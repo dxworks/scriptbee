@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBee", "ScriptBee\ScriptBee.csproj", "{BF05BD22-444C-458D-A62D-61FBD4C68AD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeConsoleApp", "ScriptBeeConsoleApp\ScriptBeeConsoleApp.csproj", "{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeTests", "ScriptBeeTests\ScriptBeeTests.csproj", "{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF05BD22-444C-458D-A62D-61FBD4C68AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF05BD22-444C-458D-A62D-61FBD4C68AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF05BD22-444C-458D-A62D-61FBD4C68AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF05BD22-444C-458D-A62D-61FBD4C68AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
