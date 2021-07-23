@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 
-namespace ScriptBee.Models
+namespace ScriptBee.Models.Dummy
 {
-    public class ModelLoader
+    public class DummyModelLoader
     {
-        public DummyModel Load(string json)
+        public DummyModel LoadModel(string json)
         {
             return JsonSerializer.Deserialize<DummyModel>(json);
         }
