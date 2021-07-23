@@ -2,9 +2,9 @@
 
 namespace ScriptBee.Scripts
 {
-    public class ScriptLoader : IScriptLoader
+    public class FileLoader : IFileLoader
     {
-        public string LoadScript(string pathToScript)
+        public string LoadFileContent(string pathToScript)
         {
             return File.ReadAllText(pathToScript);
         }

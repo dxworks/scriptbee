@@ -1,4 +1,4 @@
-﻿using ScriptBee.Models;
+﻿using ScriptBee.Models.Dummy;
 
 namespace ScriptBee.Scripts
 {

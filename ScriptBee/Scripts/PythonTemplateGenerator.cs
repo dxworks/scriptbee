@@ -1,4 +1,4 @@
-﻿using ScriptBee.Models;
+﻿using ScriptBee.Models.Dummy;
 
 namespace ScriptBee.Scripts
 {
@@ -13,10 +13,13 @@ class DummyModel:
     IsDummy: bool
 
 
+model: DummyModel
+
 # start script
 
-model: DummyModel
-print(model)
+print(model.DummyNumber)
+print(model.DummyString)
+print(model.IsDummy)
 
 # end script
 ";

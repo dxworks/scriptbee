@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using IronPython.Hosting;
-using ScriptBee.Models;
+using ScriptBee.Models.Dummy;
 using ScriptBee.Utils.ValidScriptExtractors;
 
 namespace ScriptBee.Scripts
@@ -14,7 +14,7 @@ namespace ScriptBee.Scripts
         {
             _scriptExtractor = scriptExtractor;
         }
-        
+
         public void RunScript(DummyModel dummyModel, string script)
         {
             var pythonEngine = Python.CreateEngine();
