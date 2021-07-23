@@ -24,20 +24,20 @@ namespace TemplateGeneratorConsoleApp
                             {
                                 var generatedTemplate = new PythonTemplateGenerator().GenerateTemplate(new DummyModel());
 
-                                if (string.IsNullOrWhiteSpace(options.ScriptPath))
+                                if (string.IsNullOrWhiteSpace(options.OutputPath))
                                 {
                                     File.WriteAllText("script.py", generatedTemplate);
                                 }
                                 else
                                 {
-                                    if (File.Exists(options.ScriptPath))
+                                    if (File.Exists(options.OutputPath))
                                     {
-                                        Directory.CreateDirectory(Path.GetDirectoryName(options.ScriptPath));
-                                        File.WriteAllText(options.ScriptPath, generatedTemplate);   
+                                        Directory.CreateDirectory(Path.GetDirectoryName(options.OutputPath));
+                                        File.WriteAllText(options.OutputPath, generatedTemplate);   
                                     }
                                     else
                                     {
-                                        var newPath = Path.Join(options.ScriptPath, "script.py");
+                                        var newPath = Path.Join(options.OutputPath, "script.py");
                                         Directory.CreateDirectory(Path.GetDirectoryName(newPath));
                                         File.WriteAllText(newPath, generatedTemplate); 
                                     }
