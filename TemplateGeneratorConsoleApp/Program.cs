@@ -1,8 +1,6 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
 using CommandLine;
-using Microsoft.Scripting.Runtime;
-using ScriptBee.Models;
+using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts;
 using TemplateGeneratorConsoleApp.Exceptions;
 
@@ -22,7 +20,8 @@ namespace TemplateGeneratorConsoleApp
                         {
                             case "python":
                             {
-                                var generatedTemplate = new PythonTemplateGenerator().GenerateTemplate(new DummyModel());
+                                var generatedTemplate =
+                                    new PythonTemplateGenerator().GenerateTemplate(new DummyModel());
 
                                 if (string.IsNullOrWhiteSpace(options.OutputPath))
                                 {
@@ -33,33 +32,32 @@ namespace TemplateGeneratorConsoleApp
                                     if (File.Exists(options.OutputPath))
                                     {
                                         Directory.CreateDirectory(Path.GetDirectoryName(options.OutputPath));
-                                        File.WriteAllText(options.OutputPath, generatedTemplate);   
+                                        File.WriteAllText(options.OutputPath, generatedTemplate);
                                     }
                                     else
                                     {
                                         var newPath = Path.Join(options.OutputPath, "script.py");
                                         Directory.CreateDirectory(Path.GetDirectoryName(newPath));
-                                        File.WriteAllText(newPath, generatedTemplate); 
+                                        File.WriteAllText(newPath, generatedTemplate);
                                     }
                                 }
                             }
                                 break;
                             default:
                             {
-                                throw new UnsupportedScriptTypeException($"Insert a valid programming language. {options.ScriptType} is not supported");
+                                throw new UnsupportedScriptTypeException(
+                                    $"Insert a valid programming language. {options.ScriptType} is not supported");
                             }
                         }
                     }
                         break;
-                    
+
                     default:
                     {
-                        throw new UnsupportedModelTypeException($"Insert a valid model type. {options.ModelType} is not supported");                    }
+                        throw new UnsupportedModelTypeException(
+                            $"Insert a valid model type. {options.ModelType} is not supported");
+                    }
                 }
-                
-                var modelType = options.ModelType;
-                // options.ScriptType;
-                // options.ScriptPath;
             });
         }
     }

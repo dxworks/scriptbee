@@ -15,6 +15,5 @@ namespace TemplateGeneratorConsoleApp
         [Value(2, Required = false, MetaName = "Output Path")]
 
         public string OutputPath { get; set; }
-
     }
 }
