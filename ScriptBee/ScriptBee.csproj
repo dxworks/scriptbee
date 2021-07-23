@@ -8,4 +8,8 @@
       <PackageReference Include="IronPython" Version="3.4.0-alpha1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="ModelExtensions" />
+    </ItemGroup>
+
 </Project>
