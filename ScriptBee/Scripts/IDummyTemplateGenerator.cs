@@ -2,8 +2,9 @@
 
 namespace ScriptBee.Scripts
 {
-    public interface IDummyTemplateGenerator : TemplateGenerator
+    public interface IDummyTemplateGenerator : ITemplateGenerator
     {
         public string GenerateTemplate(DummyModel dummyModel);
+        
     }
 }

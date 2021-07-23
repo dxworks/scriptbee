@@ -1,6 +1,6 @@
 ﻿namespace ScriptBee.Scripts
 {
-    public interface TemplateGenerator
+    public interface ITemplateGenerator
     {
         
     }
