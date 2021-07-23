@@ -1,5 +1,4 @@
-using System;
-using ScriptBee.Models;
+using ScriptBee.Models.Dummy;
 using Xunit;
 
 namespace ScriptBeeTests
@@ -18,9 +17,9 @@ namespace ScriptBeeTests
 
             string json = @"{""DummyNumber"":10,""DummyString"":""dummy"",""IsDummy"":true}";
 
-            ModelUnloader modelLoader = new ModelUnloader();
-            string unloadedModel = modelLoader.Unload(dummyModel);
-            
+            DummyModelUnloader dummyModelLoader = new DummyModelUnloader();
+            string unloadedModel = dummyModelLoader.UnloadModel(dummyModel);
+
             Assert.Equal(json, unloadedModel);
         }
     }
