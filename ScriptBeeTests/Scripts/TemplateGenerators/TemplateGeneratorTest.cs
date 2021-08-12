@@ -52,5 +52,160 @@ print(model);
 
             Assert.Equal(expectedScript, generatedScript);
         }
+        
+        [Fact]
+        public void Generate_WithPythonStrategy_Recursive()
+        {
+            const string expectedScript = @"class RecursiveModel:
+    longField: long
+    dummyField1: DummyModel
+    recursiveModel: RecursiveModel
+    dummyField2: DummyModel
+
+class DummyModel:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool
+
+model: RecursiveModel
+
+# start script
+
+print(model)
+
+# end script
+";
+            string generatedScript =
+                new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(typeof(RecursiveModel));
+
+            Assert.Equal(expectedScript, generatedScript);
+        }
+        
+        [Fact]
+        public void Generate_WithJavascriptStrategy_Recursive()
+        {
+            const string expectedScript = @"class RecursiveModel
+{
+    longField = 0;
+    dummyField1 = new DummyModel();
+    recursiveModel = new RecursiveModel();
+    dummyField2 = new DummyModel();
+}
+
+class DummyModel
+{
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+}
+
+let model = new RecursiveModel();
+
+// start script
+
+print(model);
+
+// end script
+";
+            string generatedScript =
+                new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(typeof(RecursiveModel));
+
+            Assert.Equal(expectedScript, generatedScript);
+        }
+        
+        [Fact]
+        public void Generate_WithJavascriptStrategy_DeepModel()
+        {
+            const string expectedScript = @"class DeepModel
+{
+    floatField = 0;
+    recursiveModel1 = new RecursiveModel();
+    recursiveModel2 = new RecursiveModel2();
+    empty = new EmptyClass();
+}
+
+class RecursiveModel
+{
+    longField = 0;
+    dummyField1 = new DummyModel();
+    recursiveModel = new RecursiveModel();
+    dummyField2 = new DummyModel();
+}
+
+class DummyModel
+{
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+}
+
+class RecursiveModel2
+{
+    dummyField1 = new DummyModel();
+    dummyField2 = new DummyModel();
+    value = '';
+}
+
+class EmptyClass
+{
+
+}
+
+let model = new DeepModel();
+
+// start script
+
+print(model);
+
+// end script
+";
+            string generatedScript =
+                new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(typeof(DeepModel));
+
+            Assert.Equal(expectedScript, generatedScript);
+        }
+        
+        [Fact]
+        public void Generate_WithPythonStrategy_DeepModel()
+        {
+            const string expectedScript = @"class DeepModel:
+    floatField: float
+    recursiveModel1: RecursiveModel
+    recursiveModel2: RecursiveModel2
+    empty: EmptyClass
+
+class RecursiveModel:
+    longField: long
+    dummyField1: DummyModel
+    recursiveModel: RecursiveModel
+    dummyField2: DummyModel
+
+class DummyModel:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool
+
+class RecursiveModel2:
+    dummyField1: DummyModel
+    dummyField2: DummyModel
+    value: str
+
+class EmptyClass:
+    pass
+
+model: DeepModel
+
+# start script
+
+print(model)
+
+# end script
+";
+            string generatedScript =
+                new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(typeof(DeepModel));
+
+            Assert.Equal(expectedScript, generatedScript);
+        }
+
     }
 }

@@ -17,5 +17,7 @@
         public string GenerateModelDeclaration(string modelType);
 
         public string GenerateSampleCode();
+
+        public string GenerateEmptyClass();
     }
 }
