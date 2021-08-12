@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Scripts
+﻿namespace ScriptBee.Scripts.ScriptRunners
 {
     public interface IScriptRunner
     {

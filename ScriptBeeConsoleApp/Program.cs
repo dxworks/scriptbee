@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts;
-using ScriptBee.Utils.ValidScriptExtractors;
+using ScriptBee.Scripts.ScriptRunners;
 using ScriptBeeConsoleApp.Exceptions;
 
 namespace ScriptBeeConsoleApp
@@ -22,21 +22,29 @@ namespace ScriptBeeConsoleApp
                         DummyModelLoader dummyModelLoader = new DummyModelLoader();
                         var dummyModel = dummyModelLoader.LoadModel(fileLoader.LoadFileContent(options.ModelPath));
 
+                        DummyScriptRunner dummyScriptRunner;
                         switch (options.ScriptType)
                         {
                             case "python":
                             {
-                                PythonDummyScriptRunner pythonDummyScriptRunner =
-                                    new PythonDummyScriptRunner(new PythonValidScriptExtractor());
-                                pythonDummyScriptRunner.RunScript(dummyModel, scriptContent);
-                            }
+                                dummyScriptRunner = new PythonDummyScriptRunner();
+
                                 break;
+                            }
+                            case "javascript":
+                            {
+                                dummyScriptRunner = new JavascriptDummyScriptRunner();
+                                
+                                break;
+                            }
                             default:
                             {
                                 throw new UnsupportedScriptTypeException(
                                     $"Insert a valid programming language. {options.ScriptType} is not supported");
                             }
                         }
+
+                        dummyScriptRunner.RunScript(dummyModel, scriptContent);
                     }
                         break;
 

@@ -4,18 +4,15 @@ using IronPython.Hosting;
 using ScriptBee.Models.Dummy;
 using ScriptBee.Utils.ValidScriptExtractors;
 
-namespace ScriptBee.Scripts
+namespace ScriptBee.Scripts.ScriptRunners
 {
-    public class PythonDummyScriptRunner : IDummyScriptRunner
+    public class PythonDummyScriptRunner : DummyScriptRunner
     {
-        private readonly IValidScriptExtractor _scriptExtractor;
-
-        public PythonDummyScriptRunner(IValidScriptExtractor scriptExtractor)
+        public PythonDummyScriptRunner() : base(new PythonValidScriptExtractor())
         {
-            _scriptExtractor = scriptExtractor;
         }
 
-        public void RunScript(DummyModel dummyModel, string script)
+        public override void RunScript(DummyModel dummyModel, string script)
         {
             var pythonEngine = Python.CreateEngine();
             var scriptScope = pythonEngine.CreateScope(new Dictionary<string, object>
@@ -28,7 +25,7 @@ namespace ScriptBee.Scripts
                 }
             });
 
-            var validScript = _scriptExtractor.ExtractValidScript(script);
+            var validScript = ScriptExtractor.ExtractValidScript(script);
             pythonEngine.Execute(validScript, scriptScope);
         }
     }
