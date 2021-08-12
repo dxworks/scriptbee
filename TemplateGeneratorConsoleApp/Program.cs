@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using CommandLine;
 using ScriptBee.Models.Dummy;
-using ScriptBee.Scripts;
+using ScriptBee.Scripts.TemplateGenerators;
+using ScriptBee.Scripts.TemplateGenerators.Strategies;
 using TemplateGeneratorConsoleApp.Exceptions;
 
 namespace TemplateGeneratorConsoleApp
@@ -21,28 +22,23 @@ namespace TemplateGeneratorConsoleApp
                             case "python":
                             {
                                 var generatedTemplate =
-                                    new PythonTemplateGenerator().GenerateTemplate(new DummyModel());
+                                    new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(
+                                        typeof(DummyModel));
 
-                                if (string.IsNullOrWhiteSpace(options.OutputPath))
-                                {
-                                    File.WriteAllText("script.py", generatedTemplate);
-                                }
-                                else
-                                {
-                                    if (File.Exists(options.OutputPath))
-                                    {
-                                        Directory.CreateDirectory(Path.GetDirectoryName(options.OutputPath));
-                                        File.WriteAllText(options.OutputPath, generatedTemplate);
-                                    }
-                                    else
-                                    {
-                                        var newPath = Path.Join(options.OutputPath, "script.py");
-                                        Directory.CreateDirectory(Path.GetDirectoryName(newPath));
-                                        File.WriteAllText(newPath, generatedTemplate);
-                                    }
-                                }
-                            }
+                                WriteScript(options.OutputPath, generatedTemplate, "script.py");
+
                                 break;
+                            }
+                            case "javascript":
+                            {
+                                var generatedTemplate =
+                                    new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(
+                                        typeof(DummyModel));
+
+                                WriteScript(options.OutputPath, generatedTemplate, "script.js");
+
+                                break;
+                            }
                             default:
                             {
                                 throw new UnsupportedScriptTypeException(
@@ -59,6 +55,28 @@ namespace TemplateGeneratorConsoleApp
                     }
                 }
             });
+        }
+
+        private static void WriteScript(string outputPath, string generatedTemplate, string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(outputPath))
+            {
+                File.WriteAllText(fileName, generatedTemplate);
+            }
+            else
+            {
+                if (File.Exists(outputPath))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+                    File.WriteAllText(outputPath, generatedTemplate);
+                }
+                else
+                {
+                    var newPath = Path.Join(outputPath, fileName);
+                    Directory.CreateDirectory(Path.GetDirectoryName(newPath));
+                    File.WriteAllText(newPath, generatedTemplate);
+                }
+            }
         }
     }
 }
