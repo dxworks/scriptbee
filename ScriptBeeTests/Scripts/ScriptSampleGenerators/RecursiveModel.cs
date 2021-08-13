@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Models.Dummy;
 
-namespace ScriptBeeTests.Scripts.TemplateGenerators
+namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {
     public class RecursiveModel
     {

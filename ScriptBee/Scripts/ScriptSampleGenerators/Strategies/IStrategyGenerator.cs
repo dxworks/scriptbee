@@ -1,6 +1,6 @@
-﻿namespace ScriptBee.Scripts.TemplateGenerators.Strategies
+﻿namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
-    public interface IStrategyTemplateGenerator
+    public interface IStrategyGenerator
     {
         public string GenerateClassName(string className);
 

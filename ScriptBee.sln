@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeConsoleApp", "Scri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeTests", "ScriptBeeTests\ScriptBeeTests.csproj", "{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateGeneratorConsoleApp", "TemplateGeneratorConsoleApp\TemplateGeneratorConsoleApp.csproj", "{38D97C34-BFE4-4B47-83DC-5959DCD22F9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptSampleGeneratorConsoleApp", "ScriptSampleGeneratorConsoleApp\ScriptSampleGeneratorConsoleApp.csproj", "{38D97C34-BFE4-4B47-83DC-5959DCD22F9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

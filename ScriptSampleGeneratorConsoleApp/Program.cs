@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using CommandLine;
 using ScriptBee.Models.Dummy;
-using ScriptBee.Scripts.TemplateGenerators;
-using ScriptBee.Scripts.TemplateGenerators.Strategies;
-using TemplateGeneratorConsoleApp.Exceptions;
+using ScriptBee.Scripts.ScriptSampleGenerators;
+using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptSampleGeneratorConsoleApp.Exceptions;
 
-namespace TemplateGeneratorConsoleApp
+namespace ScriptSampleGeneratorConsoleApp
 {
     class Program
     {
@@ -22,7 +22,7 @@ namespace TemplateGeneratorConsoleApp
                             case "python":
                             {
                                 var generatedTemplate =
-                                    new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(
+                                    new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(
                                         typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.py");
@@ -32,7 +32,7 @@ namespace TemplateGeneratorConsoleApp
                             case "javascript":
                             {
                                 var generatedTemplate =
-                                    new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(
+                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(
                                         typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.js");

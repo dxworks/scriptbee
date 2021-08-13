@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace TemplateGeneratorConsoleApp
+namespace ScriptSampleGeneratorConsoleApp
 {
     public class CommandLineOptions
     {

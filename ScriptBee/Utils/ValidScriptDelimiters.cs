@@ -6,5 +6,7 @@
         public const string PythonEndComment = "# end script";
         public const string JavascriptStartComment = "// start script";
         public const string JavascriptEndComment = "// end script";
+        public const string CSharpStartComment = "// start script";
+        public const string CSharpEndComment = "// end script";
     }
 }

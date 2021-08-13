@@ -1,8 +1,8 @@
 ﻿using ScriptBee.Utils;
 
-namespace ScriptBee.Scripts.TemplateGenerators.Strategies
+namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
-    public class JavascriptStrategyTemplateGenerator : IStrategyTemplateGenerator
+    public class JavascriptStrategyGenerator : IStrategyGenerator
     {
         public string GenerateClassName(string className)
         {

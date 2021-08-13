@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ScriptBee.Scripts.TemplateGenerators.Strategies;
+using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 
-namespace ScriptBee.Scripts.TemplateGenerators
+namespace ScriptBee.Scripts.ScriptSampleGenerators
 {
-    public class TemplateGenerator : ITemplateGenerator
+    public class ScriptSampleGenerator : IScriptSampleGenerator
     {
-        private readonly IStrategyTemplateGenerator _strategyTemplateGenerator;
+        private readonly IStrategyGenerator _strategyGenerator;
 
         private HashSet<string> _listedTypes = new HashSet<string>();
 
-        public TemplateGenerator(IStrategyTemplateGenerator strategyTemplateGenerator)
+        public ScriptSampleGenerator(IStrategyGenerator strategyGenerator)
         {
-            _strategyTemplateGenerator = strategyTemplateGenerator;
+            _strategyGenerator = strategyGenerator;
         }
 
         public string Generate(Type type)
@@ -31,19 +31,19 @@ namespace ScriptBee.Scripts.TemplateGenerators
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateModelDeclaration(type.Name));
+            stringBuilder.AppendLine(_strategyGenerator.GenerateModelDeclaration(type.Name));
 
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateStartComment());
+            stringBuilder.AppendLine(_strategyGenerator.GenerateStartComment());
 
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateSampleCode());
+            stringBuilder.AppendLine(_strategyGenerator.GenerateSampleCode());
 
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateEndComment());
+            stringBuilder.AppendLine(_strategyGenerator.GenerateEndComment());
 
             return stringBuilder.ToString();
         }
@@ -55,8 +55,8 @@ namespace ScriptBee.Scripts.TemplateGenerators
             _listedTypes.Add(type.Name);
 
             var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateClassName(type.Name));
-            var classStart = _strategyTemplateGenerator.GenerateClassStart();
+            stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type.Name));
+            var classStart = _strategyGenerator.GenerateClassStart();
             if (!string.IsNullOrEmpty(classStart))
             {
                 stringBuilder.AppendLine(classStart);
@@ -83,7 +83,7 @@ namespace ScriptBee.Scripts.TemplateGenerators
                     }
                 }
 
-                stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateField(modifier,
+                stringBuilder.AppendLine(_strategyGenerator.GenerateField(modifier,
                     fieldInfo.FieldType.Name,
                     fieldInfo.Name));
             }
@@ -99,17 +99,17 @@ namespace ScriptBee.Scripts.TemplateGenerators
                     }
                 }
                 
-                stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateField("public",
+                stringBuilder.AppendLine(_strategyGenerator.GenerateField("public",
                     propertyInfo.PropertyType.Name,
                     propertyInfo.Name));
             }
 
             if (type.GetProperties().Length == 0 && type.GetFields().Length == 0)
             {
-                stringBuilder.AppendLine(_strategyTemplateGenerator.GenerateEmptyClass());
+                stringBuilder.AppendLine(_strategyGenerator.GenerateEmptyClass());
             }
 
-            var classEnd = _strategyTemplateGenerator.GenerateClassEnd();
+            var classEnd = _strategyGenerator.GenerateClassEnd();
             if (!string.IsNullOrEmpty(classEnd))
             {
                 stringBuilder.AppendLine(classEnd);

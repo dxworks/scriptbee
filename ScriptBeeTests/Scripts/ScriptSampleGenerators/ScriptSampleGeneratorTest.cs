@@ -1,11 +1,11 @@
 ﻿using ScriptBee.Models.Dummy;
-using ScriptBee.Scripts.TemplateGenerators;
-using ScriptBee.Scripts.TemplateGenerators.Strategies;
+using ScriptBee.Scripts.ScriptSampleGenerators;
+using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using Xunit;
 
-namespace ScriptBeeTests.Scripts.TemplateGenerators
+namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {
-    public class TemplateGeneratorTest
+    public class ScriptSampleGeneratorTest
     {
         [Fact]
         public void Generate_WithPythonStrategy()
@@ -24,7 +24,7 @@ print(model)
 # end script
 ";
             string generatedScript =
-                new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(typeof(DummyModel));
+                new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(typeof(DummyModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -48,11 +48,11 @@ print(model);
 // end script
 ";
             string generatedScript =
-                new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(typeof(DummyModel));
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(typeof(DummyModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
-        
+
         [Fact]
         public void Generate_WithPythonStrategy_Recursive()
         {
@@ -76,11 +76,11 @@ print(model)
 # end script
 ";
             string generatedScript =
-                new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(typeof(RecursiveModel));
+                new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
-        
+
         [Fact]
         public void Generate_WithJavascriptStrategy_Recursive()
         {
@@ -108,11 +108,11 @@ print(model);
 // end script
 ";
             string generatedScript =
-                new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(typeof(RecursiveModel));
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
-        
+
         [Fact]
         public void Generate_WithJavascriptStrategy_DeepModel()
         {
@@ -160,11 +160,11 @@ print(model);
 // end script
 ";
             string generatedScript =
-                new TemplateGenerator(new JavascriptStrategyTemplateGenerator()).Generate(typeof(DeepModel));
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
-        
+
         [Fact]
         public void Generate_WithPythonStrategy_DeepModel()
         {
@@ -202,10 +202,9 @@ print(model)
 # end script
 ";
             string generatedScript =
-                new TemplateGenerator(new PythonStrategyTemplateGenerator()).Generate(typeof(DeepModel));
+                new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TemplateGeneratorConsoleApp.Exceptions
+namespace ScriptSampleGeneratorConsoleApp.Exceptions
 {
     public class UnsupportedModelTypeException : Exception
     {

@@ -1,9 +1,8 @@
-﻿using IronPython.Modules;
-using ScriptBee.Utils;
+﻿using ScriptBee.Utils;
 
-namespace ScriptBee.Scripts.TemplateGenerators.Strategies
+namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
-    public class PythonStrategyTemplateGenerator : IStrategyTemplateGenerator
+    public class PythonStrategyGenerator : IStrategyGenerator
     {
         public string GenerateClassName(string className)
         {

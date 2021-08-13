@@ -1,4 +1,4 @@
-﻿namespace ScriptBeeTests.Scripts.TemplateGenerators
+﻿namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {
     public class DeepModel
     {
