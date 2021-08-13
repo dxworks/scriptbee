@@ -206,5 +206,62 @@ print(model)
 
             Assert.Equal(expectedScript, generatedScript);
         }
+        
+        [Fact]
+        public void Generate_WithCSharpStrategy_DeepModel()
+        {
+            const string expectedScript = @"using System;
+public class DeepModel
+{
+    public float floatField;
+    public RecursiveModel recursiveModel1;
+    public RecursiveModel2 recursiveModel2;
+    public EmptyClass empty;
+}
+
+public class RecursiveModel
+{
+    public long longField;
+    public DummyModel dummyField1;
+    public RecursiveModel recursiveModel;
+    public DummyModel dummyField2;
+}
+
+public class DummyModel
+{
+    public int DummyNumber;
+    public string DummyString;
+    public boolean IsDummy;
+}
+
+public class RecursiveModel2
+{
+    public DummyModel dummyField1;
+    public DummyModel dummyField2;
+    public char value;
+}
+
+public class EmptyClass
+{
+
+}
+
+// start script
+
+public class ScriptContent
+{
+    public void ExecuteScript(DeepModel model)
+    {
+        Console.WriteLine(model);
+    }
+}
+
+// end script
+";
+            string generatedScript =
+                new ScriptSampleGenerator(new CSharpStrategyGenerator()).Generate(typeof(DeepModel));
+
+            Assert.Equal(expectedScript, generatedScript);
+        }
     }
 }
