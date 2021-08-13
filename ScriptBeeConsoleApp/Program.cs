@@ -2,6 +2,7 @@
 using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts;
 using ScriptBee.Scripts.ScriptRunners;
+using ScriptBee.Utils;
 using ScriptBeeConsoleApp.Exceptions;
 
 namespace ScriptBeeConsoleApp
@@ -14,6 +15,7 @@ namespace ScriptBeeConsoleApp
             {
                 var fileLoader = new FileLoader();
                 var scriptContent = fileLoader.LoadFileContent(options.ScriptPath);
+                var helperFunctionsMapper = new HelperFunctionsMapper();
 
                 switch (options.ModelType)
                 {
@@ -27,14 +29,14 @@ namespace ScriptBeeConsoleApp
                         {
                             case "python":
                             {
-                                dummyScriptRunner = new PythonDummyScriptRunner();
+                                dummyScriptRunner = new PythonDummyScriptRunner(helperFunctionsMapper);
 
                                 break;
                             }
                             case "javascript":
                             {
-                                dummyScriptRunner = new JavascriptDummyScriptRunner();
-                                
+                                dummyScriptRunner = new JavascriptDummyScriptRunner(helperFunctionsMapper);
+
                                 break;
                             }
                             default:
