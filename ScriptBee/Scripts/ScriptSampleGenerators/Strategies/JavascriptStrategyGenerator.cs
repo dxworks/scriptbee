@@ -76,5 +76,10 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         {
             return "";
         }
+
+        public string GenerateImports()
+        {
+            return "";
+        }
     }
 }

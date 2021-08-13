@@ -9,7 +9,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
     {
         private readonly IStrategyGenerator _strategyGenerator;
 
-        private HashSet<string> _listedTypes = new HashSet<string>();
+        private readonly HashSet<string> _listedTypes = new HashSet<string>();
 
         public ScriptSampleGenerator(IStrategyGenerator strategyGenerator)
         {
@@ -19,6 +19,12 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
         public string Generate(Type type)
         {
             var stringBuilder = new StringBuilder();
+
+            var imports = _strategyGenerator.GenerateImports();
+            if (!string.IsNullOrEmpty(imports))
+            {
+                stringBuilder.AppendLine(imports);
+            }
 
             stringBuilder.Append(GenerateClasses(type));
 
@@ -31,9 +37,13 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(_strategyGenerator.GenerateModelDeclaration(type.Name));
-
-            stringBuilder.AppendLine();
+            var modelDeclaration = _strategyGenerator.GenerateModelDeclaration(type.Name);
+            if (!string.IsNullOrEmpty(modelDeclaration))
+            {
+                stringBuilder.AppendLine(modelDeclaration);
+                
+                stringBuilder.AppendLine();
+            }
 
             stringBuilder.AppendLine(_strategyGenerator.GenerateStartComment());
 
@@ -98,7 +108,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                         nonPrimitiveFieldResults.Add(GenerateClasses(propertyInfo.PropertyType));
                     }
                 }
-                
+
                 stringBuilder.AppendLine(_strategyGenerator.GenerateField("public",
                     propertyInfo.PropertyType.Name,
                     propertyInfo.Name));

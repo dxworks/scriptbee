@@ -19,5 +19,7 @@
         public string GenerateSampleCode();
 
         public string GenerateEmptyClass();
+
+        public string GenerateImports();
     }
 }
