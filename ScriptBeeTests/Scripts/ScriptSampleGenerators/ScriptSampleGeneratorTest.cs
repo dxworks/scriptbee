@@ -246,17 +246,17 @@ public class EmptyClass
 
 }
 
-// start script
-
 public class ScriptContent
 {
     public void ExecuteScript(DeepModel model)
     {
+        // start script
+
         Console.WriteLine(model);
+
+        // end script
     }
 }
-
-// end script
 ";
             string generatedScript =
                 new ScriptSampleGenerator(new CSharpStrategyGenerator()).Generate(typeof(DeepModel));

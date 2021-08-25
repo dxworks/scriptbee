@@ -1,6 +1,8 @@
-﻿namespace ScriptBee.Models.Dummy
+﻿using Westwind.Utilities;
+
+namespace ScriptBee.Models.Dummy
 {
-    public class DummyModel
+    public class DummyModel : Expando
     {
         public int DummyNumber { get; set; }
         public string DummyString { get; set; }

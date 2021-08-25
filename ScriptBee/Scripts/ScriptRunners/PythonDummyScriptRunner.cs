@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using IronPython.Hosting;
 using ScriptBee.Models.Dummy;
 using ScriptBee.Utils;
@@ -35,6 +36,11 @@ namespace ScriptBee.Scripts.ScriptRunners
 
             var validScript = ScriptExtractor.ExtractValidScript(script);
             pythonEngine.Execute(validScript, scriptScope);
+            
+            dynamic m = dummyModel;
+
+            Console.WriteLine("first: " + dummyModel["Stuff"]);
+            Console.WriteLine("second: " + m.Stuff);
         }
     }
 }

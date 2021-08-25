@@ -7,6 +7,7 @@
     <ItemGroup>
       <PackageReference Include="IronPython" Version="3.4.0-alpha1" />
       <PackageReference Include="Jint" Version="3.0.0-beta-2033" />
+      <PackageReference Include="Westwind.Utilities" Version="3.0.61" />
     </ItemGroup>
 
     <ItemGroup>

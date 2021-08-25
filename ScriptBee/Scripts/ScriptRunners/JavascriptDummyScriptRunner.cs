@@ -1,4 +1,5 @@
-﻿using Jint;
+﻿using System;
+using Jint;
 using ScriptBee.Models.Dummy;
 using ScriptBee.Utils;
 using ScriptBee.Utils.ValidScriptExtractors;
@@ -27,6 +28,11 @@ namespace ScriptBee.Scripts.ScriptRunners
 
             var validScript = ScriptExtractor.ExtractValidScript(script);
             engine.Execute(validScript);
+
+            dynamic m = dummyModel;
+
+            Console.WriteLine("first: " + dummyModel["Stuff"]);
+            Console.WriteLine("second: " + m.Stuff);
         }
     }
 }
