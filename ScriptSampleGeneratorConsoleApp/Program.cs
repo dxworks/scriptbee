@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using CommandLine;
-using Microsoft.IdentityModel.Tokens;
 using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
@@ -15,7 +14,7 @@ namespace ScriptSampleGeneratorConsoleApp
             Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(options =>
             {
                 SampleCodeProvider sampleCodeProvider = SampleCodeProvider.Instance;
-                
+
                 switch (options.ModelType)
                 {
                     case "dummy":
@@ -35,8 +34,9 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "javascript":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator(sampleCodeProvider)).Generate(
-                                        typeof(DummyModel));
+                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator(sampleCodeProvider))
+                                        .Generate(
+                                            typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.js");
 
