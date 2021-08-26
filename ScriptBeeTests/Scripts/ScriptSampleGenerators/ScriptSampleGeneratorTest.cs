@@ -1,4 +1,5 @@
-﻿using ScriptBee.Models.Dummy;
+﻿using System;
+using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using Xunit;
@@ -24,7 +25,7 @@ print(model)
 # end script
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(typeof(DummyModel));
+                new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(typeof(DummyModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -48,7 +49,7 @@ print(model);
 // end script
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(typeof(DummyModel));
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(typeof(DummyModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -76,7 +77,7 @@ print(model)
 # end script
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(typeof(RecursiveModel));
+                new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -108,7 +109,7 @@ print(model);
 // end script
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(typeof(RecursiveModel));
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -160,7 +161,7 @@ print(model);
 // end script
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(typeof(DeepModel));
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -202,7 +203,7 @@ print(model)
 # end script
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(typeof(DeepModel));
+                new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }
@@ -259,7 +260,7 @@ public class ScriptContent
 }
 ";
             string generatedScript =
-                new ScriptSampleGenerator(new CSharpStrategyGenerator()).Generate(typeof(DeepModel));
+                new ScriptSampleGenerator(new CSharpStrategyGenerator(new SampleCodeProvider())).Generate(typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
         }

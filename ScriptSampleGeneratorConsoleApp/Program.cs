@@ -22,7 +22,7 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "python":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new PythonStrategyGenerator()).Generate(
+                                    new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(
                                         typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.py");
@@ -32,7 +32,7 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "javascript":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator()).Generate(
+                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(
                                         typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.js");

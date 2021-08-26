@@ -14,4 +14,10 @@
       <Folder Include="ModelExtensions" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="Scripts\ScriptSampleGenerators\Strategies\SampleCodes\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>
