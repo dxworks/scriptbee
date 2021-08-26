@@ -28,11 +28,6 @@ namespace ScriptBee.Scripts.ScriptRunners
 
             var validScript = ScriptExtractor.ExtractValidScript(script);
             engine.Execute(validScript);
-
-            dynamic m = dummyModel;
-
-            Console.WriteLine("first: " + dummyModel["Stuff"]);
-            Console.WriteLine("second: " + m.Stuff);
         }
     }
 }

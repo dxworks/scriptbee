@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Models.Dummy
 {
-    public class DummyModel : Expando
+    public class DummyModel
     {
         public int DummyNumber { get; set; }
         public string DummyString { get; set; }

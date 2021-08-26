@@ -36,11 +36,6 @@ namespace ScriptBee.Scripts.ScriptRunners
 
             var validScript = ScriptExtractor.ExtractValidScript(script);
             pythonEngine.Execute(validScript, scriptScope);
-            
-            dynamic m = dummyModel;
-
-            Console.WriteLine("first: " + dummyModel["Stuff"]);
-            Console.WriteLine("second: " + m.Stuff);
         }
     }
 }
