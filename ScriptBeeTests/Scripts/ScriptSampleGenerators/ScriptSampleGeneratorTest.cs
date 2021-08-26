@@ -9,7 +9,9 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
     {
         private readonly FileContentProvider _fileContentProvider = new FileContentProvider();
 
-        [Fact]
+        private readonly SampleCodeProvider _sampleCodeProvider = SampleCodeProvider.Instance;
+
+            [Fact]
         public void Generate_WithPythonStrategy()
         {
             string expectedScript =
@@ -17,7 +19,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonSimpleModel.txt");
 
             string generatedScript =
-                new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new PythonStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(DummyModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -31,7 +33,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptSimpleModel.txt");
             
             string generatedScript =
-                new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(DummyModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -44,7 +46,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonRecursiveModel.txt");
             string generatedScript =
-                new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new PythonStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -58,7 +60,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptRecursiveModel.txt");
             
             string generatedScript =
-                new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -72,7 +74,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDeepModelWithEmptyClass.txt");
             
             string generatedScript =
-                new ScriptSampleGenerator(new JavascriptStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new JavascriptStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -86,7 +88,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDeepModelWithEmptyClass.txt");
             
             string generatedScript =
-                new ScriptSampleGenerator(new PythonStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new PythonStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -100,7 +102,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpRecursiveModel.txt");
             
             string generatedScript =
-                new ScriptSampleGenerator(new CSharpStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new CSharpStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(RecursiveModel));
 
             Assert.Equal(expectedScript, generatedScript);
@@ -114,7 +116,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDeepModelWithEmptyClass.txt");
             
             string generatedScript =
-                new ScriptSampleGenerator(new CSharpStrategyGenerator(new SampleCodeProvider())).Generate(
+                new ScriptSampleGenerator(new CSharpStrategyGenerator(_sampleCodeProvider)).Generate(
                     typeof(DeepModel));
 
             Assert.Equal(expectedScript, generatedScript);

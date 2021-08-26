@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.Json;
 
-namespace ScriptBee.Utils
+namespace HelperFunctions
 {
     public static class HelperFunctions
     {

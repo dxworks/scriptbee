@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ScriptBee.Utils
+namespace HelperFunctions
 {
     public interface IHelperFunctionsMapper
     {

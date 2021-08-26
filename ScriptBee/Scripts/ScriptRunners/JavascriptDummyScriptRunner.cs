@@ -1,7 +1,6 @@
-﻿using System;
+﻿using HelperFunctions;
 using Jint;
 using ScriptBee.Models.Dummy;
-using ScriptBee.Utils;
 using ScriptBee.Utils.ValidScriptExtractors;
 
 namespace ScriptBee.Scripts.ScriptRunners
