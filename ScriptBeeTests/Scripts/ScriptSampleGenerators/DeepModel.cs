@@ -8,10 +8,6 @@
 
         public RecursiveModel2 recursiveModel2;
 
-        public EmptyClass empty;
-    }
-
-    public class EmptyClass
-    {
+        public EmptyModel empty;
     }
 }

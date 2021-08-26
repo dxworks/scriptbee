@@ -23,4 +23,10 @@
       <ProjectReference Include="..\ScriptBee\ScriptBee.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="Scripts\ScriptSampleGenerators\ScriptSampleTestStrings\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>

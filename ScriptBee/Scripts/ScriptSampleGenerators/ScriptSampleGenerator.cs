@@ -28,6 +28,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             if (!string.IsNullOrEmpty(imports))
             {
                 stringBuilder.AppendLine(imports);
+                stringBuilder.AppendLine("");
             }
 
             stringBuilder.Append(GenerateClasses(type));
