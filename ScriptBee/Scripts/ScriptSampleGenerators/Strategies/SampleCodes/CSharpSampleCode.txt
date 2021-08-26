@@ -1,0 +1,11 @@
+﻿public class $CLASS_NAME$
+{
+    public void $METHOD_NAME$($MODEL_TYPE$ model)
+    {
+        $START_COMMENT$
+
+        Console.WriteLine(model);
+
+        $END_COMMENT$
+    }
+}

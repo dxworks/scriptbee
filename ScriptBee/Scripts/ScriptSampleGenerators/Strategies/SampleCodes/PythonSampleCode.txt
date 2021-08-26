@@ -1,0 +1,5 @@
+﻿$START_COMMENT$
+
+print(model)
+
+$END_COMMENT$
