@@ -1,0 +1,22 @@
+﻿class RecursiveModel
+{
+    longField = 0;
+    dummyField1 = new DummyModel();
+    recursiveModel = new RecursiveModel();
+    dummyField2 = new DummyModel();
+}
+
+class DummyModel
+{
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+}
+
+let model = new RecursiveModel();
+
+// start script
+
+print(model);
+
+// end script

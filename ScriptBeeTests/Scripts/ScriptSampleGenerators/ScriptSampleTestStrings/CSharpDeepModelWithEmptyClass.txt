@@ -1,0 +1,48 @@
+﻿using System;
+
+public class DeepModel
+{
+    public float floatField;
+    public RecursiveModel recursiveModel1;
+    public RecursiveModel2 recursiveModel2;
+    public EmptyModel empty;
+}
+
+public class RecursiveModel
+{
+    public long longField;
+    public DummyModel dummyField1;
+    public RecursiveModel recursiveModel;
+    public DummyModel dummyField2;
+}
+
+public class DummyModel
+{
+    public int DummyNumber;
+    public string DummyString;
+    public boolean IsDummy;
+}
+
+public class RecursiveModel2
+{
+    public DummyModel dummyField1;
+    public DummyModel dummyField2;
+    public char value;
+}
+
+public class EmptyModel
+{
+
+}
+
+public class ScriptContent
+{
+    public void ExecuteScript(DeepModel model)
+    {
+        // start script
+
+        Console.WriteLine(model);
+
+        // end script
+    }
+}

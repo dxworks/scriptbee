@@ -1,0 +1,42 @@
+﻿class DeepModel
+{
+    floatField = 0;
+    recursiveModel1 = new RecursiveModel();
+    recursiveModel2 = new RecursiveModel2();
+    empty = new EmptyModel();
+}
+
+class RecursiveModel
+{
+    longField = 0;
+    dummyField1 = new DummyModel();
+    recursiveModel = new RecursiveModel();
+    dummyField2 = new DummyModel();
+}
+
+class DummyModel
+{
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+}
+
+class RecursiveModel2
+{
+    dummyField1 = new DummyModel();
+    dummyField2 = new DummyModel();
+    value = '';
+}
+
+class EmptyModel
+{
+
+}
+
+let model = new DeepModel();
+
+// start script
+
+print(model);
+
+// end script

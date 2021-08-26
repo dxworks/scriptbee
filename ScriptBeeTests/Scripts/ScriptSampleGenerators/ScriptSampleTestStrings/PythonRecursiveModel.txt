@@ -1,0 +1,18 @@
+﻿class RecursiveModel:
+    longField: long
+    dummyField1: DummyModel
+    recursiveModel: RecursiveModel
+    dummyField2: DummyModel
+
+class DummyModel:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool
+
+model: RecursiveModel
+
+# start script
+
+print(model)
+
+# end script

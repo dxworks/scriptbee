@@ -1,0 +1,28 @@
+﻿using System;
+
+public class RecursiveModel
+{
+    public long longField;
+    public DummyModel dummyField1;
+    public RecursiveModel recursiveModel;
+    public DummyModel dummyField2;
+}
+
+public class DummyModel
+{
+    public int DummyNumber;
+    public string DummyString;
+    public boolean IsDummy;
+}
+
+public class ScriptContent
+{
+    public void ExecuteScript(RecursiveModel model)
+    {
+        // start script
+
+        Console.WriteLine(model);
+
+        // end script
+    }
+}
