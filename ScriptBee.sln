@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeTests", "ScriptBee
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptSampleGeneratorConsoleApp", "ScriptSampleGeneratorConsoleApp\ScriptSampleGeneratorConsoleApp.csproj", "{38D97C34-BFE4-4B47-83DC-5959DCD22F9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperFunctions", "HelperFunctions\HelperFunctions.csproj", "{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{38D97C34-BFE4-4B47-83DC-5959DCD22F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38D97C34-BFE4-4B47-83DC-5959DCD22F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38D97C34-BFE4-4B47-83DC-5959DCD22F9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

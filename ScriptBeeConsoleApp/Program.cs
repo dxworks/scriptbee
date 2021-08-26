@@ -1,8 +1,8 @@
 ﻿using CommandLine;
+using HelperFunctions;
 using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts;
 using ScriptBee.Scripts.ScriptRunners;
-using ScriptBee.Utils;
 using ScriptBeeConsoleApp.Exceptions;
 
 namespace ScriptBeeConsoleApp
