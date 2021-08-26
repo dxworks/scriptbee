@@ -4,6 +4,13 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
     public class JavascriptStrategyGenerator : IStrategyGenerator
     {
+        private readonly ISampleCodeProvider _sampleCodeProvider;
+
+        public JavascriptStrategyGenerator(ISampleCodeProvider sampleCodeProvider)
+        {
+            _sampleCodeProvider = sampleCodeProvider;
+        }
+
         public string GenerateClassName(string className)
         {
             return $"class {className}";
@@ -52,16 +59,6 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return $"    {fieldName} = new {fieldType}();";
         }
 
-        public string GenerateStartComment()
-        {
-            return ValidScriptDelimiters.JavascriptStartComment;
-        }
-
-        public string GenerateEndComment()
-        {
-            return ValidScriptDelimiters.JavascriptEndComment;
-        }
-
         public string GenerateModelDeclaration(string modelType)
         {
             return $"let model = new {modelType}();";
@@ -69,7 +66,8 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateSampleCode()
         {
-            return "print(model);";
+            return _sampleCodeProvider.GetSampleCode(
+                "Scripts/ScriptSampleGenerators/Strategies/SampleCodes/JavascriptSampleCode.txt");
         }
 
         public string GenerateEmptyClass()
@@ -80,6 +78,16 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         public string GenerateImports()
         {
             return "";
+        }
+
+        public string GetStartComment()
+        {
+            return ValidScriptDelimiters.JavascriptStartComment;
+        }
+
+        public string GetEndComment()
+        {
+            return ValidScriptDelimiters.JavascriptEndComment;
         }
     }
 }

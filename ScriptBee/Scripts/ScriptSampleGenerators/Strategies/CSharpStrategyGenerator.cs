@@ -6,6 +6,13 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
     {
         private string _modelType;
 
+        private readonly ISampleCodeProvider _sampleCodeProvider;
+
+        public CSharpStrategyGenerator(ISampleCodeProvider sampleCodeProvider)
+        {
+            _sampleCodeProvider = sampleCodeProvider;
+        }
+
         public string GenerateClassName(string className)
         {
             return $"public class {className}";
@@ -27,16 +34,6 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return $"    {fieldModifier} {fieldType} {fieldName};";
         }
 
-        public string GenerateStartComment()
-        {
-            return ValidScriptDelimiters.CSharpStartComment;
-        }
-
-        public string GenerateEndComment()
-        {
-            return ValidScriptDelimiters.CSharpEndComment;
-        }
-
         public string GenerateModelDeclaration(string modelType)
         {
             _modelType = modelType;
@@ -45,14 +42,8 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateSampleCode()
         {
-            return $@"public class ScriptContent
-{{
-    public void ExecuteScript({_modelType} model)
-    {{
-        Console.WriteLine(model);
-    }}
-}}";
-            // create instance, ins.invoke("ExecuteScript", new object[] {model});
+            return _sampleCodeProvider.GetSampleCode(
+                "Scripts/ScriptSampleGenerators/Strategies/SampleCodes/CSharpSampleCode.txt");
         }
 
         public string GenerateEmptyClass()
@@ -63,6 +54,16 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         public string GenerateImports()
         {
             return "using System;";
+        }
+
+        public string GetStartComment()
+        {
+            return ValidScriptDelimiters.CSharpStartComment;
+        }
+
+        public string GetEndComment()
+        {
+            return ValidScriptDelimiters.CSharpEndComment;
         }
 
         private string GetPrimitiveType(string type)

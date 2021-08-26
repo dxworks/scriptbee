@@ -10,10 +10,6 @@
 
         public string GenerateField(string fieldModifier, string fieldType, string fieldName);
 
-        public string GenerateStartComment();
-
-        public string GenerateEndComment();
-
         public string GenerateModelDeclaration(string modelType);
 
         public string GenerateSampleCode();
@@ -21,5 +17,9 @@
         public string GenerateEmptyClass();
 
         public string GenerateImports();
+
+        public string GetStartComment();
+
+        public string GetEndComment();
     }
 }
