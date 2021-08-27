@@ -7,11 +7,15 @@ namespace ScriptBee.Scripts.ScriptRunners
     {
         protected readonly ValidScriptExtractor ScriptExtractor;
 
+        protected DummyScriptRunner()
+        {
+        }
+
         protected DummyScriptRunner(ValidScriptExtractor scriptExtractor)
         {
             ScriptExtractor = scriptExtractor;
         }
-    
+
         public abstract void RunScript(DummyModel dummyModel, string script);
     }
 }

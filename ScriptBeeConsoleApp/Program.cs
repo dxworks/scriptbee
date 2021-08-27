@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using HelperFunctions;
 using ScriptBee.Models.Dummy;
+using ScriptBee.Plugins;
 using ScriptBee.Scripts;
 using ScriptBee.Scripts.ScriptRunners;
 using ScriptBeeConsoleApp.Exceptions;
@@ -36,6 +37,12 @@ namespace ScriptBeeConsoleApp
                             case "javascript":
                             {
                                 dummyScriptRunner = new JavascriptDummyScriptRunner(helperFunctionsMapper);
+
+                                break;
+                            }
+                            case "csharp":
+                            {
+                                dummyScriptRunner = new CSharpDummyScriptRunner(new PluginLoader("Plugins"));
 
                                 break;
                             }

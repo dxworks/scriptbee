@@ -1,6 +1,4 @@
-﻿using Westwind.Utilities;
-
-namespace ScriptBee.Models.Dummy
+﻿namespace ScriptBee.Models.Dummy
 {
     public class DummyModel
     {
