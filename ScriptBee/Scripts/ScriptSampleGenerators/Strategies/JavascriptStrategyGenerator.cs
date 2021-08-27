@@ -59,6 +59,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return $"    {fieldName} = new {fieldType}();";
         }
 
+        public string GenerateProperty(string propertyModifier, string propertyType, string propertyName)
+        {
+            return GenerateField(propertyModifier, propertyType, propertyName);
+        }
+
         public string GenerateModelDeclaration(string modelType)
         {
             return $"let model = new {modelType}();";

@@ -9,6 +9,8 @@
         public string GenerateClassEnd();
 
         public string GenerateField(string fieldModifier, string fieldType, string fieldName);
+        
+        public string GenerateProperty(string propertyModifier, string propertyType, string propertyName);
 
         public string GenerateModelDeclaration(string modelType);
 

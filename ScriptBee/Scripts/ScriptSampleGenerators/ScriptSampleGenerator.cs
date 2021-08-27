@@ -10,7 +10,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
         private readonly IStrategyGenerator _strategyGenerator;
 
         private readonly string _className = "ScriptContent";
-        
+
         private readonly string _methodName = "ExecuteScript";
 
         private readonly HashSet<string> _listedTypes = new HashSet<string>();
@@ -46,24 +46,24 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             if (!string.IsNullOrEmpty(modelDeclaration))
             {
                 stringBuilder.AppendLine(modelDeclaration);
-                
+
                 stringBuilder.AppendLine();
             }
 
             var sampleCode = _strategyGenerator.GenerateSampleCode();
 
             var finalSampleCode = sampleCode.Replace("$START_COMMENT$", _strategyGenerator.GetStartComment());
-            
+
             finalSampleCode = finalSampleCode.Replace("$END_COMMENT$", _strategyGenerator.GetEndComment());
 
             finalSampleCode = finalSampleCode.Replace("$CLASS_NAME$", _className);
-            
+
             finalSampleCode = finalSampleCode.Replace("$METHOD_NAME$", _methodName);
-            
+
             finalSampleCode = finalSampleCode.Replace("$MODEL_TYPE$", type.Name);
 
             stringBuilder.AppendLine(finalSampleCode);
-            
+
             return stringBuilder.ToString();
         }
 
@@ -118,7 +118,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                     }
                 }
 
-                stringBuilder.AppendLine(_strategyGenerator.GenerateField("public",
+                stringBuilder.AppendLine(_strategyGenerator.GenerateProperty("public",
                     propertyInfo.PropertyType.Name,
                     propertyInfo.Name));
             }
