@@ -12,7 +12,7 @@ public class DummyModel
 {
     public int DummyNumber;
     public string DummyString;
-    public boolean IsDummy;
+    public bool IsDummy;
 }
 
 public class ScriptContent

@@ -138,7 +138,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
                 case "System.Boolean":
                 case "Boolean":
                 {
-                    return "boolean";
+                    return "bool";
                 }
             }
 
