@@ -5,14 +5,14 @@ public class RecursiveModel
     public long longField;
     public DummyModel dummyField1;
     public RecursiveModel recursiveModel;
-    public DummyModel dummyField2;
+    public DummyModel dummyField2 { get; set; }
 }
 
 public class DummyModel
 {
-    public int DummyNumber;
-    public string DummyString;
-    public bool IsDummy;
+    public int DummyNumber { get; set; }
+    public string DummyString { get; set; }
+    public bool IsDummy { get; set; }
 }
 
 public class ScriptContent
