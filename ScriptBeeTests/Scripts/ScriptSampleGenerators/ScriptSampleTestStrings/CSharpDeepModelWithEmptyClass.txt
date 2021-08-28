@@ -35,14 +35,12 @@ public class EmptyModel
 
 }
 
+// Only the code written in the ExecuteScript method will be executed
+
 public class ScriptContent
 {
     public void ExecuteScript(DeepModel model)
     {
-        // start script
-
         Console.WriteLine(model);
-
-        // end script
     }
 }

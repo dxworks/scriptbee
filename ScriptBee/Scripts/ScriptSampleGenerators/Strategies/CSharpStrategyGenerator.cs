@@ -8,6 +8,8 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         private readonly ISampleCodeProvider _sampleCodeProvider;
 
+        private const string StartComment = "// Only the code written in the ExecuteScript method will be executed";
+
         public CSharpStrategyGenerator(ISampleCodeProvider sampleCodeProvider)
         {
             _sampleCodeProvider = sampleCodeProvider;
@@ -64,12 +66,12 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GetStartComment()
         {
-            return ValidScriptDelimiters.CSharpStartComment;
+            return StartComment;
         }
 
         public string GetEndComment()
         {
-            return ValidScriptDelimiters.CSharpEndComment;
+            return "";
         }
 
         private string GetPrimitiveType(string type)

@@ -15,14 +15,12 @@ public class DummyModel
     public bool IsDummy { get; set; }
 }
 
+// Only the code written in the ExecuteScript method will be executed
+
 public class ScriptContent
 {
     public void ExecuteScript(RecursiveModel model)
     {
-        // start script
-
         Console.WriteLine(model);
-
-        // end script
     }
 }
