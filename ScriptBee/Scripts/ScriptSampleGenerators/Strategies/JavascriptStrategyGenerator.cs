@@ -4,11 +4,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
     public class JavascriptStrategyGenerator : IStrategyGenerator
     {
-        private readonly ISampleCodeProvider _sampleCodeProvider;
+        private readonly IFileContentProvider _fileContentProvider;
 
-        public JavascriptStrategyGenerator(ISampleCodeProvider sampleCodeProvider)
+        public JavascriptStrategyGenerator(IFileContentProvider fileContentProvider)
         {
-            _sampleCodeProvider = sampleCodeProvider;
+            _fileContentProvider = fileContentProvider;
         }
 
         public string GenerateClassName(string className)
@@ -71,7 +71,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateSampleCode()
         {
-            return _sampleCodeProvider.GetSampleCode(
+            return _fileContentProvider.GetFileContent(
                 "Scripts/ScriptSampleGenerators/Strategies/SampleCodes/JavascriptSampleCode.txt");
         }
 

@@ -6,13 +6,13 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
     {
         private string _modelType;
 
-        private readonly ISampleCodeProvider _sampleCodeProvider;
+        private readonly IFileContentProvider _fileContentProvider;
 
         private const string StartComment = "// Only the code written in the ExecuteScript method will be executed";
 
-        public CSharpStrategyGenerator(ISampleCodeProvider sampleCodeProvider)
+        public CSharpStrategyGenerator(IFileContentProvider fileContentProvider)
         {
-            _sampleCodeProvider = sampleCodeProvider;
+            _fileContentProvider = fileContentProvider;
         }
 
         public string GenerateClassName(string className)
@@ -50,7 +50,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateSampleCode()
         {
-            return _sampleCodeProvider.GetSampleCode(
+            return _fileContentProvider.GetFileContent(
                 "Scripts/ScriptSampleGenerators/Strategies/SampleCodes/CSharpSampleCode.txt");
         }
 
