@@ -4,9 +4,9 @@ using ScriptBee.Models.Dummy;
 using ScriptBee.Plugins;
 using ScriptBee.Scripts;
 using ScriptBee.Scripts.ScriptRunners;
-using ScriptBeeConsoleApp.Exceptions;
+using ScriptRunnerConsoleApp.Exceptions;
 
-namespace ScriptBeeConsoleApp
+namespace ScriptRunnerConsoleApp
 {
     class Program
     {

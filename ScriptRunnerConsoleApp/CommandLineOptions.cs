@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace ScriptBeeConsoleApp
+namespace ScriptRunnerConsoleApp
 {
     public class CommandLineOptions
     {

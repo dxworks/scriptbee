@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScriptBeeConsoleApp.Exceptions
+namespace ScriptRunnerConsoleApp.Exceptions
 {
     public class UnsupportedScriptTypeException : Exception
     {

@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBee", "ScriptBee\ScriptBee.csproj", "{BF05BD22-444C-458D-A62D-61FBD4C68AD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeConsoleApp", "ScriptBeeConsoleApp\ScriptBeeConsoleApp.csproj", "{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptRunnerConsoleApp", "ScriptRunnerConsoleApp\ScriptRunnerConsoleApp.csproj", "{6B0E0FB8-EAEF-4EBA-9C69-C1E16B2D35E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeTests", "ScriptBeeTests\ScriptBeeTests.csproj", "{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}"
 EndProject
