@@ -1,4 +1,5 @@
-﻿using ScriptBee.Utils.ValidScriptExtractors;
+﻿using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBee.Utils.ValidScriptExtractors;
 using Xunit;
 
 namespace ScriptBeeTests.Utils.ValidScriptExtractors
@@ -7,113 +8,56 @@ namespace ScriptBeeTests.Utils.ValidScriptExtractors
     {
         private readonly JavascriptValidScriptExtractor _javascriptExtractor;
 
+        private readonly FileContentProvider _fileContentProvider = FileContentProvider.Instance;
+
+        private readonly string _validScript;
+
         public JavascriptValidScriptExtractorTest()
         {
             _javascriptExtractor = new JavascriptValidScriptExtractor();
+            _validScript =
+                _fileContentProvider.GetFileContent(
+                    "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptValidScript.txt");
         }
-
+        
         [Fact]
         public void ExtractValidScript_WithTextBefore()
         {
-            const string script = @"
-class DummyModel {
-    DummyNumber = 0;
-    DummyString = '';
-    IsDummy = true;
-}
-
-let model = new DummyModel();
-
-// start script
-
-print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);
-
-// end script 
-";
-            const string validScript = @"print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);";
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextBeforeStartComment.txt");
 
             var extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Fact]
         public void ExtractValidScript_WithTextAfter()
         {
-            const string script = @"// start script
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextAfterEndComment.txt");
 
-print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);
-
-// end script 
-
-class DummyModel {
-    DummyNumber = 0;
-    DummyString = '';
-    IsDummy = true;
-}
-
-let model = new DummyModel();
-";
-            const string validScript = @"print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);";
-            string extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Fact]
         public void ExtractValidScript_NoExtraText()
         {
-            const string script = @"
-// start script
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithNoExtraText.txt");
 
-print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);
-
-// end script
-";
-            const string validScript = @"print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);";
-            string extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Fact]
         public void ExtractValidScript_TextBeforeAndAfter()
         {
-            const string script = @"class DummyModel {
-    DummyNumber = 0;
-    DummyString = '';
-    IsDummy = true;
-}
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextBeforeAndAfter.txt");
 
-let model = new DummyModel();// start script
-
-print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);
-
-// end script 
-
-class DummyModel {
-    DummyNumber = 0;
-    DummyString = '';
-    IsDummy = true;
-}
-";
-            const string validScript = @"print(model.DummyNumber);
-print(model.DummyString);
-print(model.IsDummy);";
-
-            string extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Theory]

@@ -13,7 +13,7 @@ namespace ScriptSampleGeneratorConsoleApp
         {
             Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(options =>
             {
-                SampleCodeProvider sampleCodeProvider = SampleCodeProvider.Instance;
+                FileContentProvider fileContentProvider = FileContentProvider.Instance;
 
                 switch (options.ModelType)
                 {
@@ -24,7 +24,7 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "python":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new PythonStrategyGenerator(sampleCodeProvider)).Generate(
+                                    new ScriptSampleGenerator(new PythonStrategyGenerator(fileContentProvider)).Generate(
                                         typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.py");
@@ -34,7 +34,7 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "javascript":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator(sampleCodeProvider))
+                                    new ScriptSampleGenerator(new JavascriptStrategyGenerator(fileContentProvider))
                                         .Generate(
                                             typeof(DummyModel));
 
@@ -45,7 +45,7 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "csharp":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new CSharpStrategyGenerator(sampleCodeProvider)).Generate(
+                                    new ScriptSampleGenerator(new CSharpStrategyGenerator(fileContentProvider)).Generate(
                                         typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.cs");

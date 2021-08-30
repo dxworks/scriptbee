@@ -1,4 +1,6 @@
-﻿using ScriptBee.Utils.ValidScriptExtractors;
+﻿using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBee.Utils.ValidScriptExtractors;
+using ScriptBeeTests.Scripts.ScriptSampleGenerators;
 using Xunit;
 
 namespace ScriptBeeTests.Utils.ValidScriptExtractors
@@ -7,99 +9,56 @@ namespace ScriptBeeTests.Utils.ValidScriptExtractors
     {
         private readonly PythonValidScriptExtractor _pythonExtractor;
 
+        private readonly FileContentProvider _fileContentProvider = FileContentProvider.Instance;
+
+        private readonly string _validScript;
+
         public PythonValidScriptExtractorTest()
         {
             _pythonExtractor = new PythonValidScriptExtractor();
+            _validScript =
+                _fileContentProvider.GetFileContent(
+                    "Utils/ValidScriptExtractors/ExtractorsTestStrings/PythonValidScript.txt");
         }
 
         [Fact]
         public void ExtractValidScript_WithTextBefore()
         {
-            const string script = @"
-class DummyModel:
-    DummyNumber: int
-    DummyString: str
-    IsDummy: bool
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/PythonScriptWithTextBeforeStartComment.txt");
 
-
-# start script
-
-model: DummyModel
-print(model)
-
-# end script
-";
-            const string validScript = @"model: DummyModel
-print(model)";
             var extractedScript = _pythonExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Fact]
         public void ExtractValidScript_WithTextAfter()
         {
-            const string script = @"
-# start script
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/PythonScriptWithTextAfterEndComment.txt");
 
-model: DummyModel
-print(model)
-
-# end script
-
-class DummyModel:
-    DummyNumber: int
-    DummyString: str
-    IsDummy: bool
-";
-            string validScript = @"model: DummyModel
-print(model)";
-            string extractedScript = _pythonExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            var extractedScript = _pythonExtractor.ExtractValidScript(script);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Fact]
         public void ExtractValidScript_NoExtraText()
         {
-            const string script = @"
-# start script
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/PythonScriptWithNoExtraText.txt");
 
-model: DummyModel
-print(model)
-
-# end script
-";
-            const string validScript = @"model: DummyModel
-print(model)";
-            string extractedScript = _pythonExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            var extractedScript = _pythonExtractor.ExtractValidScript(script);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Fact]
         public void ExtractValidScript_TextBeforeAndAfter()
         {
-            const string script = @"class DummyModel:
-    DummyNumber: int
-    DummyString: str
-    IsDummy: bool
+            string script = _fileContentProvider.GetFileContent(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/PythonScriptWithTextBeforeAndAfter.txt");
 
-# start script
-
-model: DummyModel
-print(model)
-
-# end script
-
-class DummyModel:
-    DummyNumber: int
-    DummyString: str
-    IsDummy: bool
-";
-
-            const string validScript = @"model: DummyModel
-print(model)";
-
-            string extractedScript = _pythonExtractor.ExtractValidScript(script);
-            Assert.Equal(validScript, extractedScript);
+            var extractedScript = _pythonExtractor.ExtractValidScript(script);
+            Assert.Equal(_validScript, extractedScript);
         }
 
         [Theory]
