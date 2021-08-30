@@ -1,0 +1,6 @@
+﻿# start script
+
+model: DummyModel
+print(model)
+
+# end script

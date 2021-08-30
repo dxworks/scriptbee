@@ -1,0 +1,17 @@
+﻿class DummyModel:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool
+
+# start script
+
+model: DummyModel
+print(model)
+
+# end script
+
+class SecondModel:
+    FirstString: str
+    SecondString: str
+    IsSecond: bool
+    OneNumber: int

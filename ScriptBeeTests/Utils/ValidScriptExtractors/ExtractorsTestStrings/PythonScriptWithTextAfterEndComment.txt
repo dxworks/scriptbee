@@ -1,0 +1,11 @@
+﻿# start script
+
+model: DummyModel
+print(model)
+
+# end script
+
+class DummyModel:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool

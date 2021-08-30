@@ -1,0 +1,7 @@
+﻿// start script
+
+print(model.DummyNumber);
+print(model.DummyString);
+print(model.IsDummy);
+
+// end script

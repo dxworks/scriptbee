@@ -1,0 +1,19 @@
+﻿class DummyModel {
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+}
+
+let model = new DummyModel();// start script
+
+print(model.DummyNumber);
+print(model.DummyString);
+print(model.IsDummy);
+
+// end script 
+
+class DummyModel {
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+}
