@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptSampleGeneratorConsol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperFunctions", "HelperFunctions\HelperFunctions.csproj", "{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeWebApp", "ScriptBeeWebApp\ScriptBeeWebApp.csproj", "{2728D6F8-E352-4E24-B253-B4E053EBC68D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2728D6F8-E352-4E24-B253-B4E053EBC68D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2728D6F8-E352-4E24-B253-B4E053EBC68D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2728D6F8-E352-4E24-B253-B4E053EBC68D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2728D6F8-E352-4E24-B253-B4E053EBC68D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
