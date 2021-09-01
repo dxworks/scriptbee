@@ -1,4 +1,4 @@
-<body>
+<body [ngClass]="{'dark-theme-mode':themeService.isDarkTheme, 'mat-app-background': true}">
   <app-nav-menu></app-nav-menu>
   <div class="container">
     <router-outlet></router-outlet>
