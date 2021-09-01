@@ -1,0 +1,22 @@
+@import "~@angular/material/theming";
+
+@include mat-core();
+
+// Defining a light theme
+$scriptbee-light-primary: mat-palette($mat-yellow, 700, 500, 900);
+$scriptbee-light-accent: mat-palette($mat-deep-orange, 700, 500, 900);
+$scriptbee-light-warn: mat-palette($mat-red);
+$scriptbee-light-theme: mat-light-theme($scriptbee-light-primary, $scriptbee-light-accent, $scriptbee-light-warn);
+
+// Defining a dark theme
+$scriptbee-dark-primary: mat-palette($mat-yellow, 700, 500, 900);
+$scriptbee-dark-accent: mat-palette($mat-deep-orange, 500, 300, 700);
+$scriptbee-dark-warn: mat-palette($mat-red);
+$scriptbee-dark-theme: mat-dark-theme($scriptbee-dark-primary, $scriptbee-dark-accent, $scriptbee-dark-warn);
+
+// Apply the light theme by default
+@include angular-material-theme($scriptbee-light-theme);
+
+.dark-theme-mode {
+  @include angular-material-theme($scriptbee-dark-theme);
+}
