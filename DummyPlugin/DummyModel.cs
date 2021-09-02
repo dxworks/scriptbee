@@ -1,6 +1,8 @@
-﻿namespace DummyPlugin
+﻿using ScriptBeePlugin;
+
+namespace DummyPlugin
 {
-    public class DummyModel
+    public class DummyModel : ScriptBeeModel
     {
         public int DummyNumber { get; set; }
         public string DummyString { get; set; }

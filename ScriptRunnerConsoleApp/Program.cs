@@ -23,7 +23,8 @@ namespace ScriptRunnerConsoleApp
                     case "dummy":
                     {
                         DummyModelLoader dummyModelLoader = new DummyModelLoader();
-                        var dummyModel = dummyModelLoader.LoadModel(fileLoader.LoadFileContent(options.ModelPath));
+                        DummyModel dummyModel =
+                            (DummyModel) dummyModelLoader.LoadModel(fileLoader.LoadFileContent(options.ModelPath));
 
                         DummyScriptRunner dummyScriptRunner;
                         switch (options.ScriptType)

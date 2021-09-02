@@ -19,7 +19,7 @@ namespace ScriptBeeWebApp.Controllers
                 case "dummy":
                 {
                     DummyModelLoader dummyModelLoader = new DummyModelLoader();
-                    var loadedModel = dummyModelLoader.LoadModel(scriptRunnerArguments.ModelJsonContent);
+                    DummyModel loadedModel = (DummyModel) dummyModelLoader.LoadModel(scriptRunnerArguments.ModelJsonContent);
                     
                     switch (scriptRunnerArguments.ScriptType)
                     {

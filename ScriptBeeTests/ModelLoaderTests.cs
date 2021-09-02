@@ -11,7 +11,7 @@ namespace ScriptBeeTests
             string json = @"{""DummyNumber"":10,""DummyString"":""dummy"",""IsDummy"":true}";
 
             DummyModelLoader dummyModelLoader = new DummyModelLoader();
-            DummyModel dummyModel = dummyModelLoader.LoadModel(json);
+            DummyModel dummyModel = (DummyModel)dummyModelLoader.LoadModel(json);
 
             Assert.Equal(10, dummyModel.DummyNumber);
             Assert.Equal("dummy", dummyModel.DummyString);

@@ -1,12 +1,14 @@
 ﻿using System.Text.Json;
+using Newtonsoft.Json;
+using ScriptBeePlugin;
 
 namespace DummyPlugin
 {
-    public class DummyModelUnloader
+    public class DummyModelUnloader : IModelUnloader
     {
-        public string UnloadModel(DummyModel model)
+        public string UnloadModel(ScriptBeeModel model)
         {
-            return JsonSerializer.Serialize(model);
+            return JsonConvert.SerializeObject(model);
         }
     }
 }
