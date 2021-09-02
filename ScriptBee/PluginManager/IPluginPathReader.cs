@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ScriptBee.Plugins
+namespace ScriptBee.PluginManager
 {
-    public interface IPluginLoader
+    public interface IPluginPathReader
     {
         public List<string> GetPluginPaths();
     }

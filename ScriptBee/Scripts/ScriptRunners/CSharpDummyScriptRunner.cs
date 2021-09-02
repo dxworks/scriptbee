@@ -5,19 +5,19 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using ScriptBee.Plugins;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
 using DummyPlugin;
+using ScriptBee.PluginManager;
 
 namespace ScriptBee.Scripts.ScriptRunners
 {
     public class CSharpDummyScriptRunner : DummyScriptRunner
     {
-        private readonly IPluginLoader _pluginLoader;
+        private readonly IPluginPathReader _pluginPathReader;
 
-        public CSharpDummyScriptRunner(IPluginLoader pluginLoader)
+        public CSharpDummyScriptRunner(IPluginPathReader pluginPathReader)
         {
-            _pluginLoader = pluginLoader;
+            _pluginPathReader = pluginPathReader;
         }
 
         public override void RunScript(DummyModel dummyModel, string script)
@@ -112,7 +112,7 @@ namespace ScriptBee.Scripts.ScriptRunners
                 );
             }
 
-            foreach (var pluginPath in _pluginLoader.GetPluginPaths())
+            foreach (var pluginPath in _pluginPathReader.GetPluginPaths())
             {
                 references.Add(MetadataReference.CreateFromFile(pluginPath));
             }

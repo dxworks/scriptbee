@@ -2,13 +2,13 @@
 using System.IO;
 using System.Linq;
 
-namespace ScriptBee.Plugins
+namespace ScriptBee.PluginManager
 {
-    public class PluginLoader : IPluginLoader
+    public class PluginPathReader : IPluginPathReader
     {
         private readonly string _pathToPlugins;
 
-        public PluginLoader(string pathToPlugins)
+        public PluginPathReader(string pathToPlugins)
         {
             _pathToPlugins = pathToPlugins;
         }
