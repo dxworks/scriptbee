@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Models.Dummy
+﻿namespace DummyPlugin
 {
     public class DummyModel
     {

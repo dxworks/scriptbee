@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using DummyPlugin;
 using HelperFunctions;
 using IronPython.Hosting;
-using ScriptBee.Models.Dummy;
 using ScriptBee.Utils.ValidScriptExtractors;
 
 namespace ScriptBee.Scripts.ScriptRunners
@@ -33,7 +33,7 @@ namespace ScriptBee.Scripts.ScriptRunners
 
             var scriptScope = pythonEngine.CreateScope(dictionary);
 
-            var validScript = ScriptExtractor.ExtractValidScript(script);
+            var validScript = scriptExtractor.ExtractValidScript(script);
             pythonEngine.Execute(validScript, scriptScope);
         }
     }

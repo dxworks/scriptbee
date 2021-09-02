@@ -1,4 +1,4 @@
-using ScriptBee.Models.Dummy;
+using DummyPlugin;
 using Xunit;
 
 namespace ScriptBeeTests

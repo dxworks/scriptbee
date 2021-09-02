@@ -1,6 +1,6 @@
-﻿using HelperFunctions;
+﻿using DummyPlugin;
+using HelperFunctions;
 using Jint;
-using ScriptBee.Models.Dummy;
 using ScriptBee.Utils.ValidScriptExtractors;
 
 namespace ScriptBee.Scripts.ScriptRunners
@@ -25,7 +25,7 @@ namespace ScriptBee.Scripts.ScriptRunners
                 engine.SetValue(functionName, delegateFunction);
             }
 
-            var validScript = ScriptExtractor.ExtractValidScript(script);
+            var validScript = scriptExtractor.ExtractValidScript(script);
             engine.Execute(validScript);
         }
     }

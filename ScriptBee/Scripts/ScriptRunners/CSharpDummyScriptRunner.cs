@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using ScriptBee.Models.Dummy;
 using ScriptBee.Plugins;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
+using DummyPlugin;
 
 namespace ScriptBee.Scripts.ScriptRunners
 {

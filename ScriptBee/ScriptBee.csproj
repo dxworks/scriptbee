@@ -5,17 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="IronPython" Version="3.4.0-alpha1" />
-        <PackageReference Include="Jint" Version="3.0.0-beta-2033" />
-        <PackageReference Include="Westwind.Utilities" Version="3.0.61" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.11.0-1.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0-1.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0-1.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.11.0-1.final" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="ModelExtensions" />
+        <PackageReference Include="IronPython" Version="3.4.0-alpha1"/>
+        <PackageReference Include="Jint" Version="3.0.0-beta-2033"/>
+        <PackageReference Include="Westwind.Utilities" Version="3.0.61"/>
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.11.0-1.final"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0-1.final"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0-1.final"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.11.0-1.final"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -25,7 +21,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\HelperFunctions\HelperFunctions.csproj" />
+        <ProjectReference Include="..\HelperFunctions\HelperFunctions.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DummyPlugin\DummyPlugin.csproj"/>
     </ItemGroup>
 
 </Project>

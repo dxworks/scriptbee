@@ -1,4 +1,4 @@
-﻿using ScriptBee.Models.Dummy;
+﻿using DummyPlugin;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using Xunit;
@@ -9,7 +9,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
     {
         private readonly FileContentProvider _fileContentProvider = FileContentProvider.Instance;
 
-            [Fact]
+        [Fact]
         public void Generate_WithPythonStrategy()
         {
             string expectedScript =
@@ -29,7 +29,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             string expectedScript =
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptSimpleModel.txt");
-            
+
             string generatedScript =
                 new ScriptSampleGenerator(new JavascriptStrategyGenerator(_fileContentProvider)).Generate(
                     typeof(DummyModel));
@@ -56,7 +56,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             string expectedScript =
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptRecursiveModel.txt");
-            
+
             string generatedScript =
                 new ScriptSampleGenerator(new JavascriptStrategyGenerator(_fileContentProvider)).Generate(
                     typeof(RecursiveModel));
@@ -70,7 +70,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             string expectedScript =
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDeepModelWithEmptyClass.txt");
-            
+
             string generatedScript =
                 new ScriptSampleGenerator(new JavascriptStrategyGenerator(_fileContentProvider)).Generate(
                     typeof(DeepModel));
@@ -84,7 +84,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             string expectedScript =
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDeepModelWithEmptyClass.txt");
-            
+
             string generatedScript =
                 new ScriptSampleGenerator(new PythonStrategyGenerator(_fileContentProvider)).Generate(
                     typeof(DeepModel));
@@ -98,7 +98,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             string expectedScript =
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpRecursiveModel.txt");
-            
+
             string generatedScript =
                 new ScriptSampleGenerator(new CSharpStrategyGenerator(_fileContentProvider)).Generate(
                     typeof(RecursiveModel));
@@ -112,7 +112,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             string expectedScript =
                 _fileContentProvider.GetFileContent(
                     "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDeepModelWithEmptyClass.txt");
-            
+
             string generatedScript =
                 new ScriptSampleGenerator(new CSharpStrategyGenerator(_fileContentProvider)).Generate(
                     typeof(DeepModel));

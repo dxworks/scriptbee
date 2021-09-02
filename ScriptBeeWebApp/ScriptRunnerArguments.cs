@@ -1,6 +1,4 @@
-﻿using ScriptBee.Models.Dummy;
-
-namespace ScriptBeeWebApp
+﻿namespace ScriptBeeWebApp
 {
     public class ScriptRunnerArguments
     {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using CommandLine;
-using ScriptBee.Models.Dummy;
+using DummyPlugin;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptSampleGeneratorConsoleApp.Exceptions;
@@ -24,8 +24,9 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "python":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new PythonStrategyGenerator(fileContentProvider)).Generate(
-                                        typeof(DummyModel));
+                                    new ScriptSampleGenerator(new PythonStrategyGenerator(fileContentProvider))
+                                        .Generate(
+                                            typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.py");
 
@@ -45,8 +46,9 @@ namespace ScriptSampleGeneratorConsoleApp
                             case "csharp":
                             {
                                 var generatedTemplate =
-                                    new ScriptSampleGenerator(new CSharpStrategyGenerator(fileContentProvider)).Generate(
-                                        typeof(DummyModel));
+                                    new ScriptSampleGenerator(new CSharpStrategyGenerator(fileContentProvider))
+                                        .Generate(
+                                            typeof(DummyModel));
 
                                 WriteScript(options.OutputPath, generatedTemplate, "script.cs");
 

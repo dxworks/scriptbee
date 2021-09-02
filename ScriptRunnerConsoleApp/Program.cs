@@ -1,6 +1,6 @@
 ﻿using CommandLine;
+using DummyPlugin;
 using HelperFunctions;
-using ScriptBee.Models.Dummy;
 using ScriptBee.Plugins;
 using ScriptBee.Scripts;
 using ScriptBee.Scripts.ScriptRunners;

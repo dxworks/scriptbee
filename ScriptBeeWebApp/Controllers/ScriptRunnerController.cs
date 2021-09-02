@@ -1,7 +1,6 @@
-﻿using HelperFunctions;
+﻿using DummyPlugin;
+using HelperFunctions;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Models.Dummy;
-using ScriptBee.Plugins;
 using ScriptBee.Scripts.ScriptRunners;
 
 namespace ScriptBeeWebApp.Controllers

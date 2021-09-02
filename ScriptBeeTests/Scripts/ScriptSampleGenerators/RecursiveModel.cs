@@ -1,4 +1,4 @@
-﻿using ScriptBee.Models.Dummy;
+﻿using DummyPlugin;
 
 namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {

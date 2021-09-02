@@ -24,6 +24,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DummyPlugin\DummyPlugin.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <Content Include="Scripts\ScriptSampleGenerators\ScriptSampleTestStrings\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

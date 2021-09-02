@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
+using DummyPlugin;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Models.Dummy;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace ScriptBee.Models.Dummy
+namespace DummyPlugin
 {
     public class DummyModelUnloader
     {
