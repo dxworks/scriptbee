@@ -1,4 +1,5 @@
-﻿using DummyPlugin;
+﻿using System.Collections.Generic;
+using DummyPlugin;
 using HelperFunctions;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Scripts.ScriptRunners;
@@ -19,7 +20,8 @@ namespace ScriptBeeWebApp.Controllers
                 case "dummy":
                 {
                     DummyModelLoader dummyModelLoader = new DummyModelLoader();
-                    DummyModel loadedModel = (DummyModel) dummyModelLoader.LoadModel(scriptRunnerArguments.ModelJsonContent);
+                    DummyModel loadedModel = (DummyModel) dummyModelLoader.LoadModel(new List<string>
+                    {scriptRunnerArguments.ModelJsonContent})["DummyModel"]["0"];
                     
                     switch (scriptRunnerArguments.ScriptType)
                     {

@@ -1,7 +1,8 @@
-﻿using CommandLine;
+﻿using System.Collections.Generic;
+using CommandLine;
 using DummyPlugin;
 using HelperFunctions;
-using ScriptBee.Plugins;
+using ScriptBee.PluginManager;
 using ScriptBee.Scripts;
 using ScriptBee.Scripts.ScriptRunners;
 using ScriptRunnerConsoleApp.Exceptions;
@@ -23,8 +24,9 @@ namespace ScriptRunnerConsoleApp
                     case "dummy":
                     {
                         DummyModelLoader dummyModelLoader = new DummyModelLoader();
-                        DummyModel dummyModel =
-                            (DummyModel) dummyModelLoader.LoadModel(fileLoader.LoadFileContent(options.ModelPath));
+
+                        DummyModel loadedModel = (DummyModel) dummyModelLoader.LoadModel(new List<string>
+                            {fileLoader.LoadFileContent(options.ModelPath)})["DummyModel"]["0"];
 
                         DummyScriptRunner dummyScriptRunner;
                         switch (options.ScriptType)
@@ -43,7 +45,7 @@ namespace ScriptRunnerConsoleApp
                             }
                             case "csharp":
                             {
-                                dummyScriptRunner = new CSharpDummyScriptRunner(new PluginLoader("Plugins"));
+                                dummyScriptRunner = new CSharpDummyScriptRunner(new PluginPathReader("Plugins"));
 
                                 break;
                             }
@@ -54,7 +56,7 @@ namespace ScriptRunnerConsoleApp
                             }
                         }
 
-                        dummyScriptRunner.RunScript(dummyModel, scriptContent);
+                        dummyScriptRunner.RunScript(loadedModel, scriptContent);
                     }
                         break;
 
