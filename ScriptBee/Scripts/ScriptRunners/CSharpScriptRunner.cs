@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DummyPlugin;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using ScriptBee.PluginManager;
@@ -21,21 +20,14 @@ namespace ScriptBee.Scripts.ScriptRunners
             _pluginPathReader = pluginPathReader;
         }
 
-        public void RunScript(DummyModel dummyModel, string script)
-        {
-            var compiledScript = CompileScript(script);
-
-            ExecuteScript(dummyModel, compiledScript);
-        }
-
         public void Run(Project project, string scriptContent)
         {
-            // var compiledScript = CompileScript(scriptContent);
-            //
-            // ExecuteScript(dummyModel, compiledScript);
+            var compiledScript = CompileScript(scriptContent);
+
+            ExecuteScript(project, compiledScript);
         }
 
-        private void ExecuteScript(DummyModel dummyModel, Assembly compiledScript)
+        private void ExecuteScript(Project project, Assembly compiledScript)
         {
             foreach (var type in compiledScript.GetTypes())
             {
@@ -44,12 +36,12 @@ namespace ScriptBee.Scripts.ScriptRunners
                     foreach (var method in type.GetMethods())
                     {
                         if (method.Name == "ExecuteScript" && method.GetParameters()
-                            .SingleOrDefault(param => param.ParameterType.Name == "DummyModel") != null)
+                            .SingleOrDefault(param => param.ParameterType.Name == "Project") != null)
                         {
                             var scriptContentObject = compiledScript.CreateInstance(type.Name);
                             method.Invoke(scriptContentObject, new object[]
                             {
-                                dummyModel
+                                project
                             });
                         }
                     }
@@ -101,8 +93,8 @@ namespace ScriptBee.Scripts.ScriptRunners
             }
 
             if (errors.Count > 0)
-            {
-                var errorMessage = errors.ToString();
+            { 
+                var errorMessage = errors.Aggregate("", (current, error) => current + error + "\n");
                 throw new CompilationErrorException(errorMessage);
             }
         }

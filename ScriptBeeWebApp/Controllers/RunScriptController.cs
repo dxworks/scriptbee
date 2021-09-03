@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 using HelperFunctions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptRunners;
 using ScriptBee.Utils.ValidScriptExtractors;
+using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.Extensions;
 
 namespace ScriptBeeWebApp.Controllers
@@ -72,10 +74,10 @@ namespace ScriptBeeWebApp.Controllers
                 {
                     return new JavascriptScriptRunner(_helperFunctionsMapper, new JavascriptValidScriptExtractor());
                 }
-                // case "csharp":
-                // {
-                //     return new CSharpDummyScriptRunner();
-                // }
+                case "csharp":
+                {
+                    return new CSharpScriptRunner(new PluginPathReader(ConfigFolders.PathToPlugins));
+                }
                 default:
                 {
                     return null;
