@@ -4,7 +4,7 @@ using ScriptBeePlugin;
 
 namespace ScriptBee.PluginManager
 {
-    public class LoadersHolder
+    public class LoadersHolder : ILoadersHolder
     {
         private Dictionary<string, IModelLoader> loaders = new Dictionary<string, IModelLoader>();
 

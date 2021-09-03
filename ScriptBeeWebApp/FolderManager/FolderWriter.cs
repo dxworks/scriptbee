@@ -1,46 +1,21 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using ScriptBeeWebApp.Config;
 
 namespace ScriptBeeWebApp.FolderManager
 {
     public class FolderWriter : IFolderWriter
     {
-        private const string Root = ".scriptbee";
-
-        private const string ModelsFolder = "models";
-
-        private const string ResultsFolder = "results";
-
-        private const string PluginsFolder = "plugins";
-
-        private readonly string _pathToRoot;
-
-        private readonly string _pathToModels;
-
-        private readonly string _pathToResults;
-
-        private readonly string _pathToPlugins;
-
-        public FolderWriter()
-        {
-            _pathToRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Root);
-
-            _pathToModels = Path.Combine(_pathToRoot, ModelsFolder);
-
-            _pathToResults = Path.Combine(_pathToRoot, ResultsFolder);
-
-            _pathToPlugins = Path.Combine(_pathToRoot, PluginsFolder);
-        }
-
         public void Initialize()
         {
-            if (!Directory.Exists(_pathToRoot))
+            if (!Directory.Exists(ConfigFolders.PathToRoot))
             {
-                Directory.CreateDirectory(_pathToRoot);
-                Directory.CreateDirectory(_pathToModels);
-                Directory.CreateDirectory(_pathToResults);
-                Directory.CreateDirectory(_pathToPlugins);
+                Directory.CreateDirectory(ConfigFolders.PathToRoot);
+                Directory.CreateDirectory(ConfigFolders.PathToModels);
+                Directory.CreateDirectory(ConfigFolders.PathToResults);
+                Directory.CreateDirectory(ConfigFolders.PathToPlugins);
             }
         }
 
@@ -48,27 +23,15 @@ namespace ScriptBeeWebApp.FolderManager
         {
             throw new NotImplementedException();
         }
-
-        public void WriteToFile(string folderName, IFormFile file)
+        
+        public Task WriteToFile(string filePath, IFormFile file)
         {
-            string outputPath = Path.Combine(_pathToModels, folderName, file.FileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
-
-            using (var fileStream = new FileStream(outputPath, FileMode.Create))
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                file.CopyToAsync(fileStream);
+                return file.CopyToAsync(fileStream);
             }
-        }
-
-        public string GetPathToModelsFolder()
-        {
-            return _pathToModels;
-        }
-
-        public string GetPathToResultsFolder()
-        {
-            return _pathToResults;
         }
     }
 }

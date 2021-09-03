@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace ScriptBeeWebApp.FolderManager
 {
@@ -8,10 +9,6 @@ namespace ScriptBeeWebApp.FolderManager
 
         public void DeleteFile(string pathToFile);
 
-        public void WriteToFile(string folderName, IFormFile file);
-
-        public string GetPathToModelsFolder();
-
-        public string GetPathToResultsFolder();
+        public Task WriteToFile(string filePath, IFormFile file);
     }
 }

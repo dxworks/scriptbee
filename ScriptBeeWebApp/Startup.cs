@@ -1,9 +1,15 @@
+using System;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ScriptBee.PluginManager;
+using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBeePlugin;
+using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.FolderManager;
 
 namespace ScriptBeeWebApp
@@ -24,6 +30,8 @@ namespace ScriptBeeWebApp
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.AddSingleton<IFolderWriter, FolderWriter>();
+            services.AddSingleton<ILoadersHolder, LoadersHolder>();
+            services.AddSingleton<IFileContentProvider, FileContentProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +77,29 @@ namespace ScriptBeeWebApp
                     // spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
             });
+            
+            var loadersHolder = (ILoadersHolder) app.ApplicationServices.GetService(typeof(ILoadersHolder));
+
+            CreateLoadersDictionary(loadersHolder);
+        }
+
+        private void CreateLoadersDictionary(ILoadersHolder loadersHolder)
+        {
+            var pluginPaths = new PluginPathReader(ConfigFolders.PathToPlugins).GetPluginPaths();
+
+            foreach (var pluginPath in pluginPaths)
+            {
+                var pluginDLL = Assembly.LoadFile(pluginPath);
+
+                foreach(Type type in pluginDLL.GetExportedTypes())
+                {
+                    if (typeof(IModelLoader).IsAssignableFrom(type))
+                    {
+                        var modelLoader = (IModelLoader) Activator.CreateInstance(type);
+                        loadersHolder.AddLoaderToDictionary(modelLoader);
+                    }
+                }
+            }
         }
     }
 }
