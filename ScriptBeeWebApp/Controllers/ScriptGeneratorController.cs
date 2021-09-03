@@ -11,11 +11,16 @@ namespace ScriptBeeWebApp.Controllers
     [Route("[controller]")]
     public class ScriptGeneratorController : ControllerBase
     {
+        private readonly IFileContentProvider _fileContentProvider;
+
+        public ScriptGeneratorController(IFileContentProvider fileContentProvider)
+        {
+            _fileContentProvider = fileContentProvider;
+        }
+
         [HttpGet("{modelType}/{scriptType}")]
         public IActionResult Get(string modelType, string scriptType)
         {
-            FileContentProvider fileContentProvider = FileContentProvider.Instance;
-
             switch (modelType)
             {
                 case "dummy":
@@ -25,7 +30,7 @@ namespace ScriptBeeWebApp.Controllers
                         case "python":
                         {
                             var generatedTemplate =
-                                new ScriptSampleGenerator(new PythonStrategyGenerator(fileContentProvider)).Generate(
+                                new ScriptSampleGenerator(new PythonStrategyGenerator(_fileContentProvider)).Generate(
                                     typeof(DummyModel));
 
                             var zipStream = CreateFileZipStream("script.py", generatedTemplate);
@@ -35,7 +40,7 @@ namespace ScriptBeeWebApp.Controllers
                         case "javascript":
                         {
                             var generatedTemplate =
-                                new ScriptSampleGenerator(new JavascriptStrategyGenerator(fileContentProvider))
+                                new ScriptSampleGenerator(new JavascriptStrategyGenerator(_fileContentProvider))
                                     .Generate(
                                         typeof(DummyModel));
 
@@ -46,7 +51,7 @@ namespace ScriptBeeWebApp.Controllers
                         case "csharp":
                         {
                             var generatedTemplate =
-                                new ScriptSampleGenerator(new CSharpStrategyGenerator(fileContentProvider)).Generate(
+                                new ScriptSampleGenerator(new CSharpStrategyGenerator(_fileContentProvider)).Generate(
                                     typeof(DummyModel));
 
                             var zipStream = CreateFileZipStream("script.cs", generatedTemplate);

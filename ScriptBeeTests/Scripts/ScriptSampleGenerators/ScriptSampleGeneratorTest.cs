@@ -7,7 +7,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {
     public class ScriptSampleGeneratorTest
     {
-        private readonly FileContentProvider _fileContentProvider = FileContentProvider.Instance;
+        private readonly RelativeFileContentProvider _fileContentProvider = new RelativeFileContentProvider();
 
         [Fact]
         public void Generate_WithPythonStrategy()

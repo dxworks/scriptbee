@@ -1,20 +1,19 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
     public class FileContentProvider : IFileContentProvider
     {
-        private FileContentProvider()
+        public Task<string> GetFileContentAsync(string path)
         {
+            return File.ReadAllTextAsync(path);
         }
-
-        public static FileContentProvider Instance { get; } = new FileContentProvider();
 
         public string GetFileContent(string path)
         {
-            return File.ReadAllText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                path));
+            return File.ReadAllText(path);
         }
     }
 }

@@ -8,8 +8,7 @@ namespace ScriptBeeTests.Utils.ValidScriptExtractors
     {
         private readonly JavascriptValidScriptExtractor _javascriptExtractor;
 
-        private readonly FileContentProvider _fileContentProvider = FileContentProvider.Instance;
-
+        private readonly IFileContentProvider _fileContentProvider = new RelativeFileContentProvider();
         private readonly string _validScript;
 
         public JavascriptValidScriptExtractorTest()

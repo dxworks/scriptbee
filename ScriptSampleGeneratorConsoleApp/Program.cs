@@ -13,7 +13,7 @@ namespace ScriptSampleGeneratorConsoleApp
         {
             Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(options =>
             {
-                FileContentProvider fileContentProvider = FileContentProvider.Instance;
+                var fileContentProvider = new RelativeFileContentProvider();
 
                 switch (options.ModelType)
                 {

@@ -9,7 +9,7 @@ namespace ScriptBeeTests.Utils.ValidScriptExtractors
     {
         private readonly PythonValidScriptExtractor _pythonExtractor;
 
-        private readonly FileContentProvider _fileContentProvider = FileContentProvider.Instance;
+        private readonly IFileContentProvider _fileContentProvider = new RelativeFileContentProvider();
 
         private readonly string _validScript;
 
