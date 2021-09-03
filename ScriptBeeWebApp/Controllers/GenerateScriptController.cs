@@ -9,11 +9,11 @@ namespace ScriptBeeWebApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ScriptGeneratorController : ControllerBase
+    public class GenerateScriptController : ControllerBase
     {
         private readonly IFileContentProvider _fileContentProvider;
 
-        public ScriptGeneratorController(IFileContentProvider fileContentProvider)
+        public GenerateScriptController(IFileContentProvider fileContentProvider)
         {
             _fileContentProvider = fileContentProvider;
         }

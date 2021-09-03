@@ -1,31 +1,35 @@
-﻿using DummyPlugin;
-using HelperFunctions;
+﻿using HelperFunctions;
 using Jint;
+using ScriptBee.ProjectContext;
 using ScriptBee.Utils.ValidScriptExtractors;
 
 namespace ScriptBee.Scripts.ScriptRunners
 {
-    public class JavascriptDummyScriptRunner : DummyScriptRunner
+    public class JavascriptScriptRunner : IScriptRunner
     {
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
 
-        public JavascriptDummyScriptRunner(IHelperFunctionsMapper helperFunctionsMapper) : base(
-            new JavascriptValidScriptExtractor())
+        private readonly ValidScriptExtractor _scriptExtractor;
+
+
+        public JavascriptScriptRunner(IHelperFunctionsMapper helperFunctionsMapper,
+            ValidScriptExtractor scriptExtractor)
         {
             _helperFunctionsMapper = helperFunctionsMapper;
+            _scriptExtractor = scriptExtractor;
         }
 
-        public override void RunScript(DummyModel dummyModel, string script)
+        public void Run(Project project, string scriptContent)
         {
             var engine = new Engine();
-            engine.SetValue("model", dummyModel);
+            engine.SetValue("context", project.Context);
 
             foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary())
             {
                 engine.SetValue(functionName, delegateFunction);
             }
 
-            var validScript = scriptExtractor.ExtractValidScript(script);
+            var validScript = _scriptExtractor.ExtractValidScript(scriptContent);
             engine.Execute(validScript);
         }
     }

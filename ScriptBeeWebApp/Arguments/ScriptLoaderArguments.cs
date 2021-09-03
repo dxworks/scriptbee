@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ScriptBeeWebApp
+namespace ScriptBeeWebApp.Arguments
 {
     public class ScriptLoaderArguments
     {

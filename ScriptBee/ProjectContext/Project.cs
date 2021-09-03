@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ScriptBeePlugin;
 
-namespace ScriptBee.Project
+namespace ScriptBee.ProjectContext
 {
     public class Project
     {

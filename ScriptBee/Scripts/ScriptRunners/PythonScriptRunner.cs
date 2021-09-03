@@ -1,28 +1,30 @@
 ﻿using System.Collections.Generic;
-using DummyPlugin;
 using HelperFunctions;
 using IronPython.Hosting;
+using ScriptBee.ProjectContext;
 using ScriptBee.Utils.ValidScriptExtractors;
 
 namespace ScriptBee.Scripts.ScriptRunners
 {
-    public class PythonDummyScriptRunner : DummyScriptRunner
+    public class PythonScriptRunner : IScriptRunner
     {
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
 
-        public PythonDummyScriptRunner(IHelperFunctionsMapper helperFunctionsMapper) : base(
-            new PythonValidScriptExtractor())
+        private readonly ValidScriptExtractor _scriptExtractor;
+
+        public PythonScriptRunner(IHelperFunctionsMapper helperFunctionsMapper, ValidScriptExtractor scriptExtractor)
         {
             _helperFunctionsMapper = helperFunctionsMapper;
+            _scriptExtractor = scriptExtractor;
         }
 
-        public override void RunScript(DummyModel dummyModel, string script)
+        public void Run(Project project, string scriptContent)
         {
             var pythonEngine = Python.CreateEngine();
             var dictionary = new Dictionary<string, object>
             {
                 {
-                    "model", dummyModel
+                    "context", project.Context
                 },
             };
 
@@ -33,7 +35,7 @@ namespace ScriptBee.Scripts.ScriptRunners
 
             var scriptScope = pythonEngine.CreateScope(dictionary);
 
-            var validScript = scriptExtractor.ExtractValidScript(script);
+            var validScript = _scriptExtractor.ExtractValidScript(scriptContent);
             pythonEngine.Execute(validScript, scriptScope);
         }
     }

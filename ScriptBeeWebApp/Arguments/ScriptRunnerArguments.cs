@@ -1,4 +1,4 @@
-﻿namespace ScriptBeeWebApp
+﻿namespace ScriptBeeWebApp.Arguments
 {
     public class ScriptRunnerArguments
     {

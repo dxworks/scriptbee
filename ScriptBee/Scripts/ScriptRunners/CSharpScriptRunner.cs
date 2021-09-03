@@ -3,28 +3,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DummyPlugin;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using ScriptBee.Scripts.ScriptRunners.Exceptions;
-using DummyPlugin;
 using ScriptBee.PluginManager;
+using ScriptBee.Scripts.ScriptRunners.Exceptions;
+using Project = ScriptBee.ProjectContext.Project;
 
 namespace ScriptBee.Scripts.ScriptRunners
 {
-    public class CSharpDummyScriptRunner : DummyScriptRunner
+    public class CSharpScriptRunner : IScriptRunner
     {
         private readonly IPluginPathReader _pluginPathReader;
 
-        public CSharpDummyScriptRunner(IPluginPathReader pluginPathReader)
+        public CSharpScriptRunner(IPluginPathReader pluginPathReader)
         {
             _pluginPathReader = pluginPathReader;
         }
 
-        public override void RunScript(DummyModel dummyModel, string script)
+        public void RunScript(DummyModel dummyModel, string script)
         {
             var compiledScript = CompileScript(script);
 
             ExecuteScript(dummyModel, compiledScript);
+        }
+
+        public void Run(Project project, string scriptContent)
+        {
+            // var compiledScript = CompileScript(scriptContent);
+            //
+            // ExecuteScript(dummyModel, compiledScript);
         }
 
         private void ExecuteScript(DummyModel dummyModel, Assembly compiledScript)

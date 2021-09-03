@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using ScriptBeePlugin;
 
 namespace HelperFunctions
 {
@@ -21,6 +24,11 @@ namespace HelperFunctions
         {
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             File.WriteAllText(filePath, text);
+        }
+
+        public static Dictionary<string, ScriptBeeModel> Get(Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> arg)
+        {
+            return arg.Select(pair => pair.Value).FirstOrDefault();
         }
     }
 }

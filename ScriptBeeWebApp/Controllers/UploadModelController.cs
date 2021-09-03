@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.PluginManager;
-using ScriptBee.Project;
+using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBeeWebApp.Arguments;
 using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.FolderManager;
 
@@ -35,7 +36,7 @@ namespace ScriptBeeWebApp.Controllers
         }
 
         [HttpPost("fromfile")]
-        public async Task<IActionResult> PostUsingFile(IFormCollection formData)
+        public async Task<IActionResult> PostFromFile(IFormCollection formData)
         {
             if (!formData.TryGetValue("modelType", out var modelType))
             {
@@ -70,7 +71,7 @@ namespace ScriptBeeWebApp.Controllers
         }
 
         [HttpPost("frompath")]
-        public async Task<IActionResult> PostUsingPath(ScriptLoaderArguments scriptLoaderArguments)
+        public async Task<IActionResult> PostFromPath(ScriptLoaderArguments scriptLoaderArguments)
         {
             if (scriptLoaderArguments.modelType == null)
             {

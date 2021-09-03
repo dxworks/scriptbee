@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ScriptBeePlugin;
 
 namespace HelperFunctions
 {
@@ -11,7 +12,8 @@ namespace HelperFunctions
         {
             _functionsDictionary = new Dictionary<string, Delegate>
             {
-                {"print", new Action<object>(HelperFunctions.Print)}
+                {"print", new Action<object>(HelperFunctions.Print)},
+                {"get", new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>, Dictionary<string, ScriptBeeModel>>(HelperFunctions.Get)}
             };
         }
 
