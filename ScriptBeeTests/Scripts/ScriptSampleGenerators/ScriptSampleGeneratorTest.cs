@@ -1,5 +1,4 @@
-﻿using DummyPlugin;
-using ScriptBee.Scripts.ScriptSampleGenerators;
+﻿using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using Xunit;
 

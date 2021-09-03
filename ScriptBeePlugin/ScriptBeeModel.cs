@@ -1,6 +1,8 @@
-﻿namespace ScriptBeePlugin
+﻿using Westwind.Utilities;
+
+namespace ScriptBeePlugin
 {
-    public class ScriptBeeModel
+    public class ScriptBeeModel : Expando
     {
         
     }
