@@ -24,9 +24,9 @@ namespace DummyPlugin
             return exposedEntities;
         }
 
-        public string GetModelName()
+        public string GetName()
         {
-            return "dummy";
+            return "Dummy";
         }
     }
 }

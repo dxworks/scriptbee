@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.PluginManager;
+using ScriptBee.Project;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.FolderManager;
@@ -21,11 +22,14 @@ namespace ScriptBeeWebApp.Controllers
 
         private readonly IFileContentProvider _fileContentProvider;
 
-        public UploadModelController(IFolderWriter folderWriter, ILoadersHolder loadersHolder, IFileContentProvider fileContentProvider)
+        private readonly IProjectManager _projectManager;
+
+        public UploadModelController(IFolderWriter folderWriter, ILoadersHolder loadersHolder, IFileContentProvider fileContentProvider, IProjectManager projectManager)
         {
             _folderWriter = folderWriter;
             _loadersHolder = loadersHolder;
             _fileContentProvider = fileContentProvider;
+            _projectManager = projectManager;
             _folderWriter.Initialize();
         }
         
@@ -59,7 +63,9 @@ namespace ScriptBeeWebApp.Controllers
 
             var dictionary = modelLoader.LoadModel(fileContents);
             
-            return Ok(dictionary.First().Value.First());
+            _projectManager.AddToProject(dictionary, modelLoader.GetName());
+            
+            return Ok();
         }
     }
 }

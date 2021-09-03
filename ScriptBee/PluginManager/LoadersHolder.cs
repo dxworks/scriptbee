@@ -10,7 +10,7 @@ namespace ScriptBee.PluginManager
 
         public void AddLoaderToDictionary(IModelLoader loader)
         {
-            string loaderName = loader.GetModelName();
+            string loaderName = loader.GetName();
             
             if (!loaders.ContainsKey(loaderName))
             {

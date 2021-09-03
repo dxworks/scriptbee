@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ScriptBee.PluginManager;
+using ScriptBee.Project;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeePlugin;
 using ScriptBeeWebApp.Config;
@@ -32,6 +33,7 @@ namespace ScriptBeeWebApp
             services.AddSingleton<IFolderWriter, FolderWriter>();
             services.AddSingleton<ILoadersHolder, LoadersHolder>();
             services.AddSingleton<IFileContentProvider, FileContentProvider>();
+            services.AddSingleton<IProjectManager, ProjectManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

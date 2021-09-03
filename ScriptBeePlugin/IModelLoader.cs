@@ -6,6 +6,6 @@ namespace ScriptBeePlugin
     {
         public Dictionary<string, Dictionary<string, ScriptBeeModel>> LoadModel(List<string> fileContents, Dictionary<string, object> configuration = null);
 
-        public string GetModelName();
+        public string GetName();
     }
 }
