@@ -25,7 +25,7 @@ namespace ScriptBee.ProjectContext
             }
         }
 
-        public Project GetProject()
+        public Project GetProject(string projectId)
         {
             return _project;
         }

@@ -1,5 +1,5 @@
 ﻿$START_COMMENT$
 
-print(model)
+print(project)
 
 $END_COMMENT$

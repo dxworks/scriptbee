@@ -66,7 +66,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateModelDeclaration(string modelType)
         {
-            return $"let model = new {modelType}();";
+            return $"let project = new {modelType}();";
         }
 
         public string GenerateSampleCode()

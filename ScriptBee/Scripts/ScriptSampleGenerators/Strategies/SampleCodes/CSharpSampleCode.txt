@@ -2,8 +2,8 @@
 
 public class $CLASS_NAME$
 {
-    public void $METHOD_NAME$($MODEL_TYPE$ model)
+    public void $METHOD_NAME$($MODEL_TYPE$ project)
     {
-        Console.WriteLine(model);
+        Console.WriteLine(project);
     }
 }

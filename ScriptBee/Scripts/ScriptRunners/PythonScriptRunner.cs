@@ -24,7 +24,7 @@ namespace ScriptBee.Scripts.ScriptRunners
             var dictionary = new Dictionary<string, object>
             {
                 {
-                    "context", project.Context
+                    "project", project
                 },
             };
 

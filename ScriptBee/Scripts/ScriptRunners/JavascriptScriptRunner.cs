@@ -22,7 +22,7 @@ namespace ScriptBee.Scripts.ScriptRunners
         public void Run(Project project, string scriptContent)
         {
             var engine = new Engine();
-            engine.SetValue("context", project.Context);
+            engine.SetValue("project", project);
 
             foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(project.ProjectId))
             {
