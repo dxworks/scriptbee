@@ -23,8 +23,4 @@
         <ProjectReference Include="..\HelperFunctions\HelperFunctions.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\DummyPlugin\DummyPlugin.csproj" />
-    </ItemGroup>
-
 </Project>
