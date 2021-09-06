@@ -24,7 +24,7 @@ namespace ScriptBee.Scripts.ScriptRunners
             var engine = new Engine();
             engine.SetValue("context", project.Context);
 
-            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary())
+            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(project.ProjectId))
             {
                 engine.SetValue(functionName, delegateFunction);
             }

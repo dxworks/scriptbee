@@ -6,20 +6,28 @@ namespace HelperFunctions
 {
     public class HelperFunctionsMapper : IHelperFunctionsMapper
     {
-        private readonly IDictionary<string, Delegate> _functionsDictionary;
+        private readonly HelperFunctions _helperFunctions;
+        private readonly Dictionary<string, Delegate> _dictionary;
 
         public HelperFunctionsMapper()
         {
-            _functionsDictionary = new Dictionary<string, Delegate>
+            _helperFunctions = new HelperFunctions();
+            _dictionary = new Dictionary<string, Delegate>
             {
-                {"print", new Action<object>(HelperFunctions.Print)},
-                {"get", new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>, Dictionary<string, ScriptBeeModel>>(HelperFunctions.Get)}
+                {"print", new Action<object>(_helperFunctions.Print)},
+                {
+                    "get",
+                    new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>,
+                        Dictionary<string, ScriptBeeModel>>(_helperFunctions.Get)
+                },
+                {"printfile", new Action<string, string>(_helperFunctions.WriteToFile)},
             };
         }
 
-        public IDictionary<string, Delegate> GetFunctionsDictionary()
+        public IDictionary<string, Delegate> GetFunctionsDictionary(string projectId)
         {
-            return _functionsDictionary;
+            _helperFunctions.ProjectId = projectId;
+            return _dictionary;
         }
     }
 }

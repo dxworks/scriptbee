@@ -36,7 +36,7 @@ namespace ScriptBeeWebApp.Controllers
         }
 
         [HttpPost("fromfile")]
-        public async Task<IActionResult> PostFromFile(IFormCollection formData)
+        public async Task<IActionResult> UploadFromFile(IFormCollection formData)
         {
             if (!formData.TryGetValue("modelType", out var modelType))
             {
@@ -71,7 +71,7 @@ namespace ScriptBeeWebApp.Controllers
         }
 
         [HttpPost("frompath")]
-        public async Task<IActionResult> PostFromPath(ScriptLoaderArguments scriptLoaderArguments)
+        public async Task<IActionResult> UploadFromPath(ScriptLoaderArguments scriptLoaderArguments)
         {
             if (scriptLoaderArguments.modelType == null)
             {

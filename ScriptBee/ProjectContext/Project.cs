@@ -7,5 +7,7 @@ namespace ScriptBee.ProjectContext
     public class Project
     {
         public Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> Context { get; set; } = new();
+
+        public string ProjectId { get; set; }
     }
 }

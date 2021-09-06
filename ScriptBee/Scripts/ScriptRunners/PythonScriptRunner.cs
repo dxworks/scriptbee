@@ -28,7 +28,8 @@ namespace ScriptBee.Scripts.ScriptRunners
                 },
             };
 
-            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary())
+            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
+                project.ProjectId))
             {
                 dictionary.Add(functionName, delegateFunction);
             }

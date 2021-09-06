@@ -27,7 +27,7 @@ namespace ScriptBeeWebApp.Controllers
         }
 
         [HttpPost("fromfile")]
-        public async Task<IActionResult> PostFromFile(IFormCollection formData)
+        public async Task<IActionResult> RunScriptFileContent(IFormCollection formData)
         {
             if (!formData.TryGetValue("scriptType", out var scriptType))
             {
