@@ -1,0 +1,5 @@
+﻿class DeepModel:
+    floatField: float
+    recursiveModel1: RecursiveModel
+    recursiveModel2: RecursiveModel2
+    empty: EmptyModel

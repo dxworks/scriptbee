@@ -1,0 +1,4 @@
+﻿class DummyModel:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool

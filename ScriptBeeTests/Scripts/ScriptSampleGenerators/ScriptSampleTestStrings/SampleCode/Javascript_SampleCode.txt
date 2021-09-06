@@ -1,0 +1,7 @@
+﻿let project = new Project();
+
+// start script
+
+print(project);
+
+// end script

@@ -1,0 +1,7 @@
+﻿class RecursiveModel
+{
+    longField = 0;
+    dummyField1 = new DummyModel();
+    recursiveModel = new RecursiveModel();
+    dummyField2 = new DummyModel();
+}

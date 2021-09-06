@@ -1,0 +1,7 @@
+﻿project: Project
+
+# start script
+
+print(project)
+
+# end script

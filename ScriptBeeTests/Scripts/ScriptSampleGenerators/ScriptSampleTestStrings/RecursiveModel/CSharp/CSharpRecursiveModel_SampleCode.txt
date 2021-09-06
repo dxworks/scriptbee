@@ -1,0 +1,11 @@
+﻿using System;
+
+// Only the code written in the ExecuteScript method will be executed
+
+public class ScriptContent
+{
+    public void ExecuteScript(RecursiveModel model)
+    {
+        Console.WriteLine(model);
+    }
+}

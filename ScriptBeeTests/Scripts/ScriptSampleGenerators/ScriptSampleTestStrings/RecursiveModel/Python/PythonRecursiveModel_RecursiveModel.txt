@@ -1,0 +1,5 @@
+﻿class RecursiveModel:
+    longField: long
+    dummyField1: DummyModel
+    recursiveModel: RecursiveModel
+    dummyField2: DummyModel

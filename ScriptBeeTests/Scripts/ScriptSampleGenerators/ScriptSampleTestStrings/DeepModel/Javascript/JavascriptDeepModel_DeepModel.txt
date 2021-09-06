@@ -1,0 +1,7 @@
+﻿class DeepModel
+{
+    floatField = 0;
+    recursiveModel1 = new RecursiveModel();
+    recursiveModel2 = new RecursiveModel2();
+    empty = new EmptyModel();
+}

@@ -1,0 +1,7 @@
+﻿public class RecursiveModel
+{
+    public long longField;
+    public DummyModel dummyField1;
+    public RecursiveModel recursiveModel;
+    public DummyModel dummyField2 { get; set; }
+}

@@ -1,0 +1,6 @@
+﻿class RecursiveModel2
+{
+    dummyField1 = new DummyModel();
+    dummyField2 = new DummyModel();
+    value = '';
+}

@@ -1,0 +1,4 @@
+﻿class RecursiveModel2:
+    dummyField1: DummyModel
+    dummyField2: DummyModel
+    value: str

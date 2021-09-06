@@ -1,0 +1,7 @@
+﻿let model = new DeepModel();
+
+// start script
+
+print(model);
+
+// end script

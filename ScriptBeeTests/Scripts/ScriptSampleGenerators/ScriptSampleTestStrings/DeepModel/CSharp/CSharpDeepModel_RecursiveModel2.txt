@@ -1,0 +1,6 @@
+﻿public class RecursiveModel2
+{
+    public DummyModel dummyField1;
+    public DummyModel dummyField2;
+    public char value;
+}
