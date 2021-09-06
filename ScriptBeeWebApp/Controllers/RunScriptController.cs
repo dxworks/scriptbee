@@ -34,6 +34,17 @@ namespace ScriptBeeWebApp.Controllers
                 return BadRequest("Missing script type");
             }
 
+            if (!formData.TryGetValue("projectId", out var projectId))
+            {
+                return BadRequest("Missing project id");
+            }
+
+            var project = _projectManager.GetProject(projectId);
+            if (project == null)
+            {
+                return NotFound($"Could not find project with id: {projectId}");
+            }
+
             List<string> scriptContents = new List<string>();
 
             foreach (var file in formData.Files)
@@ -52,7 +63,6 @@ namespace ScriptBeeWebApp.Controllers
                 return BadRequest($"Script type {scriptType} is not supported");
             }
 
-            var project = _projectManager.GetProject();
 
             foreach (var scriptContent in scriptContents)
             {

@@ -1,7 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
-using DummyPlugin;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 
@@ -12,81 +13,84 @@ namespace ScriptBeeWebApp.Controllers
     public class GenerateScriptController : ControllerBase
     {
         private readonly IFileContentProvider _fileContentProvider;
+        private readonly IProjectManager _projectManager;
 
-        public GenerateScriptController(IFileContentProvider fileContentProvider)
+        public GenerateScriptController(IFileContentProvider fileContentProvider, IProjectManager projectManager)
         {
             _fileContentProvider = fileContentProvider;
+            _projectManager = projectManager;
         }
 
-        [HttpGet("{modelType}/{scriptType}")]
-        public IActionResult Get(string modelType, string scriptType)
+        [HttpGet("{projectId}/{scriptType}")]
+        public IActionResult Get(string projectId, string scriptType)
         {
-            switch (modelType)
+            var project = _projectManager.GetProject(projectId);
+            if (project == null)
             {
-                case "dummy":
+                return NotFound($"Could not find project with id: {projectId}");
+            }
+
+            var classes = new List<object>();
+
+            foreach (var (_, dictionary) in project.Context)
+            {
+                foreach (var (_, model) in dictionary)
                 {
-                    switch (scriptType)
-                    {
-                        case "python":
-                        {
-                            var generatedTemplate =
-                                new ScriptSampleGenerator(new PythonStrategyGenerator(_fileContentProvider)).Generate(
-                                    typeof(DummyModel));
+                    classes.Add(model);
+                }
+            }
 
-                            var zipStream = CreateFileZipStream("script.py", generatedTemplate);
+            switch (scriptType)
+            {
+                case "python":
+                {
+                    var sampleCode = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider))
+                        .GetSampleCode(classes);
 
-                            return File(zipStream, "application/octet-stream", "DummyPythonSampleCode.zip");
-                        }
-                        case "javascript":
-                        {
-                            var generatedTemplate =
-                                new ScriptSampleGenerator(new JavascriptStrategyGenerator(_fileContentProvider))
-                                    .Generate(
-                                        typeof(DummyModel));
+                    var zipStream = CreateFileZipStream(sampleCode, ".py");
+                    return File(zipStream, "application/octet-stream", "DummyPythonSampleCode.zip");
+                }
+                case "javascript":
+                {
+                    var sampleCode = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider))
+                        .GetSampleCode(classes);
 
-                            var zipStream = CreateFileZipStream("script.js", generatedTemplate);
+                    var zipStream = CreateFileZipStream(sampleCode, ".js");
+                    return File(zipStream, "application/octet-stream", "DummyJavascriptSampleCode.zip");
+                }
+                case "csharp":
+                {
+                    var sampleCode = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider))
+                        .GetSampleCode(classes);
 
-                            return File(zipStream, "application/octet-stream", "DummyJavascriptSampleCode.zip");
-                        }
-                        case "csharp":
-                        {
-                            var generatedTemplate =
-                                new ScriptSampleGenerator(new CSharpStrategyGenerator(_fileContentProvider)).Generate(
-                                    typeof(DummyModel));
+                    var zipStream = CreateFileZipStream(sampleCode, ".cs");
 
-                            var zipStream = CreateFileZipStream("script.cs", generatedTemplate);
-
-                            return File(zipStream, "application/octet-stream", "DummyCSharpSampleCode.zip");
-                        }
-                        default:
-                        {
-                            return BadRequest($"Script type {scriptType} is not supported");
-                        }
-                    }
+                    return File(zipStream, "application/octet-stream", "DummyCSharpSampleCode.zip");
                 }
                 default:
                 {
-                    return BadRequest($"Model type {modelType} is not supported");
+                    return BadRequest($"Script type {scriptType} is not supported");
                 }
             }
         }
 
-        private Stream CreateFileZipStream(string fileName, string fileContent)
+        private Stream CreateFileZipStream(IList<SampleCodeFile> sampleCode, string extension)
         {
             var zipStream = new MemoryStream();
-
             using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
             {
-                var zipArchiveEntry = zip.CreateEntry(fileName);
-
-                using (StreamWriter writer = new StreamWriter(zipArchiveEntry.Open()))
+                foreach (var sampleCodeFile in sampleCode)
                 {
-                    writer.Write(fileContent);
+                    var zipArchiveEntry = zip.CreateEntry(sampleCodeFile.Name + extension);
+
+                    using (StreamWriter writer = new StreamWriter(zipArchiveEntry.Open()))
+                    {
+                        writer.Write(sampleCodeFile.Content);
+                    }
                 }
             }
 
             zipStream.Position = 0;
-
             return zipStream;
         }
     }
