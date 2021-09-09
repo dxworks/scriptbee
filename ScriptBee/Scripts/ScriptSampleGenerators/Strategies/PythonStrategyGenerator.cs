@@ -1,4 +1,7 @@
-﻿using ScriptBee.Utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using ScriptBee.Utils;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
@@ -72,6 +75,27 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         public string GenerateProperty(string propertyModifier, string propertyType, string propertyName)
         {
             return GenerateField(propertyModifier, propertyType, propertyName);
+        }
+
+        public string GenerateMethod(string methodModifier, string methodType, string methodName, List<Tuple<string, string>> methodParams)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append($"    def {methodName}(");
+            
+            for (var i = 0; i < methodParams.Count; i++)
+            {
+                var tuple = methodParams[i];
+                stringBuilder.Append($"{tuple.Item2}");
+                if (i != methodParams.Count - 1)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.AppendLine("):");
+            stringBuilder.AppendLine("        pass");
+
+            return stringBuilder.ToString();
         }
 
         public string GenerateModelDeclaration(string modelType)

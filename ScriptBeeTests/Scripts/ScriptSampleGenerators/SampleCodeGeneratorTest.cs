@@ -31,9 +31,8 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             
             Assert.Equal("DummyModel",sampleCode[0].Name);
             Assert.Equal("script",sampleCode[1].Name);
-
         }
-
+        
         [Fact]
         public void Generate_WithJavascriptStrategy_MainModelGivenAsObject_ShouldReturnJavascriptSimpleModel()
         {
@@ -54,6 +53,76 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal(sampleCodeContent, sampleCode[1].Content);
             
             Assert.Equal("DummyModel",sampleCode[0].Name);
+            Assert.Equal("script",sampleCode[1].Name);
+        }
+        
+        
+        [Fact]
+        public void Generate_WithCsharpStrategy_DummyModelWithMethods_ShouldReturnCSharpSimpleModelWithMethods()
+        {
+            var modelContent =
+                _fileContentProvider.GetFileContent(
+                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods.txt");
+
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(
+                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt");
+            
+            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider));
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
+            
+            Assert.Equal(2, sampleCode.Count);
+            
+            Assert.Equal(modelContent, sampleCode[0].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
+            
+            Assert.Equal("DummyModelWithMethods",sampleCode[0].Name);
+            Assert.Equal("script",sampleCode[1].Name);
+        }
+        
+        [Fact]
+        public void Generate_WithPythonStrategy_DummyModelWithMethods_ShouldReturnPythonSimpleModel()
+        {
+            var modelContent =
+                _fileContentProvider.GetFileContent(
+                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/PythonDummyModel_WithMethods.txt");
+
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(
+                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt");
+            
+            _sampleCodeGenerator = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider));
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
+            
+            Assert.Equal(2, sampleCode.Count);
+            
+            Assert.Equal(modelContent, sampleCode[0].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
+            
+            Assert.Equal("DummyModelWithMethods",sampleCode[0].Name);
+            Assert.Equal("script",sampleCode[1].Name);
+        }
+
+        [Fact]
+        public void Generate_WithJavascriptStrategy_DummyModelWithMethods_ShouldReturnJavascriptSimpleModel()
+        {
+            var modelContent =
+                _fileContentProvider.GetFileContent(
+                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/JavascriptDummyModel_WithMethods.txt");
+
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(
+                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
+            
+            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
+            
+            Assert.Equal(2, sampleCode.Count);
+            
+            Assert.Equal(modelContent, sampleCode[0].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
+            
+            Assert.Equal("DummyModelWithMethods",sampleCode[0].Name);
             Assert.Equal("script",sampleCode[1].Name);
         }
 

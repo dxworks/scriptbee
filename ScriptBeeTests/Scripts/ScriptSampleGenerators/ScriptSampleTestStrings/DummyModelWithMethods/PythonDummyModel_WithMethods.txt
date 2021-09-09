@@ -1,0 +1,13 @@
+﻿class DummyModelWithMethods:
+    DummyNumber: int
+    DummyString: str
+    IsDummy: bool
+
+    def SayHello():
+        pass
+
+    def GetDouble():
+        pass
+
+    def PrintNames(name1, name2, number):
+        pass

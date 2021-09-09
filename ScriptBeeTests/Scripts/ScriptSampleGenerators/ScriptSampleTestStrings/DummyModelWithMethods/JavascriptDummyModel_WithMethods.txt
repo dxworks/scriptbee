@@ -1,0 +1,20 @@
+﻿class DummyModelWithMethods
+{
+    DummyNumber = 0;
+    DummyString = '';
+    IsDummy = true;
+
+    SayHello: function()
+    {
+        return '';
+    }
+
+    GetDouble: function()
+    {
+        return 0;
+    }
+
+    PrintNames: function(name1, name2, number)
+    {
+    }
+}

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using ScriptBee.ProjectContext;
 
 // Only the code written in the ExecuteScript method will be executed
 
