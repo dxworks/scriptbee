@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
@@ -100,7 +101,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
             foreach (var fieldInfo in type.GetFields())
             {
-                var modifier = GetModifier(fieldInfo);
+                var modifier = GetFieldModifier(fieldInfo);
                 stringBuilder.AppendLine(_strategyGenerator.GenerateField(modifier, fieldInfo.FieldType.Name,
                     fieldInfo.Name));
                 if (IsPrimitive(fieldInfo.FieldType))
@@ -132,6 +133,24 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
             foreach (var methodInfo in type.GetMethods())
             {
+                if (methodInfo.IsSpecialName || methodInfo.Module.Name == "System.Private.CoreLib.dll" )
+                {
+                    continue;
+                }
+                var modifier = GetMethodModifier(methodInfo);
+                var methodParameters = methodInfo.GetParameters();
+
+                List<Tuple<string, string>> parameters = new List<Tuple<string, string>>();
+                
+                foreach (var param in methodParameters)
+                {
+                    parameters.Add(new Tuple<string, string>(param.ParameterType.Name, param.Name));
+                }
+
+                stringBuilder.AppendLine();
+                
+                stringBuilder.Append(_strategyGenerator.GenerateMethod(modifier, methodInfo.ReturnType.Name,
+                    methodInfo.Name, parameters));
             }
 
             // 4 = default object methods
@@ -174,7 +193,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             return type.IsPrimitive || type.Name is "string" or "System.String" or "String";
         }
 
-        private string GetModifier(FieldInfo fieldInfo)
+        private string GetFieldModifier(FieldInfo fieldInfo)
         {
             var modifier = "public";
             if (fieldInfo.IsPrivate)
@@ -182,6 +201,21 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                 modifier = "private";
             }
             else if (fieldInfo.IsFamily)
+            {
+                modifier = "protected";
+            }
+
+            return modifier;
+        }
+        
+        private string GetMethodModifier(MethodInfo methodInfo)
+        {
+            var modifier = "public";
+            if (methodInfo.IsPrivate)
+            {
+                modifier = "private";
+            }
+            else if (methodInfo.IsFamily)
             {
                 modifier = "protected";
             }

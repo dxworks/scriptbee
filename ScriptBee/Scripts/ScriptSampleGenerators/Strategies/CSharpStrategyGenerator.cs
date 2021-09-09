@@ -1,4 +1,8 @@
-﻿using ScriptBee.Utils;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using ScriptBee.Utils;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
@@ -40,6 +44,36 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         {
             propertyType = GetPrimitiveType(propertyType);
             return $"    {propertyModifier} {propertyType} {propertyName} {{ get; set; }}";
+        }
+
+        public string GenerateMethod(string methodModifier, string methodType, string methodName, List<Tuple<string, string>> methodParams)
+        {
+            var stringBuilder = new StringBuilder();
+            methodType = GetMethodType(methodType);
+            stringBuilder.Append($"    {methodModifier} {methodType} {methodName}(");
+            
+            for (var i = 0; i < methodParams.Count; i++)
+            {
+                var tuple = methodParams[i];
+                var type = GetPrimitiveType(tuple.Item1);
+                stringBuilder.Append($"{type} {tuple.Item2}");
+                if (i != methodParams.Count - 1)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.AppendLine(")");
+            stringBuilder.AppendLine("    {");
+
+            if (methodType != "void")
+            {
+                stringBuilder.AppendLine("        return default;");
+            }
+            
+            stringBuilder.AppendLine("    }");
+
+            return stringBuilder.ToString();
         }
 
         public string GenerateModelDeclaration(string modelType)
@@ -152,6 +186,21 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             }
 
             return type;
+        }
+        
+        private string GetMethodType(string type)
+        {
+            switch (type)
+            {
+                case "Void":
+                {
+                    return "void";
+                }
+                default:
+                {
+                    return GetPrimitiveType(type);
+                }
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
+﻿using System;
+using System.Collections.Generic;
+
+namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
     public interface IStrategyGenerator
     {
@@ -11,6 +14,9 @@
         public string GenerateField(string fieldModifier, string fieldType, string fieldName);
         
         public string GenerateProperty(string propertyModifier, string propertyType, string propertyName);
+
+        public string GenerateMethod(string methodModifier, string methodType, string methodName,
+            List<Tuple<string, string>> methodParams);
 
         public string GenerateModelDeclaration(string modelType);
 
