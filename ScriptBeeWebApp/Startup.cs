@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeePlugin;
-using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.FolderManager;
 
 namespace ScriptBeeWebApp

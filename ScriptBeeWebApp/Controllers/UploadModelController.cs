@@ -4,11 +4,11 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeeWebApp.Arguments;
-using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.FolderManager;
 
 namespace ScriptBeeWebApp.Controllers
@@ -38,9 +38,9 @@ namespace ScriptBeeWebApp.Controllers
         [HttpPost("fromfile")]
         public async Task<IActionResult> UploadFromFile(IFormCollection formData)
         {
-            if (!formData.TryGetValue("modelType", out var modelType))
+            if (!formData.TryGetValue("loaderName", out var loaderName))
             {
-                return BadRequest("Missing model type");
+                return BadRequest("Missing loader name");
             }
 
             if (!formData.TryGetValue("projectId", out var projectId))
@@ -55,11 +55,11 @@ namespace ScriptBeeWebApp.Controllers
                 return NotFound($"Could not find project with id: {projectId}");
             }
 
-            var modelLoader = _loadersHolder.GetModelLoader(modelType[0]);
+            var modelLoader = _loadersHolder.GetModelLoader(loaderName[0]);
 
             if (modelLoader == null)
             {
-                return BadRequest($"Model type {modelType[0]} is not supported");
+                return BadRequest($"Model type {loaderName[0]} is not supported");
             }
 
             List<string> fileContents = new List<string>();
@@ -68,7 +68,7 @@ namespace ScriptBeeWebApp.Controllers
             {
                 if (file.Length > 0)
                 {
-                    string filePath = Path.Combine(ConfigFolders.PathToModels, modelType[0], file.FileName);
+                    string filePath = Path.Combine(ConfigFolders.PathToModels, loaderName[0], file.FileName);
                     await _folderWriter.WriteToFile(filePath, file);
                     string fileContent = await _fileContentProvider.GetFileContentAsync(filePath);
                     fileContents.Add(fileContent);
@@ -85,9 +85,9 @@ namespace ScriptBeeWebApp.Controllers
         [HttpPost("frompath")]
         public async Task<IActionResult> UploadFromPath(ScriptLoaderArguments scriptLoaderArguments)
         {
-            if (scriptLoaderArguments.modelType == null)
+            if (scriptLoaderArguments.loaderName == null)
             {
-                return BadRequest("Missing model type");
+                return BadRequest("Missing loader name");
             }
 
             if (scriptLoaderArguments.projectId == null)
@@ -102,11 +102,11 @@ namespace ScriptBeeWebApp.Controllers
                 return NotFound($"Could not find project with id: {scriptLoaderArguments.projectId}");
             }
 
-            var modelLoader = _loadersHolder.GetModelLoader(scriptLoaderArguments.modelType);
+            var modelLoader = _loadersHolder.GetModelLoader(scriptLoaderArguments.loaderName);
 
             if (modelLoader == null)
             {
-                return BadRequest($"Model type {scriptLoaderArguments.modelType} is not supported");
+                return BadRequest($"Model type {scriptLoaderArguments.loaderName} is not supported");
             }
 
             List<string> fileContents = new List<string>();

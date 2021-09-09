@@ -17,16 +17,15 @@ namespace HelperFunctions
                 {"print", new Action<object>(_helperFunctions.Print)},
                 {
                     "get",
-                    new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>,
-                        Dictionary<string, ScriptBeeModel>>(_helperFunctions.Get)
+                    new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>, string, IEnumerable<Dictionary<string, ScriptBeeModel>>>(_helperFunctions.Get)
                 },
-                {"printfile", new Action<string, string>(_helperFunctions.WriteToFile)},
+                {"printf", new Action<string, string>(_helperFunctions.WriteToFile)},
             };
         }
 
-        public IDictionary<string, Delegate> GetFunctionsDictionary(string projectId)
+        public IDictionary<string, Delegate> GetFunctionsDictionary(string folderPath)
         {
-            _helperFunctions.ProjectId = projectId;
+            _helperFunctions.OutputFolderPath = folderPath;
             return _dictionary;
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using HelperFunctions;
 using IronPython.Hosting;
+using ScriptBee.Config;
 using ScriptBee.ProjectContext;
 using ScriptBee.Utils.ValidScriptExtractors;
 
@@ -28,8 +30,10 @@ namespace ScriptBee.Scripts.ScriptRunners
                 },
             };
 
+            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.ProjectId);
+
             foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
-                project.ProjectId))
+                outputFolderPath))
             {
                 dictionary.Add(functionName, delegateFunction);
             }

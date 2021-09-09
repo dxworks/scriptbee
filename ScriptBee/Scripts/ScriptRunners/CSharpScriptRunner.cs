@@ -93,7 +93,7 @@ namespace ScriptBee.Scripts.ScriptRunners
             }
 
             if (errors.Count > 0)
-            { 
+            {
                 var errorMessage = errors.Aggregate("", (current, error) => current + error + "\n");
                 throw new CompilationErrorException(errorMessage);
             }

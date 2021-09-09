@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using HelperFunctions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptRunners;
 using ScriptBee.Utils.ValidScriptExtractors;
-using ScriptBeeWebApp.Config;
 using ScriptBeeWebApp.Extensions;
 
 namespace ScriptBeeWebApp.Controllers
@@ -33,6 +33,13 @@ namespace ScriptBeeWebApp.Controllers
             {
                 return BadRequest("Missing script type");
             }
+            
+            var scriptRunner = GetScriptRunner(scriptType);
+
+            if (scriptRunner == null)
+            {
+                return BadRequest($"Script type {scriptType} is not supported");
+            }
 
             if (!formData.TryGetValue("projectId", out var projectId))
             {
@@ -55,15 +62,7 @@ namespace ScriptBeeWebApp.Controllers
                     scriptContents.Add(scriptContent);
                 }
             }
-
-            var scriptRunner = GetScriptRunner(scriptType);
-
-            if (scriptRunner == null)
-            {
-                return BadRequest($"Script type {scriptType} is not supported");
-            }
-
-
+            
             foreach (var scriptContent in scriptContents)
             {
                 scriptRunner.Run(project, scriptContent);

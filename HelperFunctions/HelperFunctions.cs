@@ -9,7 +9,7 @@ namespace HelperFunctions
 {
     public class HelperFunctions
     {
-        public string ProjectId { private get; set; }
+        public string OutputFolderPath { private get; set; }
 
         public void Print(object obj)
         {
@@ -22,19 +22,17 @@ namespace HelperFunctions
             WriteToFile(serializedObj, exportPath);
         }
 
-        public Dictionary<string, ScriptBeeModel> Get(
-            Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> arg)
+        public IEnumerable<Dictionary<string, ScriptBeeModel>> Get(
+            Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> context, string exportedType )
         {
-            //todo remove FirstOrDefault to return a Collection of Dictionary<string, ScriptBeeModel>
-            //use exportedType as parameter to the function
-            var exportedType = "";
-            return arg.Where(pair => pair.Key.Item1.Equals(exportedType)).Select(pair => pair.Value).FirstOrDefault();
+            return context.Where(pair => pair.Key.Item1.Equals(exportedType)).Select(pair => pair.Value).ToList();
         }
 
         public void WriteToFile(string text, string filePath)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-            File.WriteAllText(filePath, text);
+            var outputPath = Path.Combine(OutputFolderPath, filePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+            File.WriteAllText(outputPath, text);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using HelperFunctions;
+﻿using System.IO;
+using HelperFunctions;
 using Jint;
+using ScriptBee.Config;
 using ScriptBee.ProjectContext;
 using ScriptBee.Utils.ValidScriptExtractors;
 
@@ -24,7 +26,10 @@ namespace ScriptBee.Scripts.ScriptRunners
             var engine = new Engine();
             engine.SetValue("project", project);
 
-            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(project.ProjectId))
+            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.ProjectId);
+
+            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
+                outputFolderPath))
             {
                 engine.SetValue(functionName, delegateFunction);
             }

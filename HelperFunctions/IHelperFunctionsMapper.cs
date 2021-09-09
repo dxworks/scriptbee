@@ -5,6 +5,6 @@ namespace HelperFunctions
 {
     public interface IHelperFunctionsMapper
     {
-        IDictionary<string, Delegate> GetFunctionsDictionary(string projectId);
+        IDictionary<string, Delegate> GetFunctionsDictionary(string folderPath);
     }
 }

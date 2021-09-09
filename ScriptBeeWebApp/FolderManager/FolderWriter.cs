@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using ScriptBeeWebApp.Config;
+using ScriptBee.Config;
 
 namespace ScriptBeeWebApp.FolderManager
 {
