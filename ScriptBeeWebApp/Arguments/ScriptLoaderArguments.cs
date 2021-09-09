@@ -6,5 +6,6 @@ namespace ScriptBeeWebApp.Arguments
     {
         public List<string> paths { get; set; }
         public string modelType { get; set; }
+        public string projectId { get; set; }
     }
 }

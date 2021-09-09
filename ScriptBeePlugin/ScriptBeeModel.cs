@@ -4,6 +4,5 @@ namespace ScriptBeePlugin
 {
     public class ScriptBeeModel : Expando
     {
-        
     }
 }

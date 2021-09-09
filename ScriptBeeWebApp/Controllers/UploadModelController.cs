@@ -43,6 +43,18 @@ namespace ScriptBeeWebApp.Controllers
                 return BadRequest("Missing model type");
             }
 
+            if (!formData.TryGetValue("projectId", out var projectId))
+            {
+                return BadRequest("Missing project id");
+            }
+
+            var project = _projectManager.GetProject(projectId);
+            
+            if (project == null)
+            {
+                return NotFound($"Could not find project with id: {projectId}");
+            }
+
             var modelLoader = _loadersHolder.GetModelLoader(modelType[0]);
 
             if (modelLoader == null)
@@ -64,8 +76,8 @@ namespace ScriptBeeWebApp.Controllers
             }
 
             var dictionary = modelLoader.LoadModel(fileContents);
-
-            _projectManager.AddToProject(dictionary, modelLoader.GetName());
+            
+            _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
 
             return Ok();
         }
@@ -76,6 +88,18 @@ namespace ScriptBeeWebApp.Controllers
             if (scriptLoaderArguments.modelType == null)
             {
                 return BadRequest("Missing model type");
+            }
+
+            if (scriptLoaderArguments.projectId == null)
+            {
+                return BadRequest("Missing project id");
+            }
+
+            var project = _projectManager.GetProject(scriptLoaderArguments.projectId);
+
+            if (project == null)
+            {
+                return NotFound($"Could not find project with id: {scriptLoaderArguments.projectId}");
             }
 
             var modelLoader = _loadersHolder.GetModelLoader(scriptLoaderArguments.modelType);
@@ -116,7 +140,7 @@ namespace ScriptBeeWebApp.Controllers
 
             var dictionary = modelLoader.LoadModel(fileContents);
 
-            _projectManager.AddToProject(dictionary, modelLoader.GetName());
+            _projectManager.AddToGivenProject(scriptLoaderArguments.projectId, dictionary, modelLoader.GetName());
 
             return Ok();
         }
