@@ -28,5 +28,11 @@ namespace HelperFunctions
             _helperFunctions.OutputFolderPath = folderPath;
             return _dictionary;
         }
+
+        public HelperFunctions GetHelperFunctions(string folderPath)
+        {
+            _helperFunctions.OutputFolderPath = folderPath;
+            return _helperFunctions;
+        }
     }
 }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using HelperFunctions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
 using Project = ScriptBee.ProjectContext.Project;
@@ -15,19 +17,27 @@ namespace ScriptBee.Scripts.ScriptRunners
     {
         private readonly IPluginPathReader _pluginPathReader;
 
-        public CSharpScriptRunner(IPluginPathReader pluginPathReader)
+        private readonly IHelperFunctionsMapper _helperFunctionsMapper;
+
+        public CSharpScriptRunner(IPluginPathReader pluginPathReader, IHelperFunctionsMapper helperFunctionsMapper)
         {
             _pluginPathReader = pluginPathReader;
+            _helperFunctionsMapper = helperFunctionsMapper;
         }
 
         public void Run(Project project, string scriptContent)
         {
             var compiledScript = CompileScript(scriptContent);
 
-            ExecuteScript(project, compiledScript);
+            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.ProjectId);
+
+            var helperFunctions = _helperFunctionsMapper.GetHelperFunctions(outputFolderPath);
+
+            ExecuteScript(project, helperFunctions, compiledScript);
         }
 
-        private void ExecuteScript(Project project, Assembly compiledScript)
+        private void ExecuteScript(Project project, HelperFunctions.HelperFunctions helperFunctions,
+            Assembly compiledScript)
         {
             foreach (var type in compiledScript.GetTypes())
             {
@@ -35,13 +45,16 @@ namespace ScriptBee.Scripts.ScriptRunners
                 {
                     foreach (var method in type.GetMethods())
                     {
-                        if (method.Name == "ExecuteScript" && method.GetParameters()
-                            .SingleOrDefault(param => param.ParameterType.Name == "Project") != null)
+                        var methodParameters = method.GetParameters();
+                        if (method.Name == "ExecuteScript" && methodParameters.Length == 2 &&
+                            methodParameters[0].ParameterType.Name == "Project" &&
+                            methodParameters[1].ParameterType.Name == "HelperFunctions")
                         {
                             var scriptContentObject = compiledScript.CreateInstance(type.Name);
                             method.Invoke(scriptContentObject, new object[]
                             {
-                                project
+                                project,
+                                helperFunctions
                             });
                         }
                     }

@@ -85,7 +85,7 @@ namespace ScriptBeeWebApp.Controllers
                 }
                 case "csharp":
                 {
-                    return new CSharpScriptRunner(new PluginPathReader(ConfigFolders.PathToPlugins));
+                    return new CSharpScriptRunner(new PluginPathReader(ConfigFolders.PathToPlugins),_helperFunctionsMapper);
                 }
                 default:
                 {
