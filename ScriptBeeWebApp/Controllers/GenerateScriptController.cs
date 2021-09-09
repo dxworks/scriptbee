@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBeeWebApp.Arguments;
 
 namespace ScriptBeeWebApp.Controllers
 {
@@ -21,10 +23,21 @@ namespace ScriptBeeWebApp.Controllers
             _projectManager = projectManager;
         }
 
-        [HttpGet("{projectId}/{scriptType}")]
-        public IActionResult Get(string projectId, string scriptType)
+        [HttpGet]
+        public IActionResult GetSampleCode(IFormCollection formData)
         {
+            if (!formData.TryGetValue("projectId", out var projectId))
+            {
+                return BadRequest("Missing project id");
+            }
+
+            if (!formData.TryGetValue("scriptType", out var scriptType))
+            {
+                return BadRequest("Missing script type");
+            }
+
             var project = _projectManager.GetProject(projectId);
+            
             if (project == null)
             {
                 return NotFound($"Could not find project with id: {projectId}");

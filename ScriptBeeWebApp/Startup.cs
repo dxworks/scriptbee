@@ -33,7 +33,7 @@ namespace ScriptBeeWebApp
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.AddSingleton<IFolderWriter, FolderWriter>();
             services.AddSingleton<ILoadersHolder, LoadersHolder>();
-            services.AddSingleton<IFileContentProvider, FileContentProvider>();
+            services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
             services.AddSingleton<IProjectManager, ProjectManager>();
             services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
         }

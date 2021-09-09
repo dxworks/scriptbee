@@ -61,7 +61,8 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateImports()
         {
-            return "using System;";
+            return _fileContentProvider.GetFileContent(
+                "Scripts/ScriptSampleGenerators/Strategies/SampleCodes/CSharpImports.txt");
         }
 
         public string GetStartComment()
