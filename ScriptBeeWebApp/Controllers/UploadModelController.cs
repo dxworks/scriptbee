@@ -62,7 +62,7 @@ namespace ScriptBeeWebApp.Controllers
                 return BadRequest($"Model type {loaderName[0]} is not supported");
             }
 
-            List<string> fileContents = new List<string>();
+            var fileStreams = new List<Stream>();
 
             foreach (var file in formData.Files)
             {
@@ -70,12 +70,11 @@ namespace ScriptBeeWebApp.Controllers
                 {
                     string filePath = Path.Combine(ConfigFolders.PathToModels, loaderName[0], file.FileName);
                     await _folderWriter.WriteToFile(filePath, file);
-                    string fileContent = await _fileContentProvider.GetFileContentAsync(filePath);
-                    fileContents.Add(fileContent);
+                    fileStreams.Add(System.IO.File.OpenRead(filePath));
                 }
             }
 
-            var dictionary = modelLoader.LoadModel(fileContents);
+            var dictionary = modelLoader.LoadModel(fileStreams);
             
             _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
 
@@ -109,17 +108,16 @@ namespace ScriptBeeWebApp.Controllers
                 return BadRequest($"Model type {scriptLoaderArguments.loaderName} is not supported");
             }
 
-            List<string> fileContents = new List<string>();
+            var fileStreams = new List<Stream>();
 
-            List<string> wrongPaths = new List<string>();
+            var wrongPaths = new List<string>();
 
             foreach (var modelPath in scriptLoaderArguments.paths)
             {
                 var filePath = Path.Combine(ConfigFolders.PathToModels, modelPath);
                 try
                 {
-                    string fileContent = await _fileContentProvider.GetFileContentAsync(filePath);
-                    fileContents.Add(fileContent);
+                    fileStreams.Add(System.IO.File.OpenRead(filePath));
                 }
                 catch (Exception)
                 {
@@ -138,7 +136,7 @@ namespace ScriptBeeWebApp.Controllers
                 return BadRequest(badRequestMessage);
             }
 
-            var dictionary = modelLoader.LoadModel(fileContents);
+            var dictionary = modelLoader.LoadModel(fileStreams);
 
             _projectManager.AddToGivenProject(scriptLoaderArguments.projectId, dictionary, modelLoader.GetName());
 

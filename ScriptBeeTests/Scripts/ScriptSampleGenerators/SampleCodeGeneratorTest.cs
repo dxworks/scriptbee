@@ -55,8 +55,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("DummyModel",sampleCode[0].Name);
             Assert.Equal("script",sampleCode[1].Name);
         }
-        
-        
+
         [Fact]
         public void Generate_WithCsharpStrategy_DummyModelWithMethods_ShouldReturnCSharpSimpleModelWithMethods()
         {
