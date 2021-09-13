@@ -23,6 +23,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         {
             return $"public class {className}";
         }
+        
+        public string GenerateClassName(string className, string superClassName)
+        {
+            return $"public class {className} : {superClassName}";
+        }
 
         public string GenerateClassStart()
         {
@@ -34,23 +39,23 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return "}";
         }
 
-        public string GenerateField(string fieldModifier, string fieldType, string fieldName)
+        public string GenerateField(string fieldModifier, Type fieldType, string fieldName)
         {
-            fieldType = GetPrimitiveType(fieldType);
-            return $"    {fieldModifier} {fieldType} {fieldName};";
+            var fieldTypeName = GetTypeName(fieldType);
+            return $"    {fieldModifier} {fieldTypeName} {fieldName};";
         }
 
-        public string GenerateProperty(string propertyModifier, string propertyType, string propertyName)
+        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName)
         {
-            propertyType = GetPrimitiveType(propertyType);
-            return $"    {propertyModifier} {propertyType} {propertyName} {{ get; set; }}";
+            var propertyTypeName = GetTypeName(propertyType);
+            return $"    {propertyModifier} {propertyTypeName} {propertyName} {{ get; set; }}";
         }
 
-        public string GenerateMethod(string methodModifier, string methodType, string methodName, List<Tuple<string, string>> methodParams)
+        public string GenerateMethod(string methodModifier, Type methodType, string methodName, List<Tuple<string, string>> methodParams)
         {
             var stringBuilder = new StringBuilder();
-            methodType = GetMethodType(methodType);
-            stringBuilder.Append($"    {methodModifier} {methodType} {methodName}(");
+            var methodTypeName = GetTypeName(methodType);
+            stringBuilder.Append($"    {methodModifier} {methodTypeName} {methodName}(");
             
             for (var i = 0; i < methodParams.Count; i++)
             {
@@ -66,7 +71,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             stringBuilder.AppendLine(")");
             stringBuilder.AppendLine("    {");
 
-            if (methodType != "void")
+            if (methodTypeName != "void")
             {
                 stringBuilder.AppendLine("        return default;");
             }
@@ -183,24 +188,19 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
                 {
                     return "bool";
                 }
-            }
-
-            return type;
-        }
-        
-        private string GetMethodType(string type)
-        {
-            switch (type)
-            {
+                case "System.Void":
                 case "Void":
                 {
                     return "void";
                 }
-                default:
-                {
-                    return GetPrimitiveType(type);
-                }
             }
+
+            return type;
+        }
+
+        private string GetTypeName(Type type)
+        {
+            return GetPrimitiveType(type.Name);
         }
     }
 }

@@ -18,6 +18,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         {
             return $"class {className}:";
         }
+        
+        public string GenerateClassName(string className, string superClassName)
+        {
+            return $"class {className}({superClassName}):";
+        }
 
         public string GenerateClassStart()
         {
@@ -29,9 +34,10 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return "";
         }
 
-        public string GenerateField(string fieldModifier, string fieldType, string fieldName)
+        public string GenerateField(string fieldModifier, Type fieldType, string fieldName)
         {
-            if (fieldType is
+            var fieldTypeName = GetTypeName(fieldType);
+            if (fieldTypeName is
                 "decimal" or "System.Decimal"or "Decimal"or
                 "double" or "System.Double"or "Double"or
                 "float" or "System.Single" or "Single")
@@ -39,7 +45,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
                 return $"    {fieldName}: float";
             }
 
-            if (fieldType is
+            if (fieldTypeName is
                 "byte" or "System.Byte" or "Byte" or
                 "sbyte" or "System.SByte" or "SByte" or
                 "int" or "System.Int32"or "Int32" or
@@ -50,34 +56,34 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
                 return $"    {fieldName}: int";
             }
 
-            if (fieldType is
+            if (fieldTypeName is
                 "long" or "System.Int64"or "Int64" or
                 "ulong" or "System.UInt64" or "UInt64")
             {
                 return $"    {fieldName}: long";
             }
 
-            if (fieldType is
+            if (fieldTypeName is
                 "char" or "System.Char"or "Char" or
                 "string" or "System.String" or "String")
             {
                 return $"    {fieldName}: str";
             }
 
-            if (fieldType is "bool" or "System.Boolean" or "Boolean")
+            if (fieldTypeName is "bool" or "System.Boolean" or "Boolean")
             {
                 return $"    {fieldName}: bool";
             }
 
-            return $"    {fieldName}: {fieldType}";
+            return $"    {fieldName}: {fieldTypeName}";
         }
 
-        public string GenerateProperty(string propertyModifier, string propertyType, string propertyName)
+        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName)
         {
             return GenerateField(propertyModifier, propertyType, propertyName);
         }
 
-        public string GenerateMethod(string methodModifier, string methodType, string methodName, List<Tuple<string, string>> methodParams)
+        public string GenerateMethod(string methodModifier, Type methodType, string methodName, List<Tuple<string, string>> methodParams)
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append($"    def {methodName}(");
@@ -127,6 +133,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         public string GetEndComment()
         {
             return ValidScriptDelimiters.PythonEndComment;
+        }
+
+        private string GetTypeName(Type type)
+        {
+            return type.Name;
         }
     }
 }

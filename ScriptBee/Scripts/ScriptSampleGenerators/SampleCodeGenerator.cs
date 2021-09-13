@@ -14,6 +14,9 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
         private readonly ISet<string> _generatedClassNames = new HashSet<string>();
         private readonly HashSet<string> _acceptedModules = new HashSet<string>();
 
+        private readonly BindingFlags _bindingFlags =
+            BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
+
         private const string ClassName = "ScriptContent";
 
         private const string MethodName = "ExecuteScript";
@@ -96,16 +99,32 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             _generatedClassNames.Add(type.Name);
 
             var sampleCodeFiles = new List<SampleCodeFile>();
+            
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type.Name));
+            var baseType = type.BaseType;
+
+            if (baseType != null && IsAcceptedModule(baseType.Module))
+            {
+                stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type.Name, baseType.Name));
+                
+                if (!_generatedClassNames.Contains(baseType.Name))
+                {
+                    sampleCodeFiles.AddRange(GenerateClasses(baseType));
+                }
+            }
+            else
+            {
+                stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type.Name));
+            }
+            
             var classStart = _strategyGenerator.GenerateClassStart();
             if (!string.IsNullOrEmpty(classStart))
             {
                 stringBuilder.AppendLine(classStart);
             }
 
-            foreach (var fieldInfo in type.GetFields())
+            foreach (var fieldInfo in type.GetFields(_bindingFlags))
             {
                 if (!IsAcceptedModule(fieldInfo.Module))
                 {
@@ -126,7 +145,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                 }
             }
 
-            foreach (var propertyInfo in type.GetProperties())
+            foreach (var propertyInfo in type.GetProperties(_bindingFlags))
             {
                 if (!IsAcceptedModule(propertyInfo.Module))
                 {
@@ -147,7 +166,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                 }
             }
 
-            foreach (var methodInfo in type.GetMethods())
+            foreach (var methodInfo in type.GetMethods(_bindingFlags))
             {
                 if (methodInfo.IsSpecialName || !IsAcceptedModule(methodInfo.Module))
                 {

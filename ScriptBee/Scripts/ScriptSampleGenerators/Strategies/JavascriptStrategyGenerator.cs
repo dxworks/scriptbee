@@ -18,6 +18,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
         {
             return $"class {className}";
         }
+        
+        public string GenerateClassName(string className, string superClassName)
+        {
+            return $"class {className} extends {superClassName}";
+        }
 
         public string GenerateClassStart()
         {
@@ -29,18 +34,20 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return "}";
         }
 
-        public string GenerateField(string fieldModifier, string fieldType, string fieldName)
+        public string GenerateField(string fieldModifier, Type fieldType, string fieldName)
         {
-            return $"    {fieldName} = {GetFieldInitializationValue(fieldType)};";
+            var fieldTypeName = GetTypeName(fieldType);
+            return $"    {fieldName} = {GetFieldInitializationValue(fieldTypeName)};";
         }
 
-        public string GenerateProperty(string propertyModifier, string propertyType, string propertyName)
+        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName)
         {
             return GenerateField(propertyModifier, propertyType, propertyName);
         }
 
-        public string GenerateMethod(string methodModifier, string methodType, string methodName, List<Tuple<string, string>> methodParams)
+        public string GenerateMethod(string methodModifier, Type methodType, string methodName, List<Tuple<string, string>> methodParams)
         {
+            var methodTypeName = GetTypeName(methodType);
             var stringBuilder = new StringBuilder();
             stringBuilder.Append($"    {methodName}: function(");
             
@@ -57,9 +64,9 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             stringBuilder.AppendLine(")");
             stringBuilder.AppendLine("    {");
             
-            if (methodType != "void" && methodType != "Void")
+            if (methodTypeName != "void" && methodTypeName != "Void")
             {
-                stringBuilder.AppendLine($"        return {GetFieldInitializationValue(methodType)};");
+                stringBuilder.AppendLine($"        return {GetFieldInitializationValue(methodTypeName)};");
             }
             
             stringBuilder.AppendLine("    }");
@@ -122,6 +129,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
                 default:
                     return $"new {fieldType}()";
             }
+        }
+
+        private string GetTypeName(Type type)
+        {
+            return type.Name;
         }
     }
 }
