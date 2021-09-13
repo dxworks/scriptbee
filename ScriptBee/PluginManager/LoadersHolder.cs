@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Scripting.Utils;
 using ScriptBeePlugin;
 
 namespace ScriptBee.PluginManager
@@ -33,6 +35,10 @@ namespace ScriptBee.PluginManager
                 return null;
             }
         }
-        
+
+        public List<IModelLoader> GetAllLoaders()
+        {
+            return loaders.Select(pair => pair.Value).ToList();
+        }
     }
 }

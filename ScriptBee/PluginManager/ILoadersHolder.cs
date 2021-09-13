@@ -1,4 +1,5 @@
-﻿using ScriptBeePlugin;
+﻿using System.Collections.Generic;
+using ScriptBeePlugin;
 
 namespace ScriptBee.PluginManager
 {
@@ -7,5 +8,7 @@ namespace ScriptBee.PluginManager
         public void AddLoaderToDictionary(IModelLoader loader);
         
         public IModelLoader GetModelLoader(string modelName);
+
+        public List<IModelLoader> GetAllLoaders();
     }
 }

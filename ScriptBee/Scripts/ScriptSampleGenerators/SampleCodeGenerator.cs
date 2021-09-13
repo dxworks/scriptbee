@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
+using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 
@@ -12,14 +12,20 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
     {
         private readonly IStrategyGenerator _strategyGenerator;
         private readonly ISet<string> _generatedClassNames = new HashSet<string>();
+        private readonly HashSet<string> _acceptedModules = new HashSet<string>();
 
         private const string ClassName = "ScriptContent";
 
         private const string MethodName = "ExecuteScript";
 
-        public SampleCodeGenerator(IStrategyGenerator strategyGenerator)
+        public SampleCodeGenerator(IStrategyGenerator strategyGenerator, ILoadersHolder loadersHolder)
         {
             _strategyGenerator = strategyGenerator;
+
+            foreach (var modelLoader in loadersHolder.GetAllLoaders())
+            {
+                _acceptedModules.Add(modelLoader.GetType().Module.Name);
+            }
         }
 
         public IList<SampleCodeFile> GetSampleCode(object obj)
@@ -101,8 +107,13 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
             foreach (var fieldInfo in type.GetFields())
             {
+                if (!IsAcceptedModule(fieldInfo.Module))
+                {
+                    continue;
+                }
+
                 var modifier = GetFieldModifier(fieldInfo);
-                stringBuilder.AppendLine(_strategyGenerator.GenerateField(modifier, fieldInfo.FieldType.Name,
+                stringBuilder.AppendLine(_strategyGenerator.GenerateField(modifier, fieldInfo.FieldType,
                     fieldInfo.Name));
                 if (IsPrimitive(fieldInfo.FieldType))
                 {
@@ -117,8 +128,13 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
             foreach (var propertyInfo in type.GetProperties())
             {
+                if (!IsAcceptedModule(propertyInfo.Module))
+                {
+                    continue;
+                }
+
                 const string modifier = "public";
-                stringBuilder.AppendLine(_strategyGenerator.GenerateProperty(modifier, propertyInfo.PropertyType.Name,
+                stringBuilder.AppendLine(_strategyGenerator.GenerateProperty(modifier, propertyInfo.PropertyType,
                     propertyInfo.Name));
                 if (IsPrimitive(propertyInfo.PropertyType))
                 {
@@ -133,23 +149,24 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
             foreach (var methodInfo in type.GetMethods())
             {
-                if (methodInfo.IsSpecialName || methodInfo.Module.Name == "System.Private.CoreLib.dll" )
+                if (methodInfo.IsSpecialName || !IsAcceptedModule(methodInfo.Module))
                 {
                     continue;
                 }
+
                 var modifier = GetMethodModifier(methodInfo);
                 var methodParameters = methodInfo.GetParameters();
 
                 List<Tuple<string, string>> parameters = new List<Tuple<string, string>>();
-                
+
                 foreach (var param in methodParameters)
                 {
                     parameters.Add(new Tuple<string, string>(param.ParameterType.Name, param.Name));
                 }
 
                 stringBuilder.AppendLine();
-                
-                stringBuilder.Append(_strategyGenerator.GenerateMethod(modifier, methodInfo.ReturnType.Name,
+
+                stringBuilder.Append(_strategyGenerator.GenerateMethod(modifier, methodInfo.ReturnType,
                     methodInfo.Name, parameters));
             }
 
@@ -207,7 +224,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
             return modifier;
         }
-        
+
         private string GetMethodModifier(MethodInfo methodInfo)
         {
             var modifier = "public";
@@ -221,6 +238,11 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             }
 
             return modifier;
+        }
+
+        private bool IsAcceptedModule(Module module)
+        {
+            return _acceptedModules.Contains(module.Name);
         }
     }
 }

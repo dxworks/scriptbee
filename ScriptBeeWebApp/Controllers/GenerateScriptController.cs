@@ -3,10 +3,10 @@ using System.IO;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
-using ScriptBeeWebApp.Arguments;
 
 namespace ScriptBeeWebApp.Controllers
 {
@@ -16,11 +16,14 @@ namespace ScriptBeeWebApp.Controllers
     {
         private readonly IFileContentProvider _fileContentProvider;
         private readonly IProjectManager _projectManager;
+        private readonly ILoadersHolder _loadersHolder;
 
-        public GenerateScriptController(IFileContentProvider fileContentProvider, IProjectManager projectManager)
+        public GenerateScriptController(IFileContentProvider fileContentProvider, IProjectManager projectManager,
+            ILoadersHolder loadersHolder)
         {
             _fileContentProvider = fileContentProvider;
             _projectManager = projectManager;
+            _loadersHolder = loadersHolder;
         }
 
         [HttpGet]
@@ -37,7 +40,7 @@ namespace ScriptBeeWebApp.Controllers
             }
 
             var project = _projectManager.GetProject(projectId);
-            
+
             if (project == null)
             {
                 return NotFound($"Could not find project with id: {projectId}");
@@ -57,15 +60,17 @@ namespace ScriptBeeWebApp.Controllers
             {
                 case "python":
                 {
-                    var sampleCode = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider))
-                        .GetSampleCode(classes);
+                    var sampleCode =
+                        new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider), _loadersHolder)
+                            .GetSampleCode(classes);
 
                     var zipStream = CreateFileZipStream(sampleCode, ".py");
                     return File(zipStream, "application/octet-stream", "DummyPythonSampleCode.zip");
                 }
                 case "javascript":
                 {
-                    var sampleCode = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider))
+                    var sampleCode = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider),
+                            _loadersHolder)
                         .GetSampleCode(classes);
 
                     var zipStream = CreateFileZipStream(sampleCode, ".js");
@@ -73,8 +78,9 @@ namespace ScriptBeeWebApp.Controllers
                 }
                 case "csharp":
                 {
-                    var sampleCode = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider))
-                        .GetSampleCode(classes);
+                    var sampleCode =
+                        new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolder)
+                            .GetSampleCode(classes);
 
                     var zipStream = CreateFileZipStream(sampleCode, ".cs");
 
