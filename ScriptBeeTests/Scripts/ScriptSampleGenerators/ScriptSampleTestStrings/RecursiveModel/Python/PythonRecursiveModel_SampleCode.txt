@@ -1,7 +1,0 @@
-﻿model: RecursiveModel
-
-# start script
-
-print(model)
-
-# end script

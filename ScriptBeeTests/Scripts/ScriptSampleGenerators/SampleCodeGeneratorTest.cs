@@ -56,7 +56,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("DummyModel", sampleCode[0].Name);
             Assert.Equal("script", sampleCode[1].Name);
         }
-        
+
         [Theory]
         [InlineData(
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
@@ -94,6 +94,46 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 
             Assert.Equal("DummyModel", sampleCode[0].Name);
             Assert.Equal("RecursiveModel", sampleCode[1].Name);
+            Assert.Equal("script", sampleCode[2].Name);
+        }
+        
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelInheritor/CSharp/CSharpDummyModelInheritor_DummyModelInheritor.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelInheritor/Python/PythonDummyModelInheritor_DummyModelInheritor.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelInheritor/Javascript/JavascriptDummyModelInheritor_DummyModelInheritor.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModelInheritor(
+            string pathToDummyModel, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
+        {
+            var dummyModelContent =
+                _fileContentProvider.GetFileContent(pathToDummyModel);
+            var mainModelContent =
+                _fileContentProvider.GetFileContent(pathToMainModel);
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelInheritor());
+
+            Assert.Equal(3, sampleCode.Count);
+
+            Assert.Equal(dummyModelContent, sampleCode[0].Content);
+            Assert.Equal(mainModelContent, sampleCode[1].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[2].Content);
+
+            Assert.Equal("DummyModel", sampleCode[0].Name);
+            Assert.Equal("DummyModelInheritor", sampleCode[1].Name);
             Assert.Equal("script", sampleCode[2].Name);
         }
         

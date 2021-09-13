@@ -1,0 +1,9 @@
+﻿class DummyModelInheritor extends DummyModel
+{
+    IsBetter = true;
+
+    SayBye: function()
+    {
+        return '';
+    }
+}

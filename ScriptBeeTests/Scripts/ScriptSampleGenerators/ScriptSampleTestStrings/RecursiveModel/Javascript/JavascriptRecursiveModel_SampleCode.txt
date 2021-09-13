@@ -1,7 +1,0 @@
-﻿let model = new RecursiveModel();
-
-// start script
-
-print(model);
-
-// end script

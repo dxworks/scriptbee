@@ -1,0 +1,5 @@
+﻿class DummyModelInheritor(DummyModel):
+    IsBetter: bool
+
+    def SayBye():
+        pass

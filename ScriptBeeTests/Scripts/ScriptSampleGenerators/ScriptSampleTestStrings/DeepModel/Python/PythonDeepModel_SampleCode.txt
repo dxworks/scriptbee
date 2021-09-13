@@ -1,7 +1,0 @@
-﻿model: DeepModel
-
-# start script
-
-print(model)
-
-# end script
