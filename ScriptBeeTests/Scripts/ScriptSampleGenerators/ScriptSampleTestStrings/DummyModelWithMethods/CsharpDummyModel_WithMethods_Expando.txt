@@ -1,0 +1,20 @@
+﻿public class DummyModelWithMethodsExpando
+{
+    public int DummyNumber { get; set; }
+    public string DummyString { get; set; }
+    public bool IsDummy { get; set; }
+
+    public string SayHello()
+    {
+        return default;
+    }
+
+    public int GetDouble()
+    {
+        return default;
+    }
+
+    public void PrintNames(string name1, string name2, int number)
+    {
+    }
+}

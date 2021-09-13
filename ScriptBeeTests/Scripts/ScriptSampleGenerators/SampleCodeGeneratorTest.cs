@@ -1,199 +1,130 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using ScriptBee.PluginManager;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using Xunit;
+using Moq;
+using ScriptBeePlugin;
 
 namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {
     public class SampleCodeGeneratorTest
     {
         private readonly RelativeFileContentProvider _fileContentProvider = new();
+        private readonly Mock<ILoadersHolder> _loadersHolderMock = new();
         private SampleCodeGenerator _sampleCodeGenerator;
-        
-        [Fact]
-        public void Generate_WithPythonStrategy_MainModelGivenAsObject_ShouldReturnPythonSimpleModel()
-        {
-            var modelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt");
 
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModel());
-            
-            Assert.Equal(2, sampleCode.Count);
-            
-            Assert.Equal(modelContent, sampleCode[0].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("script",sampleCode[1].Name);
+        public SampleCodeGeneratorTest()
+        {
+            _loadersHolderMock.Setup(holder => holder.GetAllLoaders()).Returns(new List<IModelLoader>
+            {
+                new TestModelLoader()
+            });
         }
-        
-        [Fact]
-        public void Generate_WithJavascriptStrategy_MainModelGivenAsObject_ShouldReturnJavascriptSimpleModel()
+
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModel(
+            string pathToModel, string pathToSampleCode,Type strategyGeneratorType)
         {
             var modelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt");
-            
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
+                _fileContentProvider.GetFileContent(pathToModel);
 
-            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModel());
 
             Assert.Equal(2, sampleCode.Count);
-            
+
             Assert.Equal(modelContent, sampleCode[0].Content);
             Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("script",sampleCode[1].Name);
-        }
 
-        [Fact]
-        public void Generate_WithCsharpStrategy_DummyModelWithMethods_ShouldReturnCSharpSimpleModelWithMethods()
-        {
-            var modelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods.txt");
-
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
-            
-            Assert.Equal(2, sampleCode.Count);
-            
-            Assert.Equal(modelContent, sampleCode[0].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-            
-            Assert.Equal("DummyModelWithMethods",sampleCode[0].Name);
-            Assert.Equal("script",sampleCode[1].Name);
+            Assert.Equal("DummyModel", sampleCode[0].Name);
+            Assert.Equal("script", sampleCode[1].Name);
         }
         
-        [Fact]
-        public void Generate_WithPythonStrategy_DummyModelWithMethods_ShouldReturnPythonSimpleModel()
-        {
-            var modelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/PythonDummyModel_WithMethods.txt");
-
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
-            
-            Assert.Equal(2, sampleCode.Count);
-            
-            Assert.Equal(modelContent, sampleCode[0].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-            
-            Assert.Equal("DummyModelWithMethods",sampleCode[0].Name);
-            Assert.Equal("script",sampleCode[1].Name);
-        }
-
-        [Fact]
-        public void Generate_WithJavascriptStrategy_DummyModelWithMethods_ShouldReturnJavascriptSimpleModel()
-        {
-            var modelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/JavascriptDummyModel_WithMethods.txt");
-
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
-            
-            Assert.Equal(2, sampleCode.Count);
-            
-            Assert.Equal(modelContent, sampleCode[0].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-            
-            Assert.Equal("DummyModelWithMethods",sampleCode[0].Name);
-            Assert.Equal("script",sampleCode[1].Name);
-        }
-
-        [Fact]
-        public void Generate_WithPythonStrategy_MainModelGivenAsObject_ShouldReturnPythonRecursiveModel()
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/CSharp/CSharpRecursiveModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Python/PythonRecursiveModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Javascript/JavascriptRecursiveModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnRecursiveModel(
+            string pathToDummyModel, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
         {
             var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt");
+                _fileContentProvider.GetFileContent(pathToDummyModel);
             var mainModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Python/PythonRecursiveModel_RecursiveModel.txt");
+                _fileContentProvider.GetFileContent(pathToMainModel);
             var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt");
+                _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider));
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new RecursiveModel());
 
             Assert.Equal(3, sampleCode.Count);
-            
+
             Assert.Equal(dummyModelContent, sampleCode[0].Content);
             Assert.Equal(mainModelContent, sampleCode[1].Content);
             Assert.Equal(sampleCodeContent, sampleCode[2].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("script",sampleCode[2].Name);
-        }
 
-        [Fact]
-        public void Generate_WithJavascriptStrategy_MainModelGivenAsObject_ShouldReturnJavascriptRecursiveModel()
-        {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt");
-            var mainModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Javascript/JavascriptRecursiveModel_RecursiveModel.txt");
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
-
-            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new RecursiveModel());
-
-            Assert.Equal(3, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(mainModelContent, sampleCode[1].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[2].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("script",sampleCode[2].Name);
+            Assert.Equal("DummyModel", sampleCode[0].Name);
+            Assert.Equal("RecursiveModel", sampleCode[1].Name);
+            Assert.Equal("script", sampleCode[2].Name);
         }
         
-        [Fact]
-        public void Generate_WithJavascriptStrategy_ModelsGivesAsListOfObjects_ShouldReturnJavascriptRecursiveModel()
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/CSharp/CSharpRecursiveModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Python/PythonRecursiveModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Javascript/JavascriptRecursiveModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnRecursiveModel(
+            string pathToDummyModel, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
         {
             var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt");
+                _fileContentProvider.GetFileContent(pathToDummyModel);
             var mainModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/Javascript/JavascriptRecursiveModel_RecursiveModel.txt");
+                _fileContentProvider.GetFileContent(pathToMainModel);
             var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
+                _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
-
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            
             List<object> models = new List<object>();
             models.Add(new DummyModel());
             models.Add(new RecursiveModel());
@@ -201,140 +132,119 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
 
             Assert.Equal(3, sampleCode.Count);
-            
+
             Assert.Equal(dummyModelContent, sampleCode[0].Content);
             Assert.Equal(mainModelContent, sampleCode[1].Content);
             Assert.Equal(sampleCodeContent, sampleCode[2].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("script",sampleCode[2].Name);
-        }
 
-        [Fact]
-        public void Generate_WithCSharpStrategy_MainModelGivenAsObject_ShouldReturnCSharpRecursiveModel()
-        {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt");
-            var mainModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/CSharp/CSharpRecursiveModel_RecursiveModel.txt");
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt");
-
-            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new RecursiveModel());
-
-            Assert.Equal(3, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(mainModelContent, sampleCode[1].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[2].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("script",sampleCode[2].Name);
+            Assert.Equal("DummyModel", sampleCode[0].Name);
+            Assert.Equal("RecursiveModel", sampleCode[1].Name);
+            Assert.Equal("script", sampleCode[2].Name);
         }
         
-        [Fact]
-        public void Generate_WithCSharpStrategy_ModelsGivesAsListOfObjects_ShouldReturnCSharpRecursiveModel()
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_EmptyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_DeepModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_EmptyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_DeepModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_EmptyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_DeepModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDeepModel(
+            string pathToDummyModel,string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
         {
             var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt");
-            var mainModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/RecursiveModel/CSharp/CSharpRecursiveModel_RecursiveModel.txt");
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt");
-
-            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider));
-
-            List<object> models = new List<object>();
-            models.Add(new DummyModel());
-            models.Add(new RecursiveModel());
-            
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
-
-            Assert.Equal(3, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(mainModelContent, sampleCode[1].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[2].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("script",sampleCode[2].Name);
-        }
-        
-        [Fact]
-        public void Generate_WithJavascriptStrategy_MainModelGivenAsObject_ShouldReturnJavascriptDeepModel()
-        {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt");
+                _fileContentProvider.GetFileContent(pathToDummyModel);
             var emptyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_EmptyModel.txt");
+                _fileContentProvider.GetFileContent(pathToEmptyModel);
             var recursiveModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel.txt");
+                _fileContentProvider.GetFileContent(pathToRecursiveModel);
             var recursiveModel2Content =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel2.txt");
+                _fileContentProvider.GetFileContent(pathToRecursiveModel2);
             var deepModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_DeepModel.txt");
+                _fileContentProvider.GetFileContent(pathToMainModel);
             var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new DeepModel());
 
             Assert.Equal(6, sampleCode.Count);
-            
+
             Assert.Equal(dummyModelContent, sampleCode[0].Content);
             Assert.Equal(recursiveModelContent, sampleCode[1].Content);
             Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
             Assert.Equal(emptyModelContent, sampleCode[3].Content);
             Assert.Equal(deepModelContent, sampleCode[4].Content);
             Assert.Equal(sampleCodeContent, sampleCode[5].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("RecursiveModel2",sampleCode[2].Name);
-            Assert.Equal("EmptyModel",sampleCode[3].Name);
-            Assert.Equal("DeepModel",sampleCode[4].Name);
-            Assert.Equal("script",sampleCode[5].Name);
+
+            Assert.Equal("DummyModel", sampleCode[0].Name);
+            Assert.Equal("RecursiveModel", sampleCode[1].Name);
+            Assert.Equal("RecursiveModel2", sampleCode[2].Name);
+            Assert.Equal("EmptyModel", sampleCode[3].Name);
+            Assert.Equal("DeepModel", sampleCode[4].Name);
+            Assert.Equal("script", sampleCode[5].Name);
         }
         
-        [Fact]
-        public void Generate_WithJavascriptStrategy_ModelsGivenAsListOfObjects_ShouldReturnJavascriptDeepModel()
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_EmptyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_DeepModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_EmptyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_DeepModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_EmptyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_DeepModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnDeepModel(
+            string pathToDummyModel,string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
         {
             var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/JavascriptDummyModel.txt");
+                _fileContentProvider.GetFileContent(pathToDummyModel);
             var emptyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_EmptyModel.txt");
+                _fileContentProvider.GetFileContent(pathToEmptyModel);
             var recursiveModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel.txt");
+                _fileContentProvider.GetFileContent(pathToRecursiveModel);
             var recursiveModel2Content =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_RecursiveModel2.txt");
+                _fileContentProvider.GetFileContent(pathToRecursiveModel2);
             var deepModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Javascript/JavascriptDeepModel_DeepModel.txt");
+                _fileContentProvider.GetFileContent(pathToMainModel);
             var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider));
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
             
             List<object> models = new List<object>();
             models.Add(new DummyModel());
@@ -342,208 +252,84 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             models.Add(new RecursiveModel2());
             models.Add(new EmptyModel());
             models.Add(new DeepModel());
-
+            
             var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
 
             Assert.Equal(6, sampleCode.Count);
-            
+
             Assert.Equal(dummyModelContent, sampleCode[0].Content);
             Assert.Equal(recursiveModelContent, sampleCode[1].Content);
             Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
             Assert.Equal(emptyModelContent, sampleCode[3].Content);
             Assert.Equal(deepModelContent, sampleCode[4].Content);
             Assert.Equal(sampleCodeContent, sampleCode[5].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("RecursiveModel2",sampleCode[2].Name);
-            Assert.Equal("EmptyModel",sampleCode[3].Name);
-            Assert.Equal("DeepModel",sampleCode[4].Name);
-            Assert.Equal("script",sampleCode[5].Name);
+
+            Assert.Equal("DummyModel", sampleCode[0].Name);
+            Assert.Equal("RecursiveModel", sampleCode[1].Name);
+            Assert.Equal("RecursiveModel2", sampleCode[2].Name);
+            Assert.Equal("EmptyModel", sampleCode[3].Name);
+            Assert.Equal("DeepModel", sampleCode[4].Name);
+            Assert.Equal("script", sampleCode[5].Name);
         }
 
-        [Fact]
-        public void Generate_WithPythonStrategy_MainModelGivenAsObject_ShouldReturnPythonDeepModel()
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/PythonDummyModel_WithMethods.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/JavascriptDummyModel_WithMethods.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void GenerateSampleCode_DummyModelWithMethods_ShouldReturnDummyModelWithMethods(
+            string pathToModel, string pathToSampleCode, Type strategyGeneratorType)
         {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt");
-            var emptyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_EmptyModel.txt");
-            var recursiveModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel.txt");
-            var recursiveModel2Content =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel2.txt");
-            var deepModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_DeepModel.txt");
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DeepModel());
+            var modelContent =
+                _fileContentProvider.GetFileContent(pathToModel);
 
-            Assert.Equal(6, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(recursiveModelContent, sampleCode[1].Content);
-            Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
-            Assert.Equal(emptyModelContent, sampleCode[3].Content);
-            Assert.Equal(deepModelContent, sampleCode[4].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[5].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("RecursiveModel2",sampleCode[2].Name);
-            Assert.Equal("EmptyModel",sampleCode[3].Name);
-            Assert.Equal("DeepModel",sampleCode[4].Name);
-            Assert.Equal("script",sampleCode[5].Name);
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
+
+            Assert.Equal(2, sampleCode.Count);
+
+            Assert.Equal(modelContent, sampleCode[0].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
+
+            Assert.Equal("DummyModelWithMethods", sampleCode[0].Name);
+            Assert.Equal("script", sampleCode[1].Name);
         }
         
-        [Fact]
-        public void Generate_WithPythonStrategy_ModelsGivenAsListOfObjects_ShouldReturnPythonDeepModel()
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods_Expando.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(DummyModelWithMethodsExpando))]
+        public void GenerateSampleCode_WithCsharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
+            string pathToModel, string pathToSampleCode, Type type)
         {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt");
-            var emptyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_EmptyModel.txt");
-            var recursiveModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel.txt");
-            var recursiveModel2Content =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_RecursiveModel2.txt");
-            var deepModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/Python/PythonDeepModel_DeepModel.txt");
+            var modelContent =
+                _fileContentProvider.GetFileContent(pathToModel);
+
             var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider));
-            
-            List<object> models = new List<object>();
-            models.Add(new DummyModel());
-            models.Add(new RecursiveModel());
-            models.Add(new RecursiveModel2());
-            models.Add(new EmptyModel());
-            models.Add(new DeepModel());
+                _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
+            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolderMock.Object);
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(Activator.CreateInstance(type));
 
-            Assert.Equal(6, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(recursiveModelContent, sampleCode[1].Content);
-            Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
-            Assert.Equal(emptyModelContent, sampleCode[3].Content);
-            Assert.Equal(deepModelContent, sampleCode[4].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[5].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("RecursiveModel2",sampleCode[2].Name);
-            Assert.Equal("EmptyModel",sampleCode[3].Name);
-            Assert.Equal("DeepModel",sampleCode[4].Name);
-            Assert.Equal("script",sampleCode[5].Name);
-        }
+            Assert.Equal(2, sampleCode.Count);
 
-        [Fact]
-        public void Generate_WithCSharpStrategy_MainModelGivenAsObject_ShouldReturnCSharpDeepModel()
-        {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt");
-            var emptyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_EmptyModel.txt");
-            var recursiveModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel.txt");
-            var recursiveModel2Content =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel2.txt");
-            var deepModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_DeepModel.txt");
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider));
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(new DeepModel());
+            Assert.Equal(modelContent, sampleCode[0].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[1].Content);
 
-            Assert.Equal(6, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(recursiveModelContent, sampleCode[1].Content);
-            Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
-            Assert.Equal(emptyModelContent, sampleCode[3].Content);
-            Assert.Equal(deepModelContent, sampleCode[4].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[5].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("RecursiveModel2",sampleCode[2].Name);
-            Assert.Equal("EmptyModel",sampleCode[3].Name);
-            Assert.Equal("DeepModel",sampleCode[4].Name);
-            Assert.Equal("script",sampleCode[5].Name);
-        }
-        
-        [Fact]
-        public void Generate_WithCSharpStrategy_ModelsGivenAsListOfObjects_ShouldReturnCSharpDeepModel()
-        {
-            var dummyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt");
-            var emptyModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_EmptyModel.txt");
-            var recursiveModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel.txt");
-            var recursiveModel2Content =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_RecursiveModel2.txt");
-            var deepModelContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DeepModel/CSharp/CSharpDeepModel_DeepModel.txt");
-            var sampleCodeContent =
-                _fileContentProvider.GetFileContent(
-                    "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt");
-            
-            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider));
-            
-            List<object> models = new List<object>();
-            models.Add(new DummyModel());
-            models.Add(new RecursiveModel());
-            models.Add(new RecursiveModel2());
-            models.Add(new EmptyModel());
-            models.Add(new DeepModel());
-
-            var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
-
-            Assert.Equal(6, sampleCode.Count);
-            
-            Assert.Equal(dummyModelContent, sampleCode[0].Content);
-            Assert.Equal(recursiveModelContent, sampleCode[1].Content);
-            Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
-            Assert.Equal(emptyModelContent, sampleCode[3].Content);
-            Assert.Equal(deepModelContent, sampleCode[4].Content);
-            Assert.Equal(sampleCodeContent, sampleCode[5].Content);
-            
-            Assert.Equal("DummyModel",sampleCode[0].Name);
-            Assert.Equal("RecursiveModel",sampleCode[1].Name);
-            Assert.Equal("RecursiveModel2",sampleCode[2].Name);
-            Assert.Equal("EmptyModel",sampleCode[3].Name);
-            Assert.Equal("DeepModel",sampleCode[4].Name);
-            Assert.Equal("script",sampleCode[5].Name);
+            Assert.Equal(type.Name, sampleCode[0].Name);
+            Assert.Equal("script", sampleCode[1].Name);
         }
     }
 }
