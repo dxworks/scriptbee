@@ -351,7 +351,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods_Expando.txt",
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
             typeof(DummyModelWithMethodsExpando))]
-        public void GenerateSampleCode_WithCsharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
+        public void GenerateSampleCode_WithCSharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
             string pathToModel, string pathToSampleCode, Type type)
         {
             var modelContent =
