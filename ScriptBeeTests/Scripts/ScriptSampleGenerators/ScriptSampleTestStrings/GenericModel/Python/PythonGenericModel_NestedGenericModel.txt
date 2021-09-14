@@ -1,0 +1,6 @@
+﻿class NestedGenericModel(GenericModel[int]):
+    generic: GenericModel[str]
+    generic2: GenericModel[GenericModel[int], DummyModel]
+
+    def GetGenericModel(gen):
+        pass

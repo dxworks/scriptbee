@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Moq;
 using ScriptBee.PluginManager;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
-using Xunit;
-using Moq;
 using ScriptBeePlugin;
+using Xunit;
 
 namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 {
@@ -37,7 +37,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
             typeof(JavascriptStrategyGenerator))]
         public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModel(
-            string pathToModel, string pathToSampleCode,Type strategyGeneratorType)
+            string pathToModel, string pathToSampleCode, Type strategyGeneratorType)
         {
             var modelContent =
                 _fileContentProvider.GetFileContent(pathToModel);
@@ -45,7 +45,10 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModel());
 
             Assert.Equal(2, sampleCode.Count);
@@ -74,7 +77,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
             typeof(JavascriptStrategyGenerator))]
         public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnRecursiveModel(
-            string pathToDummyModel, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
+            string pathToDummyModel, string pathToMainModel, string pathToSampleCode, Type strategyGeneratorType)
         {
             var dummyModelContent =
                 _fileContentProvider.GetFileContent(pathToDummyModel);
@@ -83,7 +86,10 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new RecursiveModel());
 
             Assert.Equal(3, sampleCode.Count);
@@ -96,7 +102,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("RecursiveModel", sampleCode[1].Name);
             Assert.Equal("script", sampleCode[2].Name);
         }
-        
+
         [Theory]
         [InlineData(
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
@@ -114,7 +120,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
             typeof(JavascriptStrategyGenerator))]
         public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModelInheritor(
-            string pathToDummyModel, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
+            string pathToDummyModel, string pathToMainModel, string pathToSampleCode, Type strategyGeneratorType)
         {
             var dummyModelContent =
                 _fileContentProvider.GetFileContent(pathToDummyModel);
@@ -123,7 +129,10 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelInheritor());
 
             Assert.Equal(3, sampleCode.Count);
@@ -136,7 +145,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("DummyModelInheritor", sampleCode[1].Name);
             Assert.Equal("script", sampleCode[2].Name);
         }
-        
+
         [Theory]
         [InlineData(
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
@@ -154,7 +163,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
             typeof(JavascriptStrategyGenerator))]
         public void GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnRecursiveModel(
-            string pathToDummyModel, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
+            string pathToDummyModel, string pathToMainModel, string pathToSampleCode, Type strategyGeneratorType)
         {
             var dummyModelContent =
                 _fileContentProvider.GetFileContent(pathToDummyModel);
@@ -163,12 +172,15 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
-            
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
+
             List<object> models = new List<object>();
             models.Add(new DummyModel());
             models.Add(new RecursiveModel());
-            
+
             var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
 
             Assert.Equal(3, sampleCode.Count);
@@ -181,7 +193,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("RecursiveModel", sampleCode[1].Name);
             Assert.Equal("script", sampleCode[2].Name);
         }
-        
+
         [Theory]
         [InlineData(
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
@@ -208,7 +220,8 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
             typeof(JavascriptStrategyGenerator))]
         public void GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDeepModel(
-            string pathToDummyModel,string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
+            string pathToDummyModel, string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2,
+            string pathToMainModel, string pathToSampleCode, Type strategyGeneratorType)
         {
             var dummyModelContent =
                 _fileContentProvider.GetFileContent(pathToDummyModel);
@@ -223,7 +236,10 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new DeepModel());
 
             Assert.Equal(6, sampleCode.Count);
@@ -242,7 +258,7 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("DeepModel", sampleCode[4].Name);
             Assert.Equal("script", sampleCode[5].Name);
         }
-        
+
         [Theory]
         [InlineData(
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
@@ -269,7 +285,8 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
             typeof(JavascriptStrategyGenerator))]
         public void GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnDeepModel(
-            string pathToDummyModel,string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel, string pathToSampleCode,Type strategyGeneratorType)
+            string pathToDummyModel, string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2,
+            string pathToMainModel, string pathToSampleCode, Type strategyGeneratorType)
         {
             var dummyModelContent =
                 _fileContentProvider.GetFileContent(pathToDummyModel);
@@ -284,15 +301,18 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
-            
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
+
             List<object> models = new List<object>();
             models.Add(new DummyModel());
             models.Add(new RecursiveModel());
             models.Add(new RecursiveModel2());
             models.Add(new EmptyModel());
             models.Add(new DeepModel());
-            
+
             var sampleCode = _sampleCodeGenerator.GetSampleCode(models);
 
             Assert.Equal(6, sampleCode.Count);
@@ -334,7 +354,10 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator((IStrategyGenerator)Activator.CreateInstance(strategyGeneratorType, new object[]{_fileContentProvider}), _loadersHolderMock.Object);
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(new DummyModelWithMethods());
 
             Assert.Equal(2, sampleCode.Count);
@@ -345,14 +368,15 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             Assert.Equal("DummyModelWithMethods", sampleCode[0].Name);
             Assert.Equal("script", sampleCode[1].Name);
         }
-        
+
         [Theory]
         [InlineData(
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods_Expando.txt",
             "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
             typeof(DummyModelWithMethodsExpando))]
-        public void GenerateSampleCode_WithCSharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
-            string pathToModel, string pathToSampleCode, Type type)
+        public void
+            GenerateSampleCode_WithCSharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
+                string pathToModel, string pathToSampleCode, Type type)
         {
             var modelContent =
                 _fileContentProvider.GetFileContent(pathToModel);
@@ -360,7 +384,8 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
             var sampleCodeContent =
                 _fileContentProvider.GetFileContent(pathToSampleCode);
 
-            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolderMock.Object);
+            _sampleCodeGenerator = new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider),
+                _loadersHolderMock.Object);
             var sampleCode = _sampleCodeGenerator.GetSampleCode(Activator.CreateInstance(type));
 
             Assert.Equal(2, sampleCode.Count);
@@ -370,6 +395,135 @@ namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
 
             Assert.Equal(type.Name, sampleCode[0].Name);
             Assert.Equal("script", sampleCode[1].Name);
+        }
+
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/CSharpDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/CSharp/CSharpGenericModel_GenericModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/CSharp/CSharpGenericModel_GenericModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/CSharp/CSharpGenericModel_NestedGenericModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt",
+            typeof(CSharpStrategyGenerator))]
+        public void GenerateSampleCode_NestedGenericModel_ModelGivenAsObject_ShouldReturnGenericModel_CSharp(
+            string pathToDummyModel, string pathToDummyModelWithMethods, string pathToGenericModel,
+            string pathToGenericModel2,
+            string pathToNestedGenericModel, string pathToSampleCode, Type strategyGeneratorType)
+        {
+            var dummyModelContent =
+                _fileContentProvider.GetFileContent(pathToDummyModel);
+
+            var dummyModelWithMethodsContent =
+                _fileContentProvider.GetFileContent(pathToDummyModelWithMethods);
+
+            var genericModelContent =
+                _fileContentProvider.GetFileContent(pathToGenericModel);
+
+            var genericModel2Content =
+                _fileContentProvider.GetFileContent(pathToGenericModel2);
+
+            var nestedGenericModelContent =
+                _fileContentProvider.GetFileContent(pathToNestedGenericModel);
+
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new NestedGenericModel());
+
+            Assert.Equal(6, sampleCode.Count);
+
+            Assert.Equal(genericModelContent, sampleCode[0].Content);
+            Assert.Equal(genericModel2Content, sampleCode[1].Content);
+            Assert.Equal(dummyModelWithMethodsContent, sampleCode[2].Content);
+            Assert.Equal(dummyModelContent, sampleCode[3].Content);
+            Assert.Equal(nestedGenericModelContent, sampleCode[4].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[5].Content);
+        }
+
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/PythonDummyModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/Python/PythonGenericModel_GenericModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/Python/PythonGenericModel_GenericModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/Python/PythonGenericModel_NestedGenericModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            typeof(PythonStrategyGenerator))]
+        public void
+            GenerateSampleCode_NestedGenericModel_ModelGivenAsObject_ShouldReturnGenericModel_Python(
+                string pathToDummyModel, string pathToGenericModel, string pathToGenericModel2,
+                string pathToNestedGenericModel, string pathToSampleCode, Type strategyGeneratorType)
+        {
+            var dummyModelContent =
+                _fileContentProvider.GetFileContent(pathToDummyModel);
+
+            var genericModelContent =
+                _fileContentProvider.GetFileContent(pathToGenericModel);
+
+            var genericModel2Content =
+                _fileContentProvider.GetFileContent(pathToGenericModel2);
+
+            var nestedGenericModelContent =
+                _fileContentProvider.GetFileContent(pathToNestedGenericModel);
+
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new NestedGenericModel());
+
+            Assert.Equal(5, sampleCode.Count);
+
+            Assert.Equal(genericModelContent, sampleCode[0].Content);
+            Assert.Equal(genericModel2Content, sampleCode[1].Content);
+            Assert.Equal(dummyModelContent, sampleCode[2].Content);
+            Assert.Equal(nestedGenericModelContent, sampleCode[3].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[4].Content);
+        }
+
+        [Theory]
+        [InlineData(
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/Javascript/JavascriptGenericModel_GenericModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/Javascript/JavascriptGenericModel_GenericModel2.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/GenericModel/Javascript/JavascriptGenericModel_NestedGenericModel.txt",
+            "Scripts/ScriptSampleGenerators/ScriptSampleTestStrings/SampleCode/Javascript_SampleCode.txt",
+            typeof(JavascriptStrategyGenerator))]
+        public void
+            GenerateSampleCode_NestedGenericModel_ModelGivenAsObject_ShouldReturnGenericModel_Javascript(
+                string pathToGenericModel, string pathToGenericModel2,
+                string pathToNestedGenericModel, string pathToSampleCode, Type strategyGeneratorType)
+        {
+            var genericModelContent =
+                _fileContentProvider.GetFileContent(pathToGenericModel);
+
+            var genericModel2Content =
+                _fileContentProvider.GetFileContent(pathToGenericModel2);
+
+            var nestedGenericModelContent =
+                _fileContentProvider.GetFileContent(pathToNestedGenericModel);
+
+            var sampleCodeContent =
+                _fileContentProvider.GetFileContent(pathToSampleCode);
+
+            _sampleCodeGenerator =
+                new SampleCodeGenerator(
+                    (IStrategyGenerator) Activator.CreateInstance(strategyGeneratorType,
+                        new object[] {_fileContentProvider}), _loadersHolderMock.Object);
+            var sampleCode = _sampleCodeGenerator.GetSampleCode(new NestedGenericModel());
+
+            Assert.Equal(4, sampleCode.Count);
+
+            Assert.Equal(genericModelContent, sampleCode[0].Content);
+            Assert.Equal(genericModel2Content, sampleCode[1].Content);
+            Assert.Equal(nestedGenericModelContent, sampleCode[2].Content);
+            Assert.Equal(sampleCodeContent, sampleCode[3].Content);
         }
     }
 }

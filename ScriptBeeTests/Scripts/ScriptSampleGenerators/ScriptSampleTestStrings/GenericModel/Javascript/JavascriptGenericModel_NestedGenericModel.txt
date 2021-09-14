@@ -1,0 +1,10 @@
+﻿class NestedGenericModel extends GenericModel
+{
+    generic = new GenericModel();
+    generic2 = new GenericModel();
+
+    GetGenericModel: function(gen)
+    {
+        return new GenericModel();
+    }
+}

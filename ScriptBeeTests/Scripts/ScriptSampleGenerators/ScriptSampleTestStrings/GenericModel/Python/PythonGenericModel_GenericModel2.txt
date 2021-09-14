@@ -1,0 +1,2 @@
+﻿class GenericModel[T1, T2]:
+    pass
