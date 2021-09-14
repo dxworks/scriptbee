@@ -15,11 +15,18 @@ namespace HelperFunctions
             _dictionary = new Dictionary<string, Delegate>
             {
                 {"print", new Action<object>(_helperFunctions.Print)},
+                {"printFile", new Action<string, string>(_helperFunctions.WriteToFile)},
+                {"appendFile", new Action<string, string>(_helperFunctions.AppendToFile)},
+                {"appendCsv", new Action<string, List<object>>(_helperFunctions.AppendToCsv)},
+                {"exportJson", new Action<string, string>(_helperFunctions.ExportJson)},
+                {"exportCsv", new Action<string, List<object>>(_helperFunctions.ExportCsv)},
+
+                {"importJson", new Func<string, object, object>(_helperFunctions.ImportJson)},
                 {
                     "get",
-                    new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>, string, IEnumerable<Dictionary<string, ScriptBeeModel>>>(_helperFunctions.Get)
+                    new Func<Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>>, string,
+                        IEnumerable<Dictionary<string, ScriptBeeModel>>>(_helperFunctions.Get)
                 },
-                {"printf", new Action<string, string>(_helperFunctions.WriteToFile)},
             };
         }
 
