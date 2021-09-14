@@ -14,8 +14,9 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
         private readonly ISet<string> _generatedClassNames = new HashSet<string>();
         private readonly HashSet<string> _acceptedModules = new HashSet<string>();
 
-        private readonly BindingFlags _bindingFlags =
-            BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public;
+        private const BindingFlags BindingFlags = System.Reflection.BindingFlags.DeclaredOnly |
+                                                  System.Reflection.BindingFlags.Instance |
+                                                  System.Reflection.BindingFlags.Public;
 
         private const string ClassName = "ScriptContent";
 
@@ -91,7 +92,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
 
         private IList<SampleCodeFile> GenerateClasses(Type type)
         {
-            if (_generatedClassNames.Contains(type.Name))
+            if (_generatedClassNames.Contains(type.Name) || IsPrimitive(type) || !IsAcceptedModule(type.Module))
             {
                 return new List<SampleCodeFile>();
             }
@@ -99,15 +100,23 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             _generatedClassNames.Add(type.Name);
 
             var sampleCodeFiles = new List<SampleCodeFile>();
-            
+
             var stringBuilder = new StringBuilder();
+
+            var genericTypes = new HashSet<Type>();
 
             var baseType = type.BaseType;
 
             if (baseType != null && IsAcceptedModule(baseType.Module))
             {
-                stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type.Name, baseType.Name));
-                
+                stringBuilder.AppendLine(
+                    _strategyGenerator.GenerateClassName(type, baseType, out var baseClassGenericTypes));
+
+                foreach (var genericType in baseClassGenericTypes)
+                {
+                    genericTypes.Add(genericType);
+                }
+
                 if (!_generatedClassNames.Contains(baseType.Name))
                 {
                     sampleCodeFiles.AddRange(GenerateClasses(baseType));
@@ -115,28 +124,24 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             }
             else
             {
-                stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type.Name));
+                stringBuilder.AppendLine(_strategyGenerator.GenerateClassName(type));
             }
-            
+
             var classStart = _strategyGenerator.GenerateClassStart();
             if (!string.IsNullOrEmpty(classStart))
             {
                 stringBuilder.AppendLine(classStart);
             }
 
-            foreach (var fieldInfo in type.GetFields(_bindingFlags))
+            foreach (var fieldInfo in type.GetFields(BindingFlags))
             {
-                if (!IsAcceptedModule(fieldInfo.Module))
-                {
-                    continue;
-                }
-
                 var modifier = GetFieldModifier(fieldInfo);
                 stringBuilder.AppendLine(_strategyGenerator.GenerateField(modifier, fieldInfo.FieldType,
-                    fieldInfo.Name));
-                if (IsPrimitive(fieldInfo.FieldType))
+                    fieldInfo.Name, out var receivedGenericTypes));
+
+                foreach (var genericType in receivedGenericTypes)
                 {
-                    continue;
+                    genericTypes.Add(genericType);
                 }
 
                 if (!_generatedClassNames.Contains(fieldInfo.FieldType.Name))
@@ -145,19 +150,15 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                 }
             }
 
-            foreach (var propertyInfo in type.GetProperties(_bindingFlags))
+            foreach (var propertyInfo in type.GetProperties(BindingFlags))
             {
-                if (!IsAcceptedModule(propertyInfo.Module))
-                {
-                    continue;
-                }
-
                 const string modifier = "public";
                 stringBuilder.AppendLine(_strategyGenerator.GenerateProperty(modifier, propertyInfo.PropertyType,
-                    propertyInfo.Name));
-                if (IsPrimitive(propertyInfo.PropertyType))
+                    propertyInfo.Name, out var receivedGenericTypes));
+
+                foreach (var genericType in receivedGenericTypes)
                 {
-                    continue;
+                    genericTypes.Add(genericType);
                 }
 
                 if (!_generatedClassNames.Contains(propertyInfo.PropertyType.Name))
@@ -166,9 +167,9 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                 }
             }
 
-            foreach (var methodInfo in type.GetMethods(_bindingFlags))
+            foreach (var methodInfo in type.GetMethods(BindingFlags))
             {
-                if (methodInfo.IsSpecialName || !IsAcceptedModule(methodInfo.Module))
+                if (methodInfo.IsSpecialName)
                 {
                     continue;
                 }
@@ -176,17 +177,30 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
                 var modifier = GetMethodModifier(methodInfo);
                 var methodParameters = methodInfo.GetParameters();
 
-                List<Tuple<string, string>> parameters = new List<Tuple<string, string>>();
+                List<Tuple<Type, string>> parameters = new List<Tuple<Type, string>>();
 
                 foreach (var param in methodParameters)
                 {
-                    parameters.Add(new Tuple<string, string>(param.ParameterType.Name, param.Name));
+                    parameters.Add(new Tuple<Type, string>(param.ParameterType, param.Name));
                 }
 
                 stringBuilder.AppendLine();
 
                 stringBuilder.Append(_strategyGenerator.GenerateMethod(modifier, methodInfo.ReturnType,
-                    methodInfo.Name, parameters));
+                    methodInfo.Name, parameters, out var receivedGenericTypes));
+
+                foreach (var genericType in receivedGenericTypes)
+                {
+                    genericTypes.Add(genericType);
+                }
+            }
+
+            foreach (var genericType in genericTypes)
+            {
+                if (!_generatedClassNames.Contains(genericType.Name))
+                {
+                    sampleCodeFiles.AddRange(GenerateClasses(genericType));
+                }
             }
 
             // 4 = default object methods

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using ScriptBee.Utils;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 {
     public class CSharpStrategyGenerator : IStrategyGenerator
     {
-        private string _modelType;
-
         private readonly IFileContentProvider _fileContentProvider;
 
         private const string StartComment = "// Only the code written in the ExecuteScript method will be executed";
@@ -19,14 +15,17 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             _fileContentProvider = fileContentProvider;
         }
 
-        public string GenerateClassName(string className)
+        public string GenerateClassName(Type classType)
         {
+            var className = GetTypeName(classType);
             return $"public class {className}";
         }
-        
-        public string GenerateClassName(string className, string superClassName)
+
+        public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes)
         {
-            return $"public class {className} : {superClassName}";
+            var baseTypeName = GetTypeName(baseClassType, out baseClassGenericTypes);
+            var className = GetTypeName(classType);
+            return $"public class {className} : {baseTypeName}";
         }
 
         public string GenerateClassStart()
@@ -39,28 +38,38 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return "}";
         }
 
-        public string GenerateField(string fieldModifier, Type fieldType, string fieldName)
+        public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
+            out HashSet<Type> genericTypes)
         {
-            var fieldTypeName = GetTypeName(fieldType);
+            var fieldTypeName = GetTypeName(fieldType, out genericTypes);
             return $"    {fieldModifier} {fieldTypeName} {fieldName};";
         }
 
-        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName)
+        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
+            out HashSet<Type> genericTypes)
         {
-            var propertyTypeName = GetTypeName(propertyType);
+            var propertyTypeName = GetTypeName(propertyType, out genericTypes);
             return $"    {propertyModifier} {propertyTypeName} {propertyName} {{ get; set; }}";
         }
 
-        public string GenerateMethod(string methodModifier, Type methodType, string methodName, List<Tuple<string, string>> methodParams)
+        public string GenerateMethod(string methodModifier, Type methodType, string methodName,
+            List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes)
         {
             var stringBuilder = new StringBuilder();
-            var methodTypeName = GetTypeName(methodType);
+
+            var methodTypeName = GetTypeName(methodType, out genericTypes);
             stringBuilder.Append($"    {methodModifier} {methodTypeName} {methodName}(");
-            
+
             for (var i = 0; i < methodParams.Count; i++)
             {
                 var tuple = methodParams[i];
-                var type = GetPrimitiveType(tuple.Item1);
+                var type = GetTypeName(tuple.Item1, out var genericParamSet);
+
+                foreach (var genericParam in genericParamSet)
+                {
+                    genericTypes.Add(genericParam);
+                }
+
                 stringBuilder.Append($"{type} {tuple.Item2}");
                 if (i != methodParams.Count - 1)
                 {
@@ -75,7 +84,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             {
                 stringBuilder.AppendLine("        return default;");
             }
-            
+
             stringBuilder.AppendLine("    }");
 
             return stringBuilder.ToString();
@@ -83,7 +92,6 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         public string GenerateModelDeclaration(string modelType)
         {
-            _modelType = modelType;
             return "";
         }
 
@@ -198,9 +206,76 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return type;
         }
 
+        private string GetTypeName(Type type, out HashSet<Type> genericTypes)
+        {
+            genericTypes = new HashSet<Type>();
+
+            if (!type.IsGenericType)
+            {
+                return GetPrimitiveType(type.Name);
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            
+            var name = type.Name;
+            name = name[0..^2];
+            
+            stringBuilder.Append(name);
+            stringBuilder.Append('<');
+
+            for (var i = 0; i < type.GenericTypeArguments.Length; i++)
+            {
+                var genericType = type.GenericTypeArguments[i];
+
+                genericTypes.Add(genericType);
+
+                stringBuilder.Append(GetTypeName(genericType, out var nestedGenericTypes));
+
+                foreach (var genType in nestedGenericTypes)
+                {
+                    genericTypes.Add(genType);
+                }
+
+                if (i != type.GenericTypeArguments.Length - 1)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.Append('>');
+
+            return stringBuilder.ToString();
+        }
+        
         private string GetTypeName(Type type)
         {
-            return GetPrimitiveType(type.Name);
+            if (!type.IsGenericType)
+            {
+                return GetPrimitiveType(type.Name);
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            var name = type.Name;
+            name = name[0..^2];
+            
+            stringBuilder.Append(name);
+            stringBuilder.Append('<');
+
+            for (var i = 0; i < type.GenericTypeArguments.Length; i++)
+            {
+                stringBuilder.Append('T');
+                stringBuilder.Append(i+1);
+
+                if (i != type.GenericTypeArguments.Length - 1)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.Append('>');
+
+            return stringBuilder.ToString();
         }
     }
 }

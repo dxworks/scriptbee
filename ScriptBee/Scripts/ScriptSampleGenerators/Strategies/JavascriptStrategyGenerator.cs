@@ -14,14 +14,21 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             _fileContentProvider = fileContentProvider;
         }
 
-        public string GenerateClassName(string className)
+        public string GenerateClassName(Type classType)
         {
+            var className = GetTypeName(classType);
+
             return $"class {className}";
         }
         
-        public string GenerateClassName(string className, string superClassName)
+        public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes)
         {
-            return $"class {className} extends {superClassName}";
+            baseClassGenericTypes = new HashSet<Type>();
+
+            var className = GetTypeName(classType);
+            var baseClassName = GetTypeName(baseClassType);
+
+            return $"class {className} extends {baseClassName}";
         }
 
         public string GenerateClassStart()
@@ -34,20 +41,28 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return "}";
         }
 
-        public string GenerateField(string fieldModifier, Type fieldType, string fieldName)
+        public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
+            out HashSet<Type> genericTypes)
         {
+            genericTypes = new HashSet<Type>();
+            
             var fieldTypeName = GetTypeName(fieldType);
             return $"    {fieldName} = {GetFieldInitializationValue(fieldTypeName)};";
         }
 
-        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName)
+        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
+            out HashSet<Type> genericTypes)
         {
-            return GenerateField(propertyModifier, propertyType, propertyName);
+            return GenerateField(propertyModifier, propertyType, propertyName, out genericTypes);
         }
 
-        public string GenerateMethod(string methodModifier, Type methodType, string methodName, List<Tuple<string, string>> methodParams)
+        public string GenerateMethod(string methodModifier, Type methodType, string methodName,
+            List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes)
         {
+            genericTypes = new HashSet<Type>();
+
             var methodTypeName = GetTypeName(methodType);
+            
             var stringBuilder = new StringBuilder();
             stringBuilder.Append($"    {methodName}: function(");
             
@@ -133,7 +148,14 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
 
         private string GetTypeName(Type type)
         {
-            return type.Name;
+            var name = type.Name;
+            
+            if (type.IsGenericType)
+            {
+                name = name[0..^2];
+            }
+
+            return name;
         }
     }
 }

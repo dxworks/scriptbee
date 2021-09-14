@@ -14,14 +14,17 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             _fileContentProvider = fileContentProvider;
         }
 
-        public string GenerateClassName(string className)
+        public string GenerateClassName(Type classType)
         {
+            var className = GetTypeName(classType);
             return $"class {className}:";
         }
         
-        public string GenerateClassName(string className, string superClassName)
+        public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes)
         {
-            return $"class {className}({superClassName}):";
+            var baseTypeName = GetTypeName(baseClassType, out baseClassGenericTypes);
+            var className = GetTypeName(classType);
+            return $"class {className}({baseTypeName}):";
         }
 
         public string GenerateClassStart()
@@ -34,57 +37,24 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return "";
         }
 
-        public string GenerateField(string fieldModifier, Type fieldType, string fieldName)
+        public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
+            out HashSet<Type> genericTypes)
         {
-            var fieldTypeName = GetTypeName(fieldType);
-            if (fieldTypeName is
-                "decimal" or "System.Decimal"or "Decimal"or
-                "double" or "System.Double"or "Double"or
-                "float" or "System.Single" or "Single")
-            {
-                return $"    {fieldName}: float";
-            }
-
-            if (fieldTypeName is
-                "byte" or "System.Byte" or "Byte" or
-                "sbyte" or "System.SByte" or "SByte" or
-                "int" or "System.Int32"or "Int32" or
-                "uint" or "System.UInt32"or "UInt32" or
-                "short" or "System.Int16"or "Int16" or
-                "ushort" or "System.UInt16" or "UInt16")
-            {
-                return $"    {fieldName}: int";
-            }
-
-            if (fieldTypeName is
-                "long" or "System.Int64"or "Int64" or
-                "ulong" or "System.UInt64" or "UInt64")
-            {
-                return $"    {fieldName}: long";
-            }
-
-            if (fieldTypeName is
-                "char" or "System.Char"or "Char" or
-                "string" or "System.String" or "String")
-            {
-                return $"    {fieldName}: str";
-            }
-
-            if (fieldTypeName is "bool" or "System.Boolean" or "Boolean")
-            {
-                return $"    {fieldName}: bool";
-            }
-
+            var fieldTypeName = GetTypeName(fieldType, out genericTypes);
             return $"    {fieldName}: {fieldTypeName}";
         }
 
-        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName)
+        public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
+            out HashSet<Type> genericTypes)
         {
-            return GenerateField(propertyModifier, propertyType, propertyName);
+            return GenerateField(propertyModifier, propertyType, propertyName, out genericTypes);
         }
 
-        public string GenerateMethod(string methodModifier, Type methodType, string methodName, List<Tuple<string, string>> methodParams)
+        public string GenerateMethod(string methodModifier, Type methodType, string methodName,
+            List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes)
         {
+            genericTypes = new HashSet<Type>();
+            
             var stringBuilder = new StringBuilder();
             stringBuilder.Append($"    def {methodName}(");
             
@@ -135,9 +105,103 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators.Strategies
             return ValidScriptDelimiters.PythonEndComment;
         }
 
+        private string GetPrimitiveTypeName(string typeName)
+        {
+            switch (typeName)
+            {
+                case "decimal" or "System.Decimal"or "Decimal"or
+                    "double" or "System.Double"or "Double"or
+                    "float" or "System.Single" or "Single":
+                    return "float";
+                case "byte" or "System.Byte" or "Byte" or
+                    "sbyte" or "System.SByte" or "SByte" or
+                    "int" or "System.Int32"or "Int32" or
+                    "uint" or "System.UInt32"or "UInt32" or
+                    "short" or "System.Int16"or "Int16" or
+                    "ushort" or "System.UInt16" or "UInt16":
+                    return "int";
+                case "long" or "System.Int64"or "Int64" or
+                    "ulong" or "System.UInt64" or "UInt64":
+                    return "long";
+                case "char" or "System.Char"or "Char" or
+                    "string" or "System.String" or "String":
+                    return "str";
+                case "bool" or "System.Boolean" or "Boolean":
+                    return "bool";
+                default:
+                    return typeName;
+            }
+        }
+
+        private string GetTypeName(Type type, out HashSet<Type> genericTypes)
+        {
+            genericTypes = new HashSet<Type>();
+            
+            if (!type.IsGenericType)
+            {
+                return GetPrimitiveTypeName(type.Name);
+            }
+            
+            StringBuilder stringBuilder = new StringBuilder();
+
+            var name = type.Name;
+            name = name[0..^2];
+            
+            stringBuilder.Append(name);
+            stringBuilder.Append('[');
+
+            for (var i = 0; i < type.GenericTypeArguments.Length; i++)
+            {
+                var genericType = type.GenericTypeArguments[i];
+                
+                genericTypes.Add(genericType);
+
+                stringBuilder.Append(GetTypeName(genericType, out var nestedGenericTypes));
+
+                foreach (var genType in nestedGenericTypes)
+                {
+                    genericTypes.Add(genType);
+                }
+                
+                if (i != type.GenericTypeArguments.Length - 1)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+            stringBuilder.Append(']');
+
+            return stringBuilder.ToString();
+        }
+        
         private string GetTypeName(Type type)
         {
-            return type.Name;
+            if (!type.IsGenericType)
+            {
+                return GetPrimitiveTypeName(type.Name);
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            var name = type.Name;
+            name = name[0..^2];
+            
+            stringBuilder.Append(name);
+            stringBuilder.Append('[');
+
+            for (var i = 0; i < type.GenericTypeArguments.Length; i++)
+            {
+                stringBuilder.Append('T');
+                stringBuilder.Append(i+1);
+
+                if (i != type.GenericTypeArguments.Length - 1)
+                {
+                    stringBuilder.Append(", ");
+                }
+            }
+
+            stringBuilder.Append(']');
+
+            return stringBuilder.ToString();
         }
     }
 }
