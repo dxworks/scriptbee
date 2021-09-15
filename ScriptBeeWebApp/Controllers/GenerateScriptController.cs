@@ -10,8 +10,8 @@ using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 
 namespace ScriptBeeWebApp.Controllers
 {
+    [ApiControllerRoute]
     [ApiController]
-    [Route("[controller]")]
     public class GenerateScriptController : ControllerBase
     {
         private readonly IFileContentProvider _fileContentProvider;

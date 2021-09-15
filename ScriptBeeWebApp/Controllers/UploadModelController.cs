@@ -13,8 +13,8 @@ using ScriptBeeWebApp.FolderManager;
 
 namespace ScriptBeeWebApp.Controllers
 {
+    [ApiControllerRoute]
     [ApiController]
-    [Route("[controller]")]
     public class UploadModelController : ControllerBase
     {
         private readonly IFolderWriter _folderWriter;

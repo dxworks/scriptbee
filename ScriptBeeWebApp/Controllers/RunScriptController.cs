@@ -12,8 +12,8 @@ using ScriptBeeWebApp.Extensions;
 
 namespace ScriptBeeWebApp.Controllers
 {
+    [ApiControllerRoute]
     [ApiController]
-    [Route("[controller]")]
     public class RunScriptController : ControllerBase
     {
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;

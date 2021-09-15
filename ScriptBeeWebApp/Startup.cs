@@ -30,7 +30,8 @@ namespace ScriptBeeWebApp
         {
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/src"; });
+            // services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.AddSingleton<IFolderWriter, FolderWriter>();
             services.AddSingleton<ILoadersHolder, LoadersHolder>();
             services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
@@ -60,7 +61,7 @@ namespace ScriptBeeWebApp
             }
 
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

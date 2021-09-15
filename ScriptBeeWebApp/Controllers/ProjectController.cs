@@ -6,8 +6,8 @@ using ScriptBeeWebApp.Arguments;
 
 namespace ScriptBeeWebApp.Controllers
 {
+    [ApiControllerRoute]
     [ApiController]
-    [Route("[controller]")]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectManager _projectManager;

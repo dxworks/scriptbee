@@ -7,8 +7,8 @@ using Microsoft.Extensions.Logging;
 
 namespace ScriptBeeWebApp.Controllers
 {
+    [ApiControllerRoute]
     [ApiController]
-    [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
