@@ -1,16 +1,20 @@
 <div class="mat-app-background">
   <mat-toolbar color="primary">
-    <span>ScriptBee</span>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <img src="../../assets/images/bee-icon.png" alt="logo" />
+      <div>ScriptBee</div>
+      <a _ngcontent-bqr-c47="" mat-button="" routerlinkactive="docs-navbar-header-item-selected"
+        class="mat-focus-indicator docs-navbar-hide-small docs-button mat-button mat-button-base ng-star-inserted"
+        tabindex="0" aria-disabled="false" href="/components"><span class="mat-button-wrapper">Components</span><span
+          matripple="" class="mat-ripple mat-button-ripple"></span><span class="mat-button-focus-overlay"></span></a>
+      <button mat-button [routerLink]="['/projects']">
+        Projects
+      </button>
+      <button mat-button [routerLink]="['/plugins']">
+        Plugins
+      </button>
+    </div>
     <span class="example-spacer"></span>
-    <button mat-button [routerLink]="['/']">
-      Home
-    </button>
-    <button mat-button [routerLink]="['/counter']">
-      Counter
-    </button>
-    <button mat-button [routerLink]="['/fetch-data']">
-      Fetch data
-    </button>
     <mat-slide-toggle [(ngModel)]="themeService.isDarkTheme" labelPosition="before">
       <mat-icon>bedtime</mat-icon>
     </mat-slide-toggle>
