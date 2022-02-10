@@ -1,6 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ProjectService } from '../services/project.service';
+import {Component, Inject} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {ProjectService} from "../services/project/project.service";
 
 @Component({
   selector: 'app-fetch-data',
@@ -16,7 +16,9 @@ export class FetchDataComponent {
   }
 
   doSmth() {
-    this._projectService.getProject("id001").subscribe(ceva => { console.log(ceva); });
+    this._projectService.getProject("id001").subscribe(ceva => {
+      console.log(ceva);
+    });
   }
 }
 

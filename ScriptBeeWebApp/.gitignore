@@ -181,6 +181,8 @@ orleans.codegen.cs
 
 /node_modules
 
+.angular
+
 # RIA/Silverlight projects
 Generated_Code/
 

@@ -16,8 +16,13 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {MatTableModule} from '@angular/material/table';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSortModule} from '@angular/material/sort';
+import {MatInputModule} from '@angular/material/input';
+
 import {ProjectsComponent} from './projects/projects.component';
-import {PluginsComponent} from './plugins/plugins.component';
 
 @NgModule({
   declarations: [
@@ -26,8 +31,7 @@ import {PluginsComponent} from './plugins/plugins.component';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    ProjectsComponent,
-    PluginsComponent
+    ProjectsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -37,8 +41,7 @@ import {PluginsComponent} from './plugins/plugins.component';
       {path: '', component: HomeComponent, pathMatch: 'full'},
       {path: 'counter', component: CounterComponent},
       {path: 'fetch-data', component: FetchDataComponent},
-      {path: 'projects', component: ProjectsComponent},
-      {path: 'plugins', component: PluginsComponent},
+      {path: 'projects', component: ProjectsComponent}
     ]),
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -46,7 +49,12 @@ import {PluginsComponent} from './plugins/plugins.component';
     MatIconModule,
     MatButtonModule,
     FormsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Arguments;
@@ -82,7 +85,7 @@ namespace ScriptBeeWebApp.Controllers
         {
             var projects = _projectManager.GetAllProjects();
 
-            return Ok(projects);
+            return Ok(projects.Values.ToList());
         }
     }
 }

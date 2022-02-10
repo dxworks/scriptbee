@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
+    "watch": "ng build --watch --configuration development",
     "build:ssr": "ng run ScriptBeeWebApp:server:dev",
     "test": "ng test",
     "lint": "ng lint",
