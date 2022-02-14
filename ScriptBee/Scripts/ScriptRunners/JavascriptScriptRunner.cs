@@ -26,7 +26,7 @@ namespace ScriptBee.Scripts.ScriptRunners
             var engine = new Engine();
             engine.SetValue("project", project);
 
-            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.ProjectId);
+            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.Id);
 
             foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
                 outputFolderPath))

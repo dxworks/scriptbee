@@ -8,6 +8,8 @@ namespace ScriptBee.ProjectContext
     {
         public Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> Context { get; set; } = new();
 
-        public string ProjectId { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

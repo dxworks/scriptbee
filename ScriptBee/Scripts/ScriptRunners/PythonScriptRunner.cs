@@ -30,7 +30,7 @@ namespace ScriptBee.Scripts.ScriptRunners
                 },
             };
 
-            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.ProjectId);
+            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.Id);
 
             foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
                 outputFolderPath))

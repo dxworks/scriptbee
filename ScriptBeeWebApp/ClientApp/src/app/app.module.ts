@@ -21,8 +21,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatInputModule} from '@angular/material/input';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import {ProjectsComponent} from './projects/projects.component';
+import {CreateProjectDialogComponent} from './projects/create-project-dialog/create-project-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {ProjectsComponent} from './projects/projects.component';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    CreateProjectDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -54,7 +57,8 @@ import {ProjectsComponent} from './projects/projects.component';
     MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

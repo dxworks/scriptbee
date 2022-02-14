@@ -29,7 +29,7 @@ namespace ScriptBee.Scripts.ScriptRunners
         {
             var compiledScript = CompileScript(scriptContent);
 
-            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.ProjectId);
+            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.Id);
 
             var helperFunctions = _helperFunctionsMapper.GetHelperFunctions(outputFolderPath);
 

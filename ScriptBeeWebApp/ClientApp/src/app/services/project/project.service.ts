@@ -1,27 +1,41 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Project} from "../../projects/project";
+import {Project} from '../../projects/project';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {contentHeaders} from '../../shared/headers';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  private getProjectUrl = "/api/project/get";
-  private getAllProjectsUrl = "/api/project/getAll";
-
-  // private createProjectUrl = "";
+  private getProjectUrl = '/api/project/get';
+  private getAllProjectsUrl = '/api/project/getAll';
+  private createProjectUrl = '/api/project/create';
 
   constructor(private http: HttpClient) {
   }
 
-  getProject(projectId) {
-    return this.http.get<Project>(this.getProjectUrl + "/" + projectId);
+  getProject(projectId): Observable<Project> {
+    return this.http.get(this.getProjectUrl + '/' + projectId, {headers: contentHeaders}).pipe(map((data: any) => ({
+      projectId: data.id,
+      projectName: data.name,
+      creationDate: data.creationDate
+    })));
   }
 
-  getAllProjects() {
-    return this.http.get<Project[]>(this.getAllProjectsUrl);
+  getAllProjects(): Observable<Project[]> {
+    return this.http.get(this.getAllProjectsUrl, {headers: contentHeaders}).pipe(map((data: any[]) => {
+      return data.map((project: any) => ({
+        projectId: project.id,
+        projectName: project.name,
+        creationDate: project.creationDate
+      }));
+    }));
   }
 
-  // createProject(projectId, projectName)
+  createProject(projectName) {
+    return this.http.post(this.createProjectUrl, {projectName: projectName}, {headers: contentHeaders});
+  }
 }
