@@ -13,39 +13,43 @@
   </div>
 
   <div style="width: 80%" class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <mat-table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="projectId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="projectId">Project Id</th>
-        <td mat-cell *matCellDef="let row"> {{row.projectId}} </td>
+        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header="projectId">Project Id</mat-header-cell>
+        <mat-cell mat-cell *matCellDef="let row"> {{row.projectId}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="projectName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="projectName">Project Name</th>
-        <td mat-cell *matCellDef="let row"> {{row.projectName}}</td>
+        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header="projectName">Project Name</mat-header-cell>
+        <mat-cell mat-cell *matCellDef="let row"> {{row.projectName}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header="creationDate">Creation Date</th>
-        <td mat-cell *matCellDef="let row"> {{row.creationDate | date}} </td>
+        <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header="creationDate">Creation Date
+        </mat-header-cell>
+        <mat-cell mat-cell *matCellDef="let row"> {{row.creationDate | date}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="deleteProject">
-        <th mat-header-cell class="delete-column-header" *matHeaderCellDef>Delete Project</th>
-        <td mat-cell *matCellDef="let row">
+        <mat-header-cell mat-header-cell *matHeaderCellDef>Delete Project</mat-header-cell>
+        <mat-cell mat-cell *matCellDef="let row">
           <button mat-icon-button aria-label="Delete icon button" (click)="onDeleteButtonClick($event, row)">
             <mat-icon>delete</mat-icon>
           </button>
-        </td>
+        </mat-cell>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row (click)="onRowClick(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+      <mat-row mat-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-row>
+      <mat-row mat-row matRipple (click)="onRowClick(row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
+<!--      <mat-row mat-row *matNoDataRow>-->
+<!--        <mat-cell colspan="4">No data matching the filter "{{input.value}}"</mat-cell>-->
+<!--      </mat-row>-->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
       </tr>
-    </table>
+    </mat-table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of projects"></mat-paginator>
   </div>

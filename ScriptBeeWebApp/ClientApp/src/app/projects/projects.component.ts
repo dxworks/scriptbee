@@ -7,6 +7,7 @@ import {ProjectService} from '../services/project/project.service';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateProjectDialogComponent} from './create-project-dialog/create-project-dialog.component';
 import {DeleteProjectDialogComponent} from './delete-project-dialog/delete-project-dialog.component';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-projects',
@@ -20,7 +21,7 @@ export class ProjectsComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog, private projectService: ProjectService) {
+  constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router) {
     this.getAllProjects();
   }
 
@@ -48,6 +49,7 @@ export class ProjectsComponent {
   }
 
   onDeleteButtonClick(event: Event, row: Project) {
+    event.stopPropagation();
     const dialogRef = this.dialog.open(DeleteProjectDialogComponent, {
       width: '300px',
     });
@@ -70,6 +72,7 @@ export class ProjectsComponent {
   }
 
   onRowClick(row: Project) {
-    console.log(row);
+    // console.log(row);
+    this.router.navigate([`/projects/${row.projectId}`]).then(r => {});
   }
 }

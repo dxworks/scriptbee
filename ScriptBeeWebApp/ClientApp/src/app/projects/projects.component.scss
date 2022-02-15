@@ -1,4 +1,4 @@
-table {
+mat-table {
   width: 100%;
 }
 
@@ -11,20 +11,17 @@ table {
   width: 100%;
 }
 
-th {
+mat-header-cell {
   font-size: 16px;
+  flex-direction: column;
+  justify-content: center;
 }
 
 mat-header-row {
   width: 100%;
 }
 
-.mat-header-cell {
-  flex-direction: column;
-  justify-content: center;
-}
-
-.mat-cell {
+mat-cell {
   text-align: center;
   justify-content: center;
 }
@@ -38,6 +35,12 @@ mat-header-row {
   text-align: center;
 }
 
-mat-header-cell, mat-cell {
+tr, td {
+  width: 100%;
+  display: flex;
   justify-content: center;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 8px;
 }
+
