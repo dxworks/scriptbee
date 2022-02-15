@@ -1,41 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Threading.Tasks;
 using ScriptBeePlugin;
 
-namespace DummyPlugin
+namespace DummyPlugin;
+
+public class DummyModelLoader : IModelLoader
 {
-    public class DummyModelLoader : IModelLoader
+    public async Task<Dictionary<string, Dictionary<string, ScriptBeeModel>>> LoadModel(List<Stream> fileStreams,
+        Dictionary<string, object> configuration = null)
     {
-        public Dictionary<string, Dictionary<string, ScriptBeeModel>> LoadModel(List<Stream> fileStreams, Dictionary<string, object> configuration = null)
+        var exposedEntities = new Dictionary<string, Dictionary<string, ScriptBeeModel>>();
+        var objectsDictionary = new Dictionary<string, ScriptBeeModel>();
+
+        for (var i = 0; i < fileStreams.Count; i++)
         {
-            Dictionary<string, Dictionary<string, ScriptBeeModel>> exposedEntities =
-                new Dictionary<string, Dictionary<string, ScriptBeeModel>>();
-
-            Dictionary<string, ScriptBeeModel> objectsDictionary = new Dictionary<string, ScriptBeeModel>();
-
-            var jsonSerializer = new JsonSerializer();
-
-            for (var i = 0; i < fileStreams.Count; i++)
-            {
-                using (var streamReader = new StreamReader(fileStreams[i]))
-                {
-                    using (var jsonTextReader = new JsonTextReader(streamReader))
-                    {
-                        var dummyObject = jsonSerializer.Deserialize<DummyModel>(jsonTextReader);
-                        objectsDictionary.Add(i.ToString(), dummyObject);
-                    }
-                }
-            }
-
-            exposedEntities.Add("DummyModel", objectsDictionary);
-
-            return exposedEntities;
+            var dummyObject = await JsonSerializer.DeserializeAsync<DummyModel>(fileStreams[i]);
+            objectsDictionary.Add(i.ToString(), dummyObject);
         }
 
-        public string GetName()
-        {
-            return "Dummy";
-        }
+        exposedEntities.Add("DummyModel", objectsDictionary);
+
+        return exposedEntities;
+    }
+
+    public string GetName()
+    {
+        return "Dummy";
     }
 }

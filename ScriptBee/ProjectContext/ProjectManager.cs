@@ -17,7 +17,7 @@ public class ProjectManager : IProjectManager
             Name = projectName,
             CreationDate = DateTime.Now
         };
-        
+
         _projects.Add(project.Id, project);
         return project;
     }
@@ -26,7 +26,6 @@ public class ProjectManager : IProjectManager
     {
         _projects.Remove(projectId);
     }
-
 
     public void AddToGivenProject(string projectId,
         Dictionary<string, Dictionary<string, ScriptBeeModel>> dictionary, string sourceName)
