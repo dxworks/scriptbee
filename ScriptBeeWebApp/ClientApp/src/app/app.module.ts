@@ -25,6 +25,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 
 import {ProjectsComponent} from './projects/projects.component';
 import {CreateProjectDialogComponent} from './projects/create-project-dialog/create-project-dialog.component';
+import {DeleteProjectDialogComponent} from './projects/delete-project-dialog/delete-project-dialog.component';
+import {MatRippleModule} from '@angular/material/core';
+import {ProjectDetailsComponent} from './project-details/project-details.component';
+import {ROUTES} from './app-routes';
 
 @NgModule({
   declarations: [
@@ -34,18 +38,15 @@ import {CreateProjectDialogComponent} from './projects/create-project-dialog/cre
     CounterComponent,
     FetchDataComponent,
     ProjectsComponent,
-    CreateProjectDialogComponent
+    CreateProjectDialogComponent,
+    DeleteProjectDialogComponent,
+    ProjectDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot([
-      {path: '', component: HomeComponent, pathMatch: 'full'},
-      {path: 'counter', component: CounterComponent},
-      {path: 'fetch-data', component: FetchDataComponent},
-      {path: 'projects', component: ProjectsComponent}
-    ]),
+    RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
     MatToolbarModule,
     MatSlideToggleModule,
@@ -59,6 +60,7 @@ import {CreateProjectDialogComponent} from './projects/create-project-dialog/cre
     MatSortModule,
     MatInputModule,
     MatDialogModule,
+    MatRippleModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

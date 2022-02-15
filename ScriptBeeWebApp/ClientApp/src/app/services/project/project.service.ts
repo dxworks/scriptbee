@@ -10,15 +10,13 @@ import {contentHeaders} from '../../shared/headers';
 })
 export class ProjectService {
 
-  private getProjectUrl = '/api/project/get';
-  private getAllProjectsUrl = '/api/project/getAll';
-  private createProjectUrl = '/api/project/create';
+  private projectsAPIUrl = '/api/projects';
 
   constructor(private http: HttpClient) {
   }
 
-  getProject(projectId): Observable<Project> {
-    return this.http.get(this.getProjectUrl + '/' + projectId, {headers: contentHeaders}).pipe(map((data: any) => ({
+  getProject(projectId: string): Observable<Project> {
+    return this.http.get(`${this.projectsAPIUrl}/${projectId}`, {headers: contentHeaders}).pipe(map((data: any) => ({
       projectId: data.id,
       projectName: data.name,
       creationDate: data.creationDate
@@ -26,7 +24,7 @@ export class ProjectService {
   }
 
   getAllProjects(): Observable<Project[]> {
-    return this.http.get(this.getAllProjectsUrl, {headers: contentHeaders}).pipe(map((data: any[]) => {
+    return this.http.get(this.projectsAPIUrl, {headers: contentHeaders}).pipe(map((data: any[]) => {
       return data.map((project: any) => ({
         projectId: project.id,
         projectName: project.name,
@@ -35,7 +33,11 @@ export class ProjectService {
     }));
   }
 
-  createProject(projectName) {
-    return this.http.post(this.createProjectUrl, {projectName: projectName}, {headers: contentHeaders});
+  createProject(projectName: string) {
+    return this.http.post(this.projectsAPIUrl, {projectName: projectName}, {headers: contentHeaders});
+  }
+
+  deleteProject(projectId: string) {
+    return this.http.delete(`${this.projectsAPIUrl}/${projectId}`, {headers: contentHeaders});
   }
 }

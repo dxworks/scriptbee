@@ -6,6 +6,7 @@ import {Project} from './project';
 import {ProjectService} from '../services/project/project.service';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateProjectDialogComponent} from './create-project-dialog/create-project-dialog.component';
+import {DeleteProjectDialogComponent} from './delete-project-dialog/delete-project-dialog.component';
 
 @Component({
   selector: 'app-projects',
@@ -46,11 +47,29 @@ export class ProjectsComponent {
     });
   }
 
+  onDeleteButtonClick(event: Event, row: Project) {
+    const dialogRef = this.dialog.open(DeleteProjectDialogComponent, {
+      width: '300px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.projectService.deleteProject(row.projectId).subscribe(res => {
+          this.getAllProjects();
+        });
+      }
+    });
+  }
+
   private getAllProjects() {
     this.projectService.getAllProjects().subscribe(projects => {
       this.dataSource = new MatTableDataSource(projects);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }
+
+  onRowClick(row: Project) {
+    console.log(row);
   }
 }

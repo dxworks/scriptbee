@@ -10,13 +10,32 @@ table {
 .main-div {
   width: 100%;
 }
-//
-//td, th {
-//  text-align: center;
-//}
 
 th {
   font-size: 16px;
+}
+
+mat-header-row {
+  width: 100%;
+}
+
+.mat-header-cell {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mat-cell {
+  text-align: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+.delete-column-header {
+  text-align: center;
 }
 
 mat-header-cell, mat-cell {
