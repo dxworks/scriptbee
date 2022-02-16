@@ -1,0 +1,27 @@
+<div class="dropzone"
+     appFileDrop
+     (filesHovered)="toggleHover($event)"
+     (filesDropped)="addFiles($event)"
+     [class.hovering]="isHovering">
+
+  <p>Drag and Drop Files</p>
+
+  <input #modelFileInput id="modelFile" mat-button
+         (change)="addFiles($event.target.files)" hidden type="file"
+         accept="application/json">
+  <button mat-raised-button color="primary"
+          (click)="openBrowseFilesDialog()" fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-icon aria-hidden="false" aria-label="Edit Icon">publish</mat-icon>
+    <span>Browse Files</span>
+  </button>
+
+</div>
+
+<mat-list>
+  <div>Uploads</div>
+  <mat-list-item *ngFor="let file of files; let index">
+    <mat-icon mat-list-icon>description</mat-icon>
+    <div>{{file.name}}</div>
+    <button mat-icon-button color="accent" (click)="onClearButtonClick(index)"><mat-icon>clear</mat-icon></button>
+  </mat-list-item>
+</mat-list>
