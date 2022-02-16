@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
 
@@ -20,15 +18,15 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAllProjects()
+    public IEnumerable<ReturnedProject> GetAllProjects()
     {
         var projects = _projectManager.GetAllProjects();
 
-        return Ok(projects.Values.ToList());
+        return projects.Values.Select(project => new ReturnedProject(project.Id, project.Name, project.CreationDate));
     }
 
     [HttpGet("{projectId}")]
-    public IActionResult GetProject(string projectId)
+    public ActionResult<ReturnedProject> GetProject(string projectId)
     {
         if (!string.IsNullOrEmpty(projectId))
         {
@@ -39,7 +37,7 @@ public class ProjectsController : ControllerBase
                 return NotFound($"Could not find project with id: {projectId}");
             }
 
-            return Ok(project);
+            return new ReturnedProject(project.Id, project.Name, project.CreationDate);
         }
 
         return BadRequest("You must provide a projectId for this operation");
@@ -50,14 +48,21 @@ public class ProjectsController : ControllerBase
     {
         var project = _projectManager.GetProject(projectId);
 
-        var dictionary = project.Context.Keys.GroupBy(tuple => tuple.Item1)
-            .ToDictionary(grouping => grouping.Key, grouping => grouping.Select(t => t.Item2).ToList());
+        var contextResult = project.Context.Keys.GroupBy(tuple => tuple.Item1)
+            .Select(grouping => new
+            {
+                name = grouping.Key,
+                children = grouping.Select(t => new
+                {
+                    name = t.Item2
+                })
+            });
 
-        return Ok(dictionary);
+        return Ok(contextResult);
     }
 
     [HttpPost]
-    public IActionResult CreateProject(CreateProject projectArg)
+    public ActionResult<ReturnedProject> CreateProject(CreateProject projectArg)
     {
         if (projectArg == null || string.IsNullOrWhiteSpace(projectArg.projectName))
         {
@@ -65,7 +70,7 @@ public class ProjectsController : ControllerBase
         }
 
         var project = _projectManager.CreateProject(projectArg.projectName);
-        return Ok(project);
+        return new ReturnedProject(project.Id, project.Name, project.CreationDate);
     }
 
     [HttpDelete("{projectId}")]

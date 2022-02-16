@@ -28,9 +28,11 @@
       </mat-select>
     </mat-form-field>
 
-    <app-drag-and-drop-files></app-drag-and-drop-files>
+    <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
 
-    <button mat-raised-button color="primary" (click)="onUploadFilesClick()">Upload Files</button>
+    <button mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload
+      Files
+    </button>
 
     <mat-divider></mat-divider>
 

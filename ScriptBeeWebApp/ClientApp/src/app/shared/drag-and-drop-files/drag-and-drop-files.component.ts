@@ -1,7 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {Upload} from './upload';
-import * as _ from 'lodash';
-import {UploadService} from '../../services/upload/upload.service';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-drag-and-drop-files',
@@ -11,9 +8,10 @@ import {UploadService} from '../../services/upload/upload.service';
 export class DragAndDropFilesComponent {
 
   @ViewChild('modelFileInput') modelFileInput: ElementRef;
+  @Output() filesChange = new EventEmitter<File[]>();
 
   isHovering: boolean;
-  files: any[] = [];
+  @Input() files: File[] = [];
 
   toggleHover(event: boolean) {
     this.isHovering = event;
@@ -23,7 +21,7 @@ export class DragAndDropFilesComponent {
     for (let i = 0; i < files.length; i++) {
       this.files.push(files.item(i));
     }
-    console.log(files);
+    this.filesChange.emit(this.files);
   }
 
   openBrowseFilesDialog() {

@@ -4,6 +4,7 @@ import {Project} from '../../projects/project';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {contentHeaders} from '../../shared/headers';
+import {TreeNode} from "../../shared/tree/tree.component";
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,7 @@ export class ProjectService {
   }
 
   getProjectContext(projectId: string) {
-    return this.http.get(`${this.projectsAPIUrl}/context/${projectId}`, {headers: contentHeaders}).pipe(map((data: any) => {
-      console.log(data);
-      return ({});
-    }));
+    return this.http.get<TreeNode[]>(`${this.projectsAPIUrl}/context/${projectId}`, {headers: contentHeaders});
   }
 
   getAllProjects(): Observable<Project[]> {

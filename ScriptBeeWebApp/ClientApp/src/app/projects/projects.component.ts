@@ -81,7 +81,6 @@ export class ProjectsComponent {
   }
 
   onRowClick(row: Project) {
-    // console.log(row);
     this.router.navigate([`/projects/${row.projectId}`]).then(r => {
     });
   }

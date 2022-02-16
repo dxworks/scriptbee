@@ -36,9 +36,9 @@ namespace ScriptBee.PluginManager
             }
         }
 
-        public List<IModelLoader> GetAllLoaders()
+        public IEnumerable<IModelLoader> GetAllLoaders()
         {
-            return loaders.Select(pair => pair.Value).ToList();
+            return loaders.Select(pair => pair.Value);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace ScriptBee.PluginManager
         
         public IModelLoader GetModelLoader(string modelName);
 
-        public List<IModelLoader> GetAllLoaders();
+        public IEnumerable<IModelLoader> GetAllLoaders();
     }
 }
