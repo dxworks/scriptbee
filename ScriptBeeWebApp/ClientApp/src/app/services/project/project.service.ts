@@ -23,6 +23,13 @@ export class ProjectService {
     })));
   }
 
+  getProjectContext(projectId: string) {
+    return this.http.get(`${this.projectsAPIUrl}/context/${projectId}`, {headers: contentHeaders}).pipe(map((data: any) => {
+      console.log(data);
+      return ({});
+    }));
+  }
+
   getAllProjects(): Observable<Project[]> {
     return this.http.get(this.projectsAPIUrl, {headers: contentHeaders}).pipe(map((data: any[]) => {
       return data.map((project: any) => ({

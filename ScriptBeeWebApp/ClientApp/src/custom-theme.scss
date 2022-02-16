@@ -55,3 +55,9 @@ $scriptbee-dark-theme: mat-dark-theme($scriptbee-dark-primary, $scriptbee-dark-a
 .dark-theme-mode {
   @include angular-material-theme($scriptbee-dark-theme);
 }
+
+:root {
+  --primary-color: #{mat-color($scriptbee-light-primary)};
+  --accent-color: #{mat-color($scriptbee-light-accent)};
+  --warn-color : #{mat-color($scriptbee-light-warn)};
+};

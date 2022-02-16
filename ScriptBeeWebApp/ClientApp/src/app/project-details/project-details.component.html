@@ -1,1 +1,42 @@
-<p>project-details works!</p>
+<mat-card *ngIf="!project">
+  <mat-card-title style="text-align: center">
+    Project Not Found
+  </mat-card-title>
+</mat-card>
+
+<mat-tab-group mat-stretch-tabs class="tabs" *ngIf="project" animationDuration="0ms">
+  <mat-tab label="Project Details">
+
+    <h1>Details</h1>
+
+    <div fxLayout="column" fxLayoutAlign="space-around start">
+      <span>Project Id: {{project.projectId}}</span>
+      <span>Project Name: {{project.projectName}}</span>
+      <span>Creation Date: {{project.creationDate | date}}</span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <h1>Add Models</h1>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Loader</mat-label>
+      <mat-select [(value)]="selectedLoader">
+        <mat-option *ngFor="let loader of loaders" [value]="loader">
+          {{loader}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <app-drag-and-drop-files></app-drag-and-drop-files>
+
+    <button mat-raised-button color="primary" (click)="onUploadFilesClick()">Upload Files</button>
+
+    <mat-divider></mat-divider>
+
+    <h1>Project Context</h1>
+
+    <appTree [treeData]="treeData"></appTree>
+  </mat-tab>
+  <mat-tab label="Run Script"> Content 2</mat-tab>
+</mat-tab-group>

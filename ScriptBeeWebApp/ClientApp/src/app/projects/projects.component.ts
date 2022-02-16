@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {CreateProjectDialogComponent} from './create-project-dialog/create-project-dialog.component';
 import {DeleteProjectDialogComponent} from './delete-project-dialog/delete-project-dialog.component';
 import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-projects',
@@ -21,7 +22,7 @@ export class ProjectsComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router) {
+  constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router, private snackBar: MatSnackBar) {
     this.getAllProjects();
   }
 
@@ -45,6 +46,10 @@ export class ProjectsComponent {
           this.getAllProjects();
         });
       }
+    }, (error: any) => {
+      this.snackBar.open("Could not create project!", 'Ok', {
+        duration: 4000
+      });
     });
   }
 
@@ -60,6 +65,10 @@ export class ProjectsComponent {
           this.getAllProjects();
         });
       }
+    }, (error: any) => {
+      this.snackBar.open("Could not delete project!", 'Ok', {
+        duration: 4000
+      });
     });
   }
 
@@ -73,6 +82,7 @@ export class ProjectsComponent {
 
   onRowClick(row: Project) {
     // console.log(row);
-    this.router.navigate([`/projects/${row.projectId}`]).then(r => {});
+    this.router.navigate([`/projects/${row.projectId}`]).then(r => {
+    });
   }
 }

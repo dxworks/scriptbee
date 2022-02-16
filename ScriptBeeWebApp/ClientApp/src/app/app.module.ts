@@ -8,8 +8,6 @@ import {FlexLayoutModule} from '@angular/flex-layout';
 import {AppComponent} from './app.component';
 import {NavMenuComponent} from './nav-menu/nav-menu.component';
 import {HomeComponent} from './home/home.component';
-import {CounterComponent} from './counter/counter.component';
-import {FetchDataComponent} from './fetch-data/fetch-data.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -22,6 +20,15 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatCardModule} from '@angular/material/card';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTreeModule} from '@angular/material/tree';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
+
 
 import {ProjectsComponent} from './projects/projects.component';
 import {CreateProjectDialogComponent} from './projects/create-project-dialog/create-project-dialog.component';
@@ -29,18 +36,22 @@ import {DeleteProjectDialogComponent} from './projects/delete-project-dialog/del
 import {MatRippleModule} from '@angular/material/core';
 import {ProjectDetailsComponent} from './project-details/project-details.component';
 import {ROUTES} from './app-routes';
+import {DragAndDropFilesComponent} from './shared/drag-and-drop-files/drag-and-drop-files.component';
+import {FileDropDirective} from './shared/file-drop-directive/file-drop.directive';
+import { TreeComponent } from './shared/tree/tree.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     ProjectsComponent,
     CreateProjectDialogComponent,
     DeleteProjectDialogComponent,
-    ProjectDetailsComponent
+    ProjectDetailsComponent,
+    DragAndDropFilesComponent,
+    FileDropDirective,
+    TreeComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -61,6 +72,14 @@ import {ROUTES} from './app-routes';
     MatInputModule,
     MatDialogModule,
     MatRippleModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatSelectModule,
+    MatTreeModule,
+    MatDividerModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
