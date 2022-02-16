@@ -28,6 +28,7 @@
     "bootstrap": "^4.6.0",
     "core-js": "^3.8.3",
     "jquery": "^3.5.1",
+    "ngx-file-drop": "^13.0.0",
     "node-sass": "^7.0.1",
     "oidc-client": "^1.11.3",
     "popper.js": "^1.16.0",

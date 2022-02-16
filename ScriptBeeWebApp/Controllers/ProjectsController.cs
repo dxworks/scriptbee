@@ -39,13 +39,13 @@ public class ProjectsController : ControllerBase
                 return NotFound($"Could not find project with id: {projectId}");
             }
 
-            return Ok(JsonConvert.SerializeObject(project, Formatting.Indented));
+            return Ok(project);
         }
 
         return BadRequest("You must provide a projectId for this operation");
     }
 
-    [HttpGet("/content/{projectId}")]
+    [HttpGet("context/{projectId}")]
     public IActionResult GetProjectContent(string projectId)
     {
         var project = _projectManager.GetProject(projectId);
