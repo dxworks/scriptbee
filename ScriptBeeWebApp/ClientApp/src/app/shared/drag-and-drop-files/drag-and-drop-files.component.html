@@ -22,6 +22,6 @@
   <mat-list-item *ngFor="let file of files; let index">
     <mat-icon mat-list-icon>description</mat-icon>
     <div>{{file.name}}</div>
-    <button mat-icon-button color="accent" (click)="onClearButtonClick(index)"><mat-icon>clear</mat-icon></button>
+    <button mat-icon-button color="warn" (click)="onClearButtonClick(index)"><mat-icon>clear</mat-icon></button>
   </mat-list-item>
 </mat-list>

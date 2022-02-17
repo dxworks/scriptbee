@@ -39,6 +39,10 @@ import {ROUTES} from './app-routes';
 import {DragAndDropFilesComponent} from './shared/drag-and-drop-files/drag-and-drop-files.component';
 import {FileDropDirective} from './shared/file-drop-directive/file-drop.directive';
 import { TreeComponent } from './shared/tree/tree.component';
+import { DetailsContentComponent } from './project-details/details-content/details-content.component';
+import { ScriptsContentComponent } from './project-details/scripts-content/scripts-content.component';
+import { NoScriptsComponent } from './project-details/scripts-content/no-scripts/no-scripts.component';
+import { SelectedScriptComponent } from './project-details/scripts-content/selected-script/selected-script.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,11 @@ import { TreeComponent } from './shared/tree/tree.component';
     ProjectDetailsComponent,
     DragAndDropFilesComponent,
     FileDropDirective,
-    TreeComponent
+    TreeComponent,
+    DetailsContentComponent,
+    ScriptsContentComponent,
+    NoScriptsComponent,
+    SelectedScriptComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

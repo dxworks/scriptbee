@@ -1,0 +1,34 @@
+<div *ngIf="projectDetailsService.project | async">
+  <h1>Details</h1>
+
+  <div fxLayout="column" fxLayoutAlign="space-around start">
+    <span>Project Id: {{(projectDetailsService.project | async).projectId}}</span>
+    <span>Project Name: {{(projectDetailsService.project | async).projectName}}</span>
+    <span>Creation Date: {{(projectDetailsService.project | async).creationDate | date}}</span>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <h1>Add Models</h1>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Loader</mat-label>
+    <mat-select [(value)]="selectedLoader">
+      <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">
+        {{loader}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
+
+  <button mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload
+    Files
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <h1>Project Context</h1>
+
+  <appTree [treeData]="(projectDetailsService.context | async)"></appTree>
+</div>
