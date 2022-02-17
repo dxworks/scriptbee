@@ -28,7 +28,9 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
+import {MonacoEditorModule} from '@materia-ui/ngx-monaco-editor';
 
 import {ProjectsComponent} from './projects/projects.component';
 import {CreateProjectDialogComponent} from './projects/create-project-dialog/create-project-dialog.component';
@@ -38,11 +40,11 @@ import {ProjectDetailsComponent} from './project-details/project-details.compone
 import {ROUTES} from './app-routes';
 import {DragAndDropFilesComponent} from './shared/drag-and-drop-files/drag-and-drop-files.component';
 import {FileDropDirective} from './shared/file-drop-directive/file-drop.directive';
-import { TreeComponent } from './shared/tree/tree.component';
-import { DetailsContentComponent } from './project-details/details-content/details-content.component';
-import { ScriptsContentComponent } from './project-details/scripts-content/scripts-content.component';
-import { NoScriptsComponent } from './project-details/scripts-content/no-scripts/no-scripts.component';
-import { SelectedScriptComponent } from './project-details/scripts-content/selected-script/selected-script.component';
+import {TreeComponent} from './shared/tree/tree.component';
+import {DetailsContentComponent} from './project-details/details-content/details-content.component';
+import {ScriptsContentComponent} from './project-details/scripts-content/scripts-content.component';
+import {NoScriptsComponent} from './project-details/scripts-content/no-scripts/no-scripts.component';
+import {SelectedScriptComponent} from './project-details/scripts-content/selected-script/selected-script.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +89,9 @@ import { SelectedScriptComponent } from './project-details/scripts-content/selec
     MatSelectModule,
     MatTreeModule,
     MatDividerModule,
-    MatListModule
+    MatListModule,
+    MatSidenavModule,
+    MonacoEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

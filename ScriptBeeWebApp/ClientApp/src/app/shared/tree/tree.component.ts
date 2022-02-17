@@ -26,4 +26,10 @@ export class TreeComponent {
   }
 
   hasChild = (_: number, node: TreeNode) => !!node.children && node.children.length > 0;
+
+  onLeafNodeClick(node: TreeNode) {
+    console.log(node);
+    console.log(this.treeControl);
+    console.log(this.dataSource);
+  }
 }

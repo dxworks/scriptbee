@@ -1,1 +1,11 @@
-<p>scripts-content works!</p>
+<div class="example-container" fxLayout="row">
+  <div fxFlex="20" class="tree-div">
+    <div fxLayout="row" fxLayoutAlign="end">
+      <button mat-icon-button color="warn" ><mat-icon>note_add</mat-icon></button>
+    </div>
+    <appTree [treeData]="demoTree"></appTree>
+  </div>
+  <div fxFlex>
+    <router-outlet></router-outlet>
+  </div>
+</div>
