@@ -16,6 +16,7 @@ namespace ScriptBeeWebApp.FolderManager
                 Directory.CreateDirectory(ConfigFolders.PathToModels);
                 Directory.CreateDirectory(ConfigFolders.PathToResults);
                 Directory.CreateDirectory(ConfigFolders.PathToPlugins);
+                Directory.CreateDirectory(ConfigFolders.PathToProjects);
             }
         }
 

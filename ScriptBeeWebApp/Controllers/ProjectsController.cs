@@ -11,10 +11,12 @@ namespace ScriptBeeWebApp.Controllers;
 public class ProjectsController : ControllerBase
 {
     private readonly IProjectManager _projectManager;
+    private readonly IProjectFileStructureManager _projectFileStructureManager;
 
-    public ProjectsController(IProjectManager projectManager)
+    public ProjectsController(IProjectManager projectManager, IProjectFileStructureManager projectFileStructureManager)
     {
         _projectManager = projectManager;
+        _projectFileStructureManager = projectFileStructureManager;
     }
 
     [HttpGet]
@@ -48,6 +50,11 @@ public class ProjectsController : ControllerBase
     {
         var project = _projectManager.GetProject(projectId);
 
+        if (project == null)
+        {
+            return Ok(new List<string>());
+        }
+
         var contextResult = project.Context.Keys.GroupBy(tuple => tuple.Item1)
             .Select(grouping => new
             {
@@ -64,12 +71,21 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public ActionResult<ReturnedProject> CreateProject(CreateProject projectArg)
     {
-        if (projectArg == null || string.IsNullOrWhiteSpace(projectArg.projectName))
+        if (projectArg == null || string.IsNullOrWhiteSpace(projectArg.projectId) ||
+            string.IsNullOrEmpty(projectArg.projectName))
         {
             return BadRequest("Invalid arguments. Creation failed!");
         }
 
-        var project = _projectManager.CreateProject(projectArg.projectName);
+        var project = _projectManager.CreateProject(projectArg.projectId, projectArg.projectName);
+
+        if (project == null)
+        {
+            return BadRequest("A project with this name already exists!");
+        }
+        
+        _projectFileStructureManager.CreateProjectFolderStructure(projectArg.projectId);
+
         return new ReturnedProject(project.Id, project.Name, project.CreationDate);
     }
 

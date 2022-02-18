@@ -7,13 +7,18 @@ namespace ScriptBee.ProjectContext;
 
 public class ProjectManager : IProjectManager
 {
-    private Dictionary<string, Project> _projects = new Dictionary<string, Project>();
+    private readonly Dictionary<string, Project> _projects = new Dictionary<string, Project>();
 
-    public Project CreateProject(string projectName)
+    public Project CreateProject(string projectId, string projectName)
     {
+        if (_projects.ContainsKey(projectId))
+        {
+            return null;
+        }
+
         var project = new Project
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = projectId,
             Name = projectName,
             CreationDate = DateTime.Now
         };

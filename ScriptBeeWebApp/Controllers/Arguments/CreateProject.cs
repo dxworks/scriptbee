@@ -1,3 +1,3 @@
 ﻿namespace ScriptBeeWebApp.Controllers.Arguments;
 
-public record CreateProject(string projectName);
+public record CreateProject(string projectId, string projectName);

@@ -5,7 +5,7 @@ namespace ScriptBee.ProjectContext
 {
     public interface IProjectManager
     {
-        public Project CreateProject(string projectName);
+        public Project CreateProject(string projectId, string projectName);
 
         public void RemoveProject(string projectId);
 
