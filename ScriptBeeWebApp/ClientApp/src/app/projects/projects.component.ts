@@ -42,9 +42,7 @@ export class ProjectsComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.projectService.createProject(result).subscribe(res => {
-          this.getAllProjects();
-        });
+        this.getAllProjects();
       }
     }, (error: any) => {
       this.snackBar.open("Could not create project!", 'Ok', {

@@ -43,9 +43,6 @@
       <mat-row mat-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-row>
       <mat-row mat-row matRipple (click)="onRowClick(row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-<!--      <mat-row mat-row *matNoDataRow>-->
-<!--        <mat-cell colspan="4">No data matching the filter "{{input.value}}"</mat-cell>-->
-<!--      </mat-row>-->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
       </tr>

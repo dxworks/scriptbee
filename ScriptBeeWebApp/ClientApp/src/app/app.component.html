@@ -1,7 +1,4 @@
-<div style="height: 100%"
-     [ngClass]="{'dark-theme-mode':themeService.isDarkTheme, 'mat-app-background': true}">
+<div style="height: 100%; width: 100%" [ngClass]="{'dark-theme-mode':themeService.isDarkTheme, 'mat-app-background': true}">
   <app-nav-menu></app-nav-menu>
-  <div style="height: calc(100vh - 64px)">
-    <router-outlet></router-outlet>
-  </div>
+  <router-outlet></router-outlet>
 </div>

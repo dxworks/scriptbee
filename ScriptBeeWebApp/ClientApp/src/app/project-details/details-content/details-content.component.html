@@ -1,11 +1,15 @@
-<div *ngIf="projectDetailsService.project | async">
-  <h1>Details</h1>
+<div class="project-details-main-div">
+  <mat-card *ngIf="projectDetailsService.project | async" fxLayout="column" fxLayoutAlign="center start">
+    <div class="section-title content">Details</div>
+    <div fxLayout="column" fxLayoutAlign="space-around start">
+      <span>Project Id: {{(projectDetailsService.project | async).projectId}}</span>
+      <span> </span>
+      <span>Project Name: {{(projectDetailsService.project | async).projectName}}</span>
+      <span>Creation Date: {{(projectDetailsService.project | async).creationDate | date}}</span>
+    </div>
+  </mat-card>
+</div>
 
-  <div fxLayout="column" fxLayoutAlign="space-around start">
-    <span>Project Id: {{(projectDetailsService.project | async).projectId}}</span>
-    <span>Project Name: {{(projectDetailsService.project | async).projectName}}</span>
-    <span>Creation Date: {{(projectDetailsService.project | async).creationDate | date}}</span>
-  </div>
 
   <mat-divider></mat-divider>
 
@@ -31,4 +35,3 @@
   <h1>Project Context</h1>
 
   <appTree [treeData]="(projectDetailsService.context | async)"></appTree>
-</div>

@@ -1,0 +1,27 @@
+.project-details-main-div{
+  width: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  place-content: center space-around;
+  align-items: center;
+}
+
+.mat-card {
+  width: 80%;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  flex-direction: row;
+  box-sizing: border-box;
+  display: flex;
+  place-content: center flex-start;
+  align-items: center;
+}
+
+.section-title {
+  font-size: 20px;
+}
+
+.content {
+  margin: 8px 8px;
+}

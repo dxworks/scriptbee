@@ -3,7 +3,6 @@ using System.Reflection;
 using HelperFunctions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +35,7 @@ public class Startup
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
         services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
         services.AddSingleton<IProjectManager, ProjectManager>();
+        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
         services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
     }
 
@@ -61,7 +61,7 @@ public class Startup
         }
 
         app.UseRouting();
-            
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllerRoute(
@@ -82,8 +82,8 @@ public class Startup
                 spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
             }
         });
-            
-        var loadersHolder = (ILoadersHolder) app.ApplicationServices.GetService(typeof(ILoadersHolder));
+
+        var loadersHolder = (ILoadersHolder)app.ApplicationServices.GetService(typeof(ILoadersHolder));
 
         CreateLoadersDictionary(loadersHolder);
     }
@@ -96,11 +96,11 @@ public class Startup
         {
             var pluginDLL = Assembly.LoadFile(pluginPath);
 
-            foreach(Type type in pluginDLL.GetExportedTypes())
+            foreach (Type type in pluginDLL.GetExportedTypes())
             {
                 if (typeof(IModelLoader).IsAssignableFrom(type))
                 {
-                    var modelLoader = (IModelLoader) Activator.CreateInstance(type);
+                    var modelLoader = (IModelLoader)Activator.CreateInstance(type);
                     loadersHolder.AddLoaderToDictionary(modelLoader);
                 }
             }

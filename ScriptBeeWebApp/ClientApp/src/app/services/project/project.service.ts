@@ -38,8 +38,11 @@ export class ProjectService {
     }));
   }
 
-  createProject(projectName: string) {
-    return this.http.post(this.projectsAPIUrl, {projectName: projectName}, {headers: contentHeaders});
+  createProject(projectId: string, projectName: string) {
+    return this.http.post(this.projectsAPIUrl, {
+      projectId: projectId,
+      projectName: projectName
+    }, {headers: contentHeaders});
   }
 
   deleteProject(projectId: string) {

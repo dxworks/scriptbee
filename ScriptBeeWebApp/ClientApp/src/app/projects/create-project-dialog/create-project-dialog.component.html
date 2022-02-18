@@ -5,9 +5,11 @@
       <mat-label>Project Name</mat-label>
       <input matInput [(ngModel)]="data.projectName">
     </mat-form-field>
+    <div>Your new project will be created as {{data.projectName | slugify}}</div>
+    <div style="color: var(--warn-color)" *ngIf="projectExists">A project with this name already exists</div>
   </div>
   <div mat-dialog-actions>
     <button mat-button (click)="onCancelClick()">Cancel</button>
-    <button mat-button [mat-dialog-close]="data.projectName">Ok</button>
+    <button mat-button (click)="onOkClick()">Ok</button>
   </div>
 </div>

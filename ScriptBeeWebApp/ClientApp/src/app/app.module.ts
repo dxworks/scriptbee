@@ -45,6 +45,7 @@ import {DetailsContentComponent} from './project-details/details-content/details
 import {ScriptsContentComponent} from './project-details/scripts-content/scripts-content.component';
 import {NoScriptsComponent} from './project-details/scripts-content/no-scripts/no-scripts.component';
 import {SelectedScriptComponent} from './project-details/scripts-content/selected-script/selected-script.component';
+import {SlugifyPipe} from './shared/slugify.pipe';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {SelectedScriptComponent} from './project-details/scripts-content/selecte
     DetailsContentComponent,
     ScriptsContentComponent,
     NoScriptsComponent,
-    SelectedScriptComponent
+    SelectedScriptComponent,
+    SlugifyPipe
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -93,7 +95,9 @@ import {SelectedScriptComponent} from './project-details/scripts-content/selecte
     MatSidenavModule,
     MonacoEditorModule
   ],
-  providers: [],
+  providers: [
+    SlugifyPipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
