@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {TreeNode} from '../../shared/tree/tree.component';
+import {FileSystemService} from "../../services/file-system/file-system.service";
+import {ProjectDetailsService} from "../project-details.service";
+import {FileTreeNode} from "./fileTreeNode";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-scripts-content',
@@ -8,32 +11,24 @@ import {TreeNode} from '../../shared/tree/tree.component';
 })
 export class ScriptsContentComponent implements OnInit {
 
-  demoTree: TreeNode[] = [
-    {
-      name: 'Fruit',
-      children: [{name: 'Apple'}, {name: 'Banana'}, {name: 'Fruit loops'}],
-    },
-    {
-      name: 'Vegetables',
-      children: [
-        {
-          name: 'Green',
-          children: [{name: 'Broccoli'}, {name: 'Brussels sprouts'}],
-        },
-        {
-          name: 'Orange',
-          children: [{name: 'Pumpkins'}, {name: 'Carrots'}],
-        },
-      ],
-    },
-  ];
+  fileStructureTree: FileTreeNode[] = [];
 
-  constructor() {
+  constructor(private fileSystemService: FileSystemService, private projectDetailsService: ProjectDetailsService, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    this.projectDetailsService.project.subscribe(project => {
+      if (project) {
+        this.fileSystemService.getFileSystem(project.projectId).subscribe(fileTreeNode => {
+          if (fileTreeNode) {
+            this.fileStructureTree = [fileTreeNode];
+          }
+        });
+      }
+    })
   }
 
-  setProjectId(id: string) {
+  onLeafClick(node: FileTreeNode) {
+    this.router.navigate([node.srcPath], {relativeTo: this.route});
   }
 }

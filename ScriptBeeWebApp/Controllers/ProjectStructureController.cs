@@ -80,7 +80,7 @@ public class ProjectStructureController : ControllerBase
     }
 
     [HttpGet("script")]
-    public async Task<ActionResult<string>> GetScriptContent(GetScriptContent arg)
+    public async Task<ActionResult<string>> GetScriptContent([FromQuery] GetScriptContent arg)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
         {

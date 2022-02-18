@@ -2,4 +2,5 @@
 
 export interface FileTreeNode extends TreeNode {
   filePath: string;
+  srcPath: string;
 }

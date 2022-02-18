@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
 
@@ -18,6 +18,8 @@ export class TreeComponent {
     this.dataSource.data = value;
   }
 
+  @Output() leafClick = new EventEmitter<TreeNode>();
+
   treeControl = new NestedTreeControl<TreeNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<TreeNode>();
 
@@ -25,11 +27,9 @@ export class TreeComponent {
     this.dataSource.data = [];
   }
 
-  hasChild = (_: number, node: TreeNode) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: TreeNode) => !!node.children && node.children.length >= 0;
 
   onLeafNodeClick(node: TreeNode) {
-    console.log(node);
-    console.log(this.treeControl);
-    console.log(this.dataSource);
+    this.leafClick.emit(node);
   }
 }

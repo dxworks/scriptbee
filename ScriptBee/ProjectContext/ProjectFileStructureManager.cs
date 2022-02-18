@@ -41,7 +41,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
             return File.ReadAllTextAsync(filePath);
         }
 
-        return Task.FromResult<>(null);
+        return Task.FromResult<string>(null);
     }
 
     public FileStream GetFileContentStream(string projectId, string relativePath)
@@ -61,31 +61,32 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
         if (Directory.Exists(srcPath))
         {
-            return GetFolderStructure(srcPath);
+            return GetFolderStructure(srcPath, srcPath);
         }
 
         return null;
     }
 
-    private FileTreeNode GetFolderStructure(string path)
+    private FileTreeNode GetFolderStructure(string path, string srcPath)
     {
         if (File.Exists(path))
         {
-            return new FileTreeNode(Path.GetFileName(path), null, path);
+            return new FileTreeNode(Path.GetFileName(path), null, path, Path.GetRelativePath(srcPath, path));
         }
 
         var children = new List<FileTreeNode>();
 
         foreach (var folderPath in Directory.GetDirectories(path))
         {
-            children.Add(GetFolderStructure(folderPath));
+            children.Add(GetFolderStructure(folderPath, srcPath));
         }
 
         foreach (var filePath in Directory.GetFiles(path))
         {
-            children.Add(new FileTreeNode(Path.GetFileName(filePath), null, filePath));
+            children.Add(new FileTreeNode(Path.GetFileName(filePath), null, filePath,
+                Path.GetRelativePath(srcPath, filePath)));
         }
 
-        return new FileTreeNode(Path.GetDirectoryName(path), children, path);
+        return new FileTreeNode(Path.GetFileName(path), children, path, Path.GetRelativePath(srcPath, path));
     }
 }
