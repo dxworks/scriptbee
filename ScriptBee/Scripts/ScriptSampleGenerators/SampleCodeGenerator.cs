@@ -65,7 +65,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators
             return generatedClasses;
         }
 
-        private string GenerateSampleCode()
+        public string GenerateSampleCode()
         {
             var stringBuilder = new StringBuilder();
             var imports = _strategyGenerator.GenerateImports();
