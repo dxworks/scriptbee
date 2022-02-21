@@ -31,4 +31,8 @@ export class ScriptsContentComponent implements OnInit {
   onLeafClick(node: FileTreeNode) {
     this.router.navigate([node.srcPath], {relativeTo: this.route});
   }
+
+  onCreateNewProjectButtonClick() {
+
+  }
 }

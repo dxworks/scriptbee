@@ -1,1 +1,6 @@
+<div fxLayout="row" fxLayoutAlign="end" style="background: pink">
+  <button mat-icon-button color="warn" (click)="onRunScriptButtonClick()">
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+</div>
 <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>

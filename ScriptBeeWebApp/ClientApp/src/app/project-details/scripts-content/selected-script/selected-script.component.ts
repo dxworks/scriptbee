@@ -44,6 +44,10 @@ export class SelectedScriptComponent implements OnInit {
     });
   }
 
+  onRunScriptButtonClick() {
+
+  }
+
   private setEditorLanguage(scriptPath: string) {
     if (!scriptPath) {
       return;

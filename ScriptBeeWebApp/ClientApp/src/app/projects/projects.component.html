@@ -44,7 +44,8 @@
       <mat-row mat-row matRipple (click)="onRowClick(row)" *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        <td class="mat-cell" colspan="4" *ngIf="input.value != ''">No data matching the filter "{{input.value}}"</td>
+        <td class="mat-cell" colspan="4" *ngIf="input.value == ''">No available projects</td>
       </tr>
     </mat-table>
 

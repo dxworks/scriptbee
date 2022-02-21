@@ -21,6 +21,7 @@ export const ROUTES: Routes = [
           {path: ':scriptPath', component: SelectedScriptComponent},
         ]
       },
+      {path: '**', redirectTo: 'details'},
     ]
   }
 ];
