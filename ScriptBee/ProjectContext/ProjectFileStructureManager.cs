@@ -22,6 +22,12 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         File.WriteAllText(filePath, fileContent);
     }
 
+    public bool FileExists(string projectId, string relativePath)
+    {
+        var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
+        return File.Exists(filePath);
+    }
+
     public string GetFileContent(string projectId, string relativePath)
     {
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);

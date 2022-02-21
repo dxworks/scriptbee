@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ThemeService} from '../../../services/theme/theme.service';
-import {FileSystemService} from "../../../services/file-system/file-system.service";
-import {ProjectDetailsService} from "../../project-details.service";
-import {ActivatedRoute} from "@angular/router";
+import {FileSystemService} from '../../../services/file-system/file-system.service';
+import {ProjectDetailsService} from '../../project-details.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-selected-script',
@@ -21,15 +21,15 @@ export class SelectedScriptComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       if (params) {
-        const scriptPath = params["scriptPath"];
+        const scriptPath = params['scriptPath'];
 
-        this.setEditorLanguage(scriptPath)
+        this.setEditorLanguage(scriptPath);
 
         this.projectDetailsService.project.subscribe(project => {
           if (project) {
             this.fileSystemService.getFileContent(project.projectId, scriptPath).subscribe(content => {
               this.code = content;
-            })
+            });
           }
         });
       }
@@ -53,11 +53,11 @@ export class SelectedScriptComponent implements OnInit {
       return;
     }
 
-    if (scriptPath.endsWith(".js")) {
+    if (scriptPath.endsWith('.js')) {
       this.editorOptions = {...this.editorOptions, language: 'javascript'};
-    } else if (scriptPath.endsWith(".py")) {
+    } else if (scriptPath.endsWith('.py')) {
       this.editorOptions = {...this.editorOptions, language: 'python'};
-    } else if (scriptPath.endsWith(".cs")) {
+    } else if (scriptPath.endsWith('.cs')) {
       this.editorOptions = {...this.editorOptions, language: 'csharp'};
     }
   }

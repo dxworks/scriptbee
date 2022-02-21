@@ -9,6 +9,8 @@ public interface IProjectFileStructureManager
 
     public void CreateFile(string projectId, string relativePath, string fileContent);
 
+    public bool FileExists(string projectId, string relativePath);
+
     public string GetFileContent(string projectId, string relativePath);
 
     public Task<string> GetFileContentAsync(string projectId, string relativePath);

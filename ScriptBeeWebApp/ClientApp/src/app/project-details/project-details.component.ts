@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {ProjectService} from "../services/project/project.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatDialog} from "@angular/material/dialog";
-import {UploadService} from "../services/upload/upload.service";
-import {LoaderService} from "../services/loader/loader.service";
-import {ProjectDetailsService} from "./project-details.service";
+import {ActivatedRoute} from '@angular/router';
+import {ProjectService} from '../services/project/project.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
+import {UploadService} from '../services/upload/upload.service';
+import {LoaderService} from '../services/loader/loader.service';
+import {ProjectDetailsService} from './project-details.service';
 
 @Component({
   selector: 'app-project-details',
@@ -15,7 +15,8 @@ import {ProjectDetailsService} from "./project-details.service";
 export class ProjectDetailsComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private projectService: ProjectService, private loaderService: LoaderService,
-              private uploadService: UploadService, private route: ActivatedRoute, private snackBar: MatSnackBar, private projectDetailsService: ProjectDetailsService) {
+              private uploadService: UploadService, private route: ActivatedRoute, private snackBar: MatSnackBar,
+              private projectDetailsService: ProjectDetailsService) {
   }
 
   ngOnInit(): void {

@@ -1,8 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {CreateProjectDialogData} from './create-project-dialog-data';
-import {SlugifyPipe} from "../../shared/slugify.pipe";
-import {ProjectService} from "../../services/project/project.service";
+import {SlugifyPipe} from '../../shared/slugify.pipe';
+import {ProjectService} from '../../services/project/project.service';
 
 @Component({
   selector: 'app-create-project-dialog',

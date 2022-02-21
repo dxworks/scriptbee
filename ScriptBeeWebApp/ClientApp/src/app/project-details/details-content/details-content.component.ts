@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {ProjectService} from "../../services/project/project.service";
-import {UploadService} from "../../services/upload/upload.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {ProjectDetailsService} from "../project-details.service";
+import {ProjectService} from '../../services/project/project.service';
+import {UploadService} from '../../services/upload/upload.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {ProjectDetailsService} from '../project-details.service';
 
 @Component({
   selector: 'app-details-content',
@@ -20,10 +20,10 @@ export class DetailsContentComponent {
 
   onUploadFilesClick() {
     if (this.selectedLoader) {
-      let projectId = this.projectDetailsService.project.getValue().projectId;
-      this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe(result => {
-        this.projectService.getProjectContext(projectId).subscribe(result => {
-          this.projectDetailsService.context.next(result);
+      const projectId = this.projectDetailsService.project.getValue().projectId;
+      this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe(() => {
+        this.projectService.getProjectContext(projectId).subscribe(res => {
+          this.projectDetailsService.context.next(res);
         });
         this.files = [];
       });

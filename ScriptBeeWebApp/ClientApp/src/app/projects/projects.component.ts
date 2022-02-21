@@ -7,8 +7,8 @@ import {ProjectService} from '../services/project/project.service';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateProjectDialogComponent} from './create-project-dialog/create-project-dialog.component';
 import {DeleteProjectDialogComponent} from './delete-project-dialog/delete-project-dialog.component';
-import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-projects',
@@ -45,7 +45,7 @@ export class ProjectsComponent {
         this.getAllProjects();
       }
     }, (error: any) => {
-      this.snackBar.open("Could not create project!", 'Ok', {
+      this.snackBar.open('Could not create project!', 'Ok', {
         duration: 4000
       });
     });
@@ -64,7 +64,7 @@ export class ProjectsComponent {
         });
       }
     }, (error: any) => {
-      this.snackBar.open("Could not delete project!", 'Ok', {
+      this.snackBar.open('Could not delete project!', 'Ok', {
         duration: 4000
       });
     });

@@ -46,6 +46,7 @@ import {ScriptsContentComponent} from './project-details/scripts-content/scripts
 import {NoScriptsComponent} from './project-details/scripts-content/no-scripts/no-scripts.component';
 import {SelectedScriptComponent} from './project-details/scripts-content/selected-script/selected-script.component';
 import {SlugifyPipe} from './shared/slugify.pipe';
+import { CreateScriptDialogComponent } from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import {SlugifyPipe} from './shared/slugify.pipe';
     ScriptsContentComponent,
     NoScriptsComponent,
     SelectedScriptComponent,
-    SlugifyPipe
+    SlugifyPipe,
+    CreateScriptDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

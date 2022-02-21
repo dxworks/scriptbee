@@ -51,22 +51,43 @@ public class ProjectStructureController : ControllerBase
             {
                 case "python":
                 {
-                    content = new SampleCodeGenerator(new PythonStrategyGenerator(new FileContentProvider()),
+                    if (!arg.filePath.EndsWith(".py"))
+                    {
+                        arg.filePath += ".py";
+                    }
+
+                    content = new SampleCodeGenerator(new PythonStrategyGenerator(new RelativeFileContentProvider()),
                         _loadersHolder).GenerateSampleCode();
                 }
                     break;
                 case "csharp":
                 {
-                    content = new SampleCodeGenerator(new CSharpStrategyGenerator(new FileContentProvider()),
+                    if (!arg.filePath.EndsWith(".cs"))
+                    {
+                        arg.filePath += ".cs";
+                    }
+
+                    content = new SampleCodeGenerator(new CSharpStrategyGenerator(new RelativeFileContentProvider()),
                         _loadersHolder).GenerateSampleCode();
                 }
                     break;
                 case "javascript":
                 {
-                    content = new SampleCodeGenerator(new JavascriptStrategyGenerator(new FileContentProvider()),
+                    if (!arg.filePath.EndsWith(".js"))
+                    {
+                        arg.filePath += ".js";
+                    }
+
+                    content = new SampleCodeGenerator(
+                        new JavascriptStrategyGenerator(new RelativeFileContentProvider()),
                         _loadersHolder).GenerateSampleCode();
                 }
                     break;
+            }
+
+            if (_projectFileStructureManager.FileExists(arg.projectId, arg.filePath))
+            {
+                return StatusCode(StatusCodes.Status409Conflict);
             }
 
             _projectFileStructureManager.CreateFile(arg.projectId, arg.filePath, content);
