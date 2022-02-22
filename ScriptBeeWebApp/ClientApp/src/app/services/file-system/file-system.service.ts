@@ -4,6 +4,10 @@ import {FileTreeNode} from '../../project-details/scripts-content/fileTreeNode';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {contentHeaders} from "../../shared/headers";
 
+interface ScriptCreatedResult {
+  filePath: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +25,7 @@ export class FileSystemService {
   }
 
   createScript(projectId: string, filePath: string, scriptType: string) {
-    return this.http.post(this.projectStructureScriptAPIUrl, {
+    return this.http.post<ScriptCreatedResult>(this.projectStructureScriptAPIUrl, {
       projectId: projectId,
       filePath: filePath,
       scriptType: scriptType
@@ -35,6 +39,9 @@ export class FileSystemService {
 
   getScriptAbsolutePath(projectId: string, filePath: string): Observable<string> {
     const params = new HttpParams().set("projectId", projectId).set("filePath", filePath);
-    return this.http.get<string>(this.projectStructureScriptGetAbsolutePathAPIUrl, {headers: contentHeaders, params: params});
+    return this.http.get<string>(this.projectStructureScriptGetAbsolutePathAPIUrl, {
+      headers: contentHeaders,
+      params: params
+    });
   }
 }

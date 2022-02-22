@@ -37,7 +37,7 @@ public class ProjectStructureController : ControllerBase
     }
 
     [HttpPost("script")]
-    public IActionResult CreateScript(CreateScript arg)
+    public ActionResult<ScriptCreatedResult> CreateScript(CreateScript arg)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
         {
@@ -97,7 +97,7 @@ public class ProjectStructureController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        return Ok("Script created successfully");
+        return new ScriptCreatedResult(arg.filePath);
     }
 
     [HttpGet("script")]

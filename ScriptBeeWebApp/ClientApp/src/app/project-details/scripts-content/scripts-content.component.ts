@@ -36,7 +36,8 @@ export class ScriptsContentComponent implements OnInit {
     dialogRef.afterClosed().subscribe(scriptPath => {
       if (scriptPath) {
         this.loadProjectFileStructure(() => {
-          this.router.navigate([scriptPath], {relativeTo: this.route});
+          const newScriptPath = scriptPath.replaceAll('/', '\\');
+          this.router.navigate([newScriptPath], {relativeTo: this.route});
         });
       }
     }, (error: any) => {

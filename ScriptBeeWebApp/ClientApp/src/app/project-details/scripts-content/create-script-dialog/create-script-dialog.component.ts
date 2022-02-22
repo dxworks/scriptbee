@@ -31,7 +31,7 @@ export class CreateScriptDialogComponent {
       if (project) {
         this.fileSystemService.createScript(project.projectId, this.data.scriptPath, this.data.scriptType).subscribe(res => {
           if (res) {
-            this.dialogRef.close(this.data.scriptPath);
+            this.dialogRef.close(res.filePath);
           }
         }, (error: any) => {
           this.scriptExists = true;
