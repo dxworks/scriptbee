@@ -11,6 +11,7 @@ export class FileSystemService {
 
   private projectStructureAPIUrl = '/api/projectstructure';
   private projectStructureScriptAPIUrl = '/api/projectstructure/script';
+  private projectStructureScriptGetAbsolutePathAPIUrl = '/api/projectstructure/absolutepath';
 
   constructor(private http: HttpClient) {
   }
@@ -30,5 +31,10 @@ export class FileSystemService {
   getFileContent(projectId: string, filePath: string): Observable<string> {
     const params = new HttpParams().set("projectId", projectId).set("filePath", filePath);
     return this.http.get<string>(this.projectStructureScriptAPIUrl, {headers: contentHeaders, params: params});
+  }
+
+  getScriptAbsolutePath(projectId: string, filePath: string): Observable<string> {
+    const params = new HttpParams().set("projectId", projectId).set("filePath", filePath);
+    return this.http.get<string>(this.projectStructureScriptGetAbsolutePathAPIUrl, {headers: contentHeaders, params: params});
   }
 }

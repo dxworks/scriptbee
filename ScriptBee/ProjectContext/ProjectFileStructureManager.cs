@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ScriptBee.Config;
 
@@ -71,6 +73,20 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
 
         return null;
+    }
+
+    public string GetAbsoluteFilePath(string projectId, string filePath)
+    {
+        var absolutePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
+
+        var envUserFolderPath = Environment.GetEnvironmentVariable("USER_FOLDER_PATH");
+        if (!string.IsNullOrEmpty(envUserFolderPath))
+        {
+            var part = absolutePath.Replace(ConfigFolders.PathToUserFolder, "");
+            return Path.Combine(envUserFolderPath, part.TrimStart('\\', '/'));
+        }
+        
+        return absolutePath;
     }
 
     private FileTreeNode GetFolderStructure(string path, string srcPath)

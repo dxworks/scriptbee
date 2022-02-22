@@ -16,6 +16,7 @@ export class SelectedScriptComponent implements OnInit {
   editorOptions = {theme: 'vs-dark', language: 'javascript', readOnly: true};
   code = '';
   scriptPath = "";
+  scriptAbsolutePath = "";
 
   constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
               private projectDetailsService: ProjectDetailsService, private route: ActivatedRoute,
@@ -26,15 +27,22 @@ export class SelectedScriptComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params) {
         this.scriptPath = params['scriptPath'];
-
         this.setEditorLanguage(this.scriptPath);
 
         this.projectDetailsService.project.subscribe(project => {
           if (project) {
+            this.fileSystemService.getScriptAbsolutePath(project.projectId, this.scriptPath).subscribe(absolutePath => {
+              this.scriptAbsolutePath = absolutePath;
+            })
+
             this.fileSystemService.getFileContent(project.projectId, this.scriptPath).subscribe(content => {
               this.code = content;
             });
           }
+        }, (error: any) => {
+          this.snackBar.open('Could not get project!', 'Ok', {
+            duration: 4000
+          });
         });
       }
     });
@@ -58,6 +66,12 @@ export class SelectedScriptComponent implements OnInit {
           });
         });
       }
+    });
+  }
+
+  onCopyToClipboardButtonClick() {
+    this.snackBar.open('Path copied successfully!', 'Ok', {
+      duration: 2000
     });
   }
 

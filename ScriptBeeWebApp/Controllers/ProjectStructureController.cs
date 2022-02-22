@@ -101,7 +101,7 @@ public class ProjectStructureController : ControllerBase
     }
 
     [HttpGet("script")]
-    public async Task<ActionResult<string>> GetScriptContent([FromQuery] GetScriptContent arg)
+    public async Task<ActionResult<string>> GetScriptContent([FromQuery] GetScriptDetails arg)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
         {
@@ -116,5 +116,16 @@ public class ProjectStructureController : ControllerBase
         }
 
         return Ok(content);
+    }
+
+    [HttpGet("absolutepath")]
+    public ActionResult<string> GetScriptAbsolutePath([FromQuery] GetScriptDetails arg)
+    {
+        if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
+        {
+            return BadRequest("Invalid arguments!");
+        }
+
+        return _projectFileStructureManager.GetAbsoluteFilePath(arg.projectId, arg.filePath);
     }
 }

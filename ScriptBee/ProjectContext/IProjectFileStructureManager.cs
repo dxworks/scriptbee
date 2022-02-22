@@ -18,4 +18,6 @@ public interface IProjectFileStructureManager
     public FileStream GetFileContentStream(string projectId, string relativePath);
 
     public FileTreeNode GetSrcStructure(string projectId);
+    
+    public string GetAbsoluteFilePath(string projectId, string filePath);
 }

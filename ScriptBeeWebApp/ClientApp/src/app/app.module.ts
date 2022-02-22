@@ -29,6 +29,8 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 import {MonacoEditorModule} from '@materia-ui/ngx-monaco-editor';
 
@@ -95,7 +97,9 @@ import { CreateScriptDialogComponent } from './project-details/scripts-content/c
     MatDividerModule,
     MatListModule,
     MatSidenavModule,
-    MonacoEditorModule
+    MonacoEditorModule,
+    MatTooltipModule,
+    ClipboardModule
   ],
   providers: [
     SlugifyPipe
