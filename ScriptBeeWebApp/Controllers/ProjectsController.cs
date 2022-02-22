@@ -55,7 +55,7 @@ public class ProjectsController : ControllerBase
             return Ok(new List<string>());
         }
 
-        var contextResult = project.Context.Keys.GroupBy(tuple => tuple.Item1)
+        var contextResult = project.Context.Models.Keys.GroupBy(tuple => tuple.Item1)
             .Select(grouping => new
             {
                 name = grouping.Key,

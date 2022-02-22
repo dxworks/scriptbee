@@ -46,15 +46,7 @@ namespace ScriptBeeWebApp.Controllers
                 return NotFound($"Could not find project with id: {projectId}");
             }
 
-            var classes = new List<object>();
-
-            foreach (var (_, dictionary) in project.Context)
-            {
-                foreach (var (_, model) in dictionary)
-                {
-                    classes.Add(model);
-                }
-            }
+            var classes = project.Context.GetClasses();
 
             switch (scriptType)
             {

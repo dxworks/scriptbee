@@ -40,14 +40,8 @@ public class ProjectManager : IProjectManager
         foreach (var (exportedTypeName, objectsDictionary) in dictionary)
         {
             var tuple = new Tuple<string, string>(exportedTypeName, sourceName);
-            if (wantedProject.Context.ContainsKey(tuple))
-            {
-                wantedProject.Context[tuple] = objectsDictionary;
-            }
-            else
-            {
-                wantedProject.Context.Add(tuple, objectsDictionary);
-            }
+
+            wantedProject.Context.SetModel(tuple, objectsDictionary);
         }
     }
 
@@ -65,11 +59,7 @@ public class ProjectManager : IProjectManager
     {
         var wantedProject = _projects[projectId];
 
-        var tuplesToBeRemoved = wantedProject.Context.Keys.Where(tuple => tuple.Item2.Equals(sourceName));
-        foreach (var tuple in tuplesToBeRemoved)
-        {
-            wantedProject.Context.Remove(tuple);
-        }
+        wantedProject.Context.RemoveLoaderEntries(sourceName);
     }
 
     public Dictionary<string, Project> GetAllProjects()
