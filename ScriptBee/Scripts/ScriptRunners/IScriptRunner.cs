@@ -1,9 +1,8 @@
 ﻿using ScriptBee.ProjectContext;
 
-namespace ScriptBee.Scripts.ScriptRunners
+namespace ScriptBee.Scripts.ScriptRunners;
+
+public interface IScriptRunner
 {
-    public interface IScriptRunner
-    {
-        void Run(Project project, string scriptContent);
-    }
+    void Run(Project project, string scriptContent);
 }

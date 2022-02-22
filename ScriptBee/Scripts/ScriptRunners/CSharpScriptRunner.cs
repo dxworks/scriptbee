@@ -18,7 +18,7 @@ namespace ScriptBee.Scripts.ScriptRunners
         private readonly IPluginPathReader _pluginPathReader;
 
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
-
+        
         public CSharpScriptRunner(IPluginPathReader pluginPathReader, IHelperFunctionsMapper helperFunctionsMapper)
         {
             _pluginPathReader = pluginPathReader;

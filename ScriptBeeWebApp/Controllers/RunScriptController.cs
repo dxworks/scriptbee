@@ -8,6 +8,7 @@ using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptRunners;
 using ScriptBee.Utils.ValidScriptExtractors;
+using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Extensions;
 
 namespace ScriptBeeWebApp.Controllers
@@ -17,13 +18,15 @@ namespace ScriptBeeWebApp.Controllers
     public class RunScriptController : ControllerBase
     {
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
-
         private readonly IProjectManager _projectManager;
+        private readonly IProjectFileStructureManager _projectFileStructureManager;
 
-        public RunScriptController(IProjectManager projectManager, IHelperFunctionsMapper helperFunctionsMapper)
+        public RunScriptController(IProjectManager projectManager, IHelperFunctionsMapper helperFunctionsMapper,
+            IProjectFileStructureManager projectFileStructureManager)
         {
             _projectManager = projectManager;
             _helperFunctionsMapper = helperFunctionsMapper;
+            _projectFileStructureManager = projectFileStructureManager;
         }
 
         [HttpPost("fromfile")]
@@ -33,7 +36,7 @@ namespace ScriptBeeWebApp.Controllers
             {
                 return BadRequest("Missing script type");
             }
-            
+
             var scriptRunner = GetScriptRunner(scriptType);
 
             if (scriptRunner == null)
@@ -62,12 +65,54 @@ namespace ScriptBeeWebApp.Controllers
                     scriptContents.Add(scriptContent);
                 }
             }
-            
+
             foreach (var scriptContent in scriptContents)
             {
                 scriptRunner.Run(project, scriptContent);
             }
 
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RunScriptFromPath(RunScript arg)
+        {
+            if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
+            {
+                return BadRequest("Invalid arguments!");
+            }
+
+            var scriptType = "";
+            if (arg.filePath.EndsWith(".py"))
+            {
+                scriptType = "python";
+            }
+            else if (arg.filePath.EndsWith(".cs"))
+            {
+                scriptType = "csharp";
+            }
+            else if (arg.filePath.EndsWith(".js"))
+            {
+                scriptType = "javascript";
+            }
+
+            var scriptRunner = GetScriptRunner(scriptType);
+
+            if (scriptRunner == null)
+            {
+                return BadRequest($"Script type {scriptType} is not supported");
+            }
+
+            var project = _projectManager.GetProject(arg.projectId);
+            if (project == null)
+            {
+                return NotFound($"Could not find project with id: {arg.projectId}");
+            }
+
+            var scriptContent = await _projectFileStructureManager.GetFileContentAsync(arg.projectId, arg.filePath);
+
+            scriptRunner.Run(project, scriptContent);
+            
             return Ok();
         }
 
@@ -85,7 +130,8 @@ namespace ScriptBeeWebApp.Controllers
                 }
                 case "csharp":
                 {
-                    return new CSharpScriptRunner(new PluginPathReader(ConfigFolders.PathToPlugins),_helperFunctionsMapper);
+                    return new CSharpScriptRunner(new PluginPathReader(ConfigFolders.PathToPlugins),
+                        _helperFunctionsMapper);
                 }
                 default:
                 {
