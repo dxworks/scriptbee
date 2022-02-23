@@ -5,9 +5,9 @@
       <mat-label>Project Name</mat-label>
       <input matInput [(ngModel)]="data.projectName">
     </mat-form-field>
-    <div *ngIf="data.projectName != ''">Your new project will be created with the following
+    <div class="text-alignment" *ngIf="data.projectName != ''">Your new project will be created with the following
       id: {{data.projectName | slugify}}</div>
-    <div class="error-message" *ngIf="projectExists">A project with this name already exists</div>
+    <div class="error-message text-alignment" *ngIf="projectExists">A project with this name already exists</div>
   </div>
   <div mat-dialog-actions>
     <button mat-button (click)="onCancelClick()">Cancel</button>

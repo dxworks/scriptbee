@@ -4,7 +4,7 @@
      (filesDropped)="addFiles($event)"
      [class.hovering]="isHovering">
 
-  <p>Drag and Drop Files</p>
+  <p class="drag-and-drop-text">Drag and Drop Files</p>
 
   <input #modelFileInput id="modelFile" mat-button
          (change)="addFiles($event.target.files)" hidden type="file"
@@ -14,11 +14,11 @@
     <mat-icon aria-hidden="false" aria-label="Edit Icon">publish</mat-icon>
     <span>Browse Files</span>
   </button>
-
 </div>
 
 <mat-list>
-  <div>Uploads</div>
+  <div class="aligned-item">Uploads</div>
+  <div class="no-files" *ngIf="files.length == 0">No files available for upload </div>
   <mat-list-item *ngFor="let file of files; let index">
     <mat-icon mat-list-icon>description</mat-icon>
     <div>{{file.name}}</div>

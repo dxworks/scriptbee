@@ -5,44 +5,78 @@
       <div fxLayout="column" fxLayoutAlign="space-around start">
         <span class="content">Project Id: {{(projectDetailsService.project | async).projectId}}</span>
         <span class="content">Project Name: {{(projectDetailsService.project | async).projectName}}</span>
-        <span class="content">Creation Date: {{(projectDetailsService.project | async).creationDate | date}}</span>
+        <span
+          class="content-before-divider">Creation Date: {{(projectDetailsService.project | async).creationDate | date}}</span>
       </div>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content">Upload Model Files</div>
+      <div class="section-title content-after-divider">Upload Models</div>
 
       <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
 
+      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload
+        Files
+      </button>
+
       <mat-divider></mat-divider>
 
-      <div class="section-title content">Load Files</div>
+      <div class="section-title content-after-divider">Load Models</div>
+
+      <mat-form-field class="content" appearance="fill">
+        <mat-label>Loader</mat-label>
+        <mat-select [(value)]="selectedLoader">
+          <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">
+            {{loader}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-selection-list #savedFiles>
+        <mat-list-option *ngFor="let file of files">
+          {{file.name}}
+        </mat-list-option>
+      </mat-selection-list>
+
+      <p class="content">
+        Number of selected files: {{savedFiles.selectedOptions.selected.length}}
+      </p>
+
+      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Load
+        Files
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <div class="section-title content-after-divider">Project Context</div>
+
+      <appTree [treeData]="(projectDetailsService.context | async)"></appTree>
     </div>
   </mat-card>
 </div>
 
 
-<mat-divider></mat-divider>
+<!--<mat-divider></mat-divider>-->
 
-<h1>Add Models</h1>
+<!--<h1>Add Models</h1>-->
 
-<mat-form-field appearance="fill">
-  <mat-label>Loader</mat-label>
-  <mat-select [(value)]="selectedLoader">
-    <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">
-      {{loader}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<!--<mat-form-field appearance="fill">-->
+<!--  <mat-label>Loader</mat-label>-->
+<!--  <mat-select [(value)]="selectedLoader">-->
+<!--    <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">-->
+<!--      {{loader}}-->
+<!--    </mat-option>-->
+<!--  </mat-select>-->
+<!--</mat-form-field>-->
 
-<app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
+<!--<app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>-->
 
-<button mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload
-  Files
-</button>
+<!--<button mat-raised-button color="accent" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload-->
+<!--  Files-->
+<!--</button>-->
 
-<mat-divider></mat-divider>
+<!--<mat-divider></mat-divider>-->
 
-<h1>Project Context</h1>
+<!--<h1>Project Context</h1>-->
 
-<appTree [treeData]="(projectDetailsService.context | async)"></appTree>
+<!--<appTree [treeData]="(projectDetailsService.context | async)"></appTree>-->

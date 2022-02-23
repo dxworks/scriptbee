@@ -1,4 +1,4 @@
-.name-field {
+.dialog-field {
   width: 100%;
   margin-top: 12px;
   margin-bottom: 8px;
@@ -7,4 +7,9 @@
 .error-message {
   color: var(--warn-color);
   margin-top: 12px;
+}
+
+.text-alignment {
+  text-align: justify;
+  text-justify: inter-word;
 }
