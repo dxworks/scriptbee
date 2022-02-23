@@ -31,6 +31,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import {MonacoEditorModule} from '@materia-ui/ngx-monaco-editor';
 
@@ -49,6 +50,8 @@ import {NoScriptsComponent} from './project-details/scripts-content/no-scripts/n
 import {SelectedScriptComponent} from './project-details/scripts-content/selected-script/selected-script.component';
 import {SlugifyPipe} from './shared/slugify.pipe';
 import { CreateScriptDialogComponent } from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
+import { SelectableTreeComponent } from './shared/selectable-tree/selectable-tree.component';
+import { SafeUrlPipe } from './shared/safe-url/safe-url.pipe';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,9 @@ import { CreateScriptDialogComponent } from './project-details/scripts-content/c
     NoScriptsComponent,
     SelectedScriptComponent,
     SlugifyPipe,
-    CreateScriptDialogComponent
+    CreateScriptDialogComponent,
+    SelectableTreeComponent,
+    SafeUrlPipe
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -99,7 +104,8 @@ import { CreateScriptDialogComponent } from './project-details/scripts-content/c
     MatSidenavModule,
     MonacoEditorModule,
     MatTooltipModule,
-    ClipboardModule
+    ClipboardModule,
+    MatCheckboxModule
   ],
   providers: [
     SlugifyPipe

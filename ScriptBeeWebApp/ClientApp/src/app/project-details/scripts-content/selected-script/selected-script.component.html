@@ -1,9 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="end">
-  <button mat-icon-button color="warn" matTooltip="Copy to clipboard" [cdkCopyToClipboard]="scriptAbsolutePath" (click)="onCopyToClipboardButtonClick()">
+  <button mat-icon-button color="warn" matTooltip="Copy to clipboard" [cdkCopyToClipboard]="scriptAbsolutePath"
+          (click)="onCopyToClipboardButtonClick()">
     <mat-icon>content_copy</mat-icon>
   </button>
   <button mat-icon-button color="warn" matTooltip="Run script" (click)="onRunScriptButtonClick()">
     <mat-icon>play_arrow</mat-icon>
   </button>
+  <a mat-raised-button [href]="('vscode://file/' + scriptAbsolutePath) | safeUrl">Open VS Code</a>
 </div>
 <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>

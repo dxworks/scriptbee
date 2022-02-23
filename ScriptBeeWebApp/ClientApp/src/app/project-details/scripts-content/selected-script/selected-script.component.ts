@@ -3,8 +3,8 @@ import {ThemeService} from '../../../services/theme/theme.service';
 import {FileSystemService} from '../../../services/file-system/file-system.service';
 import {ProjectDetailsService} from '../../project-details.service';
 import {ActivatedRoute} from '@angular/router';
-import {RunScriptService} from "../../../services/run-script/run-script.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {RunScriptService} from '../../../services/run-script/run-script.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-selected-script',
@@ -15,8 +15,8 @@ export class SelectedScriptComponent implements OnInit {
 
   editorOptions = {theme: 'vs-dark', language: 'javascript', readOnly: true};
   code = '';
-  scriptPath = "";
-  scriptAbsolutePath = "";
+  scriptPath = '';
+  scriptAbsolutePath = '';
 
   constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
               private projectDetailsService: ProjectDetailsService, private route: ActivatedRoute,
@@ -33,7 +33,7 @@ export class SelectedScriptComponent implements OnInit {
           if (project) {
             this.fileSystemService.getScriptAbsolutePath(project.projectId, this.scriptPath).subscribe(absolutePath => {
               this.scriptAbsolutePath = absolutePath;
-            })
+            });
 
             this.fileSystemService.getFileContent(project.projectId, this.scriptPath).subscribe(content => {
               this.code = content;
