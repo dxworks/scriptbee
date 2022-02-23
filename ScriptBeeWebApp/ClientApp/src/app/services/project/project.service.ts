@@ -4,7 +4,7 @@ import {Project} from '../../projects/project';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {contentHeaders} from '../../shared/headers';
-import {TreeNode} from "../../shared/tree/tree.component";
+import {TreeNode} from '../../shared/tree-node';
 
 @Injectable({
   providedIn: 'root'

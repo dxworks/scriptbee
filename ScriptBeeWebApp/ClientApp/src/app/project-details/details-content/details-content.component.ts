@@ -3,6 +3,7 @@ import {ProjectService} from '../../services/project/project.service';
 import {UploadService} from '../../services/upload/upload.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ProjectDetailsService} from '../project-details.service';
+import {TreeNode} from "../../shared/tree-node";
 
 @Component({
   selector: 'app-details-content',
@@ -12,6 +13,7 @@ import {ProjectDetailsService} from '../project-details.service';
 export class DetailsContentComponent {
 
   selectedLoader;
+  selectedLinker;
   files = [];
 
   constructor(public projectDetailsService: ProjectDetailsService, private projectService: ProjectService,
@@ -34,7 +36,15 @@ export class DetailsContentComponent {
     }
   }
 
+  onUpdateCheckNodes(checkedNodes: TreeNode[]) {
+    console.log(checkedNodes);
+  }
+
   onLoadFilesClick(){
+
+  }
+
+  onLinkButtonClick() {
 
   }
 }

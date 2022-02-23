@@ -1,4 +1,4 @@
-﻿import {TreeNode} from '../../shared/tree/tree.component';
+﻿import {TreeNode} from '../../shared/tree-node';
 
 export interface FileTreeNode extends TreeNode {
   filePath: string;

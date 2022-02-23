@@ -1,11 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
-
-export interface TreeNode {
-  name: string;
-  children?: TreeNode[];
-}
+import {TreeNode} from "../tree-node";
 
 @Component({
   selector: 'appTree',

@@ -13,6 +13,15 @@
 
       <div class="section-title content-after-divider">Upload Models</div>
 
+      <mat-form-field class="select-loader" appearance="fill">
+        <mat-label>Loader</mat-label>
+        <mat-select [(value)]="selectedLoader">
+          <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">
+            {{loader}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
 
       <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload
@@ -23,27 +32,28 @@
 
       <div class="section-title content-after-divider">Load Models</div>
 
-      <mat-form-field class="content" appearance="fill">
-        <mat-label>Loader</mat-label>
-        <mat-select [(value)]="selectedLoader">
-          <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">
-            {{loader}}
+      <app-selectable-tree [treeData]="(projectDetailsService.context | async)" (updateCheckedNodes)="onUpdateCheckNodes($event)"></app-selectable-tree>
+
+      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onLoadFilesClick()">Load
+        Files
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <div class="section-title content-after-divider">Linker</div>
+
+      <mat-form-field class="select-loader" appearance="fill">
+        <mat-label>Linker</mat-label>
+        <mat-select [(value)]="selectedLinker">
+          <mat-option *ngFor="let linker of projectDetailsService.linkers | async" [value]="linker">
+            {{linker}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-selection-list #savedFiles>
-        <mat-list-option *ngFor="let file of files">
-          {{file.name}}
-        </mat-list-option>
-      </mat-selection-list>
+      <div></div>
 
-      <p class="content">
-        Number of selected files: {{savedFiles.selectedOptions.selected.length}}
-      </p>
-
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Load
-        Files
+      <button class="upload-button" mat-raised-button color="primary" (click)="onLinkButtonClick()">Link
       </button>
 
       <mat-divider></mat-divider>
