@@ -15,21 +15,21 @@ export class SelectableTreeComponent {
     this.dataSource.data = value;
   }
 
-  @Output() updateCheckedNodes = new EventEmitter<TreeNode[]>();
+  @Output() updateCheckedFiles = new EventEmitter<TreeNode[]>();
 
-  flatNodeMap = new Map<TodoItemFlatNode, TreeNode>();
+  flatNodeMap = new Map<FlatNode, TreeNode>();
 
-  nestedNodeMap = new Map<TreeNode, TodoItemFlatNode>();
+  nestedNodeMap = new Map<TreeNode, FlatNode>();
 
-  selectedParent: TodoItemFlatNode | null = null;
+  selectedParent: FlatNode | null = null;
 
-  treeControl: FlatTreeControl<TodoItemFlatNode>;
+  treeControl: FlatTreeControl<FlatNode>;
 
-  treeFlattener: MatTreeFlattener<TreeNode, TodoItemFlatNode>;
+  treeFlattener: MatTreeFlattener<TreeNode, FlatNode>;
 
-  dataSource: MatTreeFlatDataSource<TreeNode, TodoItemFlatNode>;
+  dataSource: MatTreeFlatDataSource<TreeNode, FlatNode>;
 
-  checklistSelection = new SelectionModel<TodoItemFlatNode>(true);
+  checklistSelection = new SelectionModel<FlatNode>(true);
 
   constructor() {
     this.treeFlattener = new MatTreeFlattener(
@@ -38,25 +38,25 @@ export class SelectableTreeComponent {
       this.isExpandable,
       this.getChildren,
     );
-    this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+    this.treeControl = new FlatTreeControl<FlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
 
-  getLevel = (node: TodoItemFlatNode) => node.level;
+  getLevel = (node: FlatNode) => node.level;
 
-  isExpandable = (node: TodoItemFlatNode) => node.expandable;
+  isExpandable = (node: FlatNode) => node.expandable;
 
   getChildren = (node: TreeNode): TreeNode[] => node.children;
 
-  hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
+  hasChild = (_: number, _nodeData: FlatNode) => _nodeData.expandable;
 
-  hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.name === '';
+  hasNoContent = (_: number, _nodeData: FlatNode) => _nodeData.name === '';
 
   transformer = (node: TreeNode, level: number) => {
     const existingNode = this.nestedNodeMap.get(node);
-    const flatNode =
-      existingNode && existingNode.name === node.name ? existingNode : new TodoItemFlatNode();
-    flatNode.name = node.name;
+    const flatNode: FlatNode =
+      existingNode && existingNode.name === node.name ? existingNode : node as FlatNode;
+
     flatNode.level = level;
     flatNode.expandable = !!node.children?.length;
     this.flatNodeMap.set(flatNode, node);
@@ -64,7 +64,7 @@ export class SelectableTreeComponent {
     return flatNode;
   };
 
-  descendantsAllSelected(node: TodoItemFlatNode): boolean {
+  descendantsAllSelected(node: FlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected =
       descendants.length > 0 &&
@@ -74,13 +74,13 @@ export class SelectableTreeComponent {
     return descAllSelected;
   }
 
-  descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
+  descendantsPartiallySelected(node: FlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => this.checklistSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
   }
 
-  itemSelectionToggle(node: TodoItemFlatNode): void {
+  itemSelectionToggle(node: FlatNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
     this.checklistSelection.isSelected(node)
@@ -90,25 +90,25 @@ export class SelectableTreeComponent {
     descendants.forEach(child => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
 
-    this.updateCheckedNodes.emit(this.getSelectedNodes());
+    this.updateCheckedFiles.emit(this.getSelectedNodes());
   }
 
-  leafItemSelectionToggle(node: TodoItemFlatNode): void {
+  leafItemSelectionToggle(node: FlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
 
-    this.updateCheckedNodes.emit(this.getSelectedNodes());
+    this.updateCheckedFiles.emit(this.getSelectedNodes());
   }
 
-  checkAllParentsSelection(node: TodoItemFlatNode): void {
-    let parent: TodoItemFlatNode | null = this.getParentNode(node);
+  checkAllParentsSelection(node: FlatNode): void {
+    let parent: FlatNode | null = this.getParentNode(node);
     while (parent) {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
     }
   }
 
-  checkRootNodeSelection(node: TodoItemFlatNode): void {
+  checkRootNodeSelection(node: FlatNode): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
     const descAllSelected =
@@ -123,7 +123,7 @@ export class SelectableTreeComponent {
     }
   }
 
-  getParentNode(node: TodoItemFlatNode): TodoItemFlatNode | null {
+  getParentNode(node: FlatNode): FlatNode | null {
     const currentLevel = this.getLevel(node);
 
     if (currentLevel < 1) {
@@ -150,9 +150,9 @@ export class SelectableTreeComponent {
       if (parent) {
         const children = dictionary.get(parent.name);
         if (!children) {
-          dictionary.set(parent.name, [{name: node.name}]);
+          dictionary.set(parent.name, [node]);
         } else {
-          children.push({name: node.name});
+          children.push(node);
         }
       } else {
         if (!dictionary.has(node.name)) {
@@ -167,7 +167,7 @@ export class SelectableTreeComponent {
   }
 }
 
-export class TodoItemFlatNode {
+export interface FlatNode {
   name: string;
   level: number;
   expandable: boolean;

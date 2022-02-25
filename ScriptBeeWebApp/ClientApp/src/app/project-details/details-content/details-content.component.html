@@ -24,7 +24,8 @@
 
       <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
 
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload
+      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0"
+              (click)="onUploadFilesClick()">Upload
         Files
       </button>
 
@@ -32,9 +33,11 @@
 
       <div class="section-title content-after-divider">Load Models</div>
 
-      <app-selectable-tree [treeData]="(projectDetailsService.context | async)" (updateCheckedNodes)="onUpdateCheckNodes($event)"></app-selectable-tree>
+      <app-selectable-tree [treeData]="availableFiles"
+                           (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-selectable-tree>
 
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0" (click)="onLoadFilesClick()">Load
+      <button class="upload-button" mat-raised-button color="primary" [disabled]="checkedFiles.length===0"
+              (click)="onLoadFilesClick()">Load
         Files
       </button>
 
@@ -64,29 +67,3 @@
     </div>
   </mat-card>
 </div>
-
-
-<!--<mat-divider></mat-divider>-->
-
-<!--<h1>Add Models</h1>-->
-
-<!--<mat-form-field appearance="fill">-->
-<!--  <mat-label>Loader</mat-label>-->
-<!--  <mat-select [(value)]="selectedLoader">-->
-<!--    <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">-->
-<!--      {{loader}}-->
-<!--    </mat-option>-->
-<!--  </mat-select>-->
-<!--</mat-form-field>-->
-
-<!--<app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>-->
-
-<!--<button mat-raised-button color="accent" [disabled]="files.length===0" (click)="onUploadFilesClick()">Upload-->
-<!--  Files-->
-<!--</button>-->
-
-<!--<mat-divider></mat-divider>-->
-
-<!--<h1>Project Context</h1>-->
-
-<!--<appTree [treeData]="(projectDetailsService.context | async)"></appTree>-->

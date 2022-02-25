@@ -3,9 +3,9 @@ import {ActivatedRoute} from '@angular/router';
 import {ProjectService} from '../services/project/project.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
-import {UploadService} from '../services/upload/upload.service';
 import {LoaderService} from '../services/loader/loader.service';
 import {ProjectDetailsService} from './project-details.service';
+import {UploadService} from '../services/upload/upload.service';
 
 @Component({
   selector: 'app-project-details',

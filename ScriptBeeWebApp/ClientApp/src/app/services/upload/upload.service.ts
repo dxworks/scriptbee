@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,11 @@ export class UploadService {
 
   uploadModels(loaderName: string, projectId: string, files: any) {
     const formData = new FormData();
-    formData.append("loaderName", loaderName);
-    formData.append("files", files);
-    formData.append("projectId", projectId);
+    formData.append('loaderName', loaderName);
+    files.forEach(file => formData.append('files', file));
+    formData.append('projectId', projectId);
+
+    console.log(files);
 
     return this.http.post(this.uploadFilesUrl, formData);
   }
