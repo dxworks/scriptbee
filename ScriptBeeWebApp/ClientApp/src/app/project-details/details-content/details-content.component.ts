@@ -38,7 +38,6 @@ export class DetailsContentComponent {
   }
 
   onUpdateCheckedFiles(checkedNodes: TreeNode[]) {
-    console.log(checkedNodes);
     this.checkedFiles = checkedNodes;
   }
 

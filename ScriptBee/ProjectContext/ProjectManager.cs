@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ScriptBeePlugin;
 
 namespace ScriptBee.ProjectContext;
@@ -9,7 +8,7 @@ public class ProjectManager : IProjectManager
 {
     private readonly Dictionary<string, Project> _projects = new Dictionary<string, Project>();
 
-    public Project CreateProject(string projectId, string projectName)
+    public Project? CreateProject(string projectId, string projectName)
     {
         if (_projects.ContainsKey(projectId))
         {
@@ -45,7 +44,7 @@ public class ProjectManager : IProjectManager
         }
     }
 
-    public Project GetProject(string projectId)
+    public Project? GetProject(string projectId)
     {
         if (!_projects.TryGetValue(projectId, out var wantedProject))
         {

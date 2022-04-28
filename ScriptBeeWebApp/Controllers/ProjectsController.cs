@@ -1,8 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Models;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
@@ -12,11 +17,14 @@ public class ProjectsController : ControllerBase
 {
     private readonly IProjectManager _projectManager;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IProjectModelService _projectModelService;
 
-    public ProjectsController(IProjectManager projectManager, IProjectFileStructureManager projectFileStructureManager)
+    public ProjectsController(IProjectManager projectManager, IProjectFileStructureManager projectFileStructureManager,
+        IProjectModelService projectModelService)
     {
         _projectManager = projectManager;
         _projectFileStructureManager = projectFileStructureManager;
+        _projectModelService = projectModelService;
     }
 
     [HttpGet]
@@ -69,7 +77,8 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<ReturnedProject> CreateProject(CreateProject projectArg)
+    public async Task<ActionResult<ReturnedProject>> CreateProject(CreateProject projectArg,
+        CancellationToken cancellationToken)
     {
         if (projectArg == null || string.IsNullOrWhiteSpace(projectArg.projectId) ||
             string.IsNullOrEmpty(projectArg.projectName))
@@ -83,7 +92,15 @@ public class ProjectsController : ControllerBase
         {
             return BadRequest("A project with this name already exists!");
         }
-        
+
+        var projectModel = new ProjectModel();
+
+        projectModel.Id = project.Id;
+        projectModel.Name = project.Name;
+        projectModel.CreationDate = DateTime.Now;
+
+        await _projectModelService.CreateDocument(projectModel, cancellationToken);
+
         _projectFileStructureManager.CreateProjectFolderStructure(projectArg.projectId);
 
         return new ReturnedProject(project.Id, project.Name, project.CreationDate);

@@ -16,9 +16,7 @@ export class UploadService {
     formData.append('loaderName', loaderName);
     files.forEach(file => formData.append('files', file));
     formData.append('projectId', projectId);
-
-    console.log(files);
-
+    
     return this.http.post(this.uploadFilesUrl, formData);
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using HelperFunctions;
 using Microsoft.AspNetCore.Http;
@@ -75,7 +76,7 @@ namespace ScriptBeeWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RunScriptFromPath(RunScript arg)
+        public async Task<IActionResult> RunScriptFromPath(RunScript arg, CancellationToken cancellationToken)
         {
             if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
             {
@@ -112,7 +113,7 @@ namespace ScriptBeeWebApp.Controllers
             var scriptContent = await _projectFileStructureManager.GetFileContentAsync(arg.projectId, arg.filePath);
 
             scriptRunner.Run(project, scriptContent);
-            
+
             return Ok();
         }
 
