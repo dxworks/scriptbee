@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeePlugin;
 using ScriptBeeWebApp.FolderManager;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp;
 
@@ -37,6 +39,21 @@ public class Startup
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
         services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
+
+        var mongoConnectionString = Configuration.GetConnectionString("mongodb");
+
+        if (string.IsNullOrEmpty(mongoConnectionString))
+        {
+            throw new Exception("Mongo Connection String not set");
+        }
+
+        var mongoUrl = new MongoUrl(mongoConnectionString);
+        var mongoClient = new MongoClient(mongoUrl);
+        var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
+
+        services.AddSingleton<IProjectModelService, ProjectModelService>(_ => new ProjectModelService(mongoDatabase));
+        services.AddSingleton<IRunModelService, RunModelService>(_ => new RunModelService(mongoDatabase));
+        services.AddSingleton<IFileModelService, FileModelService>(_ => new FileModelService(mongoDatabase));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
