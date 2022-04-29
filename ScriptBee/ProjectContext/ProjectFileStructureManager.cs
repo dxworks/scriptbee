@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using ScriptBee.Config;
 
@@ -41,15 +40,15 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         return null;
     }
 
-    public Task<string> GetFileContentAsync(string projectId, string relativePath)
+    public async Task<string?> GetFileContentAsync(string projectId, string relativePath)
     {
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
         if (File.Exists(filePath))
         {
-            return File.ReadAllTextAsync(filePath);
+            return await File.ReadAllTextAsync(filePath);
         }
 
-        return Task.FromResult<string>(null);
+        return null;
     }
 
     public FileStream GetFileContentStream(string projectId, string relativePath)
@@ -63,7 +62,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         return null;
     }
 
-    public FileTreeNode GetSrcStructure(string projectId)
+    public FileTreeNode? GetSrcStructure(string projectId)
     {
         var srcPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder);
 
@@ -85,7 +84,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
             var part = absolutePath.Replace(ConfigFolders.PathToUserFolder, "");
             return Path.Combine(envUserFolderPath, part.TrimStart('\\', '/'));
         }
-        
+
         return absolutePath;
     }
 

@@ -7,7 +7,7 @@ namespace ScriptBee.PluginManager
     {
         public void AddLoaderToDictionary(IModelLoader loader);
         
-        public IModelLoader GetModelLoader(string modelName);
+        public IModelLoader? GetModelLoader(string modelName);
 
         public IEnumerable<IModelLoader> GetAllLoaders();
     }

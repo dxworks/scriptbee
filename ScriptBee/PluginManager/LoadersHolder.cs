@@ -24,9 +24,9 @@ namespace ScriptBee.PluginManager
             }
         }
 
-        public IModelLoader GetModelLoader(string modelName)
+        public IModelLoader? GetModelLoader(string modelName)
         {
-            if (loaders.TryGetValue(modelName, out IModelLoader loader))
+            if (loaders.TryGetValue(modelName, out var loader))
             {
                 return loader;
             }

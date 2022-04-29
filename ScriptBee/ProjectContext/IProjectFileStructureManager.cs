@@ -13,11 +13,11 @@ public interface IProjectFileStructureManager
 
     public string GetFileContent(string projectId, string relativePath);
 
-    public Task<string> GetFileContentAsync(string projectId, string relativePath);
+    public Task<string?> GetFileContentAsync(string projectId, string relativePath);
 
     public FileStream GetFileContentStream(string projectId, string relativePath);
 
-    public FileTreeNode GetSrcStructure(string projectId);
+    public FileTreeNode? GetSrcStructure(string projectId);
     
     public string GetAbsoluteFilePath(string projectId, string filePath);
 }
