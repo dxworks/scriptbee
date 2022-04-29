@@ -33,12 +33,7 @@ public class Startup
         // In production, the Angular files will be served from this directory
         services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/src"; });
         // services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-        services.AddSingleton<IFolderWriter, FolderWriter>();
-        services.AddSingleton<ILoadersHolder, LoadersHolder>();
-        services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
-        services.AddSingleton<IProjectManager, ProjectManager>();
-        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
-        services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
+
 
         var mongoConnectionString = Configuration.GetConnectionString("mongodb");
 
@@ -51,9 +46,19 @@ public class Startup
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        services.AddSingleton<IProjectModelService, ProjectModelService>(_ => new ProjectModelService(mongoDatabase));
-        services.AddSingleton<IRunModelService, RunModelService>(_ => new RunModelService(mongoDatabase));
-        services.AddSingleton<IFileModelService, FileModelService>(_ => new FileModelService(mongoDatabase));
+        services.AddSingleton(_ => mongoDatabase);
+        services.AddSingleton<IFolderWriter, FolderWriter>();
+        services.AddSingleton<ILoadersHolder, LoadersHolder>();
+        services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
+        services.AddSingleton<IProjectManager, ProjectManager>();
+        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
+        services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
+        services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
+        services.AddSingleton<IFileModelService, FileModelService>();
+        services.AddSingleton<IProjectStructureService, ProjectStructureService>();
+        services.AddSingleton<IProjectModelService, ProjectModelService>();
+        services.AddSingleton<IRunModelService, RunModelService>();
+        services.AddSingleton<IFileModelService, FileModelService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
