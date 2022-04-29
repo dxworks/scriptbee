@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HelperFunctions;
@@ -11,6 +14,8 @@ using ScriptBee.Scripts.ScriptRunners;
 using ScriptBee.Utils.ValidScriptExtractors;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Extensions;
+using ScriptBeeWebApp.Models;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers
 {
@@ -21,13 +26,25 @@ namespace ScriptBeeWebApp.Controllers
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
         private readonly IProjectManager _projectManager;
         private readonly IProjectFileStructureManager _projectFileStructureManager;
+        private readonly IFileNameGenerator _fileNameGenerator;
+        private readonly IFileModelService _fileModelService;
+        private readonly IRunModelService _runModelService;
+        private readonly IProjectModelService _projectModelService;
+        private readonly IProjectStructureService _projectStructureService;
 
         public RunScriptController(IProjectManager projectManager, IHelperFunctionsMapper helperFunctionsMapper,
-            IProjectFileStructureManager projectFileStructureManager)
+            IProjectFileStructureManager projectFileStructureManager, IFileNameGenerator fileNameGenerator,
+            IFileModelService fileModelService, IRunModelService runModelService,
+            IProjectModelService projectModelService, IProjectStructureService projectStructureService)
         {
             _projectManager = projectManager;
             _helperFunctionsMapper = helperFunctionsMapper;
             _projectFileStructureManager = projectFileStructureManager;
+            _fileNameGenerator = fileNameGenerator;
+            _fileModelService = fileModelService;
+            _runModelService = runModelService;
+            _projectModelService = projectModelService;
+            _projectStructureService = projectStructureService;
         }
 
         [HttpPost("fromfile")]
@@ -111,8 +128,58 @@ namespace ScriptBeeWebApp.Controllers
             }
 
             var scriptContent = await _projectFileStructureManager.GetFileContentAsync(arg.projectId, arg.filePath);
+            if (scriptContent == null)
+            {
+                return NotFound($"File from {arg.filePath} not found");
+            }
 
-            scriptRunner.Run(project, scriptContent);
+            var scriptName = _fileNameGenerator.GenerateScriptName(arg.projectId, arg.filePath);
+
+            var byteArray = Encoding.ASCII.GetBytes(scriptContent);
+            await using var stream = new MemoryStream(byteArray);
+
+            await _fileModelService.UploadFile(scriptName, stream, cancellationToken);
+
+            await _projectStructureService.AddToProjectStructure(project.Id, arg.filePath, cancellationToken);
+
+            var projectModel = await _projectModelService.GetDocument(arg.projectId, cancellationToken);
+            if (projectModel == null)
+            {
+                return NotFound($"Could not find project model with id: {arg.projectId}");
+            }
+
+            var loadedFiles = new Dictionary<string, List<string>>();
+
+            foreach (var (loaderName, files) in projectModel.LoadedFiles)
+            {
+                loadedFiles[loaderName] = files;
+            }
+
+            var runModel = new RunModel
+            {
+                ProjectId = arg.projectId,
+                ScriptName = scriptName,
+                Linker = projectModel.Linker,
+                LoadedFiles = loadedFiles,
+                // todo console output
+                // todo output files
+            };
+
+            try
+            {
+                scriptRunner.Run(project, scriptContent);
+            }
+            catch (Exception e)
+            {
+                runModel.Errors = e.Message;
+
+                return Problem(statusCode: StatusCodes.Status500InternalServerError,
+                    detail: $"Run script failed because {e}");
+            }
+            finally
+            {
+                await _runModelService.CreateDocument(runModel, cancellationToken);
+            }
 
             return Ok();
         }

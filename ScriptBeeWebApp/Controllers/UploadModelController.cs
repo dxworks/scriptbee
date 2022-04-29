@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeeWebApp.Arguments;
-using ScriptBeeWebApp.FolderManager;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
@@ -17,26 +17,25 @@ namespace ScriptBeeWebApp.Controllers;
 [ApiController]
 public class UploadModelController : ControllerBase
 {
-    private readonly IFolderWriter _folderWriter;
-
     private readonly ILoadersHolder _loadersHolder;
-
-    private readonly IFileContentProvider _fileContentProvider;
-
     private readonly IProjectManager _projectManager;
+    private readonly IFileNameGenerator _fileNameGenerator;
+    private readonly IFileModelService _fileModelService;
+    private readonly IProjectModelService _projectModelService;
 
-    public UploadModelController(IFolderWriter folderWriter, ILoadersHolder loadersHolder,
-        IFileContentProvider fileContentProvider, IProjectManager projectManager)
+    public UploadModelController(ILoadersHolder loadersHolder, IProjectManager projectManager,
+        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService,
+        IProjectModelService projectModelService)
     {
-        _folderWriter = folderWriter;
         _loadersHolder = loadersHolder;
-        _fileContentProvider = fileContentProvider;
         _projectManager = projectManager;
-        _folderWriter.Initialize();
+        _fileNameGenerator = fileNameGenerator;
+        _fileModelService = fileModelService;
+        _projectModelService = projectModelService;
     }
 
     [HttpPost("fromfile")]
-    public async Task<IActionResult> UploadFromFile(IFormCollection formData)
+    public async Task<IActionResult> UploadFromFile(IFormCollection formData, CancellationToken cancellationToken)
     {
         if (!formData.TryGetValue("loaderName", out var loaderName))
         {
@@ -48,41 +47,30 @@ public class UploadModelController : ControllerBase
             return BadRequest("Missing project id");
         }
 
-        var project = _projectManager.GetProject(projectId);
-
-        if (project == null)
-        {
-            return NotFound($"Could not find project with id: {projectId}");
-        }
-
-        var modelLoader = _loadersHolder.GetModelLoader(loaderName[0]);
-
-        if (modelLoader == null)
-        {
-            return BadRequest($"Model type {loaderName[0]} is not supported");
-        }
-
-        var fileStreams = new List<Stream>();
+        var savedFiles = new List<string>();
 
         foreach (var file in formData.Files)
         {
             if (file.Length > 0)
             {
-                string filePath = Path.Combine(ConfigFolders.PathToModels, loaderName[0], file.FileName);
-                await _folderWriter.WriteToFile(filePath, file);
-                fileStreams.Add(System.IO.File.OpenRead(filePath));
+                var modelName = _fileNameGenerator.GenerateModelName(projectId, file.FileName, loaderName[0]);
+
+                savedFiles.Add(modelName);
+
+                await using var stream = file.OpenReadStream();
+                await _fileModelService.UploadFile(modelName, stream, cancellationToken);
             }
         }
 
-        var dictionary = await modelLoader.LoadModel(fileStreams);
-
-        _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
-
-
-        foreach (var fileStream in fileStreams)
+        var projectModel = await _projectModelService.GetDocument(projectId, cancellationToken);
+        if (projectModel == null)
         {
-            await fileStream.DisposeAsync();
+            return NotFound($"Could not find project model with id: {projectId}");
         }
+
+        projectModel.SavedFiles[loaderName[0]] = savedFiles;
+
+        await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
         return Ok();
     }

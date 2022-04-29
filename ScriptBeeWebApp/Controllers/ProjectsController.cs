@@ -18,36 +18,37 @@ public class ProjectsController : ControllerBase
     private readonly IProjectManager _projectManager;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IProjectModelService _projectModelService;
+    private readonly IFileNameGenerator _fileNameGenerator;
 
     public ProjectsController(IProjectManager projectManager, IProjectFileStructureManager projectFileStructureManager,
-        IProjectModelService projectModelService)
+        IProjectModelService projectModelService, IFileNameGenerator fileNameGenerator)
     {
         _projectManager = projectManager;
         _projectFileStructureManager = projectFileStructureManager;
         _projectModelService = projectModelService;
+        _fileNameGenerator = fileNameGenerator;
     }
 
     [HttpGet]
-    public IEnumerable<ReturnedProject> GetAllProjects()
+    public async Task<IEnumerable<ReturnedProject>> GetAllProjects(CancellationToken cancellationToken)
     {
-        var projects = _projectManager.GetAllProjects();
-
-        return projects.Values.Select(project => new ReturnedProject(project.Id, project.Name, project.CreationDate));
+        var projectModels = await _projectModelService.GetAllDocuments(cancellationToken);
+        return projectModels.Select(ConvertProjectModelToReturnedProject);
     }
 
     [HttpGet("{projectId}")]
-    public ActionResult<ReturnedProject> GetProject(string projectId)
+    public async Task<ActionResult<ReturnedNode>> GetProject(string projectId, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrEmpty(projectId))
         {
-            var project = _projectManager.GetProject(projectId);
+            var project = await _projectModelService.GetDocument(projectId, cancellationToken);
 
             if (project == null)
             {
                 return NotFound($"Could not find project with id: {projectId}");
             }
 
-            return new ReturnedProject(project.Id, project.Name, project.CreationDate);
+            return Ok(ConvertProjectModelToReturnedProject(project));
         }
 
         return BadRequest("You must provide a projectId for this operation");
@@ -77,7 +78,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ReturnedProject>> CreateProject(CreateProject projectArg,
+    public async Task<ActionResult<ProjectModel>> CreateProject(CreateProject projectArg,
         CancellationToken cancellationToken)
     {
         if (projectArg == null || string.IsNullOrWhiteSpace(projectArg.projectId) ||
@@ -93,21 +94,22 @@ public class ProjectsController : ControllerBase
             return BadRequest("A project with this name already exists!");
         }
 
-        var projectModel = new ProjectModel();
-
-        projectModel.Id = project.Id;
-        projectModel.Name = project.Name;
-        projectModel.CreationDate = DateTime.Now;
+        var projectModel = new ProjectModel
+        {
+            Id = project.Id,
+            Name = project.Name,
+            CreationDate = DateTime.Now,
+        };
 
         await _projectModelService.CreateDocument(projectModel, cancellationToken);
 
         _projectFileStructureManager.CreateProjectFolderStructure(projectArg.projectId);
 
-        return new ReturnedProject(project.Id, project.Name, project.CreationDate);
+        return projectModel;
     }
 
     [HttpDelete("{projectId}")]
-    public IActionResult RemoveProject(string projectId)
+    public async Task<IActionResult> RemoveProject(string projectId, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrEmpty(projectId))
         {
@@ -119,9 +121,48 @@ public class ProjectsController : ControllerBase
             }
 
             _projectManager.RemoveProject(projectId);
+
+            await _projectModelService.DeleteDocument(projectId, cancellationToken);
+
             return Ok("Project removed successfully");
         }
 
         return BadRequest("You must provide a projectId for this operation");
+    }
+
+    private ReturnedProject ConvertProjectModelToReturnedProject(ProjectModel project)
+    {
+        var loadedFiles = new List<ReturnedNode>();
+        var savedFiles = new List<ReturnedNode>();
+
+        foreach (var (loaderName, files) in project.LoadedFiles)
+        {
+            loadedFiles.Add(new ReturnedNode(loaderName, ConvertFileNames(files)));
+        }
+
+        foreach (var (loaderName, files) in project.SavedFiles)
+        {
+            savedFiles.Add(new ReturnedNode(loaderName, ConvertFileNames(files)));
+        }
+
+        return new ReturnedProject
+        {
+            Id = project.Id,
+            Name = project.Name,
+            CreationDate = project.CreationDate,
+            Linker = project.Linker,
+            Loaders = project.Loaders,
+            LoadedFiles = loadedFiles,
+            SavedFiles = savedFiles
+        };
+    }
+
+    private List<string> ConvertFileNames(IEnumerable<string> files)
+    {
+        return files.Select(file =>
+        {
+            var (_, fileName, _) = _fileNameGenerator.ExtractModelNameComponents(file);
+            return fileName;
+        }).ToList();
     }
 }
