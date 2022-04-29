@@ -20,7 +20,7 @@ public abstract class MongoService<T> : IMongoService<T>
         return mongoCollection.InsertOneAsync(model, cancellationToken: cancellationToken);
     }
 
-    public async Task<T> GetDocument(string id, CancellationToken cancellationToken)
+    public async Task<T?> GetDocument(string id, CancellationToken cancellationToken)
     {
         var result = await mongoCollection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         return result;
@@ -28,7 +28,7 @@ public abstract class MongoService<T> : IMongoService<T>
 
     public async Task<List<T>> GetAllDocuments(CancellationToken cancellationToken)
     {
-        return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken: cancellationToken);
+        return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken);
     }
 
     public async Task UpdateDocument(T model, CancellationToken cancellationToken)
