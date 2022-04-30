@@ -45,17 +45,17 @@ public class LoadersController : ControllerBase
             return BadRequest("Invalid arguments. ProjectId needed!");
         }
 
-        var project = _projectManager.GetProject(loadModels.ProjectId);
-
-        if (project == null)
-        {
-            return NotFound($"Could not find project with id: {loadModels.ProjectId}");
-        }
-
         var projectModel = await _projectModelService.GetDocument(loadModels.ProjectId, cancellationToken);
         if (projectModel == null)
         {
             return NotFound($"Could not find project model with id: {loadModels.ProjectId}");
+        }
+        
+        var project = _projectManager.GetProject(loadModels.ProjectId);
+
+        if (project == null)
+        {
+            _projectManager.LoadProject(projectModel);
         }
         
         Dictionary<string, List<string>> loadedFiles = new();
@@ -66,7 +66,7 @@ public class LoadersController : ControllerBase
 
             foreach (var model in models)
             {
-                var modelName = _fileNameGenerator.GenerateModelName(loadModels.ProjectId, model, loaderName);
+                var modelName = _fileNameGenerator.GenerateModelName(loadModels.ProjectId, loaderName, model);
                 modelNames.Add(modelName);
             }
 

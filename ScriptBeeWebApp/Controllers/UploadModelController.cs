@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
-using ScriptBeeWebApp.Arguments;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -53,7 +49,7 @@ public class UploadModelController : ControllerBase
         {
             if (file.Length > 0)
             {
-                var modelName = _fileNameGenerator.GenerateModelName(projectId, file.FileName, loaderName[0]);
+                var modelName = _fileNameGenerator.GenerateModelName(projectId, loaderName[0], file.FileName);
 
                 savedFiles.Add(modelName);
 
@@ -71,73 +67,6 @@ public class UploadModelController : ControllerBase
         projectModel.SavedFiles[loaderName[0]] = savedFiles;
 
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
-
-        return Ok();
-    }
-
-    [HttpPost("frompath")]
-    public async Task<IActionResult> UploadFromPath(ScriptLoaderArguments scriptLoaderArguments)
-    {
-        if (scriptLoaderArguments.loaderName == null)
-        {
-            return BadRequest("Missing loader name");
-        }
-
-        if (scriptLoaderArguments.projectId == null)
-        {
-            return BadRequest("Missing project id");
-        }
-
-        var project = _projectManager.GetProject(scriptLoaderArguments.projectId);
-
-        if (project == null)
-        {
-            return NotFound($"Could not find project with id: {scriptLoaderArguments.projectId}");
-        }
-
-        var modelLoader = _loadersHolder.GetModelLoader(scriptLoaderArguments.loaderName);
-
-        if (modelLoader == null)
-        {
-            return BadRequest($"Model type {scriptLoaderArguments.loaderName} is not supported");
-        }
-
-        var fileStreams = new List<Stream>();
-
-        var wrongPaths = new List<string>();
-
-        foreach (var modelPath in scriptLoaderArguments.paths)
-        {
-            var filePath = Path.Combine(ConfigFolders.PathToModels, modelPath);
-            try
-            {
-                fileStreams.Add(System.IO.File.OpenRead(filePath));
-            }
-            catch (Exception)
-            {
-                wrongPaths.Add(modelPath);
-            }
-        }
-
-        if (wrongPaths.Count != 0)
-        {
-            string badRequestMessage = "Could not load models from the following paths:\n";
-            foreach (var wrongPath in wrongPaths)
-            {
-                badRequestMessage = badRequestMessage + wrongPath + "\n";
-            }
-
-            return BadRequest(badRequestMessage);
-        }
-
-        var dictionary = await modelLoader.LoadModel(fileStreams);
-
-        _projectManager.AddToGivenProject(scriptLoaderArguments.projectId, dictionary, modelLoader.GetName());
-
-        foreach (var fileStream in fileStreams)
-        {
-            await fileStream.DisposeAsync();
-        }
 
         return Ok();
     }

@@ -4,8 +4,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ProjectDetailsService} from '../project-details.service';
 import {TreeNode} from "../../shared/tree-node";
 import {UploadService} from "../../services/upload/upload.service";
-import {SaveFilesService} from "../../services/save-files/save-files.service";
 import {forkJoin} from "rxjs";
+import {LoaderService} from "../../services/loader/loader.service";
 
 @Component({
   selector: 'app-details-content',
@@ -18,18 +18,38 @@ export class DetailsContentComponent {
   selectedLinker;
   files = [];
   checkedFiles: TreeNode[] = [];
-  availableFiles: TreeNode[] = [];
 
   constructor(public projectDetailsService: ProjectDetailsService, private projectService: ProjectService,
               private uploadService: UploadService, private snackBar: MatSnackBar,
-              private saveFilesService: SaveFilesService) {
+              private loaderService: LoaderService) {
   }
 
   onUploadFilesClick() {
     if (this.selectedLoader) {
-      this.saveFilesService.updateSavedFilesDictionary(this.selectedLoader, this.files);
-      this.files = [];
-      this.availableFiles = this.saveFilesService.getSavedFiles();
+      const projectId = this.projectDetailsService.project.getValue().projectId;
+
+      this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe(() => {
+        this.projectService.getProjectContext(projectId).subscribe(res => {
+          this.projectDetailsService.context.next(res);
+          this.files = [];
+        });
+
+        this.projectService.getProject(projectId).subscribe(result => {
+          if (result) {
+            this.projectDetailsService.project.next(result);
+            console.log(result);
+          }
+        }, (error: any) => {
+          this.snackBar.open('Could not get project!', 'Ok', {
+            duration: 4000
+          });
+        });
+
+      }, (error: any) => {
+        this.snackBar.open('Could not upload files!', 'Ok', {
+          duration: 4000
+        });
+      });
     } else {
       this.snackBar.open('You must select a loader first!', 'Ok', {
         duration: 4000
@@ -43,12 +63,24 @@ export class DetailsContentComponent {
 
   onLoadFilesClick() {
     const projectId = this.projectDetailsService.project.getValue().projectId;
-    const observables = this.checkedFiles.map(node => this.uploadService.uploadModels(node.name, projectId, node.children));
 
-    forkJoin(observables).subscribe(() => {
+    this.loaderService.loadModels(projectId, this.checkedFiles).subscribe(()=> {
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
+        console.log(res);
       });
+
+      this.projectService.getProject(projectId).subscribe(result => {
+        if (result) {
+          this.projectDetailsService.project.next(result);
+          console.log(result);
+        }
+      }, (error: any) => {
+        this.snackBar.open('Could not get project!', 'Ok', {
+          duration: 4000
+        });
+      });
+
     }, (error: any) => {
       this.snackBar.open('Could not load files!', 'Ok', {
         duration: 4000

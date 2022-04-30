@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Models;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
-using ScriptBeeWebApp.Models;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -130,6 +130,21 @@ public class ProjectsController : ControllerBase
         return BadRequest("You must provide a projectId for this operation");
     }
 
+    [HttpPut("{projectModel}")]
+    public async Task<IActionResult> UpdateProject(ProjectModel projectModel, CancellationToken cancellationToken)
+    {
+        var project = _projectManager.GetProject(projectModel.Id);
+
+        if (project == null)
+        {
+            return BadRequest($"Project with the given id does not exist");
+        }
+
+        await _projectModelService.UpdateDocument(projectModel, cancellationToken);
+
+        return Ok("Project removed successfully");
+    }
+
     private ReturnedProject ConvertProjectModelToReturnedProject(ProjectModel project)
     {
         var loadedFiles = new List<ReturnedNode>();
@@ -161,7 +176,7 @@ public class ProjectsController : ControllerBase
     {
         return files.Select(file =>
         {
-            var (_, fileName, _) = _fileNameGenerator.ExtractModelNameComponents(file);
+            var (_, _, fileName) = _fileNameGenerator.ExtractModelNameComponents(file);
             return fileName;
         }).ToList();
     }

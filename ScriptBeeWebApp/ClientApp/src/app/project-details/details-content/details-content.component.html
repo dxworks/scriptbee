@@ -25,15 +25,14 @@
       <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
 
       <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0"
-              (click)="onUploadFilesClick()">Upload
-        Files
+              (click)="onUploadFilesClick()">Upload Files
       </button>
 
       <mat-divider></mat-divider>
 
       <div class="section-title content-after-divider">Load Models</div>
 
-      <app-selectable-tree [treeData]="availableFiles"
+      <app-selectable-tree [treeData]="(projectDetailsService.project | async).savedFiles"
                            (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-selectable-tree>
 
       <button class="upload-button" mat-raised-button color="primary" [disabled]="checkedFiles.length===0"
@@ -58,6 +57,16 @@
 
       <button class="upload-button" mat-raised-button color="primary" (click)="onLinkButtonClick()">Link
       </button>
+
+      <mat-divider></mat-divider>
+
+      <div class="section-title content-after-divider">Used stuff</div>
+
+      <div fxLayout="column" fxLayoutAlign="space-around start">
+        <span *ngIf="(projectDetailsService.project | async).linker" class="content">Used Linker: {{(projectDetailsService.project | async).linker}}</span>
+      </div>
+
+      <appTree [treeData]="(projectDetailsService.project | async).loadedFiles"></appTree>
 
       <mat-divider></mat-divider>
 
