@@ -33,7 +33,7 @@ public class Startup
         // In production, the Angular files will be served from this directory
         services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/src"; });
         // services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-
+        services.AddSwaggerGen();
 
         var mongoConnectionString = Configuration.GetConnectionString("mongodb");
 
@@ -68,6 +68,8 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
         else
         {
