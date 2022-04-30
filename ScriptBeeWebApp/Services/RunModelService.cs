@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using ScriptBeeWebApp.Models;
+using ScriptBee.Models;
 
 namespace ScriptBeeWebApp.Services;
 

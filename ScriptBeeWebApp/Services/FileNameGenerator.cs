@@ -2,7 +2,7 @@
 
 public class FileNameGenerator : IFileNameGenerator
 {
-    public string GenerateModelName(string projectId, string fileName, string loaderName)
+    public string GenerateModelName(string projectId, string loaderName, string fileName)
     {
         return projectId + "|" + loaderName + "|" + fileName;
     }
@@ -17,7 +17,7 @@ public class FileNameGenerator : IFileNameGenerator
         return projectId + "|" + runId + "|" + outputType + "|" + fileName;
     }
 
-    public (string projectId, string fileName, string loaderName) ExtractModelNameComponents(string modelName)
+    public (string projectId, string loaderName, string fileName) ExtractModelNameComponents(string modelName)
     {
         string[] components = modelName.Split("|");
         return (components[0], components[1], components[2]);

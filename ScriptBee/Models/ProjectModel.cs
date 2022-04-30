@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
-using ScriptBeeWebApp.Services;
 
-namespace ScriptBeeWebApp.Models;
+namespace ScriptBee.Models;
 
 public class ProjectModel : IDocument
 {

@@ -1,4 +1,4 @@
-﻿namespace ScriptBeeWebApp.Services;
+﻿namespace ScriptBee.Models;
 
 public interface IDocument
 {

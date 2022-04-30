@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ScriptBee.Models;
 using ScriptBeePlugin;
 
 namespace ScriptBee.ProjectContext;
@@ -24,6 +25,23 @@ public class ProjectManager : IProjectManager
 
         _projects.Add(project.Id, project);
         return project;
+    }
+
+    public void LoadProject(ProjectModel projectModel)
+    {
+        if (_projects.ContainsKey(projectModel.Id))
+        {
+            return;
+        }
+
+        var project = new Project
+        {
+            Id = projectModel.Id,
+            Name = projectModel.Name,
+            CreationDate = projectModel.CreationDate
+        };
+
+        _projects.Add(project.Id, project);
     }
 
     public void RemoveProject(string projectId)

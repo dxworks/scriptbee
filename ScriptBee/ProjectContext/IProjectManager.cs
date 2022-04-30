@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ScriptBee.Models;
 using ScriptBeePlugin;
 
 namespace ScriptBee.ProjectContext
@@ -6,6 +7,8 @@ namespace ScriptBee.ProjectContext
     public interface IProjectManager
     {
         public Project? CreateProject(string projectId, string projectName);
+
+        public void LoadProject(ProjectModel projectModel);
 
         public void RemoveProject(string projectId);
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ScriptBeeWebApp.Models;
+using ScriptBee.Models;
 
 namespace ScriptBeeWebApp.Services;
 
