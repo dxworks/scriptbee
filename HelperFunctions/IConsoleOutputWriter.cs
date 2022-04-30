@@ -2,5 +2,7 @@
 
 public interface IConsoleOutputWriter
 {
-    void Write(string message);
+    void ConsoleWrite(string message);
+
+    void ConsoleWriteLine(string message);
 }

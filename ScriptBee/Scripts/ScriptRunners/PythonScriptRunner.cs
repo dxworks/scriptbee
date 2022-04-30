@@ -1,47 +1,50 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Threading.Tasks;
 using HelperFunctions;
 using IronPython.Hosting;
-using ScriptBee.Config;
 using ScriptBee.ProjectContext;
 using ScriptBee.Utils.ValidScriptExtractors;
+using ScriptBeeWebApp.Services;
 
-namespace ScriptBee.Scripts.ScriptRunners
+namespace ScriptBee.Scripts.ScriptRunners;
+
+public class PythonScriptRunner : IScriptRunner
 {
-    public class PythonScriptRunner : IScriptRunner
+    private readonly IHelperFunctionsFactory _helperFunctionsFactory;
+    private readonly ValidScriptExtractor _scriptExtractor;
+    private readonly IHelperFunctionsMapper _helperFunctionsMapper;
+
+    public PythonScriptRunner(ValidScriptExtractor scriptExtractor, IHelperFunctionsFactory helperFunctionsFactory,
+        IHelperFunctionsMapper helperFunctionsMapper)
     {
-        private readonly IHelperFunctionsMapper _helperFunctionsMapper;
+        _scriptExtractor = scriptExtractor;
+        _helperFunctionsFactory = helperFunctionsFactory;
+        _helperFunctionsMapper = helperFunctionsMapper;
+    }
 
-        private readonly ValidScriptExtractor _scriptExtractor;
+    public Task<List<RunResult>> Run(Project project, string runId, string scriptContent)
+    {
+        var pythonEngine = Python.CreateEngine();
 
-        public PythonScriptRunner(IHelperFunctionsMapper helperFunctionsMapper, ValidScriptExtractor scriptExtractor)
+        var helperFunctions = _helperFunctionsFactory.Create(project.Id, runId);
+
+        var dictionary = new Dictionary<string, object>
         {
-            _helperFunctionsMapper = helperFunctionsMapper;
-            _scriptExtractor = scriptExtractor;
+            {
+                "project", project
+            },
+        };
+
+        foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(helperFunctions))
+        {
+            dictionary.Add(functionName, delegateFunction);
         }
 
-        public void Run(Project project, string scriptContent)
-        {
-            var pythonEngine = Python.CreateEngine();
-            var dictionary = new Dictionary<string, object>
-            {
-                {
-                    "project", project
-                },
-            };
+        var scriptScope = pythonEngine.CreateScope(dictionary);
 
-            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.Id);
+        var validScript = _scriptExtractor.ExtractValidScript(scriptContent);
+        pythonEngine.Execute(validScript, scriptScope);
 
-            foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
-                outputFolderPath))
-            {
-                dictionary.Add(functionName, delegateFunction);
-            }
-
-            var scriptScope = pythonEngine.CreateScope(dictionary);
-
-            var validScript = _scriptExtractor.ExtractValidScript(scriptContent);
-            pythonEngine.Execute(validScript, scriptScope);
-        }
+        return helperFunctions.GetResults();
     }
 }

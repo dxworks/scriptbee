@@ -1,41 +1,46 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using HelperFunctions;
 using Jint;
-using ScriptBee.Config;
 using ScriptBee.ProjectContext;
 using ScriptBee.Utils.ValidScriptExtractors;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBee.Scripts.ScriptRunners
 {
     public class JavascriptScriptRunner : IScriptRunner
     {
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
-
+        private readonly IHelperFunctionsFactory _helperFunctionsFactory;
         private readonly ValidScriptExtractor _scriptExtractor;
 
 
-        public JavascriptScriptRunner(IHelperFunctionsMapper helperFunctionsMapper,
-            ValidScriptExtractor scriptExtractor)
+        public JavascriptScriptRunner(ValidScriptExtractor scriptExtractor,
+            IHelperFunctionsFactory helperFunctionsFactory,
+            IHelperFunctionsMapper helperFunctionsMapper)
         {
             _helperFunctionsMapper = helperFunctionsMapper;
             _scriptExtractor = scriptExtractor;
+            _helperFunctionsFactory = helperFunctionsFactory;
         }
 
-        public void Run(Project project, string scriptContent)
+        public Task<List<RunResult>> Run(Project project, string runId, string scriptContent)
         {
             var engine = new Engine();
             engine.SetValue("project", project);
 
-            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.Id);
+            var helperFunctions = _helperFunctionsFactory.Create(project.Id, runId);
 
             foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
-                outputFolderPath))
+                         helperFunctions))
             {
                 engine.SetValue(functionName, delegateFunction);
             }
 
             var validScript = _scriptExtractor.ExtractValidScript(scriptContent);
             engine.Execute(validScript);
+
+            return helperFunctions.GetResults();
         }
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using HelperFunctions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
 using Project = ScriptBee.ProjectContext.Project;
@@ -16,27 +16,26 @@ namespace ScriptBee.Scripts.ScriptRunners
     public class CSharpScriptRunner : IScriptRunner
     {
         private readonly IPluginPathReader _pluginPathReader;
+        private readonly IHelperFunctionsFactory _helperFunctionsFactory;
 
-        private readonly IHelperFunctionsMapper _helperFunctionsMapper;
-        
-        public CSharpScriptRunner(IPluginPathReader pluginPathReader, IHelperFunctionsMapper helperFunctionsMapper)
+        public CSharpScriptRunner(IPluginPathReader pluginPathReader, IHelperFunctionsFactory helperFunctionsFactory)
         {
             _pluginPathReader = pluginPathReader;
-            _helperFunctionsMapper = helperFunctionsMapper;
+            _helperFunctionsFactory = helperFunctionsFactory;
         }
 
-        public void Run(Project project, string scriptContent)
+        public Task<List<RunResult>> Run(Project project, string runId, string scriptContent)
         {
             var compiledScript = CompileScript(scriptContent);
 
-            var outputFolderPath = Path.Combine(ConfigFolders.PathToResults, project.Id);
-
-            var helperFunctions = _helperFunctionsMapper.GetHelperFunctions(outputFolderPath);
+            var helperFunctions = _helperFunctionsFactory.Create(project.Id, runId);
 
             ExecuteScript(project, helperFunctions, compiledScript);
+
+            return helperFunctions.GetResults();
         }
 
-        private void ExecuteScript(Project project, HelperFunctions.HelperFunctions helperFunctions,
+        private void ExecuteScript(Project project, IHelperFunctions helperFunctions,
             Assembly compiledScript)
         {
             foreach (var type in compiledScript.GetTypes())
@@ -48,7 +47,7 @@ namespace ScriptBee.Scripts.ScriptRunners
                         var methodParameters = method.GetParameters();
                         if (method.Name == "ExecuteScript" && methodParameters.Length == 2 &&
                             methodParameters[0].ParameterType.Name == "Project" &&
-                            methodParameters[1].ParameterType.Name == "HelperFunctions")
+                            methodParameters[1].ParameterType.Name == "IHelperFunctions")
                         {
                             var scriptContentObject = compiledScript.CreateInstance(type.Name);
                             method.Invoke(scriptContentObject, new object[]
@@ -116,7 +115,7 @@ namespace ScriptBee.Scripts.ScriptRunners
         {
             var references = new List<PortableExecutableReference>();
 
-            var value = (string) AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES");
+            var value = (string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES");
             if (value != null)
             {
                 var pathToDlls = value.Split(Path.PathSeparator);

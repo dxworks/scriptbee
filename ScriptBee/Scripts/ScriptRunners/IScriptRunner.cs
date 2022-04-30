@@ -1,8 +1,11 @@
-﻿using ScriptBee.ProjectContext;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using HelperFunctions;
+using ScriptBee.ProjectContext;
 
 namespace ScriptBee.Scripts.ScriptRunners;
 
 public interface IScriptRunner
 {
-    void Run(Project project, string scriptContent);
+    public Task<List<RunResult>> Run(Project project, string runId, string scriptContent);
 }

@@ -5,9 +5,9 @@ namespace HelperFunctions;
 
 public interface IFileOutputWriter
 {
-    void Write(string fileName, string fileContent);
+    void FileWrite(string fileName, string fileContent);
 
-    void Write(string fileName, Stream stream);
+    void FileWriteStream(string fileName, Stream stream);
 
     void ExportJson<T>(string fileName, T obj);
 
