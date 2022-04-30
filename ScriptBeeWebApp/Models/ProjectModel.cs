@@ -16,4 +16,6 @@ public class ProjectModel : IDocument
     public Dictionary<string, List<string>> LoadedFiles { get; set; } = new();
     public List<string> Loaders { get; set; } = new();
     public string Linker { get; set; }
+    
+    public int LastRunId { get; set; }
 }

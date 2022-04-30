@@ -52,6 +52,7 @@ public class Startup
         services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
+        services.AddSingleton<IHelperFunctionsFactory, HelperFunctionsFactory>();
         services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
         services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
         services.AddSingleton<IFileModelService, FileModelService>();
