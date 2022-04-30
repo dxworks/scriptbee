@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using HelperFunctions;
 
-namespace HelperFunctions
+namespace ScriptBeeWebApp.Services;
+
+public interface IHelperFunctionsMapper
 {
-    public interface IHelperFunctionsMapper
-    {
-        IDictionary<string, Delegate> GetFunctionsDictionary(string folderPath);
-
-        public HelperFunctions GetHelperFunctions(string folderPath);
-    }
+    public Dictionary<string, Delegate> GetFunctionsDictionary(IHelperFunctions helperFunctions);
 }
