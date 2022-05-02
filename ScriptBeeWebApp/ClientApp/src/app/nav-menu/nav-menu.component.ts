@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ThemeService} from '../services/theme/theme.service';
-import {OverlayContainer} from '@angular/cdk/overlay';
 
 
 @Component({
@@ -10,17 +9,9 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 })
 export class NavMenuComponent implements OnInit {
 
-  constructor(public themeService: ThemeService, private overlayContainer: OverlayContainer) {
+  constructor(public themeService: ThemeService) {
   }
 
   ngOnInit() {
-    this.themeService.darkThemeSubject.subscribe(darkMode => {
-      const darkClassName = 'dark-theme-mode';
-      if (darkMode) {
-        this.overlayContainer.getContainerElement().classList.add(darkClassName);
-      } else {
-        this.overlayContainer.getContainerElement().classList.remove(darkClassName);
-      }
-    });
   }
 }
