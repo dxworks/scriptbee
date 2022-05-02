@@ -1,13 +1,24 @@
-<div class="example-container" fxLayout="row">
-  <div fxFlex="20" class="tree-div">
-    <div fxLayout="row" fxLayoutAlign="end">
-      <button mat-icon-button color="warn" matTooltip="Create new project" (click)="onCreateNewScriptButtonClick()">
-        <mat-icon>note_add</mat-icon>
-      </button>
+<div class="main-scripts-div" fxLayout="column" fxLayoutAlign="space-between center">
+  <div class="example-container" fxLayout="row" fxFlex="60">
+    <div fxFlex="20" class="tree-div">
+      <div fxLayout="row" fxLayoutAlign="end">
+        <button mat-icon-button color="warn" matTooltip="Create new project" (click)="onCreateNewScriptButtonClick()">
+          <mat-icon>note_add</mat-icon>
+        </button>
+      </div>
+      <appTree [treeData]="fileStructureTree" (leafClick)="onLeafClick($event)"></appTree>
     </div>
-    <appTree [treeData]="fileStructureTree" (leafClick)="onLeafClick($event)"></appTree>
+    <div fxFlex>
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <div fxFlex>
-    <router-outlet></router-outlet>
-  </div>
+  <mat-tab-group class="output-tabs" animationDuration="0ms" headerPosition="below" fxFlex>
+    <mat-tab label="Console Output">
+      <app-console-output></app-console-output>
+    </mat-tab>
+    <mat-tab label="File Output">
+      <app-file-output></app-file-output>
+    </mat-tab>
+    <!--    <mat-tab label="Visualization"> Content 3</mat-tab>-->
+  </mat-tab-group>
 </div>

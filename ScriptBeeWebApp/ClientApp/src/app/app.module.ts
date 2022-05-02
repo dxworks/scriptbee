@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
@@ -12,7 +12,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatIconModule} from '@angular/material/icon';
+import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -32,8 +32,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatIconRegistry} from '@angular/material/icon';
-import {DomSanitizer} from '@angular/platform-browser';
 
 import {MonacoEditorModule} from '@materia-ui/ngx-monaco-editor';
 
@@ -51,11 +49,11 @@ import {ScriptsContentComponent} from './project-details/scripts-content/scripts
 import {NoScriptsComponent} from './project-details/scripts-content/no-scripts/no-scripts.component';
 import {SelectedScriptComponent} from './project-details/scripts-content/selected-script/selected-script.component';
 import {SlugifyPipe} from './shared/slugify.pipe';
-import {
-  CreateScriptDialogComponent
-} from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
+import {CreateScriptDialogComponent} from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
 import {SelectableTreeComponent} from './shared/selectable-tree/selectable-tree.component';
 import {SafeUrlPipe} from './shared/safe-url/safe-url.pipe';
+import {ConsoleOutputComponent} from './project-details/output/console-output/console-output.component';
+import {FileOutputComponent} from './project-details/output/file-output/file-output.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +74,9 @@ import {SafeUrlPipe} from './shared/safe-url/safe-url.pipe';
     SlugifyPipe,
     CreateScriptDialogComponent,
     SelectableTreeComponent,
-    SafeUrlPipe
+    SafeUrlPipe,
+    ConsoleOutputComponent,
+    FileOutputComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
