@@ -42,7 +42,7 @@
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Linker</div>
+      <div class="section-title content-after-divider">Link Models</div>
 
       <mat-form-field class="select-loader" appearance="fill">
         <mat-label>Linker</mat-label>
@@ -60,10 +60,11 @@
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Used stuff</div>
+      <div class="section-title content-after-divider">Currently loaded models</div>
 
       <div fxLayout="column" fxLayoutAlign="space-around start">
-        <span *ngIf="(projectDetailsService.project | async).linker" class="content">Used Linker: {{(projectDetailsService.project | async).linker}}</span>
+        <span *ngIf="(projectDetailsService.project | async).linker"
+              class="content">Used Linker: {{(projectDetailsService.project | async).linker}}</span>
       </div>
 
       <appTree [treeData]="(projectDetailsService.project | async).loadedFiles"></appTree>
@@ -71,6 +72,10 @@
       <mat-divider></mat-divider>
 
       <div class="section-title content-after-divider">Project Context</div>
+
+      <button *ngIf="(projectDetailsService.context | async).length == 0" class="upload-button" mat-raised-button
+              color="primary" (click)="onReloadModelsClick()">Reload Models
+      </button>
 
       <appTree [treeData]="(projectDetailsService.context | async)"></appTree>
     </div>

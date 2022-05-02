@@ -4,7 +4,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ProjectDetailsService} from '../project-details.service';
 import {TreeNode} from "../../shared/tree-node";
 import {UploadService} from "../../services/upload/upload.service";
-import {forkJoin} from "rxjs";
 import {LoaderService} from "../../services/loader/loader.service";
 
 @Component({
@@ -29,11 +28,6 @@ export class DetailsContentComponent {
       const projectId = this.projectDetailsService.project.getValue().projectId;
 
       this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe(() => {
-        this.projectService.getProjectContext(projectId).subscribe(res => {
-          this.projectDetailsService.context.next(res);
-          this.files = [];
-        });
-
         this.projectService.getProject(projectId).subscribe(result => {
           if (result) {
             this.projectDetailsService.project.next(result);
@@ -64,7 +58,7 @@ export class DetailsContentComponent {
   onLoadFilesClick() {
     const projectId = this.projectDetailsService.project.getValue().projectId;
 
-    this.loaderService.loadModels(projectId, this.checkedFiles).subscribe(()=> {
+    this.loaderService.loadModels(projectId, this.checkedFiles).subscribe(() => {
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
         console.log(res);
@@ -90,5 +84,16 @@ export class DetailsContentComponent {
 
   onLinkButtonClick() {
 
+  }
+
+  onReloadModelsClick() {
+    const projectId = this.projectDetailsService.project.getValue().projectId;
+
+    this.loaderService.reloadProjectContext(projectId).subscribe(() => {
+      this.projectService.getProjectContext(projectId).subscribe(res => {
+        this.projectDetailsService.context.next(res);
+        console.log(res);
+      });
+    });
   }
 }

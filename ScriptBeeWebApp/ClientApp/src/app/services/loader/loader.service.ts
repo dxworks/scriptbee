@@ -29,5 +29,9 @@ export class LoaderService {
     return this.http.post(this.loadersAPIUrl, loadModels, {headers: contentHeaders});
   }
 
+  reloadProjectContext(projectId: string) {
+    return this.http.post(`${this.loadersAPIUrl}/${projectId}`, {headers: contentHeaders});
+  }
+
 }
 

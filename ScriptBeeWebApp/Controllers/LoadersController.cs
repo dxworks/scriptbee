@@ -50,14 +50,14 @@ public class LoadersController : ControllerBase
         {
             return NotFound($"Could not find project model with id: {loadModels.ProjectId}");
         }
-        
+
         var project = _projectManager.GetProject(loadModels.ProjectId);
 
         if (project == null)
         {
             _projectManager.LoadProject(projectModel);
         }
-        
+
         Dictionary<string, List<string>> loadedFiles = new();
 
         foreach (var (loaderName, models) in loadModels.Nodes)
@@ -98,6 +98,61 @@ public class LoadersController : ControllerBase
             var dictionary = await modelLoader.LoadModel(loadedFileStreams);
 
             _projectManager.AddToGivenProject(loadModels.ProjectId, dictionary, modelLoader.GetName());
+
+            foreach (var fileStream in loadedFileStreams)
+            {
+                await fileStream.DisposeAsync();
+            }
+        }
+
+        return Ok();
+    }
+
+    [HttpPost("{projectId}")]
+    public async Task<IActionResult> ReloadProjectContext(string projectId, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(projectId))
+        {
+            return BadRequest("Invalid argument. ProjectId needed!");
+        }
+
+        var projectModel = await _projectModelService.GetDocument(projectId, cancellationToken);
+        if (projectModel == null)
+        {
+            return NotFound($"Could not find project model with id: {projectId}");
+        }
+
+        if (projectModel.LoadedFiles.Count == 0)
+        {
+            return Ok();
+        }
+
+        var project = _projectManager.GetProject(projectId);
+        if (project == null)
+        {
+            _projectManager.LoadProject(projectModel);
+        }
+
+        foreach (var (loader, loadedFileNames) in projectModel.LoadedFiles)
+        {
+            List<Stream> loadedFileStreams = new();
+
+            var modelLoader = _loadersHolder.GetModelLoader(loader);
+
+            if (modelLoader == null)
+            {
+                return BadRequest($"Model type {loader} is not supported");
+            }
+
+            foreach (var loadedFileName in loadedFileNames)
+            {
+                var fileStream = await _fileModelService.GetFile(loadedFileName);
+                loadedFileStreams.Add(fileStream);
+            }
+
+            var dictionary = await modelLoader.LoadModel(loadedFileStreams);
+
+            _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
 
             foreach (var fileStream in loadedFileStreams)
             {
