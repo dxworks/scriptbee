@@ -6,6 +6,7 @@
   <button mat-icon-button color="warn" matTooltip="Run script" (click)="onRunScriptButtonClick()">
     <mat-icon>play_arrow</mat-icon>
   </button>
-  <a mat-raised-button [href]="('vscode://file/' + scriptAbsolutePath) | safeUrl">Open VS Code</a>
+  <mat-icon color="warn" svgIcon="microsoft-visual-studio-code"></mat-icon>
+  <a button mat-stroked-button color="warn" [href]="('vscode://file/' + scriptAbsolutePath) | safeUrl">Open VS Code</a>
 </div>
 <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>

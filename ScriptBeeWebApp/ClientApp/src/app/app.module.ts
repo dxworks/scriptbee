@@ -32,6 +32,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatIconRegistry} from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
 
 import {MonacoEditorModule} from '@materia-ui/ngx-monaco-editor';
 
@@ -49,9 +51,11 @@ import {ScriptsContentComponent} from './project-details/scripts-content/scripts
 import {NoScriptsComponent} from './project-details/scripts-content/no-scripts/no-scripts.component';
 import {SelectedScriptComponent} from './project-details/scripts-content/selected-script/selected-script.component';
 import {SlugifyPipe} from './shared/slugify.pipe';
-import { CreateScriptDialogComponent } from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
-import { SelectableTreeComponent } from './shared/selectable-tree/selectable-tree.component';
-import { SafeUrlPipe } from './shared/safe-url/safe-url.pipe';
+import {
+  CreateScriptDialogComponent
+} from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
+import {SelectableTreeComponent} from './shared/selectable-tree/selectable-tree.component';
+import {SafeUrlPipe} from './shared/safe-url/safe-url.pipe';
 
 @NgModule({
   declarations: [
@@ -113,4 +117,9 @@ import { SafeUrlPipe } from './shared/safe-url/safe-url.pipe';
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
+    matIconRegistry.addSvgIconSet(
+      domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg')
+    );
+  }
 }
