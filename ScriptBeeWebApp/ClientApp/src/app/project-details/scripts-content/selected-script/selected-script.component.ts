@@ -59,7 +59,8 @@ export class SelectedScriptComponent implements OnInit {
   onRunScriptButtonClick() {
     this.projectDetailsService.project.subscribe(project => {
       if (project) {
-        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath).subscribe(() => {
+        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath).subscribe((result) => {
+          this.projectDetailsService.lastRunResult.next(result);
         }, (error: any) => {
           this.snackBar.open('Could not run script!', 'Ok', {
             duration: 4000

@@ -202,23 +202,23 @@ namespace ScriptBeeWebApp.Controllers
 
             ReturnedRun returnedRun = new();
 
-            returnedRun.Id = runModel.Id;
+            returnedRun.RunId = runModel.Id;
+            returnedRun.ProjectId = runModel.ProjectId;
             returnedRun.Errors = runModel.Errors;
+            returnedRun.ConsoleOutputName = runModel.ConsoleOutputName;
 
-            var (_, _, _, consoleOutputName) =
-                _fileNameGenerator.ExtractOutputFileNameComponents(runModel.ConsoleOutputName);
-
-            returnedRun.ConsoleOutputName = consoleOutputName;
-
-            List<string> outputFileNames = new();
+            List<OutputFile> outputFiles = new();
 
             foreach (var outputFileDatabaseName in runModel.OutputFileNames)
             {
-                var (_, _, _, outputName) = _fileNameGenerator.ExtractOutputFileNameComponents(outputFileDatabaseName);
-                outputFileNames.Add(outputName);
+                var (_, _, outputType, outputName) =
+                    _fileNameGenerator.ExtractOutputFileNameComponents(outputFileDatabaseName);
+                OutputFile outputFile = new(outputName, outputType, outputFileDatabaseName);
+
+                outputFiles.Add(outputFile);
             }
 
-            returnedRun.OutputFileNames = outputFileNames;
+            returnedRun.OutputFiles = outputFiles;
 
             return Ok(returnedRun);
         }

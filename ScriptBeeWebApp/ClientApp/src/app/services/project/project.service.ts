@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {contentHeaders} from '../../shared/headers';
 import {TreeNode} from '../../shared/tree-node';
-import {ReturnedProject} from "./returned-project";
+import {ReturnedProject} from './returned-project';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +18,10 @@ export class ProjectService {
   }
 
   getProject(projectId: string): Observable<Project> {
-    return this.http.get<ReturnedProject>(`${this.projectsAPIUrl}/${projectId}`, {headers: contentHeaders}).pipe(map((data: ReturnedProject) => {
-      return ProjectService.convertReturnedProjectToProject(data);
-    }));
+    return this.http.get<ReturnedProject>(`${this.projectsAPIUrl}/${projectId}`, {headers: contentHeaders})
+      .pipe(map((data: ReturnedProject) => {
+        return ProjectService.convertReturnedProjectToProject(data);
+      }));
   }
 
   getProjectContext(projectId: string) {
@@ -53,7 +54,7 @@ export class ProjectService {
         children: file.files.map(f => ({
           name: f
         }))
-      }
+      };
     });
 
     const loadedFiles: TreeNode[] = returnedProject.loadedFiles.map(file => {
@@ -62,7 +63,7 @@ export class ProjectService {
         children: file.files.map(f => ({
           name: f
         }))
-      }
+      };
     });
 
     return ({

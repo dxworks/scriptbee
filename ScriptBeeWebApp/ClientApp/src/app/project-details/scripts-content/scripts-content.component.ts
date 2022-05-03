@@ -6,6 +6,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CreateScriptDialogComponent} from './create-script-dialog/create-script-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {OutputFilesService} from '../../services/output/output-files.service';
+import {OutputFile} from '../../services/output/output-file';
 
 @Component({
   selector: 'app-scripts-content',
@@ -15,13 +17,19 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class ScriptsContentComponent implements OnInit {
 
   fileStructureTree: FileTreeNode[] = [];
+  consoleOutput = '';
+  outputFiles: OutputFile[] = [];
+  projectId = '';
+  runId = '';
 
   constructor(private fileSystemService: FileSystemService, private projectDetailsService: ProjectDetailsService,
-              private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar) {
+              private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private snackBar: MatSnackBar,
+              private outputFilesService: OutputFilesService) {
   }
 
   ngOnInit(): void {
     this.loadProjectFileStructure();
+    this.getOutput();
   }
 
   onLeafClick(node: FileTreeNode) {
@@ -44,6 +52,22 @@ export class ScriptsContentComponent implements OnInit {
       this.snackBar.open('Could not create script!', 'Ok', {
         duration: 4000
       });
+    });
+  }
+
+  private getOutput() {
+    this.projectDetailsService.lastRunResult.subscribe(runResult => {
+      console.log(runResult);
+      if (!runResult) {
+        return;
+      }
+      this.projectId = runResult.projectId;
+      this.runId = runResult.runId;
+      this.outputFilesService.getConsoleOutputContent(runResult.consoleOutputName).subscribe(consoleContent => {
+        this.consoleOutput = consoleContent;
+      });
+
+      this.outputFiles = runResult.outputFiles;
     });
   }
 

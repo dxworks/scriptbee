@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {contentHeaders} from "../../shared/headers";
+import {HttpClient} from '@angular/common/http';
+import {contentHeaders} from '../../shared/headers';
+import {RunScriptResult} from './run-script-result';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class RunScriptService {
   }
 
   runScriptFromPath(projectId: string, filePath: string) {
-    return this.http.post(this.runScriptAPIUrl, {
+    return this.http.post<RunScriptResult>(this.runScriptAPIUrl, {
       projectId: projectId,
       filePath: filePath
     }, {headers: contentHeaders});

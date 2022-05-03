@@ -12,7 +12,7 @@ public class FileModelService : IFileModelService
 
     public FileModelService(IMongoDatabase mongoDatabase)
     {
-        this._bucket = new GridFSBucket(mongoDatabase);
+        _bucket = new GridFSBucket(mongoDatabase);
     }
 
     public async Task UploadFile(string fileName, Stream fileStream, CancellationToken cancellationToken)

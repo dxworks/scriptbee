@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {contentHeaders} from '../../shared/headers';
-import {TreeNode} from "../../shared/tree-node";
-import {LoadModel} from "./load-model";
+import {TreeNode} from '../../shared/tree-node';
+import {LoadModel} from './load-model';
 
 @Injectable({
   providedIn: 'root'

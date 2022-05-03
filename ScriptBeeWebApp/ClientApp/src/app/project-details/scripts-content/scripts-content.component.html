@@ -14,10 +14,10 @@
   </div>
   <mat-tab-group class="output-tabs" animationDuration="0ms" headerPosition="below" fxFlex>
     <mat-tab label="Console Output">
-      <app-console-output></app-console-output>
+      <app-console-output [consoleOutput]="consoleOutput"></app-console-output>
     </mat-tab>
     <mat-tab label="File Output">
-      <app-file-output></app-file-output>
+      <app-file-output [outputFiles]="outputFiles" [projectId]="projectId" [runId]="runId"></app-file-output>
     </mat-tab>
     <!--    <mat-tab label="Visualization"> Content 3</mat-tab>-->
   </mat-tab-group>
