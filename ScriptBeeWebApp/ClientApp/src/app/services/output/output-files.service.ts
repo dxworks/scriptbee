@@ -37,7 +37,8 @@ export class OutputFilesService {
       projectId: projectId,
       runId: runId
     }, {
-      headers: contentHeaders
+      headers: contentHeaders,
+      responseType: 'blob'
     });
   }
 }

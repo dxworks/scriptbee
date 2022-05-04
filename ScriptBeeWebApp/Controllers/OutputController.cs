@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
+using HelperFunctions;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Services;
@@ -13,11 +16,14 @@ public class OutputController : ControllerBase
 {
     private readonly IFileModelService _fileModelService;
     private readonly IFileNameGenerator _fileNameGenerator;
+    private readonly IRunModelService _runModelService;
 
-    public OutputController(IFileModelService fileModelService, IFileNameGenerator fileNameGenerator)
+    public OutputController(IFileModelService fileModelService, IFileNameGenerator fileNameGenerator,
+        IRunModelService runModelService)
     {
         _fileModelService = fileModelService;
         _fileNameGenerator = fileNameGenerator;
+        _runModelService = runModelService;
     }
 
     [HttpGet("console")]
@@ -54,6 +60,55 @@ public class OutputController : ControllerBase
     public async Task<IActionResult> DownloadFile(DownloadAll downloadAll,
         CancellationToken cancellationToken)
     {
-        return Ok();
+        if (downloadAll is null || string.IsNullOrEmpty(downloadAll.ProjectId) ||
+            string.IsNullOrEmpty(downloadAll.RunId))
+        {
+            return BadRequest("You must provide a projectId and a runId for this operation");
+        }
+
+        var runModel = await _runModelService.GetDocument(downloadAll.RunId, cancellationToken);
+        if (runModel == null)
+        {
+            return NotFound("The given runId does not correspond to a valid run");
+        }
+
+        List<OutputFileStream> files = new();
+
+        foreach (var outputFilePath in runModel.OutputFileNames)
+        {
+            var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(outputFilePath);
+            var outputStream = await _fileModelService.GetFile(outputFilePath);
+            files.Add(new OutputFileStream(fileName, outputStream));
+        }
+
+        var zipStream = CreateFilesZipStream(files);
+
+        return File(zipStream, "application/octet-stream", "outputFiles.zip");
     }
+
+    private Stream CreateFilesZipStream(IEnumerable<OutputFileStream> outputFiles)
+    {
+        var zipStream = new MemoryStream();
+        using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
+        {
+            foreach (var (name, content) in outputFiles)
+            {
+                var zipArchiveEntry = zip.CreateEntry(name);
+
+                using var destinationStream = zipArchiveEntry.Open();
+
+                var buffer = new byte[1024];
+                int len;
+                while ((len = content.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    destinationStream.Write(buffer, 0, len);
+                }
+            }
+        }
+
+        zipStream.Position = 0;
+        return zipStream;
+    }
+
+    private record OutputFileStream(string Name, Stream Content);
 }

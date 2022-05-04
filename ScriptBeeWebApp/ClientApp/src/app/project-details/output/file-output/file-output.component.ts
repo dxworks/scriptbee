@@ -25,18 +25,17 @@ export class FileOutputComponent implements OnInit {
 
   onDownloadFileButtonClick(file: OutputFile) {
     this.outputFilesService.downloadFile(file.filePath).subscribe((data) => {
-      console.log(data);
       this.downloadFile(file.fileName, data);
     });
   }
 
   onDownloadAllButtonClick() {
-    this.outputFilesService.downloadAll(this.projectId, this.runId).subscribe(() => {
+    this.outputFilesService.downloadAll(this.projectId, this.runId).subscribe((data) => {
+      this.downloadFile('outputFiles.zip', data);
     });
   }
 
   private downloadFile(fileName: string, data: any) {
-
     const a: any = document.createElement('a');
     document.body.appendChild(a);
     a.style = 'display: none';
