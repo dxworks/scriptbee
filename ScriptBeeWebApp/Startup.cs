@@ -29,11 +29,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllersWithViews();
-        // In production, the Angular files will be served from this directory
-        services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/src"; });
-        // services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-        services.AddSwaggerGen();
+        // services.AddControllersWithViews();
 
         var mongoConnectionString = Configuration.GetConnectionString("mongodb");
 
@@ -60,6 +56,9 @@ public class Startup
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
         services.AddSingleton<IFileModelService, FileModelService>();
+
+        services.AddControllers();
+        services.AddSwaggerGen();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,16 +74,12 @@ public class Startup
         {
             app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
+            // app.UseHsts();
         }
 
         // app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        if (!env.IsDevelopment())
-        {
-            app.UseSpaStaticFiles();
-        }
-
+        // app.UseStaticFiles();
+        
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
@@ -92,20 +87,6 @@ public class Startup
             endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller}/{action=Index}/{id?}");
-        });
-
-        app.UseSpa(spa =>
-        {
-            // To learn more about options for serving an Angular SPA from ASP.NET Core,
-            // see https://go.microsoft.com/fwlink/?linkid=864501
-
-            spa.Options.SourcePath = "ClientApp";
-
-            if (env.IsDevelopment())
-            {
-                // spa.UseAngularCliServer(npmScript: "start");
-                spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-            }
         });
 
         var loadersHolder = (ILoadersHolder)app.ApplicationServices.GetService(typeof(ILoadersHolder));
