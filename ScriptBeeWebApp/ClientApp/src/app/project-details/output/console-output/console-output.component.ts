@@ -14,5 +14,4 @@ export class ConsoleOutputComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

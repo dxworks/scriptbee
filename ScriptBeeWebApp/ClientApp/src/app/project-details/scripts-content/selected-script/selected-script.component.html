@@ -3,10 +3,11 @@
           (click)="onCopyToClipboardButtonClick()">
     <mat-icon>content_copy</mat-icon>
   </button>
-  <button mat-icon-button color="warn" matTooltip="Run script" (click)="onRunScriptButtonClick()">
+  <a mat-icon-button color="warn" matTooltip="Open in VS Code" [href]="('vscode://file/' + scriptAbsolutePath) | safeUrl">
+    <mat-icon svgIcon="microsoft-visual-studio-code"></mat-icon>
+  </a>
+  <button class="run-script-button" mat-icon-button color="warn" matTooltip="Run script" (click)="onRunScriptButtonClick()">
     <mat-icon>play_arrow</mat-icon>
   </button>
-  <mat-icon color="warn" svgIcon="microsoft-visual-studio-code"></mat-icon>
-  <a button mat-stroked-button color="warn" [href]="('vscode://file/' + scriptAbsolutePath) | safeUrl">Open VS Code</a>
 </div>
 <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
