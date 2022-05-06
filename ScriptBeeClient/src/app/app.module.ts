@@ -9,6 +9,7 @@ import {AppComponent} from './app.component';
 import {NavMenuComponent} from './nav-menu/nav-menu.component';
 import {HomeComponent} from './home/home.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AngularSplitModule} from 'angular-split';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -76,7 +77,7 @@ import {FileOutputComponent} from './project-details/output/file-output/file-out
     SelectableTreeComponent,
     SafeUrlPipe,
     ConsoleOutputComponent,
-    FileOutputComponent
+    FileOutputComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -109,7 +110,8 @@ import {FileOutputComponent} from './project-details/output/file-output/file-out
     MonacoEditorModule,
     MatTooltipModule,
     ClipboardModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    AngularSplitModule,
   ],
   providers: [
     SlugifyPipe

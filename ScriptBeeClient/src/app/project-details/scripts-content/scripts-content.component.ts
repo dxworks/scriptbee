@@ -57,7 +57,6 @@ export class ScriptsContentComponent implements OnInit {
 
   private getOutput() {
     this.projectDetailsService.lastRunResult.subscribe(runResult => {
-      console.log(runResult);
       if (!runResult) {
         return;
       }

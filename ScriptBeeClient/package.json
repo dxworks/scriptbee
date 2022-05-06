@@ -27,6 +27,7 @@
     "@angular/router": "13.1.3",
     "@materia-ui/ngx-monaco-editor": "^6.0.0",
     "@mdi/angular-material": "^6.6.96",
+    "angular-split": "^13.2.0",
     "bootstrap": "^4.6.0",
     "core-js": "^3.8.3",
     "jquery": "^3.5.1",
