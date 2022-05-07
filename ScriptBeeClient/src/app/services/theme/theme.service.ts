@@ -20,6 +20,17 @@ export class ThemeService {
     return this._isDarkTheme;
   }
 
+  update() {
+    const splitGutterStyles = document.querySelectorAll('.as-split-gutter');
+    splitGutterStyles.forEach((gutter: any) => {
+      if (this._isDarkTheme) {
+        gutter.style.backgroundColor = 'var(--dark-resize-bar)';
+      } else {
+        gutter.style.backgroundColor = 'var(--light-resize-bar)';
+      }
+    });
+  }
+
   set isDarkTheme(theme) {
     this._isDarkTheme = theme;
     this.renderer.setAttribute(this.document.body, 'class', (this._isDarkTheme ? 'dark-theme' : 'light-theme') + ' mat-app-background');
@@ -27,14 +38,7 @@ export class ThemeService {
     localStorage.setItem('theme', this._isDarkTheme ? 'Dark' : 'Light');
 
     setTimeout(() => {
-      const splitGutterStyles = document.querySelectorAll('.as-split-gutter');
-      splitGutterStyles.forEach((gutter: any) => {
-        if (theme) {
-          gutter.style.backgroundColor = 'var(--primary-color)';
-        } else {
-          gutter.style.backgroundColor = 'var(--accent-color)';
-        }
-      });
-    }, 10);
+      this.update();
+    }, 1);
   }
 }
