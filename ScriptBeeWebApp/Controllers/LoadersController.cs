@@ -95,7 +95,7 @@ public class LoadersController : ControllerBase
                 loadedFileStreams.Add(fileStream);
             }
 
-            var dictionary = await modelLoader.LoadModel(loadedFileStreams);
+            var dictionary = await modelLoader.LoadModel(loadedFileStreams, cancellationToken: cancellationToken);
 
             _projectManager.AddToGivenProject(loadModels.ProjectId, dictionary, modelLoader.GetName());
 
@@ -150,7 +150,7 @@ public class LoadersController : ControllerBase
                 loadedFileStreams.Add(fileStream);
             }
 
-            var dictionary = await modelLoader.LoadModel(loadedFileStreams);
+            var dictionary = await modelLoader.LoadModel(loadedFileStreams, cancellationToken: cancellationToken);
 
             _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
 

@@ -1,10 +1,8 @@
-﻿using System;
-using Westwind.Utilities;
+﻿using Westwind.Utilities;
 
-namespace ScriptBeePlugin
+namespace ScriptBeePlugin;
+
+public class ScriptBeeModel : Expando
 {
-    public class ScriptBeeModel : Expando
-    {
-        public Boolean Ignored { get; set; }
-    }
+    public bool Ignored { get; set; }
 }
