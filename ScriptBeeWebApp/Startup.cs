@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using HelperFunctions;
 using Microsoft.AspNetCore.Builder;
@@ -79,7 +80,7 @@ public class Startup
 
         // app.UseHttpsRedirection();
         // app.UseStaticFiles();
-        
+
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
@@ -98,11 +99,18 @@ public class Startup
     {
         var pluginPaths = new PluginPathReader(ConfigFolders.PathToPlugins).GetPluginPaths();
 
+        Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return ((AppDomain)sender).GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
+        }
+
+        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+
         foreach (var pluginPath in pluginPaths)
         {
-            var pluginDLL = Assembly.LoadFile(pluginPath);
+            var pluginDll = Assembly.LoadFrom(pluginPath);
 
-            foreach (Type type in pluginDLL.GetExportedTypes())
+            foreach (var type in pluginDll.GetExportedTypes())
             {
                 if (typeof(IModelLoader).IsAssignableFrom(type))
                 {
@@ -111,5 +119,7 @@ public class Startup
                 }
             }
         }
+
+        AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
     }
 }

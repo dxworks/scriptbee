@@ -21,12 +21,18 @@ export class ThemeService {
   }
 
   update() {
+    if(this._isDarkTheme) {
+      document.documentElement.style.setProperty('color-scheme', 'dark');
+    } else {
+      document.documentElement.style.setProperty('color-scheme', 'light');
+    }
+
     const splitGutterStyles = document.querySelectorAll('.as-split-gutter');
     splitGutterStyles.forEach((gutter: any) => {
       if (this._isDarkTheme) {
-        gutter.style.backgroundColor = 'var(--dark-resize-bar)';
+        gutter.style.backgroundColor = 'var(--dark-element)';
       } else {
-        gutter.style.backgroundColor = 'var(--light-resize-bar)';
+        gutter.style.backgroundColor = 'var(--light-element)';
       }
     });
   }

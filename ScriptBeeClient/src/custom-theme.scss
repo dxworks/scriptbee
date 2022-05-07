@@ -60,6 +60,7 @@ $scriptbee-dark-theme: mat-dark-theme($scriptbee-dark-primary, $scriptbee-dark-a
   --primary-color: #{mat-color($scriptbee-light-primary)};
   --accent-color: #{mat-color($scriptbee-light-accent)};
   --warn-color: #{mat-color($scriptbee-light-warn)};
-  --dark-resize-bar: #3a3a3a;
-  --light-resize-bar: #eeeeee;
+
+  --dark-element: #3a3a3a;
+  --light-element: #eeeeee;
 }
