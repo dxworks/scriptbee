@@ -1,6 +1,6 @@
 ﻿using Westwind.Utilities;
 
-namespace ScriptBeePlugin;
+namespace DxWorks.ScriptBee.Plugin.Api;
 
 public class ScriptBeeModel : Expando
 {

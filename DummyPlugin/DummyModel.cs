@@ -1,5 +1,5 @@
 ﻿using System;
-using ScriptBeePlugin;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DummyPlugin
 {

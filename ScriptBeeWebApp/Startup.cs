@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using DxWorks.ScriptBee.Plugin.Api;
 using HelperFunctions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +13,6 @@ using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
-using ScriptBeePlugin;
 using ScriptBeeWebApp.FolderManager;
 using ScriptBeeWebApp.Services;
 

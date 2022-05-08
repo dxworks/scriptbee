@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Scripting.Utils;
-using ScriptBeePlugin;
 
 namespace ScriptBee.PluginManager
 {

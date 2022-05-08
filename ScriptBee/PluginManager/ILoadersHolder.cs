@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ScriptBeePlugin;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace ScriptBee.PluginManager
 {

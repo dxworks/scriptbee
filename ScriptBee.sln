@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeWebApp", "ScriptBe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyPlugin", "DummyPlugin\DummyPlugin.csproj", "{F81A3B68-997A-41E2-8C7E-9701BAB2B13E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeePlugin", "ScriptBeePlugin\ScriptBeePlugin.csproj", "{0445E1E7-5355-47A3-B807-F54F1B48D2C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Api", "DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj", "{0445E1E7-5355-47A3-B807-F54F1B48D2C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

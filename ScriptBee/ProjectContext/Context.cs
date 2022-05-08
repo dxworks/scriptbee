@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScriptBeePlugin;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace ScriptBee.ProjectContext;
 

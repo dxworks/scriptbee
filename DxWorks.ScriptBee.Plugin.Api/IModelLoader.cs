@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScriptBeePlugin;
+namespace DxWorks.ScriptBee.Plugin.Api;
 
 public interface IModelLoader
 {

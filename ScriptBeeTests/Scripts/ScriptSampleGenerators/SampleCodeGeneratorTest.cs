@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using DxWorks.ScriptBee.Plugin.Api;
 using Moq;
 using ScriptBee.PluginManager;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
-using ScriptBeePlugin;
 using Xunit;
 
 namespace ScriptBeeTests.Scripts.ScriptSampleGenerators
