@@ -6,6 +6,8 @@ public record ReturnedRun
 {
     public string RunId { get; set; }
 
+    public int RunIndex { get; set; }
+
     public string ProjectId { get; set; }
     public string ConsoleOutputName { get; set; }
 

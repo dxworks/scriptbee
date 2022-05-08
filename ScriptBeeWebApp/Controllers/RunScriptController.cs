@@ -159,13 +159,13 @@ namespace ScriptBeeWebApp.Controllers
                 loadedFiles[loaderName] = files;
             }
 
-            projectModel.LastRunId++;
+            projectModel.LastRunIndex++;
 
             await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
             var runModel = new RunModel
             {
-                Id = projectModel.LastRunId.ToString(),
+                RunIndex  = projectModel.LastRunIndex,
                 ProjectId = arg.projectId,
                 ScriptName = scriptName,
                 Linker = projectModel.Linker,
@@ -203,6 +203,7 @@ namespace ScriptBeeWebApp.Controllers
             ReturnedRun returnedRun = new();
 
             returnedRun.RunId = runModel.Id;
+            returnedRun.RunIndex = runModel.RunIndex;
             returnedRun.ProjectId = runModel.ProjectId;
             returnedRun.Errors = runModel.Errors;
             returnedRun.ConsoleOutputName = runModel.ConsoleOutputName;

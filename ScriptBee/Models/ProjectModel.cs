@@ -16,5 +16,5 @@ public class ProjectModel : IDocument
     public List<string> Loaders { get; set; } = new();
     public string Linker { get; set; }
     
-    public int LastRunId { get; set; }
+    public int LastRunIndex { get; set; }
 }
