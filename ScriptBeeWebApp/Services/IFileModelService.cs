@@ -9,4 +9,6 @@ public interface IFileModelService
     public Task UploadFile(string fileName, Stream fileStream, CancellationToken cancellationToken = default);
 
     public Task<Stream> GetFile(string fileName);
+
+    public Task DeleteFile(string fileName, CancellationToken cancellationToken = default);
 }

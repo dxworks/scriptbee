@@ -24,4 +24,15 @@ public class FileModelService : IFileModelService
     {
         return await _bucket.OpenDownloadStreamByNameAsync(fileName);
     }
+
+    public async Task DeleteFile(string fileName, CancellationToken cancellationToken)
+    {
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
+        var cursor = await _bucket.FindAsync(filter, cancellationToken: cancellationToken);
+        var fileInfo = cursor.FirstOrDefault(cancellationToken);
+        if (fileInfo != null)
+        {
+            await _bucket.DeleteAsync(fileInfo.Id, cancellationToken);
+        }
+    }
 }

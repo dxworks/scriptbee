@@ -31,7 +31,7 @@ export class DetailsContentComponent {
         this.projectService.getProject(projectId).subscribe(result => {
           if (result) {
             this.projectDetailsService.project.next(result);
-            console.log(result);
+            this.files = [];
           }
         }, (error: any) => {
           this.snackBar.open('Could not get project!', 'Ok', {

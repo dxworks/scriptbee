@@ -7,7 +7,7 @@
   <p class="drag-and-drop-text">Drag and Drop Files</p>
 
   <input #modelFileInput id="modelFile" mat-button
-         (change)="addFiles($event.target.files)" hidden type="file"
+         (change)="addFiles($event.target.files)" hidden multiple type="file"
          accept="application/json">
   <button mat-raised-button color="primary"
           (click)="openBrowseFilesDialog()" fxLayout="row" fxLayoutAlign="space-between center">

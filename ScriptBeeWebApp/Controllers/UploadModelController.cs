@@ -49,7 +49,7 @@ public class UploadModelController : ControllerBase
         {
             if (file.Length > 0)
             {
-                var modelName = _fileNameGenerator.GenerateModelName(projectId, loaderName[0], file.FileName);
+                var modelName = _fileNameGenerator.GenerateModelName(projectId, loaderName, file.FileName);
 
                 savedFiles.Add(modelName);
 
@@ -64,7 +64,15 @@ public class UploadModelController : ControllerBase
             return NotFound($"Could not find project model with id: {projectId}");
         }
 
-        projectModel.SavedFiles[loaderName[0]] = savedFiles;
+        if (projectModel.SavedFiles.TryGetValue(loaderName, out var previousSavedFiles))
+        {
+            foreach (var previousSavedFile in previousSavedFiles)
+            {
+                await _fileModelService.DeleteFile(previousSavedFile, cancellationToken);
+            }
+        }
+
+        projectModel.SavedFiles[loaderName] = savedFiles;
 
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
