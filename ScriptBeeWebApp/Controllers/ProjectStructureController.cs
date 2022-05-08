@@ -90,7 +90,7 @@ public class ProjectStructureController : ControllerBase
                 return StatusCode(StatusCodes.Status409Conflict);
             }
 
-            _projectFileStructureManager.CreateFile(arg.projectId, arg.filePath, content);
+            _projectFileStructureManager.CreateSrcFile(arg.projectId, arg.filePath, content);
         }
         catch
         {

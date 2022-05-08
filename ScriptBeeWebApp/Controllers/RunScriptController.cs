@@ -29,15 +29,14 @@ namespace ScriptBeeWebApp.Controllers
         private readonly IFileModelService _fileModelService;
         private readonly IRunModelService _runModelService;
         private readonly IProjectModelService _projectModelService;
-        private readonly IProjectStructureService _projectStructureService;
         private readonly IHelperFunctionsFactory _helperFunctionsFactory;
         private readonly IHelperFunctionsMapper _helperFunctionsMapper;
 
         public RunScriptController(IProjectManager projectManager,
             IProjectFileStructureManager projectFileStructureManager, IFileNameGenerator fileNameGenerator,
             IFileModelService fileModelService, IRunModelService runModelService,
-            IProjectModelService projectModelService, IProjectStructureService projectStructureService,
-            IHelperFunctionsFactory helperFunctionsFactory, IHelperFunctionsMapper helperFunctionsMapper)
+            IProjectModelService projectModelService, IHelperFunctionsFactory helperFunctionsFactory,
+            IHelperFunctionsMapper helperFunctionsMapper)
         {
             _projectManager = projectManager;
             _projectFileStructureManager = projectFileStructureManager;
@@ -45,7 +44,6 @@ namespace ScriptBeeWebApp.Controllers
             _fileModelService = fileModelService;
             _runModelService = runModelService;
             _projectModelService = projectModelService;
-            _projectStructureService = projectStructureService;
             _helperFunctionsFactory = helperFunctionsFactory;
             _helperFunctionsMapper = helperFunctionsMapper;
         }
@@ -144,8 +142,6 @@ namespace ScriptBeeWebApp.Controllers
 
             await _fileModelService.UploadFile(scriptName, stream, cancellationToken);
 
-            await _projectStructureService.AddToProjectStructure(project.Id, arg.filePath, cancellationToken);
-
             var projectModel = await _projectModelService.GetDocument(arg.projectId, cancellationToken);
             if (projectModel == null)
             {
@@ -165,7 +161,7 @@ namespace ScriptBeeWebApp.Controllers
 
             var runModel = new RunModel
             {
-                RunIndex  = projectModel.LastRunIndex,
+                RunIndex = projectModel.LastRunIndex,
                 ProjectId = arg.projectId,
                 ScriptName = scriptName,
                 Linker = projectModel.Linker,

@@ -13,7 +13,6 @@ using ScriptBee.Config;
 using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
-using ScriptBeeWebApp.FolderManager;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp;
@@ -44,7 +43,6 @@ public class Startup
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
         services.AddSingleton(_ => mongoDatabase);
-        services.AddSingleton<IFolderWriter, FolderWriter>();
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
         services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
         services.AddSingleton<IProjectManager, ProjectManager>();

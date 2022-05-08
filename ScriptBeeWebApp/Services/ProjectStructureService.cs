@@ -1,91 +1,70 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using MongoDB.Driver;
-using ScriptBee.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using ScriptBee.Config;
+using ScriptBee.PluginManager;
+using ScriptBee.ProjectContext;
+using ScriptBee.Scripts.ScriptSampleGenerators;
+using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 
 namespace ScriptBeeWebApp.Services;
 
 public class ProjectStructureService : IProjectStructureService
 {
-    private const string ProjectStructureCollectionName = "ProjectStructure";
-    private readonly IMongoCollection<ProjectStructure> _mongoCollection;
+    private readonly IFileContentProvider _fileContentProvider;
+    private readonly IProjectManager _projectManager;
+    private readonly ILoadersHolder _loadersHolder;
+    private readonly IProjectFileStructureManager _projectFileStructureManager;
 
-    public ProjectStructureService(IMongoDatabase mongoDatabase)
+    public ProjectStructureService(IFileContentProvider fileContentProvider, IProjectManager projectManager,
+        ILoadersHolder loadersHolder, IProjectFileStructureManager projectFileStructureManager)
     {
-        _mongoCollection = mongoDatabase.GetCollection<ProjectStructure>(ProjectStructureCollectionName);
+        _fileContentProvider = fileContentProvider;
+        _projectManager = projectManager;
+        _loadersHolder = loadersHolder;
+        _projectFileStructureManager = projectFileStructureManager;
     }
 
-    public async Task<ProjectStructure> GetProjectStructure(string projectId, CancellationToken cancellationToken)
+    public void GenerateModelClasses(string projectId)
     {
-        var result = await _mongoCollection.Find(x => x.ProjectId == projectId).FirstOrDefaultAsync(cancellationToken);
+        var project = _projectManager.GetProject(projectId);
 
-        if (result == null)
+        if (project == null)
         {
-            await AddToProjectStructure(projectId, "src", cancellationToken);
-            return CreateRootFolder(projectId);
+            throw new ArgumentException("Project cannot be null!");
         }
 
-        return result;
+        var classes = project.Context.GetClasses();
+
+        var pythonModelClasses =
+            new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider), _loadersHolder)
+                .GetSampleCode(classes);
+
+        WriteSampleCodeFiles(pythonModelClasses, projectId, "python", ".py");
+
+        var javascriptModelClasses = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider),
+                _loadersHolder)
+            .GetSampleCode(classes);
+
+        WriteSampleCodeFiles(javascriptModelClasses, projectId, "javascript", ".js");
+
+        var csharpModelClasses =
+            new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolder)
+                .GetSampleCode(classes);
+
+        WriteSampleCodeFiles(csharpModelClasses, projectId, "csharp", ".cs");
     }
 
-    public async Task AddToProjectStructure(string projectId, string filePath, CancellationToken cancellationToken)
+    private void WriteSampleCodeFiles(IList<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,
+        string extension)
     {
-        if (string.IsNullOrEmpty(filePath))
+        var deleteFolderPath = Path.Combine(ConfigFolders.GeneratedFolder, folderName);
+        _projectFileStructureManager.DeleteFolder(projectId, deleteFolderPath);
+
+        foreach (var sampleCodeFile in sampleCodeFiles)
         {
-            return;
+            var filePath = Path.Combine(ConfigFolders.GeneratedFolder, folderName, sampleCodeFile.Name + extension);
+            _projectFileStructureManager.CreateFile(projectId, filePath, sampleCodeFile.Content);
         }
-
-        var projectStructure = await _mongoCollection
-            .Find(x => x.ProjectId == projectId)
-            .FirstOrDefaultAsync(cancellationToken);
-
-        var pathParts = filePath.Split("/");
-
-        if (projectStructure == null)
-        {
-            projectStructure = CreateRootFolder(projectId, pathParts[0]);
-        }
-
-        var currentNode = projectStructure.Nodes.FirstOrDefault(n => n.Name == pathParts[0]);
-        if (currentNode == null)
-        {
-            currentNode = CreateRootFolder(projectId, pathParts[0]).Nodes[0];
-        }
-
-        var reconstructedPath = new StringBuilder(pathParts[0]);
-        for (var index = 1; index < pathParts.Length; index++)
-        {
-            var pathPart = pathParts[index];
-            reconstructedPath.Append('/');
-            reconstructedPath.Append(pathPart);
-
-            var childNode = currentNode.Children.FirstOrDefault(c => c.Name == pathPart);
-            if (childNode == null)
-            {
-                childNode = new ProjectStructureNode(pathPart, new List<ProjectStructureNode>(),
-                    reconstructedPath.ToString());
-                currentNode.Children.Add(childNode);
-            }
-
-            currentNode = childNode;
-        }
-
-        await _mongoCollection.ReplaceOneAsync(x => x.ProjectId == projectId, projectStructure,
-            new ReplaceOptions { IsUpsert = true }, cancellationToken);
-    }
-
-    private static ProjectStructure CreateRootFolder(string projectId, string folderName = "src")
-    {
-        return new ProjectStructure
-        {
-            ProjectId = projectId,
-            Nodes = new List<ProjectStructureNode>
-            {
-                new(folderName, new List<ProjectStructureNode>(), folderName)
-            }
-        };
     }
 }

@@ -2,8 +2,8 @@
 
 public class $CLASS_NAME$
 {
-    public void $METHOD_NAME$($MODEL_TYPE$ project)
+    public void $METHOD_NAME$($MODEL_TYPE$ project, IHelperFunctions helperFunctions)
     {
-        Console.WriteLine(project);
+        helperFunctions.ConsoleWriteLine("Hello, World!");
     }
 }

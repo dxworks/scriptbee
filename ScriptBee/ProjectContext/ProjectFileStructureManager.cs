@@ -18,6 +18,13 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
     public void CreateFile(string projectId, string relativePath, string fileContent)
     {
+        var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, relativePath);
+        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+        File.WriteAllText(filePath, fileContent);
+    }
+
+    public void CreateSrcFile(string projectId, string relativePath, string fileContent)
+    {
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
         Directory.CreateDirectory(Path.GetDirectoryName(filePath));
         File.WriteAllText(filePath, fileContent);
@@ -86,6 +93,16 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
 
         return absolutePath;
+    }
+
+    public void DeleteFolder(string projectId, string pathToFolder)
+    {
+        var folderAbsolutePath = Path.Combine(ConfigFolders.PathToProjects, projectId, pathToFolder);
+
+        if (Directory.Exists(folderAbsolutePath))
+        {
+            Directory.Delete(folderAbsolutePath, true);
+        }
     }
 
     private FileTreeNode GetFolderStructure(string path, string srcPath)

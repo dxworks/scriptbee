@@ -20,15 +20,17 @@ public class LoadersController : ControllerBase
     private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IFileModelService _fileModelService;
     private readonly IProjectManager _projectManager;
+    private readonly IProjectStructureService _projectStructureService;
 
     public LoadersController(ILoadersHolder loadersHolder, IProjectModelService projectModelService,
-        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService, IProjectManager projectManager)
+        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService, IProjectManager projectManager, IProjectStructureService projectStructureService)
     {
         _loadersHolder = loadersHolder;
         _projectModelService = projectModelService;
         _fileNameGenerator = fileNameGenerator;
         _fileModelService = fileModelService;
         _projectManager = projectManager;
+        _projectStructureService = projectStructureService;
     }
 
     [HttpGet]
@@ -104,7 +106,9 @@ public class LoadersController : ControllerBase
                 await fileStream.DisposeAsync();
             }
         }
-
+        
+        _projectStructureService.GenerateModelClasses(loadModels.ProjectId);
+        
         return Ok();
     }
 
