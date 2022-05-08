@@ -67,6 +67,7 @@ export class SelectedScriptComponent implements OnInit {
         this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath).subscribe((result) => {
           this.projectDetailsService.lastRunResult.next(result);
         }, (error: any) => {
+          console.log(error);
           this.snackBar.open('Could not run script!', 'Ok', {
             duration: 4000
           });

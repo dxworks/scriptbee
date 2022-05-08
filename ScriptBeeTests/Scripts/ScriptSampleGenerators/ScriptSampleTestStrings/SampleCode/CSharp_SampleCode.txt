@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using ScriptBee.ProjectContext;
+using HelperFunctions;
 
 // Only the code written in the ExecuteScript method will be executed
 
 public class ScriptContent
 {
-    public void ExecuteScript(Project project)
+    public void ExecuteScript(Project project, IHelperFunctions helperFunctions)
     {
-        Console.WriteLine(project);
+        helperFunctions.ConsoleWriteLine("Hello, World!");
     }
 }

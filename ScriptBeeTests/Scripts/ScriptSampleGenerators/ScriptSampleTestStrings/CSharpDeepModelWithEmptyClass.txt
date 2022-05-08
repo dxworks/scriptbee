@@ -39,8 +39,8 @@ public class EmptyModel
 
 public class ScriptContent
 {
-    public void ExecuteScript(DeepModel model)
+    public void ExecuteScript(DeepModel model, IHelperFunctions helperFunctions)
     {
-        Console.WriteLine(model);
+        helperFunctions.ConsoleWriteLine("Hello, World!");
     }
 }
