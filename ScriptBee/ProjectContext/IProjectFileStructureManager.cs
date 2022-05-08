@@ -8,7 +8,7 @@ public interface IProjectFileStructureManager
     public void CreateProjectFolderStructure(string projectId);
 
     public void CreateFile(string projectId, string relativePath, string fileContent);
-    
+
     public void CreateSrcFile(string projectId, string relativePath, string fileContent);
 
     public bool FileExists(string projectId, string relativePath);
@@ -24,4 +24,6 @@ public interface IProjectFileStructureManager
     public string GetAbsoluteFilePath(string projectId, string filePath);
 
     public void DeleteFolder(string projectId, string pathToFolder);
+
+    public string GetProjectAbsolutePath(string projectId);
 }

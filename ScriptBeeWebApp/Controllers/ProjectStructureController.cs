@@ -118,7 +118,7 @@ public class ProjectStructureController : ControllerBase
         return Ok(content);
     }
 
-    [HttpGet("absolutepath")]
+    [HttpGet("scriptabsolutepath")]
     public ActionResult<string> GetScriptAbsolutePath([FromQuery] GetScriptDetails arg)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
@@ -127,5 +127,16 @@ public class ProjectStructureController : ControllerBase
         }
 
         return _projectFileStructureManager.GetAbsoluteFilePath(arg.projectId, arg.filePath);
+    }
+
+    [HttpGet("projectabsolutepath")]
+    public ActionResult<string> GetProjectAbsolutePath([FromQuery] string projectId)
+    {
+        if (projectId == null || string.IsNullOrEmpty(projectId))
+        {
+            return BadRequest("Invalid arguments!");
+        }
+
+        return _projectFileStructureManager.GetProjectAbsolutePath(projectId);
     }
 }

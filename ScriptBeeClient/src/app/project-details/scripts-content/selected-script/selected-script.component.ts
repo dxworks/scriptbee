@@ -17,6 +17,7 @@ export class SelectedScriptComponent implements OnInit {
   code = '';
   scriptPath = '';
   scriptAbsolutePath = '';
+  projectAbsolutePath = '';
 
   constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
               private projectDetailsService: ProjectDetailsService, private route: ActivatedRoute,
@@ -33,6 +34,10 @@ export class SelectedScriptComponent implements OnInit {
           if (project) {
             this.fileSystemService.getScriptAbsolutePath(project.projectId, this.scriptPath).subscribe(absolutePath => {
               this.scriptAbsolutePath = absolutePath;
+            });
+
+            this.fileSystemService.getProjectAbsolutePath(project.projectId).subscribe(projectPath => {
+              this.projectAbsolutePath = projectPath;
             });
 
             this.fileSystemService.getFileContent(project.projectId, this.scriptPath).subscribe(content => {

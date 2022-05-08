@@ -105,6 +105,13 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
     }
 
+    public string GetProjectAbsolutePath(string projectId)
+    {
+        var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);
+        return projectPath;
+        
+    }
+
     private FileTreeNode GetFolderStructure(string path, string srcPath)
     {
         if (File.Exists(path))
