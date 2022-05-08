@@ -10,6 +10,7 @@ import {LoadModel} from './load-model';
 export class LoaderService {
 
   private loadersAPIUrl = '/api/loaders';
+  private loadersClearContextAPIUrl = '/api/loaders/clear';
 
   constructor(private http: HttpClient) {
   }
@@ -22,9 +23,9 @@ export class LoaderService {
     const loadModels: LoadModel = {
       projectId: projectId,
       nodes: checkedFiles.map(treeNode => ({
-          loaderName: treeNode.name,
-          models: treeNode.children.map(child => child.name)
-        }))
+        loaderName: treeNode.name,
+        models: treeNode.children.map(child => child.name)
+      }))
     };
     return this.http.post(this.loadersAPIUrl, loadModels, {headers: contentHeaders});
   }
@@ -33,5 +34,8 @@ export class LoaderService {
     return this.http.post(`${this.loadersAPIUrl}/${projectId}`, {headers: contentHeaders});
   }
 
+  clearProjectContext(projectId: string) {
+    return this.http.post(`${this.loadersClearContextAPIUrl}/${projectId}`, {headers: contentHeaders});
+  }
 }
 

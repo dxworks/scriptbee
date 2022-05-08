@@ -45,4 +45,10 @@ public class Context
 
         return classes;
     }
+
+    public void Clear()
+    {
+        Models.Clear();
+        Tags.Clear();
+    }
 }

@@ -23,7 +23,8 @@ public class LoadersController : ControllerBase
     private readonly IProjectStructureService _projectStructureService;
 
     public LoadersController(ILoadersHolder loadersHolder, IProjectModelService projectModelService,
-        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService, IProjectManager projectManager, IProjectStructureService projectStructureService)
+        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService, IProjectManager projectManager,
+        IProjectStructureService projectStructureService)
     {
         _loadersHolder = loadersHolder;
         _projectModelService = projectModelService;
@@ -106,9 +107,9 @@ public class LoadersController : ControllerBase
                 await fileStream.DisposeAsync();
             }
         }
-        
+
         _projectStructureService.GenerateModelClasses(loadModels.ProjectId);
-        
+
         return Ok();
     }
 
@@ -163,6 +164,33 @@ public class LoadersController : ControllerBase
                 await fileStream.DisposeAsync();
             }
         }
+
+        return Ok();
+    }
+
+    [HttpPost("clear/{projectId}")]
+    public async Task<IActionResult> ClearProjectContext(string projectId, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(projectId))
+        {
+            return BadRequest("Invalid argument. ProjectId needed!");
+        }
+
+        var projectModel = await _projectModelService.GetDocument(projectId, cancellationToken);
+        if (projectModel == null)
+        {
+            return NotFound($"Could not find project model with id: {projectId}");
+        }
+
+        var project = _projectManager.GetProject(projectId);
+        if (project != null)
+        {
+            project.Context.Clear();
+        }
+
+        projectModel.LoadedFiles.Clear();
+
+        await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
         return Ok();
     }

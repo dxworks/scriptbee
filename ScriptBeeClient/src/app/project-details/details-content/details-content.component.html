@@ -73,8 +73,14 @@
 
       <div class="section-title content-after-divider">Project Context</div>
 
-      <button *ngIf="(projectDetailsService.context | async).length == 0" class="upload-button" mat-raised-button
-              color="primary" (click)="onReloadModelsClick()">Reload Models
+      <button *ngIf="(projectDetailsService.context | async).length != 0" class="upload-button" mat-raised-button
+              color="primary" (click)="onClearContextButtonClick()">Clear Context
+      </button>
+
+      <button
+        *ngIf="(projectDetailsService.context | async).length == 0 && (projectDetailsService.project | async).loadedFiles.length > 0"
+        class="upload-button" mat-raised-button
+        color="primary" (click)="onReloadModelsClick()">Reload Models
       </button>
 
       <appTree [treeData]="(projectDetailsService.context | async)"></appTree>

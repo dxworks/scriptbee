@@ -92,7 +92,26 @@ export class DetailsContentComponent {
     this.loaderService.reloadProjectContext(projectId).subscribe(() => {
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
-        console.log(res);
+      });
+    });
+  }
+
+  onClearContextButtonClick() {
+    const projectId = this.projectDetailsService.project.getValue().projectId;
+
+    this.loaderService.clearProjectContext(projectId).subscribe(() => {
+      this.projectService.getProject(projectId).subscribe(result => {
+        if (result) {
+          this.projectDetailsService.project.next(result);
+        }
+      }, (error: any) => {
+        this.snackBar.open('Could not get project!', 'Ok', {
+          duration: 4000
+        });
+      });
+
+      this.projectService.getProjectContext(projectId).subscribe(res => {
+        this.projectDetailsService.context.next(res);
       });
     });
   }
