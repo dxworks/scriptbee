@@ -4,8 +4,7 @@
   justify-content: center;
   flex-direction: column;
   font-weight: 200;
-  height: 160px;
-  width: 320px;
+  height: 180px;
   border: 4px dashed;
   border-radius: 24px;
   color: var(--primary-color);
@@ -26,14 +25,25 @@ progress::-webkit-progress-value {
 }
 
 .aligned-item{
+  margin-top: 8px;
   margin-left: 8px;
+  margin-bottom: 8px;
 }
 
 .no-files{
-  margin-top: 16px;
+  margin-top: 8px;
   margin-left: 8px;
+  margin-bottom: 8px;
 }
 
 .drag-and-drop-text {
   font-weight: bold;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.text-with-opacity {
+  opacity: 80%;
 }
