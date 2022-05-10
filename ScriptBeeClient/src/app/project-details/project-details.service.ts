@@ -14,6 +14,8 @@ export class ProjectDetailsService {
   linkers: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   context: BehaviorSubject<TreeNode[]> = new BehaviorSubject<TreeNode[]>([]);
   lastRunResult: BehaviorSubject<RunScriptResult> = new BehaviorSubject<RunScriptResult>(undefined);
+  lastRunErrorMessage: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  lastOperationFailure: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   clearData() {
     this.project.next(undefined);
@@ -21,5 +23,7 @@ export class ProjectDetailsService {
     this.linkers.next([]);
     this.context.next([]);
     this.lastRunResult.next(undefined);
+    this.lastRunErrorMessage.next('');
+    this.lastOperationFailure.next('');
   }
 }

@@ -18,6 +18,7 @@ export class ScriptsContentComponent implements OnInit {
 
   fileStructureTree: FileTreeNode[] = [];
   consoleOutput = '';
+  outputErrors = '';
   outputFiles: OutputFile[] = [];
   projectId = '';
   runId = '';
@@ -56,17 +57,23 @@ export class ScriptsContentComponent implements OnInit {
   }
 
   private getOutput() {
-    this.projectDetailsService.lastRunResult.subscribe(runResult => {
-      if (!runResult) {
-        return;
-      }
-      this.projectId = runResult.projectId;
-      this.runId = runResult.runId;
-      this.outputFilesService.getConsoleOutputContent(runResult.consoleOutputName).subscribe(consoleContent => {
-        this.consoleOutput = consoleContent;
-      });
+    this.projectDetailsService.lastRunErrorMessage.subscribe(message => {
+      if (!message) {
+        this.projectDetailsService.lastRunResult.subscribe(runResult => {
+          if (runResult == null) {
+            return;
+          }
+          this.projectId = runResult.projectId;
+          this.runId = runResult.runId;
+          this.outputFilesService.getConsoleOutputContent(runResult.consoleOutputName).subscribe(consoleContent => {
+            this.consoleOutput = consoleContent;
+          });
 
-      this.outputFiles = runResult.outputFiles;
+          this.outputFiles = runResult.outputFiles;
+        });
+      } else {
+        this.outputErrors = message;
+      }
     });
   }
 
