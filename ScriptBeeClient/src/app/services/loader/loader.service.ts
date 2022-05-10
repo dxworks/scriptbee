@@ -22,11 +22,14 @@ export class LoaderService {
   loadModels(projectId: string, checkedFiles: TreeNode[]) {
     const loadModels: LoadModel = {
       projectId: projectId,
-      nodes: checkedFiles.map(treeNode => ({
-        loaderName: treeNode.name,
-        models: treeNode.children.map(child => child.name)
-      }))
+      nodes: checkedFiles
+        .filter(treeNode => treeNode.children && treeNode.children.length > 0)
+        .map(treeNode => ({
+          loaderName: treeNode.name,
+          models: treeNode.children.map(child => child.name)
+        }))
     };
+    console.log(loadModels);
     return this.http.post(this.loadersAPIUrl, loadModels, {headers: contentHeaders});
   }
 

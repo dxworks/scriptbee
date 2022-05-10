@@ -2,9 +2,11 @@ import {Component} from '@angular/core';
 import {ProjectService} from '../../services/project/project.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ProjectDetailsService} from '../project-details.service';
-import {TreeNode} from "../../shared/tree-node";
-import {UploadService} from "../../services/upload/upload.service";
-import {LoaderService} from "../../services/loader/loader.service";
+import {TreeNode} from '../../shared/tree-node';
+import {UploadService} from '../../services/upload/upload.service';
+import {LoaderService} from '../../services/loader/loader.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ErrorDialogComponent} from './error-dialog/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-details-content',
@@ -20,7 +22,7 @@ export class DetailsContentComponent {
 
   constructor(public projectDetailsService: ProjectDetailsService, private projectService: ProjectService,
               private uploadService: UploadService, private snackBar: MatSnackBar,
-              private loaderService: LoaderService) {
+              private loaderService: LoaderService, public dialog: MatDialog) {
   }
 
   onUploadFilesClick() {
@@ -34,20 +36,13 @@ export class DetailsContentComponent {
             this.files = [];
           }
         }, (error: any) => {
-          this.snackBar.open('Could not get project!', 'Ok', {
-            duration: 4000
-          });
+          this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
         });
-
       }, (error: any) => {
-        this.snackBar.open('Could not upload files!', 'Ok', {
-          duration: 4000
-        });
+        this.displayDialogErrorMessage('Could not upload files', this.getErrorMessage(error));
       });
     } else {
-      this.snackBar.open('You must select a loader first!', 'Ok', {
-        duration: 4000
-      });
+      this.displayDialogErrorMessage('You must select a loader first', '');
     }
   }
 
@@ -60,25 +55,24 @@ export class DetailsContentComponent {
 
     this.loaderService.loadModels(projectId, this.checkedFiles).subscribe(() => {
       this.projectService.getProjectContext(projectId).subscribe(res => {
-        this.projectDetailsService.context.next(res);
-        console.log(res);
+        if (res) {
+          this.projectDetailsService.context.next(res);
+        }
+      }, (error: any) => {
+        this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
       });
 
       this.projectService.getProject(projectId).subscribe(result => {
         if (result) {
           this.projectDetailsService.project.next(result);
-          console.log(result);
         }
       }, (error: any) => {
-        this.snackBar.open('Could not get project!', 'Ok', {
-          duration: 4000
-        });
+        this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
       });
 
     }, (error: any) => {
-      this.snackBar.open('Could not load files!', 'Ok', {
-        duration: 4000
-      });
+      console.log(error);
+      this.displayDialogErrorMessage('Could not load models', this.getErrorMessage(error));
     });
   }
 
@@ -92,7 +86,12 @@ export class DetailsContentComponent {
     this.loaderService.reloadProjectContext(projectId).subscribe(() => {
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
+      }, (error: any) => {
+        this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
       });
+    }, (error: any) => {
+      console.log(error);
+      this.displayDialogErrorMessage('Could not reload project context', this.getErrorMessage(error));
     });
   }
 
@@ -105,14 +104,28 @@ export class DetailsContentComponent {
           this.projectDetailsService.project.next(result);
         }
       }, (error: any) => {
-        this.snackBar.open('Could not get project!', 'Ok', {
-          duration: 4000
-        });
+        this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
       });
 
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
+      }, (error: any) => {
+        this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
       });
+    }, (error: any) => {
+      this.displayDialogErrorMessage('Could not clear project context', this.getErrorMessage(error));
     });
+  }
+
+  displayDialogErrorMessage(mainProblem: string, errorMessage: string) {
+    if (errorMessage == null || errorMessage === '') {
+      this.dialog.open(ErrorDialogComponent, {data: {mainProblem: mainProblem, errorMessage: ''}});
+    } else {
+      this.dialog.open(ErrorDialogComponent, {data: {mainProblem: mainProblem, errorMessage: errorMessage}});
+    }
+  }
+
+  private getErrorMessage(error: any) {
+    return error.error?.detail ?? error.error;
   }
 }

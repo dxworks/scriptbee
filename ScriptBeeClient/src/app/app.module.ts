@@ -33,6 +33,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import {MonacoEditorModule} from '@materia-ui/ngx-monaco-editor';
 
@@ -55,6 +56,7 @@ import {SelectableTreeComponent} from './shared/selectable-tree/selectable-tree.
 import {SafeUrlPipe} from './shared/safe-url/safe-url.pipe';
 import {ConsoleOutputComponent} from './project-details/output/console-output/console-output.component';
 import {FileOutputComponent} from './project-details/output/file-output/file-output.component';
+import { ErrorDialogComponent } from './project-details/details-content/error-dialog/error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +80,7 @@ import {FileOutputComponent} from './project-details/output/file-output/file-out
     SafeUrlPipe,
     ConsoleOutputComponent,
     FileOutputComponent,
+    ErrorDialogComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -112,6 +115,7 @@ import {FileOutputComponent} from './project-details/output/file-output/file-out
     ClipboardModule,
     MatCheckboxModule,
     AngularSplitModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     SlugifyPipe

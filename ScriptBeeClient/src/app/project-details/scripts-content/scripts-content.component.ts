@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {OutputFilesService} from '../../services/output/output-files.service';
 import {OutputFile} from '../../services/output/output-file';
+import {TreeNode} from '../../shared/tree-node';
 
 @Component({
   selector: 'app-scripts-content',
@@ -33,8 +34,9 @@ export class ScriptsContentComponent implements OnInit {
     this.getOutput();
   }
 
-  onLeafClick(node: FileTreeNode) {
-    this.router.navigate([node.srcPath], {relativeTo: this.route});
+  onLeafClick(node: TreeNode) {
+    const fileNode = node as FileTreeNode;
+    this.router.navigate([fileNode.srcPath], {relativeTo: this.route});
   }
 
   onCreateNewScriptButtonClick() {
