@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyPlugin", "DummyPlugin\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Api", "DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj", "{0445E1E7-5355-47A3-B807-F54F1B48D2C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeWebApp.Tests.Unit", "ScriptBeeWebApp.Tests.Unit\ScriptBeeWebApp.Tests.Unit.csproj", "{07848D67-892B-43E5-B337-41A6F425EE04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{0445E1E7-5355-47A3-B807-F54F1B48D2C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0445E1E7-5355-47A3-B807-F54F1B48D2C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0445E1E7-5355-47A3-B807-F54F1B48D2C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07848D67-892B-43E5-B337-41A6F425EE04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07848D67-892B-43E5-B337-41A6F425EE04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07848D67-892B-43E5-B337-41A6F425EE04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07848D67-892B-43E5-B337-41A6F425EE04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

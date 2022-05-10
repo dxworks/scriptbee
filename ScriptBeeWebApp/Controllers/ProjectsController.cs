@@ -37,7 +37,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet("{projectId}")]
-    public async Task<ActionResult<ReturnedNode>> GetProject(string projectId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProject(string projectId, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrEmpty(projectId))
         {
