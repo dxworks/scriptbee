@@ -19,6 +19,11 @@ export class DetailsContentComponent {
   selectedLinker;
   files = [];
   checkedFiles: TreeNode[] = [];
+  uploading = false;
+  loading = false;
+  linking = false;
+  reloadingContext = false;
+  clearingContext = false;
 
   constructor(public projectDetailsService: ProjectDetailsService, private projectService: ProjectService,
               private uploadService: UploadService, private snackBar: MatSnackBar,
@@ -27,6 +32,7 @@ export class DetailsContentComponent {
 
   onUploadFilesClick() {
     if (this.selectedLoader) {
+      this.uploading = true;
       const projectId = this.projectDetailsService.project.getValue().projectId;
 
       this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe(() => {
@@ -34,14 +40,18 @@ export class DetailsContentComponent {
           if (result) {
             this.projectDetailsService.project.next(result);
             this.files = [];
+            this.uploading = false;
           }
         }, (error: any) => {
+          this.uploading = false;
           this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
         });
       }, (error: any) => {
+        this.uploading = false;
         this.displayDialogErrorMessage('Could not upload files', this.getErrorMessage(error));
       });
     } else {
+      this.uploading = false;
       this.displayDialogErrorMessage('You must select a loader first', '');
     }
   }
@@ -51,6 +61,7 @@ export class DetailsContentComponent {
   }
 
   onLoadFilesClick() {
+    this.loading = true;
     const projectId = this.projectDetailsService.project.getValue().projectId;
 
     this.loaderService.loadModels(projectId, this.checkedFiles).subscribe(() => {
@@ -59,19 +70,22 @@ export class DetailsContentComponent {
           this.projectDetailsService.context.next(res);
         }
       }, (error: any) => {
+        this.loading = false;
         this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
       });
 
       this.projectService.getProject(projectId).subscribe(result => {
         if (result) {
           this.projectDetailsService.project.next(result);
+          this.loading = false;
         }
       }, (error: any) => {
+        this.loading = false;
         this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
       });
 
     }, (error: any) => {
-      console.log(error);
+      this.loading = false;
       this.displayDialogErrorMessage('Could not load models', this.getErrorMessage(error));
     });
   }
@@ -81,21 +95,25 @@ export class DetailsContentComponent {
   }
 
   onReloadModelsClick() {
+    this.reloadingContext = true;
     const projectId = this.projectDetailsService.project.getValue().projectId;
 
     this.loaderService.reloadProjectContext(projectId).subscribe(() => {
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
+        this.reloadingContext = false;
       }, (error: any) => {
+        this.reloadingContext = false;
         this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
       });
     }, (error: any) => {
-      console.log(error);
+      this.reloadingContext = false;
       this.displayDialogErrorMessage('Could not reload project context', this.getErrorMessage(error));
     });
   }
 
   onClearContextButtonClick() {
+    this.clearingContext = true;
     const projectId = this.projectDetailsService.project.getValue().projectId;
 
     this.loaderService.clearProjectContext(projectId).subscribe(() => {
@@ -104,15 +122,19 @@ export class DetailsContentComponent {
           this.projectDetailsService.project.next(result);
         }
       }, (error: any) => {
+        this.clearingContext = false;
         this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
       });
 
       this.projectService.getProjectContext(projectId).subscribe(res => {
         this.projectDetailsService.context.next(res);
+        this.clearingContext = false;
       }, (error: any) => {
+        this.clearingContext = false;
         this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
       });
     }, (error: any) => {
+      this.clearingContext = false;
       this.displayDialogErrorMessage('Could not clear project context', this.getErrorMessage(error));
     });
   }
