@@ -14,7 +14,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 })
 export class SelectedScriptComponent implements OnInit, OnDestroy {
 
-  editorOptions = {theme: 'vs-dark', language: 'javascript', readOnly: true};
+  editorOptions = {theme: 'vs-dark', language: 'javascript', readOnly: true, automaticLayout: true};
   code = '';
   scriptPath = '';
   scriptAbsolutePath = '';
