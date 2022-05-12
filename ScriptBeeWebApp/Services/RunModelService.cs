@@ -15,11 +15,10 @@ public class RunModelService : MongoService<RunModel>, IRunModelService
     {
     }
 
-    public async Task<List<RunModel>> GetAllRunsForProject(ProjectModel projectModel,
-        CancellationToken cancellationToken)
+    public async Task<List<RunModel>> GetAllRunsForProject(string projectId, CancellationToken cancellationToken)
     {
-        var results = await mongoCollection.FindAsync(run => run.ProjectId == projectModel.Id,
+        var results = await mongoCollection.FindAsync(run => run.ProjectId == projectId,
             cancellationToken: cancellationToken);
-        return results.ToList(cancellationToken: cancellationToken);
+        return results.ToList(cancellationToken);
     }
 }

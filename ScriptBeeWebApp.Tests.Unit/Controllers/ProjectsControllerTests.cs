@@ -20,6 +20,8 @@ public class ProjectsControllerTests
     private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
     private readonly Mock<IProjectModelService> _projectModelServiceMock;
     private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
+    private readonly Mock<IFileModelService> _fileModelServiceMock;
+    private readonly Mock<IRunModelService> _runModelServiceMock;
     private readonly Fixture _fixture;
 
     public ProjectsControllerTests()
@@ -28,10 +30,13 @@ public class ProjectsControllerTests
         _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
         _projectModelServiceMock = new Mock<IProjectModelService>();
         _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
+        _fileModelServiceMock = new Mock<IFileModelService>();
+        _runModelServiceMock = new Mock<IRunModelService>();
         _fixture = new Fixture();
 
         _projectsController = new ProjectsController(_projectManagerMock.Object,
-            _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object, _fileNameGeneratorMock.Object);
+            _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object, _fileNameGeneratorMock.Object,
+            _fileModelServiceMock.Object, _runModelServiceMock.Object);
     }
 
     [Fact]

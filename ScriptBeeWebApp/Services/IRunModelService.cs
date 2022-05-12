@@ -7,5 +7,5 @@ namespace ScriptBeeWebApp.Services;
 
 public interface IRunModelService : IMongoService<RunModel>
 {
-    public Task<List<RunModel>> GetAllRunsForProject(ProjectModel projectModel, CancellationToken cancellationToken);
+    public Task<List<RunModel>> GetAllRunsForProject(string projectId, CancellationToken cancellationToken);
 }

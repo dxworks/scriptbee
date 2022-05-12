@@ -19,14 +19,19 @@ public class ProjectsController : ControllerBase
     private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IProjectModelService _projectModelService;
     private readonly IFileNameGenerator _fileNameGenerator;
+    private readonly IFileModelService _fileModelService;
+    private readonly IRunModelService _runModelService;
 
     public ProjectsController(IProjectManager projectManager, IProjectFileStructureManager projectFileStructureManager,
-        IProjectModelService projectModelService, IFileNameGenerator fileNameGenerator)
+        IProjectModelService projectModelService, IFileNameGenerator fileNameGenerator,
+        IFileModelService fileModelService, IRunModelService runModelService)
     {
         _projectManager = projectManager;
         _projectFileStructureManager = projectFileStructureManager;
         _projectModelService = projectModelService;
         _fileNameGenerator = fileNameGenerator;
+        _fileModelService = fileModelService;
+        _runModelService = runModelService;
     }
 
     [HttpGet]
@@ -111,23 +116,44 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{projectId}")]
     public async Task<IActionResult> RemoveProject(string projectId, CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrEmpty(projectId))
+        if (string.IsNullOrEmpty(projectId))
         {
-            var project = _projectManager.GetProject(projectId);
-
-            if (project == null)
-            {
-                return BadRequest($"Project with the given id does not exist");
-            }
-
-            _projectManager.RemoveProject(projectId);
-
-            await _projectModelService.DeleteDocument(projectId, cancellationToken);
-
-            return Ok("Project removed successfully");
+            return BadRequest("You must provide a projectId for this operation");
         }
 
-        return BadRequest("You must provide a projectId for this operation");
+        var projectModel = await _projectModelService.GetDocument(projectId, cancellationToken);
+
+        if (projectModel != null)
+        {
+            foreach (var (_, savedFilesNames) in projectModel.SavedFiles)
+            {
+                foreach (var fileName in savedFilesNames)
+                {
+                    await _fileModelService.DeleteFile(fileName, cancellationToken);
+                }
+            }
+
+            await _projectModelService.DeleteDocument(projectId, cancellationToken);
+        }
+
+        _projectManager.RemoveProject(projectId);
+
+        var allRunsForProject = await _runModelService.GetAllRunsForProject(projectId, cancellationToken);
+        foreach (var runModel in allRunsForProject)
+        {
+            await _fileModelService.DeleteFile(runModel.ScriptName, cancellationToken);
+
+            await _fileModelService.DeleteFile(runModel.ConsoleOutputName, cancellationToken);
+
+            foreach (var outputFileName in runModel.OutputFileNames)
+            {
+                await _fileModelService.DeleteFile(outputFileName, cancellationToken);
+            }
+
+            await _runModelService.DeleteDocument(runModel.Id, cancellationToken);
+        }
+
+        return Ok("Project removed successfully");
     }
 
     [HttpPut("{projectModel}")]
