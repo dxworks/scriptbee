@@ -84,7 +84,6 @@ public class ProjectsControllerTests
         Assert.Equal(projectModel.Name, returnedProject.Name);
         Assert.Equal(projectModel.Linker, returnedProject.Linker);
         Assert.Equal(projectModel.CreationDate, returnedProject.CreationDate);
-        Assert.Equal(projectModel.Loaders, returnedProject.Loaders);
         Assert.Equal(projectModel.SavedFiles.Count, returnedProject.SavedFiles.Count);
         // todo test mai in detaliu saved files
     }

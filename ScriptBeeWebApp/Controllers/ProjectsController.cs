@@ -192,7 +192,6 @@ public class ProjectsController : ControllerBase
             Name = project.Name,
             CreationDate = project.CreationDate,
             Linker = project.Linker,
-            Loaders = project.Loaders,
             LoadedFiles = loadedFiles,
             SavedFiles = savedFiles
         };

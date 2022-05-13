@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using DxWorks.ScriptBee.Plugin.Api;
-using Microsoft.Scripting.Utils;
 
 namespace ScriptBee.PluginManager
 {
     public class LoadersHolder : ILoadersHolder
     {
-        private Dictionary<string, IModelLoader> loaders = new Dictionary<string, IModelLoader>();
+        private Dictionary<string, IModelLoader> _loaders = new();
 
         public void AddLoaderToDictionary(IModelLoader loader)
         {
             string loaderName = loader.GetName();
-            
-            if (!loaders.ContainsKey(loaderName))
+
+            if (!_loaders.ContainsKey(loaderName))
             {
-                loaders.Add(loaderName,loader);
+                _loaders.Add(loaderName, loader);
             }
             else
             {
@@ -24,9 +23,9 @@ namespace ScriptBee.PluginManager
             }
         }
 
-        public IModelLoader? GetModelLoader(string modelName)
+        public IModelLoader? GetModelLoader(string loaderName)
         {
-            if (loaders.TryGetValue(modelName, out var loader))
+            if (_loaders.TryGetValue(loaderName, out var loader))
             {
                 return loader;
             }
@@ -38,7 +37,7 @@ namespace ScriptBee.PluginManager
 
         public IEnumerable<IModelLoader> GetAllLoaders()
         {
-            return loaders.Select(pair => pair.Value);
+            return _loaders.Select(pair => pair.Value);
         }
     }
 }

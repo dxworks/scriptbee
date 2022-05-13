@@ -44,6 +44,7 @@ public class Startup
 
         services.AddSingleton(_ => mongoDatabase);
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
+        services.AddSingleton<ILinkersHolder, LinkersHolder>();
         services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
@@ -88,12 +89,13 @@ public class Startup
                 pattern: "{controller}/{action=Index}/{id?}");
         });
 
-        var loadersHolder = (ILoadersHolder)app.ApplicationServices.GetService(typeof(ILoadersHolder));
+        var loadersHolder = app.ApplicationServices.GetService<ILoadersHolder>();
+        var linkersHolder = app.ApplicationServices.GetService<ILinkersHolder>();
 
-        CreateLoadersDictionary(loadersHolder);
+        LoadPlugins(loadersHolder, linkersHolder);
     }
 
-    private void CreateLoadersDictionary(ILoadersHolder loadersHolder)
+    private void LoadPlugins(ILoadersHolder loadersHolder, ILinkersHolder linkersHolder)
     {
         var pluginPaths = new PluginPathReader(ConfigFolders.PathToPlugins).GetPluginPaths();
 
@@ -113,7 +115,19 @@ public class Startup
                 if (typeof(IModelLoader).IsAssignableFrom(type))
                 {
                     var modelLoader = (IModelLoader)Activator.CreateInstance(type);
-                    loadersHolder.AddLoaderToDictionary(modelLoader);
+                    if (modelLoader is not null)
+                    {
+                        loadersHolder.AddLoaderToDictionary(modelLoader);
+                    }
+                }
+
+                if (typeof(IModelLinker).IsAssignableFrom(type))
+                {
+                    var modelLinker = (IModelLinker)Activator.CreateInstance(type);
+                    if (modelLinker is not null)
+                    {
+                        linkersHolder.AddLinkerToDictionary(modelLinker);
+                    }
                 }
             }
         }

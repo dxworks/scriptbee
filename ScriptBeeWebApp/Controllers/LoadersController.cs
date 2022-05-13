@@ -77,7 +77,6 @@ public class LoadersController : ControllerBase
         }
 
         projectModel.LoadedFiles = loadedFiles;
-        projectModel.Loaders = _loadersHolder.GetAllLoaders().Select(modelLoader => modelLoader.GetName()).ToList();
 
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 

@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {LoaderService} from '../services/loader/loader.service';
 import {ProjectDetailsService} from './project-details.service';
 import {UploadService} from '../services/upload/upload.service';
+import {LinkerService} from '../services/linker/linker.service';
 
 @Component({
   selector: 'app-project-details',
@@ -16,7 +17,7 @@ export class ProjectDetailsComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private projectService: ProjectService, private loaderService: LoaderService,
               private uploadService: UploadService, private route: ActivatedRoute, private snackBar: MatSnackBar,
-              private projectDetailsService: ProjectDetailsService) {
+              private projectDetailsService: ProjectDetailsService, private linkerService: LinkerService) {
   }
 
   ngOnInit(): void {
@@ -28,7 +29,7 @@ export class ProjectDetailsComponent implements OnInit {
       if (result) {
         this.projectDetailsService.project.next(result);
       }
-    }, (error: any) => {
+    }, () => {
       this.snackBar.open('Could not get project!', 'Ok', {
         duration: 4000
       });
@@ -38,11 +39,22 @@ export class ProjectDetailsComponent implements OnInit {
       if (result) {
         this.projectDetailsService.loaders.next(result);
       }
-    }, (error: any) => {
+    }, () => {
       this.snackBar.open('Could not get loaders!', 'Ok', {
         duration: 4000
       });
     });
+
+    this.linkerService.getAllLinkers().subscribe({
+      next: (result) => {
+        this.projectDetailsService.linkers.next(result);
+      },
+      error: () => {
+        this.snackBar.open('Could not get linkers!', 'Ok', {
+          duration: 4000
+        });
+      }
+    })
 
     this.projectService.getProjectContext(id).subscribe(result => {
       this.projectDetailsService.context.next(result);

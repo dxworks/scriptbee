@@ -7,6 +7,7 @@ import {UploadService} from '../../services/upload/upload.service';
 import {LoaderService} from '../../services/loader/loader.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ErrorDialogComponent} from './error-dialog/error-dialog/error-dialog.component';
+import {LinkerService} from '../../services/linker/linker.service';
 
 @Component({
   selector: 'app-details-content',
@@ -27,7 +28,7 @@ export class DetailsContentComponent {
 
   constructor(public projectDetailsService: ProjectDetailsService, private projectService: ProjectService,
               private uploadService: UploadService, private snackBar: MatSnackBar,
-              private loaderService: LoaderService, public dialog: MatDialog) {
+              private loaderService: LoaderService, public dialog: MatDialog, private linkerService: LinkerService) {
   }
 
   onUploadFilesClick() {
@@ -91,24 +92,55 @@ export class DetailsContentComponent {
   }
 
   onLinkButtonClick() {
+    if (this.selectedLinker) {
+      this.linking = true;
+      const projectId = this.projectDetailsService.project.getValue().projectId;
 
+      this.linkerService.linkModels(projectId, this.selectedLinker).subscribe({
+        next: () => {
+          this.projectService.getProjectContext(projectId).subscribe({
+            next: (res) => {
+              this.projectDetailsService.context.next(res);
+              this.linking = false;
+            },
+            error: (error) => {
+              this.linking = false;
+              this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
+            }
+          });
+        },
+        error: (error) => {
+          this.linking = false;
+          this.displayDialogErrorMessage('Could not link project context', this.getErrorMessage(error));
+        }
+      });
+    } else {
+      this.linking = false;
+      this.displayDialogErrorMessage('You must select a linker first', '');
+    }
   }
 
   onReloadModelsClick() {
     this.reloadingContext = true;
     const projectId = this.projectDetailsService.project.getValue().projectId;
 
-    this.loaderService.reloadProjectContext(projectId).subscribe(() => {
-      this.projectService.getProjectContext(projectId).subscribe(res => {
-        this.projectDetailsService.context.next(res);
+    this.loaderService.reloadProjectContext(projectId).subscribe({
+      next: () => {
+        this.projectService.getProjectContext(projectId).subscribe({
+          next: (res) => {
+            this.projectDetailsService.context.next(res);
+            this.reloadingContext = false;
+          },
+          error: (error) => {
+            this.reloadingContext = false;
+            this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
+          }
+        });
+      },
+      error: (error) => {
         this.reloadingContext = false;
-      }, (error: any) => {
-        this.reloadingContext = false;
-        this.displayDialogErrorMessage('Could not get project context', this.getErrorMessage(error));
-      });
-    }, (error: any) => {
-      this.reloadingContext = false;
-      this.displayDialogErrorMessage('Could not reload project context', this.getErrorMessage(error));
+        this.displayDialogErrorMessage('Could not reload project context', this.getErrorMessage(error));
+      }
     });
   }
 
