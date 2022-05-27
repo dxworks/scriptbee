@@ -52,6 +52,7 @@ public class HelperFunctions : IHelperFunctionsWithResults
     }
 
     public async void ExportJson<T>(string fileName, T obj)
+        // public async void ExportJson<T>(string fileName, T obj, JsonSerializerSettings? settings = default)
     {
         var outputJsonName =
             _fileNameGenerator.GenerateOutputFileName(_projectId, _runId, RunResult.FileType, fileName);
@@ -59,18 +60,16 @@ public class HelperFunctions : IHelperFunctionsWithResults
         _results.Add(new RunResult(RunResult.FileType, outputJsonName));
 
         var jsonSerializer = JsonSerializer.Create();
-        await using MemoryStream stream = new MemoryStream();
+        await using var stream = new MemoryStream();
 
-        await using (var writer = new StreamWriter(stream))
-        {
-            using (var jsonWriter = new JsonTextWriter(writer))
-            {
-                jsonSerializer.Serialize(jsonWriter, obj);
-            }
-        }
+        await using var writer = new StreamWriter(stream);
+        using var jsonWriter = new JsonTextWriter(writer);
+        jsonSerializer.Serialize(jsonWriter, obj);
 
+        // stream.Position = 0;
         await _fileModelService.UploadFile(outputJsonName, stream);
     }
+
 
     public async void ExportCsv<T>(string fileName, List<T> records)
     {
@@ -78,15 +77,12 @@ public class HelperFunctions : IHelperFunctionsWithResults
 
         _results.Add(new RunResult(RunResult.FileType, outputCsvName));
 
-        await using MemoryStream stream = new MemoryStream();
+        await using var stream = new MemoryStream();
 
-        await using (var writer = new StreamWriter(stream))
-        {
-            await using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                await csv.WriteRecordsAsync(records);
-            }
-        }
+        await using var writer = new StreamWriter(stream);
+        await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+
+        await csv.WriteRecordsAsync(records);
 
         await _fileModelService.UploadFile(outputCsvName, stream);
     }
