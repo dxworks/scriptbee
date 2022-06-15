@@ -115,7 +115,7 @@ import { ErrorDialogComponent } from './project-details/details-content/error-di
     ClipboardModule,
     MatCheckboxModule,
     AngularSplitModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   providers: [
     SlugifyPipe

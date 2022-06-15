@@ -60,6 +60,10 @@ export class ScriptsContentComponent implements OnInit {
 
   private getOutput() {
     this.projectDetailsService.lastRunErrorMessage.subscribe(message => {
+      this.outputErrors = message;
+      this.consoleOutput = '';
+      this.outputFiles = [];
+
       if (!message) {
         this.projectDetailsService.lastRunResult.subscribe(runResult => {
           if (runResult == null) {
@@ -73,8 +77,6 @@ export class ScriptsContentComponent implements OnInit {
 
           this.outputFiles = runResult.outputFiles;
         });
-      } else {
-        this.outputErrors = message;
       }
     });
   }

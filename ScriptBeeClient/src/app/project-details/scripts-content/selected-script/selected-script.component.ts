@@ -66,6 +66,8 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
   }
 
   onRunScriptButtonClick() {
+    this.projectDetailsService.lastRunErrorMessage.next("");
+
     this.projectDetailsService.project.subscribe(project => {
       if (project) {
         this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath).subscribe((result) => {

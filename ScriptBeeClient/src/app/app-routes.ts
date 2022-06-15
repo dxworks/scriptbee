@@ -8,7 +8,8 @@ import {SelectedScriptComponent} from "./project-details/scripts-content/selecte
 import {ScriptsContentComponent} from "./project-details/scripts-content/scripts-content.component";
 
 export const ROUTES: Routes = [
-  {path: '', component: HomeComponent, pathMatch: 'full'},
+  // {path: '', component: HomeComponent, pathMatch: 'full'},
+  {path: '', redirectTo: 'projects', pathMatch: 'full'},
   {path: 'projects', component: ProjectsComponent},
   {
     path: 'projects/:id', component: ProjectDetailsComponent,
