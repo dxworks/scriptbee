@@ -17,6 +17,6 @@ let model = new RecursiveModel();
 
 // start script
 
-print(model);
+ConsoleWriteLine(model);
 
 // end script

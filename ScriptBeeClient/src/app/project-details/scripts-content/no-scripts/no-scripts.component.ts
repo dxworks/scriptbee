@@ -19,7 +19,7 @@ export class NoScriptsComponent implements OnInit {
       {name: 'Open the script in Visual Studio Code using the logo button from the top right corner.',  icon: 'looks_3', color: '#FF9800'},
       {name: 'Edit the script in Visual Studio Code and save the changes.', icon: 'looks_4', color: '#607D8B'},
       {name: 'Return to ScriptBee to run the script using the arrow button from the top right corner.',  icon: 'looks_5', color: '#607D8B'},
-      {name: 'Check the results that have been displayed in the output tabs located at the bottom of the page.',  icon: 'looks_6', color: '#607D8B'}
+      {name: 'Check the results that will be displayed in the output tabs located at the bottom of the page.',  icon: 'looks_6', color: '#607D8B'}
     ];
   }
 

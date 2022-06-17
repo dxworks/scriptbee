@@ -27,6 +27,6 @@ model: DeepModel
 
 # start script
 
-print(model)
+ConsoleWriteLine(model)
 
 # end script

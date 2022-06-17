@@ -13,6 +13,6 @@ model: RecursiveModel
 
 # start script
 
-print(model)
+ConsoleWriteLine(model)
 
 # end script

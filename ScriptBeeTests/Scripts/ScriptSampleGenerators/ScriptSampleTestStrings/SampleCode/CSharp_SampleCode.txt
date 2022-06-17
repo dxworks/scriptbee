@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using ScriptBee.ProjectContext;
 using HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api;
 
 // Only the code written in the ExecuteScript method will be executed
 
@@ -11,6 +12,6 @@ public class ScriptContent
 {
     public void ExecuteScript(Project project, IHelperFunctions helperFunctions)
     {
-        helperFunctions.ConsoleWriteLine("Hello, World!");
+        helperFunctions.ConsoleWriteLine("Hello, C#!");
     }
 }

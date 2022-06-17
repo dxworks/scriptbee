@@ -2,6 +2,6 @@
 
 # start script
 
-print(project)
+ConsoleWriteLine("Hello, Python!")
 
 # end script

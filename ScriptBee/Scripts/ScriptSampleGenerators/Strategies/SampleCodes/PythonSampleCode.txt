@@ -1,5 +1,5 @@
 ﻿$START_COMMENT$
 
-ConsoleWriteLine("Hello, Python!");
+ConsoleWriteLine("Hello, Python!")
 
 $END_COMMENT$

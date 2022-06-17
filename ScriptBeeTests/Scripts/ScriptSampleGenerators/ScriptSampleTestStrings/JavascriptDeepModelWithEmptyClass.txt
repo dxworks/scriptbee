@@ -37,6 +37,6 @@ let model = new DeepModel();
 
 // start script
 
-print(model);
+ConsoleWriteLine(model);
 
 // end script

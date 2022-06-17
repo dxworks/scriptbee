@@ -9,6 +9,6 @@ let model = new DummyModel();
 
 // start script
 
-print(model);
+ConsoleWriteLine(model);
 
 // end script
