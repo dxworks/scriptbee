@@ -4,6 +4,6 @@ public class $CLASS_NAME$
 {
     public void $METHOD_NAME$($MODEL_TYPE$ project, IHelperFunctions helperFunctions)
     {
-        helperFunctions.ConsoleWriteLine("Hello, World!");
+        helperFunctions.ConsoleWriteLine("Hello, C#!");
     }
 }

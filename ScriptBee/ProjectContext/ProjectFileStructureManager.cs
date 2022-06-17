@@ -8,6 +8,13 @@ namespace ScriptBee.ProjectContext;
 
 public class ProjectFileStructureManager : IProjectFileStructureManager
 {
+    private readonly string _userFolderPath;
+
+    public ProjectFileStructureManager(string userFolderPath)
+    {
+        _userFolderPath = userFolderPath;
+    }
+
     public void CreateProjectFolderStructure(string projectId)
     {
         var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);
@@ -85,11 +92,10 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
     {
         var absolutePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
 
-        var envUserFolderPath = Environment.GetEnvironmentVariable("USER_FOLDER_PATH");
-        if (!string.IsNullOrEmpty(envUserFolderPath))
+        if (!string.IsNullOrEmpty(_userFolderPath))
         {
-            var part = absolutePath.Replace(ConfigFolders.PathToUserFolder, "");
-            return Path.Combine(envUserFolderPath, part.TrimStart('\\', '/'));
+            var part = absolutePath.Replace("\\", "/").Replace(ConfigFolders.PathToUserFolder.Replace("\\", "/"), "");
+            return Path.Combine(_userFolderPath, part.TrimStart('\\', '/'));
         }
 
         return absolutePath;

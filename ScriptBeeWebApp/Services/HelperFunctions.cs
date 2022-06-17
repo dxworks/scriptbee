@@ -66,7 +66,7 @@ public class HelperFunctions : IHelperFunctionsWithResults
         using var jsonWriter = new JsonTextWriter(writer);
         jsonSerializer.Serialize(jsonWriter, obj);
 
-        // stream.Position = 0;
+        stream.Position = 0;
         await _fileModelService.UploadFile(outputJsonName, stream);
     }
 

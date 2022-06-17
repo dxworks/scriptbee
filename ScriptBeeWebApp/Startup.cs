@@ -42,12 +42,15 @@ public class Startup
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
+        string userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
+
         services.AddSingleton(_ => mongoDatabase);
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
         services.AddSingleton<ILinkersHolder, LinkersHolder>();
         services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
         services.AddSingleton<IProjectManager, ProjectManager>();
-        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
+        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>(_ =>
+            new ProjectFileStructureManager(userFolderPath));
         services.AddSingleton<IHelperFunctionsFactory, HelperFunctionsFactory>();
         services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
         services.AddSingleton<IFileNameGenerator, FileNameGenerator>();

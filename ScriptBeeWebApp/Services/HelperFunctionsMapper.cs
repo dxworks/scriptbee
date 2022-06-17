@@ -11,7 +11,7 @@ public class HelperFunctionsMapper : IHelperFunctionsMapper
 {
     public Dictionary<string, Delegate> GetFunctionsDictionary(IHelperFunctions helperFunctions)
     {
-        Type helperFunctionsType = (typeof(IHelperFunctions));
+        Type helperFunctionsType = helperFunctions.GetType();
         MethodInfo[] helperFunctionsMethods =
             helperFunctionsType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
@@ -39,8 +39,15 @@ public class HelperFunctionsMapper : IHelperFunctionsMapper
             }
             else
             {
-                functionsDictionary[methodInfo.Name] =
-                    Delegate.CreateDelegate(getType(types.ToArray()), new object(), methodInfo.Name);
+                try
+                {
+                    functionsDictionary[methodInfo.Name] =
+                        Delegate.CreateDelegate(getType(types.ToArray()), helperFunctions, methodInfo.Name);
+                }
+                catch
+                {
+                    
+                }
             }
         }
 

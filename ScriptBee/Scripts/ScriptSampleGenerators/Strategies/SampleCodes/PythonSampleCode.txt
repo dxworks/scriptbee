@@ -1,5 +1,5 @@
 ﻿$START_COMMENT$
 
-print(project)
+ConsoleWriteLine("Hello, Python!");
 
 $END_COMMENT$

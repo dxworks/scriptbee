@@ -26,4 +26,9 @@
         <ProjectReference Include="..\ScriptBee\ScriptBee.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Dockerfile" />
+      <None Remove=".dockerignore" />
+    </ItemGroup>
+
 </Project>
