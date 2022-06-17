@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {RunScriptService} from '../../../services/run-script/run-script.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {HttpErrorResponse} from '@angular/common/http';
+import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-selected-script',
@@ -19,6 +20,7 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
   scriptPath = '';
   scriptAbsolutePath = '';
   projectAbsolutePath = '';
+  isLoadingResults: boolean = false;
 
   constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
               private projectDetailsService: ProjectDetailsService, private route: ActivatedRoute,
@@ -66,21 +68,27 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
   }
 
   onRunScriptButtonClick() {
-    this.projectDetailsService.lastRunErrorMessage.next("");
+    // this.projectDetailsService.lastRunErrorMessage.next('');
+    this.isLoadingResults = true;
 
     this.projectDetailsService.project.subscribe(project => {
       if (project) {
         this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath).subscribe((result) => {
-          this.projectDetailsService.lastRunResult.next(result);
-          this.projectDetailsService.lastRunErrorMessage.next("");
-        }, (err: any) => {
-          if (err instanceof HttpErrorResponse) {
-            this.projectDetailsService.lastRunErrorMessage.next(err.error.detail);
+            if (result) {
+              this.isLoadingResults = false;
+              this.projectDetailsService.lastRunResult.next(result);
+              this.projectDetailsService.lastRunErrorMessage.next('');
+            }
+          }, (err: any) => {
+            this.isLoadingResults = false;
+            if (err instanceof HttpErrorResponse) {
+              this.projectDetailsService.lastRunErrorMessage.next(err.error.detail);
+            }
+            this.snackBar.open('Could not run script!', 'Ok', {
+              duration: 4000
+            });
           }
-          this.snackBar.open('Could not run script!', 'Ok', {
-            duration: 4000
-          });
-        });
+        );
       }
     });
   }

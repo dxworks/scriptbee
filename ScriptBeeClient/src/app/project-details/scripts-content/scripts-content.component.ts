@@ -9,6 +9,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {OutputFilesService} from '../../services/output/output-files.service';
 import {OutputFile} from '../../services/output/output-file';
 import {TreeNode} from '../../shared/tree-node';
+import {debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, first} from 'rxjs/operators';
+import {RunScriptResult} from '../../services/run-script/run-script-result';
 
 @Component({
   selector: 'app-scripts-content',
@@ -63,9 +65,10 @@ export class ScriptsContentComponent implements OnInit {
       this.outputErrors = message;
       this.consoleOutput = '';
       this.outputFiles = [];
-
+console.log(message)
       if (!message) {
-        this.projectDetailsService.lastRunResult.subscribe(runResult => {
+        this.projectDetailsService.lastRunResult.pipe(filter(x => x !== undefined)).subscribe(runResult => {
+          console.log(runResult);
           if (runResult == null) {
             return;
           }
@@ -74,7 +77,6 @@ export class ScriptsContentComponent implements OnInit {
           this.outputFilesService.getConsoleOutputContent(runResult.consoleOutputName).subscribe(consoleContent => {
             this.consoleOutput = consoleContent;
           });
-
           this.outputFiles = runResult.outputFiles;
         });
       }
@@ -95,4 +97,9 @@ export class ScriptsContentComponent implements OnInit {
       }
     });
   }
+
+  private areRunResultsEqual(runRes1: RunScriptResult, runRes2: RunScriptResult) {
+    return runRes1 && runRes2 && runRes1.runId == runRes2.runId && runRes1.projectId == runRes2.projectId;
+  }
+
 }
