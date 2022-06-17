@@ -56,7 +56,10 @@ import {SelectableTreeComponent} from './shared/selectable-tree/selectable-tree.
 import {SafeUrlPipe} from './shared/safe-url/safe-url.pipe';
 import {ConsoleOutputComponent} from './project-details/output/console-output/console-output.component';
 import {FileOutputComponent} from './project-details/output/file-output/file-output.component';
-import { ErrorDialogComponent } from './project-details/details-content/error-dialog/error-dialog/error-dialog.component';
+import {ErrorDialogComponent} from './project-details/details-content/error-dialog/error-dialog/error-dialog.component';
+import {
+  LoadingResultsDialogComponent
+} from './project-details/scripts-content/selected-script/loading-results-dialog/loading-results-dialog.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +84,7 @@ import { ErrorDialogComponent } from './project-details/details-content/error-di
     ConsoleOutputComponent,
     FileOutputComponent,
     ErrorDialogComponent,
+    LoadingResultsDialogComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

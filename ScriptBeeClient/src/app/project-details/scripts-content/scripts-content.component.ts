@@ -44,6 +44,7 @@ export class ScriptsContentComponent implements OnInit {
   onCreateNewScriptButtonClick() {
     const dialogRef = this.dialog.open(CreateScriptDialogComponent, {
       width: '300px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(scriptPath => {

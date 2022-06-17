@@ -28,7 +28,6 @@
     "@mdi/angular-material": "^6.6.96",
     "angular-split": "^13.2.0",
     "monaco-editor": "^0.33.0",
-    "primeng": "^13.4.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.4.0",
     "zone.js": "^0.11.5"

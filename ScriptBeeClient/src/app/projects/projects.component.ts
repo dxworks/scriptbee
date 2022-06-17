@@ -38,6 +38,7 @@ export class ProjectsComponent {
   onCreateButtonClick(event: Event) {
     const dialogRef = this.dialog.open(CreateProjectDialogComponent, {
       width: '300px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -55,6 +56,7 @@ export class ProjectsComponent {
     event.stopPropagation();
     const dialogRef = this.dialog.open(DeleteProjectDialogComponent, {
       width: '300px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
