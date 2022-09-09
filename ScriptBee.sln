@@ -12,6 +12,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeWebApp.Tests.Unit", "ScriptBeeWebApp.Tests.Unit\ScriptBeeWebApp.Tests.Unit.csproj", "{07848D67-892B-43E5-B337-41A6F425EE04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp\DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.csproj", "{802D178A-F4C3-4EF4-BC8E-AD89B2AF32A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript\DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.csproj", "{D7EF2248-ECEE-4AF1-861C-931515ED82B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.Python", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.csproj", "{64D278E9-6038-426C-8EE0-7DA04B6E36E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.Tests", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.Tests\DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.Tests.csproj", "{C2DED6AD-9C7B-4957-A597-A30B2C4F5FDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon\DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon.csproj", "{3C9D51FD-B216-4452-B21C-276952542E21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.Tests", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.Tests\DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.Tests.csproj", "{42FE26F5-F390-40FC-8283-CD54657915A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.Tests", "Plugins\ScriptGeneration\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.Tests\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.Tests.csproj", "{DFEFDB6D-BA77-4781-B855-11D6AF4D52CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +56,37 @@ Global
 		{07848D67-892B-43E5-B337-41A6F425EE04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07848D67-892B-43E5-B337-41A6F425EE04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07848D67-892B-43E5-B337-41A6F425EE04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36580AC2-3182-4CEE-8913-466827C63C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36580AC2-3182-4CEE-8913-466827C63C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36580AC2-3182-4CEE-8913-466827C63C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36580AC2-3182-4CEE-8913-466827C63C59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{802D178A-F4C3-4EF4-BC8E-AD89B2AF32A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{802D178A-F4C3-4EF4-BC8E-AD89B2AF32A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{802D178A-F4C3-4EF4-BC8E-AD89B2AF32A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{802D178A-F4C3-4EF4-BC8E-AD89B2AF32A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7EF2248-ECEE-4AF1-861C-931515ED82B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7EF2248-ECEE-4AF1-861C-931515ED82B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7EF2248-ECEE-4AF1-861C-931515ED82B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7EF2248-ECEE-4AF1-861C-931515ED82B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64D278E9-6038-426C-8EE0-7DA04B6E36E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64D278E9-6038-426C-8EE0-7DA04B6E36E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64D278E9-6038-426C-8EE0-7DA04B6E36E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64D278E9-6038-426C-8EE0-7DA04B6E36E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2DED6AD-9C7B-4957-A597-A30B2C4F5FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2DED6AD-9C7B-4957-A597-A30B2C4F5FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2DED6AD-9C7B-4957-A597-A30B2C4F5FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2DED6AD-9C7B-4957-A597-A30B2C4F5FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C9D51FD-B216-4452-B21C-276952542E21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C9D51FD-B216-4452-B21C-276952542E21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C9D51FD-B216-4452-B21C-276952542E21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C9D51FD-B216-4452-B21C-276952542E21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42FE26F5-F390-40FC-8283-CD54657915A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42FE26F5-F390-40FC-8283-CD54657915A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42FE26F5-F390-40FC-8283-CD54657915A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42FE26F5-F390-40FC-8283-CD54657915A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFEFDB6D-BA77-4781-B855-11D6AF4D52CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFEFDB6D-BA77-4781-B855-11D6AF4D52CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFEFDB6D-BA77-4781-B855-11D6AF4D52CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFEFDB6D-BA77-4781-B855-11D6AF4D52CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

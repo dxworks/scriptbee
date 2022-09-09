@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace ScriptBee.Scripts.ScriptSampleGenerators
+namespace ScriptBee.Scripts.ScriptSampleGenerators;
+
+public interface ISampleCodeGenerator
 {
-    public interface ISampleCodeGenerator
-    {
-        public IList<SampleCodeFile> GetSampleCode(IEnumerable<object> obj);
+    public Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> obj);
 
-        public IList<SampleCodeFile> GetSampleCode(object obj);
-
-        public string GenerateSampleCode();
-    }
+    public Task<string> GenerateSampleCode();
 }

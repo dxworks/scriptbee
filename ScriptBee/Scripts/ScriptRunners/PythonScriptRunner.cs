@@ -14,6 +14,7 @@ public class PythonScriptRunner : IScriptRunner
     private readonly ValidScriptExtractor _scriptExtractor;
     private readonly IHelperFunctionsMapper _helperFunctionsMapper;
 
+    // todo relocate ValidScriptExtractor 
     public PythonScriptRunner(ValidScriptExtractor scriptExtractor, IHelperFunctionsFactory helperFunctionsFactory,
         IHelperFunctionsMapper helperFunctionsMapper)
     {

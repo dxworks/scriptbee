@@ -1,83 +1,95 @@
-﻿using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+﻿using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using ScriptBee.Utils.ValidScriptExtractors;
 using Xunit;
 
-namespace ScriptBeeTests.Utils.ValidScriptExtractors
+namespace ScriptBeeTests.Utils.ValidScriptExtractors;
+
+public class JavascriptValidScriptExtractorTest : IAsyncLifetime
 {
-    public class JavascriptValidScriptExtractorTest
+    private readonly JavascriptValidScriptExtractor _javascriptExtractor;
+
+    private readonly IFileContentProvider _fileContentProvider = new RelativeFileContentProvider();
+    private string _validScript = "";
+
+    public JavascriptValidScriptExtractorTest()
     {
-        private readonly JavascriptValidScriptExtractor _javascriptExtractor;
+        _javascriptExtractor = new JavascriptValidScriptExtractor();
+    }
 
-        private readonly IFileContentProvider _fileContentProvider = new RelativeFileContentProvider();
-        private readonly string _validScript;
+    public async Task InitializeAsync()
+    {
+        _validScript =
+            await _fileContentProvider.GetFileContentAsync(
+                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptValidScript.txt");
+    }
 
-        public JavascriptValidScriptExtractorTest()
-        {
-            _javascriptExtractor = new JavascriptValidScriptExtractor();
-            _validScript =
-                _fileContentProvider.GetFileContent(
-                    "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptValidScript.txt");
-        }
-        
-        [Fact]
-        public void ExtractValidScript_WithTextBefore()
-        {
-            string script = _fileContentProvider.GetFileContent(
-                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextBeforeStartComment.txt");
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
-            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(_validScript, extractedScript);
-        }
+    [Fact]
+    public async Task ExtractValidScript_WithTextBefore()
+    {
+        var script = await _fileContentProvider.GetFileContentAsync(
+            "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextBeforeStartComment.txt");
 
-        [Fact]
-        public void ExtractValidScript_WithTextAfter()
-        {
-            string script = _fileContentProvider.GetFileContent(
-                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextAfterEndComment.txt");
+        var extractedScript = _javascriptExtractor.ExtractValidScript(script);
 
-            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(_validScript, extractedScript);
-        }
+        Assert.Equal(_validScript, extractedScript);
+    }
 
-        [Fact]
-        public void ExtractValidScript_NoExtraText()
-        {
-            string script = _fileContentProvider.GetFileContent(
-                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithNoExtraText.txt");
+    [Fact]
+    public async Task ExtractValidScript_WithTextAfter()
+    {
+        var script = await _fileContentProvider.GetFileContentAsync(
+            "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextAfterEndComment.txt");
 
-            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(_validScript, extractedScript);
-        }
+        var extractedScript = _javascriptExtractor.ExtractValidScript(script);
 
-        [Fact]
-        public void ExtractValidScript_TextBeforeAndAfter()
-        {
-            string script = _fileContentProvider.GetFileContent(
-                "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextBeforeAndAfter.txt");
+        Assert.Equal(_validScript, extractedScript);
+    }
 
-            var extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(_validScript, extractedScript);
-        }
+    [Fact]
+    public async Task ExtractValidScript_NoExtraText()
+    {
+        var script = await _fileContentProvider.GetFileContentAsync(
+            "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithNoExtraText.txt");
 
-        [Theory]
-        [InlineData(" ")]
-        [InlineData("")]
-        [InlineData(null)]
-        [InlineData("class DummyModel {")]
-        [InlineData(@"class DummyModel {
+        var extractedScript = _javascriptExtractor.ExtractValidScript(script);
+
+        Assert.Equal(_validScript, extractedScript);
+    }
+
+    [Fact]
+    public async Task ExtractValidScript_TextBeforeAndAfter()
+    {
+        var script = await _fileContentProvider.GetFileContentAsync(
+            "Utils/ValidScriptExtractors/ExtractorsTestStrings/JavascriptScriptWithTextBeforeAndAfter.txt");
+
+        var extractedScript = _javascriptExtractor.ExtractValidScript(script);
+
+        Assert.Equal(_validScript, extractedScript);
+    }
+
+    [Theory]
+    [InlineData(" ")]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData("class DummyModel {")]
+    [InlineData(@"class DummyModel {
 
 // start script
 
 some text }")]
-        [InlineData(@"class DummyModel {
+    [InlineData(@"class DummyModel {
 
 // end script")]
-        public void ExtractValidScript_InvalidCases(string script)
-        {
-            const string invalidScript = "";
+    public void ExtractValidScript_InvalidCases(string script)
+    {
+        var extractedScript = _javascriptExtractor.ExtractValidScript(script);
 
-            string extractedScript = _javascriptExtractor.ExtractValidScript(script);
-            Assert.Equal(invalidScript, extractedScript);
-        }
+        Assert.Equal("", extractedScript);
     }
 }

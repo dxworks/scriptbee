@@ -2,10 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,19 +22,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ScriptBee\ScriptBee.csproj" />
+        <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.csproj" />
+        <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon\DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Scripts\ScriptSampleGenerators\ScriptSampleTestStrings\**">
+        <Content Include="ScriptSampleTestStrings\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="Utils\ValidScriptExtractors\ExtractorsTestStrings\**">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
 </Project>
