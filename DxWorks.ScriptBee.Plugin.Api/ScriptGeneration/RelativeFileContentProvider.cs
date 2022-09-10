@@ -10,6 +10,6 @@ public class RelativeFileContentProvider : IFileContentProvider
     public Task<string> GetFileContentAsync(string path, CancellationToken cancellationToken = default)
     {
         return File.ReadAllTextAsync(
-            Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), path), cancellationToken);
+            Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, path), cancellationToken);
     }
 }

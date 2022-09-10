@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
 
 namespace ScriptBeeWebApp.Services;
 

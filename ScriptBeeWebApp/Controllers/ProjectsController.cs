@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Models;
 using ScriptBee.ProjectContext;
@@ -83,6 +84,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
+    // todo extract validation to separate class
     public async Task<ActionResult<ProjectModel>> CreateProject(CreateProject projectArg,
         CancellationToken cancellationToken)
     {
@@ -129,7 +131,7 @@ public class ProjectsController : ControllerBase
             {
                 foreach (var fileName in savedFilesNames)
                 {
-                    await _fileModelService.DeleteFile(fileName, cancellationToken);
+                    await _fileModelService.DeleteFileAsync(fileName, cancellationToken);
                 }
             }
 
@@ -141,13 +143,13 @@ public class ProjectsController : ControllerBase
         var allRunsForProject = await _runModelService.GetAllRunsForProject(projectId, cancellationToken);
         foreach (var runModel in allRunsForProject)
         {
-            await _fileModelService.DeleteFile(runModel.ScriptName, cancellationToken);
+            await _fileModelService.DeleteFileAsync(runModel.ScriptName, cancellationToken);
 
-            await _fileModelService.DeleteFile(runModel.ConsoleOutputName, cancellationToken);
+            await _fileModelService.DeleteFileAsync(runModel.ConsoleOutputName, cancellationToken);
 
             foreach (var outputFileName in runModel.OutputFileNames)
             {
-                await _fileModelService.DeleteFile(outputFileName, cancellationToken);
+                await _fileModelService.DeleteFileAsync(outputFileName, cancellationToken);
             }
 
             await _runModelService.DeleteDocument(runModel.Id, cancellationToken);

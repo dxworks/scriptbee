@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Plugin;
-using ScriptBee.ProjectContext;
-using ScriptBee.Services;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -14,18 +12,13 @@ namespace ScriptBeeWebApp.Controllers;
 [ApiController]
 public class UploadModelController : ControllerBase
 {
-    private readonly ILoadersHolder _loadersHolder;
-    private readonly IProjectManager _projectManager;
     private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IFileModelService _fileModelService;
     private readonly IProjectModelService _projectModelService;
 
-    public UploadModelController(ILoadersHolder loadersHolder, IProjectManager projectManager,
-        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService,
+    public UploadModelController(IFileNameGenerator fileNameGenerator, IFileModelService fileModelService,
         IProjectModelService projectModelService)
     {
-        _loadersHolder = loadersHolder;
-        _projectManager = projectManager;
         _fileNameGenerator = fileNameGenerator;
         _fileModelService = fileModelService;
         _projectModelService = projectModelService;
@@ -55,7 +48,7 @@ public class UploadModelController : ControllerBase
                 savedFiles.Add(modelName);
 
                 await using var stream = file.OpenReadStream();
-                await _fileModelService.UploadFile(modelName, stream, cancellationToken);
+                await _fileModelService.UploadFileAsync(modelName, stream, cancellationToken);
             }
         }
 
@@ -69,7 +62,7 @@ public class UploadModelController : ControllerBase
         {
             foreach (var previousSavedFile in previousSavedFiles)
             {
-                await _fileModelService.DeleteFile(previousSavedFile, cancellationToken);
+                await _fileModelService.DeleteFileAsync(previousSavedFile, cancellationToken);
             }
         }
 

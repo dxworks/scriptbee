@@ -17,6 +17,11 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
     public string Language => "csharp";
     public string Extension => ".cs";
 
+    public string ExtractValidScript(string script)
+    {
+        return script;
+    }
+
     public string GenerateClassName(Type classType)
     {
         var className = GetTypeName(classType);

@@ -25,7 +25,13 @@
         <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python\DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.csproj" />
         <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon\DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon.csproj" />
     </ItemGroup>
-
+    
+    <ItemGroup>
+        <Content Include="ExtractorsTestStrings\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    
     <ItemGroup>
         <Content Include="ScriptSampleTestStrings\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

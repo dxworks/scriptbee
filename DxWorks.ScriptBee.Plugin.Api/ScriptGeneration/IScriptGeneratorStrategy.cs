@@ -9,6 +9,8 @@ public interface IScriptGeneratorStrategy
     public string Language { get; }
     public string Extension { get; }
 
+    public string ExtractValidScript(string script);
+
     public string GenerateClassName(Type classType);
 
     public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes);

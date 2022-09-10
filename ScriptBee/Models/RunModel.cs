@@ -10,7 +10,7 @@ public class RunModel : IDocument
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
 
-    public int RunIndex { get; set; }
+    public long RunIndex { get; set; }
 
     public string ProjectId { get; set; }
     public Dictionary<string, List<string>> LoadedFiles { get; set; } = new();

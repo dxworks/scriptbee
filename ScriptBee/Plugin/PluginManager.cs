@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using ScriptBee.FileManagement;
 using Serilog;
 
 namespace ScriptBee.Plugin;
@@ -11,12 +10,14 @@ public class PluginManager
     private readonly ILogger _logger;
     private readonly IPluginManifestReader _pluginManifestReader;
     private readonly IPluginLoaderFactory _pluginLoaderFactory;
+    private readonly IPluginRepository _pluginRepository; // todo use repository
 
     public PluginManager(ILogger logger, IPluginManifestReader pluginManifestReader,
-        IPluginLoaderFactory pluginLoaderFactory)
+        IPluginLoaderFactory pluginLoaderFactory, IPluginRepository pluginRepository)
     {
         _pluginManifestReader = pluginManifestReader;
         _pluginLoaderFactory = pluginLoaderFactory;
+        _pluginRepository = pluginRepository;
         _logger = logger;
     }
 

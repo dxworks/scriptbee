@@ -1,4 +1,6 @@
-﻿namespace ScriptBeeWebApp.Services;
+﻿using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+
+namespace ScriptBeeWebApp.Services;
 
 public class FileNameGenerator : IFileNameGenerator
 {

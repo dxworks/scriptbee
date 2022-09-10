@@ -1,4 +1,5 @@
-﻿using HelperFunctions;
+﻿using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -13,8 +14,8 @@ public class HelperFunctionsFactory : IHelperFunctionsFactory
         _fileNameGenerator = fileNameGenerator;
     }
 
-    public IHelperFunctionsWithResults Create(string projectId, string runId)
+    public IHelperFunctions Create(string projectId, string runId)
     {
-        return new HelperFunctions(projectId, runId, _fileModelService, _fileNameGenerator);
+        throw new System.NotImplementedException();
     }
 }

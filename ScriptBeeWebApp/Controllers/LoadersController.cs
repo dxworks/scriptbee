@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
@@ -42,6 +43,7 @@ public class LoadersController : ControllerBase
     }
 
     [HttpPost]
+    // todo extract validation to separate class
     public async Task<IActionResult> LoadFiles(LoadModels loadModels, CancellationToken cancellationToken)
     {
         if (loadModels == null || string.IsNullOrWhiteSpace(loadModels.ProjectId))
@@ -94,7 +96,7 @@ public class LoadersController : ControllerBase
 
             foreach (var loadedFileName in loadedFileNames)
             {
-                var fileStream = await _fileModelService.GetFile(loadedFileName);
+                var fileStream = await _fileModelService.GetFileAsync(loadedFileName);
                 loadedFileStreams.Add(fileStream);
             }
 
@@ -114,6 +116,7 @@ public class LoadersController : ControllerBase
     }
 
     [HttpPost("{projectId}")]
+    // todo extract validation to separate class
     public async Task<IActionResult> ReloadProjectContext(string projectId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(projectId))
@@ -151,7 +154,7 @@ public class LoadersController : ControllerBase
 
             foreach (var loadedFileName in loadedFileNames)
             {
-                var fileStream = await _fileModelService.GetFile(loadedFileName);
+                var fileStream = await _fileModelService.GetFileAsync(loadedFileName);
                 loadedFileStreams.Add(fileStream);
             }
 
@@ -169,6 +172,7 @@ public class LoadersController : ControllerBase
     }
 
     [HttpPost("clear/{projectId}")]
+    // todo extract validation to separate class
     public async Task<IActionResult> ClearProjectContext(string projectId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(projectId))

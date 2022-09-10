@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Moq;
-using ScriptBee.FileManagement;
 using ScriptBee.Plugin;
 using Serilog;
 using Xunit;
@@ -12,6 +11,7 @@ public class PluginManagerTests
 {
     private readonly Mock<IPluginManifestReader> _pluginManifestReaderMock;
     private readonly Mock<IPluginLoaderFactory> _pluginLoaderFactoryMock;
+    private readonly Mock<IPluginRepository> _pluginRepositoryMock;
 
     private readonly PluginManager _pluginManager;
 
@@ -21,8 +21,10 @@ public class PluginManagerTests
 
         _pluginManifestReaderMock = new Mock<IPluginManifestReader>();
         _pluginLoaderFactoryMock = new Mock<IPluginLoaderFactory>();
+        _pluginRepositoryMock = new Mock<IPluginRepository>();
 
-        _pluginManager = new PluginManager(loggerMock.Object, _pluginManifestReaderMock.Object, _pluginLoaderFactoryMock.Object);
+        _pluginManager = new PluginManager(loggerMock.Object, _pluginManifestReaderMock.Object,
+            _pluginLoaderFactoryMock.Object, _pluginRepositoryMock.Object);
     }
 
     [Fact]

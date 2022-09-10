@@ -33,6 +33,7 @@ public class LinkersController : ControllerBase
     }
 
     [HttpPost]
+    // todo extract validation to separate class
     public async Task<IActionResult> Link(LinkProject linkProject, CancellationToken cancellationToken)
     {
         if (linkProject == null || string.IsNullOrWhiteSpace(linkProject.ProjectId) ||

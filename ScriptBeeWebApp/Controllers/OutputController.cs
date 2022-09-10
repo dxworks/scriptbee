@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
-using HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Services;
@@ -34,7 +34,7 @@ public class OutputController : ControllerBase
             return BadRequest("You must provide a consoleOutputPath for this operation");
         }
 
-        await using var outputStream = await _fileModelService.GetFile(consoleOutputPath);
+        await using var outputStream = await _fileModelService.GetFileAsync(consoleOutputPath);
         using StreamReader streamReader = new StreamReader(outputStream);
 
         var consoleOutputContent = await streamReader.ReadToEndAsync();
@@ -42,6 +42,7 @@ public class OutputController : ControllerBase
     }
 
     [HttpPost("files/download"), DisableRequestSizeLimit]
+    // todo extract validation to separate class
     public async Task<IActionResult> DownloadFile(DownloadFile downloadFile)
     {
         if (downloadFile is null || string.IsNullOrEmpty(downloadFile.FilePath))
@@ -49,7 +50,7 @@ public class OutputController : ControllerBase
             return BadRequest("You must provide a download file path for this operation");
         }
 
-        var outputStream = await _fileModelService.GetFile(downloadFile.FilePath);
+        var outputStream = await _fileModelService.GetFileAsync(downloadFile.FilePath);
         const string contentType = "application/octet-stream";
         var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(downloadFile.FilePath);
 
@@ -57,6 +58,7 @@ public class OutputController : ControllerBase
     }
 
     [HttpPost("files/downloadAll")]
+    // todo extract validation to separate class
     public async Task<IActionResult> DownloadFile(DownloadAll downloadAll,
         CancellationToken cancellationToken)
     {
@@ -77,7 +79,7 @@ public class OutputController : ControllerBase
         foreach (var outputFilePath in runModel.OutputFileNames)
         {
             var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(outputFilePath);
-            var outputStream = await _fileModelService.GetFile(outputFilePath);
+            var outputStream = await _fileModelService.GetFileAsync(outputFilePath);
             files.Add(new OutputFileStream(fileName, outputStream));
         }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using AutoFixture;
 using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using FluentValidation;
@@ -9,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers;
-using ScriptBeeWebApp.Dto;
-using ScriptBeeWebApp.Dto.Validation;
+using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
 using Xunit;
 
@@ -38,7 +39,7 @@ public class GenerateScriptControllerTests
     }
 
     [Fact]
-    public void GivenSupportedLanguages_WhenGetLanguages_ThenSupportedLanguagesAreReturned()
+    public async Task GivenSupportedLanguages_WhenGetLanguages_ThenSupportedLanguagesAreReturned()
     {
         _generateScriptServiceMock.Setup(s => s.GetSupportedLanguages())
             .Returns(new List<string> { "C#", "JavaScript" });
@@ -51,7 +52,7 @@ public class GenerateScriptControllerTests
     }
 
     [Fact]
-    public void GivenInvalidGenerateScriptRequest_WhenPostGenerateScript_ThenBadRequestIsReturned()
+    public async Task GivenInvalidGenerateScriptRequest_WhenPostGenerateScript_ThenBadRequestIsReturned()
     {
         var generateScriptRequest = _fixture.Create<GenerateScriptRequest>();
         var expectedValidationErrorsResponse = new ValidationErrorsResponse(new List<ValidationError>
@@ -63,8 +64,8 @@ public class GenerateScriptControllerTests
             .Setup(v => v.ValidateAsync(generateScriptRequest, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult(new List<ValidationFailure> { new("property", "error") }));
 
-        var actionResult = _generateScriptController.PostGenerateScript(generateScriptRequest);
-        var badRequestResult = (BadRequestObjectResult)actionResult.Result;
+        var actionResult = await _generateScriptController.PostGenerateScript(generateScriptRequest);
+        var badRequestResult = (BadRequestObjectResult)actionResult;
         var validationErrorResponse = (ValidationErrorsResponse)badRequestResult.Value!;
 
         Assert.Equal(400, badRequestResult.StatusCode);
@@ -72,7 +73,7 @@ public class GenerateScriptControllerTests
     }
 
     [Fact]
-    public void GivenInvalidScriptType_WhenPostGenerateScript_ThenBadRequestIsReturned()
+    public async Task GivenInvalidScriptType_WhenPostGenerateScript_ThenBadRequestIsReturned()
     {
         var generateScriptRequest = new GenerateScriptRequest("id1", "invalid");
 
@@ -82,15 +83,15 @@ public class GenerateScriptControllerTests
         _generateScriptServiceMock.Setup(s => s.GetGenerationStrategy("invalid"))
             .Returns((IScriptGeneratorStrategy?)null);
 
-        var actionResult = _generateScriptController.PostGenerateScript(generateScriptRequest);
-        var badRequestResult = (BadRequestObjectResult)actionResult.Result;
+        var actionResult = await _generateScriptController.PostGenerateScript(generateScriptRequest);
+        var badRequestResult = (BadRequestObjectResult)actionResult;
 
         Assert.Equal(400, badRequestResult.StatusCode);
         Assert.Equal("Invalid script type", badRequestResult.Value);
     }
 
     [Fact]
-    public void GivenMissingProject_WhenPostGenerateScript_ThenNotFoundIsReturned()
+    public async Task GivenMissingProject_WhenPostGenerateScript_ThenNotFoundIsReturned()
     {
         var generateScriptRequest = new GenerateScriptRequest("id1", "valid");
 
@@ -101,22 +102,22 @@ public class GenerateScriptControllerTests
             .Returns(new Mock<IScriptGeneratorStrategy>().Object);
         _projectManagerMock.Setup(p => p.GetProject("id1")).Returns((Project?)null);
 
-        var actionResult = _generateScriptController.PostGenerateScript(generateScriptRequest);
-        var notFoundResult = (NotFoundObjectResult)actionResult.Result;
+        var actionResult = await _generateScriptController.PostGenerateScript(generateScriptRequest);
+        var notFoundResult = (NotFoundObjectResult)actionResult;
 
         Assert.Equal(404, notFoundResult.StatusCode);
         Assert.Equal("Could not find project with id: id1", notFoundResult.Value);
     }
 
     [Fact]
-    public void GivenOkGenerateScriptRequest_WhenPostGenerateScript_ThenFileIsReturned()
+    public async Task GivenOkGenerateScriptRequest_WhenPostGenerateScript_ThenFileIsReturned()
     {
         var generateScriptRequest = new GenerateScriptRequest("id1", "valid");
         var project = new Project();
 
         var scriptGeneratorStrategyMock = new Mock<IScriptGeneratorStrategy>();
         scriptGeneratorStrategyMock.Setup(s => s.Language).Returns("Language");
-        
+
         _generateScriptRequestValidatorMock
             .Setup(v => v.ValidateAsync(generateScriptRequest, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
@@ -127,9 +128,9 @@ public class GenerateScriptControllerTests
                 It.IsAny<IScriptGeneratorStrategy>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Mock<Stream>().Object);
 
-        var actionResult = _generateScriptController.PostGenerateScript(generateScriptRequest);
-        var result = (FileStreamResult)actionResult.Result;
-        
+        var actionResult = await _generateScriptController.PostGenerateScript(generateScriptRequest);
+        var result = (FileStreamResult)actionResult;
+
         Assert.Equal("LanguageSampleCode.zip", result.FileDownloadName);
         Assert.Equal("application/octet-stream", result.ContentType);
     }

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.ProjectContext;
-using ScriptBeeWebApp.Dto;
-using ScriptBeeWebApp.Dto.Validation;
+using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;

@@ -7,8 +7,13 @@ namespace ScriptBee.Tests.Plugin.Internals;
 
 internal class TestScriptGeneratorPlugin : IScriptGeneratorStrategy
 {
-    public string Language { get; } = "";
-    public string Extension { get; } = "";
+    public string Language => "";
+    public string Extension => "";
+
+    public string ExtractValidScript(string script)
+    {
+        return script;
+    }
 
     public string GenerateClassName(Type classType)
     {
