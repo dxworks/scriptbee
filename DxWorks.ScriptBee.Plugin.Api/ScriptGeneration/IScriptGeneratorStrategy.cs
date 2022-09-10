@@ -6,6 +6,9 @@ namespace DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 
 public interface IScriptGeneratorStrategy
 {
+    public string Language { get; }
+    public string Extension { get; }
+
     public string GenerateClassName(Type classType);
 
     public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes);

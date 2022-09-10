@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBee", "ScriptBee\ScriptBee.csproj", "{BF05BD22-444C-458D-A62D-61FBD4C68AD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeTests", "ScriptBeeTests\ScriptBeeTests.csproj", "{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBee.Tests", "ScriptBee.Tests\ScriptBee.Tests.csproj", "{F3245AFA-8592-4AF7-9B67-7DBF51AA571B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperFunctions", "HelperFunctions\HelperFunctions.csproj", "{14FAF15E-3A9F-400A-BE6D-410426FD6EE5}"
 EndProject

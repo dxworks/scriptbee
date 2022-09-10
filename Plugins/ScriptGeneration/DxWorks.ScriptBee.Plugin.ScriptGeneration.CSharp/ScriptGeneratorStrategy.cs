@@ -14,6 +14,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         _fileContentProvider = fileContentProvider;
     }
 
+    public string Language => "csharp";
+    public string Extension => ".cs";
+
     public string GenerateClassName(Type classType)
     {
         var className = GetTypeName(classType);

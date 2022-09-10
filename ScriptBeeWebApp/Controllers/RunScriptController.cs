@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Config;
 using ScriptBee.Models;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptRunners;
 using ScriptBee.Utils.ValidScriptExtractors;

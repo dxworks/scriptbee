@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -47,43 +48,44 @@ public class ProjectStructureController : ControllerBase
         try
         {
             var content = "";
-            switch (arg.scriptType)
-            {
-                case "python":
-                {
-                    if (!arg.filePath.EndsWith(".py"))
-                    {
-                        arg.filePath += ".py";
-                    }
-
-                    content = new SampleCodeGenerator(new PythonStrategyGenerator(new RelativeFileContentProvider()),
-                        _loadersHolder).GenerateSampleCode();
-                }
-                    break;
-                case "csharp":
-                {
-                    if (!arg.filePath.EndsWith(".cs"))
-                    {
-                        arg.filePath += ".cs";
-                    }
-
-                    content = new SampleCodeGenerator(new CSharpStrategyGenerator(new RelativeFileContentProvider()),
-                        _loadersHolder).GenerateSampleCode();
-                }
-                    break;
-                case "javascript":
-                {
-                    if (!arg.filePath.EndsWith(".js"))
-                    {
-                        arg.filePath += ".js";
-                    }
-
-                    content = new SampleCodeGenerator(
-                        new JavascriptStrategyGenerator(new RelativeFileContentProvider()),
-                        _loadersHolder).GenerateSampleCode();
-                }
-                    break;
-            }
+            // todo
+            // switch (arg.scriptType)
+            // {
+            //     case "python":
+            //     {
+            //         if (!arg.filePath.EndsWith(".py"))
+            //         {
+            //             arg.filePath += ".py";
+            //         }
+            //
+            //         content = new SampleCodeGenerator(new PythonScriptGeneratorStrategy(new RelativeFileContentProvider()),
+            //             _loadersHolder).GenerateSampleCode();
+            //     }
+            //         break;
+            //     case "csharp":
+            //     {
+            //         if (!arg.filePath.EndsWith(".cs"))
+            //         {
+            //             arg.filePath += ".cs";
+            //         }
+            //
+            //         content = new SampleCodeGenerator(new CSharpScriptGeneratorStrategy(new RelativeFileContentProvider()),
+            //             _loadersHolder).GenerateSampleCode();
+            //     }
+            //         break;
+            //     case "javascript":
+            //     {
+            //         if (!arg.filePath.EndsWith(".js"))
+            //         {
+            //             arg.filePath += ".js";
+            //         }
+            //
+            //         content = new SampleCodeGenerator(
+            //             new JavascriptScriptGeneratorStrategy(new RelativeFileContentProvider()),
+            //             _loadersHolder).GenerateSampleCode();
+            //     }
+            //         break;
+            // }
 
             if (_projectFileStructureManager.FileExists(arg.projectId, arg.filePath))
             {

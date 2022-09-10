@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Reflection;
 using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using FluentValidation;
 using HelperFunctions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,9 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using ScriptBee.Config;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBee.Services;
+using ScriptBeeWebApp.Dto.Validation;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp;
@@ -47,6 +50,7 @@ public class Startup
         services.AddSingleton(_ => mongoDatabase);
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
         services.AddSingleton<ILinkersHolder, LinkersHolder>();
+        services.AddSingleton<IScriptGeneratorStrategyHolder, ScriptGeneratorStrategyHolder>();
         services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>(_ =>
@@ -59,6 +63,8 @@ public class Startup
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
         services.AddSingleton<IFileModelService, FileModelService>();
+
+        services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
 
         services.AddControllers();
         services.AddSwaggerGen();

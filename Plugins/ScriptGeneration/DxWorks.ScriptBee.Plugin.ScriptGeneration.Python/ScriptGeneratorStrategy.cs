@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.Python;
@@ -12,6 +11,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
     {
         _fileContentProvider = fileContentProvider;
     }
+
+    public string Language => "python";
+    public string Extension => ".py";
 
     public string GenerateClassName(Type classType)
     {

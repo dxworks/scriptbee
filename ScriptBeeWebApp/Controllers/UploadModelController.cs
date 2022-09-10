@@ -3,8 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
+using ScriptBee.Services;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;

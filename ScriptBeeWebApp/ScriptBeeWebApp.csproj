@@ -11,15 +11,16 @@
         <BuildServerSideRenderer>false</BuildServerSideRenderer>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <UserSecretsId>195f9921-af9e-44a4-a06a-74b2324ebce1</UserSecretsId>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-        <PackageReference Include="MongoDB.Bson" Version="2.15.0" />
-        <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
-        <PackageReference Include="MongoDB.Driver.GridFS" Version="2.15.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.8" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+        <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
+        <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
+        <PackageReference Include="MongoDB.Driver.GridFS" Version="2.17.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>

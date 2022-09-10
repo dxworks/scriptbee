@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using HelperFunctions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
 using Project = ScriptBee.ProjectContext.Project;
 

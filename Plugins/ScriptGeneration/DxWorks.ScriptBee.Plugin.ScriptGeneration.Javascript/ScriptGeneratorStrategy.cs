@@ -12,6 +12,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         _fileContentProvider = fileContentProvider;
     }
 
+    public string Language => "javascript";
+    public string Extension => ".js";
+
     public string GenerateClassName(Type classType)
     {
         var className = GetTypeName(classType);

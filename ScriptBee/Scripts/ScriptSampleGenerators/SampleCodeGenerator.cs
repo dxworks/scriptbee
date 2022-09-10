@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
-using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
+using ScriptBee.Services;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators;
 
@@ -33,7 +34,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         }
     }
 
-    public async Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> objects)
+    public async Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> objects, CancellationToken cancellationToken = default)
     {
         var generatedClasses = new List<SampleCodeFile>();
 
@@ -43,7 +44,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
             generatedClasses.AddRange(GenerateClasses(type));
         }
 
-        var generateSampleCode = await GenerateSampleCode();
+        var generateSampleCode = await GenerateSampleCode(cancellationToken);
         generatedClasses.Add(new SampleCodeFile
         {
             Name = "script",
@@ -53,7 +54,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         return generatedClasses;
     }
 
-    public async Task<string> GenerateSampleCode()
+    public async Task<string> GenerateSampleCode(CancellationToken cancellationToken = default)
     {
         var stringBuilder = new StringBuilder();
         var imports = await _scriptGeneratorStrategy.GenerateImports();
@@ -213,6 +214,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         return sampleCodeFiles;
     }
 
+    // todo extract hardcoded strings as constants
     private string ReplaceSampleCodeTemplates(string modelName, string sampleCode)
     {
         var finalSampleCode = sampleCode.Replace("$START_COMMENT$", _scriptGeneratorStrategy.GetStartComment());
@@ -227,11 +229,13 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         return finalSampleCode;
     }
 
+    // todo extract in strategy
     private bool IsPrimitive(Type type)
     {
         return type.IsPrimitive || type.Name is "string" or "System.String" or "String";
     }
 
+    // todo extract in strategy
     private string GetFieldModifier(FieldInfo fieldInfo)
     {
         var modifier = "public";
@@ -247,6 +251,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         return modifier;
     }
 
+    // todo extract in strategy
     private string GetMethodModifier(MethodInfo methodInfo)
     {
         var modifier = "public";

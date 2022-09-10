@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DxWorks.ScriptBee.Plugin.Api;
 
-namespace ScriptBee.PluginManager;
+namespace ScriptBee.Services;
 
 public class LinkersHolder : ILinkersHolder
 {
@@ -19,6 +19,7 @@ public class LinkersHolder : ILinkersHolder
         }
         else
         {
+            // todo replace with logger
             Console.Error.WriteLine($"ModelLinker with key {linkerName} already exists");
         }
     }

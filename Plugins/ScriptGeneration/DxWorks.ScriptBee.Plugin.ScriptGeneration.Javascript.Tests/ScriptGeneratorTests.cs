@@ -4,8 +4,9 @@ using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon;
 using Moq;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.Scripts.ScriptSampleGenerators;
+using ScriptBee.Services;
 using Xunit;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.Tests;

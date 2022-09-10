@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using ScriptBee.Config;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -36,26 +38,29 @@ public class ProjectStructureService : IProjectStructureService
 
         var classes = project.Context.GetClasses();
 
-        var pythonModelClasses =
-            new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider), _loadersHolder)
-                .GetSampleCode(classes);
+        
+        // todo
+        // var pythonModelClasses =
+        //     new SampleCodeGenerator(new PythonScriptGeneratorStrategy(_fileContentProvider), _loadersHolder)
+        //         .GetSampleCode(classes);
+        //
+        // WriteSampleCodeFiles(pythonModelClasses, projectId, "python", ".py");
+        //
+        // var javascriptModelClasses = new SampleCodeGenerator(
+        //         new JavascriptScriptGeneratorStrategy(_fileContentProvider),
+        //         _loadersHolder)
+        //     .GetSampleCode(classes);
+        //
+        // WriteSampleCodeFiles(javascriptModelClasses, projectId, "javascript", ".js");
+        //
+        // var csharpModelClasses =
+        //     new SampleCodeGenerator(new CSharpScriptGeneratorStrategy(_fileContentProvider), _loadersHolder)
+        //         .GetSampleCode(classes);
 
-        WriteSampleCodeFiles(pythonModelClasses, projectId, "python", ".py");
-
-        var javascriptModelClasses = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider),
-                _loadersHolder)
-            .GetSampleCode(classes);
-
-        WriteSampleCodeFiles(javascriptModelClasses, projectId, "javascript", ".js");
-
-        var csharpModelClasses =
-            new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolder)
-                .GetSampleCode(classes);
-
-        WriteSampleCodeFiles(csharpModelClasses, projectId, "csharp", ".cs");
+        // WriteSampleCodeFiles(csharpModelClasses, projectId, "csharp", ".cs");
     }
 
-    private void WriteSampleCodeFiles(IList<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,
+    private void WriteSampleCodeFiles(IEnumerable<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,
         string extension)
     {
         var deleteFolderPath = Path.Combine(ConfigFolders.GeneratedFolder, folderName);

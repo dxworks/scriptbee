@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api;
 
-namespace ScriptBee.PluginManager;
+namespace ScriptBee.Services;
 
 public interface ILinkersHolder
 {
