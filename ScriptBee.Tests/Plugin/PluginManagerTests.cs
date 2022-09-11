@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Moq;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using Serilog;
 using Xunit;
 

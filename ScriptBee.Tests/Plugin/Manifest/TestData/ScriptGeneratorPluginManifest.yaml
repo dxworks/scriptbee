@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ScriptGenerator
+metadata:
+  author: ScriptBee
+  description: "Description"
+  entryPoint: Plugin.dll
+  name: "ScriptGenerator example"
+  version: "0.0.1"

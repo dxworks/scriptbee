@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ScriptBee.FileManagement;
+using ScriptBee.Plugin.Manifest;
 using Serilog;
 
 namespace ScriptBee.Plugin;
@@ -12,15 +13,15 @@ public class PluginManifestReader : IPluginManifestReader
 
     private readonly ILogger _logger;
     private readonly IFileService _fileService;
-    private readonly IYamlFileReader _yamlFileReader;
+    private readonly IPluginManifestYamlFileReader _pluginManifestYamlFileReader;
     private readonly IPluginManifestValidator _manifestValidator;
 
-    public PluginManifestReader(ILogger logger, IFileService fileService, IYamlFileReader yamlFileReader,
+    public PluginManifestReader(ILogger logger, IFileService fileService, IPluginManifestYamlFileReader pluginManifestYamlFileReader,
         IPluginManifestValidator manifestValidator)
     {
         _logger = logger;
         _fileService = fileService;
-        _yamlFileReader = yamlFileReader;
+        _pluginManifestYamlFileReader = pluginManifestYamlFileReader;
         _manifestValidator = manifestValidator;
     }
 
@@ -69,6 +70,6 @@ public class PluginManifestReader : IPluginManifestReader
     {
         var path = _fileService.CombinePaths(pluginDirectory, ManifestYaml);
 
-        return _fileService.FileExists(path) ? _yamlFileReader.Read<PluginManifest>(path) : null;
+        return _fileService.FileExists(path) ? _pluginManifestYamlFileReader.Read(path) : null;
     }
 }

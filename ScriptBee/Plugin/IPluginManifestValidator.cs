@@ -1,4 +1,6 @@
-﻿namespace ScriptBee.Plugin;
+﻿using ScriptBee.Plugin.Manifest;
+
+namespace ScriptBee.Plugin;
 
 public interface IPluginManifestValidator
 {

@@ -1,7 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
-using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
 using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
@@ -13,11 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using ScriptBee.Config;
+using ScriptBee.FileManagement;
 using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
+using Serilog;
 
 namespace ScriptBeeWebApp;
 
@@ -46,9 +45,10 @@ public class Startup
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        string userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
+        var userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
 
         services.AddSingleton(_ => mongoDatabase);
+        services.AddSingleton<ILogger>(_ => new LoggerConfiguration().CreateLogger());
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
         services.AddSingleton<ILinkersHolder, LinkersHolder>();
         services.AddSingleton<IScriptGeneratorStrategyHolder, ScriptGeneratorStrategyHolder>();
@@ -63,8 +63,15 @@ public class Startup
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
+        services.AddSingleton<IPluginDiscriminatorHolder, PluginDiscriminatorHolder>();
+        services.AddSingleton<IPluginManifestYamlFileReader, PluginManifestYamlFileReader>();
+        services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IFileModelService, FileModelService>();
-
+        services.AddSingleton<IPluginManifestValidator, PluginManifestValidator>();
+        services.AddSingleton<IPluginRepository, CompositePluginRepository>();
+        services.AddSingleton<IPluginLoaderFactory, PluginLoaderFactory>();
+        services.AddSingleton<IPluginManifestReader, PluginManifestReader>();
+        services.AddSingleton<PluginManager>();
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
 
         services.AddControllers();
@@ -99,49 +106,9 @@ public class Startup
                 pattern: "{controller}/{action=Index}/{id?}");
         });
 
-        var loadersHolder = app.ApplicationServices.GetService<ILoadersHolder>();
-        var linkersHolder = app.ApplicationServices.GetService<ILinkersHolder>();
+        var pluginManager = app.ApplicationServices.GetRequiredService<PluginManager>();
 
-        LoadPlugins(loadersHolder, linkersHolder);
-    }
-
-    private void LoadPlugins(ILoadersHolder loadersHolder, ILinkersHolder linkersHolder)
-    {
-        var pluginPaths = new PluginPathReader(ConfigFolders.PathToPlugins).GetPluginPaths();
-
-        Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            return ((AppDomain)sender).GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
-        }
-
-        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-
-        foreach (var pluginPath in pluginPaths)
-        {
-            var pluginDll = Assembly.LoadFrom(pluginPath);
-
-            foreach (var type in pluginDll.GetExportedTypes())
-            {
-                if (typeof(IModelLoader).IsAssignableFrom(type))
-                {
-                    var modelLoader = (IModelLoader)Activator.CreateInstance(type);
-                    if (modelLoader is not null)
-                    {
-                        loadersHolder.AddLoaderToDictionary(modelLoader);
-                    }
-                }
-
-                if (typeof(IModelLinker).IsAssignableFrom(type))
-                {
-                    var modelLinker = (IModelLinker)Activator.CreateInstance(type);
-                    if (modelLinker is not null)
-                    {
-                        linkersHolder.AddLinkerToDictionary(modelLinker);
-                    }
-                }
-            }
-        }
-
-        AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
+        // todo move to task
+        pluginManager.LoadPlugins(ConfigFolders.PathToPlugins);
     }
 }

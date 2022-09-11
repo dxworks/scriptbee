@@ -5,6 +5,7 @@ using AutoFixture;
 using Moq;
 using ScriptBee.FileManagement;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using Serilog;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace ScriptBee.Tests.Plugin;
 public class PluginManifestReaderTests
 {
     private readonly Mock<IFileService> _fileServiceMock;
-    private readonly Mock<IYamlFileReader> _yamlFileReaderMock;
+    private readonly Mock<IPluginManifestYamlFileReader> _yamlFileReaderMock;
     private readonly Mock<IPluginManifestValidator> _pluginManifestValidatorMock;
     private readonly Fixture _fixture;
 
@@ -23,7 +24,7 @@ public class PluginManifestReaderTests
     {
         var loggerMock = new Mock<ILogger>();
         _fileServiceMock = new Mock<IFileService>();
-        _yamlFileReaderMock = new Mock<IYamlFileReader>();
+        _yamlFileReaderMock = new Mock<IPluginManifestYamlFileReader>();
         _pluginManifestValidatorMock = new Mock<IPluginManifestValidator>();
         _fixture = new Fixture();
 
@@ -58,7 +59,7 @@ public class PluginManifestReaderTests
     {
         _fileServiceMock.Setup(x => x.GetDirectories(It.IsAny<string>())).Returns(new List<string> { "path" });
         _fileServiceMock.Setup(x => x.FileExists(It.IsAny<string>())).Returns(true);
-        _yamlFileReaderMock.Setup(x => x.Read<PluginManifest>(It.IsAny<string>())).Throws(new Exception());
+        _yamlFileReaderMock.Setup(x => x.Read(It.IsAny<string>())).Throws(new Exception());
 
         var result = _pluginManifestReader.ReadManifests("path");
 
@@ -80,8 +81,8 @@ public class PluginManifestReaderTests
     [Fact]
     public void GivenValidManifests_WhenReadManifests_ThenReturnManifests()
     {
-        var pluginManifest1 = _fixture.Create<PluginManifest>();
-        var pluginManifest2 = _fixture.Create<PluginManifest>();
+        var pluginManifest1 = _fixture.Create<ScriptGeneratorPluginManifest>();
+        var pluginManifest2 = _fixture.Create<UiPluginManifest>();
 
         const string path1ManifestYaml = "path1/manifest.yaml";
         const string path2ManifestYaml = "path2/manifest.yaml";
@@ -92,8 +93,8 @@ public class PluginManifestReaderTests
         _fileServiceMock.Setup(x => x.CombinePaths("path2", "manifest.yaml")).Returns(path2ManifestYaml);
         _fileServiceMock.Setup(x => x.FileExists(path1ManifestYaml)).Returns(true);
         _fileServiceMock.Setup(x => x.FileExists(path2ManifestYaml)).Returns(true);
-        _yamlFileReaderMock.Setup(x => x.Read<PluginManifest>(path1ManifestYaml)).Returns(pluginManifest1);
-        _yamlFileReaderMock.Setup(x => x.Read<PluginManifest>(path2ManifestYaml)).Returns(pluginManifest2);
+        _yamlFileReaderMock.Setup(x => x.Read(path1ManifestYaml)).Returns(pluginManifest1);
+        _yamlFileReaderMock.Setup(x => x.Read(path2ManifestYaml)).Returns(pluginManifest2);
         _pluginManifestValidatorMock.Setup(x => x.Validate(pluginManifest1)).Returns(true);
         _pluginManifestValidatorMock.Setup(x => x.Validate(pluginManifest2)).Returns(true);
 

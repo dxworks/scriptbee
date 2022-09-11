@@ -1,5 +1,6 @@
 ﻿using System;
 using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using ScriptBee.Plugin.Manifest;
 using ScriptBee.Services;
 
 namespace ScriptBee.Plugin;

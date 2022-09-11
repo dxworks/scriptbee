@@ -1,4 +1,5 @@
 ﻿using System;
+using ScriptBee.Plugin.Manifest;
 
 namespace ScriptBee.Plugin;
 
