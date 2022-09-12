@@ -16,6 +16,6 @@
       </Content>
     </ItemGroup>
     <ItemGroup>
-        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.Tests"/>
+        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.Tests" />
     </ItemGroup>
 </Project>

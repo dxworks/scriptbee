@@ -4,7 +4,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using DxWorks.ScriptBee.Plugin.Api;
+using ScriptBee.Plugin;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Services;
 
@@ -12,28 +13,27 @@ namespace ScriptBeeWebApp.Services;
 
 public class GenerateScriptService : IGenerateScriptService
 {
-    private readonly IScriptGeneratorStrategyHolder _scriptGeneratorStrategyHolder;
+    // todo refactor loaders holder
     private readonly ILoadersHolder _loadersHolder;
-
-
-    public GenerateScriptService(IScriptGeneratorStrategyHolder scriptGeneratorStrategyHolder,
-        ILoadersHolder loadersHolder)
+    private readonly IPluginRepository _pluginRepository;
+    
+    public GenerateScriptService(ILoadersHolder loadersHolder, IPluginRepository pluginRepository)
     {
-        _scriptGeneratorStrategyHolder = scriptGeneratorStrategyHolder;
         _loadersHolder = loadersHolder;
+        _pluginRepository = pluginRepository;
     }
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _scriptGeneratorStrategyHolder.GetAllStrategies().Select(x => x.Language);
+        return _pluginRepository.GetPlugins<IScriptGeneratorStrategy>(_ => true).Select(strategy => strategy.Language);
     }
 
     public IScriptGeneratorStrategy? GetGenerationStrategy(string scriptType)
     {
-        return _scriptGeneratorStrategyHolder.GetStrategy(scriptType);
+        return _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == scriptType);
     }
 
-    public async Task<Stream> GenerateClassesZip(List<object> classes, IScriptGeneratorStrategy scriptGeneratorStrategy,
+    public async Task<Stream> GenerateClassesZip(IEnumerable<object> classes, IScriptGeneratorStrategy scriptGeneratorStrategy,
         CancellationToken cancellationToken = default)
     {
         var sampleCode =

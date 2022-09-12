@@ -1,5 +1,5 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
-using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -14,8 +14,9 @@ public class HelperFunctionsFactory : IHelperFunctionsFactory
         _fileNameGenerator = fileNameGenerator;
     }
 
-    public IHelperFunctions Create(string projectId, string runId)
+    public IHelperFunctionsContainer Create(string projectId, string runId)
     {
+        // todo use dependency injection to create the helper functions (include IHelperFunctionsResultService)
         throw new System.NotImplementedException();
     }
 }

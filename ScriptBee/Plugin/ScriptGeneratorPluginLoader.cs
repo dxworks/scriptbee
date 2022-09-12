@@ -1,24 +1,23 @@
 ﻿using System;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using System.Collections.Generic;
+using DxWorks.ScriptBee.Plugin.Api;
+using ScriptBee.FileManagement;
 using ScriptBee.Plugin.Manifest;
-using ScriptBee.Services;
 
 namespace ScriptBee.Plugin;
 
-public class ScriptGeneratorPluginLoader : IPluginLoader
+public class ScriptGeneratorPluginLoader : DllLoaderPlugin
 {
-    private readonly IScriptGeneratorStrategyHolder _scriptGeneratorStrategyHolder;
+    public override string AcceptedPluginKind => PluginTypes.ScriptGenerator;
 
-    public ScriptGeneratorPluginLoader(IScriptGeneratorStrategyHolder scriptGeneratorStrategyHolder)
+    protected override HashSet<Type> AcceptedPluginTypes { get; } = new()
     {
-        _scriptGeneratorStrategyHolder = scriptGeneratorStrategyHolder;
-    }
+        typeof(IScriptGeneratorStrategy)
+    };
 
-    public void LoadPlugin(PluginManifest pluginManifest, Type type)
+    public ScriptGeneratorPluginLoader(IFileService fileService, IDllLoader dllLoader,
+        IPluginRepository pluginRepository, IPluginService pluginService) : base(fileService, dllLoader,
+        pluginRepository, pluginService)
     {
-        if (Activator.CreateInstance(type) is IScriptGeneratorStrategy scriptGeneratorStrategy)
-        {
-            _scriptGeneratorStrategyHolder.AddStrategy(scriptGeneratorStrategy);
-        }
     }
 }

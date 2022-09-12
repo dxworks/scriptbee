@@ -1,17 +1,10 @@
 ﻿using System.Text;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript;
 
 public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 {
-    private readonly IFileContentProvider _fileContentProvider;
-
-    public ScriptGeneratorStrategy(IFileContentProvider fileContentProvider)
-    {
-        _fileContentProvider = fileContentProvider;
-    }
-
     public string Language => "javascript";
     public string Extension => ".js";
 
@@ -102,7 +95,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public async Task<string> GenerateSampleCode()
     {
-        return await _fileContentProvider.GetFileContentAsync("SampleCodes/JavascriptSampleCode.txt");
+        return await RelativeFileContentProvider.GetFileContentAsync("SampleCodes/JavascriptSampleCode.txt");
     }
 
     public string GenerateEmptyClass()

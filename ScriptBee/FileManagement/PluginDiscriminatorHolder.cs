@@ -11,8 +11,8 @@ public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
     {
         return new Dictionary<string, Type>
         {
-            { "ScriptGenerator", typeof(ScriptGeneratorPluginManifest) },
-            { "UI", typeof(UiPluginManifest) }
+            { PluginTypes.ScriptGenerator, typeof(ScriptGeneratorPluginManifest) },
+            { PluginTypes.Ui, typeof(UiPluginManifest) }
         };
     }
 }

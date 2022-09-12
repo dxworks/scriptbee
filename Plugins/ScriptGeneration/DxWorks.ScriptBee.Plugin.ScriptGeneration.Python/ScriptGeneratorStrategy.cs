@@ -1,17 +1,10 @@
 ﻿using System.Text;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.Python;
 
 public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 {
-    private readonly IFileContentProvider _fileContentProvider;
-
-    public ScriptGeneratorStrategy(IFileContentProvider fileContentProvider)
-    {
-        _fileContentProvider = fileContentProvider;
-    }
-
     public string Language => "python";
     public string Extension => ".py";
 
@@ -87,7 +80,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public Task<string> GenerateSampleCode()
     {
-        return _fileContentProvider.GetFileContentAsync("SampleCodes/PythonSampleCode.txt");
+        return RelativeFileContentProvider.GetFileContentAsync("SampleCodes/PythonSampleCode.txt");
     }
 
     public string GenerateEmptyClass()

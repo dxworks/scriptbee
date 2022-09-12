@@ -1,71 +1,36 @@
-﻿using System.Text;
-using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+﻿using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.File;
 
 public class FileHelperFunctions
 {
-    private readonly HelperFunctionsSettings _helperFunctionsSettings;
-    private readonly IFileModelService _fileModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IResultCollector _resultCollector;
+    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
 
-    public FileHelperFunctions(HelperFunctionsSettings helperFunctionsSettings, IFileModelService fileModelService,
-        IFileNameGenerator fileNameGenerator, IResultCollector resultCollector)
+    public FileHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
     {
-        _helperFunctionsSettings = helperFunctionsSettings;
-        _fileModelService = fileModelService;
-        _fileNameGenerator = fileNameGenerator;
-        _resultCollector = resultCollector;
+        _helperFunctionsResultService = helperFunctionsResultService;
     }
 
     public void FileWrite(string fileName, string fileContent)
     {
-        var outputFileName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.FileType, fileName);
-
-        _resultCollector.Add(new RunResult(RunResult.FileType, outputFileName));
-
-        var byteArray = Encoding.ASCII.GetBytes(fileContent);
-        using var stream = new MemoryStream(byteArray);
-
-        _fileModelService.UploadFile(outputFileName, stream);
+        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, fileContent);
     }
 
-    public async Task FileWriteAsync(string fileName, string fileContent)
+    public async Task FileWriteAsync(string fileName, string fileContent, CancellationToken cancellationToken = default)
     {
-        var outputFileName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.FileType, fileName);
-
-        _resultCollector.Add(new RunResult(RunResult.FileType, outputFileName));
-
-        var byteArray = Encoding.ASCII.GetBytes(fileContent);
-        await using var stream = new MemoryStream(byteArray);
-
-        await _fileModelService.UploadFileAsync(outputFileName, stream);
+        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, fileContent,
+            cancellationToken);
     }
 
-    public async Task FileWriteStreamAsync(string fileName, Stream stream)
+    public async Task FileWriteStreamAsync(string fileName, Stream stream,
+        CancellationToken cancellationToken = default)
     {
-        var outputFileName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.FileType, fileName);
-
-        _resultCollector.Add(new RunResult(RunResult.FileType, outputFileName));
-
-        await _fileModelService.UploadFileAsync(outputFileName, stream);
+        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, stream,
+            cancellationToken);
     }
 
     public void FileWriteStream(string fileName, Stream stream)
     {
-        var outputFileName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.FileType, fileName);
-
-        _resultCollector.Add(new RunResult(RunResult.FileType, outputFileName));
-
-        _fileModelService.UploadFile(outputFileName, stream);
+        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }
 }

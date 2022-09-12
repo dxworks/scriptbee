@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
-using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
+using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Models;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
+using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -17,22 +19,32 @@ public class RunScriptService : IRunScriptService
     private readonly IRunModelService _runModelService;
     private readonly IProjectModelService _projectModelService;
     private readonly IHelperFunctionsFactory _helperFunctionsFactory;
-    private readonly IHelperFunctionsMapper _helperFunctionsMapper;
     private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IPluginRepository _pluginRepository;
 
     public RunScriptService(IFileModelService fileModelService, IRunModelService runModelService,
         IProjectModelService projectModelService, IHelperFunctionsFactory helperFunctionsFactory,
-        IHelperFunctionsMapper helperFunctionsMapper, IFileNameGenerator fileNameGenerator,
-        IProjectFileStructureManager projectFileStructureManager)
+        IFileNameGenerator fileNameGenerator, IProjectFileStructureManager projectFileStructureManager,
+        IPluginRepository pluginRepository)
     {
         _fileModelService = fileModelService;
         _runModelService = runModelService;
         _projectModelService = projectModelService;
         _helperFunctionsFactory = helperFunctionsFactory;
-        _helperFunctionsMapper = helperFunctionsMapper;
         _fileNameGenerator = fileNameGenerator;
         _projectFileStructureManager = projectFileStructureManager;
+        _pluginRepository = pluginRepository;
+    }
+
+    public IScriptRunner? GetScriptRunner(string language)
+    {
+        return _pluginRepository.GetPlugin<IScriptRunner>(runner => runner.Language == language);
+    }
+
+    public IEnumerable<string> GetSupportedLanguages()
+    {
+        return _pluginRepository.GetPlugins<IScriptGeneratorStrategy>(_ => true).Select(strategy => strategy.Language);
     }
 
     public async Task<RunModel?> RunAsync(IScriptRunner scriptRunner, Project project, ProjectModel projectModel,

@@ -1,23 +1,22 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Model;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
-using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using Jint;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript;
 
 public class JavascriptScriptRunner : IScriptRunner
 {
-    private readonly IHelperFunctionsMapper _helperFunctionsMapper;
     private readonly IHelperFunctionsFactory _helperFunctionsFactory;
     private readonly IScriptGeneratorStrategy _scriptGeneratorStrategy;
 
-    public JavascriptScriptRunner(IHelperFunctionsMapper helperFunctionsMapper,
-        IHelperFunctionsFactory helperFunctionsFactory, IScriptGeneratorStrategy scriptGeneratorStrategy)
+    public JavascriptScriptRunner(IHelperFunctionsFactory helperFunctionsFactory,
+        IScriptGeneratorStrategy scriptGeneratorStrategy)
     {
-        _helperFunctionsMapper = helperFunctionsMapper;
         _helperFunctionsFactory = helperFunctionsFactory;
         _scriptGeneratorStrategy = scriptGeneratorStrategy;
     }
+
+    public string Language => "javascript";
 
     public async Task RunAsync(IProject project, string runId, string scriptContent,
         CancellationToken cancellationToken = default)
@@ -25,10 +24,9 @@ public class JavascriptScriptRunner : IScriptRunner
         var engine = new Engine();
         engine.SetValue("project", project);
 
-        var helperFunctions = _helperFunctionsFactory.Create(project.Id, runId);
+        var helperFunctionsContainer = _helperFunctionsFactory.Create(project.Id, runId);
 
-        foreach (var (functionName, delegateFunction) in _helperFunctionsMapper.GetFunctionsDictionary(
-                     helperFunctions))
+        foreach (var (functionName, delegateFunction) in helperFunctionsContainer.GetFunctionsDictionary())
         {
             engine.SetValue(functionName, delegateFunction);
         }

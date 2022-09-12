@@ -14,11 +14,18 @@ public class LoaderPluginLoader : IPluginLoader
         _loadersHolder = loadersHolder;
     }
 
-    public void LoadPlugin(PluginManifest pluginManifest, Type type)
+    public void Load(PluginManifest pluginManifest, Type type)
     {
         if (Activator.CreateInstance(type) is IModelLoader modelLoader)
         {
             _loadersHolder.AddLoaderToDictionary(modelLoader);
         }
+    }
+
+    
+    public string AcceptedPluginKind => PluginTypes.Loader;
+    public void Load(Models.Plugin plugin)
+    {
+        throw new NotImplementedException();
     }
 }

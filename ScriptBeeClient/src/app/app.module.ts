@@ -60,6 +60,9 @@ import {ErrorDialogComponent} from './project-details/details-content/error-dial
 import {
   LoadingResultsDialogComponent
 } from './project-details/scripts-content/selected-script/loading-results-dialog/loading-results-dialog.component';
+import { ChartComponent } from './chart/chart.component';
+import { PluginItemComponent } from './plugins/plugin-item/plugin-item.component';
+import { PluginListComponent } from './plugins/plugin-list/plugin-list.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +88,9 @@ import {
     FileOutputComponent,
     ErrorDialogComponent,
     LoadingResultsDialogComponent,
+    ChartComponent,
+    PluginItemComponent,
+    PluginListComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

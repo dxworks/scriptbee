@@ -1,18 +1,11 @@
 ﻿using System.Text;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp;
 
 public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 {
     private const string StartComment = "// Only the code written in the ExecuteScript method will be executed";
-
-    private readonly IFileContentProvider _fileContentProvider;
-
-    public ScriptGeneratorStrategy(IFileContentProvider fileContentProvider)
-    {
-        _fileContentProvider = fileContentProvider;
-    }
 
     public string Language => "csharp";
     public string Extension => ".cs";
@@ -104,7 +97,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public async Task<string> GenerateSampleCode()
     {
-        return await _fileContentProvider.GetFileContentAsync("SampleCodes/CSharpSampleCode.txt");
+        return await RelativeFileContentProvider.GetFileContentAsync("SampleCodes/CSharpSampleCode.txt");
     }
 
     public string GenerateEmptyClass()
@@ -114,7 +107,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public async Task<string> GenerateImports()
     {
-        return await _fileContentProvider.GetFileContentAsync("SampleCodes/CSharpImports.txt");
+        return await RelativeFileContentProvider.GetFileContentAsync("SampleCodes/CSharpImports.txt");
     }
 
     public string GetStartComment()

@@ -26,13 +26,14 @@ public class GenerateScriptController : ControllerBase
         _generateScriptRequestValidator = generateScriptRequestValidator;
     }
 
-    [HttpGet("/languages")]
+    [HttpGet("languages")]
     public ActionResult<IEnumerable<string>> GetLanguages()
     {
+        // todo include file extension
         return Ok(_generateScriptService.GetSupportedLanguages());
     }
 
-    [HttpPost("/generate")]
+    [HttpPost]
     public async Task<IActionResult> PostGenerateScript([FromBody] GenerateScriptRequest request,
         CancellationToken cancellationToken = default)
     {

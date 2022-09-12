@@ -42,8 +42,8 @@ public class ScriptGeneratorPluginManifestYamlParsingTests
         Assert.Equal("Plugin.dll", pluginManifest.Metadata.EntryPoint);
         Assert.Equal("Ui example", pluginManifest.Metadata.Name);
         Assert.Equal("0.0.1", pluginManifest.Metadata.Version);
+        Assert.Equal(8080, pluginManifest.Spec.Port);
         Assert.Equal("http://localhost:8080/remoteEntry.js", pluginManifest.Spec.RemoteEntry);
-        Assert.Equal("uiExample", pluginManifest.Spec.RemoteName);
         Assert.Equal("./Plugin", pluginManifest.Spec.ExposedModule);
         Assert.Equal("Plugin", pluginManifest.Spec.ComponentName);
         Assert.Equal("Result", pluginManifest.Spec.UiPluginType);

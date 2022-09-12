@@ -1,32 +1,20 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+﻿using DxWorks.ScriptBee.Plugin.Api;
 using Newtonsoft.Json;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Json;
 
 public class JsonHelperFunctions : IHelperFunctions
 {
-    private readonly HelperFunctionsSettings _helperFunctionsSettings;
-    private readonly IFileModelService _fileModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IResultCollector _resultCollector;
+    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
 
-    public JsonHelperFunctions(HelperFunctionsSettings helperFunctionsSettings, IFileModelService fileModelService,
-        IFileNameGenerator fileNameGenerator, IResultCollector resultCollector)
+    public JsonHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
     {
-        _helperFunctionsSettings = helperFunctionsSettings;
-        _fileModelService = fileModelService;
-        _fileNameGenerator = fileNameGenerator;
-        _resultCollector = resultCollector;
+        _helperFunctionsResultService = helperFunctionsResultService;
     }
 
-    public async Task ExportJsonAsync<T>(string fileName, T obj, JsonSerializerSettings? settings = default)
+    public async Task ExportJsonAsync<T>(string fileName, T obj, JsonSerializerSettings? settings = default,
+        CancellationToken cancellationToken = default)
     {
-        var outputJsonName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.FileType, fileName);
-
-        _resultCollector.Add(new RunResult(RunResult.FileType, outputJsonName));
-
         var jsonSerializer = JsonSerializer.Create(settings);
         await using var stream = new MemoryStream();
 
@@ -35,17 +23,12 @@ public class JsonHelperFunctions : IHelperFunctions
         jsonSerializer.Serialize(jsonWriter, obj);
 
         stream.Position = 0;
-        await _fileModelService.UploadFileAsync(outputJsonName, stream);
+        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, stream,
+            cancellationToken);
     }
 
     public void ExportJson(string fileName, object obj)
     {
-        var outputJsonName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.FileType, fileName);
-
-        _resultCollector.Add(new RunResult(RunResult.FileType, outputJsonName));
-
         var jsonSerializer = JsonSerializer.Create();
         using var stream = new MemoryStream();
 
@@ -54,6 +37,6 @@ public class JsonHelperFunctions : IHelperFunctions
         jsonSerializer.Serialize(jsonWriter, obj);
 
         stream.Position = 0;
-        _fileModelService.UploadFile(outputJsonName, stream);
+        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }
 }

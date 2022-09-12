@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
-using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
@@ -16,9 +17,25 @@ public class PluginController : ControllerBase
         _pluginService = pluginService;
     }
 
+    // todo allow subclasses to be returned and serialized
     [HttpGet]
-    public ActionResult<IEnumerable<PluginManifest>> GetLoadedPlugins()
+    public ActionResult<IEnumerable<PluginManifest>> GetLoadedPlugins([FromQuery] string? type = null)
     {
-        return Ok(_pluginService.GetLoadedPlugins());
+        if (string.IsNullOrEmpty(type))
+        {
+            return Ok(_pluginService.GetLoadedPlugins());
+        }
+
+        return Ok(
+            _pluginService.GetLoadedPlugins()
+                .Where(manifest => manifest.Kind == type));
+    }
+
+    // todo temporary workaround until above todo is fixed
+    [HttpGet("ui")]
+    public ActionResult<IEnumerable<UiPluginManifest>> GetLoadedUiPlugins()
+    {
+        return Ok(_pluginService.GetLoadedPlugins()
+            .OfType<UiPluginManifest>());
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon;
 using Moq;
-using ScriptBee.Plugin;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Services;
 using Xunit;
@@ -13,7 +11,6 @@ namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.Tests;
 
 public class ScriptGeneratorStrategyTests
 {
-    private readonly RelativeFileContentProvider _fileContentProvider = new();
     private readonly Mock<ILoadersHolder> _loadersHolderMock = new();
     private readonly SampleCodeGenerator _sampleCodeGenerator;
 
@@ -24,7 +21,7 @@ public class ScriptGeneratorStrategyTests
             new TestModelLoader()
         });
 
-        var scriptGeneratorStrategy = new ScriptGeneratorStrategy(_fileContentProvider);
+        var scriptGeneratorStrategy = new ScriptGeneratorStrategy();
         _sampleCodeGenerator = new SampleCodeGenerator(scriptGeneratorStrategy, _loadersHolderMock.Object);
     }
 
@@ -35,8 +32,8 @@ public class ScriptGeneratorStrategyTests
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModel(string pathToModel,
         string pathToSampleCode)
     {
-        var modelContent = await _fileContentProvider.GetFileContentAsync(pathToModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModel() });
 
         Assert.Equal(2, sampleCode.Count);
@@ -56,9 +53,9 @@ public class ScriptGeneratorStrategyTests
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnRecursiveModel(
         string pathToDummyModel, string pathToMainModel, string pathToSampleCode)
     {
-        var dummyModelContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var mainModelContent = await _fileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
+        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new RecursiveModel() });
 
@@ -81,9 +78,9 @@ public class ScriptGeneratorStrategyTests
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModelInheritor(
         string pathToDummyModel, string pathToMainModel, string pathToSampleCode)
     {
-        var dummyModelContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var mainModelContent = await _fileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
+        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModelInheritor() });
 
@@ -106,9 +103,9 @@ public class ScriptGeneratorStrategyTests
     public async Task GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnRecursiveModel(
         string pathToDummyModel, string pathToMainModel, string pathToSampleCode)
     {
-        var dummyModelContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var mainModelContent = await _fileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
+        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var models = new List<object>
         {
@@ -141,12 +138,12 @@ public class ScriptGeneratorStrategyTests
         string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel,
         string pathToSampleCode)
     {
-        var dummyModelContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var emptyModelContent = await _fileContentProvider.GetFileContentAsync(pathToEmptyModel);
-        var recursiveModelContent = await _fileContentProvider.GetFileContentAsync(pathToRecursiveModel);
-        var recursiveModel2Content = await _fileContentProvider.GetFileContentAsync(pathToRecursiveModel2);
-        var deepModelContent = await _fileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
+        var emptyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToEmptyModel);
+        var recursiveModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel);
+        var recursiveModel2Content = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel2);
+        var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DeepModel() });
 
@@ -179,12 +176,12 @@ public class ScriptGeneratorStrategyTests
         string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel,
         string pathToSampleCode)
     {
-        var dummyModelContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var emptyModelContent = await _fileContentProvider.GetFileContentAsync(pathToEmptyModel);
-        var recursiveModelContent = await _fileContentProvider.GetFileContentAsync(pathToRecursiveModel);
-        var recursiveModel2Content = await _fileContentProvider.GetFileContentAsync(pathToRecursiveModel2);
-        var deepModelContent = await _fileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
+        var emptyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToEmptyModel);
+        var recursiveModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel);
+        var recursiveModel2Content = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel2);
+        var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var models = new List<object>
         {
@@ -221,8 +218,8 @@ public class ScriptGeneratorStrategyTests
     public async Task GenerateSampleCode_DummyModelWithMethods_ShouldReturnDummyModelWithMethods(string pathToModel,
         string pathToSampleCode)
     {
-        var modelContent = await _fileContentProvider.GetFileContentAsync(pathToModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModelWithMethods() });
 
@@ -243,8 +240,8 @@ public class ScriptGeneratorStrategyTests
         GenerateSampleCode_WithCSharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
             string pathToModel, string pathToSampleCode)
     {
-        var modelContent = await _fileContentProvider.GetFileContentAsync(pathToModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
         var sampleCode =
             await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModelWithMethodsExpando() });
@@ -271,12 +268,12 @@ public class ScriptGeneratorStrategyTests
         string pathToGenericModel2,
         string pathToNestedGenericModel, string pathToSampleCode)
     {
-        var dummyModelContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var dummyModelWithMethodsContent = await _fileContentProvider.GetFileContentAsync(pathToDummyModelWithMethods);
-        var genericModelContent = await _fileContentProvider.GetFileContentAsync(pathToGenericModel);
-        var genericModel2Content = await _fileContentProvider.GetFileContentAsync(pathToGenericModel2);
-        var nestedGenericModelContent = await _fileContentProvider.GetFileContentAsync(pathToNestedGenericModel);
-        var sampleCodeContent = await _fileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
+        var dummyModelWithMethodsContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModelWithMethods);
+        var genericModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToGenericModel);
+        var genericModel2Content = await RelativeFileContentProvider.GetFileContentAsync(pathToGenericModel2);
+        var nestedGenericModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToNestedGenericModel);
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
 
 
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new NestedGenericModel() });

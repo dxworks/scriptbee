@@ -14,11 +14,17 @@ public class LinkerPluginLoader : IPluginLoader
         _linkersHolder = linkersHolder;
     }
 
-    public void LoadPlugin(PluginManifest pluginManifest, Type type)
+    public void Load(PluginManifest pluginManifest, Type type)
     {
         if (Activator.CreateInstance(type) is IModelLinker modelLinker)
         {
             _linkersHolder.AddLinkerToDictionary(modelLinker);
         }
+    }
+    
+    public string AcceptedPluginKind => PluginTypes.Linker;
+    public void Load(Models.Plugin plugin)
+    {
+        throw new NotImplementedException();
     }
 }

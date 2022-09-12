@@ -1,41 +1,21 @@
-﻿using System;
-using DxWorks.ScriptBee.Plugin.Api;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
-using ScriptBee.Services;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ScriptBee.Plugin;
 
 public class PluginLoaderFactory : IPluginLoaderFactory
 {
-    private readonly ILoadersHolder _loadersHolder;
-    private readonly ILinkersHolder _linkersHolder;
-    private readonly IScriptGeneratorStrategyHolder _scriptGeneratorStrategyHolder;
+    private readonly IEnumerable<IPluginLoader> _pluginLoaders;
 
-    public PluginLoaderFactory(ILoadersHolder loadersHolder, ILinkersHolder linkersHolder,
-        IScriptGeneratorStrategyHolder scriptGeneratorStrategyHolder)
+    public PluginLoaderFactory(IEnumerable<IPluginLoader> pluginLoaders)
     {
-        _loadersHolder = loadersHolder;
-        _linkersHolder = linkersHolder;
-        _scriptGeneratorStrategyHolder = scriptGeneratorStrategyHolder;
+        _pluginLoaders = pluginLoaders;
     }
 
-    public IPluginLoader? GetPluginLoader(Type type)
+    public IPluginLoader? GetPluginLoader(Models.Plugin plugin)
     {
-        if (typeof(IModelLoader).IsAssignableFrom(type))
-        {
-            return new LoaderPluginLoader(_loadersHolder);
-        }
+        // todo if plugin is helper functions or script runner, the instantiation should be done in the run script controller
 
-        if (typeof(IModelLinker).IsAssignableFrom(type))
-        {
-            return new LinkerPluginLoader(_linkersHolder);
-        }
-
-        if (typeof(IScriptGeneratorStrategy).IsAssignableFrom(type))
-        {
-            return new ScriptGeneratorPluginLoader(_scriptGeneratorStrategyHolder);
-        }
-
-        return null;
+        return _pluginLoaders.FirstOrDefault(loader => loader.AcceptedPluginKind == plugin.Manifest.Kind);
     }
 }

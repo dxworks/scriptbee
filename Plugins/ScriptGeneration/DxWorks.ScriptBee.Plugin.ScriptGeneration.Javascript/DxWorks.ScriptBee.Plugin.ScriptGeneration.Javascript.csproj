@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj"/>
+        <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,6 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.Tests"/>
+        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.Tests" />
     </ItemGroup>
 </Project>

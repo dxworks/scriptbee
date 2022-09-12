@@ -1,12 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
-using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
+using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
@@ -21,19 +20,23 @@ public class RunScriptController : ControllerBase
     private readonly IProjectModelService _projectModelService;
     private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IRunScriptService _runScriptService;
-    private readonly IPluginRepository _pluginRepository;
     private readonly IValidator<RunScript> _runScriptValidator;
 
     public RunScriptController(IProjectManager projectManager, IProjectModelService projectModelService,
-        IFileNameGenerator fileNameGenerator, IRunScriptService runScriptService, IPluginRepository pluginRepository,
+        IFileNameGenerator fileNameGenerator, IRunScriptService runScriptService,
         IValidator<RunScript> runScriptValidator)
     {
         _projectManager = projectManager;
         _projectModelService = projectModelService;
         _fileNameGenerator = fileNameGenerator;
         _runScriptService = runScriptService;
-        _pluginRepository = pluginRepository;
         _runScriptValidator = runScriptValidator;
+    }  
+    
+    [HttpGet("languages")]
+    public ActionResult<IEnumerable<string>> GetLanguages()
+    {
+        return Ok(_runScriptService.GetSupportedLanguages());
     }
 
     [HttpPost]
@@ -46,7 +49,7 @@ public class RunScriptController : ControllerBase
             return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
-        var scriptRunner = _pluginRepository.GetPlugin<IScriptRunner>(runScript.Language);
+        var scriptRunner = _runScriptService.GetScriptRunner(runScript.Language);
 
         if (scriptRunner == null)
         {

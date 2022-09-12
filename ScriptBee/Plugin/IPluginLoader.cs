@@ -1,9 +1,9 @@
-﻿using System;
-using ScriptBee.Plugin.Manifest;
-
-namespace ScriptBee.Plugin;
+﻿namespace ScriptBee.Plugin;
 
 public interface IPluginLoader
 {
-    void LoadPlugin(PluginManifest pluginManifest, Type type);
+    string AcceptedPluginKind { get; }
+
+    // todo make this return Task
+    void Load(Models.Plugin plugin);
 }

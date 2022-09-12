@@ -1,3 +1,3 @@
 ﻿namespace ScriptBeeWebApp.Controllers.Arguments;
 
-public record ScriptCreatedResult(string filePath);
+public record ScriptCreatedResult(string FilePath);

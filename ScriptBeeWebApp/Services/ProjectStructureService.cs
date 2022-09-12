@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
 using ScriptBee.Config;
 using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
@@ -13,18 +14,37 @@ namespace ScriptBeeWebApp.Services;
 
 public class ProjectStructureService : IProjectStructureService
 {
-    private readonly IFileContentProvider _fileContentProvider;
     private readonly IProjectManager _projectManager;
-    private readonly ILoadersHolder _loadersHolder;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IPluginRepository _pluginRepository;
+    private readonly ILoadersHolder _loadersHolder;
 
-    public ProjectStructureService(IFileContentProvider fileContentProvider, IProjectManager projectManager,
-        ILoadersHolder loadersHolder, IProjectFileStructureManager projectFileStructureManager)
+    public ProjectStructureService(IProjectManager projectManager,
+        IProjectFileStructureManager projectFileStructureManager, IPluginRepository pluginRepository,
+        ILoadersHolder loadersHolder)
     {
-        _fileContentProvider = fileContentProvider;
         _projectManager = projectManager;
-        _loadersHolder = loadersHolder;
         _projectFileStructureManager = projectFileStructureManager;
+        _pluginRepository = pluginRepository;
+        _loadersHolder = loadersHolder;
+    }
+
+    public async Task<(string extension, string content)> GetSampleCodeAsync(string scriptType,
+        CancellationToken cancellationToken = default)
+    {
+        var scriptGeneratorStrategy =
+            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == scriptType);
+
+        if (scriptGeneratorStrategy is null)
+        {
+            throw new Exception($"No plugin found for script type {scriptType}");
+        }
+
+        var sampleCode =
+            await new SampleCodeGenerator(scriptGeneratorStrategy, _loadersHolder)
+                .GenerateSampleCode(cancellationToken);
+
+        return (scriptGeneratorStrategy.Extension, sampleCode);
     }
 
     public void GenerateModelClasses(string projectId)
@@ -38,7 +58,8 @@ public class ProjectStructureService : IProjectStructureService
 
         var classes = project.Context.GetClasses();
 
-        
+        // _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy=>strategy)
+
         // todo
         // var pythonModelClasses =
         //     new SampleCodeGenerator(new PythonScriptGeneratorStrategy(_fileContentProvider), _loadersHolder)

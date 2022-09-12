@@ -1,8 +1,6 @@
-using System;
-
 namespace ScriptBee.Plugin;
 
 public interface IPluginLoaderFactory
 {
-    IPluginLoader? GetPluginLoader(Type type);
+    IPluginLoader? GetPluginLoader(Models.Plugin plugin);
 }

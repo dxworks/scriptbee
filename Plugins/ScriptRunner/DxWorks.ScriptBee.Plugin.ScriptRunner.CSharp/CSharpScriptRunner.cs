@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
-using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
-using DxWorks.ScriptBee.Plugin.Api.ScriptRunner;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 
+// todo rethink helper functions in C# scripts 
 public class CSharpScriptRunner : IScriptRunner
 {
     // todo
@@ -19,17 +19,20 @@ public class CSharpScriptRunner : IScriptRunner
         _helperFunctionsFactory = helperFunctionsFactory;
     }
 
+    public string Language => "csharp";
+
     public async Task RunAsync(IProject project, string runId, string scriptContent,
         CancellationToken cancellationToken = default)
     {
         var compiledScript = await Task.Run(() => CompileScript(scriptContent, cancellationToken), cancellationToken);
 
-        var helperFunctions = _helperFunctionsFactory.Create(project.Id, runId);
+        var helperFunctionsContainer = _helperFunctionsFactory.Create(project.Id, runId);
 
-        await Task.Run(() => ExecuteScript(project, helperFunctions, compiledScript), cancellationToken);
+        await Task.Run(() => ExecuteScript(project, helperFunctionsContainer, compiledScript), cancellationToken);
     }
 
-    private void ExecuteScript(IProject project, IHelperFunctions helperFunctions, Assembly compiledScript)
+    private void ExecuteScript(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
+        Assembly compiledScript)
     {
         foreach (var type in compiledScript.GetTypes())
         {
@@ -46,7 +49,7 @@ public class CSharpScriptRunner : IScriptRunner
                         method.Invoke(scriptContentObject, new object[]
                         {
                             project,
-                            helperFunctions
+                            helperFunctionsContainer // todo rethink helper functions in C# scripts 
                         });
                     }
                 }

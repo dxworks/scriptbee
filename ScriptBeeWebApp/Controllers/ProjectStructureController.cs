@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
@@ -11,10 +13,13 @@ namespace ScriptBeeWebApp.Controllers;
 public class ProjectStructureController : ControllerBase
 {
     private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IProjectStructureService _projectStructureService;
 
-    public ProjectStructureController(IProjectFileStructureManager projectFileStructureManager)
+    public ProjectStructureController(IProjectFileStructureManager projectFileStructureManager,
+        IProjectStructureService projectStructureService)
     {
         _projectFileStructureManager = projectFileStructureManager;
+        _projectStructureService = projectStructureService;
     }
 
     [HttpGet("{projectId}")]
@@ -31,8 +36,9 @@ public class ProjectStructureController : ControllerBase
     }
 
     [HttpPost("script")]
-    // todo extract validation om a separate class
-    public ActionResult<ScriptCreatedResult> CreateScript(CreateScript arg)
+    // todo extract validation in a separate class
+    public async Task<ActionResult<ScriptCreatedResult>> CreateScript(CreateScript arg,
+        CancellationToken cancellationToken = default)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
         {
@@ -41,55 +47,24 @@ public class ProjectStructureController : ControllerBase
 
         try
         {
-            var content = "";
-            // todo
-            // switch (arg.scriptType)
-            // {
-            //     case "python":
-            //     {
-            //         if (!arg.filePath.EndsWith(".py"))
-            //         {
-            //             arg.filePath += ".py";
-            //         }
-            //
-            //         content = new SampleCodeGenerator(new PythonScriptGeneratorStrategy(new RelativeFileContentProvider()),
-            //             _loadersHolder).GenerateSampleCode();
-            //     }
-            //         break;
-            //     case "csharp":
-            //     {
-            //         if (!arg.filePath.EndsWith(".cs"))
-            //         {
-            //             arg.filePath += ".cs";
-            //         }
-            //
-            //         content = new SampleCodeGenerator(new CSharpScriptGeneratorStrategy(new RelativeFileContentProvider()),
-            //             _loadersHolder).GenerateSampleCode();
-            //     }
-            //         break;
-            //     case "javascript":
-            //     {
-            //         if (!arg.filePath.EndsWith(".js"))
-            //         {
-            //             arg.filePath += ".js";
-            //         }
-            //
-            //         content = new SampleCodeGenerator(
-            //             new JavascriptScriptGeneratorStrategy(new RelativeFileContentProvider()),
-            //             _loadersHolder).GenerateSampleCode();
-            //     }
-            //         break;
-            // }
+            var (extension, content) =
+                await _projectStructureService.GetSampleCodeAsync(arg.scriptType, cancellationToken);
 
             if (_projectFileStructureManager.FileExists(arg.projectId, arg.filePath))
             {
                 return StatusCode(StatusCodes.Status409Conflict);
             }
 
+            if (!arg.filePath.EndsWith(extension))
+            {
+                arg.filePath += extension;
+            }
+
             _projectFileStructureManager.CreateSrcFile(arg.projectId, arg.filePath, content);
         }
         catch
         {
+            // todo have a centralized exception handler
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 

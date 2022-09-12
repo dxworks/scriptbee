@@ -18,5 +18,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
-
+    <ItemGroup>
+        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.Tests" />
+    </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
+using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 
@@ -24,6 +24,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
 
     private const string MethodName = "ExecuteScript";
 
+    // todo rethink acceptedModules
     public SampleCodeGenerator(IScriptGeneratorStrategy scriptGeneratorStrategy, ILoadersHolder loadersHolder)
     {
         _scriptGeneratorStrategy = scriptGeneratorStrategy;
@@ -34,7 +35,8 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         }
     }
 
-    public async Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> objects, CancellationToken cancellationToken = default)
+    public async Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> objects,
+        CancellationToken cancellationToken = default)
     {
         var generatedClasses = new List<SampleCodeFile>();
 

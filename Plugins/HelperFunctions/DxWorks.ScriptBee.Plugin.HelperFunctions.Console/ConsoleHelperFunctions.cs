@@ -1,24 +1,17 @@
 ﻿using System.Text;
-using DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Console;
 
 public class ConsoleHelperFunctions : IHelperFunctions
 {
-    private readonly HelperFunctionsSettings _helperFunctionsSettings;
-    private readonly IFileModelService _fileModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IResultCollector _resultCollector;
+    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
 
     private readonly StringBuilder _consoleStringBuilder = new();
 
-    public ConsoleHelperFunctions(HelperFunctionsSettings helperFunctionsSettings, IFileModelService fileModelService,
-        IFileNameGenerator fileNameGenerator, IResultCollector resultCollector)
+    public ConsoleHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
     {
-        _helperFunctionsSettings = helperFunctionsSettings;
-        _fileModelService = fileModelService;
-        _fileNameGenerator = fileNameGenerator;
-        _resultCollector = resultCollector;
+        _helperFunctionsResultService = helperFunctionsResultService;
     }
 
     public void ConsoleWrite(string message)
@@ -34,19 +27,8 @@ public class ConsoleHelperFunctions : IHelperFunctions
     public async Task OnUnloadAsync(CancellationToken cancellationToken = default)
     {
         var consoleOutput = _consoleStringBuilder.ToString();
-        if (string.IsNullOrEmpty(consoleOutput))
-        {
-            return;
-        }
 
-        var consoleOutputName =
-            _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-                _helperFunctionsSettings.RunId, RunResult.ConsoleType, "ConsoleOutput");
-        _resultCollector.Add(new RunResult(RunResult.ConsoleType, consoleOutputName));
-
-        var byteArray = Encoding.ASCII.GetBytes(consoleOutput);
-        await using var stream = new MemoryStream(byteArray);
-
-        await _fileModelService.UploadFileAsync(consoleOutputName, stream, cancellationToken);
+        await _helperFunctionsResultService.UploadResultAsync("ConsoleOutput", RunResultDefaultTypes.ConsoleType,
+            consoleOutput, cancellationToken);
     }
 }

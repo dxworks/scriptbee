@@ -7,8 +7,8 @@ public class UiPluginManifest : PluginManifest
 
 public class UiPluginManifestSpec
 {
+    public int Port { get; set; }
     public string RemoteEntry { get; set; } = "";
-    public string RemoteName { get; set; } = "";
     public string ExposedModule { get; set; } = "";
     public string ComponentName { get; set; } = "";
     public string UiPluginType { get; set; } = "";

@@ -1,84 +1,40 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using DxWorks.ScriptBee.Plugin.Api.ScriptGeneration;
-using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Plugin.Manifest;
+﻿using ScriptBee.FileManagement;
 using Serilog;
 
 namespace ScriptBee.Plugin;
 
+// todo add tests
 public class PluginManager
 {
     private readonly ILogger _logger;
-    private readonly IPluginManifestReader _pluginManifestReader;
+    private readonly IPluginReader _pluginReader;
     private readonly IPluginLoaderFactory _pluginLoaderFactory;
-    private readonly IPluginRepository _pluginRepository;
 
-    public PluginManager(ILogger logger, IPluginManifestReader pluginManifestReader,
-        IPluginLoaderFactory pluginLoaderFactory, IPluginRepository pluginRepository)
+    public PluginManager(ILogger logger, IPluginReader pluginReader, IPluginLoaderFactory pluginLoaderFactory)
     {
-        _pluginManifestReader = pluginManifestReader;
-        _pluginLoaderFactory = pluginLoaderFactory;
-        _pluginRepository = pluginRepository;
         _logger = logger;
+        _pluginReader = pluginReader;
+        _pluginLoaderFactory = pluginLoaderFactory;
     }
 
-    public void LoadPlugins(string pluginFolder)
+    // todo move to task
+    public void LoadPlugins(string allPluginsFolder)
     {
         // todo filter custom plugin definitions first
         // todo iterate over all plugin definitions and load them
-        var pluginManifests = _pluginManifestReader.ReadManifests(pluginFolder);
+        var plugins = _pluginReader.ReadPlugins(allPluginsFolder);
 
-        foreach (var pluginManifest in pluginManifests)
+        foreach (var plugin in plugins)
         {
-            switch (pluginManifest)
-            {
-                case ScriptGeneratorPluginManifest:
-                    var services = new ServiceCollection()
-                        .AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
-                    LoadDllPlugin<IScriptGeneratorStrategy>(pluginManifest.Metadata.EntryPoint, services);
-                    // _pluginRepository.RegisterPlugin<IScriptGeneratorStrategy>(scriptGeneratorSpec);
-                    break;
-                // case UiPluginManifestSpec uiPluginManifestSpec:
-                //     // todo register ui plugin
-                //     break;
-                default:
-                    _logger.Warning("Unknown plugin type {plugin}", pluginManifest);
-                    break;
-            }
-        }
-    }
-
-    private void LoadDllPlugin<T>(string pathToDll, IServiceCollection services) where T : class
-    {
-        Assembly CurrentDomainOnAssemblyResolve(object? sender, ResolveEventArgs args)
-        {
-            return ((AppDomain)sender).GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
-        }
-
-        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-
-        var pluginDll = Assembly.LoadFrom(pathToDll);
-
-        // todo take into consideration the plugin manifest type to support more than just dlls
-        foreach (var type in pluginDll.GetExportedTypes())
-        {
-            var pluginLoader = _pluginLoaderFactory.GetPluginLoader(type);
+            var pluginLoader = _pluginLoaderFactory.GetPluginLoader(plugin);
             if (pluginLoader is null)
             {
-                _logger.Warning("Plugin loader not found for type {type}", type);
+                _logger.Warning("Unknown plugin type {plugin}", plugin);
             }
             else
             {
-                if (Activator.CreateInstance(type) is T t)
-                {
-                    services.AddSingleton(t);
-                }
-                // pluginLoader.LoadPlugin(pluginManifest, type);
+                pluginLoader.Load(plugin);
             }
         }
-
-        AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
     }
 }
