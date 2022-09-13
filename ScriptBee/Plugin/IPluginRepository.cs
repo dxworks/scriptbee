@@ -1,15 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using ScriptBee.Plugin.Manifest;
 
 namespace ScriptBee.Plugin;
 
-// todo maybe combine with plugin service
 public interface IPluginRepository
 {
-    void RegisterPlugin(object plugin);
+    void RegisterPlugin(PluginManifest pluginManifest, Type @interface, Type concrete);
 
-    T? GetPlugin<T>(Expression<Func<T, bool>> filter) where T : class;
+    void RegisterPlugin(PluginManifest pluginManifest);
 
-    IEnumerable<T> GetPlugins<T>(Expression<Func<T, bool>> filter) where T : class;
+    TService? GetPlugin<TService>(Func<TService, bool> filter,
+        IEnumerable<(Type @interface, object instance)>? services = null)
+        where TService : class;
+
+    IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)
+        where TService : class;
+
+    IEnumerable<T> GetLoadedPlugins<T>()
+        where T : PluginManifest;
 }

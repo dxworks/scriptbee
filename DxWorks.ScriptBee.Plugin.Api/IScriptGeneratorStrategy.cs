@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 
 namespace DxWorks.ScriptBee.Plugin.Api;
 
-public interface IScriptGeneratorStrategy
+public interface IScriptGeneratorStrategy : IPlugin
 {
+    // todo move in manifest.yaml
     public string Language { get; }
     public string Extension { get; }
 

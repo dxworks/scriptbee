@@ -10,11 +10,11 @@ namespace ScriptBeeWebApp.Controllers;
 [ApiController]
 public class PluginController : ControllerBase
 {
-    private readonly IPluginService _pluginService;
+    private readonly IPluginRepository _pluginRepository;
 
-    public PluginController(IPluginService pluginService)
+    public PluginController(IPluginRepository pluginRepository)
     {
-        _pluginService = pluginService;
+        _pluginRepository = pluginRepository;
     }
 
     // todo allow subclasses to be returned and serialized
@@ -23,11 +23,11 @@ public class PluginController : ControllerBase
     {
         if (string.IsNullOrEmpty(type))
         {
-            return Ok(_pluginService.GetLoadedPlugins());
+            return Ok(_pluginRepository.GetLoadedPlugins<PluginManifest>());
         }
 
         return Ok(
-            _pluginService.GetLoadedPlugins()
+            _pluginRepository.GetLoadedPlugins<PluginManifest>()
                 .Where(manifest => manifest.Kind == type));
     }
 
@@ -35,7 +35,6 @@ public class PluginController : ControllerBase
     [HttpGet("ui")]
     public ActionResult<IEnumerable<UiPluginManifest>> GetLoadedUiPlugins()
     {
-        return Ok(_pluginService.GetLoadedPlugins()
-            .OfType<UiPluginManifest>());
+        return Ok(_pluginRepository.GetLoadedPlugins<UiPluginManifest>());
     }
 }

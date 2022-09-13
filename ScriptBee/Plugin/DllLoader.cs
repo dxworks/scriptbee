@@ -7,15 +7,25 @@ namespace ScriptBee.Plugin;
 
 public class DllLoader : IDllLoader
 {
-    public IEnumerable<Type> LoadDllTypes(string fullPathToDll, ISet<Type> acceptedPluginTypes)
+    public IEnumerable<(Type @interface, Type concrete)> LoadDllTypes(string fullPathToDll,
+        ISet<Type> acceptedPluginTypes)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
         var pluginDll = Assembly.LoadFrom(fullPathToDll);
 
-        // todo take into consideration the plugin manifest type to support more than just dlls
-        var acceptedTypes = pluginDll.GetExportedTypes()
-            .Where(type => acceptedPluginTypes.Any(t => t.IsAssignableFrom(type)));
+        var acceptedTypes = new List<(Type @interface, Type concrete)>();
+
+        foreach (var exportedType in pluginDll.GetExportedTypes())
+        {
+            foreach (var acceptedPluginType in acceptedPluginTypes)
+            {
+                if (acceptedPluginType.IsAssignableFrom(exportedType))
+                {
+                    acceptedTypes.Add((acceptedPluginType, exportedType));
+                }
+            }
+        }
 
         AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
 

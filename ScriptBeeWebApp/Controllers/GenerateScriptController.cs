@@ -62,6 +62,6 @@ public class GenerateScriptController : ControllerBase
         var stream =
             await _generateScriptService.GenerateClassesZip(classes, scriptGeneratorStrategy, cancellationToken);
 
-        return File(stream, "application/octet-stream", $"{scriptGeneratorStrategy.Language}SampleCode.zip");
+        return File(stream, "application/octet-stream", $"{request.ScriptType}SampleCode.zip");
     }
 }

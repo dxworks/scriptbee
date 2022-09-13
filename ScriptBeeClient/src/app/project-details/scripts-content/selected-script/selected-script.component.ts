@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ThemeService} from '../../../services/theme/theme.service';
-import {FileSystemService} from '../../../services/file-system/file-system.service';
-import {ProjectDetailsService} from '../../project-details.service';
-import {ActivatedRoute} from '@angular/router';
-import {RunScriptService} from '../../../services/run-script/run-script.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {HttpErrorResponse} from '@angular/common/http';
-import {first} from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ThemeService } from '../../../services/theme/theme.service';
+import { FileSystemService } from '../../../services/file-system/file-system.service';
+import { ProjectDetailsService } from '../../project-details.service';
+import { ActivatedRoute } from '@angular/router';
+import { RunScriptService } from '../../../services/run-script/run-script.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-selected-script',
@@ -73,7 +73,8 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
 
     this.projectDetailsService.project.subscribe(project => {
       if (project) {
-        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath).subscribe((result) => {
+        // todo remove hardcoded values
+        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath, 'python').subscribe((result) => {
             if (result) {
               this.isLoadingResults = false;
               this.projectDetailsService.lastRunResult.next(result);

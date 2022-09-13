@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Models;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 
@@ -18,36 +20,29 @@ public class RunScriptService : IRunScriptService
     private readonly IFileModelService _fileModelService;
     private readonly IRunModelService _runModelService;
     private readonly IProjectModelService _projectModelService;
-    private readonly IHelperFunctionsFactory _helperFunctionsFactory;
     private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IPluginRepository _pluginRepository;
 
     public RunScriptService(IFileModelService fileModelService, IRunModelService runModelService,
-        IProjectModelService projectModelService, IHelperFunctionsFactory helperFunctionsFactory,
-        IFileNameGenerator fileNameGenerator, IProjectFileStructureManager projectFileStructureManager,
-        IPluginRepository pluginRepository)
+        IProjectModelService projectModelService, IFileNameGenerator fileNameGenerator,
+        IProjectFileStructureManager projectFileStructureManager, IPluginRepository pluginRepository)
     {
         _fileModelService = fileModelService;
         _runModelService = runModelService;
         _projectModelService = projectModelService;
-        _helperFunctionsFactory = helperFunctionsFactory;
         _fileNameGenerator = fileNameGenerator;
         _projectFileStructureManager = projectFileStructureManager;
         _pluginRepository = pluginRepository;
     }
 
-    public IScriptRunner? GetScriptRunner(string language)
-    {
-        return _pluginRepository.GetPlugin<IScriptRunner>(runner => runner.Language == language);
-    }
-
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetPlugins<IScriptGeneratorStrategy>(_ => true).Select(strategy => strategy.Language);
+        return _pluginRepository.GetLoadedPlugins<ScriptRunnerPluginManifest>()
+            .Select(manifest => manifest.Spec.Language);
     }
 
-    public async Task<RunModel?> RunAsync(IScriptRunner scriptRunner, Project project, ProjectModel projectModel,
+    public async Task<RunModel?> RunAsync(Project project, ProjectModel projectModel, string language,
         string scriptFilePath, CancellationToken cancellationToken = default)
     {
         var scriptContent =
@@ -88,31 +83,73 @@ public class RunScriptService : IRunScriptService
 
         await _runModelService.CreateDocument(runModel, cancellationToken);
 
+        var resultCollector = new ResultCollector();
+
+        // todo create script runner using di
+        // todo register IResultCollector to the di container
+
+        var helperFunctionSettings = new HelperFunctionsSettings(project.Id, runModel.Id);
+
+        var helperFunctionService = new HelperFunctionsResultService(helperFunctionSettings, resultCollector,
+            _fileModelService, _fileNameGenerator);
+
+        var helperFunctionsEnumerable = _pluginRepository.GetPlugins<IHelperFunctions>(
+            new List<(Type @interface, object instance)>
+            {
+                (typeof(IHelperFunctionsResultService), helperFunctionService)
+            });
+
+        var helperFunctionsContainer = new HelperFunctionsContainer(helperFunctionsEnumerable);
+
+        await Task.WhenAll(helperFunctionsContainer.GetFunctions()
+            .Select(f => f.OnLoadAsync(cancellationToken)));
+
+        var scriptRunner = _pluginRepository.GetPlugin<IScriptRunner>(runner => runner.Language == language);
+
+        if (scriptRunner is null)
+        {
+            throw new Exception("Script runner not found");
+        }
+
+        var scriptGeneratorStrategy =
+            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == language);
+
+        if (scriptGeneratorStrategy is null)
+        {
+            throw new Exception("Script generator strategy not found");
+        }
+
         try
         {
-            // var runResults = await scriptRunner.RunAsync(project, runModel.Id, scriptContent);
-            //
-            // foreach (var (type, filePath) in runResults)
-            // {
-            //     if (type.Equals(RunResult.ConsoleType))
-            //     {
-            //         runModel.ConsoleOutputName = filePath;
-            //     }
-            //     else if (type.Equals(RunResult.FileType))
-            //     {
-            //         runModel.OutputFileNames.Add(filePath);
-            //     }
-            // }
-            await _runModelService.UpdateDocument(runModel, cancellationToken);
+            var validScript = scriptGeneratorStrategy.ExtractValidScript(scriptContent);
 
-            return runModel;
+            await scriptRunner.RunAsync(project, helperFunctionsContainer, validScript, cancellationToken);
         }
         catch (Exception e)
         {
             runModel.Errors = e.Message;
             await _runModelService.UpdateDocument(runModel, cancellationToken);
-
-            throw;
+            
         }
+
+        await Task.WhenAll(helperFunctionsContainer.GetFunctions()
+            .Select(f => f.OnUnloadAsync(cancellationToken)));
+
+        foreach (var (filePath, type) in resultCollector.GetResults())
+        {
+            switch (type)
+            {
+                case RunResultDefaultTypes.ConsoleType:
+                    runModel.ConsoleOutputName = filePath;
+                    break;
+                case RunResultDefaultTypes.FileType:
+                    runModel.OutputFileNames.Add(filePath);
+                    break;
+            }
+        }
+
+        await _runModelService.UpdateDocument(runModel, cancellationToken);
+
+        return runModel;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.FileManagement;
+using ScriptBee.Plugin.Manifest;
 
 namespace ScriptBee.Plugin;
 
@@ -8,8 +10,6 @@ public abstract class DllLoaderPlugin : IPluginLoader
 {
     private readonly IFileService _fileService;
     private readonly IDllLoader _dllLoader;
-    private readonly IPluginRepository _pluginRepository;
-    private readonly IPluginService _pluginService;
 
     public abstract string AcceptedPluginKind { get; }
 
@@ -17,30 +17,22 @@ public abstract class DllLoaderPlugin : IPluginLoader
     // todo classes used int assembly scanning)
     protected abstract HashSet<Type> AcceptedPluginTypes { get; }
 
-    protected DllLoaderPlugin(IFileService fileService, IDllLoader dllLoader, IPluginRepository pluginRepository,
-        IPluginService pluginService)
+    protected abstract void RegisterPlugin(PluginManifest pluginManifest, Type @interface, Type concrete);
+
+    protected DllLoaderPlugin(IFileService fileService, IDllLoader dllLoader)
     {
         _fileService = fileService;
         _dllLoader = dllLoader;
-        _pluginRepository = pluginRepository;
-        _pluginService = pluginService;
     }
 
     public void Load(Models.Plugin plugin)
     {
-        _pluginService.Add(plugin.Manifest);
-
         var path = _fileService.CombinePaths(plugin.FolderPath, plugin.Manifest.Metadata.EntryPoint);
         var loadDllTypes = _dllLoader.LoadDllTypes(path, AcceptedPluginTypes);
 
-        foreach (var type in loadDllTypes)
+        foreach (var (@interface, concrete) in loadDllTypes)
         {
-            // todo add ServiceCollection to use the di container
-            var pluginInstance = Activator.CreateInstance(type);
-            if (pluginInstance != null)
-            {
-                _pluginRepository.RegisterPlugin(pluginInstance);
-            }
+            RegisterPlugin(plugin.Manifest, @interface, concrete);
         }
     }
 }

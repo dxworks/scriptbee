@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 
 namespace DxWorks.ScriptBee.Plugin.Api;
 
-public interface IHelperFunctions
+public interface IHelperFunctions : IPlugin
 {
-    void OnLoadAsync(CancellationToken cancellationToken = default)
+    Task OnLoadAsync(CancellationToken cancellationToken = default)
     {
+        return Task.CompletedTask;
     }
 
     Task OnUnloadAsync(CancellationToken cancellationToken = default)

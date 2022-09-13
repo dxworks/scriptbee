@@ -5,5 +5,5 @@ namespace ScriptBee.Plugin;
 
 public interface IDllLoader
 {
-    IEnumerable<Type> LoadDllTypes(string fullPathToDll, ISet<Type> acceptedPluginTypes);
+    IEnumerable<(Type @interface, Type concrete)> LoadDllTypes(string fullPathToDll, ISet<Type> acceptedPluginTypes);
 }

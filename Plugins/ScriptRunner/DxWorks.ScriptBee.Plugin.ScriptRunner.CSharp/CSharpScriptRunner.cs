@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using ScriptBee.Scripts.ScriptRunners.Exceptions;
@@ -12,21 +13,13 @@ public class CSharpScriptRunner : IScriptRunner
 {
     // todo
     // private readonly IPluginPathReader _pluginPathReader;
-    private readonly IHelperFunctionsFactory _helperFunctionsFactory;
-
-    public CSharpScriptRunner(IHelperFunctionsFactory helperFunctionsFactory)
-    {
-        _helperFunctionsFactory = helperFunctionsFactory;
-    }
 
     public string Language => "csharp";
 
-    public async Task RunAsync(IProject project, string runId, string scriptContent,
-        CancellationToken cancellationToken = default)
+    public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
+        string scriptContent, CancellationToken cancellationToken = default)
     {
         var compiledScript = await Task.Run(() => CompileScript(scriptContent, cancellationToken), cancellationToken);
-
-        var helperFunctionsContainer = _helperFunctionsFactory.Create(project.Id, runId);
 
         await Task.Run(() => ExecuteScript(project, helperFunctionsContainer, compiledScript), cancellationToken);
     }

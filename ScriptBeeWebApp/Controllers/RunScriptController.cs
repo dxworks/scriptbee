@@ -31,8 +31,8 @@ public class RunScriptController : ControllerBase
         _fileNameGenerator = fileNameGenerator;
         _runScriptService = runScriptService;
         _runScriptValidator = runScriptValidator;
-    }  
-    
+    }
+
     [HttpGet("languages")]
     public ActionResult<IEnumerable<string>> GetLanguages()
     {
@@ -49,13 +49,6 @@ public class RunScriptController : ControllerBase
             return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
-        var scriptRunner = _runScriptService.GetScriptRunner(runScript.Language);
-
-        if (scriptRunner == null)
-        {
-            return BadRequest($"ScriptRunner for language {runScript.Language} not supported");
-        }
-
         var project = _projectManager.GetProject(runScript.ProjectId);
         if (project == null)
         {
@@ -68,9 +61,8 @@ public class RunScriptController : ControllerBase
             return NotFound($"Could not find project model with id: {runScript.ProjectId}");
         }
 
-        var runModel =
-            await _runScriptService.RunAsync(scriptRunner, project, projectModel, runScript.FilePath,
-                cancellationToken);
+        var runModel = await _runScriptService.RunAsync(project, projectModel, runScript.Language, runScript.FilePath,
+            cancellationToken);
 
         if (runModel is null)
         {

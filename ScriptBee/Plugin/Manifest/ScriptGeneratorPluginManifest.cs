@@ -2,9 +2,10 @@
 
 public class ScriptGeneratorPluginManifest : PluginManifest
 {
-    public ScriptGeneratorSpec? Spec { get; set; }
+    public ScriptGeneratorSpec Spec { get; set; }
 }
 
 public class ScriptGeneratorSpec
 {
+    public string Language { get; set; } = "";
 }

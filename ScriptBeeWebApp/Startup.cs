@@ -1,5 +1,4 @@
 using System;
-using DxWorks.ScriptBee.Plugin.Api;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,13 +49,10 @@ public class Startup
         services.AddSingleton<ILoadersHolder, LoadersHolder>();
         services.AddSingleton<ILinkersHolder, LinkersHolder>();
         services.AddSingleton<IPluginRepository, PluginRepository>();
-        services.AddSingleton<IPluginService, PluginService>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>(_ =>
             new ProjectFileStructureManager(userFolderPath));
-        services.AddSingleton<IHelperFunctionsFactory, HelperFunctionsFactory>();
         services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
-        services.AddSingleton<IFileModelService, FileModelService>();
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
@@ -69,11 +65,14 @@ public class Startup
         services.AddSingleton<IPluginReader, PluginReader>();
         services.AddSingleton<IDllLoader, DllLoader>();
         services.AddSingleton<IPluginLoaderFactory, PluginLoaderFactory>();
+        services.AddSingleton<IRunScriptService, RunScriptService>();
         services.AddSingleton<PluginManager>();
 
         // add Plugin Loaders
         // check if services.TryAddEnumerable is needed
         services.AddSingleton<IPluginLoader, ScriptGeneratorPluginLoader>();
+        services.AddSingleton<IPluginLoader, ScriptRunnerPluginLoader>();
+        services.AddSingleton<IPluginLoader, HelperFunctionsPluginLoader>();
         services.AddSingleton<IPluginLoader, UiPluginLoader>();
         services.AddSingleton<IPluginLoader, LinkerPluginLoader>();
         services.AddSingleton<IPluginLoader, LoaderPluginLoader>();

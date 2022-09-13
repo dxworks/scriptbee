@@ -1,4 +1,5 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 using Newtonsoft.Json;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Json;

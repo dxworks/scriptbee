@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Console;
 
@@ -13,6 +14,8 @@ public class ConsoleHelperFunctions : IHelperFunctions
     {
         _helperFunctionsResultService = helperFunctionsResultService;
     }
+
+    // todo add more overloads for int, long, double, etc.
 
     public void ConsoleWrite(string message)
     {

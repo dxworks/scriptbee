@@ -2,26 +2,54 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ScriptBee.Plugin.Manifest;
 
 namespace ScriptBee.Plugin;
 
 public class PluginRepository : IPluginRepository
 {
-    private readonly ConcurrentBag<object> _plugins = new();
+    private readonly ConcurrentBag<PluginManifest> _pluginManifests = new();
+    private readonly ConcurrentBag<ServiceDescriptor> _pluginServiceCollection = new();
 
-    public void RegisterPlugin(object plugin)
+    public void RegisterPlugin(PluginManifest pluginManifest, Type @interface, Type concrete)
     {
-        _plugins.Add(plugin);
+        _pluginManifests.Add(pluginManifest);
+
+        _pluginServiceCollection.Add(new ServiceDescriptor(@interface, concrete, ServiceLifetime.Singleton));
     }
 
-    public T? GetPlugin<T>(Expression<Func<T, bool>> filter) where T : class
+    public void RegisterPlugin(PluginManifest pluginManifest)
     {
-        return GetPlugins(filter).FirstOrDefault();
+        _pluginManifests.Add(pluginManifest);
     }
 
-    public IEnumerable<T> GetPlugins<T>(Expression<Func<T, bool>> filter) where T : class
+    public TService? GetPlugin<TService>(Func<TService, bool> filter,
+        IEnumerable<(Type @interface, object instance)>? services = null) where TService : class
     {
-        return _plugins.OfType<T>().Where(filter.Compile());
+        return GetPlugins<TService>().FirstOrDefault();
+    }
+
+    public IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)
+        where TService : class
+    {
+        var serviceCollection = new ServiceCollection
+        {
+            _pluginServiceCollection
+        };
+
+        if (services is not null)
+        {
+            serviceCollection.Add(services.Select(s => new ServiceDescriptor(s.@interface, s.instance)));
+        }
+
+        return serviceCollection.BuildServiceProvider()
+            .GetServices<TService>();
+    }
+
+    public IEnumerable<T> GetLoadedPlugins<T>() where T : PluginManifest
+    {
+        return _pluginManifests.OfType<T>();
     }
 }

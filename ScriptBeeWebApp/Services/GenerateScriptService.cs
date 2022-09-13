@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Services;
 
@@ -16,7 +17,7 @@ public class GenerateScriptService : IGenerateScriptService
     // todo refactor loaders holder
     private readonly ILoadersHolder _loadersHolder;
     private readonly IPluginRepository _pluginRepository;
-    
+
     public GenerateScriptService(ILoadersHolder loadersHolder, IPluginRepository pluginRepository)
     {
         _loadersHolder = loadersHolder;
@@ -25,7 +26,8 @@ public class GenerateScriptService : IGenerateScriptService
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetPlugins<IScriptGeneratorStrategy>(_ => true).Select(strategy => strategy.Language);
+        return _pluginRepository.GetLoadedPlugins<ScriptGeneratorPluginManifest>()
+            .Select(manifest => manifest.Spec.Language);
     }
 
     public IScriptGeneratorStrategy? GetGenerationStrategy(string scriptType)
@@ -33,7 +35,8 @@ public class GenerateScriptService : IGenerateScriptService
         return _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == scriptType);
     }
 
-    public async Task<Stream> GenerateClassesZip(IEnumerable<object> classes, IScriptGeneratorStrategy scriptGeneratorStrategy,
+    public async Task<Stream> GenerateClassesZip(IEnumerable<object> classes,
+        IScriptGeneratorStrategy scriptGeneratorStrategy,
         CancellationToken cancellationToken = default)
     {
         var sampleCode =

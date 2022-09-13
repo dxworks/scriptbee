@@ -9,10 +9,8 @@ namespace ScriptBeeWebApp.Services;
 
 public interface IRunScriptService
 {
-    IScriptRunner? GetScriptRunner(string language);
-    
     IEnumerable<string> GetSupportedLanguages();
-    
-    Task<RunModel?> RunAsync(IScriptRunner scriptRunner, Project project, ProjectModel projectModel,
+
+    Task<RunModel?> RunAsync(Project project, ProjectModel projectModel, string language,
         string scriptFilePath, CancellationToken cancellationToken = default);
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Config;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
 using ScriptBee.Services;
@@ -33,7 +34,8 @@ public class ProjectStructureService : IProjectStructureService
         CancellationToken cancellationToken = default)
     {
         var scriptGeneratorStrategy =
-            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == scriptType);
+            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(manifest =>
+                manifest.Language == scriptType);
 
         if (scriptGeneratorStrategy is null)
         {

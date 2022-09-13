@@ -1,4 +1,4 @@
-﻿namespace DxWorks.ScriptBee.Plugin.Api;
+﻿namespace DxWorks.ScriptBee.Plugin.Api.Services;
 
 public static class RunResultDefaultTypes
 {
