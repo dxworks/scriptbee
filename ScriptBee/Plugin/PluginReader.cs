@@ -17,8 +17,7 @@ public class PluginReader : IPluginReader
     private readonly IPluginManifestValidator _manifestValidator;
 
     public PluginReader(ILogger logger, IFileService fileService,
-        IPluginManifestYamlFileReader pluginManifestYamlFileReader,
-        IPluginManifestValidator manifestValidator)
+        IPluginManifestYamlFileReader pluginManifestYamlFileReader, IPluginManifestValidator manifestValidator)
     {
         _logger = logger;
         _fileService = fileService;

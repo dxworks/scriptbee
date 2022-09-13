@@ -8,25 +8,24 @@ using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 
+// todo add tests
 public class GenerateScriptService : IGenerateScriptService
 {
-    // todo refactor loaders holder
-    private readonly ILoadersHolder _loadersHolder;
+    private readonly ILoadersService _loadersService;
     private readonly IPluginRepository _pluginRepository;
 
-    public GenerateScriptService(ILoadersHolder loadersHolder, IPluginRepository pluginRepository)
+    public GenerateScriptService(ILoadersService loadersService, IPluginRepository pluginRepository)
     {
-        _loadersHolder = loadersHolder;
+        _loadersService = loadersService;
         _pluginRepository = pluginRepository;
     }
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetLoadedPlugins<ScriptGeneratorPluginManifest>()
+        return _pluginRepository.GetLoadedPluginManifests<ScriptGeneratorPluginManifest>()
             .Select(manifest => manifest.Spec.Language);
     }
 
@@ -39,8 +38,10 @@ public class GenerateScriptService : IGenerateScriptService
         IScriptGeneratorStrategy scriptGeneratorStrategy,
         CancellationToken cancellationToken = default)
     {
+        var acceptedModules = _loadersService.GetAcceptedModules();
+
         var sampleCode =
-            await new SampleCodeGenerator(scriptGeneratorStrategy, _loadersHolder).GetSampleCode(classes,
+            await new SampleCodeGenerator(scriptGeneratorStrategy, acceptedModules).GetSampleCode(classes,
                 cancellationToken);
 
         return CreateFileZipStream(sampleCode, scriptGeneratorStrategy.Extension);

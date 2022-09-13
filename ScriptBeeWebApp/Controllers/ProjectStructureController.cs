@@ -10,6 +10,7 @@ namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class ProjectStructureController : ControllerBase
 {
     private readonly IProjectFileStructureManager _projectFileStructureManager;

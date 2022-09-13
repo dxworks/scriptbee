@@ -8,6 +8,7 @@ namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class PluginController : ControllerBase
 {
     private readonly IPluginRepository _pluginRepository;
@@ -23,11 +24,11 @@ public class PluginController : ControllerBase
     {
         if (string.IsNullOrEmpty(type))
         {
-            return Ok(_pluginRepository.GetLoadedPlugins<PluginManifest>());
+            return Ok(_pluginRepository.GetLoadedPluginManifests<PluginManifest>());
         }
 
         return Ok(
-            _pluginRepository.GetLoadedPlugins<PluginManifest>()
+            _pluginRepository.GetLoadedPluginManifests<PluginManifest>()
                 .Where(manifest => manifest.Kind == type));
     }
 
@@ -35,6 +36,6 @@ public class PluginController : ControllerBase
     [HttpGet("ui")]
     public ActionResult<IEnumerable<UiPluginManifest>> GetLoadedUiPlugins()
     {
-        return Ok(_pluginRepository.GetLoadedPlugins<UiPluginManifest>());
+        return Ok(_pluginRepository.GetLoadedPluginManifests<UiPluginManifest>());
     }
 }

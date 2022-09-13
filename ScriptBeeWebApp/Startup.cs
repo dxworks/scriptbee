@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using DxWorks.ScriptBee.Plugin.Api;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +11,7 @@ using MongoDB.Driver;
 using ScriptBee.Config;
 using ScriptBee.FileManagement;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
@@ -46,8 +49,6 @@ public class Startup
 
         services.AddSingleton(_ => mongoDatabase);
         services.AddSingleton<ILogger>(_ => new LoggerConfiguration().CreateLogger());
-        services.AddSingleton<ILoadersHolder, LoadersHolder>();
-        services.AddSingleton<ILinkersHolder, LinkersHolder>();
         services.AddSingleton<IPluginRepository, PluginRepository>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>(_ =>
@@ -56,6 +57,8 @@ public class Startup
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
+        services.AddSingleton<ILoadersService, LoadersService>();
+        services.AddSingleton<ILinkersService, LinkersService>();
         services.AddSingleton<IPluginDiscriminatorHolder, PluginDiscriminatorHolder>();
         services.AddSingleton<IPluginManifestYamlFileReader, PluginManifestYamlFileReader>();
         services.AddSingleton<IGenerateScriptService, GenerateScriptService>();
@@ -64,18 +67,25 @@ public class Startup
         services.AddSingleton<IPluginManifestValidator, PluginManifestValidator>();
         services.AddSingleton<IPluginReader, PluginReader>();
         services.AddSingleton<IDllLoader, DllLoader>();
-        services.AddSingleton<IPluginLoaderFactory, PluginLoaderFactory>();
         services.AddSingleton<IRunScriptService, RunScriptService>();
         services.AddSingleton<PluginManager>();
+        services.AddSingleton<IPluginRegistrationService>(_ =>
+        {
+            var pluginRegistrationService = new PluginRegistrationService();
 
-        // add Plugin Loaders
-        // check if services.TryAddEnumerable is needed
-        services.AddSingleton<IPluginLoader, ScriptGeneratorPluginLoader>();
-        services.AddSingleton<IPluginLoader, ScriptRunnerPluginLoader>();
-        services.AddSingleton<IPluginLoader, HelperFunctionsPluginLoader>();
-        services.AddSingleton<IPluginLoader, UiPluginLoader>();
-        services.AddSingleton<IPluginLoader, LinkerPluginLoader>();
-        services.AddSingleton<IPluginLoader, LoaderPluginLoader>();
+            pluginRegistrationService.Add(PluginKinds.Loader, new HashSet<Type> { typeof(IModelLoader) });
+            pluginRegistrationService.Add(PluginKinds.Linker, new HashSet<Type> { typeof(IModelLinker) });
+            pluginRegistrationService.Add(PluginKinds.ScriptGenerator,
+                new HashSet<Type> { typeof(IScriptGeneratorStrategy) });
+            pluginRegistrationService.Add(PluginKinds.ScriptRunner, new HashSet<Type> { typeof(IScriptRunner) });
+            pluginRegistrationService.Add(PluginKinds.HelperFunctions, new HashSet<Type> { typeof(IHelperFunctions) });
+
+            // todo see how to start the plugin via node or http-server or something like that if not already started
+            pluginRegistrationService.Add(PluginKinds.Ui, new HashSet<Type>());
+
+            return pluginRegistrationService;
+        });
+        services.AddSingleton<IPluginLoader, PluginLoader>();
 
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
 

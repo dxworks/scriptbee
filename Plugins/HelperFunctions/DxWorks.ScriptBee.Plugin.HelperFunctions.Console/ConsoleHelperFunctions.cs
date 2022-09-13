@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 
@@ -15,9 +16,31 @@ public class ConsoleHelperFunctions : IHelperFunctions
         _helperFunctionsResultService = helperFunctionsResultService;
     }
 
-    // todo add more overloads for int, long, double, etc.
+    public async Task OnUnloadAsync(CancellationToken cancellationToken = default)
+    {
+        var consoleOutput = _consoleStringBuilder.ToString();
+
+        await _helperFunctionsResultService.UploadResultAsync("ConsoleOutput", RunResultDefaultTypes.ConsoleType,
+            consoleOutput, cancellationToken);
+    }
+    // todo add more overloads for bool, long, float, etc.
+
+    public void ConsoleWrite(object text)
+    {
+        _consoleStringBuilder.Append(text);
+    }
 
     public void ConsoleWrite(string message)
+    {
+        _consoleStringBuilder.Append(message);
+    }
+
+    public void ConsoleWrite(int message)
+    {
+        _consoleStringBuilder.Append(message);
+    }
+
+    public void ConsoleWrite(double message)
     {
         _consoleStringBuilder.Append(message);
     }
@@ -27,11 +50,18 @@ public class ConsoleHelperFunctions : IHelperFunctions
         _consoleStringBuilder.AppendLine(message);
     }
 
-    public async Task OnUnloadAsync(CancellationToken cancellationToken = default)
+    public void ConsoleWriteLine(object message)
     {
-        var consoleOutput = _consoleStringBuilder.ToString();
+        _consoleStringBuilder.AppendLine(message.ToString());
+    }
 
-        await _helperFunctionsResultService.UploadResultAsync("ConsoleOutput", RunResultDefaultTypes.ConsoleType,
-            consoleOutput, cancellationToken);
+    public void ConsoleWriteLine(int message)
+    {
+        _consoleStringBuilder.AppendLine(message.ToString());
+    }
+
+    public void ConsoleWriteLine(double message)
+    {
+        _consoleStringBuilder.AppendLine(message.ToString(CultureInfo.InvariantCulture));
     }
 }

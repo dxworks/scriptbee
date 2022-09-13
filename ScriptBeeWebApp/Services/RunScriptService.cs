@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Models;
 using ScriptBee.Plugin;
@@ -15,6 +16,7 @@ using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 
+// todo add tests
 public class RunScriptService : IRunScriptService
 {
     private readonly IFileModelService _fileModelService;
@@ -38,7 +40,7 @@ public class RunScriptService : IRunScriptService
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetLoadedPlugins<ScriptRunnerPluginManifest>()
+        return _pluginRepository.GetLoadedPluginManifests<ScriptRunnerPluginManifest>()
             .Select(manifest => manifest.Spec.Language);
     }
 
@@ -71,6 +73,18 @@ public class RunScriptService : IRunScriptService
 
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
+        var runModel = await RunScriptAsync(project, projectModel, language, scriptName, loadedFiles, scriptContent,
+            cancellationToken);
+
+        await _runModelService.UpdateDocument(runModel, cancellationToken);
+
+        return runModel;
+    }
+
+    private async Task<RunModel> RunScriptAsync(IProject project, ProjectModel projectModel, string language,
+        string scriptName, Dictionary<string, List<string>> loadedFiles, string scriptContent,
+        CancellationToken cancellationToken = default)
+    {
         var runModel = new RunModel
         {
             RunIndex = projectModel.LastRunIndex,
@@ -84,9 +98,6 @@ public class RunScriptService : IRunScriptService
         await _runModelService.CreateDocument(runModel, cancellationToken);
 
         var resultCollector = new ResultCollector();
-
-        // todo create script runner using di
-        // todo register IResultCollector to the di container
 
         var helperFunctionSettings = new HelperFunctionsSettings(project.Id, runModel.Id);
 
@@ -129,7 +140,6 @@ public class RunScriptService : IRunScriptService
         {
             runModel.Errors = e.Message;
             await _runModelService.UpdateDocument(runModel, cancellationToken);
-            
         }
 
         await Task.WhenAll(helperFunctionsContainer.GetFunctions()
@@ -147,8 +157,6 @@ public class RunScriptService : IRunScriptService
                     break;
             }
         }
-
-        await _runModelService.UpdateDocument(runModel, cancellationToken);
 
         return runModel;
     }

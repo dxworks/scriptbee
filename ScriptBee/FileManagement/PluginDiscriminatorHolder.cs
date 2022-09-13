@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Plugin.Manifest;
 
 namespace ScriptBee.FileManagement;
@@ -12,10 +11,12 @@ public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
     {
         return new Dictionary<string, Type>
         {
-            { PluginTypes.ScriptGenerator, typeof(ScriptGeneratorPluginManifest) },
-            { PluginTypes.ScriptRunner, typeof(ScriptRunnerPluginManifest) },
-            { PluginTypes.HelperFunctions, typeof(HelperFunctionsPluginManifest) },
-            { PluginTypes.Ui, typeof(UiPluginManifest) },
+            { PluginKinds.ScriptGenerator, typeof(ScriptGeneratorPluginManifest) },
+            { PluginKinds.ScriptRunner, typeof(ScriptRunnerPluginManifest) },
+            { PluginKinds.HelperFunctions, typeof(HelperFunctionsPluginManifest) },
+            { PluginKinds.Loader, typeof(LoaderPluginManifest) },
+            { PluginKinds.Linker, typeof(LinkerPluginManifest) },
+            { PluginKinds.Ui, typeof(UiPluginManifest) },
         };
     }
 }

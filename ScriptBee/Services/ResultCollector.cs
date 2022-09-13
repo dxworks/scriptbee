@@ -2,6 +2,7 @@
 
 namespace ScriptBee.Services;
 
+// todo add tests
 public class ResultCollector : IResultCollector
 {
     private readonly List<RunResult> _results = new();

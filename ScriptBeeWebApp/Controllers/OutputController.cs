@@ -12,6 +12,7 @@ namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class OutputController : ControllerBase
 {
     private readonly IFileModelService _fileModelService;

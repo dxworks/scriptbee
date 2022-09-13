@@ -10,6 +10,7 @@ namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class UploadModelController : ControllerBase
 {
     private readonly IFileNameGenerator _fileNameGenerator;

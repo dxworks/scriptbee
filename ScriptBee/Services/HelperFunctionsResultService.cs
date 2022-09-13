@@ -7,6 +7,7 @@ using ScriptBee.Models;
 
 namespace ScriptBee.Services;
 
+// todo add tests
 public class HelperFunctionsResultService : IHelperFunctionsResultService
 {
     private readonly HelperFunctionsSettings _helperFunctionsSettings;

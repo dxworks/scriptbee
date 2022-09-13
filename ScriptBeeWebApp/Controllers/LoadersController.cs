@@ -1,53 +1,56 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class LoadersController : ControllerBase
 {
-    private readonly ILoadersHolder _loadersHolder;
+    private readonly ILoadersService _loadersService;
     private readonly IProjectModelService _projectModelService;
     private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IFileModelService _fileModelService;
     private readonly IProjectManager _projectManager;
     private readonly IProjectStructureService _projectStructureService;
+    private readonly IValidator<LoadModels> _loadModelsValidator;
 
-    public LoadersController(ILoadersHolder loadersHolder, IProjectModelService projectModelService,
+    public LoadersController(ILoadersService loadersService, IProjectModelService projectModelService,
         IFileNameGenerator fileNameGenerator, IFileModelService fileModelService, IProjectManager projectManager,
-        IProjectStructureService projectStructureService)
+        IProjectStructureService projectStructureService, IValidator<LoadModels> loadModelsValidator)
     {
-        _loadersHolder = loadersHolder;
+        _loadersService = loadersService;
         _projectModelService = projectModelService;
         _fileNameGenerator = fileNameGenerator;
         _fileModelService = fileModelService;
         _projectManager = projectManager;
         _projectStructureService = projectStructureService;
+        _loadModelsValidator = loadModelsValidator;
     }
 
     [HttpGet]
-    public IActionResult GetAllProjectLoaders()
+    public ActionResult<IEnumerable<string>> GetAllProjectLoaders()
     {
-        return Ok(_loadersHolder.GetAllLoaders().Select(modelLoader => modelLoader.GetName()).ToList());
+        return Ok(_loadersService.GetSupportedLoaders());
     }
 
     [HttpPost]
-    // todo extract validation to separate class
-    public async Task<IActionResult> LoadFiles(LoadModels loadModels, CancellationToken cancellationToken)
+    public async Task<IActionResult> LoadFiles(LoadModels loadModels, CancellationToken cancellationToken = default)
     {
-        if (loadModels == null || string.IsNullOrWhiteSpace(loadModels.ProjectId))
+        var validationResult = await _loadModelsValidator.ValidateAsync(loadModels, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Invalid arguments. ProjectId needed!");
+            return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
         var projectModel = await _projectModelService.GetDocument(loadModels.ProjectId, cancellationToken);
@@ -63,6 +66,7 @@ public class LoadersController : ControllerBase
             _projectManager.LoadProject(projectModel);
         }
 
+        // todo extract the loading in the LoadersService
         Dictionary<string, List<string>> loadedFiles = new();
 
         foreach (var (loaderName, models) in loadModels.Nodes)
@@ -86,7 +90,7 @@ public class LoadersController : ControllerBase
         {
             List<Stream> loadedFileStreams = new();
 
-            var modelLoader = _loadersHolder.GetModelLoader(loader);
+            var modelLoader = _loadersService.GetLoader(loader);
 
             if (modelLoader == null)
             {
@@ -109,8 +113,9 @@ public class LoadersController : ControllerBase
             }
         }
 
-        _projectStructureService.GenerateModelClasses(loadModels.ProjectId);
+        await _projectStructureService.GenerateModelClasses(loadModels.ProjectId, cancellationToken);
 
+        // todo return some dto object
         return Ok();
     }
 
@@ -140,11 +145,12 @@ public class LoadersController : ControllerBase
             _projectManager.LoadProject(projectModel);
         }
 
+        // todo extract the reloading in the LoadersService
         foreach (var (loader, loadedFileNames) in projectModel.LoadedFiles)
         {
             List<Stream> loadedFileStreams = new();
 
-            var modelLoader = _loadersHolder.GetModelLoader(loader);
+            var modelLoader = _loadersService.GetLoader(loader);
 
             if (modelLoader == null)
             {

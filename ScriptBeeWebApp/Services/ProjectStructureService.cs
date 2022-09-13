@@ -6,28 +6,27 @@ using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Config;
 using ScriptBee.Plugin;
-using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 
+// todo add tests
 public class ProjectStructureService : IProjectStructureService
 {
     private readonly IProjectManager _projectManager;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IPluginRepository _pluginRepository;
-    private readonly ILoadersHolder _loadersHolder;
+    private readonly ILoadersService _loadersService;
 
     public ProjectStructureService(IProjectManager projectManager,
         IProjectFileStructureManager projectFileStructureManager, IPluginRepository pluginRepository,
-        ILoadersHolder loadersHolder)
+        ILoadersService loadersService)
     {
         _projectManager = projectManager;
         _projectFileStructureManager = projectFileStructureManager;
         _pluginRepository = pluginRepository;
-        _loadersHolder = loadersHolder;
+        _loadersService = loadersService;
     }
 
     public async Task<(string extension, string content)> GetSampleCodeAsync(string scriptType,
@@ -42,14 +41,16 @@ public class ProjectStructureService : IProjectStructureService
             throw new Exception($"No plugin found for script type {scriptType}");
         }
 
+        var acceptedModules = _loadersService.GetAcceptedModules();
+
         var sampleCode =
-            await new SampleCodeGenerator(scriptGeneratorStrategy, _loadersHolder)
-                .GenerateSampleCode(cancellationToken);
+            await new SampleCodeGenerator(scriptGeneratorStrategy, acceptedModules).GenerateSampleCode(
+                cancellationToken);
 
         return (scriptGeneratorStrategy.Extension, sampleCode);
     }
 
-    public void GenerateModelClasses(string projectId)
+    public async Task GenerateModelClasses(string projectId, CancellationToken cancellationToken = default)
     {
         var project = _projectManager.GetProject(projectId);
 
@@ -59,28 +60,17 @@ public class ProjectStructureService : IProjectStructureService
         }
 
         var classes = project.Context.GetClasses();
+        var acceptedModules = _loadersService.GetAcceptedModules();
 
-        // _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy=>strategy)
+        var generatorStrategies = _pluginRepository.GetPlugins<IScriptGeneratorStrategy>();
+        foreach (var generatorStrategy in generatorStrategies)
+        {
+            var generatedClasses = await
+                new SampleCodeGenerator(generatorStrategy, acceptedModules)
+                    .GetSampleCode(classes);
 
-        // todo
-        // var pythonModelClasses =
-        //     new SampleCodeGenerator(new PythonScriptGeneratorStrategy(_fileContentProvider), _loadersHolder)
-        //         .GetSampleCode(classes);
-        //
-        // WriteSampleCodeFiles(pythonModelClasses, projectId, "python", ".py");
-        //
-        // var javascriptModelClasses = new SampleCodeGenerator(
-        //         new JavascriptScriptGeneratorStrategy(_fileContentProvider),
-        //         _loadersHolder)
-        //     .GetSampleCode(classes);
-        //
-        // WriteSampleCodeFiles(javascriptModelClasses, projectId, "javascript", ".js");
-        //
-        // var csharpModelClasses =
-        //     new SampleCodeGenerator(new CSharpScriptGeneratorStrategy(_fileContentProvider), _loadersHolder)
-        //         .GetSampleCode(classes);
-
-        // WriteSampleCodeFiles(csharpModelClasses, projectId, "csharp", ".cs");
+            WriteSampleCodeFiles(generatedClasses, projectId, generatorStrategy.Language, generatorStrategy.Extension);
+        }
     }
 
     private void WriteSampleCodeFiles(IEnumerable<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,

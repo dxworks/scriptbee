@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ScriptBee.Config;
 
 namespace ScriptBee.ProjectContext;
 
+// todo add tests
 public class ProjectFileStructureManager : IProjectFileStructureManager
 {
     private readonly string _userFolderPath;

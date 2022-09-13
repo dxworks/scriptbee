@@ -2,6 +2,7 @@
 
 namespace ScriptBeeWebApp.Services;
 
+// todo add tests
 public class FileNameGenerator : IFileNameGenerator
 {
     public string GenerateModelName(string projectId, string loaderName, string fileName)

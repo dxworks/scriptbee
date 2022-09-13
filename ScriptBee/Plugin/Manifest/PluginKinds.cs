@@ -1,6 +1,6 @@
 ﻿namespace ScriptBee.Plugin.Manifest;
 
-public static class PluginTypes
+public static class PluginKinds
 {
     public const string Linker = "Linker";
     public const string Loader = "Loader";

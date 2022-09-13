@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.ProjectContext;
-using ScriptBee.Services;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators;
 
@@ -14,7 +13,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
 {
     private readonly IScriptGeneratorStrategy _scriptGeneratorStrategy;
     private readonly HashSet<string> _generatedClassNames = new();
-    private readonly HashSet<string> _acceptedModules = new();
+    private readonly ISet<string> _acceptedModules;
 
     private const BindingFlags BindingFlags = System.Reflection.BindingFlags.DeclaredOnly |
                                               System.Reflection.BindingFlags.Instance |
@@ -24,15 +23,10 @@ public class SampleCodeGenerator : ISampleCodeGenerator
 
     private const string MethodName = "ExecuteScript";
 
-    // todo rethink acceptedModules
-    public SampleCodeGenerator(IScriptGeneratorStrategy scriptGeneratorStrategy, ILoadersHolder loadersHolder)
+    public SampleCodeGenerator(IScriptGeneratorStrategy scriptGeneratorStrategy, ISet<string> acceptedModules)
     {
         _scriptGeneratorStrategy = scriptGeneratorStrategy;
-
-        foreach (var modelLoader in loadersHolder.GetAllLoaders())
-        {
-            _acceptedModules.Add(modelLoader.GetType().Module.Name);
-        }
+        _acceptedModules = acceptedModules;
     }
 
     public async Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> objects,

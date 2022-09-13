@@ -8,6 +8,7 @@ using DxWorks.ScriptBee.Plugin.Api.Services;
 
 namespace ScriptBeeWebApp.Services;
 
+// todo add tests
 public class HelperFunctionsContainer : IHelperFunctionsContainer
 {
     private readonly IEnumerable<IHelperFunctions> _helperFunctions;

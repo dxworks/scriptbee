@@ -3,6 +3,7 @@ using System.IO;
 
 namespace ScriptBee.Config;
 
+// todo cleanup unused code
 public static class ConfigFolders
 {
     private const string Root = ".scriptbee";

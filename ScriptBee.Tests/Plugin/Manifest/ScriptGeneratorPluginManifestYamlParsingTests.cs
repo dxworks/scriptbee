@@ -26,7 +26,69 @@ public class ScriptGeneratorPluginManifestYamlParsingTests
         Assert.Equal("Plugin.dll", pluginManifest.Metadata.EntryPoint);
         Assert.Equal("ScriptGenerator example", pluginManifest.Metadata.Name);
         Assert.Equal("0.0.1", pluginManifest.Metadata.Version);
-        Assert.Null(pluginManifest.Spec);
+        Assert.Equal("csharp",pluginManifest.Spec.Language);
+        Assert.Equal(".cs",pluginManifest.Spec.Extension);
+    }
+
+    [Theory]
+    [FilePath("TestData/ScriptRunnerPluginManifest.yaml")]
+    public void GivenManifestContent_ThenScriptRunnerPluginManifestIsConstructed(string filePath)
+    {
+        var pluginManifest = (ScriptRunnerPluginManifest)_yamlFileReader.Read(filePath);
+
+        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("ScriptRunner", pluginManifest.Kind);
+        Assert.Equal("ScriptBee", pluginManifest.Metadata.Author);
+        Assert.Equal("Description", pluginManifest.Metadata.Description);
+        Assert.Equal("Plugin.dll", pluginManifest.Metadata.EntryPoint);
+        Assert.Equal("ScriptRunner example", pluginManifest.Metadata.Name);
+        Assert.Equal("0.0.1", pluginManifest.Metadata.Version);
+        Assert.Equal("csharp",pluginManifest.Spec.Language);
+    }
+    
+    [Theory]
+    [FilePath("TestData/HelperFunctionsPluginManifest.yaml")]
+    public void GivenManifestContent_ThenHelperFunctionsPluginManifestIsConstructed(string filePath)
+    {
+        var pluginManifest = (HelperFunctionsPluginManifest)_yamlFileReader.Read(filePath);
+
+        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("HelperFunctions", pluginManifest.Kind);
+        Assert.Equal("ScriptBee", pluginManifest.Metadata.Author);
+        Assert.Equal("Description", pluginManifest.Metadata.Description);
+        Assert.Equal("Plugin.dll", pluginManifest.Metadata.EntryPoint);
+        Assert.Equal("HelperFunctions example", pluginManifest.Metadata.Name);
+        Assert.Equal("0.0.1", pluginManifest.Metadata.Version);
+    }
+    
+    [Theory]
+    [FilePath("TestData/LoaderPluginManifest.yaml")]
+    public void GivenManifestContent_ThenLoaderPluginManifestIsConstructed(string filePath)
+    {
+        var pluginManifest = (LoaderPluginManifest)_yamlFileReader.Read(filePath);
+
+        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("Loader", pluginManifest.Kind);
+        Assert.Equal("ScriptBee", pluginManifest.Metadata.Author);
+        Assert.Equal("Description", pluginManifest.Metadata.Description);
+        Assert.Equal("Plugin.dll", pluginManifest.Metadata.EntryPoint);
+        Assert.Equal("Loader example", pluginManifest.Metadata.Name);
+        Assert.Equal("0.0.1", pluginManifest.Metadata.Version);
+    }
+    
+    [Theory]
+    [FilePath("TestData/LinkerPluginManifest.yaml")]
+    public void GivenManifestContent_ThenLinkerPluginManifestIsConstructed(string filePath)
+    {
+        var pluginManifest = (LinkerPluginManifest)_yamlFileReader.Read(filePath);
+
+        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("Linker", pluginManifest.Kind);
+        Assert.Equal("ScriptBee", pluginManifest.Metadata.Author);
+        Assert.Equal("Description", pluginManifest.Metadata.Description);
+        Assert.Equal("Plugin.dll", pluginManifest.Metadata.EntryPoint);
+        Assert.Equal("Linker example", pluginManifest.Metadata.Name);
+        Assert.Equal("0.0.1", pluginManifest.Metadata.Version);
     }
 
     [Theory]

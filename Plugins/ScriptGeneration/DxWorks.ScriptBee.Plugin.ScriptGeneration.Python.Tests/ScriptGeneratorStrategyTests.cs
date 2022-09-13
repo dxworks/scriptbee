@@ -1,29 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.ScriptGeneration.TestsCommon;
-using Moq;
 using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Services;
 using Xunit;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.Tests;
 
 public class ScriptGeneratorStrategyTests
 {
-    private readonly Mock<ILoadersHolder> _loadersHolderMock = new();
     private readonly SampleCodeGenerator _sampleCodeGenerator;
 
     public ScriptGeneratorStrategyTests()
     {
-        _loadersHolderMock.Setup(holder => holder.GetAllLoaders()).Returns(new List<IModelLoader>
+        _sampleCodeGenerator = new SampleCodeGenerator(new ScriptGeneratorStrategy(), new HashSet<string>
         {
-            new TestModelLoader()
+            new TestModelLoader().GetType().Module.Name
         });
-
-        var scriptGeneratorStrategy = new ScriptGeneratorStrategy();
-
-        _sampleCodeGenerator = new SampleCodeGenerator(scriptGeneratorStrategy, _loadersHolderMock.Object);
     }
 
     [Theory]

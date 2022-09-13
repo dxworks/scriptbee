@@ -8,5 +8,5 @@ public interface IProjectStructureService
     public Task<(string extension, string content)> GetSampleCodeAsync(string scriptType,
         CancellationToken cancellationToken = default);
 
-    public void GenerateModelClasses(string projectId);
+    public Task GenerateModelClasses(string projectId, CancellationToken cancellationToken = default);
 }

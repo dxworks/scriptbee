@@ -1,4 +1,4 @@
-﻿using ScriptBee.FileManagement;
+﻿using System;
 using Serilog;
 
 namespace ScriptBee.Plugin;
@@ -8,13 +8,13 @@ public class PluginManager
 {
     private readonly ILogger _logger;
     private readonly IPluginReader _pluginReader;
-    private readonly IPluginLoaderFactory _pluginLoaderFactory;
+    private readonly IPluginLoader _pluginLoader;
 
-    public PluginManager(ILogger logger, IPluginReader pluginReader, IPluginLoaderFactory pluginLoaderFactory)
+    public PluginManager(ILogger logger, IPluginReader pluginReader, IPluginLoader pluginLoader)
     {
         _logger = logger;
         _pluginReader = pluginReader;
-        _pluginLoaderFactory = pluginLoaderFactory;
+        _pluginLoader = pluginLoader;
     }
 
     // todo move to task
@@ -26,14 +26,13 @@ public class PluginManager
 
         foreach (var plugin in plugins)
         {
-            var pluginLoader = _pluginLoaderFactory.GetPluginLoader(plugin);
-            if (pluginLoader is null)
+            try
             {
-                _logger.Warning("Unknown plugin type {plugin}", plugin);
+                _pluginLoader.Load(plugin);
             }
-            else
+            catch (Exception e)
             {
-                pluginLoader.Load(plugin);
+                _logger.Error(e, "Failed to load plugin {plugin}", plugin);
             }
         }
     }

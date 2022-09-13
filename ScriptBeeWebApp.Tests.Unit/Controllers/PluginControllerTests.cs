@@ -14,16 +14,16 @@
 //
 // public class PluginControllerTests
 // {
-//     private readonly Mock<IPluginService> _pluginServiceMock;
+//     private readonly Mock<IPluginRepository> _pluginRepositoryMock;
 //     private readonly Fixture _fixture;
 //
 //     private readonly PluginController _pluginController;
 //
 //     public PluginControllerTests()
 //     {
-//         _pluginServiceMock = new Mock<IPluginService>();
+//         _pluginRepositoryMock = new Mock<IPluginRepository>();
 //
-//         _pluginController = new PluginController(_pluginServiceMock.Object);
+//         _pluginController = new PluginController(_pluginRepositoryMock.Object);
 //
 //         _fixture = new Fixture();
 //     }
@@ -31,7 +31,7 @@
 //     [Fact]
 //     public void GivenPlugins_WhenGetLoadedPlugins_ThenListOfPluginsIsReturned()
 //     {
-//         _pluginServiceMock.Setup(x => x.GetLoadedPlugins()).Returns(new List<PluginManifest>
+//         _pluginRepositoryMock.Setup(x => x.GetLoadedPlugins()).Returns(new List<PluginManifest>
 //         {
 //             _fixture.Create<ScriptGeneratorPluginManifest>(),
 //             _fixture.Create<UiPluginManifest>(),
@@ -48,7 +48,7 @@
 //     [Fact]
 //     public void GivenPluginType_WhenGetLoadedPlugins_ThenListOfPluginsIsReturned()
 //     {
-//         _pluginServiceMock.Setup(x => x.GetLoadedPlugins()).Returns(new List<PluginManifest>
+//         _pluginRepositoryMock.Setup(x => x.GetLoadedPlugins()).Returns(new List<PluginManifest>
 //         {
 //             _fixture.Create<ScriptGeneratorPluginManifest>(),
 //             _fixture.Build<UiPluginManifest>()

@@ -2,12 +2,14 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ScriptBee.Plugin.Manifest;
 
 namespace ScriptBee.Plugin;
 
+// todo add tests
 public class PluginRepository : IPluginRepository
 {
     private readonly ConcurrentBag<PluginManifest> _pluginManifests = new();
@@ -26,13 +28,13 @@ public class PluginRepository : IPluginRepository
     }
 
     public TService? GetPlugin<TService>(Func<TService, bool> filter,
-        IEnumerable<(Type @interface, object instance)>? services = null) where TService : class
+        IEnumerable<(Type @interface, object instance)>? services = null) where TService : IPlugin
     {
         return GetPlugins<TService>().FirstOrDefault();
     }
 
     public IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)
-        where TService : class
+        where TService : IPlugin
     {
         var serviceCollection = new ServiceCollection
         {
@@ -48,7 +50,7 @@ public class PluginRepository : IPluginRepository
             .GetServices<TService>();
     }
 
-    public IEnumerable<T> GetLoadedPlugins<T>() where T : PluginManifest
+    public IEnumerable<T> GetLoadedPluginManifests<T>() where T : PluginManifest
     {
         return _pluginManifests.OfType<T>();
     }
