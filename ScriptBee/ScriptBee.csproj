@@ -16,4 +16,10 @@
         <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
     
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Options">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.9\Microsoft.Extensions.Options.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    
 </Project>

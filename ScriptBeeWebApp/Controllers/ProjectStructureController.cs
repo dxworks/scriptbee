@@ -113,4 +113,14 @@ public class ProjectStructureController : ControllerBase
 
         return _projectFileStructureManager.GetProjectAbsolutePath(projectId);
     }
+
+    [HttpPost("filewatcher")]
+    // todo add validation
+    public IActionResult SetupFileWatcher([FromBody] SetupFileWatcher setupFileWatcher)
+    {
+        _projectFileStructureManager.SetupFileWatcher(setupFileWatcher.ProjectId, setupFileWatcher.FilePath);
+
+        // todo return something
+        return Ok("");
+    }
 }

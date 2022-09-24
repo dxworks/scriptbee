@@ -14,7 +14,9 @@ using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
+using ScriptBee.Services.Config;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Hubs;
 using ScriptBeeWebApp.Services;
 using Serilog;
 
@@ -45,14 +47,14 @@ public class Startup
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        var userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
+        // var userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
 
         services.AddSingleton(_ => mongoDatabase);
         services.AddSingleton<ILogger>(_ => new LoggerConfiguration().CreateLogger());
         services.AddSingleton<IPluginRepository, PluginRepository>();
         services.AddSingleton<IProjectManager, ProjectManager>();
-        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>(_ =>
-            new ProjectFileStructureManager(userFolderPath));
+        services.Configure<UserFolderSettings>(Configuration.GetSection("UserFolder"));
+        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
         services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
@@ -86,9 +88,19 @@ public class Startup
             return pluginRegistrationService;
         });
         services.AddSingleton<IPluginLoader, PluginLoader>();
+        services.AddSingleton<IFileWatcherHubService, FileWatcherHubService>();
+        services.AddSingleton<IFileWatcherService, FileWatcherService>();
 
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
-
+        services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyOrigin();
+            }
+        ));
+        services.AddSignalR();
         services.AddControllers();
         services.AddSwaggerGen();
     }
@@ -116,6 +128,8 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHub<FileWatcherHub>("/api/fileWatcherHub");
+
             endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller}/{action=Index}/{id?}");

@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { ThemeService } from './services/theme/theme.service';

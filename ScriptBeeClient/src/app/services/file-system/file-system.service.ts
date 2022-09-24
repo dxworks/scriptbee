@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {FileTreeNode} from '../../project-details/scripts-content/fileTreeNode';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {contentHeaders} from "../../shared/headers";
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { FileTreeNode } from '../../project-details/scripts-content/fileTreeNode';
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { contentHeaders } from "../../shared/headers";
 
 interface ScriptCreatedResult {
   filePath: string;
@@ -17,6 +17,7 @@ export class FileSystemService {
   private projectStructureScriptAPIUrl = '/api/projectstructure/script';
   private projectStructureScriptGetAbsolutePathAPIUrl = '/api/projectstructure/scriptabsolutepath';
   private projectStructureProjectAbsolutePath = '/api/projectstructure/projectabsolutepath';
+  private projectStructureFileWatcherUrl = '/api/projectstructure/filewatcher';
 
   constructor(private http: HttpClient) {
   }
@@ -46,11 +47,18 @@ export class FileSystemService {
     });
   }
 
-  getProjectAbsolutePath(projectId: string) : Observable<string> {
+  getProjectAbsolutePath(projectId: string): Observable<string> {
     const params = new HttpParams().set("projectId", projectId);
     return this.http.get<string>(this.projectStructureProjectAbsolutePath, {
       headers: contentHeaders,
       params: params
     });
+  }
+
+  postFileWatcher(projectId: string, filePath: string) {
+    return this.http.post(this.projectStructureFileWatcherUrl, {
+      projectId: projectId,
+      filePath: filePath
+    }, {headers: contentHeaders});
   }
 }

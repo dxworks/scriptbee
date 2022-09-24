@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { setOutput } from "../../../state/outputs/output.actions";
+import { NotificationsService } from "../../../services/notifications/notifications.service";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: 'app-selected-script',
@@ -26,13 +28,23 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
   constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
               private projectDetailsService: ProjectDetailsService, private route: ActivatedRoute,
               private runScriptService: RunScriptService, private snackBar: MatSnackBar,
-              private store: Store) {
+              private store: Store, private notificationService: NotificationsService) {
   }
 
   ngOnDestroy(): void {
   }
 
   ngOnInit(): void {
+
+    this.notificationService.watchedFiles
+      .subscribe({
+        next: watchedFile => {
+          if (this.scriptPath === watchedFile.path) {
+            this.code = watchedFile.content;
+          }
+        }
+      });
+
     this.route.params.subscribe(params => {
       if (params) {
         this.scriptPath = params['scriptPath'];
@@ -51,6 +63,9 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
             this.fileSystemService.getFileContent(project.projectId, this.scriptPath).subscribe(content => {
               this.code = content;
             });
+
+            this.fileSystemService.postFileWatcher(project.projectId, this.scriptPath)
+              .subscribe();
           }
         }, (error: any) => {
           this.snackBar.open('Could not get project!', 'Ok', {
