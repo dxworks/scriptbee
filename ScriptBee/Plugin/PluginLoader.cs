@@ -26,20 +26,19 @@ public class PluginLoader : IPluginLoader
     {
         if (_pluginRegistrationService.TryGetValue(plugin.Manifest.Kind, out var acceptedPluginTypes))
         {
+            if (!acceptedPluginTypes!.Any())
+            {
+                _pluginRepository.RegisterPlugin(plugin.Manifest);
+                return;
+            }
+
             var path = _fileService.CombinePaths(plugin.FolderPath, plugin.Manifest.Metadata.EntryPoint);
 
             var loadDllTypes = _dllLoader.LoadDllTypes(path, acceptedPluginTypes!).ToList();
 
-            if (loadDllTypes.Count == 0)
+            foreach (var (@interface, concrete) in loadDllTypes)
             {
-                _pluginRepository.RegisterPlugin(plugin.Manifest);
-            }
-            else
-            {
-                foreach (var (@interface, concrete) in loadDllTypes)
-                {
-                    _pluginRepository.RegisterPlugin(plugin.Manifest, @interface, concrete);
-                }
+                _pluginRepository.RegisterPlugin(plugin.Manifest, @interface, concrete);
             }
 
             _logger.Information("Plugin {pluginName} loaded", plugin.Manifest.Metadata.Name);

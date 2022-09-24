@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { ThemeService } from './services/theme/theme.service';
 import { PluginService } from "./services/plugin/plugin.service";
 import { loadRemoteModule } from "@angular-architects/module-federation";
+import { ResultsService } from "./services/plugin/results.service";
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { loadRemoteModule } from "@angular-architects/module-federation";
 export class AppComponent {
   title = 'app';
 
-  constructor(private router: Router, private themeService: ThemeService, private pluginService: PluginService) {
+  constructor(private router: Router, private themeService: ThemeService,
+              private pluginService: PluginService, private resultsService: ResultsService) {
     this.router.events.pipe(debounceTime(10))
       .subscribe(() => {
         themeService.update();
@@ -20,6 +22,29 @@ export class AppComponent {
 
     this.pluginService.getAllUiPlugins().subscribe(plugins => {
       plugins.forEach(plugin => {
+        console.log(plugin)
+        loadRemoteModule({
+          remoteEntry: plugin.spec.remoteEntry,
+          type: 'module',
+          exposedModule: plugin.spec.exposedModule,
+        }).then(m => {
+          console.log(m)
+          // console.log(m.LineChartComponent)
+          // if the exported is a module
+          // console.log(m.moduleType)
+          console.log(m.ChartsModule.ɵmod.declarations[0])
+          // console.log(m.ChartsModule[plugin.spec.componentName])
+          console.log(plugin.spec.componentName)
+          console.log(Object.keys(m.ChartsModule))
+
+          resultsService.addData({
+            name: plugin.spec.componentName,
+            component: m.ChartsModule.ɵmod.declarations[0],
+            module: m.ChartsModule,
+          })
+        });
+
+        // todo add to top navigation menu
         this.router.config.unshift({
             path: plugin.spec.componentName,
             loadChildren: () => loadRemoteModule({

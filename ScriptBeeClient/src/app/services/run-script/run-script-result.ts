@@ -1,10 +1,13 @@
-import {OutputFile} from '../output/output-file';
-
 export interface RunScriptResult {
   runId: string;
+  runIndex: number;
   projectId: string;
-  consoleOutputName: string;
-  outputFiles: OutputFile[];
-  errors?: string;
+  results: OutputResult[];
+}
+
+export interface OutputResult {
+  outputId: string;
+  outputType: string;
+  path: string;
 }
 

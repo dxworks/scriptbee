@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.ProjectContext;
@@ -73,21 +73,32 @@ public class RunScriptController : ControllerBase
         (
             runModel.Id,
             runModel.RunIndex,
-            runModel.ProjectId,
-            runModel.ConsoleOutputName,
-            runModel.Errors
+            runModel.ProjectId
         );
 
-        var outputFiles = runModel.OutputFileNames.Select(outputFileDatabaseName =>
+        if (!string.IsNullOrEmpty(runModel.Errors))
+        {
+            // todo add errors to database
+            // runModel.ConsoleOutputName,
+            // runModel.Errors
+            // returnedRun.Results.Add(new OutputResult());
+        }
+
+        if (!string.IsNullOrEmpty(runModel.ConsoleOutputName))
+        {
+            // todo generate an unique id for each output file
+            returnedRun.Results.Add(new OutputResult(runModel.ConsoleOutputName, RunResultDefaultTypes.ConsoleType,
+                runModel.ConsoleOutputName));
+        }
+
+        foreach (var outputFileDatabaseName in runModel.OutputFileNames)
         {
             var (_, _, outputType, outputName) =
                 _fileNameGenerator.ExtractOutputFileNameComponents(outputFileDatabaseName);
 
-            return new OutputFile(outputName, outputType, outputFileDatabaseName);
-        }).ToList();
-
-
-        returnedRun.OutputFiles = outputFiles;
+            // todo generate an unique id for each output file
+            returnedRun.Results.Add(new OutputResult(outputFileDatabaseName, outputType, outputFileDatabaseName));
+        }
 
         return Ok(returnedRun);
     }

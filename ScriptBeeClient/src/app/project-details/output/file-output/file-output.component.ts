@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {OutputFile} from '../../../services/output/output-file';
 import {OutputFilesService} from '../../../services/output/output-files.service';
-import {HttpEventType, HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-file-output',

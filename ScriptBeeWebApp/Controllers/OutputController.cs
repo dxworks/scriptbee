@@ -27,6 +27,17 @@ public class OutputController : ControllerBase
         _runModelService = runModelService;
     }
 
+    [HttpGet("{outputId}")]
+    public async Task<ActionResult<string>> GetOutput([FromRoute] string outputId)
+    {
+        await using var outputStream = await _fileModelService.GetFileAsync(outputId);
+        using var streamReader = new StreamReader(outputStream);
+
+        var outputContent = await streamReader.ReadToEndAsync();
+        return Ok(outputContent);
+    }
+
+
     [HttpGet("console")]
     public async Task<IActionResult> GetConsoleOutputContent([FromQuery] string consoleOutputPath)
     {

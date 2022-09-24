@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {contentHeaders} from '../../shared/headers';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { contentHeaders } from '../../shared/headers';
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class OutputFilesService {
-
+  private getOutputDataUrl = '/api/output';
   private getConsoleOutputApiURL = '/api/output/console';
   private downloadFileApiURL = '/api/output/files/download';
   private downloadAllApiURL = '/api/output/files/downloadAll';
@@ -39,6 +40,12 @@ export class OutputFilesService {
     }, {
       headers: contentHeaders,
       responseType: 'blob'
+    });
+  }
+
+  fetchOutput(outputId: string): Observable<any> {
+    return this.http.get<any>(`${this.getOutputDataUrl}/${outputId}`, {
+      headers: contentHeaders
     });
   }
 }

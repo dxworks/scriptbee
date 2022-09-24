@@ -6,7 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { RunScriptService } from '../../../services/run-script/run-script.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
-import { first } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { setOutput } from "../../../state/outputs/output.actions";
 
 @Component({
   selector: 'app-selected-script',
@@ -24,7 +25,8 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
 
   constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
               private projectDetailsService: ProjectDetailsService, private route: ActivatedRoute,
-              private runScriptService: RunScriptService, private snackBar: MatSnackBar) {
+              private runScriptService: RunScriptService, private snackBar: MatSnackBar,
+              private store: Store) {
   }
 
   ngOnDestroy(): void {
@@ -71,11 +73,25 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
     // this.projectDetailsService.lastRunErrorMessage.next('');
     this.isLoadingResults = true;
 
+    // todo refactor to use rxjs not nested subscribes
     this.projectDetailsService.project.subscribe(project => {
       if (project) {
         // todo remove hardcoded values
+        // todo change subscribe signature
         this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath, 'python').subscribe((result) => {
             if (result) {
+              console.log(result)
+
+              result.results.forEach(r => {
+                this.store.dispatch(setOutput({
+                  outputId: r.outputId,
+                  projectId: result.projectId,
+                  outputType: r.outputType,
+                  path: r.path,
+                  loading: false
+                }))
+              });
+
               this.isLoadingResults = false;
               this.projectDetailsService.lastRunResult.next(result);
               this.projectDetailsService.lastRunErrorMessage.next('');

@@ -155,11 +155,6 @@ public class RunScriptControllerTests
             .With(r => r.OutputFileNames, new List<string> { "output" })
             .Create();
 
-        var expectedOutputFiles = new List<OutputFile>
-        {
-            new("fileName", "outputType", "output")
-        };
-
         _runScriptValidatorMock.Setup(x => x.ValidateAsync(runScript, default))
             .ReturnsAsync(new ValidationResult());
         _projectManagerMock.Setup(x => x.GetProject(runScript.ProjectId))
@@ -181,8 +176,14 @@ public class RunScriptControllerTests
         Assert.Equal(runModel.Id, returnedRun.RunId);
         Assert.Equal(runModel.ProjectId, returnedRun.ProjectId);
         Assert.Equal(runModel.RunIndex, returnedRun.RunIndex);
-        Assert.Equal(runModel.ConsoleOutputName, returnedRun.ConsoleOutputName);
-        Assert.Equal(runModel.Errors, returnedRun.Errors);
-        Assert.Equal(expectedOutputFiles, returnedRun.OutputFiles);
+        Assert.Equal(2, returnedRun.Results.Count);
+        var firsResult = returnedRun.Results[0];
+        Assert.Equal("Console", firsResult.OutputType);
+        Assert.Equal(runModel.ConsoleOutputName, firsResult.OutputId);
+        Assert.Equal(runModel.ConsoleOutputName, firsResult.Path);
+        var secondResult = returnedRun.Results[1];
+        Assert.Equal("outputType", secondResult.OutputType);
+        Assert.Equal("output", secondResult.OutputId);
+        Assert.Equal("output", secondResult.Path);
     }
 }

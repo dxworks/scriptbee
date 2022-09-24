@@ -5,12 +5,14 @@ namespace ScriptBeeWebApp.Controllers.Arguments;
 public record ReturnedRun(
     string RunId,
     long RunIndex,
-    string ProjectId,
-    string ConsoleOutputName,
-    string? Errors
+    string ProjectId
 )
 {
-    public List<OutputFile> OutputFiles { get; set; } = new();
+    public List<OutputResult> Results { get; set; } = new();
 }
 
-public record OutputFile(string FileName, string FileType, string FilePath);
+public record OutputResult(
+    string OutputId,
+    string OutputType,
+    string Path
+);
