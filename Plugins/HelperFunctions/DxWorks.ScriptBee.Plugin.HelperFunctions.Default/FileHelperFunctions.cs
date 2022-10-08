@@ -1,6 +1,6 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api.Services;
 
-namespace DxWorks.ScriptBee.Plugin.HelperFunctions.File;
+namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
 public class FileHelperFunctions
 {

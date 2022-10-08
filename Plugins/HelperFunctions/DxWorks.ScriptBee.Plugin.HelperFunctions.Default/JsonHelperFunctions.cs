@@ -2,7 +2,7 @@
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using Newtonsoft.Json;
 
-namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Json;
+namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
 public class JsonHelperFunctions : IHelperFunctions
 {

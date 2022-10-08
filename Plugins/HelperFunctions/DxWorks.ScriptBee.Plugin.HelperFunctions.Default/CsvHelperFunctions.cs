@@ -3,7 +3,7 @@ using CsvHelper;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 
-namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Csv;
+namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
 public class CsvHelperFunctions : IHelperFunctions
 {
