@@ -1,8 +1,12 @@
-﻿namespace ScriptBee.Plugin.Manifest;
+﻿using System.Collections.Generic;
 
-public abstract class PluginManifest
+namespace ScriptBee.Plugin.Manifest;
+
+public class PluginManifest
 {
     public string ApiVersion { get; set; } = ""; // todo use it
-    public string Kind { get; set; } = "";
-    public PluginManifestMetadata Metadata { get; set; } = new();
+    public string Name { get; set; } = "";
+    public string? Description { get; set; }
+    public string? Author { get; set; }
+    public List<PluginExtensionPoint> ExtensionPoints { get; set; } = new();
 }

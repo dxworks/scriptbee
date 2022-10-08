@@ -18,8 +18,9 @@ public class LoadersService : ILoadersService
 
     public IEnumerable<string> GetSupportedLoaders()
     {
-        return _pluginRepository.GetLoadedPluginManifests<LoaderPluginManifest>()
-            .Select(manifest => manifest.Metadata.Name);
+        return _pluginRepository.GetLoadedPluginManifests()
+            .Where(manifest => manifest.ExtensionPoints.Any(extensionPoint => extensionPoint.Kind == PluginKind.Loader))
+            .Select(manifest => manifest.Name);
     }
 
     public IModelLoader? GetLoader(string name)
@@ -32,9 +33,7 @@ public class LoadersService : ILoadersService
         var acceptedModules = new HashSet<string>();
 
         foreach (var modelLoader in _pluginRepository.GetPlugins<IModelLoader>())
-        {
             acceptedModules.Add(modelLoader.GetType().Module.Name);
-        }
 
         return acceptedModules;
     }

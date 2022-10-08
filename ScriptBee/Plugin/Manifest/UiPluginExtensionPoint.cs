@@ -1,11 +1,6 @@
 namespace ScriptBee.Plugin.Manifest;
 
-public class UiPluginManifest : PluginManifest
-{
-    public UiPluginManifestSpec Spec { get; set; } = new();
-}
-
-public class UiPluginManifestSpec
+public class UiPluginExtensionPoint : PluginExtensionPoint
 {
     public int Port { get; set; }
     public string RemoteEntry { get; set; } = "";

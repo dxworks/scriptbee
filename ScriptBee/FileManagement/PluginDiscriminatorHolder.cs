@@ -11,12 +11,12 @@ public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
     {
         return new Dictionary<string, Type>
         {
-            { PluginKinds.ScriptGenerator, typeof(ScriptGeneratorPluginManifest) },
-            { PluginKinds.ScriptRunner, typeof(ScriptRunnerPluginManifest) },
-            { PluginKinds.HelperFunctions, typeof(HelperFunctionsPluginManifest) },
-            { PluginKinds.Loader, typeof(LoaderPluginManifest) },
-            { PluginKinds.Linker, typeof(LinkerPluginManifest) },
-            { PluginKinds.Ui, typeof(UiPluginManifest) },
+            { PluginKind.ScriptGenerator, typeof(ScriptGeneratorPluginExtensionPoint) },
+            { PluginKind.ScriptRunner, typeof(ScriptRunnerPluginExtensionPoint) },
+            { PluginKind.HelperFunctions, typeof(HelperFunctionsPluginExtensionPoint) },
+            { PluginKind.Loader, typeof(LoaderPluginExtensionPoint) },
+            { PluginKind.Linker, typeof(LinkerPluginExtensionPoint) },
+            { PluginKind.Ui, typeof(UiPluginExtensionPoint) }
         };
     }
 }

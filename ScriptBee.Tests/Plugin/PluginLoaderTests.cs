@@ -11,13 +11,13 @@ namespace ScriptBee.Tests.Plugin;
 
 public class PluginLoaderTests
 {
-    private readonly Mock<ILogger> _loggerMock;
-    private readonly Mock<IFileService> _fileServiceMock;
     private readonly Mock<IDllLoader> _dllLoaderMock;
-    private readonly Mock<IPluginRepository> _pluginRepositoryMock;
-    private readonly Mock<IPluginRegistrationService> _pluginRegistrationServiceMock;
+    private readonly Mock<IFileService> _fileServiceMock;
+    private readonly Mock<ILogger> _loggerMock;
 
     private readonly PluginLoader _pluginLoader;
+    private readonly Mock<IPluginRegistrationService> _pluginRegistrationServiceMock;
+    private readonly Mock<IPluginRepository> _pluginRepositoryMock;
 
     public PluginLoaderTests()
     {
@@ -42,7 +42,8 @@ public class PluginLoaderTests
 
         _pluginLoader.Load(plugin);
 
-        _loggerMock.Verify(l => l.Warning("Plugin kind {pluginKind} is not supported", plugin.Manifest.Kind));
+        _loggerMock.Verify(l =>
+            l.Warning("Plugin kind {PluginKind} is not supported", plugin.Manifest.ExtensionPoints[0].Kind));
     }
 
     [Fact]
@@ -53,7 +54,7 @@ public class PluginLoaderTests
 
         _pluginRegistrationServiceMock.Setup(s => s.TryGetValue(It.IsAny<string>(), out acceptedTypes))
             .Returns(true);
-        _fileServiceMock.Setup(s => s.CombinePaths(plugin.FolderPath, plugin.Manifest.Metadata.EntryPoint))
+        _fileServiceMock.Setup(s => s.CombinePaths(plugin.FolderPath, plugin.Manifest.ExtensionPoints[0].EntryPoint))
             .Returns("entrypoint.dll");
         _dllLoaderMock.Setup(l => l.LoadDllTypes("entrypoint.dll", acceptedTypes))
             .Returns(new List<(Type @interface, Type concrete)>());
@@ -69,19 +70,19 @@ public class PluginLoaderTests
         var acceptedTypes = new HashSet<Type>
         {
             typeof(string),
-            typeof(object),
+            typeof(object)
         };
         var plugin = new TestPlugin();
 
         _pluginRegistrationServiceMock.Setup(s => s.TryGetValue(It.IsAny<string>(), out acceptedTypes))
             .Returns(true);
-        _fileServiceMock.Setup(s => s.CombinePaths(plugin.FolderPath, plugin.Manifest.Metadata.EntryPoint))
+        _fileServiceMock.Setup(s => s.CombinePaths(plugin.FolderPath, plugin.Manifest.ExtensionPoints[0].EntryPoint))
             .Returns("entrypoint.dll");
         _dllLoaderMock.Setup(l => l.LoadDllTypes("entrypoint.dll", acceptedTypes))
             .Returns(new List<(Type @interface, Type concrete)>
             {
                 (typeof(string), typeof(string)),
-                (typeof(object), typeof(object)),
+                (typeof(object), typeof(object))
             });
 
         _pluginLoader.Load(plugin);

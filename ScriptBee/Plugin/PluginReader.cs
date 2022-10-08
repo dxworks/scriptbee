@@ -10,19 +10,17 @@ namespace ScriptBee.Plugin;
 public class PluginReader : IPluginReader
 {
     private const string ManifestYaml = "manifest.yaml";
+    private readonly IFileService _fileService;
 
     private readonly ILogger _logger;
-    private readonly IFileService _fileService;
     private readonly IPluginManifestYamlFileReader _pluginManifestYamlFileReader;
-    private readonly IPluginManifestValidator _manifestValidator;
 
     public PluginReader(ILogger logger, IFileService fileService,
-        IPluginManifestYamlFileReader pluginManifestYamlFileReader, IPluginManifestValidator manifestValidator)
+        IPluginManifestYamlFileReader pluginManifestYamlFileReader)
     {
         _logger = logger;
         _fileService = fileService;
         _pluginManifestYamlFileReader = pluginManifestYamlFileReader;
-        _manifestValidator = manifestValidator;
     }
 
     public IEnumerable<Models.Plugin> ReadPlugins(string pluginFolderPath)
@@ -31,11 +29,11 @@ public class PluginReader : IPluginReader
 
         var pluginDirectories = _fileService.GetDirectories(pluginFolderPath).ToList();
 
-        _logger.Information("Found {pluginCount} plugin directories", pluginDirectories.Count);
+        _logger.Information("Found {PluginCount} plugin directories", pluginDirectories.Count);
 
         foreach (var pluginDirectory in pluginDirectories)
         {
-            _logger.Information("Reading manifest from {pluginDirectory}", pluginDirectory);
+            _logger.Information("Reading manifest from {PluginDirectory}", pluginDirectory);
 
             try
             {
@@ -43,23 +41,16 @@ public class PluginReader : IPluginReader
 
                 if (pluginManifest != null)
                 {
-                    if (_manifestValidator.Validate(pluginManifest))
-                    {
-                        plugins.Add(new Models.Plugin(pluginDirectory, pluginManifest));
-                    }
-                    else
-                    {
-                        _logger.Warning("Manifest validation failed for {pluginDirectory}", pluginDirectory);
-                    }
+                    plugins.Add(new Models.Plugin(pluginDirectory, pluginManifest));
                 }
                 else
                 {
-                    _logger.Warning("Manifest not found in {pluginDirectory}", pluginDirectory);
+                    _logger.Warning("Manifest not found in {PluginDirectory}", pluginDirectory);
                 }
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Error reading manifest from {pluginDirectory}", pluginDirectory);
+                _logger.Error(e, "Error reading manifest from {PluginDirectory}", pluginDirectory);
             }
         }
 

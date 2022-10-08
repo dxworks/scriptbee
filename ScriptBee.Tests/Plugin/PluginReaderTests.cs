@@ -14,24 +14,21 @@ namespace ScriptBee.Tests.Plugin;
 
 public class PluginReaderTests
 {
-    private readonly Mock<ILogger> _loggerMock;
     private readonly Mock<IFileService> _fileServiceMock;
-    private readonly Mock<IPluginManifestYamlFileReader> _yamlFileReaderMock;
-    private readonly Mock<IPluginManifestValidator> _pluginManifestValidatorMock;
     private readonly Fixture _fixture;
+    private readonly Mock<ILogger> _loggerMock;
 
     private readonly PluginReader _pluginReader;
+    private readonly Mock<IPluginManifestYamlFileReader> _yamlFileReaderMock;
 
     public PluginReaderTests()
     {
         _loggerMock = new Mock<ILogger>();
         _fileServiceMock = new Mock<IFileService>();
         _yamlFileReaderMock = new Mock<IPluginManifestYamlFileReader>();
-        _pluginManifestValidatorMock = new Mock<IPluginManifestValidator>();
         _fixture = new Fixture();
 
-        _pluginReader = new PluginReader(_loggerMock.Object, _fileServiceMock.Object, _yamlFileReaderMock.Object,
-            _pluginManifestValidatorMock.Object);
+        _pluginReader = new PluginReader(_loggerMock.Object, _fileServiceMock.Object, _yamlFileReaderMock.Object);
     }
 
     [Fact]
@@ -68,31 +65,17 @@ public class PluginReaderTests
     }
 
     [Fact]
-    public void GivenInvalidManifest_WhenReadPlugins_ThenReturnEmptyList()
-    {
-        _fileServiceMock.Setup(x => x.GetDirectories(It.IsAny<string>()))
-            .Returns(new List<string> { "path" });
-        _fileServiceMock.Setup(x => x.CombinePaths("path", "manifest.yaml"))
-            .Returns("path/manifest.yaml");
-        _fileServiceMock.Setup(x => x.FileExists(It.IsAny<string>()))
-            .Returns(true);
-        _yamlFileReaderMock.Setup(x => x.Read("path/manifest.yaml"))
-            .Returns(new TestPluginManifest());
-        _pluginManifestValidatorMock.Setup(x => x.Validate(It.IsAny<PluginManifest>()))
-            .Returns(false);
-
-        var result = _pluginReader.ReadPlugins("path");
-
-        Assert.Empty(result);
-
-        _loggerMock.Verify(l => l.Warning("Manifest validation failed for {pluginDirectory}", "path"));
-    }
-
-    [Fact]
     public void GivenValidManifests_WhenReadPlugins_ThenReturnManifests()
     {
-        var pluginManifest1 = _fixture.Create<ScriptGeneratorPluginManifest>();
-        var pluginManifest2 = _fixture.Create<UiPluginManifest>();
+        var pluginExtensionPoint1 = _fixture.Create<ScriptGeneratorPluginExtensionPoint>();
+        var pluginExtensionPoint2 = _fixture.Create<UiPluginExtensionPoint>();
+
+        var pluginManifest1 = _fixture.Build<PluginManifest>()
+            .With(p => p.ExtensionPoints, new List<PluginExtensionPoint> { pluginExtensionPoint1 })
+            .Create();
+        var pluginManifest2 = _fixture.Build<PluginManifest>()
+            .With(p => p.ExtensionPoints, new List<PluginExtensionPoint> { pluginExtensionPoint2 })
+            .Create();
 
         const string path1ManifestYaml = "path1/manifest.yaml";
         const string path2ManifestYaml = "path2/manifest.yaml";
@@ -105,8 +88,6 @@ public class PluginReaderTests
         _fileServiceMock.Setup(x => x.FileExists(path2ManifestYaml)).Returns(true);
         _yamlFileReaderMock.Setup(x => x.Read(path1ManifestYaml)).Returns(pluginManifest1);
         _yamlFileReaderMock.Setup(x => x.Read(path2ManifestYaml)).Returns(pluginManifest2);
-        _pluginManifestValidatorMock.Setup(x => x.Validate(pluginManifest1)).Returns(true);
-        _pluginManifestValidatorMock.Setup(x => x.Validate(pluginManifest2)).Returns(true);
 
         var result = _pluginReader.ReadPlugins("path").ToList();
 

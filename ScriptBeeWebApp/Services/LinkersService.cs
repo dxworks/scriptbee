@@ -17,8 +17,9 @@ public class LinkersService : ILinkersService
 
     public IEnumerable<string> GetSupportedLinkers()
     {
-        return _pluginRepository.GetLoadedPluginManifests<LinkerPluginManifest>()
-            .Select(manifest => manifest.Metadata.Name);
+        return _pluginRepository.GetLoadedPluginManifests()
+            .Where(manifest => manifest.ExtensionPoints.Any(extensionPoint => extensionPoint.Kind == PluginKind.Linker))
+            .Select(manifest => manifest.Name);
     }
 
     public IModelLinker? GetLinker(string name)

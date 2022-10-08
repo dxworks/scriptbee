@@ -25,8 +25,8 @@ public class GenerateScriptService : IGenerateScriptService
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetLoadedPluginManifests<ScriptGeneratorPluginManifest>()
-            .Select(manifest => manifest.Spec.Language);
+        return _pluginRepository.GetLoadedPluginExtensionPoints<ScriptGeneratorPluginExtensionPoint>()
+            .Select(extensionPoint => extensionPoint.Language);
     }
 
     public IScriptGeneratorStrategy? GetGenerationStrategy(string scriptType)

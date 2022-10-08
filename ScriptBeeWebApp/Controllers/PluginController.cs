@@ -22,20 +22,18 @@ public class PluginController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<PluginManifest>> GetLoadedPlugins([FromQuery] string? type = null)
     {
-        if (string.IsNullOrEmpty(type))
-        {
-            return Ok(_pluginRepository.GetLoadedPluginManifests<PluginManifest>());
-        }
+        if (string.IsNullOrEmpty(type)) return Ok(_pluginRepository.GetLoadedPluginManifests());
 
         return Ok(
-            _pluginRepository.GetLoadedPluginManifests<PluginManifest>()
-                .Where(manifest => manifest.Kind == type));
+            _pluginRepository.GetLoadedPluginManifests()
+                .Where(manifest =>
+                    manifest.ExtensionPoints.Any(extensionPoint => extensionPoint.Kind == type)));
     }
 
     // todo temporary workaround until above todo is fixed
     [HttpGet("ui")]
-    public ActionResult<IEnumerable<UiPluginManifest>> GetLoadedUiPlugins()
+    public ActionResult<IEnumerable<UiPluginExtensionPoint>> GetLoadedUiPlugins()
     {
-        return Ok(_pluginRepository.GetLoadedPluginManifests<UiPluginManifest>());
+        return Ok(_pluginRepository.GetLoadedPluginExtensionPoints<UiPluginExtensionPoint>());
     }
 }

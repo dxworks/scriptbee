@@ -42,16 +42,24 @@ public class PluginRepository : IPluginRepository
         };
 
         if (services is not null)
-        {
             serviceCollection.Add(services.Select(s => new ServiceDescriptor(s.@interface, s.instance)));
-        }
 
         return serviceCollection.BuildServiceProvider()
             .GetServices<TService>();
     }
 
-    public IEnumerable<T> GetLoadedPluginManifests<T>() where T : PluginManifest
+    public PluginManifest? GetLoadedPluginManifest(string name)
     {
-        return _pluginManifests.OfType<T>();
+        return GetLoadedPluginManifests().FirstOrDefault(manifest => manifest.Name == name);
+    }
+
+    public IEnumerable<PluginManifest> GetLoadedPluginManifests()
+    {
+        return _pluginManifests;
+    }
+
+    public IEnumerable<T> GetLoadedPluginExtensionPoints<T>() where T : PluginExtensionPoint
+    {
+        return _pluginManifests.SelectMany(p => p.ExtensionPoints).OfType<T>();
     }
 }

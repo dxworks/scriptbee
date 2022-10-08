@@ -9,10 +9,7 @@ namespace ScriptBee.FileManagement.Yaml;
 
 public class PluginManifestSpecTypeDiscriminator : ITypeDiscriminator
 {
-    public Type BaseType => typeof(PluginManifest);
-
-    private const string TargetKey = nameof(PluginManifest.Kind);
-
+    private const string TargetKey = nameof(PluginExtensionPoint.Kind);
     private readonly string _targetKey;
     private readonly Dictionary<string, Type> _typeLookup;
 
@@ -21,6 +18,8 @@ public class PluginManifestSpecTypeDiscriminator : ITypeDiscriminator
         _typeLookup = typeLookup;
         _targetKey = namingConvention.Apply(TargetKey);
     }
+
+    public Type BaseType => typeof(PluginExtensionPoint);
 
     public bool TryResolve(ParsingEventBuffer buffer, out Type? suggestedType)
     {

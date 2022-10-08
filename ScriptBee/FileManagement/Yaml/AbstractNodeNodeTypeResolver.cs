@@ -21,7 +21,7 @@ public class AbstractNodeNodeTypeResolver : INodeDeserializer
                 $"{nameof(AbstractNodeNodeTypeResolver)} requires the original resolver to be a {nameof(ObjectNodeDeserializer)}");
         }
 
-        this._original = original;
+        _original = original;
         _typeDiscriminators = discriminators;
     }
 

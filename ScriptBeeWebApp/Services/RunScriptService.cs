@@ -20,11 +20,11 @@ namespace ScriptBeeWebApp.Services;
 public class RunScriptService : IRunScriptService
 {
     private readonly IFileModelService _fileModelService;
-    private readonly IRunModelService _runModelService;
-    private readonly IProjectModelService _projectModelService;
     private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IPluginRepository _pluginRepository;
+    private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IProjectModelService _projectModelService;
+    private readonly IRunModelService _runModelService;
 
     public RunScriptService(IFileModelService fileModelService, IRunModelService runModelService,
         IProjectModelService projectModelService, IFileNameGenerator fileNameGenerator,
@@ -40,8 +40,10 @@ public class RunScriptService : IRunScriptService
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetLoadedPluginManifests<ScriptRunnerPluginManifest>()
-            .Select(manifest => manifest.Spec.Language);
+        return _pluginRepository.GetLoadedPluginManifests()
+            .SelectMany(manifest => manifest.ExtensionPoints)
+            .OfType<ScriptRunnerPluginExtensionPoint>()
+            .Select(manifest => manifest.Language);
     }
 
     public async Task<RunModel?> RunAsync(Project project, ProjectModel projectModel, string language,
@@ -49,10 +51,7 @@ public class RunScriptService : IRunScriptService
     {
         var scriptContent =
             await _projectFileStructureManager.GetFileContentAsync(project.Id, scriptFilePath);
-        if (scriptContent == null)
-        {
-            return null;
-        }
+        if (scriptContent == null) return null;
 
         var scriptName = _fileNameGenerator.GenerateScriptName(project.Id, scriptFilePath);
 
@@ -64,10 +63,7 @@ public class RunScriptService : IRunScriptService
 
         var loadedFiles = new Dictionary<string, List<string>>();
 
-        foreach (var (loaderName, files) in projectModel.LoadedFiles)
-        {
-            loadedFiles[loaderName] = files;
-        }
+        foreach (var (loaderName, files) in projectModel.LoadedFiles) loadedFiles[loaderName] = files;
 
         projectModel.LastRunIndex++;
 
@@ -91,7 +87,7 @@ public class RunScriptService : IRunScriptService
             ProjectId = project.Id,
             ScriptName = scriptName,
             Linker = projectModel.Linker,
-            LoadedFiles = loadedFiles,
+            LoadedFiles = loadedFiles
         };
 
 
@@ -117,18 +113,12 @@ public class RunScriptService : IRunScriptService
 
         var scriptRunner = _pluginRepository.GetPlugin<IScriptRunner>(runner => runner.Language == language);
 
-        if (scriptRunner is null)
-        {
-            throw new Exception("Script runner not found");
-        }
+        if (scriptRunner is null) throw new Exception("Script runner not found");
 
         var scriptGeneratorStrategy =
             _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == language);
 
-        if (scriptGeneratorStrategy is null)
-        {
-            throw new Exception("Script generator strategy not found");
-        }
+        if (scriptGeneratorStrategy is null) throw new Exception("Script generator strategy not found");
 
         try
         {
@@ -146,7 +136,6 @@ public class RunScriptService : IRunScriptService
             .Select(f => f.OnUnloadAsync(cancellationToken)));
 
         foreach (var (filePath, type) in resultCollector.GetResults())
-        {
             switch (type)
             {
                 case RunResultDefaultTypes.ConsoleType:
@@ -156,7 +145,6 @@ public class RunScriptService : IRunScriptService
                     runModel.OutputFileNames.Add(filePath);
                     break;
             }
-        }
 
         return runModel;
     }

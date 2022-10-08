@@ -66,7 +66,6 @@ public class Startup
         services.AddSingleton<IGenerateScriptService, GenerateScriptService>();
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IFileModelService, FileModelService>();
-        services.AddSingleton<IPluginManifestValidator, PluginManifestValidator>();
         services.AddSingleton<IPluginReader, PluginReader>();
         services.AddSingleton<IDllLoader, DllLoader>();
         services.AddSingleton<IRunScriptService, RunScriptService>();
@@ -75,15 +74,15 @@ public class Startup
         {
             var pluginRegistrationService = new PluginRegistrationService();
 
-            pluginRegistrationService.Add(PluginKinds.Loader, new HashSet<Type> { typeof(IModelLoader) });
-            pluginRegistrationService.Add(PluginKinds.Linker, new HashSet<Type> { typeof(IModelLinker) });
-            pluginRegistrationService.Add(PluginKinds.ScriptGenerator,
+            pluginRegistrationService.Add(PluginKind.Loader, new HashSet<Type> { typeof(IModelLoader) });
+            pluginRegistrationService.Add(PluginKind.Linker, new HashSet<Type> { typeof(IModelLinker) });
+            pluginRegistrationService.Add(PluginKind.ScriptGenerator,
                 new HashSet<Type> { typeof(IScriptGeneratorStrategy) });
-            pluginRegistrationService.Add(PluginKinds.ScriptRunner, new HashSet<Type> { typeof(IScriptRunner) });
-            pluginRegistrationService.Add(PluginKinds.HelperFunctions, new HashSet<Type> { typeof(IHelperFunctions) });
+            pluginRegistrationService.Add(PluginKind.ScriptRunner, new HashSet<Type> { typeof(IScriptRunner) });
+            pluginRegistrationService.Add(PluginKind.HelperFunctions, new HashSet<Type> { typeof(IHelperFunctions) });
 
             // todo see how to start the plugin via node or http-server or something like that if not already started
-            pluginRegistrationService.Add(PluginKinds.Ui, new HashSet<Type>());
+            pluginRegistrationService.Add(PluginKind.Ui, new HashSet<Type>());
 
             return pluginRegistrationService;
         });
@@ -131,8 +130,8 @@ public class Startup
             endpoints.MapHub<FileWatcherHub>("/api/fileWatcherHub");
 
             endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller}/{action=Index}/{id?}");
+                "default",
+                "{controller}/{action=Index}/{id?}");
         });
 
         var pluginManager = app.ApplicationServices.GetRequiredService<PluginManager>();

@@ -18,6 +18,10 @@ public interface IPluginRepository
     IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)
         where TService : IPlugin;
 
-    IEnumerable<T> GetLoadedPluginManifests<T>()
-        where T : PluginManifest;
+    PluginManifest? GetLoadedPluginManifest(string name);
+
+    IEnumerable<PluginManifest> GetLoadedPluginManifests();
+
+    IEnumerable<T> GetLoadedPluginExtensionPoints<T>()
+        where T : PluginExtensionPoint;
 }
