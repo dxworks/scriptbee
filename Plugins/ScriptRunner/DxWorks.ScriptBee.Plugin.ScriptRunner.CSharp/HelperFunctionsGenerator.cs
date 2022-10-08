@@ -10,13 +10,6 @@ namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 
 public static class HelperFunctionsGenerator
 {
-    // public partial class HelperFunctions
-    // {
-    //     public void ConsoleWriteLine(string value)
-    //     {
-    //         new ConcreteHelperFunctionsContainer().ConsoleWriteLine(value);
-    //     }
-    // }
     // https://roslynquoter.azurewebsites.net/
 
     public static SyntaxTree CreateSyntaxTree(IHelperFunctionsContainer helperFunctionsContainer)

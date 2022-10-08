@@ -19,15 +19,15 @@ public class CSharpScriptRunner : IScriptRunner
             await Task.Run(() => CompileScript(scriptContent, helperFunctionsContainer, cancellationToken),
                 cancellationToken);
 
-        await Task.Run(() => ExecuteScript(project, helperFunctionsContainer, compiledScript), cancellationToken);
+        await Task.Run(() => ExecuteScript(project, compiledScript, helperFunctionsContainer), cancellationToken);
     }
 
-    private void ExecuteScript(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        Assembly compiledScript)
+    private static void ExecuteScript(IProject project, Assembly compiledScriptAssembly,
+        IHelperFunctionsContainer helperFunctionsContainer)
     {
-        // todo populate helper functions static wrapper with helper functions from helper functions container
+        PopulateHelperFunctionFields(compiledScriptAssembly, helperFunctionsContainer);
 
-        foreach (var type in compiledScript.GetTypes())
+        foreach (var type in compiledScriptAssembly.GetTypes())
         {
             if (type.Name == "ScriptContent")
             {
@@ -37,7 +37,8 @@ public class CSharpScriptRunner : IScriptRunner
                     if (method.Name == "ExecuteScript" && methodParameters.Length == 1 &&
                         methodParameters[0].ParameterType.Name == nameof(IProject))
                     {
-                        var scriptContentObject = compiledScript.CreateInstance(type.Name);
+                        var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
+
                         method.Invoke(scriptContentObject, new object[]
                         {
                             project
@@ -48,7 +49,28 @@ public class CSharpScriptRunner : IScriptRunner
         }
     }
 
-    private Assembly CompileScript(string script, IHelperFunctionsContainer helperFunctionsContainer,
+    // todo add tests
+    private static void PopulateHelperFunctionFields(Assembly compiledScriptAssembly,
+        IHelperFunctionsContainer helperFunctionsContainer)
+    {
+        var helperFunctionClass = compiledScriptAssembly.GetTypes()
+            .FirstOrDefault(t => t.FullName == typeof(HelperFunctions).FullName);
+
+        if (helperFunctionClass is null)
+        {
+            return;
+        }
+
+        foreach (var fieldInfo in helperFunctionClass.GetFields())
+        {
+            var helperFunction = helperFunctionsContainer.GetFunctions()
+                .FirstOrDefault(h => h.GetType().FullName == fieldInfo.FieldType.FullName);
+
+            fieldInfo.SetValue(null, helperFunction);
+        }
+    }
+
+    private static Assembly CompileScript(string script, IHelperFunctionsContainer helperFunctionsContainer,
         CancellationToken cancellationToken)
     {
         // todo when writing script instead of class with execute method 
@@ -57,18 +79,18 @@ public class CSharpScriptRunner : IScriptRunner
 
         CheckErrors(syntaxTree, cancellationToken);
 
-        var helperFunctionsSyntaxTree =
-            HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
+        var helperFunctionsSyntaxTree = CSharpSyntaxTree.ParseText(
+            HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer).ToString(),
+            cancellationToken: cancellationToken);
 
         CheckErrors(helperFunctionsSyntaxTree, cancellationToken);
 
         var compilation = CSharpCompilation.Create("Compilation")
             .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                .WithOverflowChecks(true))
-            // .WithOptimizationLevel(OptimizationLevel.Release))
-            .WithReferences(FindReferences(helperFunctionsContainer))
-            // .AddSyntaxTrees(helperFunctionsSyntaxTree, syntaxTree);
-            .AddSyntaxTrees(helperFunctionsSyntaxTree);
+                .WithOverflowChecks(true)
+                .WithOptimizationLevel(OptimizationLevel.Release))
+            .AddReferences(FindReferences())
+            .AddSyntaxTrees(helperFunctionsSyntaxTree, syntaxTree);
 
         using var stream = new MemoryStream();
         var emitResult = compilation.Emit(stream, cancellationToken: cancellationToken);
@@ -101,49 +123,12 @@ public class CSharpScriptRunner : IScriptRunner
         }
     }
 
-    private List<PortableExecutableReference> FindReferences(IHelperFunctionsContainer helperFunctionsContainer)
+    private static IEnumerable<PortableExecutableReference> FindReferences()
     {
-        var references = new List<PortableExecutableReference>();
-
-        // foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic))
-        // {
-        //     references.Add(MetadataReference.CreateFromFile(assembly.Location));
-        // }
-
-        // references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
-        //
-        // var portableExecutableReferences = helperFunctionsContainer
-        //     .GetFunctions().SelectMany(x => x.GetType().Assembly.GetReferencedAssemblies())
-        //     .Select(a => MetadataReference.CreateFromFile(Assembly.Load(a).Location));
-        // foreach (var portableExecutableReference in portableExecutableReferences)
-        // {
-        //     references.Add(portableExecutableReference);
-        // }
-
-        // foreach (var reference in helperFunctionsContainer.GetType().Assembly.GetReferencedAssemblies()
-        //              .Select(a => MetadataReference.CreateFromFile(Assembly.Load(a).Location)))
-        // {
-        //     references.Add(reference);
-        // }
-
-        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()
-                     .Where(a => !a.IsDynamic)
-                     .Where(a => !string.IsNullOrEmpty(a.Location)))
-        {
-            references.Add(MetadataReference.CreateFromFile(assembly.Location));
-        }
-        // Assembly.GetEntryAssembly().GetReferencedAssemblies()
-        //     .Select(a => MetadataReference.CreateFromFile(Assembly.Load(a).Location))
-
-        // var value = (string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES");
-        // if (value != null)
-        // {
-        //     var pathToDlls = value.Split(Path.PathSeparator);
-        //     references.AddRange(pathToDlls.Where(pathToDll => !string.IsNullOrEmpty(pathToDll))
-        //         .Select(pathToDll => MetadataReference.CreateFromFile(pathToDll))
-        //     );
-        // }
-
-        return references;
+        return AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => !a.IsDynamic)
+            .Where(a => !string.IsNullOrEmpty(a.Location))
+            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
+            .ToList();
     }
 }
