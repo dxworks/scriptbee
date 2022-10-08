@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptRunner.Python", "Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.Python\DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj", "{D268E2BE-9429-476A-9CE4-F866027425E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests", "Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests\DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.csproj", "{3EDE26AA-924E-48B1-9DA4-70F3BF20017B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,5 +126,9 @@ Global
 		{D268E2BE-9429-476A-9CE4-F866027425E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D268E2BE-9429-476A-9CE4-F866027425E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D268E2BE-9429-476A-9CE4-F866027425E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EDE26AA-924E-48B1-9DA4-70F3BF20017B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EDE26AA-924E-48B1-9DA4-70F3BF20017B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EDE26AA-924E-48B1-9DA4-70F3BF20017B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EDE26AA-924E-48B1-9DA4-70F3BF20017B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

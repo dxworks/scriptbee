@@ -40,4 +40,9 @@ public class JsonHelperFunctions : IHelperFunctions
         stream.Position = 0;
         _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }
+
+    public string ConvertJson(object obj)
+    {
+        return JsonConvert.SerializeObject(obj);
+    }
 }

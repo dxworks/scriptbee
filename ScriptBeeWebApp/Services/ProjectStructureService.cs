@@ -67,7 +67,7 @@ public class ProjectStructureService : IProjectStructureService
         {
             var generatedClasses = await
                 new SampleCodeGenerator(generatorStrategy, acceptedModules)
-                    .GetSampleCode(classes);
+                    .GetSampleCode(classes, cancellationToken);
 
             WriteSampleCodeFiles(generatedClasses, projectId, generatorStrategy.Language, generatorStrategy.Extension);
         }

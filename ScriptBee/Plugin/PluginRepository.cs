@@ -30,7 +30,7 @@ public class PluginRepository : IPluginRepository
     public TService? GetPlugin<TService>(Func<TService, bool> filter,
         IEnumerable<(Type @interface, object instance)>? services = null) where TService : IPlugin
     {
-        return GetPlugins<TService>().FirstOrDefault();
+        return GetPlugins<TService>().FirstOrDefault(filter);
     }
 
     public IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)

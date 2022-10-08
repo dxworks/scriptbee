@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { FileSystemService } from '../../../services/file-system/file-system.service';
 import { ProjectDetailsService } from '../../project-details.service';
@@ -9,7 +9,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { setOutput } from "../../../state/outputs/output.actions";
 import { NotificationsService } from "../../../services/notifications/notifications.service";
-import { filter } from "rxjs/operators";
 
 @Component({
   selector: 'app-selected-script',
@@ -93,7 +92,8 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
       if (project) {
         // todo remove hardcoded values
         // todo change subscribe signature
-        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath, 'python').subscribe((result) => {
+        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
+          next: (result) => {
             if (result) {
               console.log(result)
 
@@ -111,7 +111,8 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
               this.projectDetailsService.lastRunResult.next(result);
               this.projectDetailsService.lastRunErrorMessage.next('');
             }
-          }, (err: any) => {
+          },
+          error: (err: any) => {
             this.isLoadingResults = false;
             if (err instanceof HttpErrorResponse) {
               this.projectDetailsService.lastRunErrorMessage.next(err.error.detail);
@@ -120,7 +121,7 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
               duration: 4000
             });
           }
-        );
+        });
       }
     });
   }
@@ -142,6 +143,25 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
       this.editorOptions = {...this.editorOptions, language: 'python'};
     } else if (scriptPath.endsWith('.cs')) {
       this.editorOptions = {...this.editorOptions, language: 'csharp'};
+    }
+  }
+
+  private createInjector(){
+    // return Injector.create({})
+  }
+
+  // todo refactor (maybe move in webapp)
+  private getLanguage(filename: string) {
+    if (!filename) {
+      return "";
+    }
+
+    if (filename.endsWith('.js')) {
+      return 'javascript';
+    } else if (filename.endsWith('.py')) {
+      return 'python';
+    } else if (filename.endsWith('.cs')) {
+      return 'csharp';
     }
   }
 }

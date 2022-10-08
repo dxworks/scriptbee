@@ -35,12 +35,12 @@ public class FileWatcherService : IFileWatcherService
             IncludeSubdirectories = true,
         };
 
-        watcher.Changed += async (sender, e) =>
+        watcher.Changed += async (_, e) =>
         {
             try
             {
                 await Task.Delay(100);
-                
+
                 var content = await File.ReadAllTextAsync(e.FullPath);
 
                 var watchedFile = new WatchedFile(relativePath, content);
@@ -48,11 +48,12 @@ public class FileWatcherService : IFileWatcherService
             }
             catch (Exception ex)
             {
+                // todo log exception
                 Console.WriteLine(ex);
             }
         };
 
-        watcher.Error += (sender, args) =>
+        watcher.Error += (_, _) =>
         {
             // todo log and send to notification
             Console.WriteLine("error");
