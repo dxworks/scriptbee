@@ -11,10 +11,6 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators;
 
 public class SampleCodeGenerator : ISampleCodeGenerator
 {
-    private readonly IScriptGeneratorStrategy _scriptGeneratorStrategy;
-    private readonly HashSet<string> _generatedClassNames = new();
-    private readonly ISet<string> _acceptedModules;
-
     private const BindingFlags BindingFlags = System.Reflection.BindingFlags.DeclaredOnly |
                                               System.Reflection.BindingFlags.Instance |
                                               System.Reflection.BindingFlags.Public;
@@ -22,6 +18,9 @@ public class SampleCodeGenerator : ISampleCodeGenerator
     private const string ClassName = "ScriptContent";
 
     private const string MethodName = "ExecuteScript";
+    private readonly ISet<string> _acceptedModules;
+    private readonly HashSet<string> _generatedClassNames = new();
+    private readonly IScriptGeneratorStrategy _scriptGeneratorStrategy;
 
     public SampleCodeGenerator(IScriptGeneratorStrategy scriptGeneratorStrategy, ISet<string> acceptedModules)
     {
@@ -71,7 +70,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
 
         var generateSampleCode = await _scriptGeneratorStrategy.GenerateSampleCode();
         var sampleCode = ReplaceSampleCodeTemplates(nameof(Project), generateSampleCode);
-        stringBuilder.AppendLine(sampleCode);
+        stringBuilder.Append(sampleCode);
 
         return stringBuilder.ToString();
     }
@@ -79,9 +78,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
     private IList<SampleCodeFile> GenerateClasses(Type type)
     {
         if (_generatedClassNames.Contains(type.Name) || IsPrimitive(type) || !IsAcceptedModule(type.Module))
-        {
             return new List<SampleCodeFile>();
-        }
 
         _generatedClassNames.Add(type.Name);
 
@@ -98,15 +95,9 @@ public class SampleCodeGenerator : ISampleCodeGenerator
             stringBuilder.AppendLine(
                 _scriptGeneratorStrategy.GenerateClassName(type, baseType, out var baseClassGenericTypes));
 
-            foreach (var genericType in baseClassGenericTypes)
-            {
-                genericTypes.Add(genericType);
-            }
+            foreach (var genericType in baseClassGenericTypes) genericTypes.Add(genericType);
 
-            if (!_generatedClassNames.Contains(baseType.Name))
-            {
-                sampleCodeFiles.AddRange(GenerateClasses(baseType));
-            }
+            if (!_generatedClassNames.Contains(baseType.Name)) sampleCodeFiles.AddRange(GenerateClasses(baseType));
         }
         else
         {
@@ -114,10 +105,7 @@ public class SampleCodeGenerator : ISampleCodeGenerator
         }
 
         var classStart = _scriptGeneratorStrategy.GenerateClassStart();
-        if (!string.IsNullOrEmpty(classStart))
-        {
-            stringBuilder.AppendLine(classStart);
-        }
+        if (!string.IsNullOrEmpty(classStart)) stringBuilder.AppendLine(classStart);
 
         foreach (var fieldInfo in type.GetFields(BindingFlags))
         {
@@ -125,15 +113,10 @@ public class SampleCodeGenerator : ISampleCodeGenerator
             stringBuilder.AppendLine(_scriptGeneratorStrategy.GenerateField(modifier, fieldInfo.FieldType,
                 fieldInfo.Name, out var receivedGenericTypes));
 
-            foreach (var genericType in receivedGenericTypes)
-            {
-                genericTypes.Add(genericType);
-            }
+            foreach (var genericType in receivedGenericTypes) genericTypes.Add(genericType);
 
             if (!_generatedClassNames.Contains(fieldInfo.FieldType.Name))
-            {
                 sampleCodeFiles.AddRange(GenerateClasses(fieldInfo.FieldType));
-            }
         }
 
         foreach (var propertyInfo in type.GetProperties(BindingFlags))
@@ -142,23 +125,15 @@ public class SampleCodeGenerator : ISampleCodeGenerator
             stringBuilder.AppendLine(_scriptGeneratorStrategy.GenerateProperty(modifier, propertyInfo.PropertyType,
                 propertyInfo.Name, out var receivedGenericTypes));
 
-            foreach (var genericType in receivedGenericTypes)
-            {
-                genericTypes.Add(genericType);
-            }
+            foreach (var genericType in receivedGenericTypes) genericTypes.Add(genericType);
 
             if (!_generatedClassNames.Contains(propertyInfo.PropertyType.Name))
-            {
                 sampleCodeFiles.AddRange(GenerateClasses(propertyInfo.PropertyType));
-            }
         }
 
         foreach (var methodInfo in type.GetMethods(BindingFlags))
         {
-            if (methodInfo.IsSpecialName)
-            {
-                continue;
-            }
+            if (methodInfo.IsSpecialName) continue;
 
             var modifier = GetMethodModifier(methodInfo);
             var methodParameters = methodInfo.GetParameters();
@@ -166,40 +141,26 @@ public class SampleCodeGenerator : ISampleCodeGenerator
             var parameters = new List<Tuple<Type, string>>();
 
             foreach (var param in methodParameters)
-            {
                 parameters.Add(new Tuple<Type, string>(param.ParameterType, param.Name));
-            }
 
             stringBuilder.AppendLine();
 
             stringBuilder.Append(_scriptGeneratorStrategy.GenerateMethod(modifier, methodInfo.ReturnType,
                 methodInfo.Name, parameters, out var receivedGenericTypes));
 
-            foreach (var genericType in receivedGenericTypes)
-            {
-                genericTypes.Add(genericType);
-            }
+            foreach (var genericType in receivedGenericTypes) genericTypes.Add(genericType);
         }
 
         foreach (var genericType in genericTypes)
-        {
             if (!_generatedClassNames.Contains(genericType.Name))
-            {
                 sampleCodeFiles.AddRange(GenerateClasses(genericType));
-            }
-        }
 
         // 4 = default object methods
         if (type.GetProperties().Length == 0 && type.GetFields().Length == 0 && type.GetMethods().Length <= 4)
-        {
             stringBuilder.AppendLine(_scriptGeneratorStrategy.GenerateEmptyClass());
-        }
 
         var classEnd = _scriptGeneratorStrategy.GenerateClassEnd();
-        if (!string.IsNullOrEmpty(classEnd))
-        {
-            stringBuilder.AppendLine(classEnd);
-        }
+        if (!string.IsNullOrEmpty(classEnd)) stringBuilder.AppendLine(classEnd);
 
         sampleCodeFiles.Add(new SampleCodeFile
         {
@@ -236,13 +197,8 @@ public class SampleCodeGenerator : ISampleCodeGenerator
     {
         var modifier = "public";
         if (fieldInfo.IsPrivate)
-        {
             modifier = "private";
-        }
-        else if (fieldInfo.IsFamily)
-        {
-            modifier = "protected";
-        }
+        else if (fieldInfo.IsFamily) modifier = "protected";
 
         return modifier;
     }
@@ -252,13 +208,8 @@ public class SampleCodeGenerator : ISampleCodeGenerator
     {
         var modifier = "public";
         if (methodInfo.IsPrivate)
-        {
             modifier = "private";
-        }
-        else if (methodInfo.IsFamily)
-        {
-            modifier = "protected";
-        }
+        else if (methodInfo.IsFamily) modifier = "protected";
 
         return modifier;
     }

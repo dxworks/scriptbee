@@ -6,7 +6,7 @@ namespace ScriptBee.Scripts.ScriptSampleGenerators;
 
 public interface ISampleCodeGenerator
 {
-    public Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> obj,
+    public Task<IList<SampleCodeFile>> GetSampleCode(IEnumerable<object> objects,
         CancellationToken cancellationToken = default);
 
     public Task<string> GenerateSampleCode(CancellationToken cancellationToken = default);
