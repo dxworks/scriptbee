@@ -187,13 +187,9 @@ public static class HelperFunctionsGenerator
 
     private static TypeSyntax GenerateParameter(ParameterInfo parameterInfo)
     {
-        var parameterTypeFullName = parameterInfo.ParameterType.FullName ??
-                                    parameterInfo.ParameterType.Name;
-        parameterTypeFullName = ConvertSystemTypeToPrimitiveType(parameterTypeFullName);
+        var parameterSyntax = GetParameterSyntax(parameterInfo.ParameterType);
 
-        var parameterSyntax = IdentifierName(parameterTypeFullName);
-
-        if (IsParameterGeneric(parameterInfo))
+        if (IsParameterNullable(parameterInfo))
         {
             return NullableType(parameterSyntax);
         }
@@ -205,12 +201,9 @@ public static class HelperFunctionsGenerator
     {
         var returnType = returnTypeParameterInfo.ParameterType;
 
-        var returnTypeFullName = returnType.FullName ?? returnType.Name;
-        returnTypeFullName = ConvertSystemTypeToPrimitiveType(returnTypeFullName);
+        var returnTypeSyntax = GetParameterSyntax(returnType);
 
-        var returnTypeSyntax = IdentifierName(returnTypeFullName);
-
-        if (IsParameterGeneric(returnTypeParameterInfo))
+        if (IsParameterNullable(returnTypeParameterInfo))
         {
             return NullableType(returnTypeSyntax);
         }
@@ -218,7 +211,34 @@ public static class HelperFunctionsGenerator
         return returnTypeSyntax;
     }
 
-    private static bool IsParameterGeneric(ParameterInfo parameterInfo)
+
+    private static NameSyntax GetParameterSyntax(Type parameterType)
+    {
+        var parameterTypeFullName = parameterType.FullName ?? parameterType.Name;
+
+        NameSyntax parameterSyntax;
+        if (parameterTypeFullName.Contains('`'))
+        {
+            parameterTypeFullName = parameterType.ToString();
+            var index = parameterTypeFullName.IndexOf('`');
+            parameterTypeFullName = parameterTypeFullName[..index];
+
+            parameterSyntax = GenericName(parameterTypeFullName)
+                .WithTypeArgumentList(TypeArgumentList(SeparatedList<TypeSyntax>(
+                    parameterType.GetGenericArguments().Select(GetParameterSyntax)
+                )));
+        }
+        else
+        {
+            parameterTypeFullName = ConvertSystemTypeToPrimitiveType(parameterTypeFullName);
+
+            parameterSyntax = IdentifierName(parameterTypeFullName);
+        }
+
+        return parameterSyntax;
+    }
+
+    private static bool IsParameterNullable(ParameterInfo parameterInfo)
     {
         var nullabilityInfo = new NullabilityInfoContext().Create(parameterInfo);
 

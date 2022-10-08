@@ -128,4 +128,39 @@ namespace DxWorks.ScriptBee.Plugin.Api
     }
 }", syntaxTree.ToString());
     }
+    
+    [Fact]
+    public void GivenMethodWithCollections_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
+    {
+        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
+        {
+            new HelperFunctionWithCollections()
+        });
+
+        var syntaxTree = HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
+
+        Assert.Equal(@"using System;
+
+namespace DxWorks.ScriptBee.Plugin.Api
+{
+    static partial class HelperFunctions
+    {
+        public static DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.HelperFunctionWithCollections HelperFunctionWithCollections;
+        public static void Method<T>(System.Collections.Generic.List<T>? list)
+        {
+            HelperFunctionWithCollections.Method<T>(list);
+        }
+
+        public static System.Collections.Generic.IDictionary<string, DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.Something> Method()
+        {
+            return HelperFunctionWithCollections.Method();
+        }
+
+        public static void Method(System.Collections.Generic.List<System.Collections.Generic.HashSet<string>> values)
+        {
+            HelperFunctionWithCollections.Method(values);
+        }
+    }
+}", syntaxTree.ToString());
+    }
 }
