@@ -1,0 +1,11 @@
+<div class="section-title content-after-divider">Load Models</div>
+
+<app-selectable-tree [treeData]="project.data.savedFiles"
+                     (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-selectable-tree>
+
+<mat-spinner class="load-spinner align-left" *ngIf="loading" color="primary" strokeWidth="4"
+             [diameter]="100"></mat-spinner>
+
+<button class="load-button" mat-raised-button color="primary" [disabled]="checkedFiles.length===0 || loading"
+        (click)="onLoadFilesClick()">Load Files
+</button>

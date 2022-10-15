@@ -22,7 +22,8 @@ export class UploadModelsComponent implements OnInit {
   selectedLoader: string | undefined;
   files = [];
 
-  constructor(private store: Store, private errorDialogService: ErrorDialogService, private projectService: ProjectService, private uploadService: UploadService) {
+  constructor(private store: Store, private errorDialogService: ErrorDialogService,
+              private projectService: ProjectService, private uploadService: UploadService) {
   }
 
   ngOnInit(): void {
@@ -42,9 +43,8 @@ export class UploadModelsComponent implements OnInit {
     const projectId = this.project.data.projectId;
 
     this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.store.dispatch(setSavedFiles({files: response.files, loader: response.loaderName}))
+      next: result => {
+        this.store.dispatch(setSavedFiles({files: result.files, loader: result.loaderName}))
         this.uploading = false;
         this.files = [];
       },

@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {contentHeaders} from '../../shared/headers';
-import {TreeNode} from '../../shared/tree-node';
-import {LoadModel} from './load-model';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { contentHeaders } from '../../shared/headers';
+import { TreeNode } from '../../shared/tree-node';
+import { LoadModel } from './load-model';
+import { ReturnedContextSlice } from "../project/returned-context-slice";
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +30,12 @@ export class LoaderService {
           models: treeNode.children.map(child => child.name)
         }))
     };
-    console.log(loadModels);
-    return this.http.post(this.loadersAPIUrl, loadModels, {headers: contentHeaders});
+
+    return this.http.post<ReturnedContextSlice[]>(this.loadersAPIUrl, loadModels, {headers: contentHeaders});
   }
 
   reloadProjectContext(projectId: string) {
-    return this.http.post(`${this.loadersAPIUrl}/${projectId}`, {headers: contentHeaders});
+    return this.http.post<ReturnedContextSlice[]>(`${this.loadersAPIUrl}/${projectId}`, {headers: contentHeaders});
   }
 
   clearProjectContext(projectId: string) {

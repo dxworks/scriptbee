@@ -78,6 +78,10 @@ import { linkersReducer } from "./state/linkers/linkers.reducer";
 import { LoadersEffects } from "./state/loaders/loaders.effects";
 import { LinkersEffects } from "./state/linkers/linkers.effects";
 import { UploadModelsComponent } from './project-details/details-content/upload-models/upload-models.component';
+import { LoadModelsComponent } from './project-details/details-content/load-models/load-models.component';
+import { LinkModelsComponent } from './project-details/details-content/link-models/link-models.component';
+import { CurrentlyLoadedModelsComponent } from './project-details/details-content/currently-loaded-models/currently-loaded-models.component';
+import { ProjectContextComponent } from './project-details/details-content/project-context/project-context.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +111,10 @@ import { UploadModelsComponent } from './project-details/details-content/upload-
     PluginListComponent,
     OutputErrorsComponent,
     UploadModelsComponent,
+    LoadModelsComponent,
+    LinkModelsComponent,
+    CurrentlyLoadedModelsComponent,
+    ProjectContextComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

@@ -9,6 +9,7 @@ using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 using Xunit;
 

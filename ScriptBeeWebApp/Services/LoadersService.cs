@@ -54,27 +54,29 @@ public class LoadersService : ILoadersService
         return acceptedModules;
     }
 
-    public async Task<Dictionary<string, List<FileData>>> LoadFiles(ProjectModel projectModel,
+    public async Task<Dictionary<string, List<string>>> LoadFiles(ProjectModel projectModel,
         List<Node> loadModelsNodes, CancellationToken cancellationToken = default)
     {
         var loadedFiles = await SaveLoadedFilesInProjectModelAsync(projectModel, loadModelsNodes, cancellationToken);
 
-        await LoadModelFiles(projectModel.Id, loadedFiles, cancellationToken);
+        var loadModels = await LoadModelFiles(projectModel.Id, loadedFiles, cancellationToken);
 
-        return loadedFiles;
+        return loadModels;
     }
 
-    public async Task<Dictionary<string, List<FileData>>> ReloadModels(ProjectModel projectModel,
+    public async Task<Dictionary<string, List<string>>> ReloadModels(ProjectModel projectModel,
         CancellationToken cancellationToken = default)
     {
-        await LoadModelFiles(projectModel.Id, projectModel.LoadedFiles, cancellationToken);
+        var loadedModels = await LoadModelFiles(projectModel.Id, projectModel.LoadedFiles, cancellationToken);
 
-        return projectModel.LoadedFiles;
+        return loadedModels;
     }
 
-    private async Task LoadModelFiles(string projectId, Dictionary<string, List<FileData>> loadedFiles,
-        CancellationToken cancellationToken)
+    private async Task<Dictionary<string, List<string>>> LoadModelFiles(string projectId,
+        Dictionary<string, List<FileData>> loadedFiles, CancellationToken cancellationToken)
     {
+        var loadModels = new Dictionary<string, List<string>>();
+
         foreach (var (loader, loadedFileData) in loadedFiles)
         {
             var modelLoader = GetLoader(loader);
@@ -96,9 +98,28 @@ public class LoadersService : ILoadersService
 
             _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
 
+            AddToLoadedModels(dictionary, loader);
+
             foreach (var fileStream in loadedFileStreams)
             {
                 await fileStream.DisposeAsync();
+            }
+        }
+
+        return loadModels;
+
+        void AddToLoadedModels(Dictionary<string, Dictionary<string, ScriptBeeModel>> dictionary, string loader)
+        {
+            foreach (var model in dictionary.Keys)
+            {
+                if (loadModels.TryGetValue(model, out var loaders))
+                {
+                    loaders.Add(loader);
+                }
+                else
+                {
+                    loadModels.Add(model, new List<string> { loader });
+                }
             }
         }
     }

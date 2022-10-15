@@ -6,6 +6,7 @@ import { contentHeaders } from '../../shared/headers';
 import { TreeNode } from '../../shared/tree-node';
 import { ReturnedNode, ReturnedProject } from './returned-project';
 import { ProjectData } from "../../state/project-details/project";
+import { ReturnedContextSlice } from "./returned-context-slice";
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,11 @@ export class ProjectService {
       }));
   }
 
-  getProjectContext(projectId: string) {
-    return this.http.get<TreeNode[]>(`${this.projectsAPIUrl}/context/${projectId}`, {headers: contentHeaders});
+  getProjectContext(projectId: string): Observable<TreeNode[]> {
+    return this.http.get<ReturnedContextSlice[]>(`${this.projectsAPIUrl}/context/${projectId}`, {headers: contentHeaders})
+      .pipe(map((data: ReturnedContextSlice[]) => {
+        return ProjectService.convertReturnedContextSlicesToContext(data);
+      }));
   }
 
   getAllProjects(): Observable<ProjectData[]> {
@@ -69,5 +73,14 @@ export class ProjectService {
       savedFiles: savedFiles,
       loadedFiles: loadedFiles
     });
+  }
+
+  private static convertReturnedContextSlicesToContext(contextSlices: ReturnedContextSlice[]) {
+    return contextSlices.map(slice => ({
+      name: slice.name,
+      children: slice.models.map(model => ({
+        name: model
+      }))
+    }));
   }
 }

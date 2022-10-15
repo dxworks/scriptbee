@@ -12,7 +12,6 @@ import { TreeNode } from "../tree-node";
 export class SelectableTreeComponent {
 
   @Input() set treeData(value: TreeNode[]) {
-    console.log(value)
     this.dataSource.data = value;
   }
 

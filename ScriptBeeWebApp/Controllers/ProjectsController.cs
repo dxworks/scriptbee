@@ -8,6 +8,7 @@ using ScriptBee.Models;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -69,14 +70,10 @@ public class ProjectsController : ControllerBase
         }
 
         var contextResult = project.Context.Models.Keys.GroupBy(tuple => tuple.Item1)
-            .Select(grouping => new
-            {
-                name = grouping.Key,
-                children = grouping.Select(t => new
-                {
-                    name = t.Item2
-                })
-            });
+            .Select(grouping => new ReturnedContextSlice(
+                grouping.Key,
+                grouping.Select(tuple => tuple.Item2).ToList()
+            ));
 
         return Ok(contextResult);
     }

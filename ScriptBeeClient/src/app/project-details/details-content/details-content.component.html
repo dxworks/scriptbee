@@ -28,73 +28,19 @@
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Load Models</div>
-
-      <app-selectable-tree [treeData]="project.data.savedFiles"
-                           (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-selectable-tree>
-
-      <mat-spinner class="load-spinner align-left" *ngIf="loading" color="primary" strokeWidth="4"
-                   [diameter]="100"></mat-spinner>
-
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="checkedFiles.length===0 || loading"
-              (click)="onLoadFilesClick()">Load Files
-      </button>
+      <app-load-models [project]="project"></app-load-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Link Models</div>
-
-      <mat-form-field class="select-linker" appearance="fill">
-        <mat-label>Linker</mat-label>
-        <mat-select [(value)]="selectedLinker">
-          <mat-option *ngFor="let linker of linkers" [value]="linker">
-            {{linker}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div></div>
-
-      <mat-spinner class="link-spinner align-left" *ngIf="linking" color="primary" strokeWidth="4"
-                   [diameter]="100"></mat-spinner>
-
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="linking"
-              (click)="onLinkButtonClick()">Link
-      </button>
+      <app-link-models [project]="project"></app-link-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Currently loaded models</div>
-
-      <div fxLayout="column" fxLayoutAlign="space-around start">
-        <span *ngIf="project.data.linker"
-              class="content">Used Linker: {{project.data.linker}}</span>
-      </div>
-
-      <app-tree class="currently-loaded-models"
-                [treeData]="project.data.loadedFiles"></app-tree>
+      <app-currently-loaded-models [project]="project"></app-currently-loaded-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider project-context">Project Context</div>
-
-      <mat-spinner class="reload-context-spinner align-left" *ngIf="reloadingContext" color="primary" strokeWidth="4"
-                   [diameter]="100"></mat-spinner>
-
-      <button
-        *ngIf="project.context.length == 0 && project.data.loadedFiles.length > 0"
-        class="reload-models-button" mat-raised-button [disabled]="reloadingContext"
-        color="primary" (click)="onReloadModelsClick()">Reload Models
-      </button>
-
-      <app-tree [treeData]="project.context"></app-tree>
-
-      <mat-spinner class="clear-context-spinner align-left" *ngIf="clearingContext" color="primary" strokeWidth="4"
-                   [diameter]="100"></mat-spinner>
-
-      <button *ngIf="project.context.length != 0" class="clear-context-button" mat-raised-button
-              color="primary" [disabled]="clearingContext" (click)="onClearContextButtonClick()">Clear Context
-      </button>
+      <app-project-context [project]="project"></app-project-context>
     </div>
   </mat-card>
 </div>

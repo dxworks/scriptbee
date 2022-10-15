@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;

@@ -15,9 +15,9 @@ public interface ILoadersService
 
     ISet<string> GetAcceptedModules();
 
-    Task<Dictionary<string, List<FileData>>> LoadFiles(ProjectModel projectModel, List<Node> loadModelsNodes,
+    Task<Dictionary<string, List<string>>> LoadFiles(ProjectModel projectModel, List<Node> loadModelsNodes,
         CancellationToken cancellationToken = default);
 
-    Task<Dictionary<string, List<FileData>>> ReloadModels(ProjectModel projectModel,
+    Task<Dictionary<string, List<string>>> ReloadModels(ProjectModel projectModel,
         CancellationToken cancellationToken = default);
 }

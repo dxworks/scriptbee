@@ -8,6 +8,7 @@ using ScriptBee.Models;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -73,11 +74,11 @@ public class LoadersController : ControllerBase
             _projectManager.LoadProject(projectModel);
         }
 
-        var loadFiles = await _loadersService.LoadFiles(projectModel, loadModels.Nodes, cancellationToken);
+        var loadedModels = await _loadersService.LoadFiles(projectModel, loadModels.Nodes, cancellationToken);
 
         await _projectStructureService.GenerateModelClasses(loadModels.ProjectId, cancellationToken);
 
-        return Ok(ConvertLoadedFiles(loadFiles));
+        return Ok(ConvertLoadedModels(loadedModels));
     }
 
     [HttpPost("{projectId}")]
@@ -118,9 +119,9 @@ public class LoadersController : ControllerBase
             _projectManager.LoadProject(projectModel);
         }
 
-        var loadFiles = await _loadersService.ReloadModels(projectModel, cancellationToken);
+        var loadedModels = await _loadersService.ReloadModels(projectModel, cancellationToken);
 
-        return Ok(ConvertLoadedFiles(loadFiles));
+        return Ok(ConvertLoadedModels(loadedModels));
     }
 
     [HttpPost("clear/{projectId}")]
@@ -151,8 +152,9 @@ public class LoadersController : ControllerBase
         return Ok();
     }
 
-    private static IEnumerable<ReturnedNode> ConvertLoadedFiles(Dictionary<string, List<FileData>> loadFiles)
+    private static IEnumerable<ReturnedContextSlice> ConvertLoadedModels(Dictionary<string, List<string>> loadedModels)
     {
-        return loadFiles.Select(pair => new ReturnedNode(pair.Key, pair.Value.Select(d => d.Name).ToList()));
+        return loadedModels.Select(x => new ReturnedContextSlice(
+            x.Key, x.Value));
     }
 }

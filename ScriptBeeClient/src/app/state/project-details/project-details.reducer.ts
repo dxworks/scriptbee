@@ -1,32 +1,46 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProjectDetailsState } from "./project-details.state";
-import { fetchProject, fetchProjectFailure, fetchProjectSuccess, setSavedFiles } from "./project-details.actions";
+import {
+  clearContext,
+  fetchProject,
+  fetchProjectFailure,
+  fetchProjectSuccess,
+  setLoadedModels,
+  setSavedFiles
+} from "./project-details.actions";
+import { TreeNode } from "../../shared/tree-node";
 
 export const initialState: ProjectDetailsState = {
   projectDetailsId: "",
 }
 
+function updateTreeNodeArray(savedFiles: TreeNode[], name: string, children: string[]) {
+  const indexOfNode = savedFiles.findIndex(node => node.name === name);
+  if (indexOfNode === -1) {
+    savedFiles.push({
+      name: name,
+      children: children.map(file => ({
+        name: file
+      }))
+    });
+  } else {
+    savedFiles[indexOfNode] = {
+      name: savedFiles[indexOfNode].name,
+      children: children.map(file => ({
+        name: file
+      }))
+    };
+  }
+  return savedFiles;
+}
+
+
 export const projectDetailsReducer = createReducer(
   initialState,
   on(setSavedFiles, (state, {loader, files}) => {
-    const savedFiles = [...state.project.data.savedFiles];
+    const prevSavedFiles = [...state.project.data.savedFiles];
 
-    const indexOfNode = savedFiles.findIndex(node => node.name === loader);
-    if (indexOfNode === -1) {
-      savedFiles.push({
-        name: loader,
-        children: files.map(file => ({
-          name: file
-        }))
-      });
-    } else {
-      savedFiles[indexOfNode] = {
-        name: savedFiles[indexOfNode].name,
-        children: files.map(file => ({
-          name: file
-        }))
-      };
-    }
+    const savedFiles = updateTreeNodeArray(prevSavedFiles, loader, files);
 
     return {
       ...state,
@@ -36,6 +50,28 @@ export const projectDetailsReducer = createReducer(
           ...state.project.data,
           savedFiles
         }
+      }
+    }
+  }),
+  on(setLoadedModels, (state, {loader, files}) => {
+    const oldContext = [...state.project.context];
+
+    const context = updateTreeNodeArray(oldContext, loader, files);
+
+    return {
+      ...state,
+      project: {
+        ...state.project,
+        context
+      }
+    }
+  }),
+  on(clearContext, (state) => {
+    return {
+      ...state,
+      project: {
+        ...state.project,
+        context: []
       }
     }
   }),

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using MongoDB.Bson.Serialization.Attributes;
 
-namespace ScriptBeeWebApp.Controllers.Arguments;
+namespace ScriptBeeWebApp.Controllers.DTO;
 
 public record ReturnedProject
 {
