@@ -6,6 +6,7 @@ export interface BasicPlugin {
   apiVersion: string;
   kind: PluginKind;
   metadata: PluginMetadata;
+  name: string;
 }
 
 export interface PluginMetadata {

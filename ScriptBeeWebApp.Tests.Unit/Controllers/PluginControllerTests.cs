@@ -11,7 +11,7 @@
 // using Xunit;
 //
 // namespace ScriptBeeWebApp.Tests.Unit.Controllers;
-//
+// todo to be replaced by Pact tests
 // public class PluginControllerTests
 // {
 //     private readonly Mock<IPluginRepository> _pluginRepositoryMock;
@@ -68,3 +68,5 @@
 //         Assert.Equal(2, pluginResponses.Count());
 //     }
 // }
+
+

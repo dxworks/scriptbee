@@ -1,24 +1,37 @@
-import {Component} from '@angular/core';
-import {ProjectService} from '../../services/project/project.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ProjectDetailsService} from '../project-details.service';
-import {TreeNode} from '../../shared/tree-node';
-import {UploadService} from '../../services/upload/upload.service';
-import {LoaderService} from '../../services/loader/loader.service';
-import {MatDialog} from '@angular/material/dialog';
-import {ErrorDialogComponent} from './error-dialog/error-dialog/error-dialog.component';
-import {LinkerService} from '../../services/linker/linker.service';
+import { Component, OnInit } from '@angular/core';
+import { ProjectService } from '../../services/project/project.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectDetailsService } from '../project-details.service';
+import { TreeNode } from '../../shared/tree-node';
+import { UploadService } from '../../services/upload/upload.service';
+import { LoaderService } from '../../services/loader/loader.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialogComponent } from './error-dialog/error-dialog/error-dialog.component';
+import { LinkerService } from '../../services/linker/linker.service';
+import { Project } from "../../state/project-details/project";
+import {
+  selectProjectDetails,
+  selectProjectDetailsLoading
+} from "../../state/project-details/project-details.selectors";
+import { Store } from "@ngrx/store";
+import { ActivatedRoute } from "@angular/router";
+import { selectLinkers } from "../../state/linkers/linkers.selectors";
 
 @Component({
   selector: 'app-details-content',
   templateUrl: './details-content.component.html',
   styleUrls: ['./details-content.component.scss']
 })
-export class DetailsContentComponent {
+export class DetailsContentComponent implements OnInit {
 
-  selectedLoader;
-  selectedLinker;
-  files = [];
+  isDataLoading = false;
+  loadingError = "";
+  project: Project | undefined;
+
+  linkers: string[] = [];
+
+  selectedLoader: string | undefined;
+  selectedLinker: string | undefined;
   checkedFiles: TreeNode[] = [];
   uploading = false;
   loading = false;
@@ -26,35 +39,31 @@ export class DetailsContentComponent {
   reloadingContext = false;
   clearingContext = false;
 
-  constructor(public projectDetailsService: ProjectDetailsService, private projectService: ProjectService,
-              private uploadService: UploadService, private snackBar: MatSnackBar,
-              private loaderService: LoaderService, public dialog: MatDialog, private linkerService: LinkerService) {
+
+  constructor(public projectDetailsService: ProjectDetailsService, public dialog: MatDialog,
+              private projectService: ProjectService, private uploadService: UploadService,
+              private snackBar: MatSnackBar, private store: Store, private route: ActivatedRoute,
+              private loaderService: LoaderService, private linkerService: LinkerService) {
   }
 
-  onUploadFilesClick() {
-    if (this.selectedLoader) {
-      this.uploading = true;
-      const projectId = this.projectDetailsService.project.getValue().projectId;
+  ngOnInit(): void {
+    this.store.select(selectProjectDetailsLoading).subscribe({
+      next: ({loading, error}) => {
+        this.loading = loading ?? false;
+        this.loadingError = error ?? "";
+      }
+    })
 
-      this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe(() => {
-        this.projectService.getProject(projectId).subscribe(result => {
-          if (result) {
-            this.projectDetailsService.project.next(result);
-            this.files = [];
-            this.uploading = false;
-          }
-        }, (error: any) => {
-          this.uploading = false;
-          this.displayDialogErrorMessage('Could not get project', this.getErrorMessage(error));
-        });
-      }, (error: any) => {
-        this.uploading = false;
-        this.displayDialogErrorMessage('Could not upload files', this.getErrorMessage(error));
-      });
-    } else {
-      this.uploading = false;
-      this.displayDialogErrorMessage('You must select a loader first', '');
-    }
+    this.store.select(selectProjectDetails).subscribe({
+      next: projectDetails => {
+        console.log(projectDetails)
+        this.project = projectDetails;
+      }
+    });
+
+    this.store.select(selectLinkers).subscribe(linkers => {
+      this.linkers = linkers ?? [];
+    });
   }
 
   onUpdateCheckedFiles(checkedNodes: TreeNode[]) {
@@ -63,12 +72,13 @@ export class DetailsContentComponent {
 
   onLoadFilesClick() {
     this.loading = true;
-    const projectId = this.projectDetailsService.project.getValue().projectId;
+    const projectId = this.project.data.projectId;
 
     this.loaderService.loadModels(projectId, this.checkedFiles).subscribe(() => {
       this.projectService.getProjectContext(projectId).subscribe(res => {
         if (res) {
-          this.projectDetailsService.context.next(res);
+          // todo
+          // this.projectDetailsService.context.next(res);
         }
       }, (error: any) => {
         this.loading = false;
@@ -77,7 +87,8 @@ export class DetailsContentComponent {
 
       this.projectService.getProject(projectId).subscribe(result => {
         if (result) {
-          this.projectDetailsService.project.next(result);
+          // todo
+          // this.projectDetailsService.project.next(result);
           this.loading = false;
         }
       }, (error: any) => {
@@ -94,13 +105,14 @@ export class DetailsContentComponent {
   onLinkButtonClick() {
     if (this.selectedLinker) {
       this.linking = true;
-      const projectId = this.projectDetailsService.project.getValue().projectId;
+      const projectId = this.project.data.projectId;
 
       this.linkerService.linkModels(projectId, this.selectedLinker).subscribe({
         next: () => {
           this.projectService.getProjectContext(projectId).subscribe({
             next: (res) => {
-              this.projectDetailsService.context.next(res);
+              // todo
+              // this.projectDetailsService.context.next(res);
               this.linking = false;
             },
             error: (error) => {
@@ -122,13 +134,14 @@ export class DetailsContentComponent {
 
   onReloadModelsClick() {
     this.reloadingContext = true;
-    const projectId = this.projectDetailsService.project.getValue().projectId;
+    const projectId = this.project.data.projectId;
 
     this.loaderService.reloadProjectContext(projectId).subscribe({
       next: () => {
         this.projectService.getProjectContext(projectId).subscribe({
           next: (res) => {
-            this.projectDetailsService.context.next(res);
+            // todo
+            // this.projectDetailsService.context.next(res);
             this.reloadingContext = false;
           },
           error: (error) => {
@@ -146,12 +159,13 @@ export class DetailsContentComponent {
 
   onClearContextButtonClick() {
     this.clearingContext = true;
-    const projectId = this.projectDetailsService.project.getValue().projectId;
+    const projectId = this.project.data.projectId;
 
     this.loaderService.clearProjectContext(projectId).subscribe(() => {
       this.projectService.getProject(projectId).subscribe(result => {
         if (result) {
-          this.projectDetailsService.project.next(result);
+          // todo
+          // this.projectDetailsService.project.next(result);
         }
       }, (error: any) => {
         this.clearingContext = false;
@@ -159,7 +173,8 @@ export class DetailsContentComponent {
       });
 
       this.projectService.getProjectContext(projectId).subscribe(res => {
-        this.projectDetailsService.context.next(res);
+        // todo
+        // this.projectDetailsService.context.next(res);
         this.clearingContext = false;
       }, (error: any) => {
         this.clearingContext = false;

@@ -12,7 +12,7 @@ import { fetchOutputData } from "../../../state/outputs/output.actions";
 export class ConsoleOutputComponent implements OnInit {
   private consoleOutputStream = this.store.select(selectOutput('Console'));
 
-  consoleOutput: string;
+  consoleOutput: string = "";
 
   constructor(private store: Store) {
   }
@@ -22,8 +22,12 @@ export class ConsoleOutputComponent implements OnInit {
       filter(output => output !== undefined),
       filter(output => output.length > 0),
       map(output => output[0]),
-      filter(output => !output.loading),
+      filter(output => !output?.loading),
     ).subscribe(consoleOutput => {
+      if (!consoleOutput) {
+        return;
+      }
+
       if (consoleOutput.data) {
         this.consoleOutput = consoleOutput.data;
       } else if (consoleOutput.loadingError) {

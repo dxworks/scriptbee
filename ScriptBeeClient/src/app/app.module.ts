@@ -64,14 +64,20 @@ import {
 import {
   LoadingResultsDialogComponent
 } from './project-details/scripts-content/selected-script/loading-results-dialog/loading-results-dialog.component';
-import { ChartComponent } from './chart/chart.component';
 import { PluginItemComponent } from './plugins/plugin-item/plugin-item.component';
 import { PluginListComponent } from './plugins/plugin-list/plugin-list.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { outputReducer } from "./state/outputs/output.reducer";
 import { OutputErrorsComponent } from './project-details/output/output-errors/output-errors.component';
-import { OutputEffects } from "./state/outputs/outputEffects";
+import { OutputEffects } from "./state/outputs/output.effects";
+import { projectDetailsReducer } from "./state/project-details/project-details.reducer";
+import { ProjectDetailsEffects } from "./state/project-details/project-details.effects";
+import { loadersReducer } from "./state/loaders/loaders.reducer";
+import { linkersReducer } from "./state/linkers/linkers.reducer";
+import { LoadersEffects } from "./state/loaders/loaders.effects";
+import { LinkersEffects } from "./state/linkers/linkers.effects";
+import { UploadModelsComponent } from './project-details/details-content/upload-models/upload-models.component';
 
 @NgModule({
   declarations: [
@@ -97,10 +103,10 @@ import { OutputEffects } from "./state/outputs/outputEffects";
     FileOutputComponent,
     ErrorDialogComponent,
     LoadingResultsDialogComponent,
-    ChartComponent,
     PluginItemComponent,
     PluginListComponent,
     OutputErrorsComponent,
+    UploadModelsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -137,9 +143,12 @@ import { OutputEffects } from "./state/outputs/outputEffects";
     AngularSplitModule,
     MatProgressSpinnerModule,
     StoreModule.forRoot({
-      outputState: outputReducer
+      outputState: outputReducer,
+      projectDetails: projectDetailsReducer,
+      loaders: loadersReducer,
+      linkers: linkersReducer
     }, {}),
-    EffectsModule.forRoot([OutputEffects]),
+    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, LoadersEffects, LinkersEffects]),
   ],
   providers: [
     SlugifyPipe

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,4 +14,6 @@ public interface IFileModelService
     public Task<Stream> GetFileAsync(string fileName);
 
     public Task DeleteFileAsync(string fileName, CancellationToken cancellationToken = default);
+
+    public Task DeleteFilesAsync(IEnumerable<string> fileNames, CancellationToken cancellationToken = default);
 }

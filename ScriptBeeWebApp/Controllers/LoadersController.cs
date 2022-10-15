@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Models;
 using ScriptBee.ProjectContext;
-using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
@@ -18,21 +18,17 @@ namespace ScriptBeeWebApp.Controllers;
 public class LoadersController : ControllerBase
 {
     private readonly ILoadersService _loadersService;
-    private readonly IProjectModelService _projectModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IFileModelService _fileModelService;
-    private readonly IProjectManager _projectManager;
-    private readonly IProjectStructureService _projectStructureService;
     private readonly IValidator<LoadModels> _loadModelsValidator;
+    private readonly IProjectManager _projectManager;
+    private readonly IProjectModelService _projectModelService;
+    private readonly IProjectStructureService _projectStructureService;
 
     public LoadersController(ILoadersService loadersService, IProjectModelService projectModelService,
-        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService, IProjectManager projectManager,
-        IProjectStructureService projectStructureService, IValidator<LoadModels> loadModelsValidator)
+        IProjectManager projectManager, IProjectStructureService projectStructureService,
+        IValidator<LoadModels> loadModelsValidator)
     {
         _loadersService = loadersService;
         _projectModelService = projectModelService;
-        _fileNameGenerator = fileNameGenerator;
-        _fileModelService = fileModelService;
         _projectManager = projectManager;
         _projectStructureService = projectStructureService;
         _loadModelsValidator = loadModelsValidator;
@@ -53,6 +49,17 @@ public class LoadersController : ControllerBase
             return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
+        // todo maybe move into a validator and use di for it to get LoaderService
+        foreach (var (loader, _) in loadModels.Nodes)
+        {
+            var modelLoader = _loadersService.GetLoader(loader);
+
+            if (modelLoader == null)
+            {
+                return BadRequest($"Model type {loader} is not supported");
+            }
+        }
+
         var projectModel = await _projectModelService.GetDocument(loadModels.ProjectId, cancellationToken);
         if (projectModel == null)
         {
@@ -66,57 +73,11 @@ public class LoadersController : ControllerBase
             _projectManager.LoadProject(projectModel);
         }
 
-        // todo extract the loading in the LoadersService
-        Dictionary<string, List<string>> loadedFiles = new();
-
-        foreach (var (loaderName, models) in loadModels.Nodes)
-        {
-            List<string> modelNames = new();
-
-            foreach (var model in models)
-            {
-                var modelName = _fileNameGenerator.GenerateModelName(loadModels.ProjectId, loaderName, model);
-                modelNames.Add(modelName);
-            }
-
-            loadedFiles[loaderName] = modelNames;
-        }
-
-        projectModel.LoadedFiles = loadedFiles;
-
-        await _projectModelService.UpdateDocument(projectModel, cancellationToken);
-
-        foreach (var (loader, loadedFileNames) in loadedFiles)
-        {
-            List<Stream> loadedFileStreams = new();
-
-            var modelLoader = _loadersService.GetLoader(loader);
-
-            if (modelLoader == null)
-            {
-                return BadRequest($"Model type {loader} is not supported");
-            }
-
-            foreach (var loadedFileName in loadedFileNames)
-            {
-                var fileStream = await _fileModelService.GetFileAsync(loadedFileName);
-                loadedFileStreams.Add(fileStream);
-            }
-
-            var dictionary = await modelLoader.LoadModel(loadedFileStreams, cancellationToken: cancellationToken);
-
-            _projectManager.AddToGivenProject(loadModels.ProjectId, dictionary, modelLoader.GetName());
-
-            foreach (var fileStream in loadedFileStreams)
-            {
-                await fileStream.DisposeAsync();
-            }
-        }
+        var loadFiles = await _loadersService.LoadFiles(projectModel, loadModels.Nodes, cancellationToken);
 
         await _projectStructureService.GenerateModelClasses(loadModels.ProjectId, cancellationToken);
 
-        // todo return some dto object
-        return Ok();
+        return Ok(ConvertLoadedFiles(loadFiles));
     }
 
     [HttpPost("{projectId}")]
@@ -139,41 +100,27 @@ public class LoadersController : ControllerBase
             return Ok();
         }
 
-        var project = _projectManager.GetProject(projectId);
-        if (project == null)
+        // todo maybe move into a validator and use di for it to get LoaderService
+        foreach (var (loader, _) in projectModel.LoadedFiles)
         {
-            _projectManager.LoadProject(projectModel);
-        }
-
-        // todo extract the reloading in the LoadersService
-        foreach (var (loader, loadedFileNames) in projectModel.LoadedFiles)
-        {
-            List<Stream> loadedFileStreams = new();
-
             var modelLoader = _loadersService.GetLoader(loader);
 
             if (modelLoader == null)
             {
                 return BadRequest($"Model type {loader} is not supported");
             }
-
-            foreach (var loadedFileName in loadedFileNames)
-            {
-                var fileStream = await _fileModelService.GetFileAsync(loadedFileName);
-                loadedFileStreams.Add(fileStream);
-            }
-
-            var dictionary = await modelLoader.LoadModel(loadedFileStreams, cancellationToken: cancellationToken);
-
-            _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
-
-            foreach (var fileStream in loadedFileStreams)
-            {
-                await fileStream.DisposeAsync();
-            }
         }
 
-        return Ok();
+
+        var project = _projectManager.GetProject(projectId);
+        if (project == null)
+        {
+            _projectManager.LoadProject(projectModel);
+        }
+
+        var loadFiles = await _loadersService.ReloadModels(projectModel, cancellationToken);
+
+        return Ok(ConvertLoadedFiles(loadFiles));
     }
 
     [HttpPost("clear/{projectId}")]
@@ -202,5 +149,10 @@ public class LoadersController : ControllerBase
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
         return Ok();
+    }
+
+    private static IEnumerable<ReturnedNode> ConvertLoadedFiles(Dictionary<string, List<FileData>> loadFiles)
+    {
+        return loadFiles.Select(pair => new ReturnedNode(pair.Key, pair.Value.Select(d => d.Name).ToList()));
     }
 }

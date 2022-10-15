@@ -1,13 +1,11 @@
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ThemeService } from '../../../services/theme/theme.service';
 import { FileSystemService } from '../../../services/file-system/file-system.service';
 import { ProjectDetailsService } from '../../project-details.service';
 import { ActivatedRoute } from '@angular/router';
 import { RunScriptService } from '../../../services/run-script/run-script.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Store } from '@ngrx/store';
-import { setOutput } from "../../../state/outputs/output.actions";
 import { NotificationsService } from "../../../services/notifications/notifications.service";
 
 @Component({
@@ -49,28 +47,29 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
         this.scriptPath = params['scriptPath'];
         this.setEditorLanguage(this.scriptPath);
 
-        this.projectDetailsService.project.subscribe(project => {
-          if (project) {
-            this.fileSystemService.getScriptAbsolutePath(project.projectId, this.scriptPath).subscribe(absolutePath => {
-              this.scriptAbsolutePath = absolutePath;
-            });
-
-            this.fileSystemService.getProjectAbsolutePath(project.projectId).subscribe(projectPath => {
-              this.projectAbsolutePath = projectPath;
-            });
-
-            this.fileSystemService.getFileContent(project.projectId, this.scriptPath).subscribe(content => {
-              this.code = content;
-            });
-
-            this.fileSystemService.postFileWatcher(project.projectId, this.scriptPath)
-              .subscribe();
-          }
-        }, (error: any) => {
-          this.snackBar.open('Could not get project!', 'Ok', {
-            duration: 4000
-          });
-        });
+        // todo
+        // this.projectDetailsService.project.subscribe(project => {
+        //   if (project) {
+        //     this.fileSystemService.getScriptAbsolutePath(project.data.projectId, this.scriptPath).subscribe(absolutePath => {
+        //       this.scriptAbsolutePath = absolutePath;
+        //     });
+        //
+        //     this.fileSystemService.getProjectAbsolutePath(project.data.projectId).subscribe(projectPath => {
+        //       this.projectAbsolutePath = projectPath;
+        //     });
+        //
+        //     this.fileSystemService.getFileContent(project.data.projectId, this.scriptPath).subscribe(content => {
+        //       this.code = content;
+        //     });
+        //
+        //     this.fileSystemService.postFileWatcher(project.data.projectId, this.scriptPath)
+        //       .subscribe();
+        //   }
+        // }, (error: any) => {
+        //   this.snackBar.open('Could not get project!', 'Ok', {
+        //     duration: 4000
+        //   });
+        // });
       }
     });
 
@@ -88,42 +87,42 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
     this.isLoadingResults = true;
 
     // todo refactor to use rxjs not nested subscribes
-    this.projectDetailsService.project.subscribe(project => {
-      if (project) {
-        // todo remove hardcoded values
-        // todo change subscribe signature
-        this.runScriptService.runScriptFromPath(project.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
-          next: (result) => {
-            if (result) {
-              console.log(result)
-
-              result.results.forEach(r => {
-                this.store.dispatch(setOutput({
-                  outputId: r.outputId,
-                  projectId: result.projectId,
-                  outputType: r.outputType,
-                  path: r.path,
-                  loading: false
-                }))
-              });
-
-              this.isLoadingResults = false;
-              this.projectDetailsService.lastRunResult.next(result);
-              this.projectDetailsService.lastRunErrorMessage.next('');
-            }
-          },
-          error: (err: any) => {
-            this.isLoadingResults = false;
-            if (err instanceof HttpErrorResponse) {
-              this.projectDetailsService.lastRunErrorMessage.next(err.error.detail);
-            }
-            this.snackBar.open('Could not run script!', 'Ok', {
-              duration: 4000
-            });
-          }
-        });
-      }
-    });
+    // this.projectDetailsService.project.subscribe(project => {
+    //   if (project) {
+    //     // todo remove hardcoded values
+    //     // todo change subscribe signature
+    //     this.runScriptService.runScriptFromPath(project.data.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
+    //       next: (result) => {
+    //         if (result) {
+    //           console.log(result)
+    //
+    //           result.results.forEach(r => {
+    //             this.store.dispatch(setOutput({
+    //               outputId: r.outputId,
+    //               projectId: result.projectId,
+    //               outputType: r.outputType,
+    //               path: r.path,
+    //               loading: false
+    //             }))
+    //           });
+    //
+    //           this.isLoadingResults = false;
+    //           this.projectDetailsService.lastRunResult.next(result);
+    //           this.projectDetailsService.lastRunErrorMessage.next('');
+    //         }
+    //       },
+    //       error: (err: any) => {
+    //         this.isLoadingResults = false;
+    //         if (err instanceof HttpErrorResponse) {
+    //           this.projectDetailsService.lastRunErrorMessage.next(err.error.detail);
+    //         }
+    //         this.snackBar.open('Could not run script!', 'Ok', {
+    //           duration: 4000
+    //         });
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   onCopyToClipboardButtonClick() {
@@ -146,7 +145,7 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createInjector(){
+  private createInjector() {
     // return Injector.create({})
   }
 
@@ -163,5 +162,7 @@ export class SelectedScriptComponent implements OnInit, OnDestroy {
     } else if (filename.endsWith('.cs')) {
       return 'csharp';
     }
+
+    return "";
   }
 }

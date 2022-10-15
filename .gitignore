@@ -6,3 +6,4 @@ riderModule.iml
 /_ReSharper.Caches/
 *.user
 .env
+.idea/.idea.ScriptBee/.idea/sonarlint

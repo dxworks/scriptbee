@@ -19,6 +19,7 @@ using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Hubs;
 using ScriptBeeWebApp.Services;
 using Serilog;
+using Serilog.Events;
 
 namespace ScriptBeeWebApp;
 
@@ -49,16 +50,25 @@ public class Startup
 
         // var userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
 
+        var logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateLogger();
+        Log.Logger = logger;
+
         services.AddSingleton(_ => mongoDatabase);
-        services.AddSingleton<ILogger>(_ => new LoggerConfiguration().CreateLogger());
+        services.AddSingleton<ILogger>(_ => logger);
+        services.Configure<UserFolderSettings>(Configuration.GetSection("UserFolder"));
+        services.AddSingleton<IGuidGenerator, GuidGenerator>();
         services.AddSingleton<IPluginRepository, PluginRepository>();
         services.AddSingleton<IProjectManager, ProjectManager>();
-        services.Configure<UserFolderSettings>(Configuration.GetSection("UserFolder"));
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
         services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
+        services.AddSingleton<IUploadModelService, UploadModelService>();
         services.AddSingleton<ILoadersService, LoadersService>();
         services.AddSingleton<ILinkersService, LinkersService>();
         services.AddSingleton<IPluginDiscriminatorHolder, PluginDiscriminatorHolder>();

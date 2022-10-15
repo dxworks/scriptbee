@@ -16,7 +16,7 @@ using ScriptBeeWebApp.Services;
 using Xunit;
 
 namespace ScriptBeeWebApp.Tests.Unit.Controllers;
-
+// todo to be replaced by Pact tests
 public class LinkersControllerTests
 {
     private readonly Mock<IProjectModelService> _projectModelServiceMock;

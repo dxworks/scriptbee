@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
@@ -12,7 +14,7 @@ namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
-// todo add tests
+// todo pact add tests
 public class OutputController : ControllerBase
 {
     private readonly IFileModelService _fileModelService;
@@ -26,6 +28,8 @@ public class OutputController : ControllerBase
         _fileNameGenerator = fileNameGenerator;
         _runModelService = runModelService;
     }
+
+    // todo manual test
 
     [HttpGet("{outputId}")]
     public async Task<ActionResult<string>> GetOutput([FromRoute] string outputId)
@@ -47,13 +51,14 @@ public class OutputController : ControllerBase
         }
 
         await using var outputStream = await _fileModelService.GetFileAsync(consoleOutputPath);
-        using StreamReader streamReader = new StreamReader(outputStream);
+        using var streamReader = new StreamReader(outputStream);
 
         var consoleOutputContent = await streamReader.ReadToEndAsync();
         return Ok(consoleOutputContent);
     }
 
-    [HttpPost("files/download"), DisableRequestSizeLimit]
+    [HttpPost("files/download")]
+    [DisableRequestSizeLimit]
     // todo extract validation to separate class
     public async Task<IActionResult> DownloadFile(DownloadFile downloadFile)
     {
@@ -74,13 +79,12 @@ public class OutputController : ControllerBase
     public async Task<IActionResult> DownloadFile(DownloadAll downloadAll,
         CancellationToken cancellationToken)
     {
-        if (downloadAll is null || string.IsNullOrEmpty(downloadAll.ProjectId) ||
-            string.IsNullOrEmpty(downloadAll.RunId))
+        if (downloadAll is null || string.IsNullOrEmpty(downloadAll.ProjectId))
         {
             return BadRequest("You must provide a projectId and a runId for this operation");
         }
 
-        var runModel = await _runModelService.GetDocument(downloadAll.RunId, cancellationToken);
+        var runModel = await _runModelService.GetDocument(downloadAll.ProjectId, cancellationToken);
         if (runModel == null)
         {
             return NotFound("The given runId does not correspond to a valid run");
@@ -88,10 +92,11 @@ public class OutputController : ControllerBase
 
         List<OutputFileStream> files = new();
 
-        foreach (var outputFilePath in runModel.OutputFileNames)
+        foreach (var runResult in runModel.Runs[downloadAll.RunIndex].Results
+                     .Where(r => r.Type == RunResultDefaultTypes.FileType))
         {
-            var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(outputFilePath);
-            var outputStream = await _fileModelService.GetFileAsync(outputFilePath);
+            var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(runResult.Path);
+            var outputStream = await _fileModelService.GetFileAsync(fileName);
             files.Add(new OutputFileStream(fileName, outputStream));
         }
 

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Models;
 using ScriptBee.ProjectContext;
-using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -18,17 +19,14 @@ public class RunScriptController : ControllerBase
 {
     private readonly IProjectManager _projectManager;
     private readonly IProjectModelService _projectModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IRunScriptService _runScriptService;
     private readonly IValidator<RunScript> _runScriptValidator;
 
     public RunScriptController(IProjectManager projectManager, IProjectModelService projectModelService,
-        IFileNameGenerator fileNameGenerator, IRunScriptService runScriptService,
-        IValidator<RunScript> runScriptValidator)
+        IRunScriptService runScriptService, IValidator<RunScript> runScriptValidator)
     {
         _projectManager = projectManager;
         _projectModelService = projectModelService;
-        _fileNameGenerator = fileNameGenerator;
         _runScriptService = runScriptService;
         _runScriptValidator = runScriptValidator;
     }
@@ -61,45 +59,25 @@ public class RunScriptController : ControllerBase
             return NotFound($"Could not find project model with id: {runScript.ProjectId}");
         }
 
-        var runModel = await _runScriptService.RunAsync(project, projectModel, runScript.Language, runScript.FilePath,
+        // todo catch exception and remap it to a response
+        var run = await _runScriptService.RunAsync(project, projectModel, runScript.Language, runScript.FilePath,
             cancellationToken);
 
-        if (runModel is null)
+        var returnedRun = new ReturnedRun(run.Index, run.ScriptPath, run.Linker)
         {
-            return NotFound($"File from {runScript.FilePath} not found");
-        }
-
-        ReturnedRun returnedRun = new
-        (
-            runModel.Id,
-            runModel.RunIndex,
-            runModel.ProjectId
-        );
-
-        if (!string.IsNullOrEmpty(runModel.Errors))
-        {
-            // todo add errors to database
-            // runModel.ConsoleOutputName,
-            // runModel.Errors
-            // returnedRun.Results.Add(new OutputResult());
-        }
-
-        if (!string.IsNullOrEmpty(runModel.ConsoleOutputName))
-        {
-            // todo generate an unique id for each output file
-            returnedRun.Results.Add(new OutputResult(runModel.ConsoleOutputName, RunResultDefaultTypes.ConsoleType,
-                runModel.ConsoleOutputName));
-        }
-
-        foreach (var outputFileDatabaseName in runModel.OutputFileNames)
-        {
-            var (_, _, outputType, outputName) =
-                _fileNameGenerator.ExtractOutputFileNameComponents(outputFileDatabaseName);
-
-            // todo generate an unique id for each output file
-            returnedRun.Results.Add(new OutputResult(outputFileDatabaseName, outputType, outputFileDatabaseName));
-        }
+            LoadedFiles = ConvertLoadedFiles(run.LoadedFiles),
+            Results = run.Results.Select(r => new Result(r.Id, r.Type, r.Path))
+                .ToList()
+        };
 
         return Ok(returnedRun);
+    }
+
+    private static Dictionary<string, List<string>> ConvertLoadedFiles(Dictionary<string, List<FileData>> loadedFiles)
+    {
+        return loadedFiles
+            .Select(pair =>
+                new KeyValuePair<string, List<string>>(pair.Key, pair.Value.Select(d => d.Name).ToList()))
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 }

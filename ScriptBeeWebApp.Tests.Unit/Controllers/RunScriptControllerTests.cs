@@ -8,38 +8,37 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ScriptBee.Models;
 using ScriptBee.ProjectContext;
-using ScriptBee.Services;
 using ScriptBeeWebApp.Controllers;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 using Xunit;
 
 namespace ScriptBeeWebApp.Tests.Unit.Controllers;
 
+// todo to be replaced by Pact tests
 public class RunScriptControllerTests
 {
+    private readonly Fixture _fixture;
     private readonly Mock<IProjectManager> _projectManagerMock;
     private readonly Mock<IProjectModelService> _projectModelServiceMock;
-    private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
-    private readonly Mock<IRunScriptService> _runScriptServiceMock;
-    private readonly Mock<IValidator<RunScript>> _runScriptValidatorMock;
-    private readonly Fixture _fixture;
 
     private readonly RunScriptController _runScriptController;
+    private readonly Mock<IRunScriptService> _runScriptServiceMock;
+    private readonly Mock<IValidator<RunScript>> _runScriptValidatorMock;
 
     public RunScriptControllerTests()
     {
         _projectManagerMock = new Mock<IProjectManager>();
         _projectModelServiceMock = new Mock<IProjectModelService>();
-        _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
         _runScriptServiceMock = new Mock<IRunScriptService>();
         _runScriptValidatorMock = new Mock<IValidator<RunScript>>();
 
         _fixture = new Fixture();
 
         _runScriptController = new RunScriptController(_projectManagerMock.Object, _projectModelServiceMock.Object,
-            _fileNameGeneratorMock.Object, _runScriptServiceMock.Object, _runScriptValidatorMock.Object);
+            _runScriptServiceMock.Object, _runScriptValidatorMock.Object);
     }
 
     [Fact]
@@ -114,33 +113,7 @@ public class RunScriptControllerTests
         Assert.Equal($"Could not find project model with id: {runScript.ProjectId}", result.Value);
     }
 
-    [Fact]
-    public async Task GivenMissingFilePathWhileRunning_WhenRunScriptFromPath_ThenNotFoundIsReturned()
-    {
-        var runScript = _fixture.Create<RunScript>();
-        var context = _fixture.Create<Context>();
-        var project = _fixture.Build<Project>()
-            .With(p => p.Context, context)
-            .Create();
-        var projectModel = _fixture.Create<ProjectModel>();
-
-        _runScriptValidatorMock.Setup(x => x.ValidateAsync(runScript, default))
-            .ReturnsAsync(new ValidationResult());
-        _projectManagerMock.Setup(x => x.GetProject(runScript.ProjectId))
-            .Returns(project);
-        _projectModelServiceMock.Setup(x => x.GetDocument(runScript.ProjectId, default))
-            .ReturnsAsync(projectModel);
-        _runScriptServiceMock.Setup(x => x.RunAsync(project, projectModel, runScript.Language, runScript.FilePath,
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((RunModel?)null);
-
-        var actionResult = await _runScriptController.RunScriptFromPath(runScript);
-        var result = (NotFoundObjectResult)actionResult;
-
-        Assert.Equal(404, result.StatusCode);
-        Assert.Equal($"File from {runScript.FilePath} not found", result.Value);
-    }
-
+    // todo add tests for remapped exception thrown by runScriptService 
 
     [Fact]
     public async Task GivenValidRunScript_WhenRunScriptFromPath_ThenOkIsReturned()
@@ -151,9 +124,7 @@ public class RunScriptControllerTests
             .With(p => p.Context, context)
             .Create();
         var projectModel = _fixture.Create<ProjectModel>();
-        var runModel = _fixture.Build<RunModel>()
-            .With(r => r.OutputFileNames, new List<string> { "output" })
-            .Create();
+        var run = _fixture.Create<Run>();
 
         _runScriptValidatorMock.Setup(x => x.ValidateAsync(runScript, default))
             .ReturnsAsync(new ValidationResult());
@@ -164,26 +135,37 @@ public class RunScriptControllerTests
         _runScriptServiceMock.Setup(x =>
                 x.RunAsync(project, projectModel, runScript.Language, runScript.FilePath,
                     It.IsAny<CancellationToken>()))
-            .ReturnsAsync(runModel);
-        _fileNameGeneratorMock.Setup(x => x.ExtractOutputFileNameComponents("output"))
-            .Returns((runModel.ProjectId, runModel.Id, "outputType", "fileName"));
+            .ReturnsAsync(run);
 
         var actionResult = await _runScriptController.RunScriptFromPath(runScript);
         var result = (OkObjectResult)actionResult;
         var returnedRun = (ReturnedRun)result.Value!;
 
         Assert.Equal(200, result.StatusCode);
-        Assert.Equal(runModel.Id, returnedRun.RunId);
-        Assert.Equal(runModel.ProjectId, returnedRun.ProjectId);
-        Assert.Equal(runModel.RunIndex, returnedRun.RunIndex);
-        Assert.Equal(2, returnedRun.Results.Count);
-        var firsResult = returnedRun.Results[0];
-        Assert.Equal("Console", firsResult.OutputType);
-        Assert.Equal(runModel.ConsoleOutputName, firsResult.OutputId);
-        Assert.Equal(runModel.ConsoleOutputName, firsResult.Path);
-        var secondResult = returnedRun.Results[1];
-        Assert.Equal("outputType", secondResult.OutputType);
-        Assert.Equal("output", secondResult.OutputId);
-        Assert.Equal("output", secondResult.Path);
+        Assert.Equal(run.Index, returnedRun.Index);
+        Assert.Equal(run.ScriptPath, returnedRun.ScriptName);
+        Assert.Equal(run.Linker, returnedRun.Linker);
+        Assert.Equal(run.LoadedFiles.Count, returnedRun.LoadedFiles.Count);
+        foreach (var (key, files) in run.LoadedFiles)
+        {
+            Assert.Equal(files.Count, returnedRun.LoadedFiles[key].Count);
+            for (var i = 0; i < files.Count; i++)
+            {
+                var file = files[i];
+                var loadedFile = returnedRun.LoadedFiles[key][i];
+                Assert.Equal(file.Name, loadedFile);
+            }
+        }
+
+        Assert.Equal(run.Results.Count, returnedRun.Results.Count);
+        for (var i = 0; i < run.Results.Count; i++)
+        {
+            var runResult = run.Results[i];
+            var r = returnedRun.Results[i];
+
+            Assert.Equal(runResult.Id, r.Id);
+            Assert.Equal(runResult.Path, r.Path);
+            Assert.Equal(runResult.Type, r.Type);
+        }
     }
 }

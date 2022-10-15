@@ -65,7 +65,7 @@ public class ConsoleHelperFunctions : IHelperFunctions
 
     public void ConsoleWrite(DateTime message)
     {
-        _consoleStringBuilder.Append(message);
+        _consoleStringBuilder.Append(message.ToString(CultureInfo.InvariantCulture));
     }
 
     public void ConsoleWrite(char message)
@@ -91,6 +91,11 @@ public class ConsoleHelperFunctions : IHelperFunctions
     public void ConsoleWrite(ushort message)
     {
         _consoleStringBuilder.Append(message);
+    }
+
+    public void ConsoleWriteLine()
+    {
+        _consoleStringBuilder.AppendLine();
     }
 
     public void ConsoleWriteLine(object message)
@@ -132,7 +137,7 @@ public class ConsoleHelperFunctions : IHelperFunctions
     {
         _consoleStringBuilder.AppendLine(message.ToString(CultureInfo.InvariantCulture));
     }
-    
+
     public void ConsoleWriteLine(DateTime message)
     {
         _consoleStringBuilder.AppendLine(message.ToString(CultureInfo.InvariantCulture));
@@ -142,7 +147,7 @@ public class ConsoleHelperFunctions : IHelperFunctions
     {
         _consoleStringBuilder.AppendLine(message.ToString(CultureInfo.InvariantCulture));
     }
-    
+
     public void ConsoleWriteLine(short message)
     {
         _consoleStringBuilder.AppendLine(message.ToString(CultureInfo.InvariantCulture));

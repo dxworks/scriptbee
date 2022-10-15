@@ -17,14 +17,15 @@ using Xunit;
 
 namespace ScriptBeeWebApp.Tests.Unit.Controllers;
 
+// todo to be replaced by Pact tests
 public class GenerateScriptControllerTests
 {
-    private readonly Mock<IProjectManager> _projectManagerMock;
-    private readonly Mock<IGenerateScriptService> _generateScriptServiceMock;
-    private readonly Mock<IValidator<GenerateScriptRequest>> _generateScriptRequestValidatorMock;
     private readonly Fixture _fixture;
 
     private readonly GenerateScriptController _generateScriptController;
+    private readonly Mock<IValidator<GenerateScriptRequest>> _generateScriptRequestValidatorMock;
+    private readonly Mock<IGenerateScriptService> _generateScriptServiceMock;
+    private readonly Mock<IProjectManager> _projectManagerMock;
 
     public GenerateScriptControllerTests()
     {

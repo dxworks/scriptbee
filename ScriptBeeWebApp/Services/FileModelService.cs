@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MongoDB.Driver;
@@ -16,7 +18,7 @@ public class FileModelService : IFileModelService
         _bucket = new GridFSBucket(mongoDatabase);
     }
 
-    public async Task UploadFileAsync(string fileName, Stream fileStream, CancellationToken cancellationToken)
+    public async Task UploadFileAsync(string fileName, Stream fileStream, CancellationToken cancellationToken = default)
     {
         await _bucket.UploadFromStreamAsync(fileName, fileStream, cancellationToken: cancellationToken);
     }
@@ -31,7 +33,7 @@ public class FileModelService : IFileModelService
         return await _bucket.OpenDownloadStreamByNameAsync(fileName);
     }
 
-    public async Task DeleteFileAsync(string fileName, CancellationToken cancellationToken)
+    public async Task DeleteFileAsync(string fileName, CancellationToken cancellationToken = default)
     {
         var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
         var cursor = await _bucket.FindAsync(filter, cancellationToken: cancellationToken);
@@ -40,5 +42,13 @@ public class FileModelService : IFileModelService
         {
             await _bucket.DeleteAsync(fileInfo.Id, cancellationToken);
         }
+    }
+
+    public async Task DeleteFilesAsync(IEnumerable<string> fileNames, CancellationToken cancellationToken = default)
+    {
+        var tasks = fileNames.Select(fileName => DeleteFileAsync(fileName, cancellationToken))
+            .ToList();
+
+        await Task.WhenAll(tasks);
     }
 }

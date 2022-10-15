@@ -14,16 +14,19 @@ using Xunit;
 
 namespace ScriptBeeWebApp.Tests.Unit.Controllers;
 
+// todo to be replaced by Pact tests
 public class ProjectsControllerTests
 {
-    private readonly ProjectsController _projectsController;
-    private readonly Mock<IProjectManager> _projectManagerMock;
-    private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
-    private readonly Mock<IProjectModelService> _projectModelServiceMock;
-    private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
     private readonly Mock<IFileModelService> _fileModelServiceMock;
-    private readonly Mock<IRunModelService> _runModelServiceMock;
+    private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
     private readonly Fixture _fixture;
+    private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
+    private readonly Mock<IProjectManager> _projectManagerMock;
+    private readonly Mock<IProjectModelService> _projectModelServiceMock;
+
+    private readonly ProjectsController _projectsController;
+    private readonly Mock<IRunModelService> _runModelServiceMock;
+    private readonly Mock<IUploadModelService> _uploadModelServiceMock;
 
     public ProjectsControllerTests()
     {
@@ -33,10 +36,11 @@ public class ProjectsControllerTests
         _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
         _fileModelServiceMock = new Mock<IFileModelService>();
         _runModelServiceMock = new Mock<IRunModelService>();
+        _uploadModelServiceMock = new Mock<IUploadModelService>();
         _fixture = new Fixture();
 
         _projectsController = new ProjectsController(_projectManagerMock.Object,
-            _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object, _fileNameGeneratorMock.Object,
+            _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object,
             _fileModelServiceMock.Object, _runModelServiceMock.Object);
     }
 

@@ -1,4 +1,4 @@
-import {Directive, EventEmitter, HostListener, Output} from '@angular/core';
+import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
   selector: '[appFileDrop]'
@@ -8,11 +8,8 @@ export class FileDropDirective {
   @Output() filesDropped = new EventEmitter<FileList>();
   @Output() filesHovered = new EventEmitter<boolean>();
 
-  constructor() {
-  }
-
   @HostListener('drop', ['$event'])
-  onDrop($event) {
+  onDrop($event: any) {
     $event.preventDefault();
 
     const transfer = $event.dataTransfer;
@@ -21,13 +18,13 @@ export class FileDropDirective {
   }
 
   @HostListener('dragover', ['$event'])
-  onDragOver($event) {
+  onDragOver($event: Event) {
     $event.preventDefault();
     this.filesHovered.emit(true);
   }
 
   @HostListener('dragleave', ['$event'])
-  onDragLeave($event) {
+  onDragLeave($event: Event) {
     $event.preventDefault();
     this.filesHovered.emit(false);
   }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using ScriptBee.Models;
-using ScriptBee.ProjectContext;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -11,6 +10,6 @@ public interface IRunScriptService
 {
     IEnumerable<string> GetSupportedLanguages();
 
-    Task<RunModel?> RunAsync(Project project, ProjectModel projectModel, string language,
-        string scriptFilePath, CancellationToken cancellationToken = default);
+    Task<Run> RunAsync(IProject project, ProjectModel projectModel, string language, string scriptFilePath,
+        CancellationToken cancellationToken = default);
 }

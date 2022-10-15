@@ -29,7 +29,7 @@
   margin: 8px 8px;
 }
 
-.select-loader {
+.select-linker {
   margin-top: 16px;
   margin-left: 8px;
 }
@@ -71,27 +71,11 @@
   margin-top: 48px;
 }
 
-.bold-text {
-  font-weight: bold;
-}
-
 .text-with-opacity {
   opacity: 60%;
 }
 
-.warning {
-  color: var(--primary-color);
-  opacity: 90%;
-  margin-top: 24px;
-  margin-bottom: 8px;
-}
-
-.upload-spinner {
-  margin-top: 24px;
-  margin-bottom: 8px;
-}
-
-.load-spinner{
+.load-spinner {
   margin-top: 16px;
   margin-bottom: 8px;
 }

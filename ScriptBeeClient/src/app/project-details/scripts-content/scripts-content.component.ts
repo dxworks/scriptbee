@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OutputFilesService } from '../../services/output/output-files.service';
 import { OutputFile } from '../../services/output/output-file';
 import { TreeNode } from '../../shared/tree-node';
-import { debounceTime, distinctUntilChanged, distinctUntilKeyChanged, filter, first } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { RunScriptResult } from '../../services/run-script/run-script-result';
 import { ResultsService } from "../../services/plugin/results.service";
 
@@ -78,18 +78,19 @@ export class ScriptsContentComponent implements OnInit {
   }
 
   private loadProjectFileStructure(callback?: () => void) {
-    this.projectDetailsService.project.subscribe(project => {
-      if (project) {
-        this.fileSystemService.getFileSystem(project.projectId).subscribe(fileTreeNode => {
-          if (fileTreeNode) {
-            this.fileStructureTree = [fileTreeNode];
-            if (callback) {
-              callback();
-            }
-          }
-        });
-      }
-    });
+    // todo
+    // this.projectDetailsService.project.subscribe(project => {
+    //   if (project) {
+    //     this.fileSystemService.getFileSystem(project.projectId).subscribe(fileTreeNode => {
+    //       if (fileTreeNode) {
+    //         this.fileStructureTree = [fileTreeNode];
+    //         if (callback) {
+    //           callback();
+    //         }
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   private areRunResultsEqual(runRes1: RunScriptResult, runRes2: RunScriptResult) {

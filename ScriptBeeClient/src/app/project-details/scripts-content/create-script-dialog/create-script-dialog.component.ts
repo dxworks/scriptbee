@@ -1,9 +1,9 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {CreateScriptDialogData} from './create-script-dialog-data';
-import {FileSystemService} from '../../../services/file-system/file-system.service';
-import {ScriptTypes} from './script-types';
-import {ProjectDetailsService} from '../../project-details.service';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CreateScriptDialogData } from './create-script-dialog-data';
+import { FileSystemService } from '../../../services/file-system/file-system.service';
+import { ScriptTypes } from './script-types';
+import { ProjectDetailsService } from '../../project-details.service';
 
 @Component({
   selector: 'app-create-script-dialog',
@@ -27,16 +27,17 @@ export class CreateScriptDialogComponent {
   }
 
   onOkClick(): void {
-    this.projectDetailsService.project.subscribe(project => {
-      if (project) {
-        this.fileSystemService.createScript(project.projectId, this.data.scriptPath, this.data.scriptType).subscribe(res => {
-          if (res) {
-            this.dialogRef.close(res.filePath);
-          }
-        }, (error: any) => {
-          this.scriptExists = true;
-        });
-      }
-    });
+    // todo
+    // this.projectDetailsService.project.subscribe(project => {
+    //   if (project) {
+    //     this.fileSystemService.createScript(project.projectId, this.data.scriptPath, this.data.scriptType).subscribe(res => {
+    //       if (res) {
+    //         this.dialogRef.close(res.filePath);
+    //       }
+    //     }, (error: any) => {
+    //       this.scriptExists = true;
+    //     });
+    //   }
+    // });
   }
 }

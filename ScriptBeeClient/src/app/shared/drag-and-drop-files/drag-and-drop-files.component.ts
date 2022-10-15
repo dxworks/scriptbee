@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-drag-and-drop-files',
@@ -7,10 +7,10 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
 })
 export class DragAndDropFilesComponent {
 
-  @ViewChild('modelFileInput') modelFileInput: ElementRef;
+  @ViewChild('modelFileInput') modelFileInput?: ElementRef;
   @Output() filesChange = new EventEmitter<File[]>();
 
-  isHovering: boolean;
+  isHovering: boolean = false;
   @Input() files: File[] = [];
 
   toggleHover(event: boolean) {
@@ -19,12 +19,19 @@ export class DragAndDropFilesComponent {
 
   addFiles(files: FileList) {
     for (let i = 0; i < files.length; i++) {
-      this.files.push(files.item(i));
+      const file = files.item(i);
+      if (file) {
+        this.files.push(file);
+      }
     }
     this.filesChange.emit(this.files);
   }
 
   openBrowseFilesDialog() {
+    if (!this.modelFileInput) {
+      return;
+    }
+
     this.modelFileInput.nativeElement.value = "";
     this.modelFileInput.nativeElement.click();
   }

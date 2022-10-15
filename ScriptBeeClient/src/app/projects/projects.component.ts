@@ -1,14 +1,14 @@
-import {Component, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {Project} from './project';
-import {ProjectService} from '../services/project/project.service';
-import {MatDialog} from '@angular/material/dialog';
-import {CreateProjectDialogComponent} from './create-project-dialog/create-project-dialog.component';
-import {DeleteProjectDialogComponent} from './delete-project-dialog/delete-project-dialog.component';
-import {Router} from '@angular/router';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Project, ProjectData } from '../state/project-details/project';
+import { ProjectService } from '../services/project/project.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateProjectDialogComponent } from './create-project-dialog/create-project-dialog.component';
+import { DeleteProjectDialogComponent } from './delete-project-dialog/delete-project-dialog.component';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-projects',
@@ -17,16 +17,20 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 export class ProjectsComponent {
   displayedColumns: string[] = ['projectId', 'projectName', 'creationDate', 'deleteProject'];
-  dataSource: MatTableDataSource<Project>;
+  dataSource?: MatTableDataSource<ProjectData>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
 
   constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router, private snackBar: MatSnackBar) {
     this.getAllProjects();
   }
 
   applyFilter(event: Event) {
+    if (!this.dataSource) {
+      return;
+    }
+
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -61,7 +65,7 @@ export class ProjectsComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.projectService.deleteProject(row.projectId).subscribe(res => {
+        this.projectService.deleteProject(row.data.projectId).subscribe(res => {
           this.getAllProjects();
         });
       }
@@ -74,14 +78,15 @@ export class ProjectsComponent {
 
   private getAllProjects() {
     this.projectService.getAllProjects().subscribe(projects => {
+      // todo
       this.dataSource = new MatTableDataSource(projects);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator ?? null;
+      this.dataSource.sort = this.sort ?? null;
     });
   }
 
   onRowClick(row: Project) {
-    this.router.navigate([`/projects/${row.projectId}`]).then(r => {
+    this.router.navigate([`/projects/${row.data.projectId}`]).then(r => {
     });
   }
 }

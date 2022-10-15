@@ -1,165 +1,124 @@
-﻿namespace ScriptBeeWebApp.Tests.Unit.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture;
+using DxWorks.ScriptBee.Plugin.Api;
+using Moq;
+using ScriptBee.Models;
+using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
+using ScriptBee.ProjectContext;
+using ScriptBee.Services;
+using ScriptBeeWebApp.Data.Exceptions;
+using ScriptBeeWebApp.Services;
+using Xunit;
+
+namespace ScriptBeeWebApp.Tests.Unit.Services;
 
 public class RunScriptServiceTests
 {
-    // todo add tests
-//         private readonly Mock<IProjectManager> _projectManagerMock;
-//     private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
-//     private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
-//     private readonly Mock<IFileModelService> _fileModelServiceMock;
-//     private readonly Mock<IRunModelService> _runModelServiceMock;
-//     private readonly Mock<IProjectModelService> _projectModelServiceMock;
-//     private readonly Mock<IHelperFunctionsFactory> _helperFunctionsFactoryMock;
-//     private readonly Mock<IHelperFunctionsMapper> _helperFunctionsMapperMock;
-//     private readonly Fixture _fixture;
-//
-//     private readonly RunScriptController _runScriptController;
-//
-//     public RunScriptControllerTests()
-//     {
-//         _projectManagerMock = new Mock<IProjectManager>();
-//         _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
-//         _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
-//         _fileModelServiceMock = new Mock<IFileModelService>();
-//         _runModelServiceMock = new Mock<IRunModelService>();
-//         _projectModelServiceMock = new Mock<IProjectModelService>();
-//         _helperFunctionsFactoryMock = new Mock<IHelperFunctionsFactory>();
-//         _helperFunctionsMapperMock = new Mock<IHelperFunctionsMapper>();
-//         _fixture = new Fixture();
-//
-//         _runScriptController = new RunScriptController(_projectManagerMock.Object,
-//             _projectFileStructureManagerMock.Object,
-//             _fileNameGeneratorMock.Object, _fileModelServiceMock.Object, _runModelServiceMock.Object,
-//             _projectModelServiceMock.Object, _helperFunctionsFactoryMock.Object, _helperFunctionsMapperMock.Object);
-//     }
-//
-//     [Theory]
-//     [InlineData("script.py", @"project: Project")]
-//     [InlineData("script.js", @"let project = new Project();")]
-//     public async Task GivenValidRunScript_WhenRunScriptFromPath_ThenReturnedRunIsReturned(string filePath,
-//         string scriptContent)
-//     {
-//         var runScriptArg = new RunScript("id1", filePath);
-//         var project = _fixture.Build<Project>()
-//             .With(p => p.Id, "id1")
-//             .With(p => p.Name, "name1")
-//             .Create();
-//         var projectModel = _fixture.Build<ProjectModel>()
-//             .With(p => p.Id, "id1")
-//             .With(p => p.Name, "name1")
-//             .Create();
-//
-//         _projectManagerMock.Setup(manager => manager.GetProject("id1"))
-//             .Returns(project);
-//
-//         _projectFileStructureManagerMock.Setup(manager => manager.GetFileContentAsync("id1", filePath))
-//             .Returns(Task.FromResult<string?>(scriptContent));
-//
-//         _fileNameGeneratorMock.Setup(generator => generator.GenerateScriptName("id1", filePath))
-//             .Returns("scriptName");
-//
-//         _projectModelServiceMock.Setup(service => service.GetDocument("id1", It.IsAny<CancellationToken>()))
-//             .Returns(Task.FromResult<ProjectModel?>(projectModel));
-//
-//         var helperFunctionsMock = new Mock<IHelperFunctionsWithResults>();
-//         helperFunctionsMock.Setup(functions => functions.GetResults())
-//             .Returns(Task.FromResult(new List<RunResult>
-//             {
-//                 new("Console", "path1"),
-//                 new("File", "path2-database"),
-//             }));
-//
-//         _helperFunctionsFactoryMock.Setup(factory => factory.Create("id1", null))
-//             .Returns(helperFunctionsMock.Object);
-//         _helperFunctionsMapperMock.Setup(mapper => mapper.GetFunctionsDictionary(helperFunctionsMock.Object))
-//             .Returns(new Dictionary<string, Delegate>());
-//
-//         _fileNameGeneratorMock.Setup(generator => generator.ExtractOutputFileNameComponents("path2-database"))
-//             .Returns((It.IsAny<string>(), It.IsAny<string>(), "File", "path2"));
-//
-//
-//         var response = await _runScriptController.RunScriptFromPath(runScriptArg, It.IsAny<CancellationToken>());
-//         var result = Assert.IsType<OkObjectResult>(response);
-//         var returnedRun = (result.Value as ReturnedRun)!;
-//
-//         MakeAssertions(returnedRun, projectModel);
-//     }
-//
-//     [Fact]
-//     public async Task GivenValidCSharpRunScript_WhenRunScriptFromPath_ThenReturnedRunIsReturned()
-//     {
-//         var runScriptArg = new RunScript("id1", "script.cs");
-//         var project = _fixture.Build<Project>()
-//             .With(p => p.Id, "id1")
-//             .With(p => p.Name, "name1")
-//             .Create();
-//         var projectModel = _fixture.Build<ProjectModel>()
-//             .With(p => p.Id, "id1")
-//             .With(p => p.Name, "name1")
-//             .Create();
-//
-//         _projectManagerMock.Setup(manager => manager.GetProject("id1"))
-//             .Returns(project);
-//
-//         _projectFileStructureManagerMock.Setup(manager => manager.GetFileContentAsync("id1", "script.cs"))
-//             .Returns(Task.FromResult<string?>(@"using ScriptBee.ProjectContext;
-// using HelperFunctions;
-// public class ScriptContent
-// {
-//     public void ExecuteScript(Project project, IHelperFunctions helperFunctions)
-//     {
-//     }
-// }
-// "));
-//
-//         _fileNameGeneratorMock.Setup(generator => generator.GenerateScriptName("id1", "script.cs"))
-//             .Returns("scriptName");
-//
-//         _projectModelServiceMock.Setup(service => service.GetDocument("id1", It.IsAny<CancellationToken>()))
-//             .Returns(Task.FromResult<ProjectModel?>(projectModel));
-//
-//         var helperFunctionsMock = new Mock<IHelperFunctionsWithResults>();
-//         helperFunctionsMock.Setup(functions => functions.GetResults())
-//             .Returns(Task.FromResult(new List<RunResult>
-//             {
-//                 new("Console", "path1"),
-//                 new("File", "path2-database"),
-//             }));
-//         _helperFunctionsFactoryMock.Setup(factory => factory.Create("id1", null))
-//             .Returns(helperFunctionsMock.Object);
-//
-//         _fileNameGeneratorMock.Setup(generator => generator.ExtractOutputFileNameComponents("path2-database"))
-//             .Returns((It.IsAny<string>(), It.IsAny<string>(), "File", "path2"));
-//
-//
-//         var response = await _runScriptController.RunScriptFromPath(runScriptArg, It.IsAny<CancellationToken>());
-//         var result = Assert.IsType<OkObjectResult>(response);
-//         var returnedRun = (result.Value as ReturnedRun)!;
-//
-//         MakeAssertions(returnedRun, projectModel);
-//     }
-//
-//     private void MakeAssertions(ReturnedRun returnedRun, ProjectModel projectModel)
-//     {
-//         Assert.Null(returnedRun.Errors);
-//         Assert.Equal("id1", returnedRun.ProjectId);
-//         Assert.Equal(projectModel.LastRunIndex, returnedRun.RunIndex);
-//         Assert.Equal("path1", returnedRun.ConsoleOutputName);
-//         Assert.Single(returnedRun.OutputFiles);
-//         Assert.Equal("path2", returnedRun.OutputFiles[0].FileName);
-//         Assert.Equal("path2-database", returnedRun.OutputFiles[0].FilePath);
-//         Assert.Equal("File", returnedRun.OutputFiles[0].FileType);
-//
-//         _fileModelServiceMock.Verify(service =>
-//             service.UploadFileAsync("scriptName", It.IsAny<Stream>(), It.IsAny<CancellationToken>()), Times.Once);
-//
-//         _projectModelServiceMock.Verify(service => service.UpdateDocument(projectModel, It.IsAny<CancellationToken>()),
-//             Times.Once);
-//
-//         _runModelServiceMock.Verify(
-//             service => service.CreateDocument(It.IsAny<RunModel>(), It.IsAny<CancellationToken>()), Times.Once);
-//
-//         _runModelServiceMock.Verify(
-//             service => service.UpdateDocument(It.IsAny<RunModel>(), It.IsAny<CancellationToken>()), Times.Once);
-//     }
+    private readonly Mock<IFileModelService> _fileModelServiceMock;
+    private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
+    private readonly Fixture _fixture;
+    private readonly Mock<IGuidGenerator> _guidGeneratorMock;
+    private readonly Mock<IPluginRepository> _pluginRepositoryMock;
+    private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
+    private readonly Mock<IProjectModelService> _projectModelServiceMock;
+    private readonly Mock<IRunModelService> _runModelServiceMock;
+
+    private readonly RunScriptService _runScriptService;
+
+    public RunScriptServiceTests()
+    {
+        _fileModelServiceMock = new Mock<IFileModelService>();
+        _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
+        _guidGeneratorMock = new Mock<IGuidGenerator>();
+        _pluginRepositoryMock = new Mock<IPluginRepository>();
+        _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
+        _projectModelServiceMock = new Mock<IProjectModelService>();
+        _runModelServiceMock = new Mock<IRunModelService>();
+        _fixture = new Fixture();
+
+        _runScriptService = new RunScriptService(_fileModelServiceMock.Object, _fileNameGeneratorMock.Object,
+            _guidGeneratorMock.Object, _pluginRepositoryMock.Object, _projectFileStructureManagerMock.Object,
+            _projectModelServiceMock.Object, _runModelServiceMock.Object);
+    }
+
+
+    [Fact]
+    public void GivenLoadedPluginManifests_WhenGetSupportedLanguages_ThenReturnSupportedLanguages()
+    {
+        var pluginManifests = new List<PluginManifest>
+        {
+            new()
+            {
+                Name = "Plugin1",
+                ExtensionPoints = new List<PluginExtensionPoint>
+                {
+                    new ScriptRunnerPluginExtensionPoint
+                    {
+                        Language = "C#"
+                    }
+                }
+            },
+            new()
+            {
+                Name = "Plugin2",
+                ExtensionPoints = new List<PluginExtensionPoint>
+                {
+                    new ScriptRunnerPluginExtensionPoint
+                    {
+                        Language = "Python"
+                    }
+                }
+            }
+        };
+        _pluginRepositoryMock.Setup(x => x.GetLoadedPluginManifests()).Returns(pluginManifests);
+
+        var supportedLanguages = _runScriptService.GetSupportedLanguages().ToList();
+
+        Assert.Equal(2, supportedLanguages.Count);
+        Assert.Contains("C#", supportedLanguages);
+        Assert.Contains("Python", supportedLanguages);
+    }
+
+    [Fact]
+    public async Task GivenMissingScript_WhenRunScript_ThenScriptFileNotFoundExceptionIsThrown()
+    {
+        var projectModel = _fixture.Create<ProjectModel>();
+
+        _projectFileStructureManagerMock.Setup(m => m.GetFileContentAsync(projectModel.Id, "scriptPath"))
+            .ReturnsAsync((string?)null);
+
+        await Assert.ThrowsAsync<ScriptFileNotFoundException>(() => _runScriptService.RunAsync(It.IsAny<Project>(),
+            projectModel, It.IsAny<string>(), "scriptPath", It.IsAny<CancellationToken>()));
+    }
+
+    [Fact(Skip = "Unsupported expression: x => (x.Language == \"language\")")]
+    public async Task GivenValidScriptPath_WhenRunScript_ThenScriptContentIsSavedInDatabase()
+    {
+        var projectModel = _fixture.Create<ProjectModel>();
+        const string language = "language";
+
+        _guidGeneratorMock.Setup(g => g.GenerateGuid())
+            .Returns(Guid.Parse("eee8d702-8065-4db6-b553-d99c4bbd8cbc"));
+        _projectFileStructureManagerMock.Setup(m => m.GetFileContentAsync(projectModel.Id, "scriptPath"))
+            .ReturnsAsync("content");
+        _pluginRepositoryMock.Setup(r =>
+                r.GetPlugin<IScriptRunner>(x => x.Language == language, new List<(Type @interface, object instance)>()))
+            .Returns(It.IsAny<IScriptRunner>());
+        _pluginRepositoryMock
+            .Setup(r => r.GetPlugin<IScriptGeneratorStrategy>(x => x.Language == language,
+                new List<(Type @interface, object instance)>()))
+            .Returns(It.IsAny<IScriptGeneratorStrategy>());
+
+        await _runScriptService.RunAsync(It.IsAny<Project>(), projectModel, language, "scriptPath",
+            It.IsAny<CancellationToken>());
+
+        _fileModelServiceMock.Verify(m => m.UploadFileAsync("eee8d702-8065-4db6-b553-d99c4bbd8cbc", It.IsAny<Stream>(),
+            It.IsAny<CancellationToken>()));
+    }
 }

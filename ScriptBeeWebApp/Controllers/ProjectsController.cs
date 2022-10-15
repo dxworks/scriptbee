@@ -17,21 +17,18 @@ namespace ScriptBeeWebApp.Controllers;
 // todo add tests
 public class ProjectsController : ControllerBase
 {
-    private readonly IProjectManager _projectManager;
-    private readonly IProjectFileStructureManager _projectFileStructureManager;
-    private readonly IProjectModelService _projectModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IFileModelService _fileModelService;
+    private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IProjectManager _projectManager;
+    private readonly IProjectModelService _projectModelService;
     private readonly IRunModelService _runModelService;
 
     public ProjectsController(IProjectManager projectManager, IProjectFileStructureManager projectFileStructureManager,
-        IProjectModelService projectModelService, IFileNameGenerator fileNameGenerator,
-        IFileModelService fileModelService, IRunModelService runModelService)
+        IProjectModelService projectModelService, IFileModelService fileModelService, IRunModelService runModelService)
     {
         _projectManager = projectManager;
         _projectFileStructureManager = projectFileStructureManager;
         _projectModelService = projectModelService;
-        _fileNameGenerator = fileNameGenerator;
         _fileModelService = fileModelService;
         _runModelService = runModelService;
     }
@@ -106,7 +103,7 @@ public class ProjectsController : ControllerBase
         {
             Id = project.Id,
             Name = project.Name,
-            CreationDate = DateTime.Now,
+            CreationDate = DateTime.Now
         };
 
         await _projectModelService.CreateDocument(projectModel, cancellationToken);
@@ -116,6 +113,7 @@ public class ProjectsController : ControllerBase
         return projectModel;
     }
 
+    // todo reimplement
     [HttpDelete("{projectId}")]
     public async Task<IActionResult> RemoveProject(string projectId, CancellationToken cancellationToken)
     {
@@ -126,16 +124,16 @@ public class ProjectsController : ControllerBase
 
         var projectModel = await _projectModelService.GetDocument(projectId, cancellationToken);
 
+
         if (projectModel != null)
         {
+            var fileIds = new List<string>();
             foreach (var (_, savedFilesNames) in projectModel.SavedFiles)
             {
-                foreach (var fileName in savedFilesNames)
-                {
-                    await _fileModelService.DeleteFileAsync(fileName, cancellationToken);
-                }
+                fileIds.AddRange(savedFilesNames.Select(data => data.Id.ToString()));
             }
 
+            await _fileModelService.DeleteFilesAsync(fileIds, cancellationToken);
             await _projectModelService.DeleteDocument(projectId, cancellationToken);
         }
 
@@ -144,16 +142,17 @@ public class ProjectsController : ControllerBase
         var allRunsForProject = await _runModelService.GetAllRunsForProject(projectId, cancellationToken);
         foreach (var runModel in allRunsForProject)
         {
-            await _fileModelService.DeleteFileAsync(runModel.ScriptName, cancellationToken);
+            await _fileModelService.DeleteFileAsync(runModel.ScriptPath, cancellationToken);
 
-            await _fileModelService.DeleteFileAsync(runModel.ConsoleOutputName, cancellationToken);
+            // todo
+            // await _fileModelService.DeleteFileAsync(runModel.ConsoleOutputName, cancellationToken);
+            //
+            // foreach (var outputFileName in runModel.OutputFileNames)
+            // {
+            //     await _fileModelService.DeleteFileAsync(outputFileName, cancellationToken);
+            // }
 
-            foreach (var outputFileName in runModel.OutputFileNames)
-            {
-                await _fileModelService.DeleteFileAsync(outputFileName, cancellationToken);
-            }
-
-            await _runModelService.DeleteDocument(runModel.Id, cancellationToken);
+            // await _runModelService.DeleteDocument(runModel.Id, cancellationToken);
         }
 
         return Ok("Project removed successfully");
@@ -166,7 +165,7 @@ public class ProjectsController : ControllerBase
 
         if (project == null)
         {
-            return BadRequest($"Project with the given id does not exist");
+            return BadRequest("Project with the given id does not exist");
         }
 
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
@@ -200,12 +199,9 @@ public class ProjectsController : ControllerBase
         };
     }
 
-    private List<string> ConvertFileNames(IEnumerable<string> files)
+    private List<string> ConvertFileNames(List<FileData> files)
     {
-        return files.Select(file =>
-        {
-            var (_, _, fileName) = _fileNameGenerator.ExtractModelNameComponents(file);
-            return fileName;
-        }).ToList();
+        return files.Select(f => f.Name)
+            .ToList();
     }
 }

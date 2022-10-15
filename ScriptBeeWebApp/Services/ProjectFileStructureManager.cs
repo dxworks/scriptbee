@@ -4,15 +4,16 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using ScriptBee.Config;
+using ScriptBee.ProjectContext;
 using ScriptBee.Services.Config;
 
-namespace ScriptBee.ProjectContext;
+namespace ScriptBeeWebApp.Services;
 
 // todo add tests
 public class ProjectFileStructureManager : IProjectFileStructureManager
 {
-    private readonly string _userFolderPath;
     private readonly IFileWatcherService _fileWatcherService;
+    private readonly string _userFolderPath;
 
     public ProjectFileStructureManager(IOptions<UserFolderSettings> userFolderSettings,
         IFileWatcherService fileWatcherService)
@@ -123,6 +124,18 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         return projectPath;
     }
 
+    public void SetupFileWatcher(string projectId, string filePath)
+    {
+        var fullPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
+
+        if (!File.Exists(fullPath))
+        {
+            throw new ArgumentException("File does not exist");
+        }
+
+        _fileWatcherService.SetupFileWatcher(fullPath, filePath);
+    }
+
     private FileTreeNode GetFolderStructure(string path, string srcPath)
     {
         if (File.Exists(path))
@@ -144,17 +157,5 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
 
         return new FileTreeNode(Path.GetFileName(path), children, path, Path.GetRelativePath(srcPath, path));
-    }
-
-    public void SetupFileWatcher(string projectId, string filePath)
-    {
-        var fullPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
-
-        if (!File.Exists(fullPath))
-        {
-            throw new ArgumentException("File does not exist");
-        }
-
-        _fileWatcherService.SetupFileWatcher(fullPath, filePath);
     }
 }
