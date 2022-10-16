@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable} from "rxjs";
-import { Plugin, UIPlugin } from "./plugin";
+import { Observable } from "rxjs";
+import { Plugin, } from "./plugin";
 import { contentHeaders } from "../../shared/headers";
 
 @Injectable({
@@ -18,7 +18,7 @@ export class PluginService {
     return this.http.get<Plugin[]>(this.pluginsApi, {headers: contentHeaders});
   }
 
-  getAllUiPlugins():Observable<UIPlugin[]>{
-    return this.http.get<UIPlugin[]>(`${this.pluginsApi}/ui`, {headers: contentHeaders});
-  }
+  // getAllUiPlugins():Observable<UIPlugin[]>{
+  //   return this.http.get<UIPlugin[]>(`${this.pluginsApi}/ui`, {headers: contentHeaders});
+  // }
 }

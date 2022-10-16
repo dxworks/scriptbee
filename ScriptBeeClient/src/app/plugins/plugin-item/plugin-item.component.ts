@@ -10,8 +10,4 @@ export class PluginItemComponent {
 
   @Input()
   plugin?: Plugin = undefined;
-
-  getPluginAsString() {
-    return JSON.stringify(this.plugin, null, 2);
-  }
 }

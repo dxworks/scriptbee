@@ -1,33 +1,57 @@
-export type Plugin = BasicPlugin | UIPlugin;
+type PluginKind = 'ScriptGenerator' | 'ScriptRunner' | 'HelperFunctions' | 'Loader' | 'Linker' | 'UI';
 
-type PluginKind = 'UI' | 'Loader' | 'Linker';
-
-export interface BasicPlugin {
+export interface Plugin {
   apiVersion: string;
-  kind: PluginKind;
-  metadata: PluginMetadata;
   name: string;
-}
-
-export interface PluginMetadata {
-  name: string;
-  entryPoint: string;
-  version: string;
   description: string;
   author: string;
+  extensionPoints: ExtensionPoint[]
 }
 
-type UIPluginType = 'Result';
+interface BasicExtensionPoint {
+  kind: PluginKind;
+  entryPoint: string;
+  version: string;
+}
 
-export interface UIPlugin extends BasicPlugin {
+
+interface ScriptGeneratorExtensionPoint extends BasicExtensionPoint {
+  kind: 'ScriptGenerator';
+  language: string;
+  extension: string;
+}
+
+interface ScriptRunnerExtensionPoint extends BasicExtensionPoint {
+  kind: 'ScriptRunner';
+  language: string;
+}
+
+interface HelperFunctionsExtensionPoint extends BasicExtensionPoint {
+  kind: 'HelperFunctions';
+}
+
+interface LoaderExtensionPoint extends BasicExtensionPoint {
+  kind: 'Loader';
+}
+
+interface LinkerExtensionPoint extends BasicExtensionPoint {
+  kind: 'Linker';
+}
+
+interface UIExtensionPoint extends BasicExtensionPoint {
   kind: 'UI';
-  spec: UIPluginSpec;
-}
-
-
-export interface UIPluginSpec {
+  port: number;
   remoteEntry: string;
   exposedModule: string;
   componentName: string;
-  uiPluginType: UIPluginType;
+  uiPluginType: string;
 }
+
+type ExtensionPoint =
+  HelperFunctionsExtensionPoint
+  | ScriptGeneratorExtensionPoint
+  | ScriptRunnerExtensionPoint
+  | LoaderExtensionPoint
+  | LinkerExtensionPoint
+  | UIExtensionPoint;
+
