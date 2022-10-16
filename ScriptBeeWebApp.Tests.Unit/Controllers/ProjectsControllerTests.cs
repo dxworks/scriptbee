@@ -19,7 +19,6 @@ namespace ScriptBeeWebApp.Tests.Unit.Controllers;
 public class ProjectsControllerTests
 {
     private readonly Mock<IFileModelService> _fileModelServiceMock;
-    private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
     private readonly Fixture _fixture;
     private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
     private readonly Mock<IProjectManager> _projectManagerMock;
@@ -34,7 +33,6 @@ public class ProjectsControllerTests
         _projectManagerMock = new Mock<IProjectManager>();
         _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
         _projectModelServiceMock = new Mock<IProjectModelService>();
-        _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
         _fileModelServiceMock = new Mock<IFileModelService>();
         _runModelServiceMock = new Mock<IRunModelService>();
         _uploadModelServiceMock = new Mock<IUploadModelService>();

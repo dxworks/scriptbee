@@ -37,28 +37,22 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         File.WriteAllText(filePath, fileContent);
     }
 
-    public void CreateSrcFile(string projectId, string relativePath, string fileContent)
-    {
+    public FileTreeNode CreateSrcFile(string projectId, string relativePath, string fileContent)
+    { 
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
         Directory.CreateDirectory(Path.GetDirectoryName(filePath));
         File.WriteAllText(filePath, fileContent);
+
+        var srcPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder);
+
+        return new FileTreeNode(Path.GetFileName(relativePath), null, filePath,
+            Path.GetRelativePath(srcPath, filePath));
     }
 
     public bool FileExists(string projectId, string relativePath)
     {
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
         return File.Exists(filePath);
-    }
-
-    public string GetFileContent(string projectId, string relativePath)
-    {
-        var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
-        if (File.Exists(filePath))
-        {
-            return File.ReadAllText(filePath);
-        }
-
-        return null;
     }
 
     public async Task<string?> GetFileContentAsync(string projectId, string relativePath)

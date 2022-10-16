@@ -31,29 +31,26 @@ public class RunModelService : MongoService<RunModel>, IRunModelService
 
     public async Task AddRun(string projectId, Run run, CancellationToken cancellationToken = default)
     {
-        // todo check if necessary
-        // var runModel = await _runModelService.GetDocument(projectId, cancellationToken);
-        //
-        // if (runModel is null)
-        // {
-        //     runModel = new RunModel
-        //     {
-        //         Id = projectId,
-        //         Runs = new List<Run>
-        //         {
-        //             run
-        //         }
-        //     };
-        // }
-        // else
-        // {
-        //     runModel.
-        // }
-
         var filter = Builders<RunModel>.Filter.Eq(x => x.Id, projectId);
 
-        var update = Builders<RunModel>.Update.Push(x => x.Runs, run);
+        var asyncCursor = await mongoCollection.FindAsync(filter, cancellationToken: cancellationToken);
 
-        await mongoCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
+        if (await asyncCursor.AnyAsync(cancellationToken: cancellationToken))
+        {
+            var update = Builders<RunModel>.Update.Push(x => x.Runs, run);
+
+            await mongoCollection.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
+        }
+        else
+        {
+            await mongoCollection.InsertOneAsync(new RunModel
+            {
+                Id = projectId,
+                Runs = new List<Run>
+                {
+                    run
+                }
+            }, cancellationToken: cancellationToken);
+        }
     }
 }

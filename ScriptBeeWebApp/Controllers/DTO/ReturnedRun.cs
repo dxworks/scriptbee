@@ -10,4 +10,4 @@ public record ReturnedRun(int Index, string ScriptName, string Linker)
     public List<Result> Results { get; set; } = new();
 }
 
-public record Result(Guid Id, string Type, string Path);
+public record Result(Guid Id, string Type, string Name);

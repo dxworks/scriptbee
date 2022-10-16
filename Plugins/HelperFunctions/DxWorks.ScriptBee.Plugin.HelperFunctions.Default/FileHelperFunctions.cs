@@ -1,8 +1,9 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Services;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Services;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
-public class FileHelperFunctions
+public class FileHelperFunctions : IHelperFunctions
 {
     private readonly IHelperFunctionsResultService _helperFunctionsResultService;
 

@@ -21,20 +21,17 @@ namespace ScriptBeeWebApp.Services;
 public sealed class RunScriptService : IRunScriptService
 {
     private readonly IFileModelService _fileModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IGuidGenerator _guidGenerator;
     private readonly IPluginRepository _pluginRepository;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IProjectModelService _projectModelService;
     private readonly IRunModelService _runModelService;
 
-    public RunScriptService(IFileModelService fileModelService, IFileNameGenerator fileNameGenerator,
-        IGuidGenerator guidGenerator, IPluginRepository pluginRepository,
-        IProjectFileStructureManager projectFileStructureManager, IProjectModelService projectModelService,
-        IRunModelService runModelService)
+    public RunScriptService(IFileModelService fileModelService, IGuidGenerator guidGenerator,
+        IPluginRepository pluginRepository, IProjectFileStructureManager projectFileStructureManager,
+        IProjectModelService projectModelService, IRunModelService runModelService)
     {
         _fileModelService = fileModelService;
-        _fileNameGenerator = fileNameGenerator;
         _guidGenerator = guidGenerator;
         _pluginRepository = pluginRepository;
         _projectFileStructureManager = projectFileStructureManager;
@@ -118,7 +115,7 @@ public sealed class RunScriptService : IRunScriptService
             throw new ScriptGenerationStrategyNotFoundException(language);
         }
 
-        var resultCollector = new ResultCollector(_guidGenerator);
+        var resultCollector = new ResultCollector();
 
         var helperFunctionsContainer = CreateHelperFunctionsContainer(project, runIndex, resultCollector);
 
@@ -134,7 +131,7 @@ public sealed class RunScriptService : IRunScriptService
         {
             var runErrorId = await SaveStringContentToFile(e.Message, cancellationToken);
 
-            resultCollector.Add(runErrorId.ToString(), RunResultDefaultTypes.RunError);
+            resultCollector.Add(runErrorId, runIndex, "RunError", RunResultDefaultTypes.RunError);
         }
 
         await Task.WhenAll(helperFunctionsContainer.GetFunctions()
@@ -146,10 +143,10 @@ public sealed class RunScriptService : IRunScriptService
     private HelperFunctionsContainer CreateHelperFunctionsContainer(IProject project, int runIndex,
         IResultCollector resultCollector)
     {
-        var helperFunctionSettings = new HelperFunctionsSettings(project.Id, runIndex.ToString());
+        var helperFunctionSettings = new HelperFunctionsSettings(project.Id, runIndex);
 
         var helperFunctionService = new HelperFunctionsResultService(helperFunctionSettings, resultCollector,
-            _fileModelService, _fileNameGenerator);
+            _fileModelService, _guidGenerator);
 
         var helperFunctionsEnumerable = _pluginRepository.GetPlugins<IHelperFunctions>(
             new List<(Type @interface, object instance)>

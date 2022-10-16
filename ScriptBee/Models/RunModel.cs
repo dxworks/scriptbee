@@ -9,6 +9,5 @@ public class RunModel : IDocument
     public List<Run> Runs { get; set; } = new();
 
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;
 }

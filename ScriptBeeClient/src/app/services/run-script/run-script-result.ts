@@ -1,13 +1,14 @@
 export interface RunScriptResult {
-  runId: string;
-  runIndex: number;
-  projectId: string;
+  index: number;
+  linker: string;
+  loadedFiles: Map<string, string[]>;
+  scriptName: string;
   results: OutputResult[];
 }
 
 export interface OutputResult {
-  outputId: string;
-  outputType: string;
-  path: string;
+  id: string;
+  name: string;
+  type: string;
 }
 

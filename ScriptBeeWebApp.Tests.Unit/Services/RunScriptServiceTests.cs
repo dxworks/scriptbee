@@ -21,20 +21,18 @@ namespace ScriptBeeWebApp.Tests.Unit.Services;
 public class RunScriptServiceTests
 {
     private readonly Mock<IFileModelService> _fileModelServiceMock;
-    private readonly Mock<IFileNameGenerator> _fileNameGeneratorMock;
-    private readonly Fixture _fixture;
     private readonly Mock<IGuidGenerator> _guidGeneratorMock;
     private readonly Mock<IPluginRepository> _pluginRepositoryMock;
     private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
     private readonly Mock<IProjectModelService> _projectModelServiceMock;
     private readonly Mock<IRunModelService> _runModelServiceMock;
+    private readonly Fixture _fixture;
 
     private readonly RunScriptService _runScriptService;
 
     public RunScriptServiceTests()
     {
         _fileModelServiceMock = new Mock<IFileModelService>();
-        _fileNameGeneratorMock = new Mock<IFileNameGenerator>();
         _guidGeneratorMock = new Mock<IGuidGenerator>();
         _pluginRepositoryMock = new Mock<IPluginRepository>();
         _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
@@ -42,9 +40,9 @@ public class RunScriptServiceTests
         _runModelServiceMock = new Mock<IRunModelService>();
         _fixture = new Fixture();
 
-        _runScriptService = new RunScriptService(_fileModelServiceMock.Object, _fileNameGeneratorMock.Object,
-            _guidGeneratorMock.Object, _pluginRepositoryMock.Object, _projectFileStructureManagerMock.Object,
-            _projectModelServiceMock.Object, _runModelServiceMock.Object);
+        _runScriptService = new RunScriptService(_fileModelServiceMock.Object, _guidGeneratorMock.Object,
+            _pluginRepositoryMock.Object, _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object,
+            _runModelServiceMock.Object);
     }
 
 

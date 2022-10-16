@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Models;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
@@ -139,11 +138,9 @@ public class LoadersController : ControllerBase
             return NotFound($"Could not find project model with id: {projectId}");
         }
 
+        // todo extract in loaders service
         var project = _projectManager.GetProject(projectId);
-        if (project != null)
-        {
-            project.Context.Clear();
-        }
+        project?.Context.Clear();
 
         projectModel.LoadedFiles.Clear();
 

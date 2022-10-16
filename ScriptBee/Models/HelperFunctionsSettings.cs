@@ -2,5 +2,5 @@
 
 public record HelperFunctionsSettings(
     string ProjectId,
-    string RunId
+    int RunIndex
 );

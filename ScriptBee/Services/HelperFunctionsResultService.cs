@@ -13,16 +13,16 @@ public class HelperFunctionsResultService : IHelperFunctionsResultService
     private readonly HelperFunctionsSettings _helperFunctionsSettings;
     private readonly IResultCollector _resultCollector;
     private readonly IFileModelService _fileModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
+    private readonly IGuidGenerator _guidGenerator;
 
     public HelperFunctionsResultService(HelperFunctionsSettings helperFunctionsSettings,
-        IResultCollector resultCollector, IFileModelService fileModelService, IFileNameGenerator fileNameGenerator)
+        IResultCollector resultCollector, IFileModelService fileModelService, IGuidGenerator guidGenerator)
     {
         _helperFunctionsSettings = helperFunctionsSettings;
 
         _resultCollector = resultCollector;
         _fileModelService = fileModelService;
-        _fileNameGenerator = fileNameGenerator;
+        _guidGenerator = guidGenerator;
     }
 
     public async Task UploadResultAsync(string fileName, string type, string content,
@@ -37,12 +37,11 @@ public class HelperFunctionsResultService : IHelperFunctionsResultService
     public async Task UploadResultAsync(string fileName, string type, Stream content,
         CancellationToken cancellationToken = default)
     {
-        var outputFileName = _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-            _helperFunctionsSettings.RunId, type, fileName);
+        var id = _guidGenerator.GenerateGuid();
 
-        _resultCollector.Add(outputFileName, type);
+        _resultCollector.Add(id, _helperFunctionsSettings.RunIndex, fileName, type);
 
-        await _fileModelService.UploadFileAsync(outputFileName, content, cancellationToken);
+        await _fileModelService.UploadFileAsync(id.ToString(), content, cancellationToken);
     }
 
     public void UploadResult(string fileName, string type, string content)
@@ -55,11 +54,10 @@ public class HelperFunctionsResultService : IHelperFunctionsResultService
 
     public void UploadResult(string fileName, string type, Stream content)
     {
-        var outputFileName = _fileNameGenerator.GenerateOutputFileName(_helperFunctionsSettings.ProjectId,
-            _helperFunctionsSettings.RunId, type, fileName);
+        var id = _guidGenerator.GenerateGuid();
 
-        _resultCollector.Add(outputFileName, type);
+        _resultCollector.Add(id, _helperFunctionsSettings.RunIndex, fileName, type);
 
-        _fileModelService.UploadFile(outputFileName, content);
+        _fileModelService.UploadFile(id.ToString(), content);
     }
 }

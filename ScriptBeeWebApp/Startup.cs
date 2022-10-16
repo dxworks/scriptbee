@@ -64,7 +64,6 @@ public class Startup
         services.AddSingleton<IPluginRepository, PluginRepository>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
-        services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();

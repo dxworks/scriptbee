@@ -4,10 +4,6 @@ import { FileTreeNode } from '../../project-details/scripts-content/fileTreeNode
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { contentHeaders } from "../../shared/headers";
 
-interface ScriptCreatedResult {
-  filePath: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +23,7 @@ export class FileSystemService {
   }
 
   createScript(projectId: string, filePath: string, scriptType: string) {
-    return this.http.post<ScriptCreatedResult>(this.projectStructureScriptAPIUrl, {
+    return this.http.post<FileTreeNode>(this.projectStructureScriptAPIUrl, {
       projectId: projectId,
       filePath: filePath,
       scriptType: scriptType

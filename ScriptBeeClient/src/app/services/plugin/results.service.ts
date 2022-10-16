@@ -12,6 +12,7 @@ export interface Result {
 @Injectable({
   providedIn: 'root'
 })
+// todo to be updated when ui plugins is ready
 export class ResultsService {
   resultsComponents: BehaviorSubject<Result[]> = new BehaviorSubject<Result[]>([
     {

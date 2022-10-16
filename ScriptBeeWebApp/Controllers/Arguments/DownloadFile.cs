@@ -1,3 +1,5 @@
-﻿namespace ScriptBeeWebApp.Controllers.Arguments;
+﻿using System;
 
-public record DownloadFile(string FilePath);
+namespace ScriptBeeWebApp.Controllers.Arguments;
+
+public record DownloadFile(Guid Id, string Name);

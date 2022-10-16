@@ -13,11 +13,9 @@ import { Store } from "@ngrx/store";
 })
 export class DetailsContentComponent implements OnInit {
 
-  isDataLoading = false;
+  loading = false;
   loadingError = "";
   project: Project | undefined;
-
-  loading = false;
 
   constructor(private store: Store) {
   }

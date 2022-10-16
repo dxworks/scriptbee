@@ -18,14 +18,11 @@ namespace ScriptBeeWebApp.Controllers;
 public class OutputController : ControllerBase
 {
     private readonly IFileModelService _fileModelService;
-    private readonly IFileNameGenerator _fileNameGenerator;
     private readonly IRunModelService _runModelService;
 
-    public OutputController(IFileModelService fileModelService, IFileNameGenerator fileNameGenerator,
-        IRunModelService runModelService)
+    public OutputController(IFileModelService fileModelService, IRunModelService runModelService)
     {
         _fileModelService = fileModelService;
-        _fileNameGenerator = fileNameGenerator;
         _runModelService = runModelService;
     }
 
@@ -42,6 +39,7 @@ public class OutputController : ControllerBase
     }
 
 
+    // todo to be removed
     [HttpGet("console")]
     public async Task<IActionResult> GetConsoleOutputContent([FromQuery] string consoleOutputPath)
     {
@@ -62,16 +60,14 @@ public class OutputController : ControllerBase
     // todo extract validation to separate class
     public async Task<IActionResult> DownloadFile(DownloadFile downloadFile)
     {
-        if (downloadFile is null || string.IsNullOrEmpty(downloadFile.FilePath))
+        if (downloadFile is null)
         {
             return BadRequest("You must provide a download file path for this operation");
         }
 
-        var outputStream = await _fileModelService.GetFileAsync(downloadFile.FilePath);
-        const string contentType = "application/octet-stream";
-        var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(downloadFile.FilePath);
+        var outputStream = await _fileModelService.GetFileAsync(downloadFile.Id.ToString());
 
-        return File(outputStream, contentType, fileName);
+        return File(outputStream, "application/octet-stream", downloadFile.Name);
     }
 
     [HttpPost("files/downloadAll")]
@@ -95,9 +91,8 @@ public class OutputController : ControllerBase
         foreach (var runResult in runModel.Runs[downloadAll.RunIndex].Results
                      .Where(r => r.Type == RunResultDefaultTypes.FileType))
         {
-            var (_, _, _, fileName) = _fileNameGenerator.ExtractOutputFileNameComponents(runResult.Path);
-            var outputStream = await _fileModelService.GetFileAsync(fileName);
-            files.Add(new OutputFileStream(fileName, outputStream));
+            var outputStream = await _fileModelService.GetFileAsync(runResult.Id.ToString());
+            files.Add(new OutputFileStream(runResult.Name, outputStream));
         }
 
         var zipStream = CreateFilesZipStream(files);

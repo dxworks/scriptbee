@@ -4,7 +4,6 @@ import { ProjectService } from '../services/project/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { LoaderService } from '../services/loader/loader.service';
-import { ProjectDetailsService } from './project-details.service';
 import { UploadService } from '../services/upload/upload.service';
 import { LinkerService } from '../services/linker/linker.service';
 import { Store } from "@ngrx/store";
@@ -24,15 +23,13 @@ export class ProjectDetailsComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private projectService: ProjectService, private loaderService: LoaderService,
               private uploadService: UploadService, private route: ActivatedRoute, private snackBar: MatSnackBar,
-              private projectDetailsService: ProjectDetailsService, private linkerService: LinkerService,
-              private store: Store) {
+              private linkerService: LinkerService, private store: Store) {
   }
 
   ngOnInit(): void {
-    this.projectDetailsService.clearData();
-
     const id = this.route.snapshot.paramMap.get('id');
 
+    // todo check when switching between projects
     this.store.select(selectProjectDetails).subscribe(projectDetails => {
       if (!projectDetails) {
         this.store.dispatch(fetchProject({projectId: id}));

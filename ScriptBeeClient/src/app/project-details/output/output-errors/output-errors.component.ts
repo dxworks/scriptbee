@@ -1,30 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { selectOutput } from "../../../state/outputs/output.selectors";
+import { Component, Input } from '@angular/core';
 import { OutputFilesService } from "../../../services/output/output-files.service";
-import { filter } from "rxjs/operators";
-import { switchMap } from "rxjs";
-import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-output-errors',
   templateUrl: './output-errors.component.html',
   styleUrls: ['./output-errors.component.scss']
 })
-export class OutputErrorsComponent implements OnInit {
- private buildErrorsStream = this.store.select(selectOutput('BuildError'));
+export class OutputErrorsComponent {
 
-  buildErrors: string;
+  @Input() set outputId(value: string | undefined) {
+    if (!value) {
+      this.errors = '';
+      return;
+    }
 
-  constructor(private store: Store, private outputFilesService: OutputFilesService) {
+    this.outputFilesService.fetchOutput(value).subscribe(output => {
+      this.errors = output;
+    });
   }
 
-  ngOnInit(): void {
-    this.buildErrorsStream.pipe(
-      filter(output => output !== undefined),
-      filter(output => output.length > 0),
-      switchMap(buildError => this.outputFilesService.getConsoleOutputContent(buildError[0].path))
-    ).subscribe(buildErrors => {
-      this.buildErrors = buildErrors;
-    });
+  errors: string = "";
+
+  constructor(private outputFilesService: OutputFilesService) {
   }
 }

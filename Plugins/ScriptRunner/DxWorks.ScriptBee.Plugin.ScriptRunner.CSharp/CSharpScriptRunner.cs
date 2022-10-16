@@ -35,7 +35,7 @@ public class CSharpScriptRunner : IScriptRunner
                 {
                     var methodParameters = method.GetParameters();
                     if (method.Name == "ExecuteScript" && methodParameters.Length == 1 &&
-                        methodParameters[0].ParameterType.Name == nameof(IProject))
+                        methodParameters[0].ParameterType.Name is nameof(IProject) or nameof(Project))
                     {
                         var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
 

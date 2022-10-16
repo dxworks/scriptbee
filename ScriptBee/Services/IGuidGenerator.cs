@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBee.Services;
 
 public interface IGuidGenerator
 {

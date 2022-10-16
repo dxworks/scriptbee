@@ -39,10 +39,11 @@ public class ProjectStructureController : ControllerBase
 
     [HttpPost("script")]
     // todo extract validation in a separate class
-    public async Task<ActionResult<ScriptCreatedResult>> CreateScript(CreateScript arg,
+    public async Task<ActionResult<FileTreeNode>> CreateScript(CreateScript createScript,
         CancellationToken cancellationToken = default)
     {
-        if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
+        if (createScript == null || string.IsNullOrEmpty(createScript.projectId) ||
+            string.IsNullOrEmpty(createScript.filePath))
         {
             return BadRequest("Invalid arguments!");
         }
@@ -50,27 +51,28 @@ public class ProjectStructureController : ControllerBase
         try
         {
             var (extension, content) =
-                await _projectStructureService.GetSampleCodeAsync(arg.scriptType, cancellationToken);
+                await _projectStructureService.GetSampleCodeAsync(createScript.scriptType, cancellationToken);
 
-            if (_projectFileStructureManager.FileExists(arg.projectId, arg.filePath))
+            if (!createScript.filePath.EndsWith(extension))
+            {
+                createScript.filePath += extension;
+            }
+
+            if (_projectFileStructureManager.FileExists(createScript.projectId, createScript.filePath))
             {
                 return StatusCode(StatusCodes.Status409Conflict);
             }
 
-            if (!arg.filePath.EndsWith(extension))
-            {
-                arg.filePath += extension;
-            }
+            var node = _projectFileStructureManager.CreateSrcFile(createScript.projectId, createScript.filePath,
+                content);
 
-            _projectFileStructureManager.CreateSrcFile(arg.projectId, arg.filePath, content);
+            return Ok(node);
         }
         catch
         {
             // todo have a centralized exception handler
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
-
-        return new ScriptCreatedResult(arg.filePath);
     }
 
     [HttpGet("script")]

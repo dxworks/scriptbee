@@ -80,8 +80,13 @@ import { LinkersEffects } from "./state/linkers/linkers.effects";
 import { UploadModelsComponent } from './project-details/details-content/upload-models/upload-models.component';
 import { LoadModelsComponent } from './project-details/details-content/load-models/load-models.component';
 import { LinkModelsComponent } from './project-details/details-content/link-models/link-models.component';
-import { CurrentlyLoadedModelsComponent } from './project-details/details-content/currently-loaded-models/currently-loaded-models.component';
+import {
+  CurrentlyLoadedModelsComponent
+} from './project-details/details-content/currently-loaded-models/currently-loaded-models.component';
 import { ProjectContextComponent } from './project-details/details-content/project-context/project-context.component';
+import { scriptTreeReducer } from "./state/script-tree/script-tree.reducer";
+import { ScriptTreeEffects } from "./state/script-tree/script-tree.effects";
+import { ScriptTreeComponent } from './project-details/scripts-content/script-tree/script-tree.component';
 
 @NgModule({
   declarations: [
@@ -115,6 +120,7 @@ import { ProjectContextComponent } from './project-details/details-content/proje
     LinkModelsComponent,
     CurrentlyLoadedModelsComponent,
     ProjectContextComponent,
+    ScriptTreeComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -153,10 +159,11 @@ import { ProjectContextComponent } from './project-details/details-content/proje
     StoreModule.forRoot({
       outputState: outputReducer,
       projectDetails: projectDetailsReducer,
+      scriptTree: scriptTreeReducer,
       loaders: loadersReducer,
       linkers: linkersReducer
     }, {}),
-    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, LoadersEffects, LinkersEffects]),
+    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, ScriptTreeEffects, LoadersEffects, LinkersEffects]),
   ],
   providers: [
     SlugifyPipe

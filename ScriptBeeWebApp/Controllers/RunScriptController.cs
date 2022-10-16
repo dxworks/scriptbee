@@ -66,7 +66,7 @@ public class RunScriptController : ControllerBase
         var returnedRun = new ReturnedRun(run.Index, run.ScriptPath, run.Linker)
         {
             LoadedFiles = ConvertLoadedFiles(run.LoadedFiles),
-            Results = run.Results.Select(r => new Result(r.Id, r.Type, r.Path))
+            Results = run.Results.Select(r => new Result(r.Id, r.Type, r.Name))
                 .ToList()
         };
 

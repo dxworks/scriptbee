@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ScriptBee.Models;
 using ScriptBee.Services;
 
@@ -7,20 +8,15 @@ namespace ScriptBeeWebApp.Services;
 // todo add tests
 public class ResultCollector : IResultCollector
 {
-    private readonly IGuidGenerator _guidGenerator;
     private readonly List<RunResult> _results = new();
 
-    public ResultCollector(IGuidGenerator guidGenerator)
-    {
-        _guidGenerator = guidGenerator;
-    }
-
-    public void Add(string outputFileName, string type)
+    public void Add(Guid id, int runIndex, string outputFileName, string type)
     {
         _results.Add(new RunResult
         {
-            Id = _guidGenerator.GenerateGuid(),
-            Path = outputFileName,
+            Id = id,
+            Name = outputFileName,
+            RunIndex = runIndex,
             Type = type
         });
     }

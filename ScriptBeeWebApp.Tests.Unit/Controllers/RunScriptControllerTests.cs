@@ -164,7 +164,7 @@ public class RunScriptControllerTests
             var r = returnedRun.Results[i];
 
             Assert.Equal(runResult.Id, r.Id);
-            Assert.Equal(runResult.Path, r.Path);
+            Assert.Equal(runResult.Name, r.Name);
             Assert.Equal(runResult.Type, r.Type);
         }
     }

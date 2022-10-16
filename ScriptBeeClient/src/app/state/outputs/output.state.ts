@@ -1,14 +1,11 @@
-import { EntityState } from "@ngrx/entity";
-
-export interface OutputData {
-  outputId: string;
-  projectId: string;
-  outputType: string;
-  path: string;
-  loading: boolean;
-  data?: any;
-  loadingError?: string;
+export interface OutputState {
+  runIndex?: number;
+  scriptName?: string;
+  results: Result[];
 }
 
-export interface OutputState extends EntityState<OutputData> {
+export interface Result {
+  id: string;
+  name: string;
+  type: string;
 }
