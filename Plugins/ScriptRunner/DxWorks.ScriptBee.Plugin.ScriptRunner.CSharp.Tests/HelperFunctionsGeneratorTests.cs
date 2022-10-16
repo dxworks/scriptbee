@@ -29,7 +29,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionWithoutGenericMethodThatReturnsVoid.Method1(a, b);
         }
     }
-}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
     }
 
     [Fact]
@@ -59,7 +59,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             return HelperFunctionWithoutGenericMethodsThatReturnSomething.GetSomething(a, b, c);
         }
     }
-}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
     }
 
     [Fact]
@@ -89,7 +89,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             return HelperFunctionsWithGenericMethods.Method<T1, T2, T3>(arg1, arg2, arg3);
         }
     }
-}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
     }
 
     [Fact]
@@ -127,7 +127,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionsWithGenericMethodWithConstrains.Method<T, TR>();
         }
     }
-}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
     }
 
     [Fact]
@@ -162,6 +162,6 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionWithCollections.Method(values);
         }
     }
-}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
     }
 }

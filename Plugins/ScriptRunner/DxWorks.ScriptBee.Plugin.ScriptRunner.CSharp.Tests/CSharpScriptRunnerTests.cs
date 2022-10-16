@@ -36,7 +36,7 @@ public class ScriptContent
     public void ExecuteScript(IProject project)
     {        
     }
-}".Replace("\r\n", Environment.NewLine);
+}".Replace(Environment.NewLine, "\r\n");
 
         await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
     }
@@ -62,7 +62,7 @@ public class ScriptContent
     public void ExecuteScript(IProject project)
     {        
     }
-}".Replace("\r\n", Environment.NewLine);
+}".Replace(Environment.NewLine, "\r\n");
 
         await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
     }
