@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api;
 using Xunit;
@@ -28,7 +29,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionWithoutGenericMethodThatReturnsVoid.Method1(a, b);
         }
     }
-}", syntaxTree.ToString());
+}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
     }
 
     [Fact]
@@ -58,7 +59,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             return HelperFunctionWithoutGenericMethodsThatReturnSomething.GetSomething(a, b, c);
         }
     }
-}", syntaxTree.ToString());
+}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
     }
 
     [Fact]
@@ -88,7 +89,7 @@ namespace DxWorks.ScriptBee.Plugin.Api
             return HelperFunctionsWithGenericMethods.Method<T1, T2, T3>(arg1, arg2, arg3);
         }
     }
-}", syntaxTree.ToString());
+}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
     }
 
     [Fact]
@@ -126,9 +127,9 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionsWithGenericMethodWithConstrains.Method<T, TR>();
         }
     }
-}", syntaxTree.ToString());
+}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
     }
-    
+
     [Fact]
     public void GivenMethodWithCollections_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
     {
@@ -161,6 +162,6 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionWithCollections.Method(values);
         }
     }
-}", syntaxTree.ToString());
+}".Replace("\r\n", Environment.NewLine), syntaxTree.ToString());
     }
 }

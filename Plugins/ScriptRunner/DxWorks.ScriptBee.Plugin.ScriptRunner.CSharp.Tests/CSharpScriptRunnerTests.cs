@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DxWorks.ScriptBee.Plugin.Api;
@@ -23,7 +24,7 @@ public class CSharpScriptRunnerTests
     {
         var project = new Mock<IProject>().Object;
         var helperFunctionsContainer = new Mock<IHelperFunctionsContainer>().Object;
-        const string scriptContent = @"
+        var scriptContent = @"
 using System;
 using System.Text;
 using System.Linq;
@@ -35,7 +36,7 @@ public class ScriptContent
     public void ExecuteScript(IProject project)
     {        
     }
-}";
+}".Replace("\r\n", Environment.NewLine);
 
         await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
     }
@@ -49,7 +50,7 @@ public class ScriptContent
             new DummyHelperFunctions()
         });
 
-        const string scriptContent = @"
+        var scriptContent = @"
 using System;
 using System.Text;
 using System.Linq;
@@ -61,7 +62,7 @@ public class ScriptContent
     public void ExecuteScript(IProject project)
     {        
     }
-}";
+}".Replace("\r\n", Environment.NewLine);
 
         await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
     }
