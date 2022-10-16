@@ -76,17 +76,17 @@ export const projectDetailsReducer = createReducer(
     }
   }),
   on(fetchProject, (state, {projectId}) => {
-    return {...state, projectId, loadingProject: true, loadingProjectError: undefined};
+    return {...state, projectId, loadingProject: true, fetchProjectError: undefined};
   }),
   on(fetchProjectSuccess, (state, {data, context}) => {
     return {
       ...state,
       project: {...state.project, data: data, context: context},
       loadingProject: false,
-      loadingProjectError: undefined
+      fetchProjectError: undefined
     };
   }),
   on(fetchProjectFailure, (state, {error}) => {
-    return {...state, loadingProject: false, loadingProjectError: error};
+    return {...state, loadingProject: false, fetchProjectError: error};
   }),
 );

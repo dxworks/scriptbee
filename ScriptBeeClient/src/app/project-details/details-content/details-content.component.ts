@@ -23,6 +23,7 @@ export class DetailsContentComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(selectProjectDetailsLoading).subscribe({
       next: ({loading, error}) => {
+        console.log(error)
         this.loading = loading ?? false;
         this.loadingError = error ?? "";
       }

@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ThemeService} from '../services/theme/theme.service';
+import { Component } from '@angular/core';
+import { ThemeService } from '../services/theme/theme.service';
 
 
 @Component({
@@ -7,11 +7,8 @@ import {ThemeService} from '../services/theme/theme.service';
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss']
 })
-export class NavMenuComponent implements OnInit {
+export class NavMenuComponent {
 
   constructor(public themeService: ThemeService) {
-  }
-
-  ngOnInit() {
   }
 }

@@ -1,18 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectService } from '../services/project/project.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
-import { LoaderService } from '../services/loader/loader.service';
-import { UploadService } from '../services/upload/upload.service';
-import { LinkerService } from '../services/linker/linker.service';
 import { Store } from "@ngrx/store";
-import { selectProjectDetails } from "../state/project-details/project-details.selectors";
-import { fetchProject } from "../state/project-details/project-details.actions";
 import { selectLoaders, selectLoadersFetchError } from "../state/loaders/loaders.selectors";
 import { fetchLoaders } from '../state/loaders/loaders.actions';
 import { selectLinkers, selectLinkersFetchError } from "../state/linkers/linkers.selectors";
 import { fetchLinkers } from "../state/linkers/linkers.actions";
+import { selectProjectDetails } from "../state/project-details/project-details.selectors";
+import { fetchProject } from "../state/project-details/project-details.actions";
 
 @Component({
   selector: 'app-project-details',
@@ -21,15 +16,13 @@ import { fetchLinkers } from "../state/linkers/linkers.actions";
 })
 export class ProjectDetailsComponent implements OnInit {
 
-  constructor(public dialog: MatDialog, private projectService: ProjectService, private loaderService: LoaderService,
-              private uploadService: UploadService, private route: ActivatedRoute, private snackBar: MatSnackBar,
-              private linkerService: LinkerService, private store: Store) {
+  constructor(private route: ActivatedRoute, private snackBar: MatSnackBar,
+              private store: Store) {
   }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
-    // todo check when switching between projects
     this.store.select(selectProjectDetails).subscribe(projectDetails => {
       if (!projectDetails) {
         this.store.dispatch(fetchProject({projectId: id}));

@@ -34,12 +34,11 @@ export class LinkModelsComponent implements OnInit {
       this.linking = true;
       const projectId = this.project.data.projectId;
 
+      // todo
       this.linkerService.linkModels(projectId, this.selectedLinker).subscribe({
         next: () => {
           this.projectService.getProjectContext(projectId).subscribe({
             next: (res) => {
-              // todo
-              // this.projectDetailsService.context.next(res);
               this.linking = false;
             },
             error: (error) => {

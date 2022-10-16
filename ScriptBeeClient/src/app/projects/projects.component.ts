@@ -9,6 +9,8 @@ import { CreateProjectDialogComponent } from './create-project-dialog/create-pro
 import { DeleteProjectDialogComponent } from './delete-project-dialog/delete-project-dialog.component';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { fetchProject } from "../state/project-details/project-details.actions";
+import { Store } from "@ngrx/store";
 
 @Component({
   selector: 'app-projects',
@@ -22,7 +24,9 @@ export class ProjectsComponent {
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-  constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router, private snackBar: MatSnackBar) {
+  constructor(public dialog: MatDialog, private projectService: ProjectService,
+              private router: Router, private snackBar: MatSnackBar,
+              private store: Store) {
     this.getAllProjects();
   }
 
@@ -39,20 +43,22 @@ export class ProjectsComponent {
     }
   }
 
-  onCreateButtonClick(event: Event) {
+  onCreateButtonClick() {
     const dialogRef = this.dialog.open(CreateProjectDialogComponent, {
       width: '300px',
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.getAllProjects();
+    dialogRef.afterClosed().subscribe({
+      next: result => {
+        if (result) {
+          this.getAllProjects();
+        }
+      }, error: () => {
+        this.snackBar.open('Could not create project!', 'Ok', {
+          duration: 4000
+        });
       }
-    }, (error: any) => {
-      this.snackBar.open('Could not create project!', 'Ok', {
-        duration: 4000
-      });
     });
   }
 
@@ -63,30 +69,37 @@ export class ProjectsComponent {
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.projectService.deleteProject(row.data.projectId).subscribe(res => {
-          this.getAllProjects();
-        });
+    dialogRef.afterClosed().subscribe({
+      next: result => {
+        if (result) {
+          this.projectService.deleteProject(row.data.projectId).subscribe(res => {
+            this.getAllProjects();
+          });
+        }
+      }, error: () => {
+        this.snackBar.open('Could not delete project!', 'Ok');
       }
-    }, (error: any) => {
-      this.snackBar.open('Could not delete project!', 'Ok', {
-        duration: 4000
-      });
     });
   }
 
   private getAllProjects() {
-    this.projectService.getAllProjects().subscribe(projects => {
-      // todo
-      this.dataSource = new MatTableDataSource(projects);
-      this.dataSource.paginator = this.paginator ?? null;
-      this.dataSource.sort = this.sort ?? null;
+    this.projectService.getAllProjects().subscribe({
+      next: projects => {
+        this.dataSource = new MatTableDataSource(projects);
+        this.dataSource.paginator = this.paginator ?? null;
+        this.dataSource.sort = this.sort ?? null;
+      }, error: () => {
+        this.dataSource = new MatTableDataSource([]);
+        this.snackBar.open('Could not fetch projects!', 'Ok', {
+          duration: 4000
+        });
+      }
     });
   }
 
-  onRowClick(row: Project) {
-    this.router.navigate([`/projects/${row.data.projectId}`]).then(r => {
+  onRowClick(row: ProjectData) {
+    this.router.navigate([`/projects/${row.projectId}`]).then(() => {
+      this.store.dispatch(fetchProject({projectId: row.projectId}));
     });
   }
 }

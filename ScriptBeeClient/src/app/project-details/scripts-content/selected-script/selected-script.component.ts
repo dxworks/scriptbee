@@ -98,7 +98,7 @@ export class SelectedScriptComponent implements OnInit {
           results: run.results
         }));
       },
-      error: (err) => {
+      error: () => {
         // todo handle error and display it in the output errors tab
         this.isLoadingResults = false;
 

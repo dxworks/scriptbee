@@ -18,7 +18,7 @@ export class ProjectDetailsEffects {
       switchMap(action =>
         forkJoin([this.projectService.getProject(action.projectId), this.projectService.getProjectContext(action.projectId)]).pipe(
           map(([projectData, context]) => fetchProjectSuccess({data: projectData, context: context})),
-          catchError((error) => of(fetchProjectFailure({error: error})))
+          catchError((error) => of(fetchProjectFailure({error: error.error})))
         ))
     ));
 }

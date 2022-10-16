@@ -23,7 +23,7 @@ export const scriptTreeReducer = createReducer(
     return {...state, projectId, loading: true}
   }),
   on(fetchScriptTreeSuccess, (state, {tree}) => {
-    return {...state, tree: convertTreeToScriptTree(tree, 0), loading: false}
+    return {...state, tree: convertTreeToScriptTree(tree, 0), loading: false, fetchError: undefined}
   }),
   on(fetchScriptTreeFailure, (state, {error}) => {
     return {...state, fetchError: error, loading: false}
@@ -35,10 +35,8 @@ export const scriptTreeReducer = createReducer(
     return {...state, scriptCreation: {projectId, scriptType, scriptPath}, createScriptLoading: true}
   }),
   on(createScriptSuccess, (state, {node}) => {
-    console.log(state.tree);
     const tree = insertNodeInTree(state.tree, node);
-    console.log(tree)
-    return {...state, tree: tree, createScriptLoading: false}
+    return {...state, tree: tree, createScriptLoading: false, createScriptError: undefined}
   }),
   on(createScriptFailure, (state, {error}) => {
     return {...state, createScriptError: error, createScriptLoading: false}

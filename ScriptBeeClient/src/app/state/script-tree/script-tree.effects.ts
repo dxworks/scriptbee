@@ -26,7 +26,7 @@ export class ScriptTreeEffects {
       switchMap(action =>
         this.fileSystemService.getFileSystem(action.projectId).pipe(
           map((response) => fetchScriptTreeSuccess({tree: [response]})),
-          catchError((error) => of(fetchScriptTreeFailure({error: error})))
+          catchError((error) => of(fetchScriptTreeFailure({error: error.error})))
         ))
     ));
 
@@ -36,7 +36,7 @@ export class ScriptTreeEffects {
       switchMap(action =>
         this.fileSystemService.createScript(action.projectId, action.scriptPath, action.scriptType).pipe(
           map((response) => createScriptSuccess({node: response})),
-          catchError((error) => of(createScriptFailure({error: error})))
+          catchError((error) => of(createScriptFailure({error: error.error})))
         ))
     ));
 }

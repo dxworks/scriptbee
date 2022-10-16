@@ -66,12 +66,10 @@ export class SelectableTreeComponent {
 
   descendantsAllSelected(node: FlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected =
-      descendants.length > 0 &&
+    return descendants.length > 0 &&
       descendants.every(child => {
         return this.checklistSelection.isSelected(child);
       });
-    return descAllSelected;
   }
 
   descendantsPartiallySelected(node: FlatNode): boolean {

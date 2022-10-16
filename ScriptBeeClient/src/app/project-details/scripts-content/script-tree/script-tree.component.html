@@ -1,6 +1,9 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
-<!--  TODO: Style error message -->
-<div *ngIf="loadingError">{{loadingError}}</div>
 
+<mat-card *ngIf="loadingError" class="loading-error">
+  {{loadingError}}
+</mat-card>
+
+<div *ngIf="fileStructureTree.length === 0" class="empty-tree">Tree is empty</div>
 
 <app-tree [treeData]="fileStructureTree" (leafClick)="onLeafClick($event)"></app-tree>

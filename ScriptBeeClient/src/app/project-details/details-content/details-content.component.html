@@ -1,8 +1,10 @@
 <div class="project-details-main-div">
 
   <mat-spinner *ngIf="loading"></mat-spinner>
-  <!--  TODO: Style error message -->
-  <div *ngIf="loadingError">{{loadingError}}</div>
+
+  <mat-card *ngIf="loadingError" class="loading-error">
+    {{loadingError}}
+  </mat-card>
 
   <mat-card *ngIf="project" fxLayout="column" fxLayoutAlign="center start">
     <div style="width: 100%">
