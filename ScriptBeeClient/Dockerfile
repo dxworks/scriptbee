@@ -1,7 +1,23 @@
-FROM nginx
+FROM nginx AS base
+EXPOSE 80
 
-ARG DIST_FOLDER="./dist/scriptbeewebapp"
+FROM node:16-alpine as build
 
-COPY ${DIST_FOLDER} /etc/nginx/html/
+WORKDIR /src
+
+COPY ./package*.json .
+
+RUN npm install
+
+COPY ./src ./src
+COPY ./angular.json .
+COPY ./tsconfig*.json .
+COPY ./webpack*.config.js .
+
+RUN npm run build-prod
+
+FROM base as final
 
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /src/dist/scriptbeewebapp /etc/nginx/html/

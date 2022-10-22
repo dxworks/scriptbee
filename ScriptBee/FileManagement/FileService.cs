@@ -7,7 +7,14 @@ public class FileService : IFileService
 {
     public IEnumerable<string> GetDirectories(string path)
     {
-        return Directory.GetDirectories(path);
+        try
+        {
+            return Directory.GetDirectories(path);
+        }
+        catch
+        {
+            return new List<string>();
+        }
     }
 
     public bool FileExists(string path)

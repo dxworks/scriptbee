@@ -5,7 +5,6 @@
         <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
         <IsPackable>false</IsPackable>
-        <SpaRoot>ClientApp\</SpaRoot>
 
         <!-- Set this to true if you enable server-side prerendering -->
         <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -30,8 +29,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Dockerfile" />
-      <None Remove=".dockerignore" />
+        <None Remove="Dockerfile" />
+        <None Remove=".dockerignore" />
     </ItemGroup>
 
 </Project>
