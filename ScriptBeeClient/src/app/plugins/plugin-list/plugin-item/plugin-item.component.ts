@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Plugin } from "../../services/plugin/plugin";
+import { Plugin } from "../../../services/plugin/plugin";
 
 @Component({
   selector: 'app-plugin-item',

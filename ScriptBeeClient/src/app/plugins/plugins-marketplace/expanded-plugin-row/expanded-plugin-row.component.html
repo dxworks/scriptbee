@@ -1,0 +1,37 @@
+<div *ngIf="plugin" class="plugin-row-div" fxLayout="row" fxLayoutAlign="space-between stretch" fxFlex>
+  <div fxLayout="column" fxFlex>
+    <div>
+      {{plugin.description}}
+    </div>
+
+    <br/>
+    <br/>
+
+    <div fxFlexFill fxLayout="column">
+      <div>Available extension points:</div>
+
+      <br/>
+
+      <div fxLayout="column" fxLayoutAlign="space-between stretch">
+        <div *ngFor="let version of getPluginVersions()">
+          <div fxLayout="row" fxLayoutAlign="space-between stretch">
+            <div>{{version[0]}}</div>
+            <div fxFlex></div>
+            <div>{{version[1].kinds}}</div>
+            <div fxFlex></div>
+            <div>
+              <button mat-icon-button color="primary" *ngIf="!version[1].installed"
+                      (click)="installPlugin(version[0])">
+                <mat-icon>download</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" *ngIf="version[1].installed"
+                      (click)="uninstallPlugin(version[0])">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

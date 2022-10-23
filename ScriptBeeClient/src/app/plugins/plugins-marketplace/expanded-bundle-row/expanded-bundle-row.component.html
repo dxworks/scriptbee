@@ -1,0 +1,45 @@
+<div *ngIf="bundle" class="bundle-row-div" fxLayout="row" fxLayoutAlign="space-between stretch" fxFlex>
+  <div fxLayout="column" fxFlex>
+    <div>
+      {{bundle.description}}
+    </div>
+
+    <br/>
+    <br/>
+
+    <div fxFlexFill fxLayout="column">
+      <div>Available plugins:</div>
+
+      <br/>
+
+      <div fxLayout="row" fxLayoutAlign="space-between stretch" *ngFor="let version of getPluginVersions()">
+        <div>
+          {{version[0]}}
+        </div>
+
+
+        <div fxLayout="column" fxLayoutAlign="space-between stretch">
+          <div *ngFor="let plugin of version[1].plugins" fxFlex>
+            <div>{{plugin.name}}</div>
+            <div fxFlex></div>
+            <div> {{plugin.version}}</div>
+            <div fxFlex></div>
+            <div>{{plugin.kinds}}</div>
+          </div>
+        </div>
+      
+
+        <div>
+          <button mat-icon-button color="primary" *ngIf="!version[1].installed"
+                  (click)="installBundle(version[0])">
+            <mat-icon>download</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" *ngIf="version[1].installed"
+                  (click)="uninstallBundle(version[0])">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

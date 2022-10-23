@@ -64,7 +64,7 @@ import {
 import {
   LoadingResultsDialogComponent
 } from './project-details/scripts-content/selected-script/loading-results-dialog/loading-results-dialog.component';
-import { PluginItemComponent } from './plugins/plugin-item/plugin-item.component';
+import { PluginItemComponent } from './plugins/plugin-list/plugin-item/plugin-item.component';
 import { PluginListComponent } from './plugins/plugin-list/plugin-list.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -87,6 +87,10 @@ import { ProjectContextComponent } from './project-details/details-content/proje
 import { scriptTreeReducer } from "./state/script-tree/script-tree.reducer";
 import { ScriptTreeEffects } from "./state/script-tree/script-tree.effects";
 import { ScriptTreeComponent } from './project-details/scripts-content/script-tree/script-tree.component';
+import { PluginsComponent } from './plugins/plugins/plugins.component';
+import { PluginsMarketplaceComponent } from './plugins/plugins-marketplace/plugins-marketplace.component';
+import { ExpandedPluginRowComponent } from './plugins/plugins-marketplace/expanded-plugin-row/expanded-plugin-row.component';
+import { ExpandedBundleRowComponent } from './plugins/plugins-marketplace/expanded-bundle-row/expanded-bundle-row.component';
 
 @NgModule({
   declarations: [
@@ -121,6 +125,10 @@ import { ScriptTreeComponent } from './project-details/scripts-content/script-tr
     CurrentlyLoadedModelsComponent,
     ProjectContextComponent,
     ScriptTreeComponent,
+    PluginsComponent,
+    PluginsMarketplaceComponent,
+    ExpandedPluginRowComponent,
+    ExpandedBundleRowComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

@@ -17,7 +17,7 @@ export class PluginListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.pluginService.getAllPlugins().subscribe(plugins => {
+    this.pluginService.getAllLoadedPlugins().subscribe(plugins => {
       this.loading = false;
       this.plugins = plugins;
     })
