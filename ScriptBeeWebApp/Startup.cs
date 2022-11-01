@@ -62,6 +62,7 @@ public class Startup
         services.Configure<UserFolderSettings>(Configuration.GetSection("UserFolder"));
         services.AddSingleton<IGuidGenerator, GuidGenerator>();
         services.AddSingleton<IPluginRepository, PluginRepository>();
+        services.AddSingleton<IPluginService, PluginService>();
         services.AddSingleton<IProjectManager, ProjectManager>();
         services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
