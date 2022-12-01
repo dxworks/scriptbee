@@ -8,3 +8,4 @@ riderModule.iml
 .env
 .idea/.idea.ScriptBee/.idea/sonarlint
 database/
+pack/

@@ -3,10 +3,35 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <PackageId>DxWorks.ScriptBee.Plugin.Api</PackageId>
+        <Description>This is the API for the ScriptBee plugin.</Description>
+        <PackageReleaseNotes>ReleaseNotes.md</PackageReleaseNotes>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/dxworks/scriptbee/tree/master/DxWorks.ScriptBee.Plugin.Api</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/dxworks/scriptbee</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Version>1.0.0</Version>
+        <Company>dxworks</Company>
+        <Authors>dxworks</Authors>
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="./ReleaseNotes/1.0.0.md">
+            <Pack>True</Pack>
+            <PackagePath>ReleaseNotes.md</PackagePath>
+        </None>
+        <None Include="./README.md">
+            <Pack>True</Pack>
+            <PackagePath>README.md</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Westwind.Utilities" Version="3.1.14" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="pack" />
     </ItemGroup>
 
 </Project>
