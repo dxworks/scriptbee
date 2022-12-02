@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Plugin, } from "./plugin";
 import { contentHeaders } from "../../shared/headers";
-import { BaseMarketplacePlugin } from "./marketplace-plugin";
+import { MarketplacePlugin } from "./marketplace-plugin";
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +16,11 @@ export class PluginService {
   }
 
   getAllLoadedPlugins(): Observable<Plugin[]> {
-    return this.http.get<Plugin[]>(this.pluginsApi, {headers: contentHeaders});
+    return this.http.get<Plugin[]>(this.pluginsApi, { headers: contentHeaders });
   }
 
-  getAllAvailablePlugins(start: number = 0, count: number = 10): Observable<BaseMarketplacePlugin[]> {
-    return this.http.get<BaseMarketplacePlugin[]>(`${this.pluginsApi}/available`, {
+  getAllAvailablePlugins(start: number = 0, count: number = 10): Observable<MarketplacePlugin[]> {
+    return this.http.get<MarketplacePlugin[]>(`${this.pluginsApi}/available`, {
       headers: contentHeaders,
       params: {
         start: start,
@@ -33,11 +33,11 @@ export class PluginService {
     return this.http.post(`${this.pluginsApi}/install`, {
       pluginId: pluginId,
       downloadUrl: downloadUrl
-    }, {headers: contentHeaders});
+    }, { headers: contentHeaders });
   }
 
   uninstallPlugin(pluginId: string) {
-    return this.http.delete(`${this.pluginsApi}/uninstall/${pluginId}`, {headers: contentHeaders});
+    return this.http.delete(`${this.pluginsApi}/uninstall/${pluginId}`, { headers: contentHeaders });
   }
 
   // getAllUiPlugins():Observable<UIPlugin[]>{

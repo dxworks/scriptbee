@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ScriptBee.FileManagement;
 
-public class FileService : IFileService
+public sealed class FileService : IFileService
 {
     public IEnumerable<string> GetDirectories(string path)
     {
@@ -25,5 +25,15 @@ public class FileService : IFileService
     public string CombinePaths(string path1, string path2)
     {
         return Path.Combine(path1, path2);
+    }
+
+    public void DeleteFile(string path)
+    {
+        File.Delete(path);
+    }
+
+    public void DeleteFolder(string path)
+    {
+        Directory.Delete(path, true);
     }
 }

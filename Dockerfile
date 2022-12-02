@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
 COPY ["ScriptBeeWebApp/ScriptBeeWebApp.csproj", "ScriptBeeWebApp/"]
+COPY ["ScriptBee.Marketplace.Client/ScriptBee.Marketplace.Client.csproj", "ScriptBee.Marketplace.Client/"]
 COPY ["ScriptBee/ScriptBee.csproj", "ScriptBee/"]
 COPY ["DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj", "DxWorks.ScriptBee.Plugin.Api/"]
 

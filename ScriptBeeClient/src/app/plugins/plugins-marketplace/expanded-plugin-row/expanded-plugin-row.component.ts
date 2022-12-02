@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MarketplaceSinglePlugin } from "../../../services/plugin/marketplace-plugin";
+import { MarketplacePlugin } from "../../../services/plugin/marketplace-plugin";
 
 @Component({
   selector: 'app-expanded-plugin-row',
@@ -8,7 +8,7 @@ import { MarketplaceSinglePlugin } from "../../../services/plugin/marketplace-pl
 })
 export class ExpandedPluginRowComponent {
 
-  @Input() plugin: MarketplaceSinglePlugin;
+  @Input() plugin: MarketplacePlugin;
 
   constructor() {
   }

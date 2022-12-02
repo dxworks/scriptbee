@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using ScriptBee.Config;
 using ScriptBee.FileManagement;
+using ScriptBee.Marketplace.Client;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
@@ -32,11 +33,8 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        // services.AddControllersWithViews();
-
         var mongoConnectionString = Configuration.GetConnectionString("mongodb");
 
         if (string.IsNullOrEmpty(mongoConnectionString))
@@ -47,8 +45,6 @@ public class Startup
         var mongoUrl = new MongoUrl(mongoConnectionString);
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
-
-        // var userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
 
         var logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -76,6 +72,9 @@ public class Startup
         services.AddSingleton<IGenerateScriptService, GenerateScriptService>();
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IFileModelService, FileModelService>();
+        services.AddSingleton<IDownloadService, DownloadService>();
+        services.AddHttpClient<DownloadService>();
+        services.AddSingleton<IZipService, ZipService>();
         services.AddSingleton<IPluginReader, PluginReader>();
         services.AddSingleton<IDllLoader, DllLoader>();
         services.AddSingleton<IRunScriptService, RunScriptService>();
@@ -99,6 +98,7 @@ public class Startup
         services.AddSingleton<IPluginLoader, PluginLoader>();
         services.AddSingleton<IFileWatcherHubService, FileWatcherHubService>();
         services.AddSingleton<IFileWatcherService, FileWatcherService>();
+        services.AddScriptBeeMarketplaceClient(Configuration);
 
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
         services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>

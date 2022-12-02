@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Plugin.Manifest;
@@ -41,15 +42,18 @@ public class PluginController : ControllerBase
     }
 
     [HttpGet("available")]
-    public ActionResult<IEnumerable<BaseMarketplacePlugin>> GetMarketPlugins([FromQuery] int start = 0, [FromQuery] int count = 10)
+    public async Task<ActionResult<IEnumerable<MarketplacePlugin>>> GetMarketPlugins([FromQuery] int start = 0,
+        [FromQuery] int count = 10, CancellationToken cancellationToken = default)
     {
-        return Ok(_pluginService.GetMarketPlugins(start, count));
+        var baseMarketplacePlugins = await _pluginService.GetMarketPlugins(start, count, cancellationToken);
+        return Ok(baseMarketplacePlugins);
     }
 
     [HttpPost("install")]
-    public async Task<ActionResult> InstallPlugin([FromBody] InstallPluginRequest request)
+    public async Task<ActionResult> InstallPlugin([FromBody] InstallPluginRequest request,
+        CancellationToken cancellationToken = default)
     {
-        await _pluginService.InstallPlugin(request.PluginId, request.DownloadUrl);
+        await _pluginService.InstallPlugin(request.PluginId, request.Version, cancellationToken);
         return Ok();
     }
 

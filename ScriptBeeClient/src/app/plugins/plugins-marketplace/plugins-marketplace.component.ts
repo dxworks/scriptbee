@@ -3,8 +3,8 @@ import { MatSort } from "@angular/material/sort";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from '@angular/material/table';
 import { PluginService } from "../../services/plugin/plugin.service";
-import { BaseMarketplacePlugin } from "../../services/plugin/marketplace-plugin";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import { MarketplacePlugin } from "../../services/plugin/marketplace-plugin";
 
 @Component({
   selector: 'app-plugins-marketplace',
@@ -12,16 +12,16 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   styleUrls: ['./plugins-marketplace.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
 })
 export class PluginsMarketplaceComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['name', 'type', 'author', 'expand'];
-  dataSource: MatTableDataSource<BaseMarketplacePlugin>;
-  expandedElement: BaseMarketplacePlugin | null;
+  dataSource: MatTableDataSource<MarketplacePlugin>;
+  expandedElement: MarketplacePlugin | null;
 
   isLoading = false;
 
@@ -37,7 +37,7 @@ export class PluginsMarketplaceComponent implements OnInit, AfterViewInit {
     this.pluginService.getAllAvailablePlugins().subscribe({
       next: plugins => {
         this.isLoading = false;
-        this.dataSource = new MatTableDataSource<BaseMarketplacePlugin>(plugins);
+        this.dataSource = new MatTableDataSource<MarketplacePlugin>(plugins);
       }, error: () => {
         this.isLoading = false;
         // todo display error

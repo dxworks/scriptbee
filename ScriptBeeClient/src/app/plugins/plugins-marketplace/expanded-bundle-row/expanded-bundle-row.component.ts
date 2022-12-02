@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { MarketplaceBundlePlugin } from "../../../services/plugin/marketplace-plugin";
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-expanded-bundle-row',
@@ -8,13 +7,13 @@ import { MarketplaceBundlePlugin } from "../../../services/plugin/marketplace-pl
 })
 export class ExpandedBundleRowComponent {
 
-  @Input() bundle: MarketplaceBundlePlugin;
+  // @Input() bundle: MarketplaceBundlePlugin;
 
   constructor() {
   }
 
   getPluginVersions() {
-    return Object.entries(this.bundle.versions);
+    // return Object.entries(this.bundle.versions);
   }
 
   installBundle(version: string) {
