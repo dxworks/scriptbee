@@ -4,6 +4,8 @@ namespace ScriptBee.FileManagement;
 
 public interface IFileService
 {
+    string GetFileName(string path);
+    
     IEnumerable<string> GetDirectories(string path);
 
     bool FileExists(string path);
@@ -13,4 +15,8 @@ public interface IFileService
     void DeleteFile(string path);
 
     void DeleteFolder(string path);
+
+    string ReadAllText(string path);
+
+    void AppendTextToFile(string path, string text);
 }

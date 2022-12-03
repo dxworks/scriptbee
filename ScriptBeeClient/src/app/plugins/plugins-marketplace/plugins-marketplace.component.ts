@@ -19,7 +19,7 @@ import { MarketplacePlugin } from "../../services/plugin/marketplace-plugin";
   ],
 })
 export class PluginsMarketplaceComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['name', 'type', 'author', 'expand'];
+  displayedColumns: string[] = ['name', 'author', 'expand'];
   dataSource: MatTableDataSource<MarketplacePlugin>;
   expandedElement: MarketplacePlugin | null;
 

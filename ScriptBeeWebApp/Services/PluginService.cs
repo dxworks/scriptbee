@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ScriptBee.Config;
-using ScriptBee.FileManagement;
-using ScriptBee.Marketplace.Client.Repository;
 using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
@@ -17,22 +14,15 @@ namespace ScriptBeeWebApp.Services;
 public sealed class PluginService : IPluginService
 {
     private readonly IPluginRepository _pluginRepository;
-    private readonly IStorageRepository _storageRepository;
+    private readonly IPluginInstaller _pluginInstaller;
     private readonly IPluginFetcher _pluginFetcher;
-    private readonly IDownloadService _downloadService;
-    private readonly IFileService _fileService;
-    private readonly IZipService _zipService;
 
-    public PluginService(IPluginRepository pluginRepository, IStorageRepository storageRepository,
-        IPluginFetcher pluginFetcher, IDownloadService downloadService, IFileService fileService,
-        IZipService zipService)
+    public PluginService(IPluginRepository pluginRepository, IPluginInstaller pluginInstaller,
+        IPluginFetcher pluginFetcher)
     {
         _pluginRepository = pluginRepository;
-        _storageRepository = storageRepository;
+        _pluginInstaller = pluginInstaller;
         _pluginFetcher = pluginFetcher;
-        _downloadService = downloadService;
-        _fileService = fileService;
-        _zipService = zipService;
     }
 
     public IEnumerable<PluginManifest> GetPluginManifests()
@@ -67,74 +57,25 @@ public sealed class PluginService : IPluginService
                         new ExtensionPointVersion(extensionPointVersion.Kind, extensionPointVersion.Version))
                     .ToList();
 
-                // todo set installed bool
-                pluginVersions.Add(pluginVersion, new PluginVersion(versions, false));
-            }
+                var installedPluginVersion = _pluginRepository.GetInstalledPluginVersion(plugin.Name);
 
+                var installed = installedPluginVersion is not null &&
+                                installedPluginVersion.CompareTo(Version.Parse(pluginVersion)) == 0;
+                pluginVersions.Add(pluginVersion, new PluginVersion(versions, installed));
+            }
 
             return new MarketplacePlugin(plugin.Name, plugin.Name, plugin.Author, plugin.Description, pluginVersions);
         });
-
-        // for (var i = start; i < start + count; i++)
-        // {
-        //     yield return new MarketplaceBundlePlugin(
-        //         i.ToString(),
-        //         $"Bundle {i}",
-        //         $"Author {i}",
-        //         $"Description {i}",
-        //         $"DownloadUrl {i}",
-        //         new Dictionary<string, BundlePluginVersion>
-        //         {
-        //             {
-        //                 "1.0.0", new BundlePluginVersion(new List<BundlePlugin>
-        //                 {
-        //                     new("Plugin 1", "1.0.0", new List<string> { "ScriptRunner", "ScriptGenerator" }),
-        //                     new("Plugin 2", "1.0.0",
-        //                         new List<string> { "ScriptRunner", "ScriptGenerator", "HelperFunctions" }),
-        //                 }, true)
-        //             },
-        //             {
-        //                 "1.0.1", new BundlePluginVersion(new List<BundlePlugin>
-        //                 {
-        //                     new("Plugin 1", "1.0.1", new List<string> { "ScriptRunner", "ScriptGenerator" }),
-        //                     new("Plugin 2", "1.0.1",
-        //                         new List<string> { "ScriptRunner", "ScriptGenerator", "HelperFunctions" }),
-        //                     new("Plugin 3", "1.0.1",
-        //                         new List<string> { "ScriptRunner", "ScriptGenerator", "HelperFunctions" }),
-        //                 }, false)
-        //             },
-        //         }
-        //     );
-        // }
     }
 
     public async Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default)
     {
-        var plugin = await _pluginFetcher.GetPluginAsync(pluginId, cancellationToken);
-
-        var pluginVersion = plugin.Versions.FirstOrDefault(v => v.Version == version);
-
-        if (pluginVersion is null)
-        {
-            // todo add custom exception
-            throw new Exception($"Plugin {pluginId} does not have version {version}");
-        }
-
-        var pluginFolder = _fileService.CombinePaths(ConfigFolders.PathToPlugins, pluginId);
-        var zipPath = _fileService.CombinePaths(ConfigFolders.PathToPlugins, $"{pluginId}.zip");
-
-        _fileService.DeleteFolder(pluginFolder);
-
-        var pluginVersionUrl = await _storageRepository.GetDownloadUrlAsync(pluginVersion.Url);
-        await _downloadService.DownloadFileAsync(pluginVersionUrl, zipPath, cancellationToken);
-
-        await _zipService.UnzipFileAsync(zipPath, pluginFolder, cancellationToken);
-
-        _fileService.DeleteFile(zipPath);
+        await _pluginInstaller.InstallPlugin(pluginId, version, cancellationToken);
     }
 
-    public Task UninstallPlugin(string pluginId)
+    public void UninstallPlugin(string pluginId, string pluginVersion)
     {
-        throw new NotImplementedException();
+        _pluginRepository.UnRegisterPlugin(pluginId, pluginId);
+        _pluginInstaller.UninstallPlugin(pluginId, pluginVersion);
     }
 }

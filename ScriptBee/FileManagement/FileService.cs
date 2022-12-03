@@ -5,6 +5,11 @@ namespace ScriptBee.FileManagement;
 
 public sealed class FileService : IFileService
 {
+    public string GetFileName(string path)
+    {
+        return Path.GetFileName(path);
+    }
+
     public IEnumerable<string> GetDirectories(string path)
     {
         try
@@ -34,6 +39,19 @@ public sealed class FileService : IFileService
 
     public void DeleteFolder(string path)
     {
-        Directory.Delete(path, true);
+        if (Directory.Exists(path))
+        {
+            Directory.Delete(path, true);
+        }
+    }
+
+    public string ReadAllText(string path)
+    {
+        return File.ReadAllText(path);
+    }
+
+    public void AppendTextToFile(string path, string text)
+    {
+        File.AppendAllLines(path, new List<string> { text });
     }
 }

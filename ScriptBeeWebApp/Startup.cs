@@ -39,6 +39,7 @@ public class Startup
 
         if (string.IsNullOrEmpty(mongoConnectionString))
         {
+            // todo throw custom exception
             throw new Exception("Mongo Connection String not set");
         }
 
@@ -53,6 +54,7 @@ public class Startup
             .CreateLogger();
         Log.Logger = logger;
 
+        // todo clean up using extension methods
         services.AddSingleton(_ => mongoDatabase);
         services.AddSingleton<ILogger>(_ => logger);
         services.Configure<UserFolderSettings>(Configuration.GetSection("UserFolder"));
@@ -98,6 +100,7 @@ public class Startup
         services.AddSingleton<IPluginLoader, PluginLoader>();
         services.AddSingleton<IFileWatcherHubService, FileWatcherHubService>();
         services.AddSingleton<IFileWatcherService, FileWatcherService>();
+        services.AddSingleton<IPluginInstaller, PluginInstaller>();
         services.AddScriptBeeMarketplaceClient(Configuration);
 
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();

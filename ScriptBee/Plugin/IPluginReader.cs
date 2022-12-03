@@ -5,4 +5,6 @@ namespace ScriptBee.Plugin;
 public interface IPluginReader
 {
     IEnumerable<Models.Plugin> ReadPlugins(string pluginFolderPath);
+
+    void ClearDeletePluginsFolder(string pluginFolderPath);
 }

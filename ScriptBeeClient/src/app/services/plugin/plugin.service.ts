@@ -29,15 +29,15 @@ export class PluginService {
     });
   }
 
-  installPlugin(pluginId: string, downloadUrl: string) {
+  installPlugin(pluginId: string, version: string) {
     return this.http.post(`${this.pluginsApi}/install`, {
       pluginId: pluginId,
-      downloadUrl: downloadUrl
+      version: version
     }, { headers: contentHeaders });
   }
 
-  uninstallPlugin(pluginId: string) {
-    return this.http.delete(`${this.pluginsApi}/uninstall/${pluginId}`, { headers: contentHeaders });
+  uninstallPlugin(pluginId: string, version: string) {
+    return this.http.delete(`${this.pluginsApi}/uninstall/${pluginId}/${version}`, { headers: contentHeaders });
   }
 
   // getAllUiPlugins():Observable<UIPlugin[]>{

@@ -23,6 +23,28 @@ public class PluginReader : IPluginReader
         _pluginManifestYamlFileReader = pluginManifestYamlFileReader;
     }
 
+    public void ClearDeletePluginsFolder(string pluginFolderPath)
+    {
+        var deleteFolders = _fileService.CombinePaths(pluginFolderPath, "delete.txt");
+
+        if (!_fileService.FileExists(deleteFolders))
+        {
+            return;
+        }
+
+        var deleteFoldersContent = _fileService.ReadAllText(deleteFolders);
+
+        var foldersToDelete = deleteFoldersContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var folderToDelete in foldersToDelete)
+        {
+            var folderToDeletePath = _fileService.CombinePaths(pluginFolderPath, folderToDelete);
+            _fileService.DeleteFolder(folderToDeletePath);
+        }
+
+        _fileService.DeleteFile(deleteFolders);
+    }
+
     public IEnumerable<Models.Plugin> ReadPlugins(string pluginFolderPath)
     {
         var plugins = new List<Models.Plugin>();
@@ -41,7 +63,16 @@ public class PluginReader : IPluginReader
 
                 if (pluginManifest != null)
                 {
-                    plugins.Add(new Models.Plugin(pluginDirectory, pluginManifest));
+                    var folderName = _fileService.GetFileName(pluginDirectory);
+                    var (id, version) = PluginNameGenerator.GetPluginNameAndVersion(folderName);
+
+                    if (id is null || version is null)
+                    {
+                        _logger.Warning("Plugin {PluginDirectory} has invalid name or version", pluginDirectory);
+                        continue;
+                    }
+
+                    plugins.Add(new Models.Plugin(pluginDirectory, id, version, pluginManifest));
                 }
                 else
                 {

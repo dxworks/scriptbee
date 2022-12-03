@@ -17,11 +17,6 @@
         <td mat-cell *matCellDef="let row"> {{row.name}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-        <td mat-cell *matCellDef="let row"> {{row.type === 'bundle' ? "Bundle" : "Plugin" }} </td>
-      </ng-container>
-
       <ng-container matColumnDef="author">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Author</th>
         <td mat-cell *matCellDef="let row"> {{row.author}} </td>
@@ -42,8 +37,7 @@
         <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
           <div class="expanded-row-detail"
                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-            <app-expanded-plugin-row *ngIf="element.type === 'plugin'" [plugin]="element"></app-expanded-plugin-row>
-            <app-expanded-bundle-row *ngIf="element.type === 'bundle'" [bundle]="element"></app-expanded-bundle-row>
+            <app-expanded-plugin-row [plugin]="element"></app-expanded-plugin-row>
           </div>
         </td>
       </ng-container>

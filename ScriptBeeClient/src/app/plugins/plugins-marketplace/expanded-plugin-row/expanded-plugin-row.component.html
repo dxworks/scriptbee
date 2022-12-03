@@ -8,18 +8,24 @@
     <br/>
 
     <div fxFlexFill fxLayout="column">
-      <div>Available extension points:</div>
+      <div>Available versions:</div>
 
       <br/>
 
       <div fxLayout="column" fxLayoutAlign="space-between stretch">
         <div *ngFor="let version of getPluginVersions()">
+          <mat-divider></mat-divider>
+
           <div fxLayout="row" fxLayoutAlign="space-between stretch">
-            <div>{{version[0]}}</div>
+            <div class="plugin-version-div">{{version[0]}}</div>
             <div fxFlex></div>
-            <div>{{version[1].extensionPointVersions}}</div>
+            <mat-list>
+              <mat-list-item *ngFor="let extensionPointVersion of version[1].extensionPointVersions">
+                {{extensionPointVersion.kind}}: {{extensionPointVersion.version}}
+              </mat-list-item>
+            </mat-list>
             <div fxFlex></div>
-            <div>
+            <div class="plugin-version-div">
               <button mat-icon-button color="primary" *ngIf="!version[1].installed"
                       (click)="installPlugin(version[0])">
                 <mat-icon>download</mat-icon>

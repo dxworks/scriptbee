@@ -42,9 +42,9 @@ public class PluginManagerTests
         _pluginReaderMock.Setup(x => x.ReadPlugins("path"))
             .Returns(new List<Models.Plugin>
             {
-                new TestPlugin(),
-                new TestPlugin(),
-                new TestPlugin(),
+                new TestPlugin("id", new Version(0, 0, 0, 1)),
+                new TestPlugin("id", new Version(0, 0, 0, 2)),
+                new TestPlugin("id", new Version(0, 0, 0, 3)),
             });
 
         _pluginManager.LoadPlugins("path");
@@ -57,9 +57,9 @@ public class PluginManagerTests
     {
         var expectedException = new Exception("Test exception");
 
-        Models.Plugin testPlugin1 = new TestPlugin();
-        Models.Plugin testPlugin2 = new TestPlugin();
-        Models.Plugin testPlugin3 = new TestPlugin();
+        Models.Plugin testPlugin1 = new TestPlugin("id", new Version(0, 0, 0, 1));
+        Models.Plugin testPlugin2 = new TestPlugin("id", new Version(0, 0, 1, 1));
+        Models.Plugin testPlugin3 = new TestPlugin("id", new Version(0, 0, 2, 1));
 
         _pluginReaderMock.Setup(x => x.ReadPlugins("path"))
             .Returns(new List<Models.Plugin>

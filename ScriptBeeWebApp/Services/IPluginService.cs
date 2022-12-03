@@ -16,5 +16,5 @@ public interface IPluginService
         CancellationToken cancellationToken = default);
 
     Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default);
-    Task UninstallPlugin(string pluginId);
+    void UninstallPlugin(string pluginId, string pluginVersion);
 }

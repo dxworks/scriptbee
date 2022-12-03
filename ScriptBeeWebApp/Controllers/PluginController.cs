@@ -45,6 +45,7 @@ public class PluginController : ControllerBase
     public async Task<ActionResult<IEnumerable<MarketplacePlugin>>> GetMarketPlugins([FromQuery] int start = 0,
         [FromQuery] int count = 10, CancellationToken cancellationToken = default)
     {
+        // TODO: sort descending by version
         var baseMarketplacePlugins = await _pluginService.GetMarketPlugins(start, count, cancellationToken);
         return Ok(baseMarketplacePlugins);
     }
@@ -57,10 +58,10 @@ public class PluginController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("uninstall/{pluginId}")]
-    public async Task<ActionResult> UninstallPlugin(string pluginId)
+    [HttpDelete("uninstall/{pluginId}/{pluginVersion}")]
+    public ActionResult UninstallPlugin(string pluginId, string pluginVersion)
     {
-        await _pluginService.UninstallPlugin(pluginId);
+        _pluginService.UninstallPlugin(pluginId, pluginVersion);
         return Ok();
     }
 }

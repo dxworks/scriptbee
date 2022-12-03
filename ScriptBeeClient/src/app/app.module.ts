@@ -34,6 +34,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 
@@ -89,8 +90,12 @@ import { ScriptTreeEffects } from "./state/script-tree/script-tree.effects";
 import { ScriptTreeComponent } from './project-details/scripts-content/script-tree/script-tree.component';
 import { PluginsComponent } from './plugins/plugins/plugins.component';
 import { PluginsMarketplaceComponent } from './plugins/plugins-marketplace/plugins-marketplace.component';
-import { ExpandedPluginRowComponent } from './plugins/plugins-marketplace/expanded-plugin-row/expanded-plugin-row.component';
-import { ExpandedBundleRowComponent } from './plugins/plugins-marketplace/expanded-bundle-row/expanded-bundle-row.component';
+import {
+  ExpandedPluginRowComponent
+} from './plugins/plugins-marketplace/expanded-plugin-row/expanded-plugin-row.component';
+import {
+  ExpandedBundleRowComponent
+} from './plugins/plugins-marketplace/expanded-bundle-row/expanded-bundle-row.component';
 
 @NgModule({
   declarations: [
@@ -131,17 +136,17 @@ import { ExpandedBundleRowComponent } from './plugins/plugins-marketplace/expand
     ExpandedBundleRowComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
+    FormsModule,
+    FlexLayoutModule,
     MatToolbarModule,
     MatSlideToggleModule,
     MatIconModule,
     MatButtonModule,
-    FormsModule,
-    FlexLayoutModule,
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
@@ -158,12 +163,13 @@ import { ExpandedBundleRowComponent } from './plugins/plugins-marketplace/expand
     MatDividerModule,
     MatListModule,
     MatSidenavModule,
-    MonacoEditorModule,
-    MatTooltipModule,
-    ClipboardModule,
     MatCheckboxModule,
-    AngularSplitModule,
+    MatTooltipModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
+    MonacoEditorModule,
+    ClipboardModule,
+    AngularSplitModule,
     StoreModule.forRoot({
       outputState: outputReducer,
       projectDetails: projectDetailsReducer,

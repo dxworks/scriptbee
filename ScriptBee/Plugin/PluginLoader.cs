@@ -30,7 +30,7 @@ public class PluginLoader : IPluginLoader
             {
                 if (!acceptedPluginTypes!.Any())
                 {
-                    _pluginRepository.RegisterPlugin(plugin.Manifest);
+                    _pluginRepository.RegisterPlugin(plugin.Id, plugin.Version, plugin.Manifest);
                     return;
                 }
 
@@ -40,7 +40,7 @@ public class PluginLoader : IPluginLoader
 
                 foreach (var (@interface, concrete) in loadDllTypes)
                 {
-                    _pluginRepository.RegisterPlugin(plugin.Manifest, @interface, concrete);
+                    _pluginRepository.RegisterPlugin(plugin.Id, plugin.Version, plugin.Manifest, @interface, concrete);
                 }
             }
             else

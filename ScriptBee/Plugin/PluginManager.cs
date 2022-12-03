@@ -20,6 +20,8 @@ public class PluginManager
     // todo move to task
     public void LoadPlugins(string allPluginsFolder)
     {
+        _pluginReader.ClearDeletePluginsFolder(allPluginsFolder);
+
         // todo filter custom plugin definitions first
         // todo iterate over all plugin definitions and load them
         var plugins = _pluginReader.ReadPlugins(allPluginsFolder);

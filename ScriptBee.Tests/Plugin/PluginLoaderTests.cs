@@ -35,7 +35,7 @@ public class PluginLoaderTests
     public void GivenUnregisteredPlugin_WhenLoad_ThenMessageIsLogged()
     {
         HashSet<Type>? nullTypes = null;
-        var plugin = new TestPlugin();
+        var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
 
         _pluginRegistrationServiceMock.Setup(s => s.TryGetValue(It.IsAny<string>(), out nullTypes))
             .Returns(false);
@@ -50,7 +50,7 @@ public class PluginLoaderTests
     public void GivenRegisteredPluginWithNoAcceptedTypes_WhenLoad_ThenPluginManifestIsLoaded()
     {
         var acceptedTypes = new HashSet<Type>();
-        var plugin = new TestPlugin();
+        var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
 
         _pluginRegistrationServiceMock.Setup(s => s.TryGetValue(It.IsAny<string>(), out acceptedTypes))
             .Returns(true);
@@ -61,7 +61,8 @@ public class PluginLoaderTests
 
         _pluginLoader.Load(plugin);
 
-        _pluginRepositoryMock.Verify(r => r.RegisterPlugin(plugin.Manifest), Times.Once());
+        _pluginRepositoryMock.Verify(r => r.RegisterPlugin("id", new Version(0, 0, 0, 1), plugin.Manifest),
+            Times.Once());
     }
 
     [Fact]
@@ -72,7 +73,7 @@ public class PluginLoaderTests
             typeof(string),
             typeof(object)
         };
-        var plugin = new TestPlugin();
+        var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
 
         _pluginRegistrationServiceMock.Setup(s => s.TryGetValue(It.IsAny<string>(), out acceptedTypes))
             .Returns(true);
@@ -87,9 +88,11 @@ public class PluginLoaderTests
 
         _pluginLoader.Load(plugin);
 
-        _pluginRepositoryMock.Verify(r => r.RegisterPlugin(plugin.Manifest, typeof(string), typeof(string)),
+        _pluginRepositoryMock.Verify(
+            r => r.RegisterPlugin("id", new Version(0, 0, 0, 1), plugin.Manifest, typeof(string), typeof(string)),
             Times.Once());
-        _pluginRepositoryMock.Verify(r => r.RegisterPlugin(plugin.Manifest, typeof(object), typeof(object)),
+        _pluginRepositoryMock.Verify(
+            r => r.RegisterPlugin("id", new Version(0, 0, 0, 1), plugin.Manifest, typeof(object), typeof(object)),
             Times.Once());
     }
 }

@@ -7,9 +7,12 @@ namespace ScriptBee.Plugin;
 
 public interface IPluginRepository
 {
-    void RegisterPlugin(PluginManifest pluginManifest, Type @interface, Type concrete);
+    void UnRegisterPlugin(string pluginId, string pluginVersion);
 
-    void RegisterPlugin(PluginManifest pluginManifest);
+    void RegisterPlugin(string pluginId, Version pluginVersion, PluginManifest pluginManifest, Type @interface,
+        Type concrete);
+
+    void RegisterPlugin(string pluginId, Version pluginVersion, PluginManifest pluginManifest);
 
     TService? GetPlugin<TService>(Func<TService, bool> filter,
         IEnumerable<(Type @interface, object instance)>? services = null)
@@ -18,10 +21,10 @@ public interface IPluginRepository
     IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)
         where TService : IPlugin;
 
-    PluginManifest? GetLoadedPluginManifest(string name);
-
     IEnumerable<PluginManifest> GetLoadedPluginManifests();
 
     IEnumerable<T> GetLoadedPluginExtensionPoints<T>()
         where T : PluginExtensionPoint;
+
+    Version? GetInstalledPluginVersion(string pluginName);
 }
