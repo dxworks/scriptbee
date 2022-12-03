@@ -27,13 +27,13 @@ public sealed class PluginService : IPluginService
 
     public IEnumerable<PluginManifest> GetPluginManifests()
     {
-        return _pluginRepository.GetLoadedPluginManifests();
+        return _pluginRepository.GetLoadedPluginsManifests();
     }
 
     public IEnumerable<PluginManifest> GetPluginManifests(string type)
     {
-        return _pluginRepository.GetLoadedPluginManifests().Where(manifest =>
-            manifest.ExtensionPoints.Any(extensionPoint => extensionPoint.Kind == type));
+        return _pluginRepository.GetLoadedPlugins(type)
+            .Select(plugin => plugin.Manifest);
     }
 
     public IEnumerable<T> GetExtensionPoints<T>() where T : PluginExtensionPoint

@@ -61,7 +61,7 @@ public class PluginLoaderTests
 
         _pluginLoader.Load(plugin);
 
-        _pluginRepositoryMock.Verify(r => r.RegisterPlugin("id", new Version(0, 0, 0, 1), plugin.Manifest),
+        _pluginRepositoryMock.Verify(r => r.RegisterPlugin(plugin),
             Times.Once());
     }
 
@@ -89,10 +89,10 @@ public class PluginLoaderTests
         _pluginLoader.Load(plugin);
 
         _pluginRepositoryMock.Verify(
-            r => r.RegisterPlugin("id", new Version(0, 0, 0, 1), plugin.Manifest, typeof(string), typeof(string)),
+            r => r.RegisterPlugin(plugin),
             Times.Once());
         _pluginRepositoryMock.Verify(
-            r => r.RegisterPlugin("id", new Version(0, 0, 0, 1), plugin.Manifest, typeof(object), typeof(object)),
+            r => r.RegisterPlugin(plugin, typeof(object), typeof(object)),
             Times.Once());
     }
 }

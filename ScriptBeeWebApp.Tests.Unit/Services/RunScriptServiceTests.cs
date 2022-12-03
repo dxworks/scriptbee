@@ -49,32 +49,19 @@ public class RunScriptServiceTests
     [Fact]
     public void GivenLoadedPluginManifests_WhenGetSupportedLanguages_ThenReturnSupportedLanguages()
     {
-        var pluginManifests = new List<PluginManifest>
+        var pluginExtensionPoints = new List<ScriptRunnerPluginExtensionPoint>
         {
             new()
             {
-                Name = "Plugin1",
-                ExtensionPoints = new List<PluginExtensionPoint>
-                {
-                    new ScriptRunnerPluginExtensionPoint
-                    {
-                        Language = "C#"
-                    }
-                }
+                Language = "C#"
             },
             new()
             {
-                Name = "Plugin2",
-                ExtensionPoints = new List<PluginExtensionPoint>
-                {
-                    new ScriptRunnerPluginExtensionPoint
-                    {
-                        Language = "Python"
-                    }
-                }
+                Language = "Python"
             }
         };
-        _pluginRepositoryMock.Setup(x => x.GetLoadedPluginManifests()).Returns(pluginManifests);
+        _pluginRepositoryMock.Setup(x => x.GetLoadedPluginExtensionPoints<ScriptRunnerPluginExtensionPoint>())
+            .Returns(pluginExtensionPoints);
 
         var supportedLanguages = _runScriptService.GetSupportedLanguages().ToList();
 

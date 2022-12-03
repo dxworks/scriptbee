@@ -6,7 +6,6 @@ using Moq;
 using ScriptBee.FileManagement;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
-using ScriptBee.Tests.Plugin.Internals;
 using Serilog;
 using Xunit;
 

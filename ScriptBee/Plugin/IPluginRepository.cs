@@ -9,10 +9,9 @@ public interface IPluginRepository
 {
     void UnRegisterPlugin(string pluginId, string pluginVersion);
 
-    void RegisterPlugin(string pluginId, Version pluginVersion, PluginManifest pluginManifest, Type @interface,
-        Type concrete);
+    void RegisterPlugin(Models.Plugin plugin, Type @interface, Type concrete);
 
-    void RegisterPlugin(string pluginId, Version pluginVersion, PluginManifest pluginManifest);
+    void RegisterPlugin(Models.Plugin plugin);
 
     TService? GetPlugin<TService>(Func<TService, bool> filter,
         IEnumerable<(Type @interface, object instance)>? services = null)
@@ -21,7 +20,9 @@ public interface IPluginRepository
     IEnumerable<TService> GetPlugins<TService>(IEnumerable<(Type @interface, object instance)>? services = null)
         where TService : IPlugin;
 
-    IEnumerable<PluginManifest> GetLoadedPluginManifests();
+    IEnumerable<PluginManifest> GetLoadedPluginsManifests();
+
+    IEnumerable<Models.Plugin> GetLoadedPlugins(string kind);
 
     IEnumerable<T> GetLoadedPluginExtensionPoints<T>()
         where T : PluginExtensionPoint;

@@ -4,6 +4,7 @@ using System.Linq;
 using AutoFixture;
 using DxWorks.ScriptBee.Plugin.Api;
 using Moq;
+using ScriptBee.Models;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBeeWebApp.Services;
@@ -29,13 +30,13 @@ public class LinkersServiceTests
     [Fact]
     public void GivenLinkers_WhenGetSupportedLinkers_ThenLinkersNamesAreReturned()
     {
-        var manifests = new List<PluginManifest>
+        var manifests = new List<Plugin>
         {
-            CreateLinker("linker1"),
-            CreateLinker("linker2")
+            new("path1", "linker1", new Version(0, 0, 1), CreateLinker("linker1")),
+            new("path2", "linker2", new Version(0, 0, 1), CreateLinker("linker2"))
         };
 
-        _pluginRepositoryMock.Setup(x => x.GetLoadedPluginManifests())
+        _pluginRepositoryMock.Setup(x => x.GetLoadedPlugins(PluginKind.Linker))
             .Returns(manifests);
 
         var supportedLinkers = _linkersService.GetSupportedLinkers().ToList();

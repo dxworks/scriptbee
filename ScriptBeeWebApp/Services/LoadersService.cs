@@ -32,9 +32,8 @@ public class LoadersService : ILoadersService
 
     public IEnumerable<string> GetSupportedLoaders()
     {
-        return _pluginRepository.GetLoadedPluginManifests()
-            .Where(manifest => manifest.ExtensionPoints.Any(extensionPoint => extensionPoint.Kind == PluginKind.Loader))
-            .Select(manifest => manifest.Name);
+        return _pluginRepository.GetLoadedPlugins(PluginKind.Loader)
+            .Select(plugin => plugin.Id);
     }
 
     public IModelLoader? GetLoader(string name)

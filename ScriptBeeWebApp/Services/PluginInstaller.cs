@@ -28,6 +28,7 @@ public class PluginInstaller : IPluginInstaller
         _zipService = zipService;
     }
 
+    // todo refactor this to include the plugin repository
     public async Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default)
     {
         var plugin = await _pluginFetcher.GetPluginAsync(pluginId, cancellationToken);
@@ -54,11 +55,11 @@ public class PluginInstaller : IPluginInstaller
 
     public void UninstallPlugin(string pluginId, string pluginVersion)
     {
-        // todo: remove the hard coded file\
+        // todo: remove the hard coded file
         var deleteFolders = _fileService.CombinePaths(ConfigFolders.PathToPlugins, "delete.txt");
         var pluginName = PluginNameGenerator.GetPluginName(pluginId, pluginVersion);
         var pluginFolder = _fileService.CombinePaths(ConfigFolders.PathToPlugins, pluginName);
-        
+
         _fileService.AppendTextToFile(deleteFolders, pluginFolder);
     }
 }
