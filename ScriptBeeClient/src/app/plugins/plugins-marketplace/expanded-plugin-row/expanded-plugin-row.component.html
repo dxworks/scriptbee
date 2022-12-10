@@ -13,25 +13,25 @@
       <br/>
 
       <div fxLayout="column" fxLayoutAlign="space-between stretch">
-        <div *ngFor="let version of getPluginVersions()">
+        <div *ngFor="let version of plugin.versions">
           <mat-divider></mat-divider>
 
           <div fxLayout="row" fxLayoutAlign="space-between stretch">
-            <div class="plugin-version-div">{{version[0]}}</div>
+            <div class="plugin-version-div">{{version.version}}</div>
             <div fxFlex></div>
             <mat-list>
-              <mat-list-item *ngFor="let extensionPointVersion of version[1].extensionPointVersions">
+              <mat-list-item *ngFor="let extensionPointVersion of version.extensionPointVersions">
                 {{extensionPointVersion.kind}}: {{extensionPointVersion.version}}
               </mat-list-item>
             </mat-list>
             <div fxFlex></div>
             <div class="plugin-version-div">
-              <button mat-icon-button color="primary" *ngIf="!version[1].installed"
-                      (click)="installPlugin(version[0])">
+              <button mat-icon-button color="primary" *ngIf="!version.installed"
+                      (click)="installPlugin(version.version)">
                 <mat-icon>download</mat-icon>
               </button>
-              <button mat-icon-button color="accent" *ngIf="version[1].installed"
-                      (click)="uninstallPlugin(version[0])">
+              <button mat-icon-button color="accent" *ngIf="version.installed"
+                      (click)="uninstallPlugin(version.version)">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

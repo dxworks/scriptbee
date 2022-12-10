@@ -101,7 +101,7 @@ public class Startup
         services.AddSingleton<IFileWatcherHubService, FileWatcherHubService>();
         services.AddSingleton<IFileWatcherService, FileWatcherService>();
         services.AddSingleton<IPluginInstaller, PluginInstaller>();
-        services.AddScriptBeeMarketplaceClient(Configuration);
+        services.AddScriptBeeMarketplaceClient();
 
         services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
         services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>

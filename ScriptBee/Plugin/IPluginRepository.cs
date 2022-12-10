@@ -27,5 +27,5 @@ public interface IPluginRepository
     IEnumerable<T> GetLoadedPluginExtensionPoints<T>()
         where T : PluginExtensionPoint;
 
-    Version? GetInstalledPluginVersion(string pluginName);
+    Version? GetInstalledPluginVersion(string pluginId);
 }

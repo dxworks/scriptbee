@@ -5,7 +5,7 @@ namespace ScriptBeeWebApp.Services;
 
 public interface IPluginInstaller
 {
-    Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default);
-    
+    Task<string> InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default);
+
     void UninstallPlugin(string pluginId, string pluginVersion);
 }

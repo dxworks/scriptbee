@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ScriptBee.Config;
 using ScriptBee.FileManagement;
-using ScriptBee.Marketplace.Client.Repository;
 using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
 
@@ -12,28 +11,36 @@ namespace ScriptBeeWebApp.Services;
 
 public class PluginInstaller : IPluginInstaller
 {
-    private readonly IStorageRepository _storageRepository;
-    private readonly IPluginFetcher _pluginFetcher;
+    private readonly IMarketPluginFetcher _marketPluginFetcher;
     private readonly IDownloadService _downloadService;
     private readonly IFileService _fileService;
     private readonly IZipService _zipService;
 
-    public PluginInstaller(IStorageRepository storageRepository, IPluginFetcher pluginFetcher,
-        IDownloadService downloadService, IFileService fileService, IZipService zipService)
+    public PluginInstaller(IMarketPluginFetcher marketPluginFetcher, IDownloadService downloadService,
+        IFileService fileService,
+        IZipService zipService)
     {
-        _storageRepository = storageRepository;
-        _pluginFetcher = pluginFetcher;
+        _marketPluginFetcher = marketPluginFetcher;
         _downloadService = downloadService;
         _fileService = fileService;
         _zipService = zipService;
     }
 
     // todo refactor this to include the plugin repository
-    public async Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default)
+    public async Task<string> InstallPlugin(string pluginId, string version,
+        CancellationToken cancellationToken = default)
     {
-        var plugin = await _pluginFetcher.GetPluginAsync(pluginId, cancellationToken);
+        var plugins = await _marketPluginFetcher.GetPluginsAsync(cancellationToken);
 
-        var pluginVersion = plugin.Versions.FirstOrDefault(v => v.Version == version);
+        var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
+        if (plugin is null)
+        {
+            // todo add custom exception
+            throw new Exception("Plugin not found");
+        }
+
+        var semver = Version.Parse(version);
+        var pluginVersion = plugin.Versions.FirstOrDefault(v => v.Version == semver);
 
         if (pluginVersion is null)
         {
@@ -45,12 +52,15 @@ public class PluginInstaller : IPluginInstaller
         var pluginFolder = _fileService.CombinePaths(ConfigFolders.PathToPlugins, pluginName);
         var zipPath = _fileService.CombinePaths(ConfigFolders.PathToPlugins, $"{pluginName}.zip");
 
-        var pluginVersionUrl = await _storageRepository.GetDownloadUrlAsync(pluginVersion.Url);
+        var pluginVersionUrl = pluginVersion.Url;
+
         await _downloadService.DownloadFileAsync(pluginVersionUrl, zipPath, cancellationToken);
 
         await _zipService.UnzipFileAsync(zipPath, pluginFolder, cancellationToken);
 
         _fileService.DeleteFile(zipPath);
+
+        return pluginFolder;
     }
 
     public void UninstallPlugin(string pluginId, string pluginVersion)

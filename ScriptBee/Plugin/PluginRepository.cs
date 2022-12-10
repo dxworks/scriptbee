@@ -69,9 +69,9 @@ public class PluginRepository : IPluginRepository
         return GetLoadedPlugins().SelectMany(p => p.Manifest.ExtensionPoints).OfType<T>();
     }
 
-    public Version? GetInstalledPluginVersion(string pluginName)
+    public Version? GetInstalledPluginVersion(string pluginId)
     {
-        return _plugins.TryGetValue(pluginName, out var plugin) ? plugin.Version : null;
+        return _plugins.TryGetValue(pluginId, out var plugin) ? plugin.Version : null;
     }
 
     private IEnumerable<Models.Plugin> GetLoadedPlugins()

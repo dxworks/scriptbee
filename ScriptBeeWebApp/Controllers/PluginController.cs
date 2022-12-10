@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +46,16 @@ public class PluginController : ControllerBase
     public async Task<ActionResult<IEnumerable<MarketplacePlugin>>> GetMarketPlugins([FromQuery] int start = 0,
         [FromQuery] int count = 10, CancellationToken cancellationToken = default)
     {
-        // TODO: sort descending by version
         var baseMarketplacePlugins = await _pluginService.GetMarketPlugins(start, count, cancellationToken);
+
+        baseMarketplacePlugins = baseMarketplacePlugins
+            .Select(plugin =>
+            {
+                var versions = plugin.Versions.OrderByDescending(version => version.Version);
+                return plugin with { Versions = versions.ToList() };
+            })
+            .Skip(start)
+            .Take(count);
         return Ok(baseMarketplacePlugins);
     }
 

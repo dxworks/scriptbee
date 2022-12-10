@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MarketplacePlugin } from "../../../services/plugin/marketplace-plugin";
 import { PluginService } from "../../../services/plugin/plugin.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-expanded-plugin-row',
@@ -11,36 +12,42 @@ export class ExpandedPluginRowComponent {
 
   @Input() plugin: MarketplacePlugin;
 
-  constructor(private pluginService: PluginService) {
+  constructor(private pluginService: PluginService, private snackBar: MatSnackBar,) {
   }
 
   installPlugin(version: string) {
-    this.pluginService.installPlugin(this.plugin.name, version).subscribe({
+    this.pluginService.installPlugin(this.plugin.id, version).subscribe({
       next: () => {
-        console.log('installed');
-        // todo display success
+        this.plugin.versions = this.plugin.versions.map(v => {
+          if (v.version === version) {
+            v.installed = true;
+          }
+          return v;
+        });
       },
       error: () => {
-        console.log('error');
-        // todo display error
+        this.snackBar.open('Could not install plugin', 'Ok', {
+          duration: 4000
+        });
       }
     });
   }
 
   uninstallPlugin(version: string) {
-    this.pluginService.uninstallPlugin(this.plugin.name, version).subscribe({
+    this.pluginService.uninstallPlugin(this.plugin.id, version).subscribe({
       next: () => {
-        console.log('uninstalled');
-        // todo display success
+        this.plugin.versions = this.plugin.versions.map(v => {
+          if (v.version === version) {
+            v.installed = false;
+          }
+          return v;
+        });
       },
       error: () => {
-        console.log('error');
-        // todo display error
+        this.snackBar.open('Could not uninstall plugin', 'Ok', {
+          duration: 4000
+        });
       }
     });
-  }
-
-  getPluginVersions() {
-    return Object.entries(this.plugin.versions);
   }
 }
