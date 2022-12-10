@@ -7,6 +7,7 @@
         <Description>This is the API for the ScriptBee plugin.</Description>
         <PackageReleaseNotes>ReleaseNotes.md</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageProjectUrl>https://github.com/dxworks/scriptbee/tree/master/DxWorks.ScriptBee.Plugin.Api</PackageProjectUrl>
         <RepositoryUrl>https://github.com/dxworks/scriptbee</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -16,15 +17,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="./ReleaseNotes/1.0.0.md">
-            <Pack>True</Pack>
-            <PackagePath>ReleaseNotes.md</PackagePath>
-        </None>
+        <None Include="./ReleaseNotes/1.0.0.md" Pack="true" PackagePath="ReleaseNotes.md"/>
         <None Include="./README.md" Pack="true" PackagePath=""/>
+        <None Include="./LICENSE" Pack="true" PackagePath=""/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Westwind.Utilities" Version="3.1.14"/>
     </ItemGroup>
-    
+
 </Project>

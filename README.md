@@ -48,6 +48,9 @@ docker-compose up
 
 ## Plugins
 
+> Plugins use the [DxWorks Hub SDK](https://github.com/dxworks/dxworks-hub-sdk) and will create a folder in the users
+> folder were the hub will be downloaded and used. (e.g. `C:\Users\{user}\.dxw\hub`)
+
 ### How to create a plugin
 
 To create a plugin you need to create a folder in the `plugins` folder in the folder `SCRIPTBEE_DATA`. The folder must
@@ -60,16 +63,17 @@ ScriptBee supports the following plugin types:
 - ScriptGenerator
 - ScriptRunner
 - HelperFunctions
-- UI
 
-> Note: the `UI` plugin type is not yet fully implemented
+[//]: # (- UI)
+
+[//]: # (> Note: the `UI` plugin type is not yet fully implemented)
 
 Some examples of a plugin manifests are located [here](ScriptBee.Tests/Plugin/Manifest/TestData).
 
 ### Anatomy of the plugin manifest
 
 ```yaml
-apiVersion: v1
+apiVersion: 1.0.0
 author: ScriptBee
 description: "Description"
 name: "HelperFunctions example"
