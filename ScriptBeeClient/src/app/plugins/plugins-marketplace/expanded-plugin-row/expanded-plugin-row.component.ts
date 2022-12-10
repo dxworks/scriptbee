@@ -11,13 +11,18 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class ExpandedPluginRowComponent {
 
   @Input() plugin: MarketplacePlugin;
+  isLoading = false;
 
-  constructor(private pluginService: PluginService, private snackBar: MatSnackBar,) {
+  constructor(private pluginService: PluginService, private snackBar: MatSnackBar) {
   }
 
   installPlugin(version: string) {
+    this.isLoading = true;
+
     this.pluginService.installPlugin(this.plugin.id, version).subscribe({
       next: () => {
+        this.isLoading = false;
+
         this.plugin.versions = this.plugin.versions.map(v => {
           if (v.version === version) {
             v.installed = true;
@@ -26,6 +31,8 @@ export class ExpandedPluginRowComponent {
         });
       },
       error: () => {
+        this.isLoading = false;
+
         this.snackBar.open('Could not install plugin', 'Ok', {
           duration: 4000
         });
@@ -34,8 +41,12 @@ export class ExpandedPluginRowComponent {
   }
 
   uninstallPlugin(version: string) {
+    this.isLoading = true;
+
     this.pluginService.uninstallPlugin(this.plugin.id, version).subscribe({
       next: () => {
+        this.isLoading = false;
+
         this.plugin.versions = this.plugin.versions.map(v => {
           if (v.version === version) {
             v.installed = false;
@@ -44,6 +55,8 @@ export class ExpandedPluginRowComponent {
         });
       },
       error: () => {
+        this.isLoading = false;
+
         this.snackBar.open('Could not uninstall plugin', 'Ok', {
           duration: 4000
         });

@@ -74,10 +74,6 @@ import { OutputErrorsComponent } from './project-details/output/output-errors/ou
 import { OutputEffects } from "./state/outputs/output.effects";
 import { projectDetailsReducer } from "./state/project-details/project-details.reducer";
 import { ProjectDetailsEffects } from "./state/project-details/project-details.effects";
-import { loadersReducer } from "./state/loaders/loaders.reducer";
-import { linkersReducer } from "./state/linkers/linkers.reducer";
-import { LoadersEffects } from "./state/loaders/loaders.effects";
-import { LinkersEffects } from "./state/linkers/linkers.effects";
 import { UploadModelsComponent } from './project-details/details-content/upload-models/upload-models.component';
 import { LoadModelsComponent } from './project-details/details-content/load-models/load-models.component';
 import { LinkModelsComponent } from './project-details/details-content/link-models/link-models.component';
@@ -174,10 +170,8 @@ import {
       outputState: outputReducer,
       projectDetails: projectDetailsReducer,
       scriptTree: scriptTreeReducer,
-      loaders: loadersReducer,
-      linkers: linkersReducer
     }, {}),
-    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, ScriptTreeEffects, LoadersEffects, LinkersEffects]),
+    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, ScriptTreeEffects]),
   ],
   providers: [
     SlugifyPipe

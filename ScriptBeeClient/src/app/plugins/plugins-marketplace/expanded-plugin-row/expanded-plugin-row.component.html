@@ -26,6 +26,7 @@
             </mat-list>
             <div fxFlex></div>
             <div class="plugin-version-div">
+              <mat-spinner *ngIf="isLoading"></mat-spinner>
               <button mat-icon-button color="primary" *ngIf="!version.installed"
                       (click)="installPlugin(version.version)">
                 <mat-icon>download</mat-icon>

@@ -3,8 +3,8 @@ import { Project } from "../../../state/project-details/project";
 import { Store } from "@ngrx/store";
 import { ErrorDialogService } from "../../../shared/error-dialog/error-dialog.service";
 import { ProjectService } from "../../../services/project/project.service";
-import { selectLinkers } from "../../../state/linkers/linkers.selectors";
 import { LinkerService } from "../../../services/linker/linker.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-link-models',
@@ -20,12 +20,19 @@ export class LinkModelsComponent implements OnInit {
   linking = false;
 
   constructor(private store: Store, private errorDialogService: ErrorDialogService,
-              private linkerService: LinkerService, private projectService: ProjectService) {
+    private linkerService: LinkerService, private projectService: ProjectService, private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-    this.store.select(selectLinkers).subscribe(linkers => {
-      this.linkers = linkers ?? [];
+    this.linkerService.getAllLinkers().subscribe({
+      next: (res) => {
+        this.linkers = res;
+      },
+      error: () => {
+        this.snackBar.open('Could not get linkers!', 'Ok', {
+          duration: 4000
+        });
+      }
     });
   }
 
