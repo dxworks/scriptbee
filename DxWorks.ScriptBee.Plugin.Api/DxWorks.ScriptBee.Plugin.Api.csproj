@@ -20,18 +20,11 @@
             <Pack>True</Pack>
             <PackagePath>ReleaseNotes.md</PackagePath>
         </None>
-        <None Include="./README.md">
-            <Pack>True</Pack>
-            <PackagePath>README.md</PackagePath>
-        </None>
+        <None Include="./README.md" Pack="true" PackagePath=""/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Westwind.Utilities" Version="3.1.14" />
+        <PackageReference Include="Westwind.Utilities" Version="3.1.14"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="pack" />
-    </ItemGroup>
-
+    
 </Project>

@@ -7,14 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DxWorks.Hub.Sdk" Version="1.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="D:\Work\Visual Studio 2019\CSharp\DxWorks.Hub.Sdk\DxWorks.Hub.Sdk\DxWorks.Hub.Sdk.csproj" />
-    </ItemGroup>
-
-
 </Project>
