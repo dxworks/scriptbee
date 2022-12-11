@@ -1,0 +1,35 @@
+slug: scriptbee-default-helper-functions-plugin
+name: ScriptBee Default Helper Functions Plugin
+description: ScriptBee Default Helper Functions Plugin
+
+license: Apache-2.0
+
+repositories:
+  - https://github.com/dxworks/scriptbee
+
+issues:
+  - https://github.com/dxworks/scriptbee
+
+docs:
+  - https://github.com/dxworks/scriptbee
+
+site: https://github.com/dxworks/scriptbee
+
+technologies:
+  - C#
+
+authors:
+  - name: ScriptBee
+
+tags:
+  - Helper Functions
+
+scriptBee:
+  versions:
+    - version: 1.0.0
+      name: DxWorks.ScriptBee.Plugin.HelperFunctions.Default
+      sourceCode: https://github.com/dxworks/scriptbee/tree/master/Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default
+      asset: "url"
+      extensionPoints:
+        - kind: "HelperFunctions"
+          version: 1.0.0

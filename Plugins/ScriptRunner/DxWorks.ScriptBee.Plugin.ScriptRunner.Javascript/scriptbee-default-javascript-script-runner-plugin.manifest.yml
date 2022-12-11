@@ -1,0 +1,36 @@
+slug: scriptbee-default-javascript-script-runner-plugin
+name: ScriptBee Default Javascript Script Runner Plugin
+description: ScriptBee Default Javascript Script Runner Plugin
+
+license: Apache-2.0
+
+repositories:
+  - https://github.com/dxworks/scriptbee
+
+issues:
+  - https://github.com/dxworks/scriptbee
+
+docs:
+  - https://github.com/dxworks/scriptbee
+
+site: https://github.com/dxworks/scriptbee
+
+technologies:
+  - C#
+  - Javascript
+
+authors:
+  - name: ScriptBee
+
+tags:
+  - Script Runner
+
+scriptBee:
+  versions:
+    - version: 1.0.0
+      name: ScriptBee Default Javascript Script Runner Plugin
+      sourceCode: https://github.com/dxworks/scriptbee/tree/master/Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript
+      asset: "url"
+      extensionPoints:
+        - kind: "ScriptRunner"
+          version: 1.0.0

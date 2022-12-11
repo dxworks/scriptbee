@@ -1,0 +1,36 @@
+slug: scriptbee-default-python-script-generator-plugin
+name: ScriptBee Default Python Script Generator Plugin
+description: ScriptBee Default Python Script Generator Plugin
+
+license: Apache-2.0
+
+repositories:
+  - https://github.com/dxworks/scriptbee
+
+issues:
+  - https://github.com/dxworks/scriptbee
+
+docs:
+  - https://github.com/dxworks/scriptbee
+
+site: https://github.com/dxworks/scriptbee
+
+technologies:
+  - C#
+  - Python
+
+authors:
+  - name: ScriptBee
+
+tags:
+  - Script Generator
+
+scriptBee:
+  versions:
+    - version: 1.0.0
+      name: DxWorks.ScriptBee.Plugin.ScriptGeneration.Python
+      sourceCode: https://github.com/dxworks/scriptbee/tree/master/Plugins/ScriptGeneration/DxWorks.ScriptBee.Plugin.ScriptGeneration.Python
+      asset: "url"
+      extensionPoints:
+        - kind: "ScriptGenerator"
+          version: 1.0.0

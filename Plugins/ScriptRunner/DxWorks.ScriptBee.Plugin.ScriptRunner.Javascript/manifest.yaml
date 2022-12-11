@@ -1,0 +1,9 @@
+apiVersion: 1.0.0
+author: ScriptBee
+description: "Default Javascript ScriptRunner Plugin"
+name: DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript
+extensionPoints:
+  - kind: ScriptRunner
+    entryPoint: DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.dll
+    version: 1.0.0
+    language: javascript
