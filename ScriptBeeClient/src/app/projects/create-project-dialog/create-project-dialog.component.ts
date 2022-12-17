@@ -1,8 +1,8 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {CreateProjectDialogData} from './create-project-dialog-data';
-import {SlugifyPipe} from '../../shared/slugify.pipe';
-import {ProjectService} from '../../services/project/project.service';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CreateProjectDialogData } from './create-project-dialog-data';
+import { SlugifyPipe } from '../../shared/slugify.pipe';
+import { ProjectService } from '../../services/project/project.service';
 
 @Component({
   selector: 'app-create-project-dialog',
@@ -10,13 +10,16 @@ import {ProjectService} from '../../services/project/project.service';
   styleUrls: ['./create-project-dialog.component.scss']
 })
 export class CreateProjectDialogComponent {
-
   projectExists = false;
 
-  constructor(public dialogRef: MatDialogRef<CreateProjectDialogComponent>, private projectService: ProjectService,
-              @Inject(MAT_DIALOG_DATA) public data: CreateProjectDialogData, public slugify: SlugifyPipe) {
+  constructor(
+    public dialogRef: MatDialogRef<CreateProjectDialogComponent>,
+    private projectService: ProjectService,
+    @Inject(MAT_DIALOG_DATA) public data: CreateProjectDialogData,
+    public slugify: SlugifyPipe
+  ) {
     if (!data || !data.projectName) {
-      this.data = {projectName: ''};
+      this.data = { projectName: '' };
     }
   }
 
@@ -25,12 +28,20 @@ export class CreateProjectDialogComponent {
   }
 
   onOkClick(): void {
-    this.projectService.createProject(this.slugify.transform(this.data.projectName), this.data.projectName).subscribe(res => {
-      if (res) {
-        this.dialogRef.close(true);
-      }
-    }, (error: any) => {
-      this.projectExists = true;
-    });
+    this.projectService
+      .createProject(
+        this.slugify.transform(this.data.projectName),
+        this.data.projectName
+      )
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.dialogRef.close(true);
+          }
+        },
+        error: () => {
+          this.projectExists = true;
+        }
+      });
   }
 }
