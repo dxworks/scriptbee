@@ -30,7 +30,7 @@ public class PluginInstaller : IPluginInstaller
     public async Task<string> InstallPlugin(string pluginId, string version,
         CancellationToken cancellationToken = default)
     {
-        var plugins = await _marketPluginFetcher.GetPluginsAsync(cancellationToken);
+        var plugins = await _marketPluginFetcher.GetProjectsAsync(cancellationToken);
 
         var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
         if (plugin is null)

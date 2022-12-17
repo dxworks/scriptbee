@@ -12,7 +12,7 @@ public interface IPluginService
     IEnumerable<PluginManifest> GetPluginManifests(string type);
     IEnumerable<T> GetExtensionPoints<T>() where T : PluginExtensionPoint;
 
-    Task<IEnumerable<MarketplacePlugin>> GetMarketPlugins(int start, int count,
+    Task<IEnumerable<MarketplaceProject>> GetMarketPlugins(int start, int count,
         CancellationToken cancellationToken = default);
 
     Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default);

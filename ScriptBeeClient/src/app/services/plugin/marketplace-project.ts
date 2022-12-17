@@ -1,8 +1,11 @@
 import { PluginKind } from "./plugin";
 
-export interface MarketplacePlugin {
+type MarketplaceProjectType = "Plugin" | "Bundle";
+
+export interface MarketplaceProject {
   id: string;
   name: string;
+  type: MarketplaceProjectType;
   authors: string[];
   description: string;
   versions: PluginVersion[];

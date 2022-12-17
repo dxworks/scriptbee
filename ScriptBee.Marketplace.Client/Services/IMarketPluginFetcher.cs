@@ -4,5 +4,5 @@ namespace ScriptBee.Marketplace.Client.Services;
 
 public interface IMarketPluginFetcher
 {
-    Task<IEnumerable<MarketPlacePlugin>> GetPluginsAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<MarketPlaceProject>> GetProjectsAsync(CancellationToken cancellationToken = default);
 }

@@ -128,4 +128,22 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("Plugin", extensionPoint.ComponentName);
         Assert.Equal("Result", extensionPoint.UiPluginType);
     }
+
+    [Theory]
+    [FilePath("TestData/PluginBundlePluginManifest.yaml")]
+    public void GivenManifestContent_ThenPluginBundlePluginManifestIsConstructed(string filePath)
+    {
+        var pluginManifest = _yamlFileReader.Read(filePath);
+
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
+        Assert.Equal("Plugin example", pluginManifest.Name);
+        Assert.Equal("ScriptBee", pluginManifest.Author);
+        Assert.Equal("Description", pluginManifest.Description);
+
+        var extensionPoint = (PluginBundleExtensionPoint)pluginManifest.ExtensionPoints.Single();
+
+        Assert.Equal("Plugin", extensionPoint.Kind);
+        Assert.Equal("plugin", extensionPoint.EntryPoint);
+        Assert.Equal("0.0.1", extensionPoint.Version);
+    }
 }

@@ -4,7 +4,7 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from '@angular/material/table';
 import { PluginService } from "../../services/plugin/plugin.service";
 import { animate, state, style, transition, trigger } from "@angular/animations";
-import { MarketplacePlugin } from "../../services/plugin/marketplace-plugin";
+import { MarketplaceProject } from "../../services/plugin/marketplace-project";
 
 @Component({
   selector: 'app-plugins-marketplace',
@@ -19,9 +19,9 @@ import { MarketplacePlugin } from "../../services/plugin/marketplace-plugin";
   ],
 })
 export class PluginsMarketplaceComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['name', 'author', 'expand'];
-  dataSource: MatTableDataSource<MarketplacePlugin>;
-  expandedElement: MarketplacePlugin | null;
+  displayedColumns: string[] = ['name', 'author', 'type', 'expand'];
+  dataSource: MatTableDataSource<MarketplaceProject>;
+  expandedElement: MarketplaceProject | null;
 
   isLoading = false;
 
@@ -37,7 +37,7 @@ export class PluginsMarketplaceComponent implements OnInit, AfterViewInit {
     this.pluginService.getAllAvailablePlugins().subscribe({
       next: plugins => {
         this.isLoading = false;
-        this.dataSource = new MatTableDataSource<MarketplacePlugin>(plugins);
+        this.dataSource = new MatTableDataSource<MarketplaceProject>(plugins);
       }, error: () => {
         this.isLoading = false;
         // todo display error

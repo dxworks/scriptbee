@@ -1,4 +1,4 @@
-﻿using DxWorks.Hub.Sdk;
+﻿using DxWorks.Hub.Sdk.Clients;
 using DxWorks.Hub.Sdk.Project;
 using ScriptBee.Marketplace.Client.Data;
 
@@ -6,42 +6,46 @@ namespace ScriptBee.Marketplace.Client.Services;
 
 public sealed class MarketPluginFetcher : IMarketPluginFetcher
 {
-    private readonly IDxWorksHubClient _hubClient;
+    private readonly IScriptBeeClient _hubClient;
 
-    public MarketPluginFetcher(IDxWorksHubClient hubClient)
+
+    public MarketPluginFetcher(IScriptBeeClient hubClient)
     {
         _hubClient = hubClient;
     }
 
-    public async Task<IEnumerable<MarketPlacePlugin>> GetPluginsAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MarketPlaceProject>> GetProjectsAsync(CancellationToken cancellationToken = default)
     {
         await _hubClient.UpdateRepositoryAsync(cancellationToken);
 
-        return _hubClient.GetProjects()
-            .Where(project => project.ScriptBee is not null)
+        return _hubClient.GetScriptBeeProjects()
             .Select(ConvertToPlugin);
     }
 
-    private static MarketPlacePlugin ConvertToPlugin(DxWorksProject project)
+    private static MarketPlaceProject ConvertToPlugin(ScriptBeeProject project)
     {
-        return new MarketPlacePlugin
+        var projectType = project.Type == ScriptBeeProjectTypes.Bundle
+            ? MarketPlaceProjectType.Bundle
+            : MarketPlaceProjectType.Plugin;
+
+        return new MarketPlaceProject
         (
-            project.Slug,
+            project.Id,
             project.Name,
+            projectType,
             project.Description,
             project.Authors.Select(author => author.Name).ToList(),
-            project.ScriptBee!.Versions.Select(ConvertToPluginVersion).ToList()
+            project.Versions.Select(ConvertToPluginVersion).ToList()
         );
     }
 
-    private static PluginVersion ConvertToPluginVersion(ScriptBeeVersion version)
+    private static PluginVersion ConvertToPluginVersion(ScriptBeeProjectVersion version)
     {
         return new PluginVersion
         (
-            version.Asset,
+            version.DownloadUrl,
             version.Version,
-            (version.ExtensionPoints ?? new List<ExtensionPoint>())
-            .Select(point => new ExtensionPointVersion(point.Kind, point.Version)).ToList()
+            version.Manifest
         );
     }
 }

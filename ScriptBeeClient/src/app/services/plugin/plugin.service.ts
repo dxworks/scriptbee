@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Plugin, } from "./plugin";
 import { contentHeaders } from "../../shared/headers";
-import { MarketplacePlugin } from "./marketplace-plugin";
+import { MarketplaceProject } from "./marketplace-project";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class PluginService {
     return this.http.get<Plugin[]>(this.pluginsApi, { headers: contentHeaders });
   }
 
-  getAllAvailablePlugins(start: number = 0, count: number = 10): Observable<MarketplacePlugin[]> {
-    return this.http.get<MarketplacePlugin[]>(`${this.pluginsApi}/available`, {
+  getAllAvailablePlugins(start: number = 0, count: number = 10): Observable<MarketplaceProject[]> {
+    return this.http.get<MarketplaceProject[]>(`${this.pluginsApi}/available`, {
       headers: contentHeaders,
       params: {
         start: start,

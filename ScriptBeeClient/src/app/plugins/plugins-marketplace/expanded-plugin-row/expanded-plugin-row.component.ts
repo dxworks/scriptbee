@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MarketplacePlugin } from "../../../services/plugin/marketplace-plugin";
+import { MarketplaceProject } from "../../../services/plugin/marketplace-project";
 import { PluginService } from "../../../services/plugin/plugin.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
@@ -10,7 +10,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 })
 export class ExpandedPluginRowComponent {
 
-  @Input() plugin: MarketplacePlugin;
+  @Input() plugin: MarketplaceProject;
   isLoading = false;
 
   constructor(private pluginService: PluginService, private snackBar: MatSnackBar) {

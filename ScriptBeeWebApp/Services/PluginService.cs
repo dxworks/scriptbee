@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ScriptBee.Marketplace.Client.Data;
 using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBeeWebApp.Controllers.DTO;
+using PluginVersion = ScriptBeeWebApp.Controllers.DTO.PluginVersion;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -44,31 +46,24 @@ public sealed class PluginService : IPluginService
         return _pluginRepository.GetLoadedPluginExtensionPoints<T>();
     }
 
-    public async Task<IEnumerable<MarketplacePlugin>> GetMarketPlugins(int start, int count,
+    public async Task<IEnumerable<MarketplaceProject>> GetMarketPlugins(int start, int count,
         CancellationToken cancellationToken = default)
     {
-        var plugins = await _marketPluginFetcher.GetPluginsAsync(cancellationToken);
+        var projects = await _marketPluginFetcher.GetProjectsAsync(cancellationToken);
 
-        return plugins.Select(plugin =>
-        {
-            var pluginVersions = new List<PluginVersion>();
-
-            foreach (var (_, pluginVersion, extensionPointVersions) in plugin.Versions)
+        return projects
+            .Select(plugin =>
             {
-                var versions = extensionPointVersions
-                    .Select(extensionPointVersion =>
-                        new ExtensionPointVersion(extensionPointVersion.Kind, extensionPointVersion.Version.ToString()))
+                var pluginVersions = plugin.Versions
+                    .Select(pluginVersion => GetPluginVersion(pluginVersion, plugin))
                     .ToList();
+                var type = plugin.Type == MarketPlaceProjectType.Plugin
+                    ? MarketplaceProject.PluginType
+                    : MarketplaceProject.BundleType;
 
-                var installedPluginVersion = _pluginRepository.GetInstalledPluginVersion(plugin.Id);
-
-                var installed = installedPluginVersion is not null &&
-                                installedPluginVersion.CompareTo(pluginVersion) == 0;
-                pluginVersions.Add(new PluginVersion(pluginVersion.ToString(), versions, installed));
-            }
-
-            return new MarketplacePlugin(plugin.Id, plugin.Name, plugin.Description, plugin.Authors, pluginVersions);
-        });
+                return new MarketplaceProject(plugin.Id, plugin.Name, type, plugin.Description,
+                    plugin.Authors, pluginVersions);
+            });
     }
 
     public async Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default)
@@ -78,6 +73,17 @@ public sealed class PluginService : IPluginService
         var plugin = _pluginReader.ReadPlugin(installedPluginPath);
         if (plugin is not null)
         {
+            var installPluginTasks = new List<Task>();
+
+            foreach (var extensionPoint in plugin.Manifest.ExtensionPoints.Where(point =>
+                         point.Kind == PluginKind.Plugin))
+            {
+                installPluginTasks.Add(InstallPlugin(extensionPoint.EntryPoint, extensionPoint.Version,
+                    cancellationToken));
+            }
+
+            await Task.WhenAll(installPluginTasks);
+
             _pluginLoader.Load(plugin);
         }
     }
@@ -86,5 +92,17 @@ public sealed class PluginService : IPluginService
     {
         _pluginRepository.UnRegisterPlugin(pluginId, pluginId);
         _pluginInstaller.UninstallPlugin(pluginId, pluginVersion);
+    }
+
+    private PluginVersion GetPluginVersion(ScriptBee.Marketplace.Client.Data.PluginVersion pluginVersion,
+        MarketPlaceProject plugin)
+    {
+        var (_, version, _) = pluginVersion;
+        var installedPluginVersion = _pluginRepository.GetInstalledPluginVersion(plugin.Id);
+
+        var installed = installedPluginVersion is not null &&
+                        installedPluginVersion.CompareTo(version) == 0;
+
+        return new PluginVersion(version.ToString(), installed);
     }
 }

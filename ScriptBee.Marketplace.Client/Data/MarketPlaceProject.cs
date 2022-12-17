@@ -1,8 +1,15 @@
 ﻿namespace ScriptBee.Marketplace.Client.Data;
 
-public record MarketPlacePlugin(
+public enum MarketPlaceProjectType
+{
+    Plugin,
+    Bundle
+}
+
+public record MarketPlaceProject(
     string Id,
     string Name,
+    MarketPlaceProjectType Type,
     string Description,
     List<string> Authors,
     List<PluginVersion> Versions

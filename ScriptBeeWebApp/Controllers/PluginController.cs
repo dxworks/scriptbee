@@ -43,7 +43,7 @@ public class PluginController : ControllerBase
     }
 
     [HttpGet("available")]
-    public async Task<ActionResult<IEnumerable<MarketplacePlugin>>> GetMarketPlugins([FromQuery] int start = 0,
+    public async Task<ActionResult<IEnumerable<MarketplaceProject>>> GetMarketPlugins([FromQuery] int start = 0,
         [FromQuery] int count = 10, CancellationToken cancellationToken = default)
     {
         var baseMarketplacePlugins = await _pluginService.GetMarketPlugins(start, count, cancellationToken);

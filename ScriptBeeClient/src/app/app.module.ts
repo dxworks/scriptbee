@@ -89,9 +89,6 @@ import { PluginsMarketplaceComponent } from './plugins/plugins-marketplace/plugi
 import {
   ExpandedPluginRowComponent
 } from './plugins/plugins-marketplace/expanded-plugin-row/expanded-plugin-row.component';
-import {
-  ExpandedBundleRowComponent
-} from './plugins/plugins-marketplace/expanded-bundle-row/expanded-bundle-row.component';
 
 @NgModule({
   declarations: [
@@ -128,8 +125,7 @@ import {
     ScriptTreeComponent,
     PluginsComponent,
     PluginsMarketplaceComponent,
-    ExpandedPluginRowComponent,
-    ExpandedBundleRowComponent,
+    ExpandedPluginRowComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
