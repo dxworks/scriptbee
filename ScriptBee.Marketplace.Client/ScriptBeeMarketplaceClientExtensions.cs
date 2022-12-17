@@ -6,10 +6,12 @@ namespace ScriptBee.Marketplace.Client;
 
 public static class ScriptBeeMarketplaceClientExtensions
 {
-    public static void AddScriptBeeMarketplaceClient(this IServiceCollection services,
+    public static IServiceCollection AddScriptBeeMarketplaceClient(this IServiceCollection services,
         Action<DxWorksHubSdkOptions>? configureOptionsAction = null)
     {
         services.AddDxWorksHubSdk(configureOptionsAction);
         services.AddSingleton<IMarketPluginFetcher, MarketPluginFetcher>();
+
+        return services;
     }
 }

@@ -9,7 +9,7 @@ using ScriptBee.ProjectContext;
 
 namespace ScriptBee.Scripts.ScriptSampleGenerators;
 
-public class SampleCodeGenerator : ISampleCodeGenerator
+public class SampleCodeGenerator
 {
     private const BindingFlags BindingFlags = System.Reflection.BindingFlags.DeclaredOnly |
                                               System.Reflection.BindingFlags.Instance |
