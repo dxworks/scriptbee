@@ -43,7 +43,8 @@ public class PluginLoaderTests
         _pluginLoader.Load(plugin);
 
         _loggerMock.Verify(l =>
-            l.Warning("Plugin kind {PluginKind} is not supported", plugin.Manifest.ExtensionPoints[0].Kind));
+            l.Warning("Plugin kind {PluginKind} has no relevant Dlls to load",
+                plugin.Manifest.ExtensionPoints[0].Kind));
     }
 
     [Fact]
@@ -88,11 +89,6 @@ public class PluginLoaderTests
 
         _pluginLoader.Load(plugin);
 
-        _pluginRepositoryMock.Verify(
-            r => r.RegisterPlugin(plugin),
-            Times.Once());
-        _pluginRepositoryMock.Verify(
-            r => r.RegisterPlugin(plugin, typeof(object), typeof(object)),
-            Times.Once());
+        _pluginRepositoryMock.Verify(r => r.RegisterPlugin(plugin, typeof(object), typeof(object)), Times.Once());
     }
 }
