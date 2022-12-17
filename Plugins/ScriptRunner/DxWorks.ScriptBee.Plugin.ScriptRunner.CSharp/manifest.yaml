@@ -1,9 +1,0 @@
-apiVersion: 1.0.0
-author: ScriptBee
-description: "Default CSharp ScriptRunner Plugin"
-name: DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp
-extensionPoints:
-  - kind: ScriptRunner
-    entryPoint: DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.dll
-    version: 1.0.0
-    language: csharp

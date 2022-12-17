@@ -1,8 +1,0 @@
-apiVersion: 1.0.0
-author: ScriptBee
-description: "Default Helper Functions Plugin"
-name: DxWorks.ScriptBee.Plugin.HelperFunctions.Default
-extensionPoints:
-  - kind: HelperFunctions
-    entryPoint: DxWorks.ScriptBee.Plugin.HelperFunctions.Default.dll
-    version: 1.0.0

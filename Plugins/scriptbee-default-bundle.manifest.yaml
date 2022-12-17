@@ -1,0 +1,44 @@
+slug: scriptbee-default-bundle
+name: ScriptBee Default Bundle
+description: Contains the default plugins for script generation (C#, Javascript, Python), script running (C#, Javascript, Python) and helper functions
+
+license: Apache-2.0
+
+repositories:
+  - https://github.com/dxworks/scriptbee
+
+issues:
+  - https://github.com/dxworks/scriptbee/issues
+
+docs:
+  - https://github.com/dxworks/scriptbee
+
+site: https://github.com/dxworks/scriptbee
+
+technologies:
+  - C#
+  - Roslyn
+  - IronPython
+  - Jint
+
+authors:
+  - name: Andrei Timar
+    github: https://github.com/andrei2699
+  - name: Tania Topciov
+    github: https://github.com/taniatopciov
+
+tags:
+  - Helper Functions
+  - Script Generation
+  - Script Running
+  - Analysis
+
+scriptBee:
+  id: scriptbee-default-bundle
+  type: bundle
+  versions:
+    - version: 1.0.0
+      name: dxworks/scriptbee
+      sourceCode: https://github.com/dxworks/scriptbee/tree/master/Plugins
+      manifest: https://raw.githubusercontent.com/dxworks/honeydew/v1.0.0/Plugins/manifest.yaml
+      asset: scriptbee-default-bundle.zip
