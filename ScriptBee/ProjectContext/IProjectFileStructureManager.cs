@@ -24,5 +24,6 @@ public interface IProjectFileStructureManager
     public void DeleteFolder(string projectId, string pathToFolder);
 
     public string GetProjectAbsolutePath(string projectId);
-    void SetupFileWatcher(string projectId, string filePath);
+    void SetupFileWatcher(string projectId);
+    void RemoveFileWatcher(string projectId);
 }

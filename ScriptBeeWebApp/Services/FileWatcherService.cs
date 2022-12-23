@@ -1,25 +1,30 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Threading.Tasks;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Data;
+using Serilog;
 
 namespace ScriptBeeWebApp.Services;
 
 public class FileWatcherService : IFileWatcherService
 {
-    // todo needs an optimization to watch only the src folder of each project and notify accordingly all the files that are modified
     private readonly ConcurrentDictionary<string, FileSystemWatcher> _watchers = new();
-
     private readonly IFileWatcherHubService _fileWatcherHubService;
+    private readonly ILogger _logger;
 
-    public FileWatcherService(IFileWatcherHubService fileWatcherHubService)
+    public FileWatcherService(IFileWatcherHubService fileWatcherHubService, ILogger logger)
     {
         _fileWatcherHubService = fileWatcherHubService;
+        _logger = logger;
     }
 
-    public void SetupFileWatcher(string fullPath, string relativePath)
+    public void RemoveFileWatcher(string fullPath)
+    {
+        _watchers.TryRemove(fullPath, out _);
+    }
+
+    public void SetupFileWatcher(string fullPath)
     {
         if (_watchers.ContainsKey(fullPath))
         {
@@ -30,7 +35,6 @@ public class FileWatcherService : IFileWatcherService
         {
             NotifyFilter = NotifyFilters.LastWrite,
             Path = Path.GetDirectoryName(fullPath)!,
-            Filter = relativePath,
             EnableRaisingEvents = true,
             IncludeSubdirectories = true,
         };
@@ -39,25 +43,21 @@ public class FileWatcherService : IFileWatcherService
         {
             try
             {
-                await Task.Delay(100);
+                await using var fs = new FileStream(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var sr = new StreamReader(fs);
 
-                var content = await File.ReadAllTextAsync(e.FullPath);
+                var content = await sr.ReadToEndAsync();
 
-                var watchedFile = new WatchedFile(relativePath, content);
+                var watchedFile = new WatchedFile(e.FullPath, content);
                 await _fileWatcherHubService.SendFileWatch(watchedFile);
             }
             catch (Exception ex)
             {
-                // todo log exception
-                Console.WriteLine(ex);
+                _logger.Error(ex, "Error while watching file");
             }
         };
 
-        watcher.Error += (_, _) =>
-        {
-            // todo log and send to notification
-            Console.WriteLine("error");
-        };
+        watcher.Error += (_, e) => _logger.Error(e.GetException(), "Error while watching file");
 
         _watchers.AddOrUpdate(fullPath, watcher, (_, watcher1) => watcher1);
     }
