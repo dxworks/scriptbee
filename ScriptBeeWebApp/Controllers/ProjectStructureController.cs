@@ -121,9 +121,19 @@ public class ProjectStructureController : ControllerBase
     // todo add validation
     public IActionResult SetupFileWatcher([FromBody] SetupFileWatcher setupFileWatcher)
     {
-        _projectFileStructureManager.SetupFileWatcher(setupFileWatcher.ProjectId, setupFileWatcher.FilePath);
+        _projectFileStructureManager.SetupFileWatcher(setupFileWatcher.ProjectId);
 
         // todo return something
         return Ok("");
     }
+    
+    [HttpDelete("filewatcher/{projectId}")]
+    public IActionResult RemoveFileWatcher(string projectId)
+    {
+        _projectFileStructureManager.RemoveFileWatcher(projectId);
+
+        // todo return something
+        return Ok("");
+    }
+    
 }

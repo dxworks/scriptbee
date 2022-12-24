@@ -16,13 +16,26 @@ public static class PluginNameGenerator
 
     public static (string? id, Version? version) GetPluginNameAndVersion(string folderName)
     {
-        var parts = folderName.Split('@');
+        var lastIndexOfDelimiter = folderName.LastIndexOf('@');
 
-        if (parts.Length == 2)
+        if (lastIndexOfDelimiter == -1)
         {
-            return (parts[0], Version.Parse(parts[1]));
+            return (null, null);
         }
 
-        return (null, null);
+        var id = folderName[..lastIndexOfDelimiter];
+        var versionPart = folderName[(lastIndexOfDelimiter + 1)..];
+
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            return (null, null);
+        }
+
+        if (!Version.TryParse(versionPart, out var version))
+        {
+            return (null, null);
+        }
+
+        return (id, version);
     }
 }

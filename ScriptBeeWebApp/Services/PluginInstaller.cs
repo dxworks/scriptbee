@@ -6,6 +6,7 @@ using ScriptBee.Config;
 using ScriptBee.FileManagement;
 using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
+using ScriptBeeWebApp.Data.Exceptions;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -35,8 +36,7 @@ public class PluginInstaller : IPluginInstaller
         var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
         if (plugin is null)
         {
-            // todo add custom exception
-            throw new Exception("Plugin not found");
+            throw new PluginNotFoundException(pluginId);
         }
 
         var semver = Version.Parse(version);
@@ -44,8 +44,7 @@ public class PluginInstaller : IPluginInstaller
 
         if (pluginVersion is null)
         {
-            // todo add custom exception
-            throw new Exception($"Plugin {pluginId} does not have version {version}");
+            throw new PluginVersionNotFoundException("$pluginId $version");
         }
 
         var pluginName = PluginNameGenerator.GetPluginName(pluginId, pluginVersion.Version);

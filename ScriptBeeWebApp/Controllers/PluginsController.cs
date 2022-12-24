@@ -13,13 +13,13 @@ namespace ScriptBeeWebApp.Controllers;
 [ApiControllerRoute]
 [ApiController]
 // todo add tests
-public class PluginController : ControllerBase
+public class PluginsController : ControllerBase
 {
     private readonly IPluginService _pluginService;
 
 
     // todo allow subclasses to be returned and serialized
-    public PluginController(IPluginService pluginService)
+    public PluginsController(IPluginService pluginService)
     {
         _pluginService = pluginService;
     }
