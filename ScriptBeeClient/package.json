@@ -32,6 +32,7 @@
     "@angular/router": "14.2.1",
     "@materia-ui/ngx-monaco-editor": "^6.0.0",
     "@mdi/angular-material": "^6.6.96",
+    "@ngrx/component": "^14.0.0",
     "@ngrx/effects": "^14.3.1",
     "@ngrx/entity": "^14.3.1",
     "@ngrx/store": "^14.3.1",
@@ -45,11 +46,20 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "14.2.2",
+    "@angular-eslint/builder": "14.0.4",
+    "@angular-eslint/eslint-plugin": "14.0.4",
+    "@angular-eslint/eslint-plugin-template": "14.0.4",
     "@angular-eslint/schematics": "14.0.4",
+    "@angular-eslint/template-parser": "14.0.4",
     "@angular/cli": "14.2.2",
     "@angular/compiler-cli": "14.2.1",
     "@types/jasmine": "^4.3.0",
     "@types/node": "18.7.16",
+    "@typescript-eslint/eslint-plugin": "5.36.2",
+    "@typescript-eslint/parser": "5.36.2",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jasmine-core": "^4.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.1",
@@ -58,8 +68,6 @@
     "karma-jasmine-html-reporter": "2.0.0",
     "ngx-build-plus": "^14.0.0",
     "prettier": "^2.8.1",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
     "typescript": "~4.7.0"
   }
 }
