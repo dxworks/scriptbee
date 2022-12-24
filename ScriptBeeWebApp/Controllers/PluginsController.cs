@@ -43,19 +43,17 @@ public class PluginsController : ControllerBase
     }
 
     [HttpGet("available")]
-    public async Task<ActionResult<IEnumerable<MarketplaceProject>>> GetMarketPlugins([FromQuery] int start = 0,
-        [FromQuery] int count = 10, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<MarketplaceProject>>> GetMarketPlugins(
+        CancellationToken cancellationToken = default)
     {
-        var baseMarketplacePlugins = await _pluginService.GetMarketPlugins(start, count, cancellationToken);
+        var baseMarketplacePlugins = await _pluginService.GetMarketPlugins(cancellationToken);
 
         baseMarketplacePlugins = baseMarketplacePlugins
             .Select(plugin =>
             {
                 var versions = plugin.Versions.OrderByDescending(version => version.Version);
                 return plugin with { Versions = versions.ToList() };
-            })
-            .Skip(start)
-            .Take(count);
+            });
         return Ok(baseMarketplacePlugins);
     }
 

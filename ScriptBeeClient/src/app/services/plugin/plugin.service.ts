@@ -19,18 +19,12 @@ export class PluginService {
     });
   }
 
-  getAllAvailablePlugins(start: number = 0, count: number = 10): Observable<MarketplaceProject[]> {
-    return this.http.get<MarketplaceProject[]>(`${this.pluginsApi}/available`, {
-      headers: contentHeaders,
-      params: {
-        start,
-        count
-      }
-    });
+  getAllAvailablePlugins(): Observable<MarketplaceProject[]> {
+    return this.http.get<MarketplaceProject[]>(`${this.pluginsApi}/available`, { headers: contentHeaders });
   }
 
   installPlugin(pluginId: string, version: string) {
-    return this.http.post(
+    return this.http.post<void>(
       `${this.pluginsApi}/install`,
       {
         pluginId,
@@ -41,7 +35,7 @@ export class PluginService {
   }
 
   uninstallPlugin(pluginId: string, version: string) {
-    return this.http.delete(`${this.pluginsApi}/uninstall/${pluginId}/${version}`, { headers: contentHeaders });
+    return this.http.delete<void>(`${this.pluginsApi}/uninstall/${pluginId}/${version}`, { headers: contentHeaders });
   }
 
   // getAllUiPlugins():Observable<UIPlugin[]>{

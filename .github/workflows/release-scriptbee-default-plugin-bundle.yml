@@ -1,50 +1,50 @@
-﻿name: Release ScriptBee Default Plugin Bundle
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Extract Semver
-        id: semver_parser
-        run: |
-          semver=${TAG#"refs/tags/v"}
-          
-          echo ::set-output name=semver::$semver
-        env:
-          TAG: ${{ github.ref }}
-
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.x'
-
-      - name: Create Zip Archive 
-        run: |          
-          sh ./scripts/create_default_bundle_zip.sh ${{ steps.semver_parser.outputs.semver }} scriptbee-default-bundle.zip          
-          
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: scriptbee-default-bundle.zip
-          path: scriptbee-default-bundle.zip      
-
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ScriptBee Default Plugin Bundle ${{ steps.semver_parser.outputs.semver }}          
-          body: ""
-          prerelease: false
-          draft: false
-          fail_on_unmatched_files: true
-          files: |
-            ./scriptbee-default-bundle.zip
+﻿#name: Release ScriptBee Default Plugin Bundle
+#
+#on:
+#  push:
+#    tags:
+#      - 'v*'
+#
+#jobs:
+#  build:
+#    name: Build
+#    runs-on: ubuntu-latest
+#    
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Extract Semver
+#        id: semver_parser
+#        run: |
+#          semver=${TAG#"refs/tags/v"}
+#          
+#          echo ::set-output name=semver::$semver
+#        env:
+#          TAG: ${{ github.ref }}
+#
+#      - uses: actions/setup-dotnet@v1
+#        with:
+#          dotnet-version: '6.0.x'
+#
+#      - name: Create Zip Archive 
+#        run: |          
+#          sh ./scripts/create_default_bundle_zip.sh ${{ steps.semver_parser.outputs.semver }} scriptbee-default-bundle.zip          
+#          
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: scriptbee-default-bundle.zip
+#          path: scriptbee-default-bundle.zip      
+#
+#      - name: Create Release
+#        id: create_release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          name: ScriptBee Default Plugin Bundle ${{ steps.semver_parser.outputs.semver }}          
+#          body: ""
+#          prerelease: false
+#          draft: false
+#          fail_on_unmatched_files: true
+#          files: |
+#            ./scriptbee-default-bundle.zip
