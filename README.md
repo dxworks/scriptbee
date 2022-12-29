@@ -46,6 +46,8 @@ To run ScriptBee simply run the following command:
 docker-compose up
 ```
 
+> For local development, run the following command: `docker-compose -f docker-compose-dev.yaml up`
+
 ## Plugins
 
 > Plugins use the [DxWorks Hub SDK](https://github.com/dxworks/dxworks-hub-sdk) and will create a folder in the users

@@ -22,3 +22,9 @@
 **/values.dev.yaml
 LICENSE
 README.md
+.github/
+.idea/
+bin/
+database/
+ReleaseNotes/
+scripts/

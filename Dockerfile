@@ -1,34 +1,24 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
+
+COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
+COPY ScriptBee ./ScriptBee
+COPY ScriptBee.Marketplace.Client ./ScriptBee.Marketplace.Client
+COPY ScriptBeeWebApp ./ScriptBeeWebApp
+
+RUN dotnet restore ./ScriptBeeWebApp
+
+RUN dotnet publish ./ScriptBeeWebApp -c Release -o publish --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0  AS final
+
 EXPOSE 80
 EXPOSE 443
 
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-
-COPY ["ScriptBeeWebApp/ScriptBeeWebApp.csproj", "ScriptBeeWebApp/"]
-COPY ["ScriptBee.Marketplace.Client/ScriptBee.Marketplace.Client.csproj", "ScriptBee.Marketplace.Client/"]
-COPY ["ScriptBee/ScriptBee.csproj", "ScriptBee/"]
-COPY ["DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj", "DxWorks.ScriptBee.Plugin.Api/"]
-
-RUN dotnet restore "ScriptBeeWebApp/ScriptBeeWebApp.csproj"
-
-COPY DxWorks.ScriptBee.Plugin.Api DxWorks.ScriptBee.Plugin.Api
-COPY ScriptBeeWebApp ScriptBeeWebApp
-COPY ScriptBee ScriptBee
-
-WORKDIR "/src/ScriptBeeWebApp"
-
-RUN dotnet build "ScriptBeeWebApp.csproj" -c Release -o /app/build
-
-
-FROM build AS publish
-
-RUN dotnet publish "ScriptBeeWebApp.csproj" -c Release -o /app/publish
-
-FROM base AS final
-
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+COPY --from=build /app/publish .
+
+ENV LD_LIBRARY_PATH=/app/runtimes/debian.9-x64/native/
+
 ENTRYPOINT ["dotnet", "ScriptBeeWebApp.dll"]

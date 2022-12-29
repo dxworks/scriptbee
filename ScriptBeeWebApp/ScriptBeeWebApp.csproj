@@ -34,4 +34,8 @@
         <None Remove=".dockerignore" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="ScriptBeeWebApp.sln" />
+    </ItemGroup>
+
 </Project>
