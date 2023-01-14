@@ -13,7 +13,7 @@ public static class UtilityServicesExtensions
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IDownloadService, DownloadService>();
         services.AddHttpClient<DownloadService>();
-        services.AddSingleton<IZipService, ZipService>();
+        services.AddSingleton<IZipFileService, ZipFileService>();
         return services;
     }
 }

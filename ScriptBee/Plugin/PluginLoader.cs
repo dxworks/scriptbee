@@ -45,7 +45,7 @@ public class PluginLoader : IPluginLoader
             }
             else
             {
-                _logger.Warning("Plugin kind {PluginKind} has no relevant Dlls to load", extensionPoint.Kind);
+                _logger.Warning("Plugin kind '{PluginKind}' from '{EntryPoint}' has no relevant Dlls to load", extensionPoint.Kind, extensionPoint.EntryPoint);
             }
         }
 

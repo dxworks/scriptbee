@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using ScriptBee.Marketplace.Client.Data;
 using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Installer;
 using ScriptBee.Plugin.Manifest;
 using ScriptBeeWebApp.Controllers.DTO;
+using Serilog;
 using PluginVersion = ScriptBeeWebApp.Controllers.DTO.PluginVersion;
 
 namespace ScriptBeeWebApp.Services;
@@ -15,19 +17,24 @@ namespace ScriptBeeWebApp.Services;
 public sealed class PluginService : IPluginService
 {
     private readonly IPluginRepository _pluginRepository;
-    private readonly IPluginInstaller _pluginInstaller;
+    private readonly IBundlePluginInstaller _bundlePluginInstaller;
+    private readonly IBundlePluginUninstaller _bundlePluginUninstaller;
     private readonly IMarketPluginFetcher _marketPluginFetcher;
     private readonly IPluginReader _pluginReader;
     private readonly IPluginLoader _pluginLoader;
+    private readonly ILogger _logger;
 
-    public PluginService(IPluginRepository pluginRepository, IPluginInstaller pluginInstaller,
-        IMarketPluginFetcher marketPluginFetcher, IPluginReader pluginReader, IPluginLoader pluginLoader)
+    public PluginService(IPluginRepository pluginRepository, IBundlePluginInstaller bundlePluginInstaller,
+        IBundlePluginUninstaller bundlePluginUninstaller, IMarketPluginFetcher marketPluginFetcher,
+        IPluginReader pluginReader, IPluginLoader pluginLoader, ILogger logger)
     {
         _pluginRepository = pluginRepository;
-        _pluginInstaller = pluginInstaller;
+        _bundlePluginInstaller = bundlePluginInstaller;
+        _bundlePluginUninstaller = bundlePluginUninstaller;
         _marketPluginFetcher = marketPluginFetcher;
         _pluginReader = pluginReader;
         _pluginLoader = pluginLoader;
+        _logger = logger;
     }
 
     public IEnumerable<PluginManifest> GetPluginManifests()
@@ -67,21 +74,16 @@ public sealed class PluginService : IPluginService
 
     public async Task InstallPlugin(string pluginId, string version, CancellationToken cancellationToken = default)
     {
-        var installedPluginPath = await _pluginInstaller.InstallPlugin(pluginId, version, cancellationToken);
+        var installPluginPaths = await _bundlePluginInstaller.Install(pluginId, version, cancellationToken);
 
-        var plugin = _pluginReader.ReadPlugin(installedPluginPath);
-        if (plugin is not null)
+        foreach (var installPluginPath in installPluginPaths)
         {
-            var installPluginTasks = new List<Task>();
-
-            foreach (var extensionPoint in plugin.Manifest.ExtensionPoints.Where(point =>
-                         point.Kind == PluginKind.Plugin))
+            var plugin = _pluginReader.ReadPlugin(installPluginPath);
+            if (plugin is null)
             {
-                installPluginTasks.Add(InstallPlugin(extensionPoint.EntryPoint, extensionPoint.Version,
-                    cancellationToken));
+                _logger.Warning("Plugin Manifest from {Path} could not be read", installPluginPath);
+                continue;
             }
-
-            await Task.WhenAll(installPluginTasks);
 
             _pluginLoader.Load(plugin);
         }
@@ -89,8 +91,12 @@ public sealed class PluginService : IPluginService
 
     public void UninstallPlugin(string pluginId, string pluginVersion)
     {
-        _pluginRepository.UnRegisterPlugin(pluginId, pluginId);
-        _pluginInstaller.UninstallPlugin(pluginId, pluginVersion);
+        var uninstalledPluginVersions = _bundlePluginUninstaller.Uninstall(pluginId, pluginVersion);
+
+        foreach (var (plugin, version) in uninstalledPluginVersions)
+        {
+            _pluginRepository.UnRegisterPlugin(plugin, version);
+        }
     }
 
     private PluginVersion GetPluginVersion(ScriptBee.Marketplace.Client.Data.PluginVersion pluginVersion,

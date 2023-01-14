@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ScriptBee.Config;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.Plugin;
 using ScriptBeeWebApp.Controllers.Arguments.Validation;
@@ -77,6 +76,6 @@ public class Startup
         var pluginManager = app.ApplicationServices.GetRequiredService<PluginManager>();
 
         // todo move to task
-        pluginManager.LoadPlugins(ConfigFolders.PathToPlugins);
+        pluginManager.LoadPlugins();
     }
 }

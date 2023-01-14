@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBee.Services;
 
-public interface IZipService
+public interface IZipFileService
 {
     Task UnzipFileAsync(string zipFilePath, string destinationPath, CancellationToken cancellationToken = default);
 }

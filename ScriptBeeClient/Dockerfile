@@ -1,7 +1,7 @@
 FROM nginx AS base
 EXPOSE 80
 
-FROM node:16-alpine as build
+FROM node:16 as build
 
 WORKDIR /src
 

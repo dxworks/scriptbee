@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Moq;
+using ScriptBee.Config;
 using ScriptBee.Plugin;
+using ScriptBee.Plugin.Installer;
 using ScriptBee.Tests.Plugin.Internals;
 using Serilog;
 using Xunit;
@@ -10,28 +12,31 @@ namespace ScriptBee.Tests.Plugin;
 
 public class PluginManagerTests
 {
-    private readonly Mock<ILogger> _loggerMock;
     private readonly Mock<IPluginReader> _pluginReaderMock;
     private readonly Mock<IPluginLoader> _pluginLoaderMock;
+    private readonly Mock<IPluginUninstaller> _pluginUninstallerMock;
+    private readonly Mock<ILogger> _loggerMock;
 
     private readonly PluginManager _pluginManager;
 
     public PluginManagerTests()
     {
-        _loggerMock = new Mock<ILogger>();
         _pluginReaderMock = new Mock<IPluginReader>();
         _pluginLoaderMock = new Mock<IPluginLoader>();
+        _pluginUninstallerMock = new Mock<IPluginUninstaller>();
+        _loggerMock = new Mock<ILogger>();
 
-        _pluginManager = new PluginManager(_loggerMock.Object, _pluginReaderMock.Object, _pluginLoaderMock.Object);
+        _pluginManager = new PluginManager(_pluginReaderMock.Object, _pluginLoaderMock.Object,
+            _pluginUninstallerMock.Object, _loggerMock.Object);
     }
 
     [Fact]
     public void GivenEmptyPlugins_WhenLoadPlugins_ThenNoPluginsLoaded()
     {
-        _pluginReaderMock.Setup(x => x.ReadPlugins("path"))
+        _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins))
             .Returns(new List<Models.Plugin>());
 
-        _pluginManager.LoadPlugins("path");
+        _pluginManager.LoadPlugins();
 
         _pluginLoaderMock.Verify(x => x.Load(It.IsAny<Models.Plugin>()), Times.Never());
     }
@@ -39,7 +44,7 @@ public class PluginManagerTests
     [Fact]
     public void GivenAllValidPlugins_WhenLoadPlugins_ThenAllPluginsAreLoaded()
     {
-        _pluginReaderMock.Setup(x => x.ReadPlugins("path"))
+        _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins))
             .Returns(new List<Models.Plugin>
             {
                 new TestPlugin("id", new Version(0, 0, 0, 1)),
@@ -47,7 +52,7 @@ public class PluginManagerTests
                 new TestPlugin("id", new Version(0, 0, 0, 3)),
             });
 
-        _pluginManager.LoadPlugins("path");
+        _pluginManager.LoadPlugins();
 
         _pluginLoaderMock.Verify(x => x.Load(It.IsAny<Models.Plugin>()), Times.Exactly(3));
     }
@@ -61,7 +66,7 @@ public class PluginManagerTests
         Models.Plugin testPlugin2 = new TestPlugin("id", new Version(0, 0, 1, 1));
         Models.Plugin testPlugin3 = new TestPlugin("id", new Version(0, 0, 2, 1));
 
-        _pluginReaderMock.Setup(x => x.ReadPlugins("path"))
+        _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins))
             .Returns(new List<Models.Plugin>
             {
                 testPlugin1,
@@ -70,9 +75,20 @@ public class PluginManagerTests
             });
         _pluginLoaderMock.Setup(l => l.Load(testPlugin2)).Throws(expectedException);
 
-        _pluginManager.LoadPlugins("path");
+        _pluginManager.LoadPlugins();
 
-        _loggerMock.Verify(l => l.Error(expectedException, "Failed to load plugin {plugin}", testPlugin2),
+        _loggerMock.Verify(l => l.Error(expectedException, "Failed to load plugin {Plugin}", testPlugin2),
             Times.Once());
+    }
+
+    [Fact]
+    public void WhenLoadPlugins_ThenMarkedForDeletePluginsAreUninstalled()
+    {
+        _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins))
+            .Returns(new List<Models.Plugin>());
+
+        _pluginManager.LoadPlugins();
+
+        _pluginUninstallerMock.Verify(x => x.DeleteMarkedPlugins(), Times.Once());
     }
 }

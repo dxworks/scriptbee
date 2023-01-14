@@ -22,6 +22,11 @@ public sealed class FileService : IFileService
         }
     }
 
+    public bool DirectoryExists(string path)
+    {
+        return Directory.Exists(path);
+    }
+
     public bool FileExists(string path)
     {
         return File.Exists(path);
@@ -34,24 +39,32 @@ public sealed class FileService : IFileService
 
     public void DeleteFile(string path)
     {
-        File.Delete(path);
+        if (FileExists(path))
+        {
+            File.Delete(path);
+        }
     }
 
-    public void DeleteFolder(string path)
+    public void DeleteDirectory(string path)
     {
-        if (Directory.Exists(path))
+        if (DirectoryExists(path))
         {
             Directory.Delete(path, true);
         }
     }
 
-    public string ReadAllText(string path)
+    public IEnumerable<string> ReadAllLines(string path)
     {
-        return File.ReadAllText(path);
+        return File.ReadAllLines(path);
     }
 
     public void AppendTextToFile(string path, string text)
     {
         File.AppendAllLines(path, new List<string> { text });
+    }
+
+    public void CreateFolder(string path)
+    {
+        Directory.CreateDirectory(path);
     }
 }

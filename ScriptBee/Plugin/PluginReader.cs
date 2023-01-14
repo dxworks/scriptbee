@@ -23,28 +23,6 @@ public class PluginReader : IPluginReader
         _pluginManifestYamlFileReader = pluginManifestYamlFileReader;
     }
 
-    public void ClearDeletePluginsFolder(string pluginFolderPath)
-    {
-        var deleteFolders = _fileService.CombinePaths(pluginFolderPath, "delete.txt");
-
-        if (!_fileService.FileExists(deleteFolders))
-        {
-            return;
-        }
-
-        var deleteFoldersContent = _fileService.ReadAllText(deleteFolders);
-
-        var foldersToDelete = deleteFoldersContent.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-
-        foreach (var folderToDelete in foldersToDelete)
-        {
-            var folderToDeletePath = _fileService.CombinePaths(pluginFolderPath, folderToDelete);
-            _fileService.DeleteFolder(folderToDeletePath);
-        }
-
-        _fileService.DeleteFile(deleteFolders);
-    }
-
     public Models.Plugin? ReadPlugin(string pluginPath)
     {
         _logger.Information("Reading manifest from {PluginDirectory}", pluginPath);

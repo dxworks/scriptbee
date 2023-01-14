@@ -36,6 +36,8 @@ public class PluginLoaderTests
     {
         HashSet<Type>? nullTypes = null;
         var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
+        plugin.Manifest.ExtensionPoints[0].Kind = "kind";
+        plugin.Manifest.ExtensionPoints[0].EntryPoint = "entryPoint";
 
         _pluginRegistrationServiceMock.Setup(s => s.TryGetValue(It.IsAny<string>(), out nullTypes))
             .Returns(false);
@@ -43,8 +45,8 @@ public class PluginLoaderTests
         _pluginLoader.Load(plugin);
 
         _loggerMock.Verify(l =>
-            l.Warning("Plugin kind {PluginKind} has no relevant Dlls to load",
-                plugin.Manifest.ExtensionPoints[0].Kind));
+            l.Warning("Plugin kind '{PluginKind}' from '{EntryPoint}' has no relevant Dlls to load", "kind",
+                "entryPoint"));
     }
 
     [Fact]
