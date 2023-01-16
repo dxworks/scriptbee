@@ -10,16 +10,12 @@ services:
       - ${MONGODB_DATA}/production:/Databases/production
   
   frontend:
-    build:
-      context: ./ScriptBeeClient
-      dockerfile: ./Dockerfile
+    image: dxworks/scriptbee-client    
     ports:
       - "4201:80"
 
   backend:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: dxworks/scriptbee-backend    
     volumes:
       - ${SCRIPTBEE_DATA}:/root/.scriptbee
     environment:

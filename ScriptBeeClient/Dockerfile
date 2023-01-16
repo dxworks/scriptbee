@@ -11,8 +11,8 @@ RUN npm install
 
 COPY ./src ./src
 COPY ./angular.json .
-COPY ./tsconfig*.json .
-COPY ./webpack*.config.js .
+COPY ./tsconfig*.json ./
+COPY ./webpack*.config.js ./
 
 RUN npm run build-prod
 
