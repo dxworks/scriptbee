@@ -23,7 +23,7 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
       - name: Build Docker Image for ScriptBeeClient
         run: |
-          docker build -t dxworks/scriptbee-client:${{ github.event.inputs.version }} -f ./ScriptBeeClient/Dockerfile .
+          docker build -t dxworks/scriptbee-client:${{ github.event.inputs.version }} -f ./ScriptBeeClient/Dockerfile ./ScriptBeeClient
       - name: Build Docker Image for ScriptBee Backend
         run: |
           docker build -t dxworks/scriptbee-backend:${{ github.event.inputs.version }} -f ./Dockerfile .
