@@ -15,6 +15,10 @@ public class Program
     {
         return Host.CreateDefaultBuilder(args)
             .UseSerilog()
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>()
+                    .UseKestrel(options => { options.Limits.MaxRequestBodySize = null; });
+            });
     }
 }

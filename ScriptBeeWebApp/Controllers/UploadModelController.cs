@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBeeWebApp.Controllers.Arguments;
 using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
@@ -23,6 +22,7 @@ public class UploadModelController : ControllerBase
         _uploadModelService = uploadModelService;
     }
 
+    [DisableRequestSizeLimit]
     [HttpPost("fromfile")]
     public async Task<IActionResult> UploadFromFile(IFormCollection formData,
         CancellationToken cancellationToken = default)
