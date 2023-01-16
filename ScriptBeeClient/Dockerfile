@@ -5,7 +5,7 @@ FROM node:16 as build
 
 WORKDIR /src
 
-COPY ./package*.json .
+COPY ./package*.json ./
 
 RUN npm install
 
