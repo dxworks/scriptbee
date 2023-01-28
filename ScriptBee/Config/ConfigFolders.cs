@@ -15,9 +15,9 @@ public static class ConfigFolders
 
     public const string GeneratedFolder = "generated";
 
-    public static readonly string PathToUserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    private static readonly string PathToUserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-    private static readonly string PathToRoot = Path.Combine(PathToUserFolder, Root);
+    public static readonly string PathToRoot = Path.Combine(PathToUserFolder, Root);
 
     public static readonly string PathToPlugins = Path.Combine(PathToRoot, PluginsFolder);
 
