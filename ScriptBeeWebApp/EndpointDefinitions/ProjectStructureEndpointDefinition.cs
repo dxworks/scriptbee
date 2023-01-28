@@ -1,0 +1,149 @@
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using ScriptBee.ProjectContext;
+using ScriptBeeWebApp.EndpointDefinitions.Arguments;
+using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
+using ScriptBeeWebApp.Services;
+
+namespace ScriptBeeWebApp.EndpointDefinitions;
+
+// todo pact add tests
+public class ProjectStructureEndpointDefinition : IEndpointDefinition
+{
+    public void DefineServices(IServiceCollection services)
+    {
+        //
+    }
+
+    public void DefineEndpoints(WebApplication app)
+    {
+        app.MapGet("/api/projectstructure/{projectId}", GetProjectStructure);
+        app.MapPost("/api/projectstructure/script", CreateScript);
+        app.MapGet("/api/projectstructure/script", GetScriptContent);
+        app.MapGet("/api/projectstructure/scriptabsolutepath", GetScriptAbsolutePath);
+        app.MapGet("/api/projectstructure/projectabsolutepath", GetProjectAbsolutePath);
+        app.MapPost("/api/projectstructure/filewatcher", SetupFileWatcher);
+        app.MapDelete("/api/projectstructure/filewatcher/{projectId}", RemoveFileWatcher);
+    }
+
+    public static IResult GetProjectStructure([FromRoute] string projectId,
+        IProjectFileStructureManager projectFileStructureManager)
+    {
+        var fileTreeNode = projectFileStructureManager.GetSrcStructure(projectId);
+
+        if (fileTreeNode == null)
+        {
+            return Results.BadRequest("Project with given id does not exist");
+        }
+
+        return Results.Ok(fileTreeNode);
+    }
+
+    public static async Task<IResult> CreateScript([FromBody] CreateScript createScript,
+        IValidator<CreateScript> validator, IProjectFileStructureManager projectFileStructureManager,
+        IProjectStructureService projectStructureService,
+        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await validator.ValidateAsync(createScript, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
+        }
+
+        var (extension, content) =
+            await projectStructureService.GetSampleCodeAsync(createScript.ScriptType, cancellationToken);
+
+        if (!createScript.FilePath.EndsWith(extension))
+        {
+            createScript.FilePath += extension;
+        }
+
+        if (projectFileStructureManager.FileExists(createScript.ProjectId, createScript.FilePath))
+        {
+            return Results.Conflict();
+        }
+
+        var node = projectFileStructureManager.CreateSrcFile(createScript.ProjectId, createScript.FilePath,
+            content);
+
+        return Results.Ok(node);
+    }
+
+    public static async Task<IResult> GetScriptContent([FromQuery] GetScriptDetails? arg,
+        IValidator<GetScriptDetails> validator, IProjectFileStructureManager projectFileStructureManager,
+        CancellationToken cancellationToken)
+    {
+        if (arg is null)
+        {
+            return Results.BadRequest("Invalid arguments!");
+        }
+
+        var validationResult = await validator.ValidateAsync(arg, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
+        }
+
+        var content = await projectFileStructureManager.GetFileContentAsync(arg.ProjectId, arg.FilePath);
+
+        if (content == null)
+        {
+            return Results.NotFound("Script not found");
+        }
+
+        return Results.Ok(content);
+    }
+
+    public static async Task<IResult> GetScriptAbsolutePath([FromQuery] GetScriptDetails? arg,
+        IValidator<GetScriptDetails> validator, IProjectFileStructureManager projectFileStructureManager,
+        CancellationToken cancellationToken)
+    {
+        if (arg is null)
+        {
+            return Results.BadRequest("Invalid arguments!");
+        }
+
+        var validationResult = await validator.ValidateAsync(arg, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
+        }
+
+        return Results.Ok(projectFileStructureManager.GetAbsoluteFilePath(arg.ProjectId, arg.FilePath));
+    }
+
+    public static IResult GetProjectAbsolutePath([FromQuery] string projectId,
+        IProjectFileStructureManager projectFileStructureManager)
+    {
+        if (string.IsNullOrEmpty(projectId))
+        {
+            return Results.BadRequest("Invalid arguments!");
+        }
+
+        return Results.Ok(projectFileStructureManager.GetProjectAbsolutePath(projectId));
+    }
+
+    public static async Task<IResult> SetupFileWatcher([FromBody] SetupFileWatcher setupFileWatcher,
+        IValidator<SetupFileWatcher> validator, IProjectFileStructureManager projectFileStructureManager,
+        CancellationToken cancellationToken)
+    {
+        var validationResult = await validator.ValidateAsync(setupFileWatcher, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
+        }
+
+        projectFileStructureManager.SetupFileWatcher(setupFileWatcher.ProjectId);
+
+        // todo return something
+        return Results.Ok("");
+    }
+
+    public static IResult RemoveFileWatcher(string projectId, IProjectFileStructureManager projectFileStructureManager)
+    {
+        projectFileStructureManager.RemoveFileWatcher(projectId);
+
+        // todo return something
+        return Results.Ok("");
+    }
+}

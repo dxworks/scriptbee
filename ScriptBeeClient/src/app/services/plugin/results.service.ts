@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from "rxjs";
-import { ConsoleOutputComponent } from "../../project-details/output/console-output/console-output.component";
-import { OutputErrorsComponent } from "../../project-details/output/output-errors/output-errors.component";
+import { BehaviorSubject } from 'rxjs';
+import { ConsoleOutputComponent } from '../../project-details/output/console-output/console-output.component';
+import { OutputErrorsComponent } from '../../project-details/output/output-errors/output-errors.component';
 
 export interface Result {
   name: string;
   component?: any;
-  module?: any
+  module?: any;
 }
 
 @Injectable({
@@ -22,7 +22,7 @@ export class ResultsService {
     {
       name: 'Console Output',
       component: ConsoleOutputComponent
-    },
+    }
     // {
     //   name: 'File Output',
     //   component: FileOutputComponent

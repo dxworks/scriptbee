@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api;
+﻿using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Models;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
-using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 
 namespace ScriptBeeWebApp.Services;
 

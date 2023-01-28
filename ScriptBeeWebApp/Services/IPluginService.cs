@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ScriptBee.Plugin.Manifest;
-using ScriptBeeWebApp.Controllers.DTO;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
 
 namespace ScriptBeeWebApp.Services;
 

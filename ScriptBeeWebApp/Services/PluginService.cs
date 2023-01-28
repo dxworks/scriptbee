@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using ScriptBee.Marketplace.Client.Data;
+﻿using ScriptBee.Marketplace.Client.Data;
 using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Installer;
 using ScriptBee.Plugin.Manifest;
-using ScriptBeeWebApp.Controllers.DTO;
-using Serilog;
-using PluginVersion = ScriptBeeWebApp.Controllers.DTO.PluginVersion;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
+using ILogger = Serilog.ILogger;
+using PluginVersion = ScriptBeeWebApp.EndpointDefinitions.DTO.PluginVersion;
 
 namespace ScriptBeeWebApp.Services;
 

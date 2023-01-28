@@ -1,7 +1,4 @@
-﻿using LibGit2Sharp;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.ProjectContext;
+﻿using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBee.Services.Config;
 using ScriptBeeWebApp.Services;
@@ -12,6 +9,7 @@ public static class ControllerServicesExtensions
 {
     public static IServiceCollection AddControllerServices(this IServiceCollection services,  IConfigurationSection userFolderConfigurationSection)
     {
+        // todo: move in endpoint definition
         services.Configure<UserFolderSettings>(userFolderConfigurationSection);
 
         services.AddSingleton<IProjectManager, ProjectManager>();
