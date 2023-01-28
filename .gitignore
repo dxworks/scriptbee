@@ -7,3 +7,7 @@ riderModule.iml
 *.user
 .env
 .idea/.idea.ScriptBee/.idea/sonarlint
+database/
+pack/
+publish/
+firebaseConfig.json

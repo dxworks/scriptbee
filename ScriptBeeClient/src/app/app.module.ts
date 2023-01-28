@@ -34,6 +34,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 
@@ -51,42 +52,32 @@ import { ScriptsContentComponent } from './project-details/scripts-content/scrip
 import { NoScriptsComponent } from './project-details/scripts-content/no-scripts/no-scripts.component';
 import { SelectedScriptComponent } from './project-details/scripts-content/selected-script/selected-script.component';
 import { SlugifyPipe } from './shared/slugify.pipe';
-import {
-  CreateScriptDialogComponent
-} from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
+import { CreateScriptDialogComponent } from './project-details/scripts-content/create-script-dialog/create-script-dialog.component';
 import { SelectableTreeComponent } from './shared/selectable-tree/selectable-tree.component';
 import { SafeUrlPipe } from './shared/safe-url/safe-url.pipe';
 import { ConsoleOutputComponent } from './project-details/output/console-output/console-output.component';
 import { FileOutputComponent } from './project-details/output/file-output/file-output.component';
-import {
-  ErrorDialogComponent
-} from './project-details/details-content/error-dialog/error-dialog/error-dialog.component';
-import {
-  LoadingResultsDialogComponent
-} from './project-details/scripts-content/selected-script/loading-results-dialog/loading-results-dialog.component';
-import { PluginItemComponent } from './plugins/plugin-item/plugin-item.component';
-import { PluginListComponent } from './plugins/plugin-list/plugin-list.component';
+import { ErrorDialogComponent } from './project-details/details-content/error-dialog/error-dialog/error-dialog.component';
+import { LoadingResultsDialogComponent } from './project-details/scripts-content/selected-script/loading-results-dialog/loading-results-dialog.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { outputReducer } from "./state/outputs/output.reducer";
+import { outputReducer } from './state/outputs/output.reducer';
 import { OutputErrorsComponent } from './project-details/output/output-errors/output-errors.component';
-import { OutputEffects } from "./state/outputs/output.effects";
-import { projectDetailsReducer } from "./state/project-details/project-details.reducer";
-import { ProjectDetailsEffects } from "./state/project-details/project-details.effects";
-import { loadersReducer } from "./state/loaders/loaders.reducer";
-import { linkersReducer } from "./state/linkers/linkers.reducer";
-import { LoadersEffects } from "./state/loaders/loaders.effects";
-import { LinkersEffects } from "./state/linkers/linkers.effects";
+import { OutputEffects } from './state/outputs/output.effects';
+import { projectDetailsReducer } from './state/project-details/project-details.reducer';
+import { ProjectDetailsEffects } from './state/project-details/project-details.effects';
 import { UploadModelsComponent } from './project-details/details-content/upload-models/upload-models.component';
 import { LoadModelsComponent } from './project-details/details-content/load-models/load-models.component';
 import { LinkModelsComponent } from './project-details/details-content/link-models/link-models.component';
-import {
-  CurrentlyLoadedModelsComponent
-} from './project-details/details-content/currently-loaded-models/currently-loaded-models.component';
+import { CurrentlyLoadedModelsComponent } from './project-details/details-content/currently-loaded-models/currently-loaded-models.component';
 import { ProjectContextComponent } from './project-details/details-content/project-context/project-context.component';
-import { scriptTreeReducer } from "./state/script-tree/script-tree.reducer";
-import { ScriptTreeEffects } from "./state/script-tree/script-tree.effects";
+import { scriptTreeReducer } from './state/script-tree/script-tree.reducer';
+import { ScriptTreeEffects } from './state/script-tree/script-tree.effects';
 import { ScriptTreeComponent } from './project-details/scripts-content/script-tree/script-tree.component';
+import { PluginsMarketplaceDashboardComponent } from './plugins/plugins-marketplace-dashboard/plugins-marketplace-dashboard.component';
+import { PluginMarketplaceDashboardListComponent } from './plugins/plugins-marketplace-dashboard/plugin-marketplace-dashboard-list/plugin-marketplace-dashboard-list.component';
+import { PluginMarketplaceDashboardListItemComponent } from './plugins/plugins-marketplace-dashboard/plugin-marketplace-dashboard-list-item/plugin-marketplace-dashboard-list-item.component';
+import { ApiErrorMessageComponent } from './shared/api-error-message/api-error-message.component';
 
 @NgModule({
   declarations: [
@@ -112,8 +103,6 @@ import { ScriptTreeComponent } from './project-details/scripts-content/script-tr
     FileOutputComponent,
     ErrorDialogComponent,
     LoadingResultsDialogComponent,
-    PluginItemComponent,
-    PluginListComponent,
     OutputErrorsComponent,
     UploadModelsComponent,
     LoadModelsComponent,
@@ -121,19 +110,23 @@ import { ScriptTreeComponent } from './project-details/scripts-content/script-tr
     CurrentlyLoadedModelsComponent,
     ProjectContextComponent,
     ScriptTreeComponent,
+    PluginsMarketplaceDashboardComponent,
+    PluginMarketplaceDashboardListComponent,
+    PluginMarketplaceDashboardListItemComponent,
+    ApiErrorMessageComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
+    FormsModule,
+    FlexLayoutModule,
     MatToolbarModule,
     MatSlideToggleModule,
     MatIconModule,
     MatButtonModule,
-    FormsModule,
-    FlexLayoutModule,
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
@@ -150,30 +143,28 @@ import { ScriptTreeComponent } from './project-details/scripts-content/script-tr
     MatDividerModule,
     MatListModule,
     MatSidenavModule,
-    MonacoEditorModule,
-    MatTooltipModule,
-    ClipboardModule,
     MatCheckboxModule,
-    AngularSplitModule,
+    MatTooltipModule,
     MatProgressSpinnerModule,
-    StoreModule.forRoot({
-      outputState: outputReducer,
-      projectDetails: projectDetailsReducer,
-      scriptTree: scriptTreeReducer,
-      loaders: loadersReducer,
-      linkers: linkersReducer
-    }, {}),
-    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, ScriptTreeEffects, LoadersEffects, LinkersEffects]),
+    MatChipsModule,
+    MonacoEditorModule,
+    ClipboardModule,
+    AngularSplitModule,
+    StoreModule.forRoot(
+      {
+        outputState: outputReducer,
+        projectDetails: projectDetailsReducer,
+        scriptTree: scriptTreeReducer
+      },
+      {}
+    ),
+    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, ScriptTreeEffects])
   ],
-  providers: [
-    SlugifyPipe
-  ],
+  providers: [SlugifyPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(matIconRegistry: MatIconRegistry, domSanitizer: DomSanitizer) {
-    matIconRegistry.addSvgIconSet(
-      domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg')
-    );
+    matIconRegistry.addSvgIconSet(domSanitizer.bypassSecurityTrustResourceUrl('./assets/mdi.svg'));
   }
 }

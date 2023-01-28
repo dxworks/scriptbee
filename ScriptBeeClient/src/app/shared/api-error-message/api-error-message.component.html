@@ -1,0 +1,15 @@
+<div class='message-div' fxLayout='column'>
+  <ng-template [ngIf]="type === 'error'">
+    <mat-icon class='icon-content' aria-hidden='false' fontIcon='report'></mat-icon>
+  </ng-template>
+
+  <ng-template [ngIf]="type === 'warning'">
+    <mat-icon class='icon-content' aria-hidden='false' fontIcon='warning'></mat-icon>
+  </ng-template>
+
+  <ng-template [ngIf]="type === 'no-data'">
+    <mat-icon class='icon-content' aria-hidden='false' fontIcon='assignment_late'></mat-icon>
+  </ng-template>
+
+  <span>{{message}}</span>
+</div>

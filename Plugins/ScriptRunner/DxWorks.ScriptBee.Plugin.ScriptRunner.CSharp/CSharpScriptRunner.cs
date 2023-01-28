@@ -128,7 +128,6 @@ public class CSharpScriptRunner : IScriptRunner
         return AppDomain.CurrentDomain.GetAssemblies()
             .Where(a => !a.IsDynamic)
             .Where(a => !string.IsNullOrEmpty(a.Location))
-            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location))
-            .ToList();
+            .Select(assembly => MetadataReference.CreateFromFile(assembly.Location));
     }
 }

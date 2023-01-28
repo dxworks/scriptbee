@@ -1,3 +1,3 @@
 namespace ScriptBeeWebApp.Controllers.Arguments;
 
-public record SetupFileWatcher(string ProjectId, string FilePath);
+public record SetupFileWatcher(string ProjectId);

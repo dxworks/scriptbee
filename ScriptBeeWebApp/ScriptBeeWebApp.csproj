@@ -5,7 +5,6 @@
         <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
         <IsPackable>false</IsPackable>
-        <SpaRoot>ClientApp\</SpaRoot>
 
         <!-- Set this to true if you enable server-side prerendering -->
         <BuildServerSideRenderer>false</BuildServerSideRenderer>
@@ -18,20 +17,25 @@
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.8" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-        <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
-        <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
-        <PackageReference Include="MongoDB.Driver.GridFS" Version="2.17.1" />
-        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="MongoDB.Bson" Version="2.18.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+        <PackageReference Include="MongoDB.Driver.GridFS" Version="2.18.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ScriptBee.Marketplace.Client\ScriptBee.Marketplace.Client.csproj" />
         <ProjectReference Include="..\ScriptBee\ScriptBee.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Dockerfile" />
-      <None Remove=".dockerignore" />
+        <None Remove="Dockerfile" />
+        <None Remove=".dockerignore" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="ScriptBeeWebApp.sln" />
     </ItemGroup>
 
 </Project>

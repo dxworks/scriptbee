@@ -6,7 +6,6 @@ using Moq;
 using ScriptBee.FileManagement;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
-using ScriptBee.Tests.Plugin.Internals;
 using Serilog;
 using Xunit;
 
@@ -67,30 +66,29 @@ public class PluginReaderTests
     [Fact]
     public void GivenValidManifests_WhenReadPlugins_ThenReturnManifests()
     {
+        const string path1ManifestYaml = "path1/manifest.yaml";
+        const string path2ManifestYaml = "path2/manifest.yaml";
         var pluginExtensionPoint1 = _fixture.Create<ScriptGeneratorPluginExtensionPoint>();
         var pluginExtensionPoint2 = _fixture.Create<UiPluginExtensionPoint>();
-
         var pluginManifest1 = _fixture.Build<PluginManifest>()
             .With(p => p.ExtensionPoints, new List<PluginExtensionPoint> { pluginExtensionPoint1 })
             .Create();
         var pluginManifest2 = _fixture.Build<PluginManifest>()
             .With(p => p.ExtensionPoints, new List<PluginExtensionPoint> { pluginExtensionPoint2 })
             .Create();
-
-        const string path1ManifestYaml = "path1/manifest.yaml";
-        const string path2ManifestYaml = "path2/manifest.yaml";
-
         _fileServiceMock.Setup(x => x.GetDirectories(It.IsAny<string>()))
             .Returns(new List<string> { "path1", "path2" });
         _fileServiceMock.Setup(x => x.CombinePaths("path1", "manifest.yaml")).Returns(path1ManifestYaml);
         _fileServiceMock.Setup(x => x.CombinePaths("path2", "manifest.yaml")).Returns(path2ManifestYaml);
         _fileServiceMock.Setup(x => x.FileExists(path1ManifestYaml)).Returns(true);
         _fileServiceMock.Setup(x => x.FileExists(path2ManifestYaml)).Returns(true);
+        _fileServiceMock.Setup(x => x.GetFileName("path1")).Returns("path1@0.0.0");
+        _fileServiceMock.Setup(x => x.GetFileName("path2")).Returns("path2@0.0.0");
         _yamlFileReaderMock.Setup(x => x.Read(path1ManifestYaml)).Returns(pluginManifest1);
         _yamlFileReaderMock.Setup(x => x.Read(path2ManifestYaml)).Returns(pluginManifest2);
 
-        var result = _pluginReader.ReadPlugins("path").ToList();
+        var result = _pluginReader.ReadPlugins("path");
 
-        Assert.Equal(2, result.Count);
+        Assert.Equal(2, result.Count());
     }
 }

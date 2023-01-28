@@ -30,7 +30,7 @@ public class PluginLoader : IPluginLoader
             {
                 if (!acceptedPluginTypes!.Any())
                 {
-                    _pluginRepository.RegisterPlugin(plugin.Manifest);
+                    _pluginRepository.RegisterPlugin(plugin);
                     return;
                 }
 
@@ -40,12 +40,12 @@ public class PluginLoader : IPluginLoader
 
                 foreach (var (@interface, concrete) in loadDllTypes)
                 {
-                    _pluginRepository.RegisterPlugin(plugin.Manifest, @interface, concrete);
+                    _pluginRepository.RegisterPlugin(plugin, @interface, concrete);
                 }
             }
             else
             {
-                _logger.Warning("Plugin kind {PluginKind} is not supported", extensionPoint.Kind);
+                _logger.Warning("Plugin kind '{PluginKind}' from '{EntryPoint}' has no relevant Dlls to load", extensionPoint.Kind, extensionPoint.EntryPoint);
             }
         }
 

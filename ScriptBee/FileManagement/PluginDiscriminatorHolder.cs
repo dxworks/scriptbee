@@ -11,6 +11,7 @@ public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
     {
         return new Dictionary<string, Type>
         {
+            { PluginKind.Plugin, typeof(PluginBundleExtensionPoint) },
             { PluginKind.ScriptGenerator, typeof(ScriptGeneratorPluginExtensionPoint) },
             { PluginKind.ScriptRunner, typeof(ScriptRunnerPluginExtensionPoint) },
             { PluginKind.HelperFunctions, typeof(HelperFunctionsPluginExtensionPoint) },

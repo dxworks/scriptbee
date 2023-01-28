@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using ScriptBee.Config;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services.Config;
+using ScriptBeeWebApp.Data.Exceptions;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -38,7 +38,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
     }
 
     public FileTreeNode CreateSrcFile(string projectId, string relativePath, string fileContent)
-    { 
+    {
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, relativePath);
         Directory.CreateDirectory(Path.GetDirectoryName(filePath));
         File.WriteAllText(filePath, fileContent);
@@ -118,16 +118,28 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         return projectPath;
     }
 
-    public void SetupFileWatcher(string projectId, string filePath)
+    public void SetupFileWatcher(string projectId)
     {
-        var fullPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
+        var fullPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder);
 
-        if (!File.Exists(fullPath))
+        if (!Directory.Exists(fullPath))
         {
-            throw new ArgumentException("File does not exist");
+            throw new ProjectFolderNotFoundException(projectId);
         }
 
-        _fileWatcherService.SetupFileWatcher(fullPath, filePath);
+        _fileWatcherService.SetupFileWatcher(fullPath);
+    }
+
+    public void RemoveFileWatcher(string projectId)
+    {
+        var fullPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder);
+
+        if (!Directory.Exists(fullPath))
+        {
+            throw new ProjectFolderNotFoundException(projectId);
+        }
+
+        _fileWatcherService.RemoveFileWatcher(fullPath);
     }
 
     private FileTreeNode GetFolderStructure(string path, string srcPath)

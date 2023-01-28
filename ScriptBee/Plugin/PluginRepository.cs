@@ -12,19 +12,24 @@ namespace ScriptBee.Plugin;
 // todo add tests
 public class PluginRepository : IPluginRepository
 {
-    private readonly ConcurrentBag<PluginManifest> _pluginManifests = new();
+    private readonly ConcurrentDictionary<string, Models.Plugin> _plugins = new();
     private readonly ConcurrentBag<ServiceDescriptor> _pluginServiceCollection = new();
 
-    public void RegisterPlugin(PluginManifest pluginManifest, Type @interface, Type concrete)
+    public void UnRegisterPlugin(string pluginId, string pluginVersion)
     {
-        _pluginManifests.Add(pluginManifest);
+        _plugins.Remove(pluginId, out _);
+    }
+
+    public void RegisterPlugin(Models.Plugin plugin, Type @interface, Type concrete)
+    {
+        RegisterPlugin(plugin);
 
         _pluginServiceCollection.Add(new ServiceDescriptor(@interface, concrete, ServiceLifetime.Singleton));
     }
 
-    public void RegisterPlugin(PluginManifest pluginManifest)
+    public void RegisterPlugin(Models.Plugin plugin)
     {
-        _pluginManifests.Add(pluginManifest);
+        _plugins.AddOrUpdate(plugin.Id, plugin, (_, manifest) => manifest.Version < plugin.Version ? plugin : manifest);
     }
 
     public TService? GetPlugin<TService>(Func<TService, bool> filter,
@@ -48,18 +53,29 @@ public class PluginRepository : IPluginRepository
             .GetServices<TService>();
     }
 
-    public PluginManifest? GetLoadedPluginManifest(string name)
+    public IEnumerable<PluginManifest> GetLoadedPluginsManifests()
     {
-        return GetLoadedPluginManifests().FirstOrDefault(manifest => manifest.Name == name);
+        return GetLoadedPlugins().Select(plugin => plugin.Manifest);
     }
 
-    public IEnumerable<PluginManifest> GetLoadedPluginManifests()
+    public IEnumerable<Models.Plugin> GetLoadedPlugins(string kind)
     {
-        return _pluginManifests;
+        return GetLoadedPlugins()
+            .Where(plugin => plugin.Manifest.ExtensionPoints.Any(extensionPoint => extensionPoint.Kind == kind));
     }
 
     public IEnumerable<T> GetLoadedPluginExtensionPoints<T>() where T : PluginExtensionPoint
     {
-        return _pluginManifests.SelectMany(p => p.ExtensionPoints).OfType<T>();
+        return GetLoadedPlugins().SelectMany(p => p.Manifest.ExtensionPoints).OfType<T>();
+    }
+
+    public Version? GetInstalledPluginVersion(string pluginId)
+    {
+        return _plugins.TryGetValue(pluginId, out var plugin) ? plugin.Version : null;
+    }
+
+    private IEnumerable<Models.Plugin> GetLoadedPlugins()
+    {
+        return _plugins.Values;
     }
 }

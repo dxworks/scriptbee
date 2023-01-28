@@ -10,13 +10,13 @@ export class ConsoleOutputComponent {
 
   // todo add the possibility for realtime updates
 
-  @Input() set outputId(value: string | undefined) {
-    if (!value) {
+  @Input() set outputId(outputId: string | undefined) {
+    if (!outputId) {
       this.consoleOutput = '';
       return;
     }
 
-    this.outputFilesService.fetchOutput(value).subscribe(output => {
+    this.outputFilesService.fetchOutput(outputId).subscribe(output => {
       this.consoleOutput = output;
     });
   }

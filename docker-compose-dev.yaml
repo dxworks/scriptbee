@@ -1,0 +1,43 @@
+﻿version: "3.8"
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ${MONGODB_DATA}/db:/data/db
+      - ${MONGODB_DATA}/dev.archive:/Databases/dev.archive
+      - ${MONGODB_DATA}/production:/Databases/production
+  
+  mongo-express:
+    image: mongo-express
+    container_name: mexpress
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/?authSource=admin
+    links:
+      - mongo
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+  
+  frontend:
+    build:
+      context: ./ScriptBeeClient
+      dockerfile: ./Dockerfile
+    ports:
+      - "4201:80"
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ${SCRIPTBEE_DATA}:/root/.scriptbee
+    environment:
+      - ConnectionStrings__mongodb=mongodb://mongo:27017/ScriptBee?authSource=admin
+    depends_on:
+      - mongo
+    ports:
+      - "4202:80"

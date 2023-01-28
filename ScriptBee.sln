@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.HelperFunctions.Default", "Plugins\HelperFunctions\DxWorks.ScriptBee.Plugin.HelperFunctions.Default\DxWorks.ScriptBee.Plugin.HelperFunctions.Default.csproj", "{9E0D1DBD-2165-4310-AC62-030F192991F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBee.Marketplace.Client", "ScriptBee.Marketplace.Client\ScriptBee.Marketplace.Client.csproj", "{CA247B5B-7540-4513-981C-1799F65B3B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,5 +114,9 @@ Global
 		{9E0D1DBD-2165-4310-AC62-030F192991F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E0D1DBD-2165-4310-AC62-030F192991F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E0D1DBD-2165-4310-AC62-030F192991F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

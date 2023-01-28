@@ -41,10 +41,8 @@ public sealed class RunScriptService : IRunScriptService
 
     public IEnumerable<string> GetSupportedLanguages()
     {
-        return _pluginRepository.GetLoadedPluginManifests()
-            .SelectMany(manifest => manifest.ExtensionPoints)
-            .OfType<ScriptRunnerPluginExtensionPoint>()
-            .Select(manifest => manifest.Language);
+        return _pluginRepository.GetLoadedPluginExtensionPoints<ScriptRunnerPluginExtensionPoint>()
+            .Select(point => point.Language);
     }
 
     public async Task<Run> RunAsync(IProject project, ProjectModel projectModel, string language,

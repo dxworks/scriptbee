@@ -23,38 +23,48 @@ public class PluginReader : IPluginReader
         _pluginManifestYamlFileReader = pluginManifestYamlFileReader;
     }
 
+    public Models.Plugin? ReadPlugin(string pluginPath)
+    {
+        _logger.Information("Reading manifest from {PluginDirectory}", pluginPath);
+
+        try
+        {
+            var pluginManifest = ReadManifest(pluginPath);
+
+            if (pluginManifest != null)
+            {
+                var folderName = _fileService.GetFileName(pluginPath);
+                var (id, version) = PluginNameGenerator.GetPluginNameAndVersion(folderName);
+
+                if (id is null || version is null)
+                {
+                    _logger.Warning("Plugin {PluginDirectory} has invalid name or version", pluginPath);
+                    return null;
+                }
+
+                return new Models.Plugin(pluginPath, id, version, pluginManifest);
+            }
+
+            _logger.Warning("Manifest not found in {PluginDirectory}", pluginPath);
+            return null;
+        }
+        catch (Exception e)
+        {
+            _logger.Error(e, "Error reading manifest from {PluginDirectory}", pluginPath);
+        }
+
+        return null;
+    }
+
     public IEnumerable<Models.Plugin> ReadPlugins(string pluginFolderPath)
     {
-        var plugins = new List<Models.Plugin>();
-
         var pluginDirectories = _fileService.GetDirectories(pluginFolderPath).ToList();
 
         _logger.Information("Found {PluginCount} plugin directories", pluginDirectories.Count);
 
-        foreach (var pluginDirectory in pluginDirectories)
-        {
-            _logger.Information("Reading manifest from {PluginDirectory}", pluginDirectory);
-
-            try
-            {
-                var pluginManifest = ReadManifest(pluginDirectory);
-
-                if (pluginManifest != null)
-                {
-                    plugins.Add(new Models.Plugin(pluginDirectory, pluginManifest));
-                }
-                else
-                {
-                    _logger.Warning("Manifest not found in {PluginDirectory}", pluginDirectory);
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "Error reading manifest from {PluginDirectory}", pluginDirectory);
-            }
-        }
-
-        return plugins;
+        return pluginDirectories.Select(ReadPlugin)
+            .Where(plugin => plugin is not null)
+            .OfType<Models.Plugin>();
     }
 
     private PluginManifest? ReadManifest(string pluginDirectory)

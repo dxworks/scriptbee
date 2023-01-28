@@ -20,7 +20,7 @@ public class PluginManifestYamlParsingTests
     {
         var pluginManifest = _yamlFileReader.Read(filePath);
 
-        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
         Assert.Equal("ScriptGenerator example", pluginManifest.Name);
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
@@ -40,7 +40,7 @@ public class PluginManifestYamlParsingTests
     {
         var pluginManifest = _yamlFileReader.Read(filePath);
 
-        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
         Assert.Equal("ScriptRunner example", pluginManifest.Name);
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
@@ -59,7 +59,7 @@ public class PluginManifestYamlParsingTests
     {
         var pluginManifest = _yamlFileReader.Read(filePath);
 
-        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
         Assert.Equal("HelperFunctions example", pluginManifest.Name);
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
@@ -77,7 +77,7 @@ public class PluginManifestYamlParsingTests
     {
         var pluginManifest = _yamlFileReader.Read(filePath);
 
-        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
         Assert.Equal("Loader example", pluginManifest.Name);
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
@@ -95,7 +95,7 @@ public class PluginManifestYamlParsingTests
     {
         var pluginManifest = _yamlFileReader.Read(filePath);
 
-        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
         Assert.Equal("Linker example", pluginManifest.Name);
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
@@ -112,7 +112,7 @@ public class PluginManifestYamlParsingTests
     public void GivenManifestContent_ThenUiPluginManifestIsConstructed(string filePath)
     {
         var pluginManifest = _yamlFileReader.Read(filePath);
-        Assert.Equal("v1", pluginManifest.ApiVersion);
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
         Assert.Equal("Ui example", pluginManifest.Name);
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
@@ -127,5 +127,23 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("./Plugin", extensionPoint.ExposedModule);
         Assert.Equal("Plugin", extensionPoint.ComponentName);
         Assert.Equal("Result", extensionPoint.UiPluginType);
+    }
+
+    [Theory]
+    [FilePath("TestData/PluginBundlePluginManifest.yaml")]
+    public void GivenManifestContent_ThenPluginBundlePluginManifestIsConstructed(string filePath)
+    {
+        var pluginManifest = _yamlFileReader.Read(filePath);
+
+        Assert.Equal("1.0.0", pluginManifest.ApiVersion);
+        Assert.Equal("Plugin example", pluginManifest.Name);
+        Assert.Equal("ScriptBee", pluginManifest.Author);
+        Assert.Equal("Description", pluginManifest.Description);
+
+        var extensionPoint = (PluginBundleExtensionPoint)pluginManifest.ExtensionPoints.Single();
+
+        Assert.Equal("Plugin", extensionPoint.Kind);
+        Assert.Equal("plugin", extensionPoint.EntryPoint);
+        Assert.Equal("0.0.1", extensionPoint.Version);
     }
 }

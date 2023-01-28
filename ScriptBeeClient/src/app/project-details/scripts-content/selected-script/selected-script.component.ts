@@ -5,13 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 import { RunScriptService } from '../../../services/run-script/run-script.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { NotificationsService } from "../../../services/notifications/notifications.service";
-import { selectScriptTreeLeafClick } from "../../../state/script-tree/script-tree.selectors";
-import { filter, map, switchMap } from "rxjs/operators";
-import { forkJoin, of } from "rxjs";
-import { selectProjectDetails } from "../../../state/project-details/project-details.selectors";
-import { Project } from "../../../state/project-details/project";
-import { setOutput } from "../../../state/outputs/output.actions";
+import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { selectScriptTreeLeafClick } from '../../../state/script-tree/script-tree.selectors';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { forkJoin, of } from 'rxjs';
+import { selectProjectDetails } from '../../../state/project-details/project-details.selectors';
+import { Project } from '../../../state/project-details/project';
+import { setOutput } from '../../../state/outputs/output.actions';
 
 @Component({
   selector: 'app-selected-script',
@@ -19,47 +19,57 @@ import { setOutput } from "../../../state/outputs/output.actions";
   styleUrls: ['./selected-script.component.scss']
 })
 export class SelectedScriptComponent implements OnInit {
-
-  editorOptions = {theme: 'vs-dark', language: 'javascript', readOnly: true, automaticLayout: true};
+  editorOptions = {
+    theme: 'vs-dark',
+    language: 'javascript',
+    readOnly: true,
+    automaticLayout: true
+  };
   code = '';
   scriptPath = '';
   scriptAbsolutePath = '';
   projectAbsolutePath = '';
-  isLoadingResults: boolean = false;
+  isLoadingResults = false;
   project: Project | undefined;
 
-  constructor(private themeService: ThemeService, private fileSystemService: FileSystemService,
-              private route: ActivatedRoute, private runScriptService: RunScriptService,
-              private snackBar: MatSnackBar, private store: Store,
-              private notificationService: NotificationsService) {
-  }
+  constructor(
+    private themeService: ThemeService,
+    private fileSystemService: FileSystemService,
+    private route: ActivatedRoute,
+    private runScriptService: RunScriptService,
+    private snackBar: MatSnackBar,
+    private store: Store,
+    private notificationService: NotificationsService
+  ) {}
 
   ngOnInit(): void {
-
     this.notificationService.watchedFiles.subscribe({
-      next: watchedFile => {
-        console.log(watchedFile)
+      next: (watchedFile) => {
         if (this.scriptPath === watchedFile.path) {
           this.code = watchedFile.content;
         }
       }
     });
 
-    this.store.select(selectProjectDetails).pipe(
-      filter(x => !!x),
-      switchMap(project => {
-        return this.store.select(selectScriptTreeLeafClick)
-          .pipe(
-            map(leaf => leaf?.filePath ?? this.route.snapshot.paramMap.get('scriptPath')),
-            switchMap(filePath => forkJoin([
-              of(project),
-              of(filePath),
-              this.fileSystemService.getProjectAbsolutePath(project.data.projectId),
-              this.fileSystemService.getScriptAbsolutePath(project.data.projectId, filePath),
-              this.fileSystemService.getFileContent(project.data.projectId, filePath),
-
-            ])));
-      }))
+    this.store
+      .select(selectProjectDetails)
+      .pipe(
+        filter((x) => !!x),
+        switchMap((project) => {
+          return this.store.select(selectScriptTreeLeafClick).pipe(
+            map((leaf) => leaf?.filePath ?? this.route.snapshot.paramMap.get('scriptPath')),
+            switchMap((filePath) =>
+              forkJoin([
+                of(project),
+                of(filePath),
+                this.fileSystemService.getProjectAbsolutePath(project.data.projectId),
+                this.fileSystemService.getScriptAbsolutePath(project.data.projectId, filePath),
+                this.fileSystemService.getFileContent(project.data.projectId, filePath)
+              ])
+            )
+          );
+        })
+      )
       .subscribe(([project, filePath, projectPath, absolutePath, content]) => {
         this.project = project;
         this.scriptPath = filePath;
@@ -67,17 +77,13 @@ export class SelectedScriptComponent implements OnInit {
         this.scriptAbsolutePath = absolutePath;
         this.code = content;
         this.setEditorLanguage(this.scriptPath);
-
-        // todo remove this and move it in scripts-content component
-        this.fileSystemService.postFileWatcher(project.data.projectId, this.scriptPath)
-          .subscribe();
       });
 
-    this.themeService.darkThemeSubject.subscribe(isDark => {
+    this.themeService.darkThemeSubject.subscribe((isDark) => {
       if (isDark) {
-        this.editorOptions = {...this.editorOptions, theme: 'vs-dark'};
+        this.editorOptions = { ...this.editorOptions, theme: 'vs-dark' };
       } else {
-        this.editorOptions = {...this.editorOptions, theme: 'vs-light'};
+        this.editorOptions = { ...this.editorOptions, theme: 'vs-light' };
       }
     });
   }
@@ -92,11 +98,13 @@ export class SelectedScriptComponent implements OnInit {
     this.runScriptService.runScriptFromPath(this.project.data.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
       next: (run) => {
         this.isLoadingResults = false;
-        this.store.dispatch(setOutput({
-          runIndex: run.index,
-          scriptName: run.scriptName,
-          results: run.results
-        }));
+        this.store.dispatch(
+          setOutput({
+            runIndex: run.index,
+            scriptName: run.scriptName,
+            results: run.results
+          })
+        );
       },
       error: () => {
         // todo handle error and display it in the output errors tab
@@ -121,11 +129,11 @@ export class SelectedScriptComponent implements OnInit {
     }
 
     if (scriptPath.endsWith('.js')) {
-      this.editorOptions = {...this.editorOptions, language: 'javascript'};
+      this.editorOptions = { ...this.editorOptions, language: 'javascript' };
     } else if (scriptPath.endsWith('.py')) {
-      this.editorOptions = {...this.editorOptions, language: 'python'};
+      this.editorOptions = { ...this.editorOptions, language: 'python' };
     } else if (scriptPath.endsWith('.cs')) {
-      this.editorOptions = {...this.editorOptions, language: 'csharp'};
+      this.editorOptions = { ...this.editorOptions, language: 'csharp' };
     }
   }
 
@@ -136,7 +144,7 @@ export class SelectedScriptComponent implements OnInit {
   // todo refactor (maybe move in webapp)
   private getLanguage(filename: string) {
     if (!filename) {
-      return "";
+      return '';
     }
 
     if (filename.endsWith('.js')) {
@@ -147,6 +155,6 @@ export class SelectedScriptComponent implements OnInit {
       return 'csharp';
     }
 
-    return "";
+    return '';
   }
 }

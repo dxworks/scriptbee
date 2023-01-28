@@ -2,6 +2,7 @@
 
 public static class PluginKind
 {
+    public const string Plugin = "Plugin";
     public const string Linker = "Linker";
     public const string Loader = "Loader";
     public const string ScriptGenerator = "ScriptGenerator";

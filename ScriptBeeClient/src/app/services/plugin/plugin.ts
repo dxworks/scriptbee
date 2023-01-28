@@ -1,4 +1,4 @@
-type PluginKind = 'ScriptGenerator' | 'ScriptRunner' | 'HelperFunctions' | 'Loader' | 'Linker' | 'UI';
+export type PluginKind = 'ScriptGenerator' | 'ScriptRunner' | 'HelperFunctions' | 'Loader' | 'Linker' | 'UI';
 
 export interface Plugin {
   apiVersion: string;
@@ -13,7 +13,6 @@ interface BasicExtensionPoint {
   entryPoint: string;
   version: string;
 }
-
 
 interface ScriptGeneratorExtensionPoint extends BasicExtensionPoint {
   kind: 'ScriptGenerator';
