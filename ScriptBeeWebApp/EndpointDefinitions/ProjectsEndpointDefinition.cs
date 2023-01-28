@@ -137,14 +137,11 @@ public class ProjectsEndpointDefinition : IEndpointDefinition
             await fileModelService.DeleteFileAsync(runModel.ScriptPath, cancellationToken);
 
             // todo
-            // await _fileModelService.DeleteFileAsync(runModel.ConsoleOutputName, cancellationToken);
-            //
-            // foreach (var outputFileName in runModel.OutputFileNames)
+            // foreach (var runResult in runModel.Results)
             // {
-            //     await _fileModelService.DeleteFileAsync(outputFileName, cancellationToken);
+            //     await fileModelService.DeleteFileAsync(runResult.Name, cancellationToken);
             // }
-
-            // await _runModelService.DeleteDocument(runModel.Id, cancellationToken);
+            // await runModelService.DeleteDocument(runModel.ScriptId, cancellationToken);
         }
 
         return Results.Ok("Project removed successfully");

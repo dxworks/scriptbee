@@ -9,15 +9,13 @@ services:
       - ${MONGODB_DATA}/dev.archive:/Databases/dev.archive
       - ${MONGODB_DATA}/production:/Databases/production
   
-  frontend:
-    image: dxworks/scriptbee-client    
+  scripbee:
+    image: dxworks/scriptbee
     ports:
       - "4201:80"
-
-  backend:
-    image: dxworks/scriptbee-backend    
     volumes:
       - ${SCRIPTBEE_DATA}:/root/.scriptbee
+
     environment:
       - ConnectionStrings__mongodb=mongodb://mongo:27017/ScriptBee?authSource=admin
     depends_on:

@@ -15,14 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Build Docker Image for ScriptBeeClient
+      - name: Build Docker Image
         run: |
-          docker build -t dxworks/scriptbee-client:${{ github.event.inputs.version }} -f ./ScriptBeeClient/Dockerfile .
-      - name: Build Docker Image for ScriptBee Backend
-        run: |
-          docker build -t dxworks/scriptbee-backend:${{ github.event.inputs.version }} -f ./Dockerfile .
+          docker build -t dxworks/scriptbee:${{ github.event.inputs.version }} -f ./Dockerfile .
       - name: Publish Docker Images
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push dxworks/scriptbee-client:${{ github.event.inputs.version }}
-          docker push dxworks/scriptbee-backend:${{ github.event.inputs.version }}
+          docker push dxworks/scriptbee:${{ github.event.inputs.version }}
