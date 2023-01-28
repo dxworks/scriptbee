@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Serilog;
+﻿using Serilog;
 using Serilog.Events;
+using ILogger = Serilog.ILogger;
 
 namespace ScriptBeeWebApp.Extensions;
 

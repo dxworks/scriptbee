@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Concurrent;
-using System.IO;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Data;
-using Serilog;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -11,9 +8,9 @@ public class FileWatcherService : IFileWatcherService
 {
     private readonly ConcurrentDictionary<string, FileSystemWatcher> _watchers = new();
     private readonly IFileWatcherHubService _fileWatcherHubService;
-    private readonly ILogger _logger;
+    private readonly Serilog.ILogger _logger;
 
-    public FileWatcherService(IFileWatcherHubService fileWatcherHubService, ILogger logger)
+    public FileWatcherService(IFileWatcherHubService fileWatcherHubService, Serilog.ILogger logger)
     {
         _fileWatcherHubService = fileWatcherHubService;
         _logger = logger;

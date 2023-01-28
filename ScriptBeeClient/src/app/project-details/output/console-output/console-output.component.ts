@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { OutputFilesService } from "../../../services/output/output-files.service";
+import { OutputFilesService } from '../../../services/output/output-files.service';
 
 @Component({
   selector: 'app-console-output',
@@ -7,7 +7,6 @@ import { OutputFilesService } from "../../../services/output/output-files.servic
   styleUrls: ['./console-output.component.scss']
 })
 export class ConsoleOutputComponent {
-
   // todo add the possibility for realtime updates
 
   @Input() set outputId(outputId: string | undefined) {
@@ -16,13 +15,12 @@ export class ConsoleOutputComponent {
       return;
     }
 
-    this.outputFilesService.fetchOutput(outputId).subscribe(output => {
+    this.outputFilesService.fetchOutput(outputId).subscribe((output) => {
       this.consoleOutput = output;
     });
   }
 
-  consoleOutput: string = "";
+  consoleOutput = '';
 
-  constructor(private outputFilesService: OutputFilesService) {
-  }
+  constructor(private outputFilesService: OutputFilesService) {}
 }

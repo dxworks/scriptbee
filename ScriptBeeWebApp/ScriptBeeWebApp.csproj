@@ -2,26 +2,32 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
         <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
         <IsPackable>false</IsPackable>
-
-        <!-- Set this to true if you enable server-side prerendering -->
-        <BuildServerSideRenderer>false</BuildServerSideRenderer>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <UserSecretsId>195f9921-af9e-44a4-a06a-74b2324ebce1</UserSecretsId>
-        <Nullable>enable</Nullable>
+        <SpaRoot>..\ScriptBeeClient\</SpaRoot>
+        <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+        <RootNamespace>ScriptBeeWebApp</RootNamespace>
+        <AssemblyName>ScriptBeeWebApp</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.4.0" />
+        <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="5.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="7.0.2" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
         <PackageReference Include="MongoDB.Bson" Version="2.18.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
         <PackageReference Include="MongoDB.Driver.GridFS" Version="2.18.0" />
+        <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+        <PackageReference Include="Serilog.Expressions" Version="3.4.1" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+
     </ItemGroup>
 
     <ItemGroup>
@@ -35,7 +41,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="ScriptBeeWebApp.sln" />
+        <Folder Include="wwwroot" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Don't publish the SPA source files, but do show them in the project files list -->
+        <Content Remove="$(SpaRoot)**" />
+        <None Remove="$(SpaRoot)**" />
+        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="ScriptBeeWebApp.sln" />
     </ItemGroup>
 
 </Project>

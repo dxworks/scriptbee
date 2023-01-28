@@ -21,15 +21,8 @@ services:
     restart: unless-stopped
     ports:
       - "8081:8081"
-  
-  frontend:
-    build:
-      context: ./ScriptBeeClient
-      dockerfile: ./Dockerfile
-    ports:
-      - "4201:80"
 
-  backend:
+  scripbee:
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -40,4 +33,4 @@ services:
     depends_on:
       - mongo
     ports:
-      - "4202:80"
+      - "4201:80"
