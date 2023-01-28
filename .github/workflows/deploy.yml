@@ -7,6 +7,10 @@ on:
         description: 'Version'
         required: true
         default: '1.0.0'
+      branch:
+        description: 'Branch'
+        required: true
+        default: 'master'
 
 jobs:
   build:
@@ -14,11 +18,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Build Docker Image
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+      - name: Build Docker Image for ScriptBeeClient
         run: |
-          docker build -t dxworks/scriptbee:${{ github.event.inputs.version }} -f ./Dockerfile .
+          docker build -t dxworks/scriptbee-client:${{ github.event.inputs.version }} -f ./ScriptBeeClient/Dockerfile ./ScriptBeeClient
+      - name: Build Docker Image for ScriptBee Backend
+        run: |
+          docker build -t dxworks/scriptbee-backend:${{ github.event.inputs.version }} -f ./Dockerfile .
       - name: Publish Docker Images
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push dxworks/scriptbee:${{ github.event.inputs.version }}
+          docker push dxworks/scriptbee-client:${{ github.event.inputs.version }}
+          docker push dxworks/scriptbee-backend:${{ github.event.inputs.version }}
