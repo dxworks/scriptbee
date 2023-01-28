@@ -5,6 +5,7 @@ using ScriptBee.Models;
 
 namespace ScriptBee.ProjectContext;
 
+// todo add tests
 public class ProjectManager : IProjectManager
 {
     private readonly Dictionary<string, Project> _projects = new Dictionary<string, Project>();

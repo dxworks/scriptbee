@@ -1,0 +1,23 @@
+<div class="section-title content-after-divider">Upload Models</div>
+
+<mat-form-field class="select-loader" appearance="fill">
+  <mat-label>Loader</mat-label>
+  <mat-select [(value)]="selectedLoader">
+    <mat-option *ngFor="let loader of loaders" [value]="loader">
+      {{loader}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
+
+<div class="warning align-left">Keep in mind: When uploading new models for a particular loader, the references to
+  previous uploads will be deleted!
+</div>
+
+<mat-spinner class="upload-spinner align-left" *ngIf="uploading" color="primary" strokeWidth="4"
+             [diameter]="100"></mat-spinner>
+
+<button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0 || uploading"
+        (click)="onUploadFilesClick()">Upload Files
+</button>

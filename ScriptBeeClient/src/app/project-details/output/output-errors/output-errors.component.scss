@@ -1,0 +1,13 @@
+.main-console-div {
+  height: 100%;
+  overflow: auto;
+}
+
+div, pre {
+  white-space: pre-line;
+}
+
+div > pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

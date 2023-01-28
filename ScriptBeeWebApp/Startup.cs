@@ -1,8 +1,7 @@
 using System;
-using System.Linq;
-using System.Reflection;
+using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api;
-using HelperFunctions;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +9,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using ScriptBee.Config;
-using ScriptBee.PluginManager;
+using ScriptBee.FileManagement;
+using ScriptBee.Plugin;
+using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBee.Services;
+using ScriptBee.Services.Config;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Hubs;
 using ScriptBeeWebApp.Services;
+using Serilog;
+using Serilog.Events;
 
 namespace ScriptBeeWebApp;
 
@@ -42,24 +48,67 @@ public class Startup
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        string userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
+        // var userFolderPath = Configuration.GetSection("USER_FOLDER_PATH").Value ?? "";
+
+        var logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .CreateLogger();
+        Log.Logger = logger;
 
         services.AddSingleton(_ => mongoDatabase);
-        services.AddSingleton<ILoadersHolder, LoadersHolder>();
-        services.AddSingleton<ILinkersHolder, LinkersHolder>();
-        services.AddSingleton<IFileContentProvider, RelativeFileContentProvider>();
+        services.AddSingleton<ILogger>(_ => logger);
+        services.Configure<UserFolderSettings>(Configuration.GetSection("UserFolder"));
+        services.AddSingleton<IGuidGenerator, GuidGenerator>();
+        services.AddSingleton<IPluginRepository, PluginRepository>();
         services.AddSingleton<IProjectManager, ProjectManager>();
-        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>(_ =>
-            new ProjectFileStructureManager(userFolderPath));
-        services.AddSingleton<IHelperFunctionsFactory, HelperFunctionsFactory>();
-        services.AddSingleton<IHelperFunctionsMapper, HelperFunctionsMapper>();
-        services.AddSingleton<IFileNameGenerator, FileNameGenerator>();
-        services.AddSingleton<IFileModelService, FileModelService>();
+        services.AddSingleton<IProjectFileStructureManager, ProjectFileStructureManager>();
         services.AddSingleton<IProjectStructureService, ProjectStructureService>();
         services.AddSingleton<IProjectModelService, ProjectModelService>();
         services.AddSingleton<IRunModelService, RunModelService>();
+        services.AddSingleton<IUploadModelService, UploadModelService>();
+        services.AddSingleton<ILoadersService, LoadersService>();
+        services.AddSingleton<ILinkersService, LinkersService>();
+        services.AddSingleton<IPluginDiscriminatorHolder, PluginDiscriminatorHolder>();
+        services.AddSingleton<IPluginManifestYamlFileReader, PluginManifestYamlFileReader>();
+        services.AddSingleton<IGenerateScriptService, GenerateScriptService>();
+        services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IFileModelService, FileModelService>();
+        services.AddSingleton<IPluginReader, PluginReader>();
+        services.AddSingleton<IDllLoader, DllLoader>();
+        services.AddSingleton<IRunScriptService, RunScriptService>();
+        services.AddSingleton<PluginManager>();
+        services.AddSingleton<IPluginRegistrationService>(_ =>
+        {
+            var pluginRegistrationService = new PluginRegistrationService();
 
+            pluginRegistrationService.Add(PluginKind.Loader, new HashSet<Type> { typeof(IModelLoader) });
+            pluginRegistrationService.Add(PluginKind.Linker, new HashSet<Type> { typeof(IModelLinker) });
+            pluginRegistrationService.Add(PluginKind.ScriptGenerator,
+                new HashSet<Type> { typeof(IScriptGeneratorStrategy) });
+            pluginRegistrationService.Add(PluginKind.ScriptRunner, new HashSet<Type> { typeof(IScriptRunner) });
+            pluginRegistrationService.Add(PluginKind.HelperFunctions, new HashSet<Type> { typeof(IHelperFunctions) });
+
+            // todo see how to start the plugin via node or http-server or something like that if not already started
+            pluginRegistrationService.Add(PluginKind.Ui, new HashSet<Type>());
+
+            return pluginRegistrationService;
+        });
+        services.AddSingleton<IPluginLoader, PluginLoader>();
+        services.AddSingleton<IFileWatcherHubService, FileWatcherHubService>();
+        services.AddSingleton<IFileWatcherService, FileWatcherService>();
+
+        services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
+        services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .AllowAnyOrigin();
+            }
+        ));
+        services.AddSignalR();
         services.AddControllers();
         services.AddSwaggerGen();
     }
@@ -87,54 +136,16 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHub<FileWatcherHub>("/api/fileWatcherHub");
+
             endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller}/{action=Index}/{id?}");
+                "default",
+                "{controller}/{action=Index}/{id?}");
         });
 
-        var loadersHolder = app.ApplicationServices.GetService<ILoadersHolder>();
-        var linkersHolder = app.ApplicationServices.GetService<ILinkersHolder>();
+        var pluginManager = app.ApplicationServices.GetRequiredService<PluginManager>();
 
-        LoadPlugins(loadersHolder, linkersHolder);
-    }
-
-    private void LoadPlugins(ILoadersHolder loadersHolder, ILinkersHolder linkersHolder)
-    {
-        var pluginPaths = new PluginPathReader(ConfigFolders.PathToPlugins).GetPluginPaths();
-
-        Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            return ((AppDomain)sender).GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
-        }
-
-        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
-
-        foreach (var pluginPath in pluginPaths)
-        {
-            var pluginDll = Assembly.LoadFrom(pluginPath);
-
-            foreach (var type in pluginDll.GetExportedTypes())
-            {
-                if (typeof(IModelLoader).IsAssignableFrom(type))
-                {
-                    var modelLoader = (IModelLoader)Activator.CreateInstance(type);
-                    if (modelLoader is not null)
-                    {
-                        loadersHolder.AddLoaderToDictionary(modelLoader);
-                    }
-                }
-
-                if (typeof(IModelLinker).IsAssignableFrom(type))
-                {
-                    var modelLinker = (IModelLinker)Activator.CreateInstance(type);
-                    if (modelLinker is not null)
-                    {
-                        linkersHolder.AddLinkerToDictionary(modelLinker);
-                    }
-                }
-            }
-        }
-
-        AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
+        // todo move to task
+        pluginManager.LoadPlugins(ConfigFolders.PathToPlugins);
     }
 }

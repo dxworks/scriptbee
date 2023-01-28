@@ -1,0 +1,7 @@
+<mat-spinner *ngIf="loading"></mat-spinner>
+
+<div *ngIf="!loading && plugins.length ===0">No plugins loaded</div>
+
+<div *ngIf="!loading && plugins.length > 0" fxLayout="column" fxLayoutGap="16">
+  <app-plugin-item *ngFor="let plugin of plugins" [plugin]="plugin"></app-plugin-item>
+</div>

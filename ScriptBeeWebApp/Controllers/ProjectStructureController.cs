@@ -1,26 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
-using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.DTO;
+using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class ProjectStructureController : ControllerBase
 {
     private readonly IProjectFileStructureManager _projectFileStructureManager;
-    private readonly ILoadersHolder _loadersHolder;
+    private readonly IProjectStructureService _projectStructureService;
 
     public ProjectStructureController(IProjectFileStructureManager projectFileStructureManager,
-        ILoadersHolder loadersHolder)
+        IProjectStructureService projectStructureService)
     {
         _projectFileStructureManager = projectFileStructureManager;
-        _loadersHolder = loadersHolder;
+        _projectStructureService = projectStructureService;
     }
 
     [HttpGet("{projectId}")]
@@ -37,71 +38,46 @@ public class ProjectStructureController : ControllerBase
     }
 
     [HttpPost("script")]
-    public ActionResult<ScriptCreatedResult> CreateScript(CreateScript arg)
+    // todo extract validation in a separate class
+    public async Task<ActionResult<FileTreeNode>> CreateScript(CreateScript createScript,
+        CancellationToken cancellationToken = default)
     {
-        if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
+        if (createScript == null || string.IsNullOrEmpty(createScript.projectId) ||
+            string.IsNullOrEmpty(createScript.filePath))
         {
             return BadRequest("Invalid arguments!");
         }
 
         try
         {
-            var content = "";
-            switch (arg.scriptType)
+            var (extension, content) =
+                await _projectStructureService.GetSampleCodeAsync(createScript.scriptType, cancellationToken);
+
+            if (!createScript.filePath.EndsWith(extension))
             {
-                case "python":
-                {
-                    if (!arg.filePath.EndsWith(".py"))
-                    {
-                        arg.filePath += ".py";
-                    }
-
-                    content = new SampleCodeGenerator(new PythonStrategyGenerator(new RelativeFileContentProvider()),
-                        _loadersHolder).GenerateSampleCode();
-                }
-                    break;
-                case "csharp":
-                {
-                    if (!arg.filePath.EndsWith(".cs"))
-                    {
-                        arg.filePath += ".cs";
-                    }
-
-                    content = new SampleCodeGenerator(new CSharpStrategyGenerator(new RelativeFileContentProvider()),
-                        _loadersHolder).GenerateSampleCode();
-                }
-                    break;
-                case "javascript":
-                {
-                    if (!arg.filePath.EndsWith(".js"))
-                    {
-                        arg.filePath += ".js";
-                    }
-
-                    content = new SampleCodeGenerator(
-                        new JavascriptStrategyGenerator(new RelativeFileContentProvider()),
-                        _loadersHolder).GenerateSampleCode();
-                }
-                    break;
+                createScript.filePath += extension;
             }
 
-            if (_projectFileStructureManager.FileExists(arg.projectId, arg.filePath))
+            if (_projectFileStructureManager.FileExists(createScript.projectId, createScript.filePath))
             {
                 return StatusCode(StatusCodes.Status409Conflict);
             }
 
-            _projectFileStructureManager.CreateSrcFile(arg.projectId, arg.filePath, content);
+            var node = _projectFileStructureManager.CreateSrcFile(createScript.projectId, createScript.filePath,
+                content);
+
+            return Ok(node);
         }
         catch
         {
+            // todo have a centralized exception handler
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
-
-        return new ScriptCreatedResult(arg.filePath);
     }
 
     [HttpGet("script")]
-    public async Task<ActionResult<string>> GetScriptContent([FromQuery] GetScriptDetails arg)
+    // todo extract validation om a separate class
+    public async Task<ActionResult<string>> GetScriptContent([FromQuery] GetScriptDetails? arg)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
         {
@@ -119,7 +95,8 @@ public class ProjectStructureController : ControllerBase
     }
 
     [HttpGet("scriptabsolutepath")]
-    public ActionResult<string> GetScriptAbsolutePath([FromQuery] GetScriptDetails arg)
+    // todo extract validation om a separate class
+    public ActionResult<string> GetScriptAbsolutePath([FromQuery] GetScriptDetails? arg)
     {
         if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
         {
@@ -132,11 +109,21 @@ public class ProjectStructureController : ControllerBase
     [HttpGet("projectabsolutepath")]
     public ActionResult<string> GetProjectAbsolutePath([FromQuery] string projectId)
     {
-        if (projectId == null || string.IsNullOrEmpty(projectId))
+        if (string.IsNullOrEmpty(projectId))
         {
             return BadRequest("Invalid arguments!");
         }
 
         return _projectFileStructureManager.GetProjectAbsolutePath(projectId);
+    }
+
+    [HttpPost("filewatcher")]
+    // todo add validation
+    public IActionResult SetupFileWatcher([FromBody] SetupFileWatcher setupFileWatcher)
+    {
+        _projectFileStructureManager.SetupFileWatcher(setupFileWatcher.ProjectId, setupFileWatcher.FilePath);
+
+        // todo return something
+        return Ok("");
     }
 }

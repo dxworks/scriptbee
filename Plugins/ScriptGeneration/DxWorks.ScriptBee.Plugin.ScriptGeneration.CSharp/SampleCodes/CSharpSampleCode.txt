@@ -1,0 +1,9 @@
+﻿$START_COMMENT$
+
+public class $CLASS_NAME$
+{
+    public void $METHOD_NAME$($MODEL_TYPE$ project)
+    {
+        ConsoleWriteLine("Hello, C#!");
+    }
+}

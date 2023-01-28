@@ -1,109 +1,48 @@
 <div class="project-details-main-div">
-  <mat-card *ngIf="projectDetailsService.project | async" fxLayout="column" fxLayoutAlign="center start">
+
+  <mat-spinner *ngIf="loading"></mat-spinner>
+
+  <mat-card *ngIf="loadingError" class="loading-error">
+    {{loadingError}}
+  </mat-card>
+
+  <mat-card *ngIf="project" fxLayout="column" fxLayoutAlign="center start">
     <div style="width: 100%">
       <div class="section-title content">Details</div>
       <div fxLayout="column" fxLayoutAlign="space-around start">
         <div class="content">
           <span>Project Id: &nbsp;</span>
-          <span class="text-with-opacity">{{(projectDetailsService.project | async).projectId}}</span>
+          <span class="text-with-opacity">{{project.data.projectId}}</span>
         </div>
         <div class="content">
           <span>Project Name: &nbsp;</span>
-          <span class="text-with-opacity">{{(projectDetailsService.project | async).projectName}}</span>
+          <span class="text-with-opacity">{{project.data.projectName}}</span>
         </div>
         <div class="content-before-divider">
           <span>Creation Date: &nbsp;</span>
-          <span class="text-with-opacity">{{(projectDetailsService.project | async).creationDate | date}}</span>
+          <span class="text-with-opacity">{{project.data.creationDate | date}}</span>
         </div>
       </div>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Upload Models</div>
-
-      <mat-form-field class="select-loader" appearance="fill">
-        <mat-label>Loader</mat-label>
-        <mat-select [(value)]="selectedLoader">
-          <mat-option *ngFor="let loader of projectDetailsService.loaders | async" [value]="loader">
-            {{loader}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
-
-      <div class="warning align-left">Keep in mind: When uploading new models for a particular loader, the references to previous uploads will be deleted!</div>
-
-      <mat-spinner class="upload-spinner align-left" *ngIf="uploading" color="primary" strokeWidth="4" [diameter]="100"></mat-spinner>
-
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="files.length===0 || uploading"
-              (click)="onUploadFilesClick()">Upload Files
-      </button>
+      <app-upload-models [project]="project"></app-upload-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Load Models</div>
-
-      <app-selectable-tree [treeData]="(projectDetailsService.project | async).savedFiles"
-                           (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-selectable-tree>
-
-      <mat-spinner class="load-spinner align-left" *ngIf="loading" color="primary" strokeWidth="4" [diameter]="100"></mat-spinner>
-
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="checkedFiles.length===0 || loading"
-              (click)="onLoadFilesClick()">Load Files
-      </button>
+      <app-load-models [project]="project"></app-load-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Link Models</div>
-
-      <mat-form-field class="select-loader" appearance="fill">
-        <mat-label>Linker</mat-label>
-        <mat-select [(value)]="selectedLinker">
-          <mat-option *ngFor="let linker of projectDetailsService.linkers | async" [value]="linker">
-            {{linker}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <div></div>
-
-      <mat-spinner class="link-spinner align-left" *ngIf="linking" color="primary" strokeWidth="4" [diameter]="100"></mat-spinner>
-
-      <button class="upload-button" mat-raised-button color="primary" [disabled]="linking" (click)="onLinkButtonClick()">Link
-      </button>
+      <app-link-models [project]="project"></app-link-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider">Currently loaded models</div>
-
-      <div fxLayout="column" fxLayoutAlign="space-around start">
-        <span *ngIf="(projectDetailsService.project | async).linker"
-              class="content">Used Linker: {{(projectDetailsService.project | async).linker}}</span>
-      </div>
-
-      <appTree class="currently-loaded-models"
-               [treeData]="(projectDetailsService.project | async).loadedFiles"></appTree>
+      <app-currently-loaded-models [project]="project"></app-currently-loaded-models>
 
       <mat-divider></mat-divider>
 
-      <div class="section-title content-after-divider project-context">Project Context</div>
-
-      <mat-spinner class="reload-context-spinner align-left" *ngIf="reloadingContext" color="primary" strokeWidth="4" [diameter]="100"></mat-spinner>
-
-      <button
-        *ngIf="(projectDetailsService.context | async).length == 0 && (projectDetailsService.project | async).loadedFiles.length > 0"
-        class="reload-models-button" mat-raised-button [disabled]="reloadingContext"
-        color="primary" (click)="onReloadModelsClick()">Reload Models
-      </button>
-
-      <appTree [treeData]="(projectDetailsService.context | async)"></appTree>
-
-      <mat-spinner class="clear-context-spinner align-left" *ngIf="clearingContext" color="primary" strokeWidth="4" [diameter]="100"></mat-spinner>
-
-      <button *ngIf="(projectDetailsService.context | async).length != 0" class="clear-context-button" mat-raised-button
-              color="primary" [disabled]="clearingContext" (click)="onClearContextButtonClick()">Clear Context
-      </button>
+      <app-project-context [project]="project"></app-project-context>
     </div>
   </mat-card>
 </div>

@@ -6,23 +6,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="IronPython" Version="3.4.0-alpha1" />
-        <PackageReference Include="Jint" Version="3.0.0-beta-2033" />
-        <PackageReference Include="MongoDB.Bson" Version="2.15.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.11.0-1.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0-1.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.11.0-1.final" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.11.0-1.final" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
+        <PackageReference Include="Serilog" Version="2.11.0" />
+        <PackageReference Include="YamlDotNet" Version="12.0.0" />
     </ItemGroup>
-
+    
     <ItemGroup>
-        <Content Include="Scripts\ScriptSampleGenerators\Strategies\SampleCodes\**">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
+        <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
-        <ProjectReference Include="..\HelperFunctions\HelperFunctions.csproj" />
+      <Reference Include="Microsoft.Extensions.Options">
+        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.9\Microsoft.Extensions.Options.dll</HintPath>
+      </Reference>
     </ItemGroup>
-
+    
 </Project>

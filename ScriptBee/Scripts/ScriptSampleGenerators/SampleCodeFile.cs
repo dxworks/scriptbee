@@ -1,9 +1,8 @@
-﻿namespace ScriptBee.Scripts.ScriptSampleGenerators
-{
-    public record SampleCodeFile
-    {
-        public string Name { get; init; }
+﻿namespace ScriptBee.Scripts.ScriptSampleGenerators;
 
-        public string Content { get; init; }
-    }
+public record SampleCodeFile
+{
+    public string Name { get; init; }
+
+    public string Content { get; init; }
 }

@@ -1,3 +1,3 @@
 ﻿namespace ScriptBeeWebApp.Controllers.Arguments;
 
-public record RunScript(string projectId, string filePath);
+public record RunScript(string ProjectId, string FilePath, string Language);

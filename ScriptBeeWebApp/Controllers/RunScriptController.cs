@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HelperFunctions;
-using Microsoft.AspNetCore.Http;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Config;
 using ScriptBee.Models;
-using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
-using ScriptBee.Scripts.ScriptRunners;
-using ScriptBee.Utils.ValidScriptExtractors;
 using ScriptBeeWebApp.Controllers.Arguments;
-using ScriptBeeWebApp.Extensions;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -24,182 +18,66 @@ namespace ScriptBeeWebApp.Controllers;
 public class RunScriptController : ControllerBase
 {
     private readonly IProjectManager _projectManager;
-    private readonly IProjectFileStructureManager _projectFileStructureManager;
-    private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IFileModelService _fileModelService;
-    private readonly IRunModelService _runModelService;
     private readonly IProjectModelService _projectModelService;
-    private readonly IHelperFunctionsFactory _helperFunctionsFactory;
-    private readonly IHelperFunctionsMapper _helperFunctionsMapper;
+    private readonly IRunScriptService _runScriptService;
+    private readonly IValidator<RunScript> _runScriptValidator;
 
-    public RunScriptController(IProjectManager projectManager,
-        IProjectFileStructureManager projectFileStructureManager, IFileNameGenerator fileNameGenerator,
-        IFileModelService fileModelService, IRunModelService runModelService,
-        IProjectModelService projectModelService, IHelperFunctionsFactory helperFunctionsFactory,
-        IHelperFunctionsMapper helperFunctionsMapper)
+    public RunScriptController(IProjectManager projectManager, IProjectModelService projectModelService,
+        IRunScriptService runScriptService, IValidator<RunScript> runScriptValidator)
     {
         _projectManager = projectManager;
-        _projectFileStructureManager = projectFileStructureManager;
-        _fileNameGenerator = fileNameGenerator;
-        _fileModelService = fileModelService;
-        _runModelService = runModelService;
         _projectModelService = projectModelService;
-        _helperFunctionsFactory = helperFunctionsFactory;
-        _helperFunctionsMapper = helperFunctionsMapper;
+        _runScriptService = runScriptService;
+        _runScriptValidator = runScriptValidator;
+    }
+
+    [HttpGet("languages")]
+    public ActionResult<IEnumerable<string>> GetLanguages()
+    {
+        return Ok(_runScriptService.GetSupportedLanguages());
     }
 
     [HttpPost]
-    public async Task<IActionResult> RunScriptFromPath(RunScript arg, CancellationToken cancellationToken)
+    public async Task<IActionResult> RunScriptFromPath(RunScript runScript,
+        CancellationToken cancellationToken = default)
     {
-        if (arg == null || string.IsNullOrEmpty(arg.projectId) || string.IsNullOrEmpty(arg.filePath))
+        var validationResult = await _runScriptValidator.ValidateAsync(runScript, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Invalid arguments!");
+            return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
-        var scriptType = "";
-        if (arg.filePath.EndsWith(".py"))
-        {
-            scriptType = "python";
-        }
-        else if (arg.filePath.EndsWith(".cs"))
-        {
-            scriptType = "csharp";
-        }
-        else if (arg.filePath.EndsWith(".js"))
-        {
-            scriptType = "javascript";
-        }
-
-        var scriptRunner = GetScriptRunner(scriptType);
-
-        if (scriptRunner == null)
-        {
-            return BadRequest($"Script type {scriptType} is not supported");
-        }
-
-        var project = _projectManager.GetProject(arg.projectId);
+        var project = _projectManager.GetProject(runScript.ProjectId);
         if (project == null)
         {
-            return NotFound($"Could not find project with id: {arg.projectId}");
+            return NotFound($"Could not find project with id: {runScript.ProjectId}");
         }
 
-        var scriptContent = await _projectFileStructureManager.GetFileContentAsync(arg.projectId, arg.filePath);
-        if (scriptContent == null)
-        {
-            return NotFound($"File from {arg.filePath} not found");
-        }
-
-        var scriptName = _fileNameGenerator.GenerateScriptName(arg.projectId, arg.filePath);
-
-        var byteArray = Encoding.ASCII.GetBytes(scriptContent);
-        await using var stream = new MemoryStream(byteArray);
-
-        await _fileModelService.UploadFile(scriptName, stream, cancellationToken);
-
-        var projectModel = await _projectModelService.GetDocument(arg.projectId, cancellationToken);
+        var projectModel = await _projectModelService.GetDocument(runScript.ProjectId, cancellationToken);
         if (projectModel == null)
         {
-            return NotFound($"Could not find project model with id: {arg.projectId}");
+            return NotFound($"Could not find project model with id: {runScript.ProjectId}");
         }
 
-        var loadedFiles = new Dictionary<string, List<string>>();
+        // todo catch exception and remap it to a response
+        var run = await _runScriptService.RunAsync(project, projectModel, runScript.Language, runScript.FilePath,
+            cancellationToken);
 
-        foreach (var (loaderName, files) in projectModel.LoadedFiles)
+        var returnedRun = new ReturnedRun(run.Index, run.ScriptPath, run.Linker)
         {
-            loadedFiles[loaderName] = files;
-        }
-
-        projectModel.LastRunIndex++;
-
-        await _projectModelService.UpdateDocument(projectModel, cancellationToken);
-
-        var runModel = new RunModel
-        {
-            RunIndex = projectModel.LastRunIndex,
-            ProjectId = arg.projectId,
-            ScriptName = scriptName,
-            Linker = projectModel.Linker,
-            LoadedFiles = loadedFiles,
+            LoadedFiles = ConvertLoadedFiles(run.LoadedFiles),
+            Results = run.Results.Select(r => new Result(r.Id, r.Type, r.Name))
+                .ToList()
         };
-
-        await _runModelService.CreateDocument(runModel, cancellationToken);
-        
-        try
-        {
-            var runResults = await scriptRunner.Run(project, runModel.Id, scriptContent);
-
-            foreach (var (type, filePath) in runResults)
-            {
-                if (type.Equals(RunResult.ConsoleType))
-                {
-                    runModel.ConsoleOutputName = filePath;
-                }
-                else if (type.Equals(RunResult.FileType))
-                {
-                    runModel.OutputFileNames.Add(filePath);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            runModel.Errors = e.Message;
-
-            return Problem(statusCode: StatusCodes.Status500InternalServerError,
-                detail: $"Run script failed because {e}");
-        }
-        finally
-        {
-            await _runModelService.UpdateDocument(runModel, cancellationToken);
-        }
-
-        ReturnedRun returnedRun = new()
-        {
-            RunId = runModel.Id,
-            RunIndex = runModel.RunIndex,
-            ProjectId = runModel.ProjectId,
-            Errors = runModel.Errors,
-            ConsoleOutputName = runModel.ConsoleOutputName
-        };
-
-        List<OutputFile> outputFiles = new();
-
-        foreach (var outputFileDatabaseName in runModel.OutputFileNames)
-        {
-            var (_, _, outputType, outputName) =
-                _fileNameGenerator.ExtractOutputFileNameComponents(outputFileDatabaseName);
-            OutputFile outputFile = new(outputName, outputType, outputFileDatabaseName);
-
-            outputFiles.Add(outputFile);
-        }
-
-        returnedRun.OutputFiles = outputFiles;
 
         return Ok(returnedRun);
     }
 
-    private IScriptRunner GetScriptRunner(string scriptType)
+    private static Dictionary<string, List<string>> ConvertLoadedFiles(Dictionary<string, List<FileData>> loadedFiles)
     {
-        switch (scriptType)
-        {
-            case "python":
-            {
-                return new PythonScriptRunner(new PythonValidScriptExtractor(), _helperFunctionsFactory,
-                    _helperFunctionsMapper);
-            }
-            case "javascript":
-            {
-                return new JavascriptScriptRunner(new JavascriptValidScriptExtractor(), _helperFunctionsFactory,
-                    _helperFunctionsMapper);
-            }
-            case "csharp":
-            {
-                return new CSharpScriptRunner(new PluginPathReader(ConfigFolders.PathToPlugins),
-                    _helperFunctionsFactory);
-            }
-            default:
-            {
-                return null;
-            }
-        }
+        return loadedFiles
+            .Select(pair =>
+                new KeyValuePair<string, List<string>>(pair.Key, pair.Value.Select(d => d.Name).ToList()))
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 }

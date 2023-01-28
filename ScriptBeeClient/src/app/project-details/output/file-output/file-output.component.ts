@@ -1,41 +1,38 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {OutputFile} from '../../../services/output/output-file';
-import {OutputFilesService} from '../../../services/output/output-files.service';
-import {HttpEventType, HttpResponse} from '@angular/common/http';
+import { Component, Input } from '@angular/core';
+import { OutputFile } from '../../../services/output/output-file';
+import { OutputFilesService } from '../../../services/output/output-files.service';
 
 @Component({
   selector: 'app-file-output',
   templateUrl: './file-output.component.html',
   styleUrls: ['./file-output.component.scss']
 })
-export class FileOutputComponent implements OnInit {
+export class FileOutputComponent {
 
   @Input()
   outputFiles: OutputFile[] = [];
   @Input()
   projectId = '';
   @Input()
-  runId = '';
+  runIndex: number = -1;
 
   constructor(private outputFilesService: OutputFilesService) {
   }
 
-  ngOnInit(): void {
-  }
-
   onDownloadFileButtonClick(file: OutputFile) {
-    this.outputFilesService.downloadFile(file.filePath).subscribe((data) => {
-      this.downloadFile(file.fileName, data);
+    this.outputFilesService.downloadFile(file.fileId, file.fileName).subscribe((data) => {
+      FileOutputComponent.downloadFile(file.fileName, data);
     });
   }
 
   onDownloadAllButtonClick() {
-    this.outputFilesService.downloadAll(this.projectId, this.runId).subscribe((data) => {
-      this.downloadFile('outputFiles.zip', data);
+    this.outputFilesService.downloadAll(this.projectId, this.runIndex).subscribe((data) => {
+      FileOutputComponent.downloadFile('outputFiles.zip', data);
     });
   }
 
-  private downloadFile(fileName: string, data: any) {
+  // todo to be moved to common service
+  private static downloadFile(fileName: string, data: any) {
     const a: any = document.createElement('a');
     document.body.appendChild(a);
     a.style = 'display: none';

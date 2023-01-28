@@ -1,0 +1,7 @@
+<div class="section-title content-after-divider">Currently loaded models</div>
+
+<div fxLayout="column" fxLayoutAlign="space-around start">
+  <span *ngIf="project.data.linker" class="content">Used Linker: {{project.data.linker}}</span>
+</div>
+
+<app-tree [treeData]="project.data.loadedFiles"></app-tree>

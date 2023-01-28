@@ -1,108 +1,67 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using Microsoft.AspNetCore.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
-using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
+using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
+using ScriptBeeWebApp.Services;
 
-namespace ScriptBeeWebApp.Controllers
+namespace ScriptBeeWebApp.Controllers;
+
+[ApiControllerRoute]
+[ApiController]
+public class GenerateScriptController : ControllerBase
 {
-    [ApiControllerRoute]
-    [ApiController]
-    public class GenerateScriptController : ControllerBase
+    private readonly IProjectManager _projectManager;
+    private readonly IGenerateScriptService _generateScriptService;
+    private readonly IValidator<GenerateScriptRequest> _generateScriptRequestValidator;
+
+    public GenerateScriptController(IProjectManager projectManager, IGenerateScriptService generateScriptService,
+        IValidator<GenerateScriptRequest> generateScriptRequestValidator)
     {
-        private readonly IFileContentProvider _fileContentProvider;
-        private readonly IProjectManager _projectManager;
-        private readonly ILoadersHolder _loadersHolder;
+        _projectManager = projectManager;
+        _generateScriptService = generateScriptService;
+        _generateScriptRequestValidator = generateScriptRequestValidator;
+    }
 
-        public GenerateScriptController(IFileContentProvider fileContentProvider, IProjectManager projectManager,
-            ILoadersHolder loadersHolder)
+    [HttpGet("languages")]
+    public ActionResult<IEnumerable<string>> GetLanguages()
+    {
+        // todo include file extension
+        return Ok(_generateScriptService.GetSupportedLanguages());
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> PostGenerateScript([FromBody] GenerateScriptRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await _generateScriptRequestValidator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            _fileContentProvider = fileContentProvider;
-            _projectManager = projectManager;
-            _loadersHolder = loadersHolder;
+            return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
-        [HttpGet]
-        public IActionResult GetSampleCode(IFormCollection formData)
+        var scriptGeneratorStrategy = _generateScriptService.GetGenerationStrategy(request.ScriptType);
+
+        if (scriptGeneratorStrategy is null)
         {
-            if (!formData.TryGetValue("projectId", out var projectId))
-            {
-                return BadRequest("Missing project id");
-            }
-
-            if (!formData.TryGetValue("scriptType", out var scriptType))
-            {
-                return BadRequest("Missing script type");
-            }
-
-            var project = _projectManager.GetProject(projectId);
-
-            if (project == null)
-            {
-                return NotFound($"Could not find project with id: {projectId}");
-            }
-
-            var classes = project.Context.GetClasses();
-
-            switch (scriptType)
-            {
-                case "python":
-                {
-                    var sampleCode =
-                        new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider), _loadersHolder)
-                            .GetSampleCode(classes);
-
-                    var zipStream = CreateFileZipStream(sampleCode, ".py");
-                    return File(zipStream, "application/octet-stream", "DummyPythonSampleCode.zip");
-                }
-                case "javascript":
-                {
-                    var sampleCode = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider),
-                            _loadersHolder)
-                        .GetSampleCode(classes);
-
-                    var zipStream = CreateFileZipStream(sampleCode, ".js");
-                    return File(zipStream, "application/octet-stream", "DummyJavascriptSampleCode.zip");
-                }
-                case "csharp":
-                {
-                    var sampleCode =
-                        new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolder)
-                            .GetSampleCode(classes);
-
-                    var zipStream = CreateFileZipStream(sampleCode, ".cs");
-
-                    return File(zipStream, "application/octet-stream", "DummyCSharpSampleCode.zip");
-                }
-                default:
-                {
-                    return BadRequest($"Script type {scriptType} is not supported");
-                }
-            }
+            return BadRequest("Invalid script type");
         }
 
-        private Stream CreateFileZipStream(IList<SampleCodeFile> sampleCode, string extension)
+        var project = _projectManager.GetProject(request.ProjectId);
+
+        if (project is null)
         {
-            var zipStream = new MemoryStream();
-            using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
-            {
-                foreach (var sampleCodeFile in sampleCode)
-                {
-                    var zipArchiveEntry = zip.CreateEntry(sampleCodeFile.Name + extension);
-
-                    using (StreamWriter writer = new StreamWriter(zipArchiveEntry.Open()))
-                    {
-                        writer.Write(sampleCodeFile.Content);
-                    }
-                }
-            }
-
-            zipStream.Position = 0;
-            return zipStream;
+            return NotFound($"Could not find project with id: {request.ProjectId}");
         }
+
+        var classes = project.Context.GetClasses();
+
+        var stream =
+            await _generateScriptService.GenerateClassesZip(classes, scriptGeneratorStrategy, cancellationToken);
+
+        return File(stream, "application/octet-stream", $"{request.ScriptType}SampleCode.zip");
     }
 }

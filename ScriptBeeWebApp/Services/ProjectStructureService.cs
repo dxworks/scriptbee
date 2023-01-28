@@ -1,31 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Config;
-using ScriptBee.PluginManager;
+using ScriptBee.Plugin;
 using ScriptBee.ProjectContext;
 using ScriptBee.Scripts.ScriptSampleGenerators;
-using ScriptBee.Scripts.ScriptSampleGenerators.Strategies;
 
 namespace ScriptBeeWebApp.Services;
 
+// todo add tests
 public class ProjectStructureService : IProjectStructureService
 {
-    private readonly IFileContentProvider _fileContentProvider;
     private readonly IProjectManager _projectManager;
-    private readonly ILoadersHolder _loadersHolder;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
+    private readonly IPluginRepository _pluginRepository;
+    private readonly ILoadersService _loadersService;
 
-    public ProjectStructureService(IFileContentProvider fileContentProvider, IProjectManager projectManager,
-        ILoadersHolder loadersHolder, IProjectFileStructureManager projectFileStructureManager)
+    public ProjectStructureService(IProjectManager projectManager,
+        IProjectFileStructureManager projectFileStructureManager, IPluginRepository pluginRepository,
+        ILoadersService loadersService)
     {
-        _fileContentProvider = fileContentProvider;
         _projectManager = projectManager;
-        _loadersHolder = loadersHolder;
         _projectFileStructureManager = projectFileStructureManager;
+        _pluginRepository = pluginRepository;
+        _loadersService = loadersService;
     }
 
-    public void GenerateModelClasses(string projectId)
+    public async Task<(string extension, string content)> GetSampleCodeAsync(string scriptType,
+        CancellationToken cancellationToken = default)
+    {
+        var scriptGeneratorStrategy =
+            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(manifest =>
+                manifest.Language == scriptType);
+
+        if (scriptGeneratorStrategy is null)
+        {
+            throw new Exception($"No plugin found for script type {scriptType}");
+        }
+
+        var acceptedModules = _loadersService.GetAcceptedModules();
+
+        var sampleCode =
+            await new SampleCodeGenerator(scriptGeneratorStrategy, acceptedModules).GenerateSampleCode(
+                cancellationToken);
+
+        return (scriptGeneratorStrategy.Extension, sampleCode);
+    }
+
+    public async Task GenerateModelClasses(string projectId, CancellationToken cancellationToken = default)
     {
         var project = _projectManager.GetProject(projectId);
 
@@ -35,27 +60,20 @@ public class ProjectStructureService : IProjectStructureService
         }
 
         var classes = project.Context.GetClasses();
+        var acceptedModules = _loadersService.GetAcceptedModules();
 
-        var pythonModelClasses =
-            new SampleCodeGenerator(new PythonStrategyGenerator(_fileContentProvider), _loadersHolder)
-                .GetSampleCode(classes);
+        var generatorStrategies = _pluginRepository.GetPlugins<IScriptGeneratorStrategy>();
+        foreach (var generatorStrategy in generatorStrategies)
+        {
+            var generatedClasses = await
+                new SampleCodeGenerator(generatorStrategy, acceptedModules)
+                    .GetSampleCode(classes, cancellationToken);
 
-        WriteSampleCodeFiles(pythonModelClasses, projectId, "python", ".py");
-
-        var javascriptModelClasses = new SampleCodeGenerator(new JavascriptStrategyGenerator(_fileContentProvider),
-                _loadersHolder)
-            .GetSampleCode(classes);
-
-        WriteSampleCodeFiles(javascriptModelClasses, projectId, "javascript", ".js");
-
-        var csharpModelClasses =
-            new SampleCodeGenerator(new CSharpStrategyGenerator(_fileContentProvider), _loadersHolder)
-                .GetSampleCode(classes);
-
-        WriteSampleCodeFiles(csharpModelClasses, projectId, "csharp", ".cs");
+            WriteSampleCodeFiles(generatedClasses, projectId, generatorStrategy.Language, generatorStrategy.Extension);
+        }
     }
 
-    private void WriteSampleCodeFiles(IList<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,
+    private void WriteSampleCodeFiles(IEnumerable<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,
         string extension)
     {
         var deleteFolderPath = Path.Combine(ConfigFolders.GeneratedFolder, folderName);

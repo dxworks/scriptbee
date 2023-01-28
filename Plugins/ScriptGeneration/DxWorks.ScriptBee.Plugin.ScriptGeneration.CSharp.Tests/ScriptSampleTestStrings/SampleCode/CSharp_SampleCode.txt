@@ -1,0 +1,19 @@
+﻿using System;
+using System.Text;
+using System.Linq;
+using System.Collections.Generic;
+using ScriptBee.ProjectContext;
+using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
+using static DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+
+
+// Only the code written in the ExecuteScript method will be executed
+
+public class ScriptContent
+{
+    public void ExecuteScript(Project project)
+    {
+        ConsoleWriteLine("Hello, C#!");
+    }
+}

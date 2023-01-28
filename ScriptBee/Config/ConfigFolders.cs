@@ -7,10 +7,6 @@ public static class ConfigFolders
 {
     private const string Root = ".scriptbee";
 
-    private const string ModelsFolder = "models";
-
-    private const string ResultsFolder = "results";
-
     private const string PluginsFolder = "plugins";
 
     private const string ProjectsFolder = "projects";
@@ -21,11 +17,7 @@ public static class ConfigFolders
 
     public static readonly string PathToUserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-    public static readonly string PathToRoot = Path.Combine(PathToUserFolder, Root);
-
-    public static readonly string PathToModels = Path.Combine(PathToRoot, ModelsFolder);
-
-    public static readonly string PathToResults = Path.Combine(PathToRoot, ResultsFolder);
+    private static readonly string PathToRoot = Path.Combine(PathToUserFolder, Root);
 
     public static readonly string PathToPlugins = Path.Combine(PathToRoot, PluginsFolder);
 

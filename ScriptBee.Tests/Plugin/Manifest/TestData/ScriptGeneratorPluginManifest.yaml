@@ -1,0 +1,10 @@
+apiVersion: v1
+author: ScriptBee
+description: "Description"
+name: "ScriptGenerator example"
+extensionPoints:
+  - kind: ScriptGenerator
+    entryPoint: Plugin.dll
+    version: "0.0.1"
+    language: "csharp"
+    extension: ".cs"

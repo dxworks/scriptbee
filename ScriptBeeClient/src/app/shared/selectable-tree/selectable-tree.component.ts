@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {SelectionModel} from '@angular/cdk/collections';
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import {TreeNode} from "../tree-node";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { TreeNode } from "../tree-node";
 
 @Component({
   selector: 'app-selectable-tree',
@@ -46,19 +46,19 @@ export class SelectableTreeComponent {
 
   isExpandable = (node: FlatNode) => node.expandable;
 
-  getChildren = (node: TreeNode): TreeNode[] => node.children;
+  getChildren = (node: TreeNode): TreeNode[] => node?.children ?? [];
 
   hasChild = (_: number, _nodeData: FlatNode) => _nodeData.expandable;
 
   hasNoContent = (_: number, _nodeData: FlatNode) => _nodeData.name === '';
 
   transformer = (node: TreeNode, level: number) => {
-    const existingNode = this.nestedNodeMap.get(node);
-    const flatNode: FlatNode =
-      existingNode && existingNode.name === node.name ? existingNode : node as FlatNode;
+    const flatNode: FlatNode = {
+      name: node.name,
+      level: level,
+      expandable: !!node.children?.length
+    }
 
-    flatNode.level = level;
-    flatNode.expandable = !!node.children?.length;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
@@ -66,12 +66,10 @@ export class SelectableTreeComponent {
 
   descendantsAllSelected(node: FlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected =
-      descendants.length > 0 &&
+    return descendants.length > 0 &&
       descendants.every(child => {
         return this.checklistSelection.isSelected(child);
       });
-    return descAllSelected;
   }
 
   descendantsPartiallySelected(node: FlatNode): boolean {

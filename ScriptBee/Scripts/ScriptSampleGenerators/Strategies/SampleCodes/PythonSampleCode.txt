@@ -1,5 +1,0 @@
-﻿$START_COMMENT$
-
-ConsoleWriteLine("Hello, Python!")
-
-$END_COMMENT$

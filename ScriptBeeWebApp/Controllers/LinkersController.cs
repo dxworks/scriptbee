@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.PluginManager;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.Arguments.Validation;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
@@ -14,33 +15,35 @@ namespace ScriptBeeWebApp.Controllers;
 public class LinkersController : ControllerBase
 {
     private readonly IProjectModelService _projectModelService;
-    private readonly ILinkersHolder _linkersHolder;
+    private readonly ILinkersService _linkersService;
     private readonly IProjectManager _projectManager;
+    private readonly IValidator<LinkProject> _linkProjectValidator;
 
-    public LinkersController(IProjectModelService projectModelService, ILinkersHolder linkersHolder,
-        IProjectManager projectManager)
+    public LinkersController(IProjectModelService projectModelService, ILinkersService linkersService,
+        IProjectManager projectManager, IValidator<LinkProject> linkProjectValidator)
     {
         _projectModelService = projectModelService;
         _projectManager = projectManager;
-        _linkersHolder = linkersHolder;
+        _linkProjectValidator = linkProjectValidator;
+        _linkersService = linkersService;
     }
 
     [HttpGet]
-    public IActionResult GetAllLinkers()
+    public ActionResult<IEnumerable<string>> GetAllLinkers()
     {
-        return Ok(_linkersHolder.GetAllLinkers().Select(linker => linker.GetName()).ToList());
+        return Ok(_linkersService.GetSupportedLinkers());
     }
 
     [HttpPost]
     public async Task<IActionResult> Link(LinkProject linkProject, CancellationToken cancellationToken)
     {
-        if (linkProject == null || string.IsNullOrWhiteSpace(linkProject.ProjectId) ||
-            string.IsNullOrEmpty(linkProject.LinkerName))
+        var validationResult = await _linkProjectValidator.ValidateAsync(linkProject, cancellationToken);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("Invalid arguments. ProjectId and LinkerName needed!");
+            return BadRequest(validationResult.GetValidationErrorsResponse());
         }
 
-        var linker = _linkersHolder.GetModelLinker(linkProject.LinkerName);
+        var linker = _linkersService.GetLinker(linkProject.LinkerName);
         if (linker is null)
         {
             return NotFound($"Could not find linker with name: {linkProject.LinkerName}");
@@ -63,6 +66,7 @@ public class LinkersController : ControllerBase
         projectModel.Linker = linkProject.LinkerName;
         await _projectModelService.UpdateDocument(projectModel, cancellationToken);
 
-        return Ok();
+        // todo return something like the current state of the project with the linker applied
+        return Ok("");
     }
 }

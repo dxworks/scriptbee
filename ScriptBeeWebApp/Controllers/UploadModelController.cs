@@ -1,37 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.PluginManager;
-using ScriptBee.ProjectContext;
+using ScriptBeeWebApp.Controllers.Arguments;
+using ScriptBeeWebApp.Controllers.DTO;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Controllers;
 
 [ApiControllerRoute]
 [ApiController]
+// todo add tests
 public class UploadModelController : ControllerBase
 {
-    private readonly ILoadersHolder _loadersHolder;
-    private readonly IProjectManager _projectManager;
-    private readonly IFileNameGenerator _fileNameGenerator;
-    private readonly IFileModelService _fileModelService;
     private readonly IProjectModelService _projectModelService;
+    private readonly IUploadModelService _uploadModelService;
 
-    public UploadModelController(ILoadersHolder loadersHolder, IProjectManager projectManager,
-        IFileNameGenerator fileNameGenerator, IFileModelService fileModelService,
-        IProjectModelService projectModelService)
+    public UploadModelController(IProjectModelService projectModelService, IUploadModelService uploadModelService)
     {
-        _loadersHolder = loadersHolder;
-        _projectManager = projectManager;
-        _fileNameGenerator = fileNameGenerator;
-        _fileModelService = fileModelService;
         _projectModelService = projectModelService;
+        _uploadModelService = uploadModelService;
     }
 
     [HttpPost("fromfile")]
-    public async Task<IActionResult> UploadFromFile(IFormCollection formData, CancellationToken cancellationToken)
+    public async Task<IActionResult> UploadFromFile(IFormCollection formData,
+        CancellationToken cancellationToken = default)
     {
         if (!formData.TryGetValue("loaderName", out var loaderName))
         {
@@ -43,39 +37,17 @@ public class UploadModelController : ControllerBase
             return BadRequest("Missing project id");
         }
 
-        var savedFiles = new List<string>();
-
-        foreach (var file in formData.Files)
-        {
-            if (file.Length > 0)
-            {
-                var modelName = _fileNameGenerator.GenerateModelName(projectId, loaderName, file.FileName);
-
-                savedFiles.Add(modelName);
-
-                await using var stream = file.OpenReadStream();
-                await _fileModelService.UploadFile(modelName, stream, cancellationToken);
-            }
-        }
-
         var projectModel = await _projectModelService.GetDocument(projectId, cancellationToken);
         if (projectModel == null)
         {
             return NotFound($"Could not find project model with id: {projectId}");
         }
 
-        if (projectModel.SavedFiles.TryGetValue(loaderName, out var previousSavedFiles))
-        {
-            foreach (var previousSavedFile in previousSavedFiles)
-            {
-                await _fileModelService.DeleteFile(previousSavedFile, cancellationToken);
-            }
-        }
+        var fileData =
+            await _uploadModelService.UploadFilesAsync(projectModel, loaderName, formData.Files, cancellationToken);
 
-        projectModel.SavedFiles[loaderName] = savedFiles;
+        var fileNames = fileData.Select(d => d.Name).ToList();
 
-        await _projectModelService.UpdateDocument(projectModel, cancellationToken);
-
-        return Ok();
+        return Ok(new ReturnedNode(loaderName, fileNames));
     }
 }

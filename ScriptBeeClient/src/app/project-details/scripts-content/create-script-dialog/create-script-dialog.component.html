@@ -3,12 +3,12 @@
   <div mat-dialog-content>
     <mat-form-field class="dialog-field" appearance="fill" cdkFocusInitial>
       <mat-label>Script Name</mat-label>
-      <input matInput [(ngModel)]="data.scriptPath">
+      <input matInput [(ngModel)]="scriptPath">
     </mat-form-field>
 
     <mat-form-field class="dialog-field" appearance="fill">
       <mat-label>Script Type</mat-label>
-      <mat-select [(value)]="data.scriptType">
+      <mat-select [(value)]="scriptType">
         <mat-option *ngFor="let type of types" [value]="type">
           {{type}}
         </mat-option>
@@ -17,9 +17,10 @@
 
     <div class="text-alignment">The corresponding file extension will be automatically added to the name</div>
     <div class="error-message text-alignment" *ngIf="scriptExists">A script with this name already exists</div>
+    <mat-spinner *ngIf="loading"></mat-spinner>
   </div>
   <div mat-dialog-actions>
     <button mat-button (click)="onCancelClick()">Cancel</button>
-    <button [disabled]="data.scriptPath === ''" mat-button (click)="onOkClick()">Ok</button>
+    <button [disabled]="scriptPath === ''" mat-button (click)="onOkClick()">Ok</button>
   </div>
 </div>

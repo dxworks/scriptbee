@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 
 namespace ScriptBee.ProjectContext;
 
-public class Context
+public class Context : IContext
 {
     public Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> Models { get; set; } = new();
     public Dictionary<Tuple<string, string>, Dictionary<string, string>> Tags { get; set; } = new();

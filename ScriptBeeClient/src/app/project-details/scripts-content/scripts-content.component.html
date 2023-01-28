@@ -10,7 +10,9 @@
                 <mat-icon>note_add</mat-icon>
               </button>
             </div>
-            <appTree [treeData]="fileStructureTree" (leafClick)="onLeafClick($event)"></appTree>
+
+            <app-script-tree></app-script-tree>
+
           </div>
         </as-split-area>
 
@@ -23,15 +25,28 @@
     </as-split-area>
 
     <as-split-area [size]="35">
+
       <mat-tab-group fxFlex class="output-tabs" animationDuration="0ms" headerPosition="below">
-        <mat-tab label="Output Errors">
-          <app-console-output [consoleOutput]="outputErrors"></app-console-output>
-        </mat-tab>
+        <!--        todo: when ui plugins are ready -->
+        <!--        <ng-container *ngFor="let result of resultsService.resultsComponents | async">-->
+        <!--          <mat-tab label="{{result.name}}">-->
+        <!--            <div *ngIf="result.component && !result.module">-->
+        <!--              <ng-container *ngComponentOutlet="result.component">AA</ng-container>-->
+        <!--            </div>-->
+        <!--            <div *ngIf="result.module">-->
+        <!--              <ng-container [ngComponentOutlet]="result.component"-->
+        <!--                            [ngComponentOutletNgModule]="result.module"></ng-container>-->
+        <!--            </div>-->
+        <!--          </mat-tab>-->
+        <!--        </ng-container>-->
         <mat-tab label="Console Output">
-          <app-console-output [consoleOutput]="consoleOutput"></app-console-output>
+          <app-console-output [outputId]="consoleOutputId"></app-console-output>
+        </mat-tab>
+        <mat-tab label="Output Errors">
+          <app-output-errors [outputId]="outputErrorsId"></app-output-errors>
         </mat-tab>
         <mat-tab label="File Output">
-          <app-file-output [outputFiles]="outputFiles" [projectId]="projectId" [runId]="runId"></app-file-output>
+          <app-file-output [outputFiles]="outputFiles" [projectId]="projectId" [runIndex]="runIndex"></app-file-output>
         </mat-tab>
       </mat-tab-group>
     </as-split-area>

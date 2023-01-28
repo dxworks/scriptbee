@@ -1,0 +1,8 @@
+apiVersion: v1
+author: ScriptBee
+description: "Description"
+name: "Loader example"
+extensionPoints:
+  - kind: Loader
+    entryPoint: Plugin.dll
+    version: "0.0.1"

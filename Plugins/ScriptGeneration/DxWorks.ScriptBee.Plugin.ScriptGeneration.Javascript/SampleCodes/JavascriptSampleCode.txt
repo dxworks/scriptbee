@@ -1,0 +1,5 @@
+﻿$START_COMMENT$
+
+ConsoleWriteLine("Hello, JavaScript!");
+
+$END_COMMENT$

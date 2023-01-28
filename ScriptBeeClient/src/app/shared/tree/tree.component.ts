@@ -1,11 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {NestedTreeControl} from '@angular/cdk/tree';
-import {MatTreeNestedDataSource} from '@angular/material/tree';
-import {TreeNode} from "../tree-node";
-import {ArrayDataSource} from "@angular/cdk/collections";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { TreeNode } from "../tree-node";
 
 @Component({
-  selector: 'appTree',
+  selector: 'app-tree',
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.scss']
 })

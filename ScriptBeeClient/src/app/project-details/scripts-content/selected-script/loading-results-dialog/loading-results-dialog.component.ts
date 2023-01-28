@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-loading-results-dialog',
@@ -6,7 +6,4 @@ import {Component} from '@angular/core';
   styleUrls: ['./loading-results-dialog.component.scss']
 })
 export class LoadingResultsDialogComponent {
-
-  constructor() {
-  }
 }
