@@ -8,6 +8,8 @@ riderModule.iml
 .env
 .idea/.idea.ScriptBee/.idea/sonarlint
 database/
+database2/
+scriptbee_data/
 pack/
 publish/
 firebaseConfig.json

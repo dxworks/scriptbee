@@ -8,8 +8,6 @@ services:
       - "27017:27017"
     volumes:
       - ${MONGODB_DATA}/db:/data/db
-      - ${MONGODB_DATA}/dev.archive:/Databases/dev.archive
-      - ${MONGODB_DATA}/production:/Databases/production
   
   mongo-express:
     image: mongo-express
