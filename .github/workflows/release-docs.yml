@@ -1,4 +1,4 @@
-﻿name: ci
+﻿name: Release Docs
 on:
   push:
     branches:
@@ -7,6 +7,7 @@ permissions:
   contents: write
 jobs:
   deploy:
+    name: Deploy Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +19,7 @@ jobs:
           key: ${{ github.ref }}
           path: .cache
       - name: Install MkDocs
-        run: pip install mkdocs-material mkdocs-material-extension
+        run: pip install mkdocs-material mkdocs-material-extensions
         
       - name: Deploy docs
         run: mkdocs gh-deploy --force
