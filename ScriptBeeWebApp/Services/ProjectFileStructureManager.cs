@@ -27,6 +27,12 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         Directory.CreateDirectory(Path.Combine(projectPath, ConfigFolders.GeneratedFolder));
     }
 
+    public void DeleteProjectFolderStructure(string projectId)
+    {
+        var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);
+        Directory.Delete(projectPath, true);
+    }
+
     public void CreateFile(string projectId, string relativePath, string fileContent)
     {
         var filePath = Path.Combine(ConfigFolders.PathToProjects, projectId, relativePath);
@@ -164,7 +170,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
         var part = absolutePath.Replace("\\", "/")
             .Replace(ConfigFolders.PathToRoot.Replace("\\", "/"), "");
-        
+
         return Path.Combine(_userFolderPath, part.TrimStart('\\', '/')).Replace("\\", "/");
     }
 }

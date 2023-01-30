@@ -5,7 +5,7 @@ import { PluginsStore } from '../plugins.store';
   selector: 'app-plugins-marketplace-dashboard',
   templateUrl: './plugins-marketplace-dashboard.component.html',
   styleUrls: ['./plugins-marketplace-dashboard.component.scss'],
-  providers: [PluginsStore]
+  providers: [PluginsStore],
 })
 export class PluginsMarketplaceDashboardComponent implements OnInit {
   marketPlacePlugins$ = this.store.marketPlacePlugins;

@@ -12,6 +12,16 @@ public static class HelperFunctionsGenerator
 {
     // https://roslynquoter.azurewebsites.net/
 
+    public static SyntaxList<MemberDeclarationSyntax> GetMemberDeclarationSyntaxList(
+        IHelperFunctionsContainer helperFunctionsContainer)
+    {
+        var syntaxTree = CreateSyntaxTree(helperFunctionsContainer);
+
+        return (((syntaxTree.GetRoot() as CompilationUnitSyntax)!
+                .Members.First() as NamespaceDeclarationSyntax)!
+            .Members.First() as ClassDeclarationSyntax)!.Members;
+    }
+
     public static SyntaxTree CreateSyntaxTree(IHelperFunctionsContainer helperFunctionsContainer)
     {
         var helperFunctionTypes = helperFunctionsContainer.GetFunctions()

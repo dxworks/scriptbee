@@ -19,10 +19,12 @@ public class UploadModelEndpointDefinition : IEndpointDefinition
 
 
     [DisableRequestSizeLimit]
-    [HttpPost("fromfile")]
-    public static async Task<IResult> UploadFromFile(IFormCollection formData, IProjectModelService projectModelService,
-        IUploadModelService uploadModelService, CancellationToken cancellationToken = default)
+    public static async Task<IResult> UploadFromFile(HttpRequest request,
+        IProjectModelService projectModelService, IUploadModelService uploadModelService,
+        CancellationToken cancellationToken = default)
     {
+        var formData = request.Form;
+
         if (!formData.TryGetValue("loaderName", out var loaderName))
         {
             return Results.BadRequest("Missing loader name");
