@@ -5,9 +5,7 @@ services:
     container_name: mongo
     restart: unless-stopped
     volumes:
-      - ${MONGODB_DATA}/db:/data/db
-      - ${MONGODB_DATA}/dev.archive:/Databases/dev.archive
-      - ${MONGODB_DATA}/production:/Databases/production
+      - ${MONGODB_DATA}:/data/db
   
   scripbee:
     image: dxworks/scriptbee
@@ -18,5 +16,6 @@ services:
 
     environment:
       - ConnectionStrings__mongodb=mongodb://mongo:27017/ScriptBee?authSource=admin
+      - UserFolder__UserFolderPath=${SCRIPTBEE_DATA}
     depends_on:
       - mongo

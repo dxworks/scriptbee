@@ -1,27 +1,28 @@
-<div class="dropzone"
+<div class='dropzone'
      appFileDrop
-     (filesHovered)="toggleHover($event)"
-     (filesDropped)="addFiles($event)"
-     [class.hovering]="isHovering">
+     (filesHovered)='toggleHover($event)'
+     (filesDropped)='addFiles($event)'
+     [class.hovering]='isHovering'>
 
-  <p class="drag-and-drop-text">Drag and Drop Files</p>
+  <p class='drag-and-drop-text'>Drag and Drop Files</p>
 
-  <input #modelFileInput id="modelFile" mat-button
-         (change)="addFiles($event.target.files)" hidden multiple type="file"
-         accept="application/json">
-  <button mat-raised-button color="primary"
-          (click)="openBrowseFilesDialog()" fxLayout="row" fxLayoutAlign="space-between center">
-    <mat-icon aria-hidden="false" aria-label="Edit Icon">publish</mat-icon>
+  <input #modelFileInput id='modelFile' mat-button
+         (change)='addFiles($event.target.files)' hidden multiple type='file'>
+  <button mat-raised-button color='primary'
+          (click)='openBrowseFilesDialog()' fxLayout='row' fxLayoutAlign='space-between center'>
+    <mat-icon aria-hidden='false' aria-label='Edit Icon'>publish</mat-icon>
     <span>Browse Files</span>
   </button>
 </div>
 
 <mat-list>
-  <div class="aligned-item text-with-opacity bold-text" *ngIf="files.length > 0">Files</div>
-  <div class="no-files text-with-opacity bold-text" *ngIf="files.length == 0">No files available for upload </div>
-  <mat-list-item *ngFor="let file of files; let index">
+  <div class='aligned-item text-with-opacity bold-text' *ngIf='files.length > 0'>Files</div>
+  <div class='no-files text-with-opacity bold-text' *ngIf='files.length == 0'>No files available for upload</div>
+  <mat-list-item *ngFor='let file of files; let index'>
     <mat-icon mat-list-icon>description</mat-icon>
     <div>{{file.name}}</div>
-    <button mat-icon-button color="warn" (click)="onClearButtonClick(index)"><mat-icon>clear</mat-icon></button>
+    <button mat-icon-button color='warn' (click)='onClearButtonClick(index)'>
+      <mat-icon>clear</mat-icon>
+    </button>
   </mat-list-item>
 </mat-list>

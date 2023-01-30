@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
@@ -28,7 +25,7 @@ public class HelperFunctionsContainer : IHelperFunctionsContainer
             var helperFunctionsMethods =
                 helperFunctionsType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
-            foreach (var methodInfo in helperFunctionsMethods)
+            foreach (var methodInfo in GetUniqueMethods(helperFunctionsMethods))
             {
                 Func<Type[], Type> getType;
                 var isAction = methodInfo.ReturnType == (typeof(void));
@@ -65,6 +62,22 @@ public class HelperFunctionsContainer : IHelperFunctionsContainer
         }
 
         return functionsDictionary;
+    }
+
+    private IEnumerable<MethodInfo> GetUniqueMethods(MethodInfo[] helperFunctionsMethods)
+    {
+        return helperFunctionsMethods
+            .GroupBy(m => m.Name)
+            .Select(g =>
+            {
+                if (g.Count() == 1)
+                {
+                    return g.First();
+                }
+
+                return g.OrderByDescending(m => m.GetParameters().Length).ThenByDescending(m =>
+                    m.GetParameters().Count(p => p.ParameterType == typeof(object))).First();
+            });
     }
 
     public IEnumerable<IHelperFunctions> GetFunctions()

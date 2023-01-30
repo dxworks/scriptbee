@@ -54,7 +54,7 @@ public class CSharpScriptRunner : IScriptRunner
         IHelperFunctionsContainer helperFunctionsContainer)
     {
         var helperFunctionClass = compiledScriptAssembly.GetTypes()
-            .FirstOrDefault(t => t.FullName == typeof(HelperFunctions).FullName);
+            .FirstOrDefault(t => t.FullName == "ScriptContent");
 
         if (helperFunctionClass is null)
         {
@@ -73,24 +73,23 @@ public class CSharpScriptRunner : IScriptRunner
     private static Assembly CompileScript(string script, IHelperFunctionsContainer helperFunctionsContainer,
         CancellationToken cancellationToken)
     {
+        var members = HelperFunctionsGenerator.GetMemberDeclarationSyntaxList(helperFunctionsContainer);
+
+        script = script.Replace("public void ExecuteScript",
+            $"{members}public void ExecuteScript");
+
         // todo when writing script instead of class with execute method 
         // https://stackoverflow.com/questions/13601412/compilation-errors-when-dealing-with-c-sharp-script-using-roslyn
         var syntaxTree = CSharpSyntaxTree.ParseText(script, cancellationToken: cancellationToken);
 
         CheckErrors(syntaxTree, cancellationToken);
 
-        var helperFunctionsSyntaxTree = CSharpSyntaxTree.ParseText(
-            HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer).ToString(),
-            cancellationToken: cancellationToken);
-
-        CheckErrors(helperFunctionsSyntaxTree, cancellationToken);
-
         var compilation = CSharpCompilation.Create("Compilation")
             .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
                 .WithOverflowChecks(true)
                 .WithOptimizationLevel(OptimizationLevel.Release))
             .AddReferences(FindReferences())
-            .AddSyntaxTrees(helperFunctionsSyntaxTree, syntaxTree);
+            .AddSyntaxTrees(syntaxTree);
 
         using var stream = new MemoryStream();
         var emitResult = compilation.Emit(stream, cancellationToken: cancellationToken);

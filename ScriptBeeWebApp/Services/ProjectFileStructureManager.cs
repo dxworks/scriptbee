@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using ScriptBee.Config;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services.Config;
@@ -28,6 +25,12 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         Directory.CreateDirectory(projectPath);
         Directory.CreateDirectory(Path.Combine(projectPath, ConfigFolders.SrcFolder));
         Directory.CreateDirectory(Path.Combine(projectPath, ConfigFolders.GeneratedFolder));
+    }
+
+    public void DeleteProjectFolderStructure(string projectId)
+    {
+        var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);
+        Directory.Delete(projectPath, true);
     }
 
     public void CreateFile(string projectId, string relativePath, string fileContent)
@@ -92,14 +95,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
     public string GetAbsoluteFilePath(string projectId, string filePath)
     {
         var absolutePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
-
-        if (!string.IsNullOrEmpty(_userFolderPath))
-        {
-            var part = absolutePath.Replace("\\", "/").Replace(ConfigFolders.PathToUserFolder.Replace("\\", "/"), "");
-            return Path.Combine(_userFolderPath, part.TrimStart('\\', '/'));
-        }
-
-        return absolutePath;
+        return GetPathToUserFolder(absolutePath);
     }
 
     public void DeleteFolder(string projectId, string pathToFolder)
@@ -115,7 +111,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
     public string GetProjectAbsolutePath(string projectId)
     {
         var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);
-        return projectPath;
+        return GetPathToUserFolder(projectPath);
     }
 
     public void SetupFileWatcher(string projectId)
@@ -163,5 +159,18 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
 
         return new FileTreeNode(Path.GetFileName(path), children, path, Path.GetRelativePath(srcPath, path));
+    }
+
+    private string GetPathToUserFolder(string absolutePath)
+    {
+        if (string.IsNullOrEmpty(_userFolderPath))
+        {
+            return absolutePath;
+        }
+
+        var part = absolutePath.Replace("\\", "/")
+            .Replace(ConfigFolders.PathToRoot.Replace("\\", "/"), "");
+
+        return Path.Combine(_userFolderPath, part.TrimStart('\\', '/')).Replace("\\", "/");
     }
 }

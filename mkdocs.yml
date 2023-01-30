@@ -1,0 +1,70 @@
+site_name: ScriptBee Docs
+repo_url: https://github.com/dxworks/scriptbee
+
+theme:
+  logo: assets/logo.png
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    primary: amber
+    accent: deep orange
+
+  features:
+    - navigation.expand
+    - navigation.indexes
+    - navigation.instant
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.footer
+    - content.code.copy
+plugins:
+  - search
+#  - mermaid2
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home:
+      - Introduction: index.md
+      - Installation: home/installation.md
+      - Run: home/run.md
+  - Projects:
+      - Creation: projects/creation.md
+      - Context: projects/context.md
+      - Deletion: projects/deletion.md
+  - Plugins:
+      - Installation: plugins/installation.md
+      - Manifest: plugins/manifest.md
+      - Plugin Api:
+          - plugins/plugin_api.md
+          - Loader: plugins/loader.md
+          - Linker: plugins/linker.md
+          - Script Generator: plugins/script_generator.md
+          - Script Runner: plugins/script_runner.md
+          - Helper Functions:
+              - Api: plugins/helper_functions.md              
+              - Console: plugins/helper_functions/console_helper_functions.md
+              - File: plugins/helper_functions/file_helper_functions.md
+              - Json: plugins/helper_functions/json_helper_functions.md
+              - Csv: plugins/helper_functions/csv_helper_functions.md
+              - Context: plugins/helper_functions/context_helper_functions.md
+          - Bundle: plugins/bundle.md
+  - Scripts:
+      - scripts/setup.md
+      - Writing Your First C# Script: scripts/first_csharp_script.md
+      - Writing Your First Python Script: scripts/first_python_script.md
+      - Writing Your First Javascript Script: scripts/first_javascript_script.md
+  - Results:
+      - View Results: results/view.md

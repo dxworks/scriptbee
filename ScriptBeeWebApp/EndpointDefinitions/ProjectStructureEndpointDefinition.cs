@@ -69,22 +69,15 @@ public class ProjectStructureEndpointDefinition : IEndpointDefinition
         return Results.Ok(node);
     }
 
-    public static async Task<IResult> GetScriptContent([FromQuery] GetScriptDetails? arg,
-        IValidator<GetScriptDetails> validator, IProjectFileStructureManager projectFileStructureManager,
-        CancellationToken cancellationToken)
+    public static async Task<IResult> GetScriptContent([FromQuery] string projectId, [FromQuery] string filePath,
+        IProjectFileStructureManager projectFileStructureManager, CancellationToken cancellationToken)
     {
-        if (arg is null)
+        if (string.IsNullOrEmpty(projectId) || string.IsNullOrEmpty(filePath))
         {
             return Results.BadRequest("Invalid arguments!");
         }
 
-        var validationResult = await validator.ValidateAsync(arg, cancellationToken);
-        if (!validationResult.IsValid)
-        {
-            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
-        }
-
-        var content = await projectFileStructureManager.GetFileContentAsync(arg.ProjectId, arg.FilePath);
+        var content = await projectFileStructureManager.GetFileContentAsync(projectId, filePath);
 
         if (content == null)
         {
@@ -94,22 +87,15 @@ public class ProjectStructureEndpointDefinition : IEndpointDefinition
         return Results.Ok(content);
     }
 
-    public static async Task<IResult> GetScriptAbsolutePath([FromQuery] GetScriptDetails? arg,
-        IValidator<GetScriptDetails> validator, IProjectFileStructureManager projectFileStructureManager,
-        CancellationToken cancellationToken)
+    public static IResult GetScriptAbsolutePath([FromQuery] string projectId, [FromQuery] string filePath,
+        IProjectFileStructureManager projectFileStructureManager, CancellationToken cancellationToken)
     {
-        if (arg is null)
+        if (string.IsNullOrEmpty(projectId) || string.IsNullOrEmpty(filePath))
         {
             return Results.BadRequest("Invalid arguments!");
         }
 
-        var validationResult = await validator.ValidateAsync(arg, cancellationToken);
-        if (!validationResult.IsValid)
-        {
-            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
-        }
-
-        return Results.Ok(projectFileStructureManager.GetAbsoluteFilePath(arg.ProjectId, arg.FilePath));
+        return Results.Ok(projectFileStructureManager.GetAbsoluteFilePath(projectId, filePath));
     }
 
     public static IResult GetProjectAbsolutePath([FromQuery] string projectId,

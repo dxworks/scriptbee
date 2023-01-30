@@ -20,9 +20,10 @@ public class JsonHelperFunctions : IHelperFunctions
         await using var stream = new MemoryStream();
 
         await using var writer = new StreamWriter(stream);
-        using var jsonWriter = new JsonTextWriter(writer);
+        await using var jsonWriter = new JsonTextWriter(writer);
         jsonSerializer.Serialize(jsonWriter, obj);
 
+        await jsonWriter.FlushAsync(cancellationToken);
         stream.Position = 0;
         await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, stream,
             cancellationToken);
@@ -37,6 +38,7 @@ public class JsonHelperFunctions : IHelperFunctions
         using var jsonWriter = new JsonTextWriter(writer);
         jsonSerializer.Serialize(jsonWriter, obj);
 
+        jsonWriter.Flush();
         stream.Position = 0;
         _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }

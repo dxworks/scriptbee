@@ -105,8 +105,8 @@ public class ProjectsEndpointDefinition : IEndpointDefinition
 
     // todo reimplement
     public static async Task<IResult> DeleteProject([FromRoute] string projectId,
-        IProjectModelService projectModelService,
-        IProjectManager projectManager, IFileModelService fileModelService, IRunModelService runModelService,
+        IProjectModelService projectModelService, IProjectManager projectManager, IFileModelService fileModelService,
+        IRunModelService runModelService, IProjectFileStructureManager projectFileStructureManager,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(projectId))
@@ -137,12 +137,13 @@ public class ProjectsEndpointDefinition : IEndpointDefinition
             await fileModelService.DeleteFileAsync(runModel.ScriptPath, cancellationToken);
 
             // todo
-            // foreach (var runResult in runModel.Results)
-            // {
-            //     await fileModelService.DeleteFileAsync(runResult.Name, cancellationToken);
-            // }
-            // await runModelService.DeleteDocument(runModel.ScriptId, cancellationToken);
+            foreach (var runResult in runModel.Results)
+            {
+                await fileModelService.DeleteFileAsync(runResult.Name, cancellationToken);
+            }
         }
+
+        projectFileStructureManager.DeleteProjectFolderStructure(projectId);
 
         return Results.Ok("Project removed successfully");
     }
