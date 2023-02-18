@@ -1,0 +1,18 @@
+<div fxLayout='row' fxLayoutAlign='space-around center'>
+  <mat-form-field appearance='fill'>
+    <mat-label>Parameter Type</mat-label>
+    <mat-select [id]='"parameter-type"' [value]='parameter.type' (valueChange)='onParameterTypeChange($event)'>
+      <mat-option *ngFor='let type of parameterTypes' [value]='type'>{{type}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Parameter Name</mat-label>
+    <input id='parameter-name' matInput placeholder='Name' [ngModel]='parameter.name'
+           (ngModelChange)='nameUpdate.next($event)'>
+  </mat-form-field>
+
+  <button mat-icon-button color='accent' aria-label='Delete Parameter' (click)='onDeleteClick()'>
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FileTreeNode } from '../../project-details/scripts-content/fileTreeNode';
+import { FileTreeNode } from '../../project-details/components/run-script/scripts-content/fileTreeNode';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { contentHeaders } from '../../shared/headers';
 

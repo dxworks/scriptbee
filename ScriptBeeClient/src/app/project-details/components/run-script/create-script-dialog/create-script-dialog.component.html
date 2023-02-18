@@ -1,0 +1,42 @@
+<div class='main-dialog-div'>
+  <h1 mat-dialog-title style='text-align: center'>Create new script</h1>
+  <div mat-dialog-content>
+
+    <div fxLayoutAlign='row' fxLayoutGap='16'>
+      <mat-form-field class='dialog-field' appearance='fill' cdkFocusInitial>
+        <mat-label>Script Name</mat-label>
+        <input matInput [(ngModel)]='scriptPath'>
+      </mat-form-field>
+
+      <mat-form-field class='dialog-field' appearance='fill'>
+        <mat-label>Script Type</mat-label>
+        <mat-select [(value)]='scriptType'>
+          <mat-option *ngFor='let type of types' [value]='type'>
+            {{type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class='text-alignment'><i>The corresponding file extension will be automatically added to the name</i></div>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Parameters</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-script-parameters-list></app-script-parameters-list>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
+
+    <div class='error-message text-alignment' *ngIf='scriptExists'>A script with this name already exists</div>
+    <mat-spinner *ngIf='loading'></mat-spinner>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)='onCancelClick()'>Cancel</button>
+    <button [disabled]="scriptPath === ''" mat-button (click)='onOkClick()'>Ok</button>
+  </div>
+</div>
