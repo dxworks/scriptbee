@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using DxWorks.ScriptBee.Plugin.Api;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.EndpointDefinitions;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
 using ScriptBeeWebApp.Services;
 using Xunit;
 
@@ -39,11 +40,20 @@ public class GenerateScriptEndpointDefinitionTests
     public void GivenSupportedLanguages_WhenGetLanguages_ThenSupportedLanguagesAreReturned()
     {
         _generateScriptServiceMock.Setup(s => s.GetSupportedLanguages())
-            .Returns(new List<string> { "C#", "JavaScript" });
+            .Returns(new List<ScriptLanguage>
+            {
+                new("C#", "cs"),
+                new("JavaScript", "js")
+            });
 
-        var languages = GenerateScriptEndpointDefinition.GetLanguages(_generateScriptServiceMock.Object);
+        var languages = ScriptsEndpointDefinition.GetLanguages(_generateScriptServiceMock.Object);
 
-        Assert.Equal(new List<string> { "C#", "JavaScript" }, languages);
+        var scriptLanguages = languages as ScriptLanguage[] ?? languages.ToArray();
+        Assert.Equal(2, scriptLanguages.Length);
+        Assert.Equal("C#", scriptLanguages.First().Name);
+        Assert.Equal("cs", scriptLanguages.First().Extension);
+        Assert.Equal("JavaScript", scriptLanguages.Last().Name);
+        Assert.Equal("js", scriptLanguages.Last().Extension);
     }
 
     [Fact]
@@ -59,7 +69,7 @@ public class GenerateScriptEndpointDefinitionTests
             .Setup(v => v.ValidateAsync(generateScriptRequest, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult(new List<ValidationFailure> { new("property", "error") }));
 
-        var result = await GenerateScriptEndpointDefinition.PostGenerateScript(generateScriptRequest,
+        var result = await ScriptsEndpointDefinition.PostGenerateScript(generateScriptRequest,
             _generateScriptRequestValidatorMock.Object, _generateScriptServiceMock.Object, _projectManagerMock.Object);
 
         Assert.Equal(400, result.GetStatusCode());
@@ -77,7 +87,7 @@ public class GenerateScriptEndpointDefinitionTests
         _generateScriptServiceMock.Setup(s => s.GetGenerationStrategy("invalid"))
             .Returns((IScriptGeneratorStrategy?)null);
 
-        var result = await GenerateScriptEndpointDefinition.PostGenerateScript(generateScriptRequest,
+        var result = await ScriptsEndpointDefinition.PostGenerateScript(generateScriptRequest,
             _generateScriptRequestValidatorMock.Object, _generateScriptServiceMock.Object, _projectManagerMock.Object);
 
         Assert.Equal(400, result.GetStatusCode());
@@ -96,7 +106,7 @@ public class GenerateScriptEndpointDefinitionTests
             .Returns(new Mock<IScriptGeneratorStrategy>().Object);
         _projectManagerMock.Setup(p => p.GetProject("id1")).Returns((Project?)null);
 
-        var result = await GenerateScriptEndpointDefinition.PostGenerateScript(generateScriptRequest,
+        var result = await ScriptsEndpointDefinition.PostGenerateScript(generateScriptRequest,
             _generateScriptRequestValidatorMock.Object, _generateScriptServiceMock.Object, _projectManagerMock.Object);
 
         Assert.Equal(404, result.GetStatusCode());
@@ -122,7 +132,7 @@ public class GenerateScriptEndpointDefinitionTests
                 It.IsAny<IScriptGeneratorStrategy>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Mock<Stream>().Object);
 
-        var result = await GenerateScriptEndpointDefinition.PostGenerateScript(generateScriptRequest,
+        var result = await ScriptsEndpointDefinition.PostGenerateScript(generateScriptRequest,
             _generateScriptRequestValidatorMock.Object, _generateScriptServiceMock.Object, _projectManagerMock.Object);
 
         Assert.Equal("validSampleCode.zip", result.GetProperty<string>("FileDownloadName"));

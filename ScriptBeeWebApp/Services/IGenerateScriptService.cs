@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
 
 namespace ScriptBeeWebApp.Services;
 
 public interface IGenerateScriptService
 {
-    IEnumerable<string> GetSupportedLanguages();
+    IEnumerable<ScriptLanguage> GetSupportedLanguages();
     IScriptGeneratorStrategy? GetGenerationStrategy(string scriptType);
 
     Task<Stream> GenerateClassesZip(IEnumerable<object> classes, IScriptGeneratorStrategy scriptGeneratorStrategy,

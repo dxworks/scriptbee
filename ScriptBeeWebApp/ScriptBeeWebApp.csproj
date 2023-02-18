@@ -55,4 +55,7 @@
         <Content Include="ScriptBeeWebApp.sln" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="ScriptBeeWebApp.Tests.Contract" />
+    </ItemGroup>
 </Project>

@@ -2,18 +2,21 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateScriptDialogData } from './create-script-dialog-data';
 import { ScriptTypes } from './script-types';
-import { Store } from '@ngrx/store';
-import { createScript } from '../../../../state/script-tree/script-tree.actions';
-import { selectScriptCreationLoading } from '../../../../state/script-tree/script-tree.selectors';
+import { CreateScriptStore } from '../../../stores/create-script.store';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-script-dialog',
   templateUrl: './create-script-dialog.component.html',
   styleUrls: ['./create-script-dialog.component.scss'],
+  providers: [CreateScriptStore],
 })
 export class CreateScriptDialogComponent {
   scriptExists = false;
   types = [ScriptTypes.csharp, ScriptTypes.javascript, ScriptTypes.python];
+
+  availableScriptLanguages$ = this.store.availableLanguages.pipe(map((languages) => languages.map((language) => language.name)));
+  availableScriptLanguagesError$ = this.store.availableLanguagesError;
 
   scriptPath = '';
   scriptType: ScriptTypes = ScriptTypes.csharp;
@@ -24,20 +27,25 @@ export class CreateScriptDialogComponent {
   // TODO: add tests
   // TODO: call the API
 
-  constructor(public dialogRef: MatDialogRef<CreateScriptDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData, private store: Store) {
-    this.store.select(selectScriptCreationLoading).subscribe({
-      next: ({ loading, error }) => {
-        if (!loading && this.loading) {
-          if (error) {
-            this.scriptExists = true;
-          } else {
-            this.dialogRef.close();
-          }
-        }
-
-        this.loading = loading;
-      },
-    });
+  constructor(
+    public dialogRef: MatDialogRef<CreateScriptDialogComponent>,
+    private store: CreateScriptStore,
+    @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData
+  ) {
+    this.store.loadAvailableLanguages();
+    // this.store.select(selectScriptCreationLoading).subscribe({
+    //   next: ({ loading, error }) => {
+    //     if (!loading && this.loading) {
+    //       if (error) {
+    //         this.scriptExists = true;
+    //       } else {
+    //         this.dialogRef.close();
+    //       }
+    //     }
+    //
+    //     this.loading = loading;
+    //   },
+    // });
   }
 
   onCancelClick(): void {
@@ -45,12 +53,12 @@ export class CreateScriptDialogComponent {
   }
 
   onOkClick(): void {
-    this.store.dispatch(
-      createScript({
-        projectId: this.data.projectId,
-        scriptPath: this.scriptPath,
-        scriptType: this.scriptType,
-      })
-    );
+    // this.store.dispatch(
+    //   createScript({
+    //     projectId: this.data.projectId,
+    //     scriptPath: this.scriptPath,
+    //     scriptType: this.scriptType,
+    //   })
+    // );
   }
 }

@@ -1,4 +1,4 @@
-<div class='main-dialog-div'>
+<div>
   <h1 mat-dialog-title style='text-align: center'>Create new script</h1>
   <div mat-dialog-content>
 
@@ -11,8 +11,8 @@
       <mat-form-field class='dialog-field' appearance='fill'>
         <mat-label>Script Type</mat-label>
         <mat-select [(value)]='scriptType'>
-          <mat-option *ngFor='let type of types' [value]='type'>
-            {{type}}
+          <mat-option *ngFor='let language of availableScriptLanguages$ | async' [value]='language'>
+            {{language}}
           </mat-option>
         </mat-select>
       </mat-form-field>

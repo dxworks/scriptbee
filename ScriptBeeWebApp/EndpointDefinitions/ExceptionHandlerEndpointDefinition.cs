@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
+using ILogger = Serilog.ILogger;
 
 namespace ScriptBeeWebApp.EndpointDefinitions;
 
@@ -14,7 +16,7 @@ public class ExceptionHandlerEndpointDefinition : IEndpointDefinition
         app.MapGet("/error", HandleError);
     }
 
-    private async Task HandleError(HttpContext context, Serilog.ILogger logger)
+    private static async Task HandleError(HttpContext context, ILogger logger)
     {
         var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerFeature>();
 
@@ -34,9 +36,7 @@ public class ExceptionHandlerEndpointDefinition : IEndpointDefinition
         {
             logger.Error(exception, "Exception occurred");
         }
-        
-        await context.Response.WriteAsJsonAsync(new EndpointError(exception.Message));
+
+        await context.Response.WriteAsJsonAsync(new EndpointError(exception.Message, context.Response.StatusCode));
     }
 }
-
-public record EndpointError(string Error);

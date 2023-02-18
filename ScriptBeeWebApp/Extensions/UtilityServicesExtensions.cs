@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.FileManagement;
+﻿using ScriptBee.FileManagement;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Services;
 

@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBee.Marketplace.Client", "ScriptBee.Marketplace.Client\ScriptBee.Marketplace.Client.csproj", "{CA247B5B-7540-4513-981C-1799F65B3B2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptBeeWebApp.Tests.Contract", "ScriptBeeWebApp.Tests.Contract\ScriptBeeWebApp.Tests.Contract.csproj", "{23916357-3E19-44CB-AA42-C81DD17ABBA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,5 +120,9 @@ Global
 		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA247B5B-7540-4513-981C-1799F65B3B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23916357-3E19-44CB-AA42-C81DD17ABBA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23916357-3E19-44CB-AA42-C81DD17ABBA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23916357-3E19-44CB-AA42-C81DD17ABBA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23916357-3E19-44CB-AA42-C81DD17ABBA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

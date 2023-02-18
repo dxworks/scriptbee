@@ -20,7 +20,6 @@ public static class ControllerServicesExtensions
         services.AddSingleton<IUploadModelService, UploadModelService>();
         services.AddSingleton<ILoadersService, LoadersService>();
         services.AddSingleton<ILinkersService, LinkersService>();
-        services.AddSingleton<IGenerateScriptService, GenerateScriptService>();
         services.AddSingleton<IFileModelService, FileModelService>();
         services.AddSingleton<IRunScriptService, RunScriptService>();
         
