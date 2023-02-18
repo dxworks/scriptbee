@@ -20,4 +20,8 @@ To run ScriptBee simply run the following command:
 docker-compose up
 ```
 
-> For local development, run the following command: `docker-compose -f docker-compose-dev.yaml up`
+For local development, run the following command:
+
+```sh 
+docker-compose -f docker-compose-dev.yaml up
+```
