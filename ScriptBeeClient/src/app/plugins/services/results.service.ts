@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ConsoleOutputComponent } from '../../project-details/output/console-output/console-output.component';
-import { OutputErrorsComponent } from '../../project-details/output/output-errors/output-errors.component';
+import { ConsoleOutputComponent } from '../../project-details/components/run-script/output/console-output/console-output.component';
+import { OutputErrorsComponent } from '../../project-details/components/run-script/output/output-errors/output-errors.component';
 
 export interface Result {
   name: string;

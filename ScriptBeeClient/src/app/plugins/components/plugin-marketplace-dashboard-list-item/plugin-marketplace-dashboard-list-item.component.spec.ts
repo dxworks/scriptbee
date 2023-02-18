@@ -5,7 +5,7 @@ import { MockComponents, MockDirectives } from 'ng-mocks';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PluginService } from '../../../services/plugin/plugin.service';
+import { PluginService } from '../../services/plugin.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatSelectHarness } from '@angular/material/select/testing';
@@ -17,11 +17,8 @@ describe('PluginMarketplaceDashboardListItemComponent', () => {
 
   const createComponent = createComponentFactory({
     component: PluginMarketplaceDashboardListItemComponent,
-    declarations: [
-      ...MockComponents(MatCard, MatCardHeader),
-      ...MockDirectives(MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent)
-    ],
-    imports: [MatSelectModule, MatProgressSpinnerModule, MatSnackBarModule]
+    declarations: [...MockComponents(MatCard, MatCardHeader), ...MockDirectives(MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent)],
+    imports: [MatSelectModule, MatProgressSpinnerModule, MatSnackBarModule],
   });
 
   beforeEach(() => {
@@ -224,7 +221,7 @@ describe('PluginMarketplaceDashboardListItemComponent', () => {
       const version2 = createPluginVersion(false, '1.2.0');
       const version3 = createPluginVersion(false, '4.0.0');
       const component = createComponent({
-        props: { plugin: createMarketplacePlugin('id', 'plugin-name', 'Plugin', [version1, version2, version3]) }
+        props: { plugin: createMarketplacePlugin('id', 'plugin-name', 'Plugin', [version1, version2, version3]) },
       });
       const loader = TestbedHarnessEnvironment.loader(component.fixture);
 
@@ -260,7 +257,7 @@ describe('PluginMarketplaceDashboardListItemComponent', () => {
       const version2 = createPluginVersion(false, '6.0.0');
       const version3 = createPluginVersion(false, '1.7.0');
       const component = createComponent({
-        props: { plugin: createMarketplacePlugin('id', 'plugin-name', 'Plugin', [version1, version2, version3]) }
+        props: { plugin: createMarketplacePlugin('id', 'plugin-name', 'Plugin', [version1, version2, version3]) },
       });
 
       await selectItemInSelect(component, 1);
@@ -273,7 +270,7 @@ describe('PluginMarketplaceDashboardListItemComponent', () => {
       const version2 = createPluginVersion(false, '6.0.0');
       const version3 = createPluginVersion(false, '1.7.0');
       const component = createComponent({
-        props: { plugin: createMarketplacePlugin('id', 'plugin-name', 'Plugin', [version1, version2, version3]) }
+        props: { plugin: createMarketplacePlugin('id', 'plugin-name', 'Plugin', [version1, version2, version3]) },
       });
 
       await selectItemInSelect(component, 1);

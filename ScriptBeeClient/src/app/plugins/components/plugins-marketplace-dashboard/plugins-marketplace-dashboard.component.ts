@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PluginsStore } from '../plugins.store';
+import { PluginsStore } from '../../stores/plugins.store';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',

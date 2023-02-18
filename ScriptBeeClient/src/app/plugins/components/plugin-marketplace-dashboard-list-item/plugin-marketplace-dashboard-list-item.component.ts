@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { MarketplaceProject } from '../../../services/plugin/marketplace-project';
-import { PluginService } from '../../../services/plugin/plugin.service';
+import { MarketplaceProject } from '../../services/marketplace-project';
+import { PluginService } from '../../services/plugin.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-plugin-marketplace-dashboard-list-item',
   templateUrl: './plugin-marketplace-dashboard-list-item.component.html',
-  styleUrls: ['./plugin-marketplace-dashboard-list-item.component.scss']
+  styleUrls: ['./plugin-marketplace-dashboard-list-item.component.scss'],
 })
 export class PluginMarketplaceDashboardListItemComponent {
   @Input()
@@ -39,7 +39,7 @@ export class PluginMarketplaceDashboardListItemComponent {
       error: () => {
         this.loading = false;
         this.snackbar.open('Could not install plugin', 'Dismiss', { duration: 4000 });
-      }
+      },
     });
   }
 
@@ -54,7 +54,7 @@ export class PluginMarketplaceDashboardListItemComponent {
       error: () => {
         this.loading = false;
         this.snackbar.open('Could not uninstall plugin', 'Dismiss', { duration: 4000 });
-      }
+      },
     });
   }
 
