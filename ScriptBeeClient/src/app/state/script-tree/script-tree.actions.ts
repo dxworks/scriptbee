@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { FileTreeNode } from '../../project-details/components/run-script/scripts-content/fileTreeNode';
 import { ScriptTreeNode } from './script-tree.state';
-import { ScriptTypes } from '../../project-details/components/run-script/create-script-dialog/script-types';
+import { ScriptTypes } from '../../project-details/services/script-types';
 
 export const fetchScriptTree = createAction('[ScriptBee] Fetch Script Tree', props<{ projectId: string }>());
 

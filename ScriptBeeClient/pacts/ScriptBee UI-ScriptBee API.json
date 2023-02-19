@@ -16,7 +16,6 @@
       },
       "response": {
         "body": {
-          "code": 500,
           "message": "message"
         },
         "headers": {
@@ -24,7 +23,46 @@
         },
         "matchingRules": {
           "body": {
-            "$.code": {
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 500
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "create script with empty project id"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "",
+          "scriptType": "script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
               "combine": "AND",
               "matchers": [
                 {
@@ -32,6 +70,717 @@
                 }
               ]
             },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "message": "message"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 400
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "create script with empty script path"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": "script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "message": "message"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 400
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "create script with empty script type"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": ""
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "message": "message"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 400
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "create script with invalid script type"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": "invalid script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "message": "message"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 400
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "create script with project id for project that does not exist"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": "script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "message": "message"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 404
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "create script with script path that already exists"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": "script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "status": 409
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "error while creating script"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": "script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "message": "message"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
             "$.message": {
               "combine": "AND",
               "matchers": [
@@ -87,6 +836,135 @@
               ]
             },
             "$[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {}
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to create a script",
+      "providerStates": [
+        {
+          "name": "valid data to create a script"
+        }
+      ],
+      "request": {
+        "body": {
+          "filePath": "script path",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptType": "script type"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptType": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/api/scripts"
+      },
+      "response": {
+        "body": {
+          "filePath": "script path",
+          "name": "script name",
+          "srcPath": "script src path"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.filePath": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.srcPath": {
               "combine": "AND",
               "matchers": [
                 {

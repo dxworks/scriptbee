@@ -5,15 +5,14 @@
     <div fxLayoutAlign='row' fxLayoutGap='16'>
       <mat-form-field class='dialog-field' appearance='fill' cdkFocusInitial>
         <mat-label>Script Name</mat-label>
-        <input matInput [(ngModel)]='scriptPath'>
+        <input id='script-name' matInput [(ngModel)]='scriptPath'>
       </mat-form-field>
 
       <mat-form-field class='dialog-field' appearance='fill'>
         <mat-label>Script Type</mat-label>
-        <mat-select [(value)]='scriptType'>
-          <mat-option *ngFor='let language of availableScriptLanguages$ | async' [value]='language'>
-            {{language}}
-          </mat-option>
+        <mat-select id='script-language' [(ngModel)]='scriptLanguage'>
+          <mat-option *ngFor='let language of availableScriptLanguages$ | async'
+                      [value]='language'>{{language}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -26,17 +25,29 @@
           <mat-panel-title>Parameters</mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-script-parameters-list></app-script-parameters-list>
+        <app-script-parameters-list (parametersChange)='onParametersChange($event)'></app-script-parameters-list>
 
       </mat-expansion-panel>
     </mat-accordion>
 
 
-    <div class='error-message text-alignment' *ngIf='scriptExists'>A script with this name already exists</div>
-    <mat-spinner *ngIf='loading'></mat-spinner>
+    <ng-container *ngIf='createScriptError'>
+      <div>sss</div>
+      <div class='error-message text-alignment' *ngIf='createScriptError.code === 409'>A script with this name already exists</div>
+      <div class='error-message text-alignment' *ngIf='createScriptError.code !== 409'>An error occurred while creating the script</div>
+    </ng-container>
+
+    <ng-container *ngIf='isCreatingScript'>
+      <ng-template [ngTemplateOutlet]='loading'></ng-template>
+    </ng-container>
+
+    <ng-template #loading>
+      <app-centered-spinner></app-centered-spinner>
+    </ng-template>
+
   </div>
   <div mat-dialog-actions>
-    <button mat-button (click)='onCancelClick()'>Cancel</button>
-    <button [disabled]="scriptPath === ''" mat-button (click)='onOkClick()'>Ok</button>
+    <button [disabled]='isOkDisabled()' mat-button (click)='onOkClick()'>OK</button>
+    <button mat-button (click)='onCancelClick()'>CANCEL</button>
   </div>
 </div>

@@ -11,7 +11,7 @@ describe('PluginMarketplaceDashboardListComponent', () => {
   const createComponent = createComponentFactory({
     component: PluginMarketplaceDashboardListComponent,
     declarations: [...MockComponents(PluginMarketplaceDashboardListItemComponent, ApiErrorMessageComponent)],
-    imports: [MatProgressSpinnerModule]
+    imports: [MatProgressSpinnerModule],
   });
 
   it('should create', () => {
@@ -32,8 +32,8 @@ describe('PluginMarketplaceDashboardListComponent', () => {
     const component = createComponent({
       props: {
         plugins: [createMarketplacePlugin('1', '2')],
-        error: { message: 'error', code: 400 }
-      }
+        error: { message: 'error', code: 400 },
+      },
     });
 
     const errorMessageComponent = component.debugElement.query(By.directive(ApiErrorMessageComponent));
@@ -45,13 +45,9 @@ describe('PluginMarketplaceDashboardListComponent', () => {
   it('given plugins, then plugins are shown', () => {
     const component = createComponent({
       props: {
-        plugins: [
-          createMarketplacePlugin('1', 'plugin-name1'),
-          createMarketplacePlugin('2', 'plugin-name2'),
-          createMarketplacePlugin('3', 'plugin-name3')
-        ],
-        error: undefined
-      }
+        plugins: [createMarketplacePlugin('1', 'plugin-name1'), createMarketplacePlugin('2', 'plugin-name2'), createMarketplacePlugin('3', 'plugin-name3')],
+        error: undefined,
+      },
     });
 
     const items = component.debugElement.queryAll(By.directive(PluginMarketplaceDashboardListItemComponent));
@@ -88,8 +84,8 @@ describe('PluginMarketplaceDashboardListComponent', () => {
       const component = createComponent({
         props: {
           plugins: [createMarketplacePlugin('1', '2')],
-          error: { message: 'error', code: 400 }
-        }
+          error: { message: 'error', code: 400 },
+        },
       });
 
       const spinner = component.query('mat-spinner');

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { Parameter, ParameterType } from '../script-types';
+import { Parameter, ParameterType } from '../../../services/script-types';
 
 @Component({
   selector: 'app-script-parameters-list',
@@ -16,11 +16,13 @@ export class ScriptParametersListComponent {
   private parameterId = 0;
 
   onAddButtonClick(): void {
-    this.parameters.push({
-      id: this.parameterId.toString(),
-      name: '',
-      type: ParameterType.string,
-    });
+    this.parameters.push(
+      this.setParameterError({
+        id: this.parameterId.toString(),
+        name: '',
+        type: ParameterType.string,
+      })
+    );
     this.parameterId++;
 
     this.parametersChange.emit(this.parameters);
@@ -33,8 +35,24 @@ export class ScriptParametersListComponent {
   }
 
   onParameterChange(parameter: Parameter) {
-    this.parameters = this.parameters.map((p) => (p.id === parameter.id ? parameter : p));
+    this.parameters = this.parameters.map((p) => (p.id === parameter.id ? this.setParameterError(parameter) : p));
 
     this.parametersChange.emit(this.parameters);
+  }
+
+  setParameterError(parameter: Parameter): Parameter {
+    const isParameterNameUnique = this.parameters.every((p) => p.id === parameter.id || p.name !== parameter.name);
+    let nameError = undefined;
+
+    if (!parameter.name) {
+      nameError = 'Parameter name is required';
+    } else if (!isParameterNameUnique) {
+      nameError = 'Parameter name must be unique';
+    }
+
+    return {
+      ...parameter,
+      nameError,
+    };
   }
 }

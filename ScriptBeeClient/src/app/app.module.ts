@@ -1,6 +1,6 @@
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -78,8 +78,9 @@ import { PluginsMarketplaceDashboardComponent } from './plugins/components/plugi
 import { PluginMarketplaceDashboardListComponent } from './plugins/components/plugin-marketplace-dashboard-list/plugin-marketplace-dashboard-list.component';
 import { PluginMarketplaceDashboardListItemComponent } from './plugins/components/plugin-marketplace-dashboard-list-item/plugin-marketplace-dashboard-list-item.component';
 import { ApiErrorMessageComponent } from './shared/api-error-message/api-error-message.component';
-import { ScriptParametersListComponent } from './project-details/components/run-script/create-script-dialog/script-parameters-list/script-parameters-list.component';
-import { ScriptParameterComponent } from './project-details/components/run-script/create-script-dialog/script-parameters-list/script-parameter/script-parameter.component';
+import { ScriptParametersListComponent } from './project-details/components/run-script/script-parameters-list/script-parameters-list.component';
+import { ScriptParameterComponent } from './project-details/components/run-script/script-parameters-list/script-parameter/script-parameter.component';
+import { CenteredSpinnerComponent } from './shared/centered-spinner/centered-spinner.component';
 
 @NgModule({
   declarations: [
@@ -118,14 +119,15 @@ import { ScriptParameterComponent } from './project-details/components/run-scrip
     ApiErrorMessageComponent,
     ScriptParametersListComponent,
     ScriptParameterComponent,
+    CenteredSpinnerComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
-    FormsModule,
     FlexLayoutModule,
     MatToolbarModule,
     MatSlideToggleModule,

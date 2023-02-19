@@ -1,9 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateScriptDialogData } from './create-script-dialog-data';
-import { ScriptTypes } from './script-types';
 import { CreateScriptStore } from '../../../stores/create-script.store';
 import { map } from 'rxjs/operators';
+import { Parameter } from '../../../services/script-types';
+import { ApiErrorMessage } from '../../../../shared/api-error-message';
 
 @Component({
   selector: 'app-create-script-dialog',
@@ -12,20 +13,15 @@ import { map } from 'rxjs/operators';
   providers: [CreateScriptStore],
 })
 export class CreateScriptDialogComponent {
-  scriptExists = false;
-  types = [ScriptTypes.csharp, ScriptTypes.javascript, ScriptTypes.python];
-
   availableScriptLanguages$ = this.store.availableLanguages.pipe(map((languages) => languages.map((language) => language.name)));
-  availableScriptLanguagesError$ = this.store.availableLanguagesError;
+
+  createScriptError: ApiErrorMessage | undefined = undefined;
+  isCreatingScript = false;
 
   scriptPath = '';
-  scriptType: ScriptTypes = ScriptTypes.csharp;
-  loading = false;
-  // TODO: remove the store
-  // TODO: handle 500 vs 404 errors
-  // TODO: add parameters
-  // TODO: add tests
-  // TODO: call the API
+  scriptLanguage = '';
+
+  parameters: Parameter[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<CreateScriptDialogComponent>,
@@ -33,19 +29,26 @@ export class CreateScriptDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData
   ) {
     this.store.loadAvailableLanguages();
-    // this.store.select(selectScriptCreationLoading).subscribe({
-    //   next: ({ loading, error }) => {
-    //     if (!loading && this.loading) {
-    //       if (error) {
-    //         this.scriptExists = true;
-    //       } else {
-    //         this.dialogRef.close();
-    //       }
-    //     }
-    //
-    //     this.loading = loading;
-    //   },
-    // });
+    this.store.createScriptResult.subscribe((result) => {
+      this.isCreatingScript = false;
+      if (result) {
+        this.dialogRef.close();
+      }
+    });
+    this.store.createScriptError.subscribe((error) => {
+      this.isCreatingScript = false;
+      this.createScriptError = error;
+    });
+  }
+
+  onParametersChange(parameters: Parameter[]) {
+    this.parameters = parameters;
+  }
+
+  isOkDisabled(): boolean {
+    const parametersAreValid = this.parameters.every((parameter) => !parameter.nameError);
+
+    return !this.scriptPath || !this.scriptLanguage || !parametersAreValid;
   }
 
   onCancelClick(): void {
@@ -53,12 +56,17 @@ export class CreateScriptDialogComponent {
   }
 
   onOkClick(): void {
-    // this.store.dispatch(
-    //   createScript({
-    //     projectId: this.data.projectId,
-    //     scriptPath: this.scriptPath,
-    //     scriptType: this.scriptType,
-    //   })
-    // );
+    this.isCreatingScript = true;
+    this.createScriptError = undefined;
+    this.store.createScript({
+      projectId: this.data.projectId,
+      filePath: this.scriptPath,
+      scriptType: this.scriptLanguage,
+      parameters: this.parameters.map((parameter) => ({
+        name: parameter.name,
+        type: parameter.type,
+        value: parameter.value,
+      })),
+    });
   }
 }

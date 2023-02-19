@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
 import { PluginService } from '../services/plugin.service';
 import { MarketplaceProject } from '../services/marketplace-project';
-import { ApiErrorMessage, createApiErrorMessage } from '../../shared/api-error-message';
+import { ApiErrorMessage } from '../../shared/api-error-message';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface PluginsStoreState {
   marketPlacePlugins: MarketplaceProject[] | undefined;
@@ -25,7 +26,7 @@ export class PluginsStore extends ComponentStore<PluginsStoreState> {
         this.pluginService.getAllAvailablePlugins().pipe(
           tap({
             next: (marketPlacePlugins) => this.patchState({ marketPlacePlugins: marketPlacePlugins }),
-            error: (error) => this.patchState({ marketplacePluginsError: createApiErrorMessage(error) }),
+            error: (error: HttpErrorResponse) => this.patchState({ marketplacePluginsError: error.error }),
           }),
           catchError(() => EMPTY)
         )

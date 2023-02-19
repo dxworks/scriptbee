@@ -1,5 +1,5 @@
 import { PluginMarketplaceDashboardListItemComponent } from './plugin-marketplace-dashboard-list-item.component';
-import { createComponentFactory, createHttpFactory, HttpMethod, Spectator, SpectatorHttp } from '@ngneat/spectator';
+import { createComponentFactory, createHttpFactory, HttpMethod, Spectator, SpectatorHttp } from '@ngneat/spectator/jest';
 import { createMarketplacePlugin, createPluginVersion } from '../../../../../test/marketplacePluginUtils';
 import { MockComponents, MockDirectives } from 'ng-mocks';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
@@ -9,7 +9,6 @@ import { PluginService } from '../../services/plugin.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { MatSelectHarness } from '@angular/material/select/testing';
-import { expect } from '@angular/flex-layout/_private-utils/testing';
 
 describe('PluginMarketplaceDashboardListItemComponent', () => {
   let pluginServiceSpectator: SpectatorHttp<PluginService>;
@@ -138,7 +137,7 @@ describe('PluginMarketplaceDashboardListItemComponent', () => {
     it('given uninstall button click, when uninstall is failed, then error is displayed to user', () => {
       const version = createPluginVersion(true, '1.0.0');
       const component = createComponent({ props: { plugin: createMarketplacePlugin('plugin-id', 'plugin-name', 'Plugin', [version]) } });
-      const snackBarOpenSpy = spyOn(component.inject(MatSnackBar), 'open');
+      const snackBarOpenSpy = jest.spyOn(component.inject(MatSnackBar), 'open');
 
       clickUninstallButton(component, 'plugin-id', '1.0.0', { status: 500, statusText: 'Internal Server Error' });
 
@@ -308,7 +307,7 @@ describe('PluginMarketplaceDashboardListItemComponent', () => {
     it('given install button click, when install is failed, then error is displayed to user', async () => {
       const version = createPluginVersion(false, '1.0.0');
       const component = createComponent({ props: { plugin: createMarketplacePlugin('plugin-id', 'plugin-name', 'Plugin', [version]) } });
-      const snackBarOpenSpy = spyOn(component.inject(MatSnackBar), 'open');
+      const snackBarOpenSpy = jest.spyOn(component.inject(MatSnackBar), 'open');
 
       await selectItemInSelect(component, 0);
       clickInstallButton(component, 'plugin-id', '1.0.0', { status: 500, statusText: 'Internal Server Error' });
