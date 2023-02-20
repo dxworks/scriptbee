@@ -13,6 +13,7 @@ using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Data.Exceptions;
+using ScriptBeeWebApp.Repository;
 using ScriptBeeWebApp.Services;
 using Xunit;
 

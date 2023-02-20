@@ -5,7 +5,7 @@ using Moq;
 using ScriptBee.Models;
 using ScriptBeeWebApp.EndpointDefinitions;
 using ScriptBeeWebApp.EndpointDefinitions.DTO;
-using ScriptBeeWebApp.Services;
+using ScriptBeeWebApp.Repository;
 using Xunit;
 
 namespace ScriptBeeWebApp.Tests.Unit.EndpointDefinitions;

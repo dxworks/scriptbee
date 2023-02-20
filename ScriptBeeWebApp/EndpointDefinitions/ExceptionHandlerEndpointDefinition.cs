@@ -13,7 +13,7 @@ public class ExceptionHandlerEndpointDefinition : IEndpointDefinition
 
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapGet("/error", HandleError);
+        app.Map("/error", HandleError);
     }
 
     private static async Task HandleError(HttpContext context, ILogger logger)
@@ -37,6 +37,7 @@ public class ExceptionHandlerEndpointDefinition : IEndpointDefinition
             logger.Error(exception, "Exception occurred");
         }
 
-        await context.Response.WriteAsJsonAsync(new EndpointError(exception.Message, context.Response.StatusCode));
+        context.Response.StatusCode = 500;
+        await context.Response.WriteAsJsonAsync(new EndpointError(exception.Message));
     }
 }

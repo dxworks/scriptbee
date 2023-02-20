@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using ScriptBee.Models;
+﻿using ScriptBee.Models;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBeeWebApp.Repository;
 
 public interface IRunModelService : IMongoService<RunModel>
 {

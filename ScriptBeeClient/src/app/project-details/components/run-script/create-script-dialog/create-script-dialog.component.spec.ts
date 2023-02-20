@@ -1,28 +1,28 @@
-import { CreateScriptDialogComponent } from './create-script-dialog.component';
-import { createComponentFactory, createHttpFactory, HttpMethod, Spectator, SpectatorHttp } from '@ngneat/spectator/jest';
-import { ScriptsService } from '../../../services/scripts.service';
-import { MockComponents, MockDirectives } from 'ng-mocks';
-import { ScriptParametersListComponent } from '../script-parameters-list/script-parameters-list.component';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {CreateScriptDialogComponent} from './create-script-dialog.component';
+import {createComponentFactory, createHttpFactory, HttpMethod, Spectator, SpectatorHttp} from '@ngneat/spectator/jest';
+import {ScriptsService} from '../../../services/scripts.service';
+import {MockComponents, MockDirectives} from 'ng-mocks';
+import {ScriptParametersListComponent} from '../script-parameters-list/script-parameters-list.component';
+import {MatFormFieldModule, MatLabel} from '@angular/material/form-field';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {
-  clickElementById,
-  clickElementByText,
-  enterTextInInput,
-  queryElementByCss,
-  queryElementById,
-  queryElementByText,
-  selectItemInSelect,
+    clickElementById,
+    clickElementByText,
+    enterTextInInput,
+    queryElementByCss,
+    queryElementById,
+    queryElementByText,
+    selectItemInSelect,
 } from '../../../../../../test/inputUtils';
-import { CreateScriptData, ParameterType, ScriptLanguage } from '../../../services/script-types';
-import { MatSelectModule } from '@angular/material/select';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiErrorMessage } from '../../../../shared/api-error-message';
-import { FileTreeNode } from '../scripts-content/fileTreeNode';
-import { waitForAsync } from '@angular/core/testing';
-import { CenteredSpinnerComponent } from '../../../../shared/centered-spinner/centered-spinner.component';
+import {CreateScriptData, ParameterType, ScriptLanguage} from '../../../services/script-types';
+import {MatSelectModule} from '@angular/material/select';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatInputModule} from '@angular/material/input';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ApiErrorMessage} from '../../../../shared/api-error-message';
+import {FileTreeNode} from '../scripts-content/fileTreeNode';
+import {waitForAsync} from '@angular/core/testing';
+import {CenteredSpinnerComponent} from '../../../../shared/centered-spinner/centered-spinner.component';
 
 describe('CreateScriptDialogComponent', () => {
   let createScriptServiceSpectator: SpectatorHttp<ScriptsService>;
@@ -184,7 +184,7 @@ describe('CreateScriptDialogComponent', () => {
 
     mockCreateScript(
       component,
-      { projectId: 'project-id', filePath: 'test', scriptType: 'Bash', parameters: [] },
+      { projectId: 'project-id', filePath: 'test', scriptLanguage: 'Bash', parameters: [] },
       {
         name: 'test',
         filePath: 'test',
@@ -215,7 +215,7 @@ describe('CreateScriptDialogComponent', () => {
       {
         projectId: 'project-id',
         filePath: 'test',
-        scriptType: 'Bash',
+        scriptLanguage: 'Bash',
         parameters: [
           { name: 'test', type: ParameterType.boolean, value: 'false' },
           { name: 'test2', type: ParameterType.boolean, value: 'true' },
@@ -243,7 +243,7 @@ describe('CreateScriptDialogComponent', () => {
     await selectValidInputs(component);
     mockCreateScript(
       component,
-      { projectId: 'project-id', filePath: 'test', scriptType: 'Bash', parameters: [] },
+      { projectId: 'project-id', filePath: 'test', scriptLanguage: 'Bash', parameters: [] },
       {
         code: 500,
         message: 'error',
@@ -265,7 +265,7 @@ describe('CreateScriptDialogComponent', () => {
     await selectValidInputs(component);
     mockCreateScript(
       component,
-      { projectId: 'project-id', filePath: 'test', scriptType: 'Bash', parameters: [] },
+      { projectId: 'project-id', filePath: 'test', scriptLanguage: 'Bash', parameters: [] },
       {
         code: 409,
         message: 'error',
@@ -289,7 +289,7 @@ describe('CreateScriptDialogComponent', () => {
     const request = mockCreateScriptWithoutFlush(component, {
       projectId: 'project-id',
       filePath: 'test',
-      scriptType: 'Bash',
+      scriptLanguage: 'Bash',
       parameters: [],
     });
     component.detectChanges();

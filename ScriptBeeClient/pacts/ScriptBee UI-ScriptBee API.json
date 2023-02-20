@@ -55,7 +55,7 @@
             }
           ],
           "projectId": "",
-          "scriptType": "script type"
+          "scriptLanguage": "script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -112,7 +112,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -166,7 +166,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": "script type"
+          "scriptLanguage": "script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -223,7 +223,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -277,7 +277,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": ""
+          "scriptLanguage": ""
         },
         "headers": {
           "Content-Type": "application/json"
@@ -334,7 +334,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -388,7 +388,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": "invalid script type"
+          "scriptLanguage": "invalid script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -445,7 +445,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -499,7 +499,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": "script type"
+          "scriptLanguage": "script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -556,7 +556,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -610,7 +610,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": "script type"
+          "scriptLanguage": "script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -667,7 +667,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -702,7 +702,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": "script type"
+          "scriptLanguage": "script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -759,7 +759,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -867,7 +867,7 @@
             }
           ],
           "projectId": "project id",
-          "scriptType": "script type"
+          "scriptLanguage": "script type"
         },
         "headers": {
           "Content-Type": "application/json"
@@ -924,7 +924,7 @@
                 }
               ]
             },
-            "$.scriptType": {
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {
@@ -940,7 +940,17 @@
       "response": {
         "body": {
           "filePath": "script path",
+          "id": "script id",
           "name": "script name",
+          "parameters": [
+            {
+              "name": "parameter name",
+              "type": "string",
+              "value": "parameter value"
+            }
+          ],
+          "projectId": "project id",
+          "scriptLanguage": "script type",
           "srcPath": "script src path"
         },
         "headers": {
@@ -956,7 +966,65 @@
                 }
               ]
             },
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
             "$.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.parameters[*].name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.parameters[*].type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "string|integer|float|boolean"
+                }
+              ]
+            },
+            "$.parameters[*].value": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.projectId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.scriptLanguage": {
               "combine": "AND",
               "matchers": [
                 {

@@ -1,6 +1,7 @@
 ﻿using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBee.Services.Config;
+using ScriptBeeWebApp.Repository;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Extensions;

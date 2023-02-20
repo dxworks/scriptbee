@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using ScriptBee.Models;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBeeWebApp.Repository;
 
 public abstract class MongoService<T> : IMongoService<T>
     where T : IDocument
@@ -25,6 +22,12 @@ public abstract class MongoService<T> : IMongoService<T>
     {
         var result = await mongoCollection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         return result;
+    }
+
+    public async Task<bool> DocumentExists(string id, CancellationToken cancellationToken)
+    {
+        var document = await GetDocument(id, cancellationToken);
+        return document != null;
     }
 
     public async Task<List<T>> GetAllDocuments(CancellationToken cancellationToken)

@@ -11,6 +11,7 @@ using ScriptBeeWebApp.EndpointDefinitions;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
 using ScriptBeeWebApp.EndpointDefinitions.DTO;
+using ScriptBeeWebApp.Repository;
 using ScriptBeeWebApp.Services;
 using Xunit;
 

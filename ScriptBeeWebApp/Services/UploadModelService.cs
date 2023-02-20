@@ -1,5 +1,6 @@
 using ScriptBee.Models;
 using ScriptBee.Services;
+using ScriptBeeWebApp.Repository;
 
 namespace ScriptBeeWebApp.Services;
 

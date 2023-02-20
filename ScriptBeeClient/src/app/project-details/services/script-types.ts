@@ -36,6 +36,16 @@ export interface CreateScriptDataParameter {
 export interface CreateScriptData {
   projectId: string;
   filePath: string;
-  scriptType: string;
+  scriptLanguage: string;
+  parameters: CreateScriptDataParameter[];
+}
+
+export interface CreateScriptResponse {
+  id: string;
+  projectId: string;
+  name: string;
+  filePath: string;
+  srcPath: string;
+  scriptLanguage: string;
   parameters: CreateScriptDataParameter[];
 }

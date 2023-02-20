@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using ScriptBee.Models;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBeeWebApp.Repository;
 
 // todo add tests with test containers
 // todo update docs to reflect changes

@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Models;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBeeWebApp.Repository;
 
 public interface IProjectModelService : IMongoService<ProjectModel>
 {

@@ -1,10 +1,10 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateScriptDialogData } from './create-script-dialog-data';
-import { CreateScriptStore } from '../../../stores/create-script.store';
-import { map } from 'rxjs/operators';
-import { Parameter } from '../../../services/script-types';
-import { ApiErrorMessage } from '../../../../shared/api-error-message';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {CreateScriptDialogData} from './create-script-dialog-data';
+import {CreateScriptStore} from '../../../stores/create-script.store';
+import {map} from 'rxjs/operators';
+import {Parameter} from '../../../services/script-types';
+import {ApiErrorMessage} from '../../../../shared/api-error-message';
 
 @Component({
   selector: 'app-create-script-dialog',
@@ -61,7 +61,7 @@ export class CreateScriptDialogComponent {
     this.store.createScript({
       projectId: this.data.projectId,
       filePath: this.scriptPath,
-      scriptType: this.scriptLanguage,
+      scriptLanguage: this.scriptLanguage,
       parameters: this.parameters.map((parameter) => ({
         name: parameter.name,
         type: parameter.type,

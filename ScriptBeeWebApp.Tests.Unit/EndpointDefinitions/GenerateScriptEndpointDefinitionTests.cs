@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -12,7 +11,6 @@ using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.EndpointDefinitions;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
-using ScriptBeeWebApp.EndpointDefinitions.DTO;
 using ScriptBeeWebApp.Services;
 using Xunit;
 
@@ -25,6 +23,7 @@ public class GenerateScriptEndpointDefinitionTests
 
     private readonly Mock<IValidator<GenerateScriptRequest>> _generateScriptRequestValidatorMock;
     private readonly Mock<IGenerateScriptService> _generateScriptServiceMock;
+
     private readonly Mock<IProjectManager> _projectManagerMock;
 
     public GenerateScriptEndpointDefinitionTests()
@@ -36,25 +35,6 @@ public class GenerateScriptEndpointDefinitionTests
         _fixture = new Fixture();
     }
 
-    [Fact]
-    public void GivenSupportedLanguages_WhenGetLanguages_ThenSupportedLanguagesAreReturned()
-    {
-        _generateScriptServiceMock.Setup(s => s.GetSupportedLanguages())
-            .Returns(new List<ScriptLanguage>
-            {
-                new("C#", "cs"),
-                new("JavaScript", "js")
-            });
-
-        var languages = ScriptsEndpointDefinition.GetLanguages(_generateScriptServiceMock.Object);
-
-        var scriptLanguages = languages as ScriptLanguage[] ?? languages.ToArray();
-        Assert.Equal(2, scriptLanguages.Length);
-        Assert.Equal("C#", scriptLanguages.First().Name);
-        Assert.Equal("cs", scriptLanguages.First().Extension);
-        Assert.Equal("JavaScript", scriptLanguages.Last().Name);
-        Assert.Equal("js", scriptLanguages.Last().Extension);
-    }
 
     [Fact]
     public async Task GivenInvalidGenerateScriptRequest_WhenPostGenerateScript_ThenBadRequestIsReturned()

@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { ComponentStore } from '@ngrx/component-store';
-import { ApiErrorMessage } from '../../shared/api-error-message';
-import { ScriptsService } from '../services/scripts.service';
-import { catchError, EMPTY, pipe, tap } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
-import { CreateScriptData, ScriptLanguage } from '../services/script-types';
-import { FileTreeNode } from '../components/run-script/scripts-content/fileTreeNode';
+import {Injectable} from '@angular/core';
+import {ComponentStore} from '@ngrx/component-store';
+import {ApiErrorMessage} from '../../shared/api-error-message';
+import {ScriptsService} from '../services/scripts.service';
+import {catchError, EMPTY, pipe, tap} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {CreateScriptData, CreateScriptResponse, ScriptLanguage} from '../services/script-types';
 
 interface CreateScriptStoreState {
   availableLanguages: ScriptLanguage[];
   availableLanguagesError: ApiErrorMessage | undefined;
 
-  createScriptResult: FileTreeNode | undefined;
+  createScriptResult: CreateScriptResponse | undefined;
   createScriptError: ApiErrorMessage | undefined;
 }
 

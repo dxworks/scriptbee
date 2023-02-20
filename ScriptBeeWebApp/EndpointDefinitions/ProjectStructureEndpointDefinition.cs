@@ -51,7 +51,7 @@ public class ProjectStructureEndpointDefinition : IEndpointDefinition
         }
 
         var (extension, content) =
-            await projectStructureService.GetSampleCodeAsync(createScript.ScriptType, cancellationToken);
+            await projectStructureService.GetSampleCodeAsync(createScript.ScriptLanguage, cancellationToken);
 
         if (!createScript.FilePath.EndsWith(extension))
         {

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.Api.Model;
+﻿using DxWorks.ScriptBee.Plugin.Api.Model;
 using ScriptBee.Models;
 
 namespace ScriptBeeWebApp.Services;

@@ -1,10 +1,16 @@
-import { executeFailedInteraction, executeSuccessfulInteraction, getPactInterceptor, getResponseHeaders, pactWrapper } from '../../../../test/pactUtils';
-import { eachLike, like } from '@pact-foundation/pact/src/v3/matchers';
-import { term } from '@pact-foundation/pact/src/dsl/matchers';
-import { TestBed } from '@angular/core/testing';
-import { ScriptsService } from './scripts.service';
-import { HttpClientModule } from '@angular/common/http';
-import { ParameterType } from './script-types';
+import {
+    executeFailedInteraction,
+    executeSuccessfulInteraction,
+    getPactInterceptor,
+    getResponseHeaders,
+    pactWrapper
+} from '../../../../test/pactUtils';
+import {eachLike, like} from '@pact-foundation/pact/src/v3/matchers';
+import {term} from '@pact-foundation/pact/src/dsl/matchers';
+import {TestBed} from '@angular/core/testing';
+import {ScriptsService} from './scripts.service';
+import {HttpClientModule} from '@angular/common/http';
+import {CreateScriptData, ParameterType} from './script-types';
 
 describe('Scripts Service Pact', () => {
   const provider = pactWrapper();
@@ -73,7 +79,7 @@ describe('Scripts Service Pact', () => {
       return {
         projectId: like(projectId),
         filePath: like(filePath),
-        scriptType: like(scriptType),
+        scriptLanguage: like(scriptType),
         parameters: eachLike({
           name: like('parameter name'),
           type: term({
@@ -85,11 +91,11 @@ describe('Scripts Service Pact', () => {
       };
     }
 
-    function createRequestData(projectId: string, filePath: string, scriptType: string) {
+    function createRequestData(projectId: string, filePath: string, scriptType: string): CreateScriptData {
       return {
         projectId: projectId,
         filePath: filePath,
-        scriptType: scriptType,
+        scriptLanguage: scriptType,
         parameters: [
           {
             name: 'parameter name',
@@ -113,18 +119,34 @@ describe('Scripts Service Pact', () => {
           status: 200,
           headers: getResponseHeaders(),
           body: {
+            id: like('script id'),
+            projectId: like('project id'),
             name: like('script name'),
             filePath: like('script path'),
             srcPath: like('script src path'),
+            scriptLanguage: like('script type'),
+            parameters: eachLike({
+              name: like('parameter name'),
+              type: term({
+                matcher: 'string|integer|float|boolean',
+                generate: 'string',
+              }),
+              value: like('parameter value'),
+            }),
           },
         });
 
       return provider.executeTest(() =>
         executeSuccessfulInteraction(scriptService.createScript(createRequestData('project id', 'script path', 'script type')), (script) => {
+          expect(script.id).toEqual('script id');
+          expect(script.projectId).toEqual('project id');
           expect(script.name).toEqual('script name');
           expect(script.filePath).toEqual('script path');
           expect(script.srcPath).toEqual('script src path');
-          expect(script.children).toBeUndefined();
+          expect(script.scriptLanguage).toEqual('script type');
+          expect(script.parameters[0].name).toEqual('parameter name');
+          expect(script.parameters[0].type).toEqual(ParameterType.string);
+          expect(script.parameters[0].value).toEqual('parameter value');
         })
       );
     });

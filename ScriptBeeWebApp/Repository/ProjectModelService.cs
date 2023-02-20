@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Models;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBeeWebApp.Repository;
 
 public class ProjectModelService : MongoService<ProjectModel>, IProjectModelService
 {
