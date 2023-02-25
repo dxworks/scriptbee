@@ -48,8 +48,8 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
         var srcPath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder);
 
-        return new FileTreeNode(Path.GetFileName(relativePath), null, filePath,
-            Path.GetRelativePath(srcPath, filePath));
+        return new FileTreeNode(Path.GetFileName(relativePath), filePath,
+            Path.GetRelativePath(srcPath, filePath), null);
     }
 
     public bool FileExists(string projectId, string relativePath)
@@ -142,7 +142,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
     {
         if (File.Exists(path))
         {
-            return new FileTreeNode(Path.GetFileName(path), null, path, Path.GetRelativePath(srcPath, path));
+            return new FileTreeNode(Path.GetFileName(path), path, Path.GetRelativePath(srcPath, path), null);
         }
 
         var children = new List<FileTreeNode>();
@@ -154,11 +154,11 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
         foreach (var filePath in Directory.GetFiles(path))
         {
-            children.Add(new FileTreeNode(Path.GetFileName(filePath), null, filePath,
-                Path.GetRelativePath(srcPath, filePath)));
+            children.Add(new FileTreeNode(Path.GetFileName(filePath), filePath,
+                Path.GetRelativePath(srcPath, filePath), null));
         }
 
-        return new FileTreeNode(Path.GetFileName(path), children, path, Path.GetRelativePath(srcPath, path));
+        return new FileTreeNode(Path.GetFileName(path), path, Path.GetRelativePath(srcPath, path), children);
     }
 
     private string GetPathToUserFolder(string absolutePath)

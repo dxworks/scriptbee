@@ -11,4 +11,10 @@ public class ScriptModelService : MongoService<ScriptModel>, IScriptModelService
         mongoDatabase.GetCollection<ScriptModel>(ProjectsCollectionName))
     {
     }
+
+    public Task<ScriptModel?> GetScriptModelByFilePathAsync(string filePath, string projectId, CancellationToken cancellationToken = default)
+    {
+        // todo: add tests
+        throw new NotImplementedException();
+    }
 }

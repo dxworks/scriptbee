@@ -32,7 +32,73 @@ public class ScriptsService : IScriptsService
         return _generateScriptService.GetSupportedLanguages();
     }
 
-    public async Task<OneOf<CreateScriptResponse, ProjectMissing, ScriptConflict, InvalidScriptType>> CreateScriptAsync(
+
+    public async Task<OneOf<IEnumerable<ScriptFileStructureNode>, ProjectMissing>> GetScriptsStructureAsync(
+        string projectId,
+        CancellationToken cancellationToken = default)
+    {
+        var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
+        if (!documentExists)
+        {
+            return new ProjectMissing(projectId);
+        }
+
+        var fileTreeNode = _projectFileStructureManager.GetSrcStructure(projectId);
+        if (fileTreeNode is null)
+        {
+            return new ProjectMissing(projectId);
+        }
+
+        var structure = await GetScriptFileStructureAsync(projectId, fileTreeNode, cancellationToken);
+        return OneOf<IEnumerable<ScriptFileStructureNode>, ProjectMissing>.FromT0(structure);
+    }
+
+    public async Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> GetScriptByFilePathAsync(
+        string filepath,
+        string projectId, CancellationToken cancellationToken = default)
+    {
+        var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
+        if (!documentExists)
+        {
+            return new ProjectMissing(projectId);
+        }
+
+        var scriptModel =
+            await _scriptModelService.GetScriptModelByFilePathAsync(filepath, projectId, cancellationToken);
+        if (scriptModel is null)
+        {
+            return new ScriptMissing(filepath);
+        }
+
+        return CreateScriptResponse(scriptModel);
+    }
+
+    public async Task<OneOf<string, ProjectMissing, ScriptMissing>> GetScriptContentAsync(string scriptId,
+        string projectId,
+        CancellationToken cancellationToken = default)
+    {
+        var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
+        if (!documentExists)
+        {
+            return new ProjectMissing(projectId);
+        }
+
+        var scriptModel = await _scriptModelService.GetDocument(scriptId, cancellationToken);
+        if (scriptModel is null)
+        {
+            return new ScriptMissing(scriptId);
+        }
+
+        var content = await _projectFileStructureManager.GetFileContentAsync(projectId, scriptModel.FilePath);
+        if (content is null)
+        {
+            return new ScriptMissing(scriptId);
+        }
+
+        return content;
+    }
+
+    public async Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptConflict, InvalidScriptType>> CreateScriptAsync(
         CreateScript createScript, CancellationToken cancellationToken = default)
     {
         if (!IsScriptTypeSupported(createScript.ScriptLanguage))
@@ -67,19 +133,119 @@ public class ScriptsService : IScriptsService
         return CreateScriptResponse(scriptModel);
     }
 
+    public async Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> UpdateScriptAsync(
+        UpdateScript updateScript, CancellationToken cancellationToken = default)
+    {
+        var documentExists = await _projectModelService.DocumentExists(updateScript.ProjectId, cancellationToken);
+        if (!documentExists)
+        {
+            return new ProjectMissing(updateScript.ProjectId);
+        }
+
+        var scriptModel = await _scriptModelService.GetDocument(updateScript.Id, cancellationToken);
+        if (scriptModel is null)
+        {
+            return new ScriptMissing(updateScript.Id);
+        }
+
+        scriptModel.Parameters = updateScript.Parameters
+            .Select(p => new ScriptParameterModel
+            {
+                Name = p.Name,
+                Type = p.Type,
+                Value = p.Value
+            })
+            .ToList();
+
+        await _scriptModelService.UpdateDocument(scriptModel, cancellationToken);
+
+        return CreateScriptResponse(scriptModel);
+    }
+
+    public Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> DeleteScriptAsync(string scriptId,
+        string projectId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task<IEnumerable<ScriptFileStructureNode>> GetScriptFileStructureAsync(string projectId,
+        FileTreeNode fileTreeNode, CancellationToken cancellationToken)
+    {
+        var scriptFileStructureNodes = new List<ScriptFileStructureNode>();
+
+        if (fileTreeNode.Children is null)
+        {
+            return scriptFileStructureNodes;
+        }
+
+        foreach (var treeNode in fileTreeNode.Children)
+        {
+            if (treeNode.Children is null)
+            {
+                var node = await AddScriptToFileStructure(projectId, treeNode, cancellationToken);
+                scriptFileStructureNodes.Add(node);
+            }
+            else
+            {
+                scriptFileStructureNodes.Add(new ScriptFileStructureNode
+                {
+                    IsDirectory = true,
+                    Children = await GetScriptFileStructureAsync(projectId, treeNode, cancellationToken),
+                    Name = treeNode.Name,
+                    Path = treeNode.FilePath,
+                    AbsolutePath = _projectFileStructureManager.GetAbsoluteFilePath(projectId, treeNode.FilePath),
+                    ScriptData = null
+                });
+            }
+        }
+
+        return scriptFileStructureNodes;
+    }
+
+    private async Task<ScriptFileStructureNode> AddScriptToFileStructure(string projectId, FileTreeNode treeNode,
+        CancellationToken cancellationToken)
+    {
+        string absoluteFilePath;
+        ScriptDataResponse? scriptData = null;
+
+        var scriptModel = await _scriptModelService.GetScriptModelByFilePathAsync(treeNode.FilePath, projectId,
+            cancellationToken);
+        if (scriptModel is not null)
+        {
+            absoluteFilePath = scriptModel.AbsoluteFilePath;
+            scriptData = CreateScriptResponse(scriptModel);
+        }
+        else
+        {
+            absoluteFilePath = _projectFileStructureManager.GetAbsoluteFilePath(projectId, treeNode.FilePath);
+        }
+
+        return new ScriptFileStructureNode
+        {
+            IsDirectory = false,
+            Children = null,
+            Name = treeNode.Name,
+            Path = treeNode.FilePath,
+            AbsolutePath = absoluteFilePath,
+            ScriptData = scriptData
+        };
+    }
+
     private bool IsScriptTypeSupported(string scriptType)
     {
         return _generateScriptService.GetSupportedLanguages().Any(language => language.Name == scriptType);
     }
 
-    private static ScriptModel CreateScriptModel(CreateScript createScript, FileTreeNode fileTreeNode)
+    private ScriptModel CreateScriptModel(CreateScript createScript, FileTreeNode fileTreeNode)
     {
         return new ScriptModel
         {
+            Id = createScript.FilePath,
             ProjectId = createScript.ProjectId,
-            Name = fileTreeNode.name,
+            Name = fileTreeNode.Name,
             FilePath = createScript.FilePath,
-            SrcPath = fileTreeNode.srcPath,
+            AbsoluteFilePath =
+                _projectFileStructureManager.GetAbsoluteFilePath(createScript.ProjectId, createScript.FilePath),
             ScriptLanguage = createScript.ScriptLanguage,
             Parameters = createScript.Parameters.Select(CreateScriptParameterModel).ToList()
         };
@@ -95,14 +261,14 @@ public class ScriptsService : IScriptsService
         };
     }
 
-    private static CreateScriptResponse CreateScriptResponse(ScriptModel scriptModel)
+    private static ScriptDataResponse CreateScriptResponse(ScriptModel scriptModel)
     {
-        return new CreateScriptResponse(
+        return new ScriptDataResponse(
             scriptModel.Id,
             scriptModel.ProjectId,
             scriptModel.Name,
             scriptModel.FilePath,
-            scriptModel.SrcPath,
+            scriptModel.AbsoluteFilePath,
             scriptModel.ScriptLanguage,
             scriptModel.Parameters.Select(CreateScriptParameterResponse).ToList()
         );

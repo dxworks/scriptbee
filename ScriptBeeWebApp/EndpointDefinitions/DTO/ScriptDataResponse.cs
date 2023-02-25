@@ -1,11 +1,11 @@
 ﻿namespace ScriptBeeWebApp.EndpointDefinitions.DTO;
 
-public record CreateScriptResponse(
+public record ScriptDataResponse(
     string Id,
     string ProjectId,
     string Name,
     string FilePath,
-    string SrcPath,
+    string AbsolutePath,
     string ScriptLanguage,
     IEnumerable<ScriptParameterResponse> Parameters
 );

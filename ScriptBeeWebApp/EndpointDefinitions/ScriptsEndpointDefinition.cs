@@ -21,17 +21,70 @@ public class ScriptsEndpointDefinition : IEndpointDefinition
 
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapGet("/api/scripts/languages", GetLanguages);
+        app.MapGet("/api/scripts", GetScripts);
         app.MapPost("/api/scripts", PostCreateScript);
+        app.MapPut("/api/scripts", PutUpdateScript);
+        app.MapGet("/api/scripts/{scriptId}", GetScriptById);
+        // app.MapDelete("/api/scripts/{scriptId}", DeleteScript);
+        app.MapGet("/api/scripts/{scriptId}/content", GetScriptContent);
+        app.MapGet("/api/scripts/languages", GetLanguages);
         app.MapPost("/api/generatescript", PostGenerateScript);
     }
 
-    public static IEnumerable<ScriptLanguage> GetLanguages(IScriptsService scriptsService)
+    private static IEnumerable<ScriptLanguage> GetLanguages(IScriptsService scriptsService)
     {
         return scriptsService.GetSupportedLanguages();
     }
 
-    public static async Task<IResult> PostCreateScript([FromBody] CreateScript createScript,
+    private async Task<IResult> GetScripts(IScriptsService scriptsService, [FromQuery] string projectId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(projectId))
+        {
+            return Results.BadRequest(new ValidationErrorsResponse(new List<ValidationError>
+            {
+                new("projectId", "ProjectId is required")
+            }));
+        }
+
+        var result = await scriptsService.GetScriptsStructureAsync(projectId, cancellationToken);
+
+        return result.Match(
+            Results.Ok,
+            Results.NotFound);
+    }
+
+    private static async Task<IResult> GetScriptById(IScriptsService scriptsService, [FromRoute] string scriptId,
+        [FromQuery] string projectId, CancellationToken cancellationToken = default)
+    {
+        var result = await scriptsService.GetScriptByFilePathAsync(scriptId, projectId, cancellationToken);
+
+        return result.Match(
+            Results.Ok,
+            Results.NotFound,
+            Results.NotFound);
+    }
+
+    private async Task<IResult> GetScriptContent(IScriptsService scriptsService, [FromRoute] string scriptId,
+        [FromQuery] string projectId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(projectId))
+        {
+            return Results.BadRequest(new ValidationErrorsResponse(new List<ValidationError>
+            {
+                new("projectId", "ProjectId is required")
+            }));
+        }
+
+        var result = await scriptsService.GetScriptContentAsync(scriptId, projectId, cancellationToken);
+
+        return result.Match(
+            Results.Ok,
+            Results.NotFound,
+            Results.NotFound);
+    }
+
+    private static async Task<IResult> PostCreateScript([FromBody] CreateScript createScript,
         IValidator<CreateScript> validator, IScriptsService scriptsService,
         CancellationToken cancellationToken = default)
     {
@@ -48,6 +101,35 @@ public class ScriptsEndpointDefinition : IEndpointDefinition
             Results.NotFound,
             Results.Conflict,
             Results.BadRequest);
+    }
+
+    private static async Task<IResult> PutUpdateScript([FromBody] UpdateScript updateScript,
+        IValidator<UpdateScript> validator, IScriptsService scriptsService,
+        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await validator.ValidateAsync(updateScript, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return Results.BadRequest(validationResult.GetValidationErrorsResponse());
+        }
+
+        var result = await scriptsService.UpdateScriptAsync(updateScript, cancellationToken);
+
+        return result.Match(
+            Results.Ok,
+            Results.NotFound,
+            Results.NotFound);
+    }
+
+    private async Task<IResult> DeleteScript(IScriptsService scriptsService, [FromRoute] string scriptId,
+        [FromQuery] string projectId, CancellationToken cancellationToken = default)
+    {
+        var result = await scriptsService.DeleteScriptAsync(scriptId, projectId, cancellationToken);
+
+        return result.Match(
+            Results.Ok,
+            Results.NotFound,
+            Results.NotFound);
     }
 
 // todo pact add tests

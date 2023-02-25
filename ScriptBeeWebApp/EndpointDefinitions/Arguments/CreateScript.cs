@@ -4,5 +4,3 @@ public record CreateScript(string ProjectId, string FilePath, string ScriptLangu
 {
     public string FilePath { get; set; } = FilePath;
 }
-
-public record ScriptParameter(string Name, string Type, string? Value);

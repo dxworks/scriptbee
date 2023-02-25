@@ -10,7 +10,7 @@ using Moq;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.EndpointDefinitions;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
-using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
 using ScriptBeeWebApp.Services;
 using Xunit;
 

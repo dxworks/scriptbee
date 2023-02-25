@@ -2,15 +2,13 @@
 
 namespace ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
 
-public class CreateScriptValidator : AbstractValidator<CreateScript>
+public class UpdateScriptValidator : AbstractValidator<UpdateScript>
 {
-    public CreateScriptValidator()
+    public UpdateScriptValidator()
     {
         RuleFor(x => x.ProjectId)
             .NotEmpty();
-        RuleFor(x => x.FilePath)
-            .NotEmpty();
-        RuleFor(x => x.ScriptLanguage)
+        RuleFor(x => x.Id)
             .NotEmpty();
         RuleForEach(x => x.Parameters)
             .SetValidator(new ScriptParameterValidator());
