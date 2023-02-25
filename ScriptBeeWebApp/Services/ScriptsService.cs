@@ -192,7 +192,7 @@ public class ScriptsService : IScriptsService
                     IsDirectory = true,
                     Children = await GetScriptFileStructureAsync(projectId, treeNode, cancellationToken),
                     Name = treeNode.Name,
-                    Path = treeNode.FilePath,
+                    Path = treeNode.SrcPath,
                     AbsolutePath = _projectFileStructureManager.GetAbsoluteFilePath(projectId, treeNode.FilePath),
                     ScriptData = null
                 });
@@ -225,7 +225,7 @@ public class ScriptsService : IScriptsService
             IsDirectory = false,
             Children = null,
             Name = treeNode.Name,
-            Path = treeNode.FilePath,
+            Path = treeNode.SrcPath,
             AbsolutePath = absoluteFilePath,
             ScriptData = scriptData
         };

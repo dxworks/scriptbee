@@ -26,7 +26,7 @@ import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-pa
 export class SelectedScriptComponent implements OnInit {
   editorOptions = {
     theme: 'vs-dark',
-    language: 'javascript',
+    language: 'csharp',
     readOnly: true,
     automaticLayout: true,
   };
@@ -36,6 +36,10 @@ export class SelectedScriptComponent implements OnInit {
   projectAbsolutePath = '';
   isLoadingResults = false;
   project: Project | undefined;
+
+  scriptContentError$ = this.scriptsStore.scriptContentError;
+  scriptContentLoading$ = this.scriptsStore.scriptContentLoading;
+
   private availableScriptLanguages: ScriptLanguage[] = [];
 
   constructor(
@@ -56,6 +60,34 @@ export class SelectedScriptComponent implements OnInit {
         if (this.scriptPath === watchedFile.path) {
           this.code = watchedFile.content;
         }
+      },
+    });
+
+    const scriptPath = this.route.snapshot.paramMap.get('scriptPath');
+    const projectId = this.project?.data.projectId;
+    if (scriptPath && projectId) {
+      this.scriptsStore.loadScriptContent({
+        scriptId: scriptPath,
+        projectId: projectId,
+      });
+    }
+
+    this.route.paramMap.subscribe({
+      next: (params) => {
+        const scriptPath = params.get('scriptPath');
+        const projectId = this.project?.data.projectId;
+        if (scriptPath && projectId) {
+          this.scriptsStore.loadScriptContent({
+            scriptId: scriptPath,
+            projectId: projectId,
+          });
+        }
+      },
+    });
+
+    this.scriptsStore.scriptContent.subscribe({
+      next: (scriptContent) => {
+        this.code = scriptContent;
       },
     });
 
@@ -169,7 +201,7 @@ export class SelectedScriptComponent implements OnInit {
     this.dialog.open(EditParametersDialogComponent, {
       disableClose: true,
       data: {
-        scriptId: '',
+        scriptId: this.scriptPath,
         projectId: this.project.data.projectId,
         parameters: [],
       },

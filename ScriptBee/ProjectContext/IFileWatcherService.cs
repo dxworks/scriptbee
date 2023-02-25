@@ -2,7 +2,7 @@ namespace ScriptBee.ProjectContext;
 
 public interface IFileWatcherService
 {
-    void SetupFileWatcher(string fullPath);
-    
-    void RemoveFileWatcher(string fullPath);
+    void SetupFileWatcher(string projectId, string fullPath);
+
+    void RemoveFileWatcher(string projectId, string fullPath);
 }

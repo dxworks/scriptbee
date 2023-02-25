@@ -12,9 +12,11 @@ public class ScriptModelService : MongoService<ScriptModel>, IScriptModelService
     {
     }
 
-    public Task<ScriptModel?> GetScriptModelByFilePathAsync(string filePath, string projectId, CancellationToken cancellationToken = default)
+    public async Task<ScriptModel?> GetScriptModelByFilePathAsync(string filePath, string projectId,
+        CancellationToken cancellationToken = default)
     {
-        // todo: add tests
-        throw new NotImplementedException();
+        var result = await mongoCollection.Find(x => x.FilePath == filePath && x.ProjectId == projectId)
+            .FirstOrDefaultAsync(cancellationToken);
+        return result;
     }
 }

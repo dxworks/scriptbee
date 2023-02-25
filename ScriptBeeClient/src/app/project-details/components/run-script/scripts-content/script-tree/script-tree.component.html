@@ -1,9 +1,11 @@
-<mat-spinner *ngIf="loading"></mat-spinner>
+<mat-spinner *ngIf='scriptsForProjectLoading$ | async'></mat-spinner>
 
-<mat-card *ngIf="loadingError" class="loading-error">
-  {{loadingError}}
+<mat-card *ngIf='scriptsForProjectError$ | async' class='loading-error'>
+  {{scriptsForProjectError$ | async}}
 </mat-card>
 
-<div *ngIf="fileStructureTree.length === 0" class="empty-tree">Tree is empty</div>
+<div *ngIf='scriptsForProject$ | async as scriptsForProject'>
+  <div *ngIf='scriptsForProject.length === 0' class='empty-tree'>Tree is empty</div>
 
-<app-tree [treeData]="fileStructureTree" (leafClick)="onLeafClick($event)"></app-tree>
+  <app-tree [treeData]='scriptsForProject' (leafClick)='onLeafClick($event)'></app-tree>
+</div>

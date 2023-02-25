@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using ScriptBee.Config;
+﻿using ScriptBee.Config;
 using ScriptBee.ProjectContext;
-using ScriptBee.Services.Config;
 using ScriptBeeWebApp.Data.Exceptions;
 
 namespace ScriptBeeWebApp.Services;
@@ -10,13 +8,13 @@ namespace ScriptBeeWebApp.Services;
 public class ProjectFileStructureManager : IProjectFileStructureManager
 {
     private readonly IFileWatcherService _fileWatcherService;
-    private readonly string _userFolderPath;
+    private readonly IConfigFoldersService _configFoldersService;
 
-    public ProjectFileStructureManager(IOptions<UserFolderSettings> userFolderSettings,
-        IFileWatcherService fileWatcherService)
+    public ProjectFileStructureManager(IFileWatcherService fileWatcherService,
+        IConfigFoldersService configFoldersService)
     {
-        _userFolderPath = userFolderSettings.Value.UserFolderPath ?? "";
         _fileWatcherService = fileWatcherService;
+        _configFoldersService = configFoldersService;
     }
 
     public void CreateProjectFolderStructure(string projectId)
@@ -94,9 +92,9 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
     public string GetAbsoluteFilePath(string projectId, string filePath)
     {
-        var absolutePath = Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, filePath);
-        return GetPathToUserFolder(absolutePath);
+        return _configFoldersService.GetAbsoluteFilePath(projectId, filePath);
     }
+
 
     public void DeleteFolder(string projectId, string pathToFolder)
     {
@@ -110,8 +108,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
 
     public string GetProjectAbsolutePath(string projectId)
     {
-        var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);
-        return GetPathToUserFolder(projectPath);
+        return _configFoldersService.GetProjectAbsolutePath(projectId);
     }
 
     public void SetupFileWatcher(string projectId)
@@ -123,7 +120,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
             throw new ProjectFolderNotFoundException(projectId);
         }
 
-        _fileWatcherService.SetupFileWatcher(fullPath);
+        _fileWatcherService.SetupFileWatcher(projectId, fullPath);
     }
 
     public void RemoveFileWatcher(string projectId)
@@ -135,7 +132,7 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
             throw new ProjectFolderNotFoundException(projectId);
         }
 
-        _fileWatcherService.RemoveFileWatcher(fullPath);
+        _fileWatcherService.RemoveFileWatcher(projectId, fullPath);
     }
 
     private FileTreeNode GetFolderStructure(string path, string srcPath)
@@ -159,18 +156,5 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
 
         return new FileTreeNode(Path.GetFileName(path), path, Path.GetRelativePath(srcPath, path), children);
-    }
-
-    private string GetPathToUserFolder(string absolutePath)
-    {
-        if (string.IsNullOrEmpty(_userFolderPath))
-        {
-            return absolutePath;
-        }
-
-        var part = absolutePath.Replace("\\", "/")
-            .Replace(ConfigFolders.PathToRoot.Replace("\\", "/"), "");
-
-        return Path.Combine(_userFolderPath, part.TrimStart('\\', '/')).Replace("\\", "/");
     }
 }

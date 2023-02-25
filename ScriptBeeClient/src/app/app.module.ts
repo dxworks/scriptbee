@@ -72,7 +72,6 @@ import { LinkModelsComponent } from './project-details/components/details-conten
 import { CurrentlyLoadedModelsComponent } from './project-details/components/details-content/currently-loaded-models/currently-loaded-models.component';
 import { ProjectContextComponent } from './project-details/components/details-content/project-context/project-context.component';
 import { scriptTreeReducer } from './state/script-tree/script-tree.reducer';
-import { ScriptTreeEffects } from './state/script-tree/script-tree.effects';
 import { ScriptTreeComponent } from './project-details/components/run-script/scripts-content/script-tree/script-tree.component';
 import { PluginsMarketplaceDashboardComponent } from './plugins/components/plugins-marketplace-dashboard/plugins-marketplace-dashboard.component';
 import { PluginMarketplaceDashboardListComponent } from './plugins/components/plugin-marketplace-dashboard-list/plugin-marketplace-dashboard-list.component';
@@ -166,7 +165,7 @@ import { EditParametersDialogComponent } from './project-details/components/run-
       },
       {}
     ),
-    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects, ScriptTreeEffects]),
+    EffectsModule.forRoot([OutputEffects, ProjectDetailsEffects]),
   ],
   providers: [SlugifyPipe],
   bootstrap: [AppComponent],

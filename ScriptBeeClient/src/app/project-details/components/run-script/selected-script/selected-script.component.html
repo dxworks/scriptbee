@@ -15,6 +15,37 @@
     <mat-icon>play_arrow</mat-icon>
   </button>
 </div>
+
+
+<ng-container *ngIf='scriptContentLoading$ | async; else scriptContentError'>
+  <app-centered-spinner></app-centered-spinner>
+</ng-container>
+
+<ng-template #scriptContentError>
+  <ng-container *ngIf='scriptContentError$ | async as scriptContentError; else scriptContent'>
+    <ng-container *ngIf='scriptContentError.code === 404'>
+      <app-api-error-message message='Script not found' type='error'></app-api-error-message>
+    </ng-container>
+
+    <ng-container *ngIf='scriptContentError.code !== 404'>
+      <app-api-error-message message='An error occurred while loading script content'
+                             type='error'></app-api-error-message>
+    </ng-container>
+  </ng-container>
+
+</ng-template>
+
+<ng-template #scriptContent>
+  <ngx-monaco-editor style='height: 100%' [options]='editorOptions' [(ngModel)]='code'></ngx-monaco-editor>
+</ng-template>
+
+
+<mat-spinner *ngIf='scriptContentLoading$ | async'></mat-spinner>
+
+<mat-card *ngIf='scriptContentError$ | async' class='loading-error'>
+  {{scriptContentError$ | async}}
+</mat-card>
+
 <ngx-monaco-editor style='height: 100%' [options]='editorOptions' [(ngModel)]='code'></ngx-monaco-editor>
 
 <app-loading-results-dialog *ngIf='isLoadingResults'></app-loading-results-dialog>

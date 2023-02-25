@@ -34,7 +34,9 @@ export class ScriptsService {
   }
 
   getScriptContent(scriptId: string, projectId: string) {
-    return this.http.get<string>(`${this.scriptsApi}/${scriptId}/content`, {
+    const encodedScriptId = encodeURIComponent(scriptId);
+
+    return this.http.get<string>(`${this.scriptsApi}/${encodedScriptId}/content`, {
       headers: contentHeaders,
       params: { projectId },
     });

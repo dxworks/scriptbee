@@ -12,14 +12,13 @@ public class ProjectStructureEndpointDefinition : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        //
+        services.AddSingleton<IConfigFoldersService, ConfigFoldersService>();
     }
 
     public void DefineEndpoints(WebApplication app)
     {
         app.MapGet("/api/projectstructure/{projectId}", GetProjectStructure);
         app.MapPost("/api/projectstructure/script", CreateScript);
-        app.MapGet("/api/projectstructure/script", GetScriptContent);
         app.MapGet("/api/projectstructure/scriptabsolutepath", GetScriptAbsolutePath);
         app.MapGet("/api/projectstructure/projectabsolutepath", GetProjectAbsolutePath);
         app.MapPost("/api/projectstructure/filewatcher", SetupFileWatcher);
@@ -67,24 +66,6 @@ public class ProjectStructureEndpointDefinition : IEndpointDefinition
             content);
 
         return Results.Ok(node);
-    }
-
-    public static async Task<IResult> GetScriptContent([FromQuery] string projectId, [FromQuery] string filePath,
-        IProjectFileStructureManager projectFileStructureManager, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrEmpty(projectId) || string.IsNullOrEmpty(filePath))
-        {
-            return Results.BadRequest("Invalid arguments!");
-        }
-
-        var content = await projectFileStructureManager.GetFileContentAsync(projectId, filePath);
-
-        if (content == null)
-        {
-            return Results.NotFound("Script not found");
-        }
-
-        return Results.Ok(content);
     }
 
     public static IResult GetScriptAbsolutePath([FromQuery] string projectId, [FromQuery] string filePath,

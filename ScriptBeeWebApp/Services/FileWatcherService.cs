@@ -9,19 +9,22 @@ public class FileWatcherService : IFileWatcherService
     private readonly ConcurrentDictionary<string, FileSystemWatcher> _watchers = new();
     private readonly IFileWatcherHubService _fileWatcherHubService;
     private readonly Serilog.ILogger _logger;
+    private readonly IConfigFoldersService _configFoldersService;
 
-    public FileWatcherService(IFileWatcherHubService fileWatcherHubService, Serilog.ILogger logger)
+    public FileWatcherService(IFileWatcherHubService fileWatcherHubService, Serilog.ILogger logger,
+        IConfigFoldersService configFoldersService)
     {
         _fileWatcherHubService = fileWatcherHubService;
         _logger = logger;
+        _configFoldersService = configFoldersService;
     }
 
-    public void RemoveFileWatcher(string fullPath)
+    public void RemoveFileWatcher(string projectId, string fullPath)
     {
         _watchers.TryRemove(fullPath, out _);
     }
 
-    public void SetupFileWatcher(string fullPath)
+    public void SetupFileWatcher(string projectId, string fullPath)
     {
         if (_watchers.ContainsKey(fullPath))
         {
@@ -45,7 +48,8 @@ public class FileWatcherService : IFileWatcherService
 
                 var content = await sr.ReadToEndAsync();
 
-                var watchedFile = new WatchedFile(e.FullPath, content);
+                var relativePath = _configFoldersService.GetSrcRelativePath(projectId, e.FullPath);
+                var watchedFile = new WatchedFile(relativePath, content);
                 await _fileWatcherHubService.SendFileWatch(watchedFile);
             }
             catch (Exception ex)
