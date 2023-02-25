@@ -81,6 +81,7 @@ import { ApiErrorMessageComponent } from './shared/api-error-message/api-error-m
 import { ScriptParametersListComponent } from './project-details/components/run-script/script-parameters-list/script-parameters-list.component';
 import { ScriptParameterComponent } from './project-details/components/run-script/script-parameters-list/script-parameter/script-parameter.component';
 import { CenteredSpinnerComponent } from './shared/centered-spinner/centered-spinner.component';
+import { EditParametersDialogComponent } from './project-details/components/run-script/edit-parameters-dialog/edit-parameters-dialog.component';
 
 @NgModule({
   declarations: [
@@ -120,6 +121,7 @@ import { CenteredSpinnerComponent } from './shared/centered-spinner/centered-spi
     ScriptParametersListComponent,
     ScriptParameterComponent,
     CenteredSpinnerComponent,
+    EditParametersDialogComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

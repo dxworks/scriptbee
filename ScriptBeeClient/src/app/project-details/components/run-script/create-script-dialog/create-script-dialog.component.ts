@@ -1,16 +1,16 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {CreateScriptDialogData} from './create-script-dialog-data';
-import {CreateScriptStore} from '../../../stores/create-script.store';
-import {map} from 'rxjs/operators';
-import {Parameter} from '../../../services/script-types';
-import {ApiErrorMessage} from '../../../../shared/api-error-message';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CreateScriptDialogData } from './create-script-dialog-data';
+import { ScriptsStore } from '../../../stores/scripts-store.service';
+import { map } from 'rxjs/operators';
+import { Parameter } from '../../../services/script-types';
+import { ApiErrorMessage } from '../../../../shared/api-error-message';
 
 @Component({
   selector: 'app-create-script-dialog',
   templateUrl: './create-script-dialog.component.html',
   styleUrls: ['./create-script-dialog.component.scss'],
-  providers: [CreateScriptStore],
+  providers: [ScriptsStore],
 })
 export class CreateScriptDialogComponent {
   availableScriptLanguages$ = this.store.availableLanguages.pipe(map((languages) => languages.map((language) => language.name)));
@@ -25,8 +25,8 @@ export class CreateScriptDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<CreateScriptDialogComponent>,
-    private store: CreateScriptStore,
-    @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData
+    @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData,
+    private store: ScriptsStore
   ) {
     this.store.loadAvailableLanguages();
     this.store.createScriptResult.subscribe((result) => {

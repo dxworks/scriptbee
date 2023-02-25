@@ -11,6 +11,8 @@
     "build:ssr": "ng run ScriptBeeWebApp:server:dev",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:pact": "jest --testTimeout 30000 --testPathPattern .*.pact.spec.ts",
+    "clean:pact": "rimraf ./pacts",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js"
@@ -68,6 +70,7 @@
     "ng-mocks": "^14.5.0",
     "ngx-build-plus": "^14.0.0",
     "prettier": "^2.8.1",
+    "rimraf": "^4.1.2",
     "typescript": "~4.7.0"
   }
 }

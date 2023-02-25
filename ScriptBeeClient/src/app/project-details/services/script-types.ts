@@ -1,8 +1,6 @@
 // TODO: remove
 export enum ScriptTypes {
-  python = 'python',
   javascript = 'javascript',
-  csharp = 'csharp',
 }
 
 export enum ParameterType {
@@ -27,7 +25,7 @@ export interface ScriptLanguage {
   extension: string;
 }
 
-export interface CreateScriptDataParameter {
+export interface ScriptDataParameter {
   name: string;
   type: ParameterType;
   value: string;
@@ -37,15 +35,34 @@ export interface CreateScriptData {
   projectId: string;
   filePath: string;
   scriptLanguage: string;
-  parameters: CreateScriptDataParameter[];
+  parameters: ScriptDataParameter[];
 }
 
-export interface CreateScriptResponse {
+export interface UpdateScriptData {
+  id: string;
+  projectId: string;
+  parameters: ScriptDataParameter[];
+}
+
+export interface ScriptData {
   id: string;
   projectId: string;
   name: string;
   filePath: string;
-  srcPath: string;
+  absolutePath: string;
   scriptLanguage: string;
-  parameters: CreateScriptDataParameter[];
+  parameters: ScriptDataParameter[];
+}
+
+export type CreateScriptResponse = ScriptData;
+
+export type UpdateScriptResponse = ScriptData;
+
+export interface ScriptFileStructureNode {
+  name: string;
+  path: string;
+  absolutePath: string;
+  isDirectory: boolean;
+  scriptData?: ScriptData;
+  children?: ScriptFileStructureNode[];
 }

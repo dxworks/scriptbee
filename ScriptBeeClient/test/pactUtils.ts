@@ -40,11 +40,11 @@ export function getResponseHeaders() {
   };
 }
 
-export function executeSuccessfulInteraction<T>(observable: Observable<T>, assertions: (data: T) => void): Promise<void> {
+export function executeSuccessfulInteraction<T>(observable: Observable<T>, assertions?: (data: T) => void): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     observable.subscribe({
       next: (data) => {
-        assertions(data);
+        assertions?.(data);
         resolve();
       },
       error: (error) => {

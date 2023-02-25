@@ -12,18 +12,23 @@ import { forkJoin, of } from 'rxjs';
 import { selectProjectDetails } from '../../../../state/project-details/project-details.selectors';
 import { Project } from '../../../../state/project-details/project';
 import { setOutput } from '../../../../state/outputs/output.actions';
+import { ScriptsStore } from '../../../stores/scripts-store.service';
+import { ScriptLanguage } from '../../../services/script-types';
+import { MatDialog } from '@angular/material/dialog';
+import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-parameters-dialog.component';
 
 @Component({
   selector: 'app-selected-script',
   templateUrl: './selected-script.component.html',
-  styleUrls: ['./selected-script.component.scss']
+  styleUrls: ['./selected-script.component.scss'],
+  providers: [ScriptsStore],
 })
 export class SelectedScriptComponent implements OnInit {
   editorOptions = {
     theme: 'vs-dark',
     language: 'javascript',
     readOnly: true,
-    automaticLayout: true
+    automaticLayout: true,
   };
   code = '';
   scriptPath = '';
@@ -31,6 +36,7 @@ export class SelectedScriptComponent implements OnInit {
   projectAbsolutePath = '';
   isLoadingResults = false;
   project: Project | undefined;
+  private availableScriptLanguages: ScriptLanguage[] = [];
 
   constructor(
     private themeService: ThemeService,
@@ -39,7 +45,9 @@ export class SelectedScriptComponent implements OnInit {
     private runScriptService: RunScriptService,
     private snackBar: MatSnackBar,
     private store: Store,
-    private notificationService: NotificationsService
+    private scriptsStore: ScriptsStore,
+    private notificationService: NotificationsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +56,7 @@ export class SelectedScriptComponent implements OnInit {
         if (this.scriptPath === watchedFile.path) {
           this.code = watchedFile.content;
         }
-      }
+      },
     });
 
     this.store
@@ -64,7 +72,7 @@ export class SelectedScriptComponent implements OnInit {
                 of(filePath),
                 this.fileSystemService.getProjectAbsolutePath(project.data.projectId),
                 this.fileSystemService.getScriptAbsolutePath(project.data.projectId, filePath),
-                this.fileSystemService.getFileContent(project.data.projectId, filePath)
+                this.fileSystemService.getFileContent(project.data.projectId, filePath),
               ])
             )
           );
@@ -86,6 +94,9 @@ export class SelectedScriptComponent implements OnInit {
         this.editorOptions = { ...this.editorOptions, theme: 'vs-light' };
       }
     });
+
+    this.scriptsStore.loadAvailableLanguages();
+    this.scriptsStore.availableLanguages.subscribe((languages) => (this.availableScriptLanguages = languages));
   }
 
   onRunScriptButtonClick() {
@@ -102,7 +113,7 @@ export class SelectedScriptComponent implements OnInit {
           setOutput({
             runIndex: run.index,
             scriptName: run.scriptName,
-            results: run.results
+            results: run.results,
           })
         );
       },
@@ -111,15 +122,15 @@ export class SelectedScriptComponent implements OnInit {
         this.isLoadingResults = false;
 
         this.snackBar.open('Could not run script!', 'Ok', {
-          duration: 4000
+          duration: 4000,
         });
-      }
+      },
     });
   }
 
   onCopyToClipboardButtonClick() {
     this.snackBar.open('Path copied successfully!', 'Ok', {
-      duration: 2000
+      duration: 2000,
     });
   }
 
@@ -128,12 +139,11 @@ export class SelectedScriptComponent implements OnInit {
       return;
     }
 
-    if (scriptPath.endsWith('.js')) {
-      this.editorOptions = { ...this.editorOptions, language: 'javascript' };
-    } else if (scriptPath.endsWith('.py')) {
-      this.editorOptions = { ...this.editorOptions, language: 'python' };
-    } else if (scriptPath.endsWith('.cs')) {
-      this.editorOptions = { ...this.editorOptions, language: 'csharp' };
+    for (const language of this.availableScriptLanguages) {
+      if (scriptPath.endsWith(language.extension)) {
+        this.editorOptions = { ...this.editorOptions, language: language.name };
+        return;
+      }
     }
   }
 
@@ -141,20 +151,28 @@ export class SelectedScriptComponent implements OnInit {
     // return Injector.create({})
   }
 
-  // todo refactor (maybe move in webapp)
   private getLanguage(filename: string) {
     if (!filename) {
       return '';
     }
 
-    if (filename.endsWith('.js')) {
-      return 'javascript';
-    } else if (filename.endsWith('.py')) {
-      return 'python';
-    } else if (filename.endsWith('.cs')) {
-      return 'csharp';
+    for (const language of this.availableScriptLanguages) {
+      if (filename.endsWith(language.extension)) {
+        return language.name;
+      }
     }
 
     return '';
+  }
+
+  onEditParametersButtonClick() {
+    this.dialog.open(EditParametersDialogComponent, {
+      disableClose: true,
+      data: {
+        scriptId: '',
+        projectId: this.project.data.projectId,
+        parameters: [],
+      },
+    });
   }
 }

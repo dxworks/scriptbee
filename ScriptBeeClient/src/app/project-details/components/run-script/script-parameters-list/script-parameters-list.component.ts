@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Parameter, ParameterType } from '../../../services/script-types';
 
@@ -9,10 +9,10 @@ import { Parameter, ParameterType } from '../../../services/script-types';
   viewProviders: [MatExpansionPanel],
 })
 export class ScriptParametersListComponent {
+  @Input()
+  parameters: Parameter[] = [];
   @Output()
   parametersChange = new EventEmitter<Parameter[]>();
-
-  parameters: Parameter[] = [];
   private parameterId = 0;
 
   onAddButtonClick(): void {

@@ -77,7 +77,6 @@ export class ScriptsContentComponent implements OnInit, OnDestroy {
 
   onCreateNewScriptButtonClick() {
     this.dialog.open(CreateScriptDialogComponent, {
-      // width: '300px',
       disableClose: true,
       data: { projectId: this.projectId },
     });

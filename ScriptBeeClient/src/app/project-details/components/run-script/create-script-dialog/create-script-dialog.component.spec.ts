@@ -1,28 +1,27 @@
-import {CreateScriptDialogComponent} from './create-script-dialog.component';
-import {createComponentFactory, createHttpFactory, HttpMethod, Spectator, SpectatorHttp} from '@ngneat/spectator/jest';
-import {ScriptsService} from '../../../services/scripts.service';
-import {MockComponents, MockDirectives} from 'ng-mocks';
-import {ScriptParametersListComponent} from '../script-parameters-list/script-parameters-list.component';
-import {MatFormFieldModule, MatLabel} from '@angular/material/form-field';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import { CreateScriptDialogComponent } from './create-script-dialog.component';
+import { createComponentFactory, createHttpFactory, HttpMethod, Spectator, SpectatorHttp } from '@ngneat/spectator/jest';
+import { ScriptsService } from '../../../services/scripts.service';
+import { MockComponents, MockDirectives } from 'ng-mocks';
+import { ScriptParametersListComponent } from '../script-parameters-list/script-parameters-list.component';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import {
-    clickElementById,
-    clickElementByText,
-    enterTextInInput,
-    queryElementByCss,
-    queryElementById,
-    queryElementByText,
-    selectItemInSelect,
+  clickElementById,
+  clickElementByText,
+  enterTextInInput,
+  queryElementByCss,
+  queryElementById,
+  queryElementByText,
+  selectItemInSelect,
 } from '../../../../../../test/inputUtils';
-import {CreateScriptData, ParameterType, ScriptLanguage} from '../../../services/script-types';
-import {MatSelectModule} from '@angular/material/select';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatInputModule} from '@angular/material/input';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ApiErrorMessage} from '../../../../shared/api-error-message';
-import {FileTreeNode} from '../scripts-content/fileTreeNode';
-import {waitForAsync} from '@angular/core/testing';
-import {CenteredSpinnerComponent} from '../../../../shared/centered-spinner/centered-spinner.component';
+import { CreateScriptData, CreateScriptResponse, ParameterType, ScriptLanguage } from '../../../services/script-types';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ApiErrorMessage } from '../../../../shared/api-error-message';
+import { waitForAsync } from '@angular/core/testing';
+import { CenteredSpinnerComponent } from '../../../../shared/centered-spinner/centered-spinner.component';
 
 describe('CreateScriptDialogComponent', () => {
   let createScriptServiceSpectator: SpectatorHttp<ScriptsService>;
@@ -30,10 +29,6 @@ describe('CreateScriptDialogComponent', () => {
   const mockDialogRef = {
     close: jest.fn(),
   };
-
-  beforeEach(() => {
-    mockDialogRef.close.mockClear();
-  });
 
   const createComponent = createComponentFactory({
     component: CreateScriptDialogComponent,
@@ -58,7 +53,7 @@ describe('CreateScriptDialogComponent', () => {
     return testRequest;
   }
 
-  function mockCreateScript(component: Spectator<CreateScriptDialogComponent>, request: CreateScriptData, body: FileTreeNode | ApiErrorMessage) {
+  function mockCreateScript(component: Spectator<CreateScriptDialogComponent>, request: CreateScriptData, body: CreateScriptResponse | ApiErrorMessage) {
     const testRequest = mockCreateScriptWithoutFlush(component, request);
     const status = 'code' in body ? body.code : 200;
 
@@ -68,6 +63,7 @@ describe('CreateScriptDialogComponent', () => {
   }
 
   beforeEach(() => {
+    mockDialogRef.close.mockClear();
     createScriptServiceSpectator = createScriptService();
   });
 
@@ -189,6 +185,10 @@ describe('CreateScriptDialogComponent', () => {
         name: 'test',
         filePath: 'test',
         srcPath: 'test',
+        id: 'script-id',
+        projectId: 'project-id',
+        parameters: [],
+        scriptLanguage: 'Bash',
       }
     );
     expect(component.component.dialogRef.close).toHaveBeenCalledTimes(1);
@@ -225,6 +225,13 @@ describe('CreateScriptDialogComponent', () => {
         name: 'test',
         filePath: 'test',
         srcPath: 'test',
+        id: 'script-id',
+        projectId: 'project-id',
+        parameters: [
+          { name: 'test', type: ParameterType.boolean, value: 'false' },
+          { name: 'test2', type: ParameterType.boolean, value: 'true' },
+        ],
+        scriptLanguage: 'Bash',
       }
     );
 
@@ -275,7 +282,7 @@ describe('CreateScriptDialogComponent', () => {
     expect(queryElementByText(component, 'A script with this name already exists')).toBeTruthy();
   });
 
-  it('should show loading element until request is still in progress', async () => {
+  it('should show loading element while request is still in progress', async () => {
     const component = createComponent({
       props: {
         data: {

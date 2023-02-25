@@ -32,7 +32,6 @@
 
 
     <ng-container *ngIf='createScriptError'>
-      <div>sss</div>
       <div class='error-message text-alignment' *ngIf='createScriptError.code === 409'>A script with this name already exists</div>
       <div class='error-message text-alignment' *ngIf='createScriptError.code !== 409'>An error occurred while creating the script</div>
     </ng-container>
