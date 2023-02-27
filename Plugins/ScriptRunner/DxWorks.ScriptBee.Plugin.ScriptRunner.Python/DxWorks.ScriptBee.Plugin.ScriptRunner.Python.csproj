@@ -14,4 +14,13 @@
         <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+        <Content Include="SampleCodes\PythonSampleCode.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests" />
+    </ItemGroup>
 </Project>
