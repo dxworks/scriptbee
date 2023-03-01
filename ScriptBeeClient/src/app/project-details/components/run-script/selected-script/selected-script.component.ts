@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { ThemeService } from '../../../../services/theme/theme.service';
-import { FileSystemService } from '../../../../services/file-system/file-system.service';
-import { ActivatedRoute } from '@angular/router';
-import { RunScriptService } from '../../../../services/run-script/run-script.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Store } from '@ngrx/store';
-import { NotificationsService } from '../../../../services/notifications/notifications.service';
-import { selectScriptTreeLeafClick } from '../../../../state/script-tree/script-tree.selectors';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { forkJoin, of } from 'rxjs';
-import { selectProjectDetails } from '../../../../state/project-details/project-details.selectors';
-import { Project } from '../../../../state/project-details/project';
-import { setOutput } from '../../../../state/outputs/output.actions';
-import { ScriptsStore } from '../../../stores/scripts-store.service';
-import { ScriptLanguage } from '../../../services/script-types';
-import { MatDialog } from '@angular/material/dialog';
-import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-parameters-dialog.component';
+import {Component, OnInit} from '@angular/core';
+import {ThemeService} from '../../../../services/theme/theme.service';
+import {FileSystemService} from '../../../../services/file-system/file-system.service';
+import {ActivatedRoute} from '@angular/router';
+import {RunScriptService} from '../../../../services/run-script/run-script.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Store} from '@ngrx/store';
+import {NotificationsService} from '../../../../services/notifications/notifications.service';
+import {selectScriptTreeLeafClick} from '../../../../state/script-tree/script-tree.selectors';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {forkJoin, of} from 'rxjs';
+import {selectProjectDetails} from '../../../../state/project-details/project-details.selectors';
+import {Project} from '../../../../state/project-details/project';
+import {setOutput} from '../../../../state/outputs/output.actions';
+import {ScriptsStore} from '../../../stores/scripts-store.service';
+import {ScriptLanguage} from '../../../services/script-types';
+import {MatDialog} from '@angular/material/dialog';
+import {EditParametersDialogComponent} from '../edit-parameters-dialog/edit-parameters-dialog.component';
 
 @Component({
   selector: 'app-selected-script',
@@ -32,7 +32,6 @@ export class SelectedScriptComponent implements OnInit {
   };
   code = '';
   scriptPath = '';
-  scriptAbsolutePath = '';
   projectAbsolutePath = '';
   isLoadingResults = false;
   project: Project | undefined;
@@ -98,24 +97,14 @@ export class SelectedScriptComponent implements OnInit {
         switchMap((project) => {
           return this.store.select(selectScriptTreeLeafClick).pipe(
             map((leaf) => leaf?.filePath ?? this.route.snapshot.paramMap.get('scriptPath')),
-            switchMap((filePath) =>
-              forkJoin([
-                of(project),
-                of(filePath),
-                this.fileSystemService.getProjectAbsolutePath(project.data.projectId),
-                this.fileSystemService.getScriptAbsolutePath(project.data.projectId, filePath),
-                this.fileSystemService.getFileContent(project.data.projectId, filePath),
-              ])
-            )
+            switchMap((filePath) => forkJoin([of(project), of(filePath), this.fileSystemService.getProjectAbsolutePath(project.data.projectId)]))
           );
         })
       )
-      .subscribe(([project, filePath, projectPath, absolutePath, content]) => {
+      .subscribe(([project, filePath, projectAbsolutePath]) => {
         this.project = project;
         this.scriptPath = filePath;
-        this.projectAbsolutePath = projectPath;
-        this.scriptAbsolutePath = absolutePath;
-        this.code = content;
+        this.projectAbsolutePath = projectAbsolutePath;
         this.setEditorLanguage(this.scriptPath);
       });
 
@@ -128,7 +117,10 @@ export class SelectedScriptComponent implements OnInit {
     });
 
     this.scriptsStore.loadAvailableLanguages();
-    this.scriptsStore.availableLanguages.subscribe((languages) => (this.availableScriptLanguages = languages));
+    this.scriptsStore.availableLanguages.subscribe((languages) => {
+      console.log(languages);
+      return (this.availableScriptLanguages = languages);
+    });
   }
 
   onRunScriptButtonClick() {
@@ -137,6 +129,8 @@ export class SelectedScriptComponent implements OnInit {
     }
 
     this.isLoadingResults = true;
+
+    console.log(this.getLanguage(this.scriptPath));
 
     this.runScriptService.runScriptFromPath(this.project.data.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
       next: (run) => {

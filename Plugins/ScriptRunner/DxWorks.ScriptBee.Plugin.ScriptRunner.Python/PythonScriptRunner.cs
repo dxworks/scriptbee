@@ -1,4 +1,5 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
+﻿using System.Dynamic;
+using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 
@@ -15,9 +16,8 @@ public class PythonScriptRunner : IScriptRunner
 
         var dictionary = new Dictionary<string, object>
         {
-            {
-                "project", project
-            },
+            { "project", project },
+            { "scriptParameters", CreateScriptParameters(parameters) }
         };
 
         foreach (var (functionName, delegateFunction) in helperFunctionsContainer.GetFunctionsDictionary())
@@ -30,5 +30,20 @@ public class PythonScriptRunner : IScriptRunner
         var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
 
         await Task.Run(() => { pythonEngine.Execute(validScript, scriptScope); }, cancellationToken);
+    }
+
+
+    private static dynamic CreateScriptParameters(IEnumerable<ScriptParameter> parameters)
+    {
+        dynamic scriptParameters = new ExpandoObject();
+
+        IDictionary<string, object?> underlyingDictionary = scriptParameters;
+
+        foreach (var parameter in parameters)
+        {
+            underlyingDictionary.Add(parameter.Name, parameter.Value);
+        }
+
+        return scriptParameters;
     }
 }

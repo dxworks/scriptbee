@@ -54,8 +54,7 @@ public sealed class ScriptsService : IScriptsService
     }
 
     public async Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> GetScriptByFilePathAsync(
-        string filepath,
-        string projectId, CancellationToken cancellationToken = default)
+        string filepath, string projectId, CancellationToken cancellationToken = default)
     {
         var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
         if (!documentExists)
@@ -68,6 +67,25 @@ public sealed class ScriptsService : IScriptsService
         if (scriptModel is null)
         {
             return new ScriptMissing(filepath);
+        }
+
+        return CreateScriptResponse(scriptModel);
+    }
+
+    public async Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> GetScriptByIdAsync(string scriptId,
+        string projectId, CancellationToken cancellationToken = default)
+    {
+        var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
+        if (!documentExists)
+        {
+            return new ProjectMissing(projectId);
+        }
+
+        var scriptModel =
+            await _scriptModelService.GetDocument(scriptId, cancellationToken);
+        if (scriptModel is null)
+        {
+            return new ScriptMissing(scriptId);
         }
 
         return CreateScriptResponse(scriptModel);

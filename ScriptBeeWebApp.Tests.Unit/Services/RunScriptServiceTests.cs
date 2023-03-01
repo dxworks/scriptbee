@@ -25,6 +25,7 @@ public class RunScriptServiceTests
     private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
     private readonly Mock<IProjectModelService> _projectModelServiceMock;
     private readonly Mock<IRunModelService> _runModelServiceMock;
+    private readonly Mock<IScriptsService> _scriptsServiceMock;
     private readonly Fixture _fixture;
 
     private readonly RunScriptService _runScriptService;
@@ -37,11 +38,12 @@ public class RunScriptServiceTests
         _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
         _projectModelServiceMock = new Mock<IProjectModelService>();
         _runModelServiceMock = new Mock<IRunModelService>();
+        _scriptsServiceMock = new Mock<IScriptsService>();
         _fixture = new Fixture();
 
         _runScriptService = new RunScriptService(_fileModelServiceMock.Object, _guidGeneratorMock.Object,
             _pluginRepositoryMock.Object, _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object,
-            _runModelServiceMock.Object);
+            _runModelServiceMock.Object, _scriptsServiceMock.Object);
     }
 
     [Fact]

@@ -39,13 +39,4 @@
   <ngx-monaco-editor style='height: 100%' [options]='editorOptions' [(ngModel)]='code'></ngx-monaco-editor>
 </ng-template>
 
-
-<mat-spinner *ngIf='scriptContentLoading$ | async'></mat-spinner>
-
-<mat-card *ngIf='scriptContentError$ | async' class='loading-error'>
-  {{scriptContentError$ | async}}
-</mat-card>
-
-<ngx-monaco-editor style='height: 100%' [options]='editorOptions' [(ngModel)]='code'></ngx-monaco-editor>
-
 <app-loading-results-dialog *ngIf='isLoadingResults'></app-loading-results-dialog>

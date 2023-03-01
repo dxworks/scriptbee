@@ -13,7 +13,9 @@ public interface IScriptsService
         CancellationToken cancellationToken = default);
 
     Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> GetScriptByFilePathAsync(string filepath,
-        string projectId,
+        string projectId, CancellationToken cancellationToken = default);
+
+    Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> GetScriptByIdAsync(string scriptId, string projectId,
         CancellationToken cancellationToken = default);
 
     Task<OneOf<string, ProjectMissing, ScriptMissing>> GetScriptContentAsync(string scriptId, string projectId,
