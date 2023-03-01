@@ -13,10 +13,12 @@ public class CSharpScriptRunner : IScriptRunner
     public string Language => "csharp";
 
     public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        string scriptContent, CancellationToken cancellationToken = default)
+        IEnumerable<ScriptParameter> parameters, string scriptContent, CancellationToken cancellationToken = default)
     {
+        var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
+
         var compiledScript =
-            await Task.Run(() => CompileScript(scriptContent, helperFunctionsContainer, cancellationToken),
+            await Task.Run(() => CompileScript(validScript, helperFunctionsContainer, cancellationToken),
                 cancellationToken);
 
         await Task.Run(() => ExecuteScript(project, compiledScript, helperFunctionsContainer), cancellationToken);

@@ -1,6 +1,6 @@
-﻿namespace ScriptBee.Models;
+﻿namespace DxWorks.ScriptBee.Plugin.Api.Model;
 
-public class ScriptParameterModel
+public class ScriptParameter
 {
     public string Name { get; set; } = null!;
     public string Type { get; set; } = null!;

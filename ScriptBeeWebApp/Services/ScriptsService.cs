@@ -5,10 +5,11 @@ using ScriptBeeWebApp.Data;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.DTO;
 using ScriptBeeWebApp.Repository;
+using ScriptParameter = DxWorks.ScriptBee.Plugin.Api.Model.ScriptParameter;
 
 namespace ScriptBeeWebApp.Services;
 
-public class ScriptsService : IScriptsService
+public sealed class ScriptsService : IScriptsService
 {
     private readonly IGenerateScriptService _generateScriptService;
     private readonly IProjectFileStructureManager _projectFileStructureManager;
@@ -31,7 +32,6 @@ public class ScriptsService : IScriptsService
     {
         return _generateScriptService.GetSupportedLanguages();
     }
-
 
     public async Task<OneOf<IEnumerable<ScriptFileStructureNode>, ProjectMissing>> GetScriptsStructureAsync(
         string projectId,
@@ -74,8 +74,7 @@ public class ScriptsService : IScriptsService
     }
 
     public async Task<OneOf<string, ProjectMissing, ScriptMissing>> GetScriptContentAsync(string scriptId,
-        string projectId,
-        CancellationToken cancellationToken = default)
+        string projectId, CancellationToken cancellationToken = default)
     {
         var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
         if (!documentExists)
@@ -149,7 +148,7 @@ public class ScriptsService : IScriptsService
         }
 
         scriptModel.Parameters = updateScript.Parameters
-            .Select(p => new ScriptParameterModel
+            .Select(p => new ScriptParameter
             {
                 Name = p.Name,
                 Type = p.Type,
@@ -251,9 +250,9 @@ public class ScriptsService : IScriptsService
         };
     }
 
-    private static ScriptParameterModel CreateScriptParameterModel(ScriptParameter parameter)
+    private static ScriptParameter CreateScriptParameterModel(EndpointDefinitions.Arguments.ScriptParameter parameter)
     {
-        return new ScriptParameterModel
+        return new ScriptParameter
         {
             Name = parameter.Name,
             Type = parameter.Type,
@@ -274,7 +273,7 @@ public class ScriptsService : IScriptsService
         );
     }
 
-    private static ScriptParameterResponse CreateScriptParameterResponse(ScriptParameterModel parameter)
+    private static ScriptParameterResponse CreateScriptParameterResponse(ScriptParameter parameter)
     {
         return new ScriptParameterResponse(parameter.Name, parameter.Type, parameter.Value);
     }

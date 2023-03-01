@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace DxWorks.ScriptBee.Plugin.Api;
+﻿namespace DxWorks.ScriptBee.Plugin.Api;
 
 public interface IModelLinker : IPlugin
 {

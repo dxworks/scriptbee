@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -9,7 +8,6 @@ using DxWorks.ScriptBee.Plugin.Api;
 using Moq;
 using ScriptBee.Models;
 using ScriptBee.Plugin;
-using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Data.Exceptions;
@@ -44,31 +42,6 @@ public class RunScriptServiceTests
         _runScriptService = new RunScriptService(_fileModelServiceMock.Object, _guidGeneratorMock.Object,
             _pluginRepositoryMock.Object, _projectFileStructureManagerMock.Object, _projectModelServiceMock.Object,
             _runModelServiceMock.Object);
-    }
-
-
-    [Fact]
-    public void GivenLoadedPluginManifests_WhenGetSupportedLanguages_ThenReturnSupportedLanguages()
-    {
-        var pluginExtensionPoints = new List<ScriptRunnerPluginExtensionPoint>
-        {
-            new()
-            {
-                Language = "C#"
-            },
-            new()
-            {
-                Language = "Python"
-            }
-        };
-        _pluginRepositoryMock.Setup(x => x.GetLoadedPluginExtensionPoints<ScriptRunnerPluginExtensionPoint>())
-            .Returns(pluginExtensionPoints);
-
-        var supportedLanguages = _runScriptService.GetSupportedLanguages().ToList();
-
-        Assert.Equal(2, supportedLanguages.Count);
-        Assert.Contains("C#", supportedLanguages);
-        Assert.Contains("Python", supportedLanguages);
     }
 
     [Fact]

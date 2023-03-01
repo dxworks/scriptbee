@@ -10,7 +10,7 @@ public class JavascriptScriptRunner : IScriptRunner
     public string Language => "javascript";
 
     public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        string scriptContent, CancellationToken cancellationToken = default)
+        IEnumerable<ScriptParameter> parameters, string scriptContent, CancellationToken cancellationToken = default)
     {
         var engine = new Engine();
         engine.SetValue("project", project);
@@ -20,6 +20,8 @@ public class JavascriptScriptRunner : IScriptRunner
             engine.SetValue(functionName, delegateFunction);
         }
 
-        await Task.Run(() => { engine.Execute(scriptContent); }, cancellationToken);
+        var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
+
+        await Task.Run(() => { engine.Execute(validScript); }, cancellationToken);
     }
 }

@@ -20,19 +20,14 @@ public class RunScriptEndpointDefinition : IEndpointDefinition
 
     public void DefineEndpoints(WebApplication app)
     {
-        app.MapGet("/api/runscript/languages", GetLanguages);
-        app.MapPost("/api/runscript", RunScriptFromPath);
-    }
-
-    public static IEnumerable<string> GetLanguages(IRunScriptService runScriptService)
-    {
-        return runScriptService.GetSupportedLanguages();
+        app.MapPost("/api/scripts/run", PostRunScriptFromPath);
+        // TODO: run history
     }
 
     [HttpPost]
-    public static async Task<IResult> RunScriptFromPath([FromBody] RunScript runScript, IValidator<RunScript> validator,
-        IRunScriptService runScriptService, IProjectManager projectManager, IProjectModelService projectModelService,
-        CancellationToken cancellationToken = default)
+    public static async Task<IResult> PostRunScriptFromPath([FromBody] RunScript runScript,
+        IValidator<RunScript> validator, IRunScriptService runScriptService, IProjectManager projectManager,
+        IProjectModelService projectModelService, CancellationToken cancellationToken = default)
     {
         var validationResult = await validator.ValidateAsync(runScript, cancellationToken);
         if (!validationResult.IsValid)

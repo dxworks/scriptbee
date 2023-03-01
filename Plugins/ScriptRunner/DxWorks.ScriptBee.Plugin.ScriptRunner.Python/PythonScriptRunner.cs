@@ -9,7 +9,7 @@ public class PythonScriptRunner : IScriptRunner
     public string Language => "python";
 
     public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        string scriptContent, CancellationToken cancellationToken = default)
+        IEnumerable<ScriptParameter> parameters, string scriptContent, CancellationToken cancellationToken = default)
     {
         var pythonEngine = IronPython.Hosting.Python.CreateEngine();
 
@@ -27,6 +27,8 @@ public class PythonScriptRunner : IScriptRunner
 
         var scriptScope = pythonEngine.CreateScope(dictionary);
 
-        await Task.Run(() => { pythonEngine.Execute(scriptContent, scriptScope); }, cancellationToken);
+        var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
+
+        await Task.Run(() => { pythonEngine.Execute(validScript, scriptScope); }, cancellationToken);
     }
 }

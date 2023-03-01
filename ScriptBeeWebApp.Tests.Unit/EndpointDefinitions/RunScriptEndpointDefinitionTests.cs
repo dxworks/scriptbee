@@ -9,7 +9,6 @@ using ScriptBee.Models;
 using ScriptBee.ProjectContext;
 using ScriptBeeWebApp.EndpointDefinitions;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
-using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
 using ScriptBeeWebApp.EndpointDefinitions.DTO;
 using ScriptBeeWebApp.Repository;
 using ScriptBeeWebApp.Services;
@@ -37,17 +36,6 @@ public class RunScriptEndpointDefinitionTests
     }
 
     [Fact]
-    public void GivenLanguages_WhenGetLanguages_ThenReturnsLanguages()
-    {
-        var expectedLanguages = new List<string> { "C#", "Python", "JavaScript" };
-        _runScriptServiceMock.Setup(x => x.GetSupportedLanguages()).Returns(expectedLanguages);
-
-        var languages = RunScriptEndpointDefinition.GetLanguages(_runScriptServiceMock.Object);
-
-        Assert.Equal(expectedLanguages, languages);
-    }
-
-    [Fact]
     public async Task GivenInvalidRunScript_WhenRunScriptFromPath_ThenBadRequestIsReturned()
     {
         var runScript = _fixture.Create<RunScript>();
@@ -57,7 +45,7 @@ public class RunScriptEndpointDefinitionTests
         _runScriptValidatorMock.Setup(x => x.ValidateAsync(runScript, default))
             .ReturnsAsync(new ValidationResult(new List<ValidationFailure> { new("property", "error") }));
 
-        var result = await RunScriptEndpointDefinition.RunScriptFromPath(runScript,
+        var result = await RunScriptEndpointDefinition.PostRunScriptFromPath(runScript,
             _runScriptValidatorMock.Object, _runScriptServiceMock.Object, _projectManagerMock.Object,
             _projectModelServiceMock.Object);
 
@@ -75,7 +63,7 @@ public class RunScriptEndpointDefinitionTests
         _projectManagerMock.Setup(x => x.GetProject(runScript.ProjectId))
             .Returns((Project?)null);
 
-        var result = await RunScriptEndpointDefinition.RunScriptFromPath(runScript,
+        var result = await RunScriptEndpointDefinition.PostRunScriptFromPath(runScript,
             _runScriptValidatorMock.Object, _runScriptServiceMock.Object, _projectManagerMock.Object,
             _projectModelServiceMock.Object);
 
@@ -99,7 +87,7 @@ public class RunScriptEndpointDefinitionTests
         _projectModelServiceMock.Setup(x => x.GetDocument(project.Id, default))
             .ReturnsAsync((ProjectModel?)null);
 
-        var result = await RunScriptEndpointDefinition.RunScriptFromPath(runScript,
+        var result = await RunScriptEndpointDefinition.PostRunScriptFromPath(runScript,
             _runScriptValidatorMock.Object, _runScriptServiceMock.Object, _projectManagerMock.Object,
             _projectModelServiceMock.Object);
 
@@ -131,7 +119,7 @@ public class RunScriptEndpointDefinitionTests
                     It.IsAny<CancellationToken>()))
             .ReturnsAsync(run);
 
-        var result = await RunScriptEndpointDefinition.RunScriptFromPath(runScript,
+        var result = await RunScriptEndpointDefinition.PostRunScriptFromPath(runScript,
             _runScriptValidatorMock.Object, _runScriptServiceMock.Object, _projectManagerMock.Object,
             _projectModelServiceMock.Object);
 

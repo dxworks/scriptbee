@@ -38,7 +38,8 @@ public class ScriptContent
     }
 }".Replace(Environment.NewLine, "\r\n");
 
-        await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
+        await _scriptRunner.RunAsync(project, helperFunctionsContainer, new List<ScriptParameter>(), scriptContent,
+            It.IsAny<CancellationToken>());
     }
 
     [Fact]
@@ -64,6 +65,7 @@ public class ScriptContent
     }
 }".Replace(Environment.NewLine, "\r\n");
 
-        await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
+        await _scriptRunner.RunAsync(project, helperFunctionsContainer, new List<ScriptParameter>(), scriptContent,
+            It.IsAny<CancellationToken>());
     }
 }

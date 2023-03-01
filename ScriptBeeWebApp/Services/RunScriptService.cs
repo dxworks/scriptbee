@@ -4,7 +4,6 @@ using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Models;
 using ScriptBee.Plugin;
-using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Data.Exceptions;
@@ -33,13 +32,7 @@ public sealed class RunScriptService : IRunScriptService
         _projectModelService = projectModelService;
         _runModelService = runModelService;
     }
-
-    public IEnumerable<string> GetSupportedLanguages()
-    {
-        return _pluginRepository.GetLoadedPluginExtensionPoints<ScriptRunnerPluginExtensionPoint>()
-            .Select(point => point.Language);
-    }
-
+    
     public async Task<Run> RunAsync(IProject project, ProjectModel projectModel, string language,
         string scriptFilePath, CancellationToken cancellationToken = default)
     {
@@ -100,14 +93,6 @@ public sealed class RunScriptService : IRunScriptService
             throw new ScriptRunnerNotFoundException(language);
         }
 
-        var scriptGeneratorStrategy =
-            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == language);
-
-        if (scriptGeneratorStrategy is null)
-        {
-            throw new ScriptGenerationStrategyNotFoundException(language);
-        }
-
         var resultCollector = new ResultCollector();
 
         var helperFunctionsContainer = CreateHelperFunctionsContainer(project, runIndex, resultCollector);
@@ -116,9 +101,9 @@ public sealed class RunScriptService : IRunScriptService
 
         try
         {
-            var validScript = scriptGeneratorStrategy.ExtractValidScript(scriptContent);
-
-            await scriptRunner.RunAsync(project, helperFunctionsContainer, validScript, cancellationToken);
+            // todo: fetch parameters from script model
+            await scriptRunner.RunAsync(project, helperFunctionsContainer, new List<ScriptParameter>(), scriptContent,
+                cancellationToken);
         }
         catch (Exception e)
         {

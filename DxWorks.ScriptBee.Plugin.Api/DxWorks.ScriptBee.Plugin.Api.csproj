@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>true</ImplicitUsings>
         <PackageId>DxWorks.ScriptBee.Plugin.Api</PackageId>
         <Description>This is the API for the ScriptBee plugin.</Description>
         <PackageReleaseNotes>ReleaseNotes.md</PackageReleaseNotes>

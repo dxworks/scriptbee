@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using FluentValidation.TestHelper;
-using ScriptBee.Models;
-using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
 using Xunit;
 
@@ -19,7 +18,7 @@ public class ScriptParameterValidatorTests
     [Fact]
     public async Task GivenValidScriptParameter_WhenValidate_ThenResultHasNoErrors()
     {
-        var scriptParameter = new ScriptParameter("name", ScriptParameterModel.TypeString, "value");
+        var scriptParameter = new ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter("name", ScriptParameter.TypeString, "value");
 
         var result = await _validator.TestValidateAsync(scriptParameter);
 
@@ -29,7 +28,7 @@ public class ScriptParameterValidatorTests
     [Fact]
     public async Task GivenEmptyName_WhenValidate_ThenResultHasErrors()
     {
-        var scriptParameter = new ScriptParameter("", ScriptParameterModel.TypeString, "value");
+        var scriptParameter = new ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter("", ScriptParameter.TypeString, "value");
 
         var result = await _validator.TestValidateAsync(scriptParameter);
 
@@ -39,7 +38,7 @@ public class ScriptParameterValidatorTests
     [Fact]
     public async Task GivenInvalidType_WhenValidate_ThenResultHasErrors()
     {
-        var scriptParameter = new ScriptParameter("name", "invalidType", "value");
+        var scriptParameter = new ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter("name", "invalidType", "value");
 
         var result = await _validator.TestValidateAsync(scriptParameter);
 
@@ -47,13 +46,13 @@ public class ScriptParameterValidatorTests
     }
 
     [Theory]
-    [InlineData(ScriptParameterModel.TypeString)]
-    [InlineData(ScriptParameterModel.TypeInteger)]
-    [InlineData(ScriptParameterModel.TypeBoolean)]
-    [InlineData(ScriptParameterModel.TypeFloat)]
+    [InlineData(ScriptParameter.TypeString)]
+    [InlineData(ScriptParameter.TypeInteger)]
+    [InlineData(ScriptParameter.TypeBoolean)]
+    [InlineData(ScriptParameter.TypeFloat)]
     public async Task GivenValidType_WhenValidate_ThenResultHasNoErrors(string type)
     {
-        var scriptParameter = new ScriptParameter("name", type, "value");
+        var scriptParameter = new ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter("name", type, "value");
 
         var result = await _validator.TestValidateAsync(scriptParameter);
 
@@ -63,7 +62,7 @@ public class ScriptParameterValidatorTests
     [Fact]
     public async Task GivenNullValue_WhenValidate_ThenResultHasNoErrors()
     {
-        var scriptParameter = new ScriptParameter("name", ScriptParameterModel.TypeString, null);
+        var scriptParameter = new ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter("name", ScriptParameter.TypeString, null);
 
         var result = await _validator.TestValidateAsync(scriptParameter);
 

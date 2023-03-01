@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace ScriptBee.Models;
@@ -12,5 +13,5 @@ public class ScriptModel : IDocument
     public string FilePath { get; set; } = null!;
     public string AbsoluteFilePath { get; set; } = null!;
     public string ScriptLanguage { get; set; } = null!;
-    public List<ScriptParameterModel> Parameters { get; set; } = new();
+    public List<ScriptParameter> Parameters { get; set; } = new();
 }
