@@ -25,7 +25,7 @@ public class ScriptsEndpointDefinition : IEndpointDefinition
         app.MapPost("/api/scripts", PostCreateScript);
         app.MapPut("/api/scripts", PutUpdateScript);
         app.MapGet("/api/scripts/{scriptId}", GetScriptById);
-        // app.MapDelete("/api/scripts/{scriptId}", DeleteScript);
+        app.MapDelete("/api/scripts/{scriptId}", DeleteScript);
         app.MapGet("/api/scripts/{scriptId}/content", GetScriptContent);
         app.MapGet("/api/scripts/languages", GetLanguages);
         app.MapPost("/api/generatescript", PostGenerateScript);
@@ -121,7 +121,7 @@ public class ScriptsEndpointDefinition : IEndpointDefinition
             Results.NotFound);
     }
 
-    private async Task<IResult> DeleteScript(IScriptsService scriptsService, [FromRoute] string scriptId,
+    private static async Task<IResult> DeleteScript(IScriptsService scriptsService, [FromRoute] string scriptId,
         [FromQuery] string projectId, CancellationToken cancellationToken = default)
     {
         var result = await scriptsService.DeleteScriptAsync(scriptId, projectId, cancellationToken);

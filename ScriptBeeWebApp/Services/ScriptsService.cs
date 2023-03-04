@@ -179,10 +179,27 @@ public sealed class ScriptsService : IScriptsService
         return CreateScriptResponse(scriptModel);
     }
 
-    public Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> DeleteScriptAsync(string scriptId,
-        string projectId, CancellationToken cancellationToken)
+    public async Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> DeleteScriptAsync(string scriptId,
+        string projectId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var documentExists = await _projectModelService.DocumentExists(projectId, cancellationToken);
+        if (!documentExists)
+        {
+            return new ProjectMissing(projectId);
+        }
+
+        var scriptModel = await _scriptModelService.GetDocument(scriptId, cancellationToken);
+        if (scriptModel is null)
+        {
+            _projectFileStructureManager.DeleteFile(projectId, scriptId);
+
+            return new ScriptMissing(scriptId);
+        }
+
+        await _scriptModelService.DeleteDocument(scriptId, cancellationToken);
+        _projectFileStructureManager.DeleteFile(projectId, scriptId);
+
+        return CreateScriptResponse(scriptModel);
     }
 
     private async Task<IEnumerable<ScriptFileStructureNode>> GetScriptFileStructureAsync(string projectId,

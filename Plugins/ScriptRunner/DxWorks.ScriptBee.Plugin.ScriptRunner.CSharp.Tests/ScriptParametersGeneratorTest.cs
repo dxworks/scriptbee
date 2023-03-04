@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Exceptions;
 using Xunit;
@@ -14,7 +15,7 @@ public class ScriptParametersGeneratorTest
 
         Assert.Equal(@"public class ScriptParameters
 {
-}", scriptParametersCode);
+}".Replace(Environment.NewLine, "\r\n"), scriptParametersCode);
     }
 
     [Fact]
@@ -55,7 +56,7 @@ public class ScriptParametersGeneratorTest
     public integer b { get; set; } = 5;
     public boolean c { get; set; } = true;
     public float d { get; set; } = 6.5F;
-}", scriptParametersCode);
+}".Replace(Environment.NewLine, "\r\n"), scriptParametersCode);
     }
 
     [Fact]
@@ -99,9 +100,9 @@ public class ScriptParametersGeneratorTest
     public boolean c { get; set; }
 
     public float d { get; set; }
-}", scriptParametersCode);
+}".Replace(Environment.NewLine, "\r\n"), scriptParametersCode);
     }
-    
+
     [Fact]
     public void GivenInvalidParameterType_WhenGenerateScriptParameters_ThenExceptionIsThrown()
     {
@@ -113,11 +114,11 @@ public class ScriptParametersGeneratorTest
                 Type = "invalid",
                 Value = "123"
             }
-        };  
+        };
 
         Assert.Throws<InvalidParameterTypeException>(() => GetScriptParametersCode(parameters));
     }
-    
+
     private static string GetScriptParametersCode(IEnumerable<ScriptParameter> parameters)
     {
         return ScriptParametersGenerator.GenerateScriptParameters(parameters)

@@ -106,6 +106,17 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         }
     }
 
+    public void DeleteFile(string projectId, string pathToFile)
+    {
+        var fileAbsolutePath =
+            Path.Combine(ConfigFolders.PathToProjects, projectId, ConfigFolders.SrcFolder, pathToFile);
+
+        if (File.Exists(fileAbsolutePath))
+        {
+            File.Delete(fileAbsolutePath);
+        }
+    }
+
     public string GetProjectAbsolutePath(string projectId)
     {
         return _configFoldersService.GetProjectAbsolutePath(projectId);

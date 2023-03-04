@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { ScriptsStore } from '../../../../stores/scripts-store.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ScriptFileStructureNode } from '../../../../services/script-types';
+import {Component, Input} from '@angular/core';
+import {ScriptsStore} from '../../../../stores/scripts-store.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ScriptFileStructureNode} from '../../../../services/script-types';
 
 @Component({
   selector: 'app-script-tree',
@@ -34,5 +34,9 @@ export class ScriptTreeComponent {
 
   onLeafClick(node: ScriptFileStructureNode) {
     this.router.navigate([node.path], { relativeTo: this.route }).then();
+  }
+
+  onDeleteLeafClick(node: ScriptFileStructureNode) {
+    this.store.deleteScript({ scriptId: node.path, projectId: this.projectId });
   }
 }

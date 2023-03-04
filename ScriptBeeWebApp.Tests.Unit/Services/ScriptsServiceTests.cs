@@ -495,7 +495,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenEmptySupportedLanguages_WhenCreateScriptAsync_ThenReturnsInvalidScriptType()
     {
-        var createScript = new CreateScript("projectId", "filePath", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
 
         _generateScriptServiceMock.Setup(x => x.GetSupportedLanguages())
             .Returns(new List<ScriptLanguage>());
@@ -508,7 +509,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenInvalidScriptType_WhenCreateScriptAsync_ThenReturnsInvalidScriptType()
     {
-        var createScript = new CreateScript("projectId", "filePath", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
 
         _generateScriptServiceMock.Setup(x => x.GetSupportedLanguages())
             .Returns(new List<ScriptLanguage>
@@ -524,7 +526,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenMissingProject_WhenCreateScriptAsync_ThenReturnsProjectMissing()
     {
-        var createScript = new CreateScript("projectId", "filePath", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
 
         _generateScriptServiceMock.Setup(x => x.GetSupportedLanguages())
             .Returns(new List<ScriptLanguage>
@@ -542,7 +545,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenExistingScriptPath_WhenCreateScriptAsync_ThenReturnsScriptConflict()
     {
-        var createScript = new CreateScript("projectId", "filePath", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
 
         _generateScriptServiceMock.Setup(x => x.GetSupportedLanguages())
             .Returns(new List<ScriptLanguage>
@@ -564,10 +568,11 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenNonExistingScriptPath_WhenCreateScriptAsync_ThenReturnsFileTreeNode()
     {
-        var createScript = new CreateScript("projectId", "filePath.js", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>
-        {
-            new("name", "type", "value")
-        });
+        var createScript = new CreateScript("projectId", "filePath.js", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>
+            {
+                new("name", "type", "value")
+            });
         var fileTreeNode = new FileTreeNode("filePath", "fileId", "srcPath", null);
         var createScriptResponse = new ScriptDataResponse(null!, "projectId", "filePath", "filePath.js", "absolutePath",
             "scriptType", new List<ScriptParameterResponse>
@@ -610,7 +615,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenFilePathWithoutExtension_WhenCreateScriptAsync_ThenExtensionIsAppended()
     {
-        var createScript = new CreateScript("projectId", "filePath", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
         var fileTreeNode = new FileTreeNode("filePath", "fileId", "srcPath", null);
 
         _generateScriptServiceMock.Setup(x => x.GetSupportedLanguages())
@@ -637,7 +643,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenFilePathWithExtension_WhenCreateScriptAsync_ThenExtensionIsNotAppended()
     {
-        var createScript = new CreateScript("projectId", "filePath.js", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath.js", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
         var fileTreeNode = new FileTreeNode("filePath", "fileId", "srcPath", null);
 
         _generateScriptServiceMock.Setup(x => x.GetSupportedLanguages())
@@ -664,7 +671,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenValidScriptWithNoParameters_WhenCreateScriptAsync_ThenScriptInformationIsStored()
     {
-        var createScript = new CreateScript("projectId", "filePath.js", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var createScript = new CreateScript("projectId", "filePath.js", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
         var scriptModel = new ScriptModel
         {
             Id = "filePath.js",
@@ -705,10 +713,11 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenValidScriptWithParameters_WhenCreateScriptAsync_ThenScriptInformationIsStored()
     {
-        var createScript = new CreateScript("projectId", "filePath.js", "scriptType", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>
-        {
-            new("parameterName", "parameterType", "parameterValue"),
-        });
+        var createScript = new CreateScript("projectId", "filePath.js", "scriptType",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>
+            {
+                new("parameterName", "parameterType", "parameterValue"),
+            });
         var scriptModel = new ScriptModel
         {
             Id = "filePath.js",
@@ -760,7 +769,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenMissingProject_WhenUpdateScriptAsync_ThenProjectMissingIsReturned()
     {
-        var updateScript = new UpdateScript("scriptId", "projectId", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var updateScript = new UpdateScript("scriptId", "projectId",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
 
         _projectModelServiceMock.Setup(x => x.DocumentExists("projectId", It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
@@ -774,7 +784,8 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenMissingScript_WhenUpdateScriptAsync_ThenScriptMissingIsReturned()
     {
-        var updateScript = new UpdateScript("scriptId", "projectId", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
+        var updateScript = new UpdateScript("scriptId", "projectId",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>());
 
         _projectModelServiceMock.Setup(x => x.DocumentExists("projectId", It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
@@ -790,10 +801,11 @@ public class ScriptsServiceTests
     [Fact]
     public async Task GivenValidScript_WhenUpdateScriptAsync_ThenScriptInformationIsStored()
     {
-        var updateScript = new UpdateScript("scriptId", "projectId", new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>
-        {
-            new("parameterName", "parameterType", "parameterValue"),
-        });
+        var updateScript = new UpdateScript("scriptId", "projectId",
+            new List<ScriptBeeWebApp.EndpointDefinitions.Arguments.ScriptParameter>
+            {
+                new("parameterName", "parameterType", "parameterValue"),
+            });
         var scriptModel = new ScriptModel
         {
             Id = "scriptId",
@@ -839,6 +851,57 @@ public class ScriptsServiceTests
 
     #region DeleteScriptAsync
 
+    [Fact]
+    public async Task GivenMissingProject_WhenDeleteScriptAsync_ThenProjectMissingIsReturned()
+    {
+        _projectModelServiceMock.Setup(x => x.DocumentExists("projectId", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var result = await _scriptsService.DeleteScriptAsync("scriptId", "projectId", It.IsAny<CancellationToken>());
+
+        Assert.True(result.IsT1);
+        Assert.Equal("projectId", result.AsT1.ProjectId);
+    }
+
+    [Fact]
+    public async Task GivenMissingScript_WhenDeleteScriptAsync_ThenScriptMissingIsReturned()
+    {
+        _projectModelServiceMock.Setup(x => x.DocumentExists("projectId", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _scriptModelServiceMock.Setup(x => x.GetDocument("scriptId", It.IsAny<CancellationToken>()))
+            .ReturnsAsync((ScriptModel?)null);
+
+        var result = await _scriptsService.DeleteScriptAsync("scriptId", "projectId", It.IsAny<CancellationToken>());
+
+        Assert.True(result.IsT2);
+        Assert.Equal("scriptId", result.AsT2.ScriptId);
+    }
+    
+    [Fact]
+    public async Task GivenValidScript_WhenDeleteScriptAsync_ThenScriptIsDeleted()
+    {
+        var scriptModel = new ScriptModel
+        {
+            Id = "scriptId",
+            ProjectId = "projectId",
+            Name = "filePath",
+            FilePath = "filePath.js",
+            AbsoluteFilePath = "absoluteFilePath",
+            ScriptLanguage = "scriptType",
+            Parameters = new List<ScriptParameter>(),
+        };
+
+        _projectModelServiceMock.Setup(x => x.DocumentExists("projectId", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _scriptModelServiceMock.Setup(x => x.GetDocument("scriptId", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(scriptModel);
+
+        await _scriptsService.DeleteScriptAsync("scriptId", "projectId", It.IsAny<CancellationToken>());
+
+        _scriptModelServiceMock.Verify(
+            x => x.DeleteDocument("scriptId", It.IsAny<CancellationToken>()), Times.Once);
+    }
+    
     #endregion
 
     private static bool VerifyScriptDataResponse(ScriptDataResponse expected, ScriptDataResponse actual)

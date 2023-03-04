@@ -28,5 +28,5 @@ public interface IScriptsService
         CancellationToken cancellationToken = default);
 
     Task<OneOf<ScriptDataResponse, ProjectMissing, ScriptMissing>> DeleteScriptAsync(string scriptId, string projectId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 }

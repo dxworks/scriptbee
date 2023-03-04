@@ -1,11 +1,18 @@
-import { Injectable } from '@angular/core';
-import { ComponentStore } from '@ngrx/component-store';
-import { ApiErrorMessage } from '../../shared/api-error-message';
-import { ScriptsService } from '../services/scripts.service';
-import { catchError, EMPTY, pipe, tap } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
-import { CreateScriptData, CreateScriptResponse, ScriptData, ScriptFileStructureNode, ScriptLanguage, UpdateScriptData } from '../services/script-types';
+import {Injectable} from '@angular/core';
+import {ComponentStore} from '@ngrx/component-store';
+import {ApiErrorMessage} from '../../shared/api-error-message';
+import {ScriptsService} from '../services/scripts.service';
+import {catchError, EMPTY, pipe, tap} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {
+    CreateScriptData,
+    CreateScriptResponse,
+    ScriptData,
+    ScriptFileStructureNode,
+    ScriptLanguage,
+    UpdateScriptData
+} from '../services/script-types';
 
 interface CreateScriptStoreState {
   availableLanguages: ScriptLanguage[];
@@ -27,6 +34,10 @@ interface CreateScriptStoreState {
   scriptContent: string | undefined;
   scriptContentError: ApiErrorMessage | undefined;
   scriptContentLoading: boolean;
+
+  deleteScriptResult: string | undefined;
+  deleteScriptError: ApiErrorMessage | undefined;
+  deleteScriptLoading: boolean;
 }
 
 @Injectable()
@@ -47,6 +58,9 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
       scriptContent: undefined,
       scriptContentError: undefined,
       scriptContentLoading: false,
+      deleteScriptResult: undefined,
+      deleteScriptError: undefined,
+      deleteScriptLoading: false,
     });
   }
 
@@ -161,6 +175,25 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
               this.patchState({
                 scriptContentError: { code: error.status, message: error.message },
                 scriptContentLoading: false,
+              }),
+          }),
+          catchError(() => EMPTY)
+        );
+      })
+    )
+  );
+
+  deleteScript = this.effect<{ scriptId: string; projectId: string }>(
+    pipe(
+      switchMap(({ scriptId, projectId }) => {
+        this.patchState({ deleteScriptLoading: true, deleteScriptError: undefined, deleteScriptResult: undefined });
+        return this.scriptsService.deleteScript(scriptId, projectId).pipe(
+          tap({
+            next: () => this.patchState({ deleteScriptResult: 'SUCCESS', deleteScriptLoading: false }),
+            error: (error: HttpErrorResponse) =>
+              this.patchState({
+                deleteScriptError: { code: error.status, message: error.message },
+                deleteScriptLoading: false,
               }),
           }),
           catchError(() => EMPTY)

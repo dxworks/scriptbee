@@ -7,7 +7,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 
-public static class ScriptParametersGenerator
+public static class ScriptParametersGenerator 
 {
     public static ClassDeclarationSyntax GenerateScriptParameters(IEnumerable<ScriptParameter> parameters)
     {
