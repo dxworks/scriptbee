@@ -1,5 +1,6 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
   <mat-tree-node matRipple *matTreeNodeDef="let node" matTreeNodeToggle (click)="onLeafNodeClick(node)">
+    <div *ngIf='node.level === 0' class='root-tree-file-adjustment'></div>
     {{node.name}}
   </mat-tree-node>
   <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">

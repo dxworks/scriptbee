@@ -64,5 +64,6 @@ export interface ScriptFileStructureNode {
   absolutePath: string;
   isDirectory: boolean;
   scriptData?: ScriptData;
+  level: number;
   children?: ScriptFileStructureNode[];
 }

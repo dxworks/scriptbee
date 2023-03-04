@@ -2,9 +2,9 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
+using DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Exceptions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using ScriptBee.Scripts.ScriptRunners.Exceptions;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 
@@ -18,10 +18,11 @@ public class CSharpScriptRunner : IScriptRunner
         var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
 
         var compiledScript =
-            await Task.Run(() => CompileScript(validScript, helperFunctionsContainer, cancellationToken),
+            await Task.Run(() => CompileScript(validScript, parameters, helperFunctionsContainer, cancellationToken),
                 cancellationToken);
 
-        await Task.Run(() => ExecuteScript(project, compiledScript, helperFunctionsContainer), cancellationToken);
+        await Task.Run(() => ExecuteScript(project, compiledScript, helperFunctionsContainer),
+            cancellationToken);
     }
 
     private static void ExecuteScript(IProject project, Assembly compiledScriptAssembly,
@@ -31,24 +32,60 @@ public class CSharpScriptRunner : IScriptRunner
 
         foreach (var type in compiledScriptAssembly.GetTypes())
         {
-            if (type.Name == "ScriptContent")
+            if (type.Name != "ScriptContent")
             {
-                foreach (var method in type.GetMethods())
-                {
-                    var methodParameters = method.GetParameters();
-                    if (method.Name == "ExecuteScript" && methodParameters.Length == 1 &&
-                        methodParameters[0].ParameterType.Name is nameof(IProject) or nameof(Project))
-                    {
-                        var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
+                continue;
+            }
 
-                        method.Invoke(scriptContentObject, new object[]
+            foreach (var method in type.GetMethods())
+            {
+                var methodParameters = method.GetParameters();
+
+                if (method.Name == "ExecuteScript")
+                {
+                    switch (methodParameters.Length)
+                    {
+                        case 1 when IsProjectType(methodParameters[0].ParameterType):
                         {
-                            project
-                        });
+                            var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
+
+                            method.Invoke(scriptContentObject, new object[]
+                            {
+                                project
+                            });
+
+                            return;
+                        }
+                        case 2 when IsProjectType(methodParameters[0].ParameterType) &&
+                                    methodParameters[1].ParameterType.Name == "ScriptParameters":
+                        {
+                            var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
+                            var scriptParameters = CreateScriptParameters(compiledScriptAssembly);
+
+                            method.Invoke(scriptContentObject, new[]
+                            {
+                                project,
+                                scriptParameters
+                            });
+
+                            return;
+                        }
                     }
                 }
             }
         }
+    }
+
+    private static object? CreateScriptParameters(Assembly compiledScriptAssembly)
+    {
+        var scriptParameters = compiledScriptAssembly.GetTypes().FirstOrDefault(t => t.Name == "ScriptParameters");
+
+        return scriptParameters is null ? null : Activator.CreateInstance(scriptParameters);
+    }
+
+    private static bool IsProjectType(MemberInfo type)
+    {
+        return type.Name is nameof(IProject) or nameof(Project);
     }
 
     // todo add tests
@@ -72,13 +109,14 @@ public class CSharpScriptRunner : IScriptRunner
         }
     }
 
-    private static Assembly CompileScript(string script, IHelperFunctionsContainer helperFunctionsContainer,
-        CancellationToken cancellationToken)
+    private static Assembly CompileScript(string script, IEnumerable<ScriptParameter> parameters,
+        IHelperFunctionsContainer helperFunctionsContainer, CancellationToken cancellationToken)
     {
         var members = HelperFunctionsGenerator.GetMemberDeclarationSyntaxList(helperFunctionsContainer);
+        var scriptParameters = ScriptParametersGenerator.GenerateScriptParameters(parameters);
 
         script = script.Replace("public void ExecuteScript",
-            $"{members}public void ExecuteScript");
+            $"{scriptParameters}{members}public void ExecuteScript");
 
         // todo when writing script instead of class with execute method 
         // https://stackoverflow.com/questions/13601412/compilation-errors-when-dealing-with-c-sharp-script-using-roslyn

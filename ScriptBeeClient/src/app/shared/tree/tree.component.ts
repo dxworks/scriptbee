@@ -1,22 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { TreeNode } from "../tree-node";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {NestedTreeControl} from '@angular/cdk/tree';
+import {MatTreeNestedDataSource} from '@angular/material/tree';
+import {TreeNode} from '../tree-node';
 
 @Component({
   selector: 'app-tree',
   templateUrl: './tree.component.html',
-  styleUrls: ['./tree.component.scss']
+  styleUrls: ['./tree.component.scss'],
 })
 export class TreeComponent {
-
   @Input() set treeData(value: TreeNode[]) {
     this.dataSource.data = value;
   }
 
   @Output() leafClick = new EventEmitter<TreeNode>();
 
-  treeControl = new NestedTreeControl<TreeNode>(node => node.children);
+  treeControl = new NestedTreeControl<TreeNode>((node) => node.children);
   dataSource = new MatTreeNestedDataSource<TreeNode>();
 
   constructor() {

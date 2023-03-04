@@ -49,7 +49,7 @@ public sealed class ScriptsService : IScriptsService
             return new ProjectMissing(projectId);
         }
 
-        var structure = await GetScriptFileStructureAsync(projectId, fileTreeNode, cancellationToken);
+        var structure = await GetScriptFileStructureAsync(projectId, fileTreeNode, 0, cancellationToken);
         return OneOf<IEnumerable<ScriptFileStructureNode>, ProjectMissing>.FromT0(structure);
     }
 
@@ -186,7 +186,7 @@ public sealed class ScriptsService : IScriptsService
     }
 
     private async Task<IEnumerable<ScriptFileStructureNode>> GetScriptFileStructureAsync(string projectId,
-        FileTreeNode fileTreeNode, CancellationToken cancellationToken)
+        FileTreeNode fileTreeNode, int level, CancellationToken cancellationToken)
     {
         var scriptFileStructureNodes = new List<ScriptFileStructureNode>();
 
@@ -199,7 +199,7 @@ public sealed class ScriptsService : IScriptsService
         {
             if (treeNode.Children is null)
             {
-                var node = await AddScriptToFileStructure(projectId, treeNode, cancellationToken);
+                var node = await AddScriptToFileStructure(projectId, treeNode, level, cancellationToken);
                 scriptFileStructureNodes.Add(node);
             }
             else
@@ -207,10 +207,11 @@ public sealed class ScriptsService : IScriptsService
                 scriptFileStructureNodes.Add(new ScriptFileStructureNode
                 {
                     IsDirectory = true,
-                    Children = await GetScriptFileStructureAsync(projectId, treeNode, cancellationToken),
+                    Children = await GetScriptFileStructureAsync(projectId, treeNode, level + 1, cancellationToken),
                     Name = treeNode.Name,
                     Path = treeNode.SrcPath,
                     AbsolutePath = _projectFileStructureManager.GetAbsoluteFilePath(projectId, treeNode.FilePath),
+                    Level = level,
                     ScriptData = null
                 });
             }
@@ -220,7 +221,7 @@ public sealed class ScriptsService : IScriptsService
     }
 
     private async Task<ScriptFileStructureNode> AddScriptToFileStructure(string projectId, FileTreeNode treeNode,
-        CancellationToken cancellationToken)
+        int level, CancellationToken cancellationToken)
     {
         string absoluteFilePath;
         ScriptDataResponse? scriptData = null;
@@ -244,6 +245,7 @@ public sealed class ScriptsService : IScriptsService
             Name = treeNode.Name,
             Path = treeNode.SrcPath,
             AbsolutePath = absoluteFilePath,
+            Level = level,
             ScriptData = scriptData
         };
     }

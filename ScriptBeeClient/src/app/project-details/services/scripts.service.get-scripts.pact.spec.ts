@@ -1,10 +1,16 @@
-import { executeFailedInteraction, executeSuccessfulInteraction, getPactInterceptor, getResponseHeaders, pactWrapper } from '../../../../test/pactUtils';
-import { boolean, eachLike, like } from '@pact-foundation/pact/src/v3/matchers';
-import { term } from '@pact-foundation/pact/src/dsl/matchers';
-import { TestBed } from '@angular/core/testing';
-import { ScriptsService } from './scripts.service';
-import { HttpClientModule } from '@angular/common/http';
-import { ParameterType } from './script-types';
+import {
+    executeFailedInteraction,
+    executeSuccessfulInteraction,
+    getPactInterceptor,
+    getResponseHeaders,
+    pactWrapper
+} from '../../../../test/pactUtils';
+import {boolean, eachLike, like} from '@pact-foundation/pact/src/v3/matchers';
+import {term} from '@pact-foundation/pact/src/dsl/matchers';
+import {TestBed} from '@angular/core/testing';
+import {ScriptsService} from './scripts.service';
+import {HttpClientModule} from '@angular/common/http';
+import {ParameterType} from './script-types';
 
 describe('Get Scripts Service Pact', () => {
   const provider = pactWrapper();
@@ -140,6 +146,7 @@ function getNodeResponsePact() {
     path: like('path'),
     absolutePath: like('absolutePath'),
     isDirectory: boolean(true),
+    level: like(0),
     scriptData: like({
       id: like('script id'),
       projectId: like('project id'),
@@ -154,6 +161,7 @@ function getNodeResponsePact() {
           generate: 'string',
         }),
         value: like('parameter value'),
+        level: like(1),
       }),
     }),
   };

@@ -118,7 +118,6 @@ export class SelectedScriptComponent implements OnInit {
 
     this.scriptsStore.loadAvailableLanguages();
     this.scriptsStore.availableLanguages.subscribe((languages) => {
-      console.log(languages);
       return (this.availableScriptLanguages = languages);
     });
   }
@@ -129,9 +128,6 @@ export class SelectedScriptComponent implements OnInit {
     }
 
     this.isLoadingResults = true;
-
-    console.log(this.getLanguage(this.scriptPath));
-
     this.runScriptService.runScriptFromPath(this.project.data.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
       next: (run) => {
         this.isLoadingResults = false;
