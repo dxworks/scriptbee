@@ -1,55 +1,44 @@
-import { Component, Input } from '@angular/core';
-import { Project } from '../../../../state/project-details/project';
-import { LoaderService } from '../../../../services/loader/loader.service';
+import { Component, OnInit } from '@angular/core';
 import { TreeNode } from '../../../../shared/tree-node';
-import { Store } from '@ngrx/store';
 import { ErrorDialogService } from '../../../../shared/error-dialog/error-dialog.service';
-import { setLoadedModels } from '../../../../state/project-details/project-details.actions';
+import { LoadersStore } from '../../../stores/loaders-store.service';
+import { ProjectStore } from '../../../stores/project-store.service';
+import { ContextStore } from '../../../stores/context-store.service';
 
 @Component({
   selector: 'app-load-models',
   templateUrl: './load-models.component.html',
   styleUrls: ['./load-models.component.scss'],
 })
-export class LoadModelsComponent {
-  @Input()
-  project: Project | undefined;
+export class LoadModelsComponent implements OnInit {
+  loadedFiles$ = this.loadersStore.savedFiles;
+  loadModelsLoading$ = this.loadersStore.loadModelsLoading;
 
   checkedFiles: TreeNode[] = [];
-  loading = false;
 
-  constructor(private store: Store, private errorDialogService: ErrorDialogService, private loaderService: LoaderService) {}
+  constructor(
+    private projectStore: ProjectStore,
+    private loadersStore: LoadersStore,
+    private contextStore: ContextStore,
+    private errorDialogService: ErrorDialogService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadersStore.loadModelsError.subscribe((error) => {
+      if (error) {
+        this.errorDialogService.displayDialogErrorMessage('Could not load models', error.message);
+      }
+    });
+  }
 
   onUpdateCheckedFiles(checkedNodes: TreeNode[]) {
     this.checkedFiles = checkedNodes;
   }
 
   onLoadFilesClick() {
-    this.loading = true;
-    const projectId = this.project.data.projectId;
+    const projectId = this.projectStore.getProjectId();
 
-    this.loaderService.loadModels(projectId, this.checkedFiles).subscribe({
-      next: (result) => {
-        for (const loadModelsResult of result) {
-          this.store.dispatch(
-            setLoadedModels({
-              files: loadModelsResult.models,
-              loader: loadModelsResult.name,
-            })
-          );
-        }
-
-        this.loading = false;
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorDialogService.displayDialogErrorMessage('Could not load models', LoadModelsComponent.getErrorMessage(err));
-      },
-    });
-  }
-
-  // todo after errors are standardized, remove this
-  private static getErrorMessage(error: any) {
-    return error.error?.detail ?? error.error;
+    this.loadersStore.loadModels({ projectId, models: this.checkedFiles });
+    this.contextStore.loadContext({ projectId });
   }
 }

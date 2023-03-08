@@ -1,28 +1,15 @@
-import {Injectable} from '@angular/core';
-import {ComponentStore} from '@ngrx/component-store';
-import {ApiErrorMessage} from '../../shared/api-error-message';
-import {ScriptsService} from '../services/scripts.service';
-import {catchError, EMPTY, pipe, tap} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {HttpErrorResponse} from '@angular/common/http';
-import {
-    CreateScriptData,
-    CreateScriptResponse,
-    ScriptData,
-    ScriptFileStructureNode,
-    ScriptLanguage,
-    UpdateScriptData
-} from '../services/script-types';
+import { Injectable } from '@angular/core';
+import { ComponentStore } from '@ngrx/component-store';
+import { ApiErrorMessage } from '../../shared/api-error-message';
+import { ScriptsService } from '../services/scripts.service';
+import { catchError, EMPTY, pipe, tap } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ScriptData, ScriptFileStructureNode, ScriptLanguage } from '../services/script-types';
 
-interface CreateScriptStoreState {
+interface ScriptStoreState {
   availableLanguages: ScriptLanguage[];
   availableLanguagesError: ApiErrorMessage | undefined;
-
-  createScriptResult: CreateScriptResponse | undefined;
-  createScriptError: ApiErrorMessage | undefined;
-
-  updateScriptResult: CreateScriptResponse | undefined;
-  updateScriptError: ApiErrorMessage | undefined;
 
   scriptsForProject: ScriptFileStructureNode[] | undefined;
   scriptsForProjectError: ApiErrorMessage | undefined;
@@ -35,21 +22,18 @@ interface CreateScriptStoreState {
   scriptContentError: ApiErrorMessage | undefined;
   scriptContentLoading: boolean;
 
-  deleteScriptResult: string | undefined;
   deleteScriptError: ApiErrorMessage | undefined;
   deleteScriptLoading: boolean;
 }
 
-@Injectable()
-export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
+@Injectable({
+  providedIn: 'root',
+})
+export class ScriptsStore extends ComponentStore<ScriptStoreState> {
   constructor(private scriptsService: ScriptsService) {
     super({
       availableLanguages: [],
       availableLanguagesError: undefined,
-      createScriptResult: undefined,
-      createScriptError: undefined,
-      updateScriptResult: undefined,
-      updateScriptError: undefined,
       scriptsForProject: undefined,
       scriptsForProjectError: undefined,
       scriptsForProjectLoading: false,
@@ -58,7 +42,6 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
       scriptContent: undefined,
       scriptContentError: undefined,
       scriptContentLoading: false,
-      deleteScriptResult: undefined,
       deleteScriptError: undefined,
       deleteScriptLoading: false,
     });
@@ -77,11 +60,32 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
   readonly scriptContentError = this.select((state) => state.scriptContentError);
   readonly scriptContentLoading = this.select((state) => state.scriptContentLoading);
 
-  readonly createScriptResult = this.select((state) => state.createScriptResult);
-  readonly createScriptError = this.select((state) => state.createScriptError);
+  getScriptParameters(projectId: string, scriptPath: string) {
+    const script = this.getScriptRecursively(this.get().scriptsForProject, projectId, scriptPath);
+    if (!script) {
+      return [];
+    }
 
-  readonly updateScriptResult = this.select((state) => state.updateScriptResult);
-  readonly updateScriptError = this.select((state) => state.updateScriptError);
+    return script.scriptData.parameters;
+  }
+
+  updateScript(updateScriptResult: ScriptData) {
+    this.patchState((state) => {
+      const newScriptsForProject = state.scriptsForProject?.map((script) => {
+        if (script.scriptData?.filePath === updateScriptResult.filePath && script.scriptData?.projectId === updateScriptResult.projectId) {
+          return {
+            ...script,
+            scriptData: updateScriptResult,
+          };
+        }
+        return script;
+      });
+
+      return {
+        scriptsForProject: newScriptsForProject,
+      };
+    });
+  }
 
   loadAvailableLanguages = this.effect<void>(
     pipe(
@@ -96,34 +100,6 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
                   message: error.message,
                 },
               }),
-          }),
-          catchError(() => EMPTY)
-        )
-      )
-    )
-  );
-
-  createScript = this.effect<CreateScriptData>(
-    pipe(
-      switchMap((createScriptData) =>
-        this.scriptsService.createScript(createScriptData).pipe(
-          tap({
-            next: (createScriptResult) => this.patchState({ createScriptResult }),
-            error: (error: HttpErrorResponse) => this.patchState({ createScriptError: { code: error.status, message: error.message } }),
-          }),
-          catchError(() => EMPTY)
-        )
-      )
-    )
-  );
-
-  updateScript = this.effect<UpdateScriptData>(
-    pipe(
-      switchMap((updateScriptData) =>
-        this.scriptsService.updateScript(updateScriptData).pipe(
-          tap({
-            next: (updateScriptResult) => this.patchState({ updateScriptResult }),
-            error: (error: HttpErrorResponse) => this.patchState({ updateScriptError: { code: error.status, message: error.message } }),
           }),
           catchError(() => EMPTY)
         )
@@ -186,10 +162,15 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
   deleteScript = this.effect<{ scriptId: string; projectId: string }>(
     pipe(
       switchMap(({ scriptId, projectId }) => {
-        this.patchState({ deleteScriptLoading: true, deleteScriptError: undefined, deleteScriptResult: undefined });
+        this.patchState({ deleteScriptLoading: true, deleteScriptError: undefined });
         return this.scriptsService.deleteScript(scriptId, projectId).pipe(
           tap({
-            next: () => this.patchState({ deleteScriptResult: 'SUCCESS', deleteScriptLoading: false }),
+            next: () =>
+              this.patchState((state) => {
+                const newScriptsForProject = state.scriptsForProject?.filter((script) => script.path !== scriptId);
+
+                return { scriptsForProject: newScriptsForProject, deleteScriptLoading: false };
+              }),
             error: (error: HttpErrorResponse) =>
               this.patchState({
                 deleteScriptError: { code: error.status, message: error.message },
@@ -201,4 +182,24 @@ export class ScriptsStore extends ComponentStore<CreateScriptStoreState> {
       })
     )
   );
+
+  private getScriptRecursively(scripts: ScriptFileStructureNode[], projectId: string, scriptPath: string): ScriptFileStructureNode | undefined {
+    if (!scripts) {
+      return undefined;
+    }
+
+    for (const script of scripts) {
+      if (!script.children && script.scriptData) {
+        if (script.scriptData.filePath === scriptPath && script.scriptData.projectId === projectId) {
+          return script;
+        }
+      } else {
+        const result = this.getScriptRecursively(script.children, projectId, scriptPath);
+        if (result) {
+          return result;
+        }
+      }
+    }
+    return undefined;
+  }
 }

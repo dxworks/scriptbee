@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { Project } from '../../../../state/project-details/project';
+import { Component } from '@angular/core';
+import { LoadersStore } from '../../../stores/loaders-store.service';
+import { ProjectStore } from '../../../stores/project-store.service';
 
 @Component({
   selector: 'app-currently-loaded-models',
@@ -7,6 +8,8 @@ import { Project } from '../../../../state/project-details/project';
   styleUrls: ['./currently-loaded-models.component.scss'],
 })
 export class CurrentlyLoadedModelsComponent {
-  @Input()
-  project: Project | undefined;
+  loadedFiles$ = this.loadersStore.loadedFiles;
+  projectData$ = this.projectStore.projectData;
+
+  constructor(private loadersStore: LoadersStore, private projectStore: ProjectStore) {}
 }

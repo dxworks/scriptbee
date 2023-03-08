@@ -185,11 +185,11 @@ public class ScriptsServiceTests
             {
                 new("folder1", "folder1", "folder1", new List<FileTreeNode>
                 {
-                    new("script1.js", "folder1/script1.js", "script1.js", null),
+                    new("script1.js", "/root/folder1/script1.js", "folder1/script1.js", null),
                 }),
                 new("folder2", "folder2", "folder2", new List<FileTreeNode>
                 {
-                    new("script2.js", "folder2/script2.js", "script2.js", null),
+                    new("script2.js", "/root/folder2/script2.js", "folder2/script2.js", null),
                 }),
             }));
         _scriptModelServiceMock.Setup(x =>
@@ -242,12 +242,12 @@ public class ScriptsServiceTests
                 new("script1.js", "script1.js", "script1.js", null),
                 new("folder1", "folder1", "folder1", new List<FileTreeNode>
                 {
-                    new("script2.js", "folder1/script2.js", "script2.js", null),
+                    new("script2.js", "/root/folder1/script2.js", "folder1/script2.js", null),
                 }),
                 new("script3.js", "script3.js", "script3.js", null),
                 new("folder2", "folder2", "folder2", new List<FileTreeNode>
                 {
-                    new("script4.js", "folder2/script4.js", "script4.js", null),
+                    new("script4.js", "/root/folder2/script4.js", "folder2/script4.js", null),
                 }),
             }));
         _scriptModelServiceMock.Setup(x =>
@@ -876,7 +876,7 @@ public class ScriptsServiceTests
         Assert.True(result.IsT2);
         Assert.Equal("scriptId", result.AsT2.ScriptId);
     }
-    
+
     [Fact]
     public async Task GivenValidScript_WhenDeleteScriptAsync_ThenScriptIsDeleted()
     {
@@ -901,7 +901,7 @@ public class ScriptsServiceTests
         _scriptModelServiceMock.Verify(
             x => x.DeleteDocument("scriptId", It.IsAny<CancellationToken>()), Times.Once);
     }
-    
+
     #endregion
 
     private static bool VerifyScriptDataResponse(ScriptDataResponse expected, ScriptDataResponse actual)

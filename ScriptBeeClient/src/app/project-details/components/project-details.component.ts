@@ -1,24 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { selectProjectDetails } from '../../state/project-details/project-details.selectors';
-import { fetchProject } from '../../state/project-details/project-details.actions';
+import { ProjectStore } from '../stores/project-store.service';
 
 @Component({
   selector: 'app-project-details',
   templateUrl: './project-details.component.html',
   styleUrls: ['./project-details.component.scss'],
+  providers: [ProjectStore],
 })
 export class ProjectDetailsComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private store: Store) {}
+  constructor(private route: ActivatedRoute, private projectStore: ProjectStore) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-
-    this.store.select(selectProjectDetails).subscribe((projectDetails) => {
-      if (!projectDetails) {
-        this.store.dispatch(fetchProject({ projectId: id }));
-      }
-    });
+    this.projectStore.setProjectId(id);
   }
 }

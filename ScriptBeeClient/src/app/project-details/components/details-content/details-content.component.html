@@ -1,48 +1,60 @@
-<div class="project-details-main-div">
+<div class='project-details-main-div'>
 
-  <mat-spinner *ngIf="loading"></mat-spinner>
+  <ng-container *ngIf='projectDataLoading$ | async; else projectDataError'>
+    <app-centered-spinner></app-centered-spinner>
+  </ng-container>
 
-  <mat-card *ngIf="loadingError" class="loading-error">
-    {{loadingError}}
-  </mat-card>
+  <ng-template #projectDataError>
+    <ng-container *ngIf='projectDataError$ | async as projectDataError'>
+      <ng-container *ngIf='projectDataError.code === 404'>
+        <app-api-error-message message='Project not found' type='error'></app-api-error-message>
+      </ng-container>
 
-  <mat-card *ngIf="project" fxLayout="column" fxLayoutAlign="center start">
-    <div style="width: 100%">
-      <div class="section-title content">Details</div>
-      <div fxLayout="column" fxLayoutAlign="space-around start">
-        <div class="content">
+      <ng-container *ngIf='projectDataError.code !== 404'>
+        <app-api-error-message message='An error occurred while loading project information'
+                               type='error'></app-api-error-message>
+      </ng-container>
+    </ng-container>
+
+  </ng-template>
+
+  <mat-card *ngIf='projectData$ | async as projectData' fxLayout='column' fxLayoutAlign='center start'>
+    <div style='width: 100%'>
+      <div class='section-title content'>Details</div>
+      <div fxLayout='column' fxLayoutAlign='space-around start'>
+        <div class='content'>
           <span>Project Id: &nbsp;</span>
-          <span class="text-with-opacity">{{project.data.projectId}}</span>
+          <span class='text-with-opacity'>{{projectData.projectId}}</span>
         </div>
-        <div class="content">
+        <div class='content'>
           <span>Project Name: &nbsp;</span>
-          <span class="text-with-opacity">{{project.data.projectName}}</span>
+          <span class='text-with-opacity'>{{projectData.projectName}}</span>
         </div>
-        <div class="content-before-divider">
+        <div class='content-before-divider'>
           <span>Creation Date: &nbsp;</span>
-          <span class="text-with-opacity">{{project.data.creationDate | date}}</span>
+          <span class='text-with-opacity'>{{projectData.creationDate | date}}</span>
         </div>
       </div>
 
       <mat-divider></mat-divider>
 
-      <app-upload-models [project]="project"></app-upload-models>
+      <app-upload-models></app-upload-models>
 
       <mat-divider></mat-divider>
 
-      <app-load-models [project]="project"></app-load-models>
+      <app-load-models></app-load-models>
 
       <mat-divider></mat-divider>
 
-      <app-link-models [project]="project"></app-link-models>
+      <app-link-models></app-link-models>
 
       <mat-divider></mat-divider>
 
-      <app-currently-loaded-models [project]="project"></app-currently-loaded-models>
+      <app-currently-loaded-models></app-currently-loaded-models>
 
       <mat-divider></mat-divider>
 
-      <app-project-context [project]="project"></app-project-context>
+      <app-project-context></app-project-context>
     </div>
   </mat-card>
 </div>

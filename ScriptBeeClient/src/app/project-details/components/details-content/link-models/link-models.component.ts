@@ -1,10 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Project } from '../../../../state/project-details/project';
-import { Store } from '@ngrx/store';
+import { Component, OnInit } from '@angular/core';
 import { ErrorDialogService } from '../../../../shared/error-dialog/error-dialog.service';
-import { ProjectService } from '../../../../services/project/project.service';
-import { LinkerService } from '../../../../services/linker/linker.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectStore } from '../../../stores/project-store.service';
+import { LinkersStore } from '../../../stores/linkers-store.service';
+import { ContextStore } from '../../../stores/context-store.service';
 
 @Component({
   selector: 'app-link-models',
@@ -12,65 +10,40 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./link-models.component.scss'],
 })
 export class LinkModelsComponent implements OnInit {
-  @Input()
-  project: Project | undefined;
+  linkers$ = this.linkersStore.linkers;
+  linkersLoading$ = this.linkersStore.linkersLoading;
+  linkersError$ = this.linkersStore.linkersError;
 
-  linkers: string[] = [];
+  linkModelsLoading$ = this.linkersStore.linkModelsLoading;
+
   selectedLinker: string | undefined;
-  linking = false;
+  private projectId: string;
 
   constructor(
-    private store: Store,
-    private errorDialogService: ErrorDialogService,
-    private linkerService: LinkerService,
-    private projectService: ProjectService,
-    private snackBar: MatSnackBar
+    private projectStore: ProjectStore,
+    private linkersStore: LinkersStore,
+    private contextStore: ContextStore,
+    private errorDialogService: ErrorDialogService
   ) {}
 
   ngOnInit(): void {
-    this.linkerService.getAllLinkers().subscribe({
-      next: (res) => {
-        this.linkers = res;
-      },
-      error: () => {
-        this.snackBar.open('Could not get linkers!', 'Ok', {
-          duration: 4000,
-        });
-      },
+    this.projectId = this.projectStore.getProjectId();
+
+    this.linkersStore.loadLinkers();
+
+    this.linkersStore.linkModelsError.subscribe((error) => {
+      if (error) {
+        this.errorDialogService.displayDialogErrorMessage('Could not link models', error.message);
+      }
     });
   }
 
   onLinkButtonClick() {
-    if (this.selectedLinker) {
-      this.linking = true;
-      const projectId = this.project.data.projectId;
-
-      // todo
-      this.linkerService.linkModels(projectId, this.selectedLinker).subscribe({
-        next: () => {
-          this.projectService.getProjectContext(projectId).subscribe({
-            next: (res) => {
-              this.linking = false;
-            },
-            error: (error) => {
-              this.linking = false;
-              this.errorDialogService.displayDialogErrorMessage('Could not get project context', LinkModelsComponent.getErrorMessage(error));
-            },
-          });
-        },
-        error: (error) => {
-          this.linking = false;
-          this.errorDialogService.displayDialogErrorMessage('Could not link project context', LinkModelsComponent.getErrorMessage(error));
-        },
-      });
-    } else {
-      this.linking = false;
+    if (!this.selectedLinker) {
       this.errorDialogService.displayDialogErrorMessage('You must select a linker first', '');
+      return;
     }
-  }
 
-  // todo after errors are standardized, remove this
-  private static getErrorMessage(error: any) {
-    return error.error?.detail ?? error.error;
+    this.linkersStore.linkModels({ projectId: this.projectId, linkerName: this.selectedLinker });
   }
 }

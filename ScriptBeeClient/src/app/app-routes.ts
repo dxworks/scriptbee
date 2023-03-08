@@ -4,7 +4,7 @@ import { ProjectDetailsComponent } from './project-details/components/project-de
 import { DetailsContentComponent } from './project-details/components/details-content/details-content.component';
 import { NoScriptsComponent } from './project-details/components/run-script/scripts-content/no-scripts/no-scripts.component';
 import { SelectedScriptComponent } from './project-details/components/run-script/selected-script/selected-script.component';
-import { ScriptsContentComponent } from './project-details/components/run-script/scripts-content/scripts-content.component';
+import { ScriptsContentComponent } from './project-details/components/run-script/scripts-content.component';
 import { PluginsMarketplaceDashboardComponent } from './plugins/components/plugins-marketplace-dashboard/plugins-marketplace-dashboard.component';
 
 export const ROUTES: Routes = [

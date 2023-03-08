@@ -184,7 +184,7 @@ describe('CreateScriptDialogComponent', () => {
       {
         name: 'test',
         filePath: 'test',
-        srcPath: 'test',
+        absolutePath: 'test',
         id: 'script-id',
         projectId: 'project-id',
         parameters: [],
@@ -224,7 +224,7 @@ describe('CreateScriptDialogComponent', () => {
       {
         name: 'test',
         filePath: 'test',
-        srcPath: 'test',
+        absolutePath: 'test',
         id: 'script-id',
         projectId: 'project-id',
         parameters: [

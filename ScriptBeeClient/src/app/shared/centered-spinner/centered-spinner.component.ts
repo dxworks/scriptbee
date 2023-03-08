@@ -8,4 +8,7 @@ import { Component, Input } from '@angular/core';
 export class CenteredSpinnerComponent {
   @Input()
   visible = true;
+
+  @Input()
+  text = '';
 }

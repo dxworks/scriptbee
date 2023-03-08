@@ -243,7 +243,7 @@ public sealed class ScriptsService : IScriptsService
         string absoluteFilePath;
         ScriptDataResponse? scriptData = null;
 
-        var scriptModel = await _scriptModelService.GetScriptModelByFilePathAsync(treeNode.FilePath, projectId,
+        var scriptModel = await _scriptModelService.GetScriptModelByFilePathAsync(treeNode.SrcPath, projectId,
             cancellationToken);
         if (scriptModel is not null)
         {

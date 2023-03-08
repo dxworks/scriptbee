@@ -4,8 +4,44 @@
   <app-api-error-message message='Error while loading the scripts tree' type='error'></app-api-error-message>
 </ng-container>
 
-<div *ngIf='scriptsForProject$ | async as scriptsForProject'>
-  <div *ngIf='scriptsForProject.length === 0' class='empty-tree'>Tree is empty</div>
+<ng-container>
+  <div *ngIf='dataSource.data && dataSource.data.length === 0' class='empty-tree'>There are no scripts</div>
 
-  <app-tree [treeData]='scriptsForProject' (leafClick)='onLeafClick($event)' (deleteLeafClick)='onDeleteLeafClick($event)'></app-tree>
-</div>
+  <mat-tree [dataSource]='dataSource' [treeControl]='treeControl' class='example-tree'>
+    <mat-tree-node *matTreeNodeDef='let node' matTreeNodeToggle matRipple (click)='onLeafClick(node)'>
+      <div *ngIf='node.level === 0' class='root-tree-file-adjustment'></div>
+
+      <div [style]='{height:"100%"}' fxFlex>
+        {{node.name}}
+      </div>
+
+      <button clickStopPropagation mat-icon-button [matMenuTriggerFor]='menu' aria-label='tree leaf more button'>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu='matMenu'>
+        <button mat-menu-item (click)='onDeleteLeafClick(node)'>
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </mat-tree-node>
+
+    <mat-nested-tree-node *matTreeNodeDef='let node; when: hasChild'>
+      <div class='mat-tree-node'>
+        <button mat-icon-button matTreeNodeToggle
+                [attr.aria-label]="'Toggle ' + node.name">
+          <mat-icon class='mat-icon-rtl-mirror'>
+            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        {{node.name}}
+      </div>
+      <div [class.example-tree-invisible]='!treeControl.isExpanded(node)'
+           role='group'>
+        <ng-container matTreeNodeOutlet></ng-container>
+      </div>
+    </mat-nested-tree-node>
+  </mat-tree>
+
+</ng-container>

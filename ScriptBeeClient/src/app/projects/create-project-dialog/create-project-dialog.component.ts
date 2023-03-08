@@ -2,12 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateProjectDialogData } from './create-project-dialog-data';
 import { SlugifyPipe } from '../../shared/slugify.pipe';
-import { ProjectService } from '../../services/project/project.service';
+import { ProjectService } from '../../project-details/services/project.service';
 
 @Component({
   selector: 'app-create-project-dialog',
   templateUrl: './create-project-dialog.component.html',
-  styleUrls: ['./create-project-dialog.component.scss']
+  styleUrls: ['./create-project-dialog.component.scss'],
 })
 export class CreateProjectDialogComponent {
   projectExists = false;
@@ -28,20 +28,15 @@ export class CreateProjectDialogComponent {
   }
 
   onOkClick(): void {
-    this.projectService
-      .createProject(
-        this.slugify.transform(this.data.projectName),
-        this.data.projectName
-      )
-      .subscribe({
-        next: (res) => {
-          if (res) {
-            this.dialogRef.close(true);
-          }
-        },
-        error: () => {
-          this.projectExists = true;
+    this.projectService.createProject(this.slugify.transform(this.data.projectName), this.data.projectName).subscribe({
+      next: (res) => {
+        if (res) {
+          this.dialogRef.close(true);
         }
-      });
+      },
+      error: () => {
+        this.projectExists = true;
+      },
+    });
   }
 }

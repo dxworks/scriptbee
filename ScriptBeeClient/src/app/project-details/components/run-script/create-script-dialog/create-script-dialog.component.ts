@@ -1,19 +1,20 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateScriptDialogData } from './create-script-dialog-data';
-import { ScriptsStore } from '../../../stores/scripts-store.service';
 import { map } from 'rxjs/operators';
 import { Parameter } from '../../../services/script-types';
 import { ApiErrorMessage } from '../../../../shared/api-error-message';
+import { CreateScriptStore } from '../../../stores/create-script-store.service';
+import { ScriptsStore } from '../../../stores/scripts-store.service';
 
 @Component({
   selector: 'app-create-script-dialog',
   templateUrl: './create-script-dialog.component.html',
   styleUrls: ['./create-script-dialog.component.scss'],
-  providers: [ScriptsStore],
+  providers: [CreateScriptStore],
 })
 export class CreateScriptDialogComponent {
-  availableScriptLanguages$ = this.store.availableLanguages.pipe(map((languages) => languages.map((language) => language.name)));
+  availableScriptLanguages$ = this.scriptsStore.availableLanguages.pipe(map((languages) => languages.map((language) => language.name)));
 
   createScriptError: ApiErrorMessage | undefined = undefined;
   isCreatingScript = false;
@@ -26,16 +27,17 @@ export class CreateScriptDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<CreateScriptDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData,
-    private store: ScriptsStore
+    private createScriptStore: CreateScriptStore,
+    private scriptsStore: ScriptsStore
   ) {
-    this.store.loadAvailableLanguages();
-    this.store.createScriptResult.subscribe((result) => {
+    this.scriptsStore.loadAvailableLanguages();
+    this.createScriptStore.createScriptResult.subscribe((result) => {
       this.isCreatingScript = false;
       if (result) {
         this.dialogRef.close();
       }
     });
-    this.store.createScriptError.subscribe((error) => {
+    this.createScriptStore.createScriptError.subscribe((error) => {
       this.isCreatingScript = false;
       this.createScriptError = error;
     });
@@ -58,7 +60,7 @@ export class CreateScriptDialogComponent {
   onOkClick(): void {
     this.isCreatingScript = true;
     this.createScriptError = undefined;
-    this.store.createScript({
+    this.createScriptStore.createScript({
       projectId: this.data.projectId,
       filePath: this.scriptPath,
       scriptLanguage: this.scriptLanguage,

@@ -1,12 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Project } from '../../../../state/project-details/project';
-import { Store } from '@ngrx/store';
+import { Component, OnInit } from '@angular/core';
 import { ErrorDialogService } from '../../../../shared/error-dialog/error-dialog.service';
-import { ProjectService } from '../../../../services/project/project.service';
-import { UploadService } from '../../../../services/upload/upload.service';
-import { setSavedFiles } from '../../../../state/project-details/project-details.actions';
-import { LoaderService } from '../../../../services/loader/loader.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectStore } from '../../../stores/project-store.service';
+import { LoadersStore } from '../../../stores/loaders-store.service';
+import { UploadModelsStore } from '../../../stores/upload-models-store.service';
 
 @Component({
   selector: 'app-upload-models',
@@ -14,66 +10,45 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./upload-models.component.scss'],
 })
 export class UploadModelsComponent implements OnInit {
-  @Input()
-  project: Project | undefined;
+  loaders$ = this.loadersStore.loaders;
+  loadersLoading$ = this.loadersStore.loadersLoading;
+  loadersError$ = this.loadersStore.loadersError;
 
-  uploading = false;
-  loaders: string[] = [];
+  filesLoading$ = this.uploadModelsStore.filesLoading;
+
   selectedLoader: string | undefined;
   files = [];
+  private projectId: string;
 
   constructor(
-    private store: Store,
-    private errorDialogService: ErrorDialogService,
-    private projectService: ProjectService,
-    private uploadService: UploadService,
-    private loaderService: LoaderService,
-    private snackBar: MatSnackBar
+    private projectStore: ProjectStore,
+    private loadersStore: LoadersStore,
+    private uploadModelsStore: UploadModelsStore,
+    private errorDialogService: ErrorDialogService
   ) {}
 
   ngOnInit(): void {
-    this.loaderService.getAllLoaders().subscribe({
-      next: (result) => {
-        this.loaders = result;
-      },
-      error: () => {
-        this.snackBar.open('Could not get loaders!', 'Ok', {
-          duration: 4000,
-        });
-      },
+    this.projectId = this.projectStore.getProjectId();
+
+    this.loadersStore.loadLoaders();
+
+    this.uploadModelsStore.files.subscribe((files) => {
+      this.files = files;
+    });
+
+    this.uploadModelsStore.filesError.subscribe((error) => {
+      if (error) {
+        this.errorDialogService.displayDialogErrorMessage('Could not upload files', error.message);
+      }
     });
   }
 
   onUploadFilesClick() {
     if (!this.selectedLoader) {
-      this.uploading = false;
       this.errorDialogService.displayDialogErrorMessage('You must select a loader first', '');
       return;
     }
 
-    this.uploading = true;
-    const projectId = this.project.data.projectId;
-
-    this.uploadService.uploadModels(this.selectedLoader, projectId, this.files).subscribe({
-      next: (result) => {
-        this.store.dispatch(
-          setSavedFiles({
-            files: result.files,
-            loader: result.loaderName,
-          })
-        );
-        this.uploading = false;
-        this.files = [];
-      },
-      error: (err) => {
-        this.uploading = false;
-        this.errorDialogService.displayDialogErrorMessage('Could not upload files', UploadModelsComponent.getErrorMessage(err));
-      },
-    });
-  }
-
-  // todo after errors are standardized, remove this
-  private static getErrorMessage(error: any) {
-    return error.error?.detail ?? error.error;
+    this.uploadModelsStore.uploadFiles({ projectId: this.projectId, loader: this.selectedLoader, files: this.files });
   }
 }

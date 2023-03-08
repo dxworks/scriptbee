@@ -1,16 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FileSystemService } from '../../../../services/file-system/file-system.service';
+import { FileSystemService } from '../../../services/file-system/file-system.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateScriptDialogComponent } from '../create-script-dialog/create-script-dialog.component';
+import { CreateScriptDialogComponent } from './create-script-dialog/create-script-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { OutputFile } from '../../../../services/output/output-file';
-import { filter } from 'rxjs/operators';
+import { OutputFile } from '../../../services/output/output-file';
 import { Store } from '@ngrx/store';
-import { selectProjectDetails } from '../../../../state/project-details/project-details.selectors';
-import { fetchScriptTree } from '../../../../state/script-tree/script-tree.actions';
-import { selectScriptTreeLeafClick } from '../../../../state/script-tree/script-tree.selectors';
-import { selectLastRunOutput } from '../../../../state/outputs/output.selectors';
+import { selectLastRunOutput } from '../../../state/outputs/output.selectors';
+import { ProjectStore } from '../../stores/project-store.service';
 
 @Component({
   selector: 'app-scripts-content',
@@ -26,6 +23,7 @@ export class ScriptsContentComponent implements OnInit, OnDestroy {
   consoleOutputId: string | undefined;
 
   constructor(
+    private projectStore: ProjectStore,
     private fileSystemService: FileSystemService,
     private router: Router,
     private route: ActivatedRoute,
@@ -35,26 +33,8 @@ export class ScriptsContentComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.store
-      .select(selectProjectDetails)
-      .pipe(filter((x) => !!x))
-      .subscribe({
-        next: (projectDetails) => {
-          this.projectId = projectDetails.data.projectId;
-          this.store.dispatch(fetchScriptTree({ projectId: projectDetails.data.projectId }));
-
-          this.fileSystemService.addFileWatcher(this.projectId).subscribe();
-        },
-      });
-
-    this.store
-      .select(selectScriptTreeLeafClick)
-      .pipe(filter((x) => !!x))
-      .subscribe({
-        next: (node) => {
-          void this.router.navigate([node.id], { relativeTo: this.route });
-        },
-      });
+    this.projectId = this.projectStore.getProjectId();
+    this.fileSystemService.addFileWatcher(this.projectId).subscribe();
 
     this.store.select(selectLastRunOutput).subscribe({
       next: (outputState) => {

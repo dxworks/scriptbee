@@ -14,13 +14,17 @@ public class SampleCodeGenerator
     private const BindingFlags BindingFlags = System.Reflection.BindingFlags.DeclaredOnly |
                                               System.Reflection.BindingFlags.Instance |
                                               System.Reflection.BindingFlags.Public;
-
-    private const string ClassName = "ScriptContent";
-
-    private const string MethodName = "ExecuteScript";
     private readonly ISet<string> _acceptedModules;
     private readonly HashSet<string> _generatedClassNames = new();
     private readonly IScriptGeneratorStrategy _scriptGeneratorStrategy;
+
+    private const string ClassName = "ScriptContent";
+    private const string MethodName = "ExecuteScript";
+    private const string StartCommentMarker = "$START_COMMENT$";
+    private const string EndCommentMarker = "$END_COMMENT$";
+    private const string ClassNameMarker = "$CLASS_NAME$";
+    private const string MethodNameMarker = "$METHOD_NAME$";
+    private const string ModelTypeMarker = "$MODEL_TYPE$";
 
     public SampleCodeGenerator(IScriptGeneratorStrategy scriptGeneratorStrategy, ISet<string> acceptedModules)
     {
@@ -174,15 +178,11 @@ public class SampleCodeGenerator
     // todo extract hardcoded strings as constants
     private string ReplaceSampleCodeTemplates(string modelName, string sampleCode)
     {
-        var finalSampleCode = sampleCode.Replace("$START_COMMENT$", _scriptGeneratorStrategy.GetStartComment());
-
-        finalSampleCode = finalSampleCode.Replace("$END_COMMENT$", _scriptGeneratorStrategy.GetEndComment());
-
-        finalSampleCode = finalSampleCode.Replace("$CLASS_NAME$", ClassName);
-
-        finalSampleCode = finalSampleCode.Replace("$METHOD_NAME$", MethodName);
-
-        finalSampleCode = finalSampleCode.Replace("$MODEL_TYPE$", modelName);
+        var finalSampleCode = sampleCode.Replace(StartCommentMarker, _scriptGeneratorStrategy.GetStartComment());
+        finalSampleCode = finalSampleCode.Replace(EndCommentMarker, _scriptGeneratorStrategy.GetEndComment());
+        finalSampleCode = finalSampleCode.Replace(ClassNameMarker, ClassName);
+        finalSampleCode = finalSampleCode.Replace(MethodNameMarker, MethodName);
+        finalSampleCode = finalSampleCode.Replace(ModelTypeMarker, modelName);
         return finalSampleCode;
     }
 

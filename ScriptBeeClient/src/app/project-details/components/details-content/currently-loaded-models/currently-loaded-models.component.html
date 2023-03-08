@@ -1,7 +1,12 @@
-<div class="section-title content-after-divider">Currently loaded models</div>
+<div class='section-title content-after-divider'>Currently loaded models</div>
 
-<div fxLayout="column" fxLayoutAlign="space-around start">
-  <span *ngIf="project.data.linker" class="content">Used Linker: {{project.data.linker}}</span>
-</div>
+<ng-container *ngIf='projectData$ | async as projectData'>
+  <div fxLayout='column' fxLayoutAlign='space-around start' *ngIf='projectData.linker'>
+    <span class='content'>Used Linker: {{projectData.linker}}</span>
+  </div>
+</ng-container>
 
-<app-tree [treeData]="project.data.loadedFiles"></app-tree>
+
+<ng-container *ngIf='loadedFiles$ | async as loadedFiles'>
+  <app-tree [treeData]='loadedFiles'></app-tree>
+</ng-container>

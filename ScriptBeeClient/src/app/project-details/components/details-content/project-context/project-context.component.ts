@@ -1,64 +1,60 @@
-import { Component, Input } from '@angular/core';
-import { Project } from '../../../../state/project-details/project';
-import { Store } from '@ngrx/store';
+import { Component, OnInit } from '@angular/core';
 import { ErrorDialogService } from '../../../../shared/error-dialog/error-dialog.service';
-import { LoaderService } from '../../../../services/loader/loader.service';
-import { clearContext, setLoadedModels } from '../../../../state/project-details/project-details.actions';
+import { ProjectStore } from '../../../stores/project-store.service';
+import { ContextStore } from '../../../stores/context-store.service';
+import { LoadersStore } from '../../../stores/loaders-store.service';
 
 @Component({
   selector: 'app-project-context',
   templateUrl: './project-context.component.html',
   styleUrls: ['./project-context.component.scss'],
 })
-export class ProjectContextComponent {
-  @Input()
-  project: Project | undefined;
-  reloadingContext = false;
-  clearingContext = false;
+export class ProjectContextComponent implements OnInit {
+  loadedFiles$ = this.loadersStore.loadedFiles;
+  context$ = this.contextStore.context;
+  contextLoading$ = this.contextStore.contextLoading;
 
-  constructor(private store: Store, private errorDialogService: ErrorDialogService, private loaderService: LoaderService) {}
+  reloadingContext$ = this.contextStore.reloadingContext;
+  clearingContext$ = this.contextStore.clearingContext;
+
+  private projectId: string;
+
+  constructor(
+    private projectStore: ProjectStore,
+    private contextStore: ContextStore,
+    private loadersStore: LoadersStore,
+    private errorDialogService: ErrorDialogService
+  ) {}
+
+  ngOnInit(): void {
+    this.projectId = this.projectStore.getProjectId();
+
+    this.contextStore.reloadingContextError.subscribe((error) => {
+      if (error) {
+        this.errorDialogService.displayDialogErrorMessage('Could not reload project context', error.message);
+      }
+    });
+
+    this.contextStore.clearingContextError.subscribe((error) => {
+      if (error) {
+        this.errorDialogService.displayDialogErrorMessage('Could not clear project context', error.message);
+      }
+    });
+
+    this.contextStore.contextError.subscribe((error) => {
+      if (error) {
+        this.errorDialogService.displayDialogErrorMessage('Could not load project context', error.message);
+      }
+    });
+
+    this.contextStore.loadContext({ projectId: this.projectId });
+  }
 
   onReloadModelsClick() {
-    this.reloadingContext = true;
-    const projectId = this.project.data.projectId;
-
-    this.loaderService.reloadProjectContext(projectId).subscribe({
-      next: (result) => {
-        for (const loadModelsResult of result) {
-          this.store.dispatch(
-            setLoadedModels({
-              files: loadModelsResult.models,
-              loader: loadModelsResult.name,
-            })
-          );
-        }
-
-        this.reloadingContext = false;
-      },
-      error: (error) => {
-        this.reloadingContext = false;
-        this.errorDialogService.displayDialogErrorMessage('Could not reload project context', ProjectContextComponent.getErrorMessage(error));
-      },
-    });
+    this.contextStore.reloadContext({ projectId: this.projectId });
   }
 
   onClearContextButtonClick() {
-    this.clearingContext = true;
-    const projectId = this.project.data.projectId;
-
-    this.loaderService.clearProjectContext(projectId).subscribe({
-      next: () => {
-        this.clearingContext = false;
-        this.store.dispatch(clearContext());
-      },
-      error: (err) => {
-        this.clearingContext = false;
-        this.errorDialogService.displayDialogErrorMessage('Could not clear project context', ProjectContextComponent.getErrorMessage(err));
-      },
-    });
-  }
-
-  private static getErrorMessage(error: any) {
-    return error.error?.detail ?? error.error;
+    this.contextStore.clearContext({ projectId: this.projectId });
   }
 }
