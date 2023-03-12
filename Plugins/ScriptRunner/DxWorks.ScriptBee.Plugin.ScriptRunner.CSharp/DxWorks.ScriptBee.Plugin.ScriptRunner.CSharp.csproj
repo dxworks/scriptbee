@@ -8,12 +8,23 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" />
-<!--        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>-->
-<!--        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.3.0"/>-->
+        <!--        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.0"/>-->
+        <!--        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.3.0"/>-->
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="SampleCodes\CSharpImports.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="SampleCodes\CSharpSampleCode.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests" />
+    </ItemGroup>
 </Project>

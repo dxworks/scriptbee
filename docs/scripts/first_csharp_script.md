@@ -30,6 +30,37 @@ public class ScriptContent
 
 ```
 
+### With Parameters
+
+ScriptBee supports parameterized scripts. This means that you can create add parameters while creating a script or edit
+them later.
+
+> Make sure the script has the parameters defined before running it.
+
+```csharp title="script.cs"
+using System;
+using System.Text;
+using System.Linq;
+using System.Collections.Generic;
+using ScriptBee.ProjectContext;
+using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
+using static DxWorks.ScriptBee.Plugin.Api.HelperFunctions;
+
+
+// Only the code written in the ExecuteScript method will be executed
+
+public class ScriptContent
+{
+    public void ExecuteScript(Project project, ScriptParameters scriptParameters)
+    {
+        ConsoleWriteLine("Hello, C#!");
+        ConsoleWriteLine("Parameter: " + scriptParameters.MyParameter); 
+    }
+}
+
+```
+
 ## Model Uploading
 
 From project details section, upload a model files for the specific loader. In this example, we will
@@ -86,4 +117,4 @@ It uses the classes offered by the Honeydew plugin that are stored in the contex
 Using the helper functions from `DxWorks.ScriptBee.Plugin.Api.HelperFunctions`, we can easily convert the projects to
 json and export them to a file.
 
-If every is ok, you should see the results in the console and the file outputs section.  
+If everything is ok, you should see the results in the console and the file outputs section.  

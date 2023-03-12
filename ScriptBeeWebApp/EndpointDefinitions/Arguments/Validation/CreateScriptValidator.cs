@@ -10,7 +10,9 @@ public class CreateScriptValidator : AbstractValidator<CreateScript>
             .NotEmpty();
         RuleFor(x => x.FilePath)
             .NotEmpty();
-        RuleFor(x => x.ScriptType)
+        RuleFor(x => x.ScriptLanguage)
             .NotEmpty();
+        RuleForEach(x => x.Parameters)
+            .SetValidator(new ScriptParameterValidator());
     }
 }

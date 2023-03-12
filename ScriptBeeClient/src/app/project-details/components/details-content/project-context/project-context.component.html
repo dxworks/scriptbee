@@ -1,0 +1,37 @@
+<div class='section-title content-after-divider project-context'>Project Context</div>
+
+<ng-container *ngIf='contextLoading$ | async'>
+  <app-centered-spinner text='Loading Context'></app-centered-spinner>
+</ng-container>
+
+<ng-container *ngIf='context$ | async as context'>
+
+  <ng-container *ngIf='context.length === 0'>
+    <div class='no-context-message'>No context loaded</div>
+
+    <ng-container *ngIf='loadedFiles$ | async as loadedFiles'>
+      <ng-container *ngIf='loadedFiles.length > 0'>
+        <ng-container *ngIf='clearingContext$ | async'>
+          <app-centered-spinner text='Clearing Context'></app-centered-spinner>
+        </ng-container>
+
+        <button
+          class='reload-models-button' mat-raised-button [disabled]='reloadingContext$ | async'
+          color='primary' (click)='onReloadModelsClick()'>Reload Models
+        </button>
+
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <app-tree [treeData]='context'></app-tree>
+
+  <ng-container *ngIf='clearingContext$ | async'>
+    <app-centered-spinner text='Clearing Context'></app-centered-spinner>
+  </ng-container>
+
+  <button *ngIf='context.length !== 0' class='clear-context-button' mat-raised-button
+          color='primary' [disabled]='clearingContext$ | async' (click)='onClearContextButtonClick()'>Clear Context
+  </button>
+
+</ng-container>

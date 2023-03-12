@@ -10,13 +10,17 @@
 }
 
 .example-tree .mat-nested-tree-node div[role=group] {
-  padding-left: 40px;
+  padding-left: 32px;
 }
 
 .example-tree div[role=group] > .mat-tree-node {
-  padding-left: 40px;
+  padding-left: 32px;
 }
 
 .example-tree {
   margin-bottom: 16px;
+}
+
+.root-tree-file-adjustment {
+    margin-left: 32px;
 }

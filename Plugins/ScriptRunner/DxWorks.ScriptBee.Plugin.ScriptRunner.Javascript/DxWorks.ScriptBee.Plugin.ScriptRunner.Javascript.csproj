@@ -14,4 +14,13 @@
         <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="SampleCodes\JavascriptSampleCode.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests" />
+    </ItemGroup>
 </Project>

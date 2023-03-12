@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ScriptBeeWebApp.Services;
+﻿namespace ScriptBeeWebApp.Services;
 
 public interface IProjectStructureService
 {

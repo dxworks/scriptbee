@@ -6,7 +6,7 @@ using ScriptBee.Services;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
 using ScriptBeeWebApp.EndpointDefinitions.DTO;
-using ScriptBeeWebApp.Services;
+using ScriptBeeWebApp.Repository;
 
 namespace ScriptBeeWebApp.EndpointDefinitions;
 

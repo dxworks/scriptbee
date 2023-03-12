@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Services;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments;
 using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
-using ScriptBeeWebApp.Services;
+using ScriptBeeWebApp.Repository;
 
 namespace ScriptBeeWebApp.EndpointDefinitions;
 

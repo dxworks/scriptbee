@@ -1,0 +1,13 @@
+<h1 mat-dialog-title style="text-align: center">Failure Cause</h1>
+<mat-dialog-content class="mat-typography">
+  <h3>
+    <span class="bolder">Error: &nbsp;</span>
+    <span>{{data.mainProblem}}</span>
+  </h3>
+  <div class="message">
+    {{data.errorMessage}}
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>OK</button>
+</mat-dialog-actions>

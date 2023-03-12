@@ -38,7 +38,8 @@ public class ScriptContent
     }
 }".Replace(Environment.NewLine, "\r\n");
 
-        await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
+        await _scriptRunner.RunAsync(project, helperFunctionsContainer, new List<ScriptParameter>(), scriptContent,
+            It.IsAny<CancellationToken>());
     }
 
     [Fact]
@@ -64,6 +65,44 @@ public class ScriptContent
     }
 }".Replace(Environment.NewLine, "\r\n");
 
-        await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptContent, It.IsAny<CancellationToken>());
+        await _scriptRunner.RunAsync(project, helperFunctionsContainer, new List<ScriptParameter>(), scriptContent,
+            It.IsAny<CancellationToken>());
+    }
+    
+    
+    [Fact]
+    public async Task GivenEmptyFileWithDummyHelperFunctionWithScriptParameters_WhenRunAsync_FileIsCompiledWithoutErrors()
+    {
+        var project = new Mock<IProject>().Object;
+        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
+        {
+            new DummyHelperFunctions()
+        });
+        var scriptParameters = new List<ScriptParameter>
+        {
+            new()
+            {
+                Name = "a",
+                Type = "string",
+                Value = "a"
+            }
+        };
+        
+        var scriptContent = @"
+using System;
+using System.Text;
+using System.Linq;
+using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
+
+public class ScriptContent
+{
+    public void ExecuteScript(IProject project, ScriptParameters scriptParameters)
+    {        
+    }
+}".Replace(Environment.NewLine, "\r\n");
+
+        await _scriptRunner.RunAsync(project, helperFunctionsContainer, scriptParameters, scriptContent,
+            It.IsAny<CancellationToken>());
     }
 }

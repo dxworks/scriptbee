@@ -1,11 +1,15 @@
-﻿using System;
+﻿using System.Runtime.Serialization;
 
-namespace ScriptBee.Scripts.ScriptRunners.Exceptions
-{
-    public class CompilationErrorException : Exception
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Exceptions;
+
+[Serializable]
+public class CompilationErrorException : Exception
     {
         public CompilationErrorException(string message) : base(message)
         {
         }
-    }
+
+        protected CompilationErrorException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
 }

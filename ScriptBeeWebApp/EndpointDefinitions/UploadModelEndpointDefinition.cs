@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScriptBeeWebApp.EndpointDefinitions.DTO;
+using ScriptBeeWebApp.Repository;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.EndpointDefinitions;

@@ -1,5 +1,4 @@
-﻿using System;
-using ScriptBee.Services;
+﻿using ScriptBee.Services;
 
 namespace ScriptBeeWebApp.Services;
 

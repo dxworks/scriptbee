@@ -6,7 +6,7 @@ namespace ScriptBee.ProjectContext;
 public interface IProjectFileStructureManager
 {
     public void CreateProjectFolderStructure(string projectId);
-    
+
     public void DeleteProjectFolderStructure(string projectId);
 
     public void CreateFile(string projectId, string relativePath, string fileContent);
@@ -24,6 +24,8 @@ public interface IProjectFileStructureManager
     public string GetAbsoluteFilePath(string projectId, string filePath);
 
     public void DeleteFolder(string projectId, string pathToFolder);
+
+    public void DeleteFile(string projectId, string pathToFile);
 
     public string GetProjectAbsolutePath(string projectId);
     void SetupFileWatcher(string projectId);

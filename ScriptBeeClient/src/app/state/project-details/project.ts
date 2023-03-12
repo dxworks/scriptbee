@@ -1,4 +1,4 @@
-﻿import { TreeNode } from "../../shared/tree-node";
+﻿import { TreeNode } from '../../shared/tree-node';
 
 export interface ProjectData {
   projectId: string;
@@ -8,11 +8,4 @@ export interface ProjectData {
   loaders: string[];
   savedFiles: TreeNode[];
   loadedFiles: TreeNode[];
-}
-
-export type ProjectContext = TreeNode[];
-
-export interface Project {
-  data?: ProjectData
-  context: ProjectContext;
 }

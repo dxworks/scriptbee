@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace ScriptBeeWebApp.Extensions;
+﻿namespace ScriptBeeWebApp.Extensions;
 
 public static class EndpointDefinitionExtensions
 {
     public static void AddEndpointDefinitions(this IServiceCollection services)
     {
-        services.AddEndpointDefinitions((typeof(IEndpointDefinition)));
+        services.AddEndpointDefinitions(typeof(IEndpointDefinition));
     }
 
     public static void AddEndpointDefinitions(this IServiceCollection services, params Type[] scanMarkers)

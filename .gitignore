@@ -6,7 +6,7 @@ riderModule.iml
 /_ReSharper.Caches/
 *.user
 .env
-.idea/.idea.ScriptBee/.idea/sonarlint
+**/.idea/sonarlint
 database/
 database2/
 scriptbee_data/

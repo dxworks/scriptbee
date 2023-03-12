@@ -1,4 +1,5 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
+﻿using System.Dynamic;
+using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 
@@ -9,15 +10,14 @@ public class PythonScriptRunner : IScriptRunner
     public string Language => "python";
 
     public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        string scriptContent, CancellationToken cancellationToken = default)
+        IEnumerable<ScriptParameter> parameters, string scriptContent, CancellationToken cancellationToken = default)
     {
         var pythonEngine = IronPython.Hosting.Python.CreateEngine();
 
         var dictionary = new Dictionary<string, object>
         {
-            {
-                "project", project
-            },
+            { "project", project },
+            { "scriptParameters", CreateScriptParameters(parameters) }
         };
 
         foreach (var (functionName, delegateFunction) in helperFunctionsContainer.GetFunctionsDictionary())
@@ -27,6 +27,23 @@ public class PythonScriptRunner : IScriptRunner
 
         var scriptScope = pythonEngine.CreateScope(dictionary);
 
-        await Task.Run(() => { pythonEngine.Execute(scriptContent, scriptScope); }, cancellationToken);
+        var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
+
+        await Task.Run(() => { pythonEngine.Execute(validScript, scriptScope); }, cancellationToken);
+    }
+
+
+    private static dynamic CreateScriptParameters(IEnumerable<ScriptParameter> parameters)
+    {
+        dynamic scriptParameters = new ExpandoObject();
+
+        IDictionary<string, object?> underlyingDictionary = scriptParameters;
+
+        foreach (var parameter in parameters)
+        {
+            underlyingDictionary.Add(parameter.Name, parameter.Value);
+        }
+
+        return scriptParameters;
     }
 }

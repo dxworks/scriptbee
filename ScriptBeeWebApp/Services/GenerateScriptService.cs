@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO.Compression;
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Manifest;
 using ScriptBee.Scripts.ScriptSampleGenerators;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -23,10 +19,10 @@ public class GenerateScriptService : IGenerateScriptService
         _pluginRepository = pluginRepository;
     }
 
-    public IEnumerable<string> GetSupportedLanguages()
+    public IEnumerable<ScriptLanguage> GetSupportedLanguages()
     {
         return _pluginRepository.GetLoadedPluginExtensionPoints<ScriptGeneratorPluginExtensionPoint>()
-            .Select(extensionPoint => extensionPoint.Language);
+            .Select(extensionPoint => new ScriptLanguage(extensionPoint.Language, extensionPoint.Extension));
     }
 
     public IScriptGeneratorStrategy? GetGenerationStrategy(string scriptType)

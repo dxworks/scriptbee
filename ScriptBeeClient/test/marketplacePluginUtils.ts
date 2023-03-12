@@ -1,4 +1,4 @@
-import { MarketplaceProject, MarketplaceProjectType, PluginVersion } from '../src/app/services/plugin/marketplace-project';
+import { MarketplaceProject, MarketplaceProjectType, PluginVersion } from '../src/app/plugins/services/marketplace-project';
 
 export function createMarketplacePlugin(
   id: string,
@@ -14,7 +14,7 @@ export function createMarketplacePlugin(
     name,
     versions,
     authors,
-    description
+    description,
   };
 }
 
@@ -25,8 +25,8 @@ export function createPluginVersion(installed: boolean, version = '1.0.0'): Plug
     extensionPointVersions: [
       {
         version: '1.0.0',
-        kind: 'Loader'
-      }
-    ]
+        kind: 'Loader',
+      },
+    ],
   };
 }

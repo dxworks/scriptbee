@@ -7,12 +7,33 @@ Default Plugin Bundle
 
 ## Template
 
+> Only the code written between `# start script` and `# end script` will be executed
+
 ```python title="script.py"
 project: Project
 
 # start script
 
 ConsoleWriteLine("Hello, Python!")
+
+# end script
+```
+
+### With Parameters
+
+ScriptBee supports parameterized scripts. This means that you can create add parameters while creating a script or edit
+them later.
+
+> Make sure the script has the parameters defined before running it.
+
+```python title="script.py"
+project: Project
+scriptParameters: ScriptParameters
+
+# start script
+
+ConsoleWriteLine("Hello, Python!")
+ConsoleWriteLine("Parameter: " + scriptParameters.MyParameter)
 
 # end script
 ```
@@ -48,7 +69,6 @@ for pair in repos:
             "FileCount": len(repoProject.Files),
         })
 
-
 ConsoleWriteLine(ConvertJson(projects))
 ConsoleWriteLine("It contained " + str(len(projects)) + " projects.")
 ExportJson("output.json", projects)
@@ -62,4 +82,4 @@ It uses the classes offered by the Honeydew plugin that are stored in the contex
 Using the helper functions from `DxWorks.ScriptBee.Plugin.Api.HelperFunctions`, we can easily convert the projects to
 json and export them to a file.
 
-If every is ok, you should see the results in the console and the file outputs section.  
+If everything is ok, you should see the results in the console and the file outputs section.  

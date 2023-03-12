@@ -1,0 +1,7 @@
+<div>
+  <app-script-parameter *ngFor='let parameter of parameters' [parameter]='parameter'
+                        (parameterChange)='onParameterChange($event)'
+                        (delete)='onParameterDelete($event)'></app-script-parameter>
+</div>
+
+<button mat-button color='primary' (click)='onAddButtonClick()'>Add</button>

@@ -1,6 +1,7 @@
 ﻿using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBee.Services.Config;
+using ScriptBeeWebApp.Repository;
 using ScriptBeeWebApp.Services;
 
 namespace ScriptBeeWebApp.Extensions;
@@ -20,7 +21,6 @@ public static class ControllerServicesExtensions
         services.AddSingleton<IUploadModelService, UploadModelService>();
         services.AddSingleton<ILoadersService, LoadersService>();
         services.AddSingleton<ILinkersService, LinkersService>();
-        services.AddSingleton<IGenerateScriptService, GenerateScriptService>();
         services.AddSingleton<IFileModelService, FileModelService>();
         services.AddSingleton<IRunScriptService, RunScriptService>();
         

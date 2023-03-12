@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Models;
 using ScriptBee.Plugin;
-using ScriptBee.Plugin.Manifest;
 using ScriptBee.ProjectContext;
 using ScriptBee.Services;
 using ScriptBeeWebApp.Data.Exceptions;
+using ScriptBeeWebApp.Repository;
 
 namespace ScriptBeeWebApp.Services;
 
@@ -26,10 +20,11 @@ public sealed class RunScriptService : IRunScriptService
     private readonly IProjectFileStructureManager _projectFileStructureManager;
     private readonly IProjectModelService _projectModelService;
     private readonly IRunModelService _runModelService;
+    private readonly IScriptsService _scriptsService;
 
     public RunScriptService(IFileModelService fileModelService, IGuidGenerator guidGenerator,
         IPluginRepository pluginRepository, IProjectFileStructureManager projectFileStructureManager,
-        IProjectModelService projectModelService, IRunModelService runModelService)
+        IProjectModelService projectModelService, IRunModelService runModelService, IScriptsService scriptsService)
     {
         _fileModelService = fileModelService;
         _guidGenerator = guidGenerator;
@@ -37,14 +32,10 @@ public sealed class RunScriptService : IRunScriptService
         _projectFileStructureManager = projectFileStructureManager;
         _projectModelService = projectModelService;
         _runModelService = runModelService;
+        _scriptsService = scriptsService;
     }
 
-    public IEnumerable<string> GetSupportedLanguages()
-    {
-        return _pluginRepository.GetLoadedPluginExtensionPoints<ScriptRunnerPluginExtensionPoint>()
-            .Select(point => point.Language);
-    }
-
+    // TODO: run by id instead of path
     public async Task<Run> RunAsync(IProject project, ProjectModel projectModel, string language,
         string scriptFilePath, CancellationToken cancellationToken = default)
     {
@@ -53,7 +44,8 @@ public sealed class RunScriptService : IRunScriptService
         var (scriptId, scriptContent) =
             await SaveScriptContentAsync(projectModel.Id, scriptFilePath, cancellationToken);
 
-        var results = await RunScriptAsync(project, runIndex, language, scriptContent, cancellationToken);
+        var results =
+            await RunScriptAsync(project, scriptFilePath, runIndex, language, scriptContent, cancellationToken);
 
         var run = new Run
         {
@@ -95,7 +87,7 @@ public sealed class RunScriptService : IRunScriptService
         return scriptId;
     }
 
-    private async Task<List<RunResult>> RunScriptAsync(IProject project, int runIndex, string language,
+    private async Task<List<RunResult>> RunScriptAsync(IProject project, string scriptId, int runIndex, string language,
         string scriptContent, CancellationToken cancellationToken = default)
     {
         var scriptRunner = _pluginRepository.GetPlugin<IScriptRunner>(runner => runner.Language == language);
@@ -105,25 +97,29 @@ public sealed class RunScriptService : IRunScriptService
             throw new ScriptRunnerNotFoundException(language);
         }
 
-        var scriptGeneratorStrategy =
-            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == language);
-
-        if (scriptGeneratorStrategy is null)
-        {
-            throw new ScriptGenerationStrategyNotFoundException(language);
-        }
-
         var resultCollector = new ResultCollector();
 
         var helperFunctionsContainer = CreateHelperFunctionsContainer(project, runIndex, resultCollector);
 
         await Task.WhenAll(helperFunctionsContainer.GetFunctions().Select(f => f.OnLoadAsync(cancellationToken)));
 
+        var scriptResponse = await _scriptsService.GetScriptByIdAsync(scriptId, project.Id, cancellationToken);
+
+        var parameters = scriptResponse.Match(
+            response => response.Parameters.Select(p => new ScriptParameter
+            {
+                Name = p.Name,
+                Type = p.Type,
+                Value = p.Value
+            }),
+            _ => Enumerable.Empty<ScriptParameter>(),
+            _ => Enumerable.Empty<ScriptParameter>()
+        );
+
         try
         {
-            var validScript = scriptGeneratorStrategy.ExtractValidScript(scriptContent);
-
-            await scriptRunner.RunAsync(project, helperFunctionsContainer, validScript, cancellationToken);
+            await scriptRunner.RunAsync(project, helperFunctionsContainer, parameters, scriptContent,
+                cancellationToken);
         }
         catch (Exception e)
         {

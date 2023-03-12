@@ -3,14 +3,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ProjectData } from '../state/project-details/project';
-import { ProjectService } from '../services/project/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateProjectDialogComponent } from './create-project-dialog/create-project-dialog.component';
 import { DeleteProjectDialogComponent } from './delete-project-dialog/delete-project-dialog.component';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { fetchProject } from '../state/project-details/project-details.actions';
-import { Store } from '@ngrx/store';
+import { ProjectService } from '../project-details/services/project.service';
 
 @Component({
   selector: 'app-projects',
@@ -24,7 +22,7 @@ export class ProjectsComponent {
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-  constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router, private snackBar: MatSnackBar, private store: Store) {
+  constructor(public dialog: MatDialog, private projectService: ProjectService, private router: Router, private snackBar: MatSnackBar) {
     this.getAllProjects();
   }
 
@@ -99,8 +97,6 @@ export class ProjectsComponent {
   }
 
   onRowClick(row: ProjectData) {
-    this.router.navigate([`/projects/${row.projectId}`]).then(() => {
-      this.store.dispatch(fetchProject({ projectId: row.projectId }));
-    });
+    this.router.navigate([`/projects/${row.projectId}`]).then();
   }
 }

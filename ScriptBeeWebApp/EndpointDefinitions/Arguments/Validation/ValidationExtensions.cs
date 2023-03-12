@@ -1,4 +1,5 @@
 using FluentValidation.Results;
+using ScriptBeeWebApp.EndpointDefinitions.DTO;
 
 namespace ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
 
@@ -11,7 +12,3 @@ public static class ValidationExtensions
                 .ToList());
     }
 }
-
-public record ValidationErrorsResponse(List<ValidationError> Errors);
-
-public record ValidationError(string PropertyName, string ErrorMessage);

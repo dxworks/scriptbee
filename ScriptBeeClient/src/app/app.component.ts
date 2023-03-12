@@ -2,22 +2,20 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { ThemeService } from './services/theme/theme.service';
-import { PluginService } from "./services/plugin/plugin.service";
-import { ResultsService } from "./services/plugin/results.service";
+import { PluginService } from './plugins/services/plugin.service';
+import { ResultsService } from './plugins/services/results.service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   title = 'app';
 
-  constructor(private router: Router, private themeService: ThemeService,
-              private pluginService: PluginService, private resultsService: ResultsService) {
-    this.router.events.pipe(debounceTime(10))
-      .subscribe(() => {
-        themeService.update();
-      });
+  constructor(private router: Router, private themeService: ThemeService, private pluginService: PluginService, private resultsService: ResultsService) {
+    this.router.events.pipe(debounceTime(10)).subscribe(() => {
+      themeService.update();
+    });
 
     // todo was just for proof of concept, need to make more extensible when we have ui plugins
     // this.pluginService.getAllUiPlugins().subscribe(plugins => {

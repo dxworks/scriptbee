@@ -9,7 +9,7 @@ import {
   fetchScriptTreeSuccess,
   scriptTreeLeafClick
 } from './script-tree.actions';
-import { FileTreeNode } from '../../project-details/scripts-content/fileTreeNode';
+import { FileTreeNode } from '../../project-details/components/run-script/scripts-content/fileTreeNode';
 
 // todo stop assuming that src is the root
 

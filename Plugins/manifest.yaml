@@ -8,7 +8,7 @@ extensionPoints:
     version: 1.0.0
     language: csharp
   - kind: ScriptGenerator
-    entryPoint: DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp/DxWorks.ScriptBee.Plugin.ScriptGeneration.CSharp.dll
+    entryPoint: DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.dll
     version: 1.0.0
     language: csharp
     extension: ".cs"
@@ -18,7 +18,7 @@ extensionPoints:
     version: 1.0.0
     language: javascript
   - kind: ScriptGenerator
-    entryPoint: DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript/DxWorks.ScriptBee.Plugin.ScriptGeneration.Javascript.dll
+    entryPoint: DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.dll
     version: 1.0.0
     language: javascript
     extension: ".js"
@@ -28,7 +28,7 @@ extensionPoints:
     version: 1.0.0
     language: python
   - kind: ScriptGenerator
-    entryPoint: DxWorks.ScriptBee.Plugin.ScriptGeneration.Python/DxWorks.ScriptBee.Plugin.ScriptGeneration.Python.dll
+    entryPoint: DxWorks.ScriptBee.Plugin.ScriptRunner.Python/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.dll
     version: 1.0.0
     language: python
     extension: ".py"

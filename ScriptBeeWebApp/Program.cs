@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
 var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 
+// TODO: move service registration in Endpoint Definitions 
 builder.Services
     .AddMongoDb(mongoConnectionString)
     .AddSerilog()
@@ -22,14 +23,6 @@ builder.Services
     .AddFileWatcherServices()
     .AddControllerServices(userFolderConfigurationSection)
     .AddValidatorsFromAssemblyContaining<IValidationMarker>()
-    .AddCors(options => options.AddPolicy("CorsPolicy", builder =>
-        {
-            builder.AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials()
-                .AllowAnyOrigin();
-        }
-    ))
     .AddSignalR();
 
 builder.Services.AddEndpointDefinitions();
@@ -45,12 +38,11 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 
-//todo: add Authentication
-// todo: add Authorization
+// TODO: add Authentication
+// TODO: add Authorization
 app.UseSerilogRequestLogging();
 app.UseExceptionHandler("/error");
 
-// app.UseCors("CorsPolicy");
 app.UseEndpoints(_ => { });
 
 app.UseSpa(spa =>
