@@ -10,6 +10,12 @@ written in C#, Javascript and Python on it.
 
 The full documentation can be found [here](https://dxworks.org/scriptbee/).
 
+### Run locally MkDocs
+
+```bash
+docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+```
+
 ## How to run
 
 ### Run
