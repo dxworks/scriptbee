@@ -51,7 +51,9 @@ public sealed class PluginService : IPluginService
 
     public async Task<IEnumerable<MarketplaceProject>> GetMarketPlugins(CancellationToken cancellationToken = default)
     {
-        var projects = await _marketPluginFetcher.GetProjectsAsync(cancellationToken);
+        await _marketPluginFetcher.UpdateRepositoryAsync(cancellationToken);
+
+        var projects = _marketPluginFetcher.GetProjectsAsync();
 
         return projects
             .Select(plugin =>

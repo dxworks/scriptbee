@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture;
 using Moq;
 using ScriptBee.Marketplace.Client.Data;
@@ -28,35 +26,34 @@ public class PluginUrlFetcherTests
     }
 
     [Fact]
-    public async Task GivenEmptyProjects_WhenGetPluginUrlAsync_ThenPluginNotFoundExceptionIsThrown()
+    public void GivenEmptyProjects_WhenGetPluginUrlAsync_ThenPluginNotFoundExceptionIsThrown()
     {
-        _marketPluginFetcher.Setup(x => x.GetProjectsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(Enumerable.Empty<MarketPlaceProject>());
+        _marketPluginFetcher.Setup(x => x.GetProjectsAsync())
+            .Returns(Enumerable.Empty<MarketPlaceProject>());
 
-        await Assert.ThrowsAsync<PluginNotFoundException>(() =>
-            _pluginUrlFetcher.GetPluginUrlAsync("plugin", "1.0.0", It.IsAny<CancellationToken>()));
+        Assert.Throws<PluginNotFoundException>(() => _pluginUrlFetcher.GetPluginUrl("plugin", "1.0.0"));
     }
 
     [Fact]
-    public async Task GivenProjectWithNoPluginId_WhenGetPluginUrlAsync_ThenPluginNotFoundExceptionIsThrown()
+    public void GivenProjectWithNoPluginId_WhenGetPluginUrlAsync_ThenPluginNotFoundExceptionIsThrown()
     {
-        _marketPluginFetcher.Setup(x => x.GetProjectsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<MarketPlaceProject>
+        _marketPluginFetcher.Setup(x => x.GetProjectsAsync())
+            .Returns(new List<MarketPlaceProject>
             {
                 _fixture.Create<MarketPlaceProject>(),
                 _fixture.Create<MarketPlaceProject>(),
                 _fixture.Create<MarketPlaceProject>(),
             });
 
-        await Assert.ThrowsAsync<PluginNotFoundException>(() =>
-            _pluginUrlFetcher.GetPluginUrlAsync("plugin", "1.0.0", It.IsAny<CancellationToken>()));
+        Assert.Throws<PluginNotFoundException>(() =>
+            _pluginUrlFetcher.GetPluginUrl("plugin", "1.0.0"));
     }
 
     [Fact]
-    public async Task GivenProjectWithWrongVersion_WhenGetPluginUrlAsync_ThenPluginNotFoundExceptionIsThrown()
+    public void GivenProjectWithWrongVersion_WhenGetPluginUrlAsync_ThenPluginNotFoundExceptionIsThrown()
     {
-        _marketPluginFetcher.Setup(x => x.GetProjectsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<MarketPlaceProject>
+        _marketPluginFetcher.Setup(x => x.GetProjectsAsync())
+            .Returns(new List<MarketPlaceProject>
             {
                 _fixture.Create<MarketPlaceProject>(),
                 _fixture.Build<MarketPlaceProject>()
@@ -66,15 +63,14 @@ public class PluginUrlFetcherTests
                 _fixture.Create<MarketPlaceProject>(),
             });
 
-        await Assert.ThrowsAsync<PluginVersionNotFoundException>(() =>
-            _pluginUrlFetcher.GetPluginUrlAsync("plugin", "1.0.0", It.IsAny<CancellationToken>()));
+        Assert.Throws<PluginVersionNotFoundException>(() => _pluginUrlFetcher.GetPluginUrl("plugin", "1.0.0"));
     }
 
     [Fact]
-    public async Task GivenProjectWithCorrectVersion_WhenGetPluginUrlAsync_ThenPluginUrlIsReturned()
+    public void GivenProjectWithCorrectVersion_WhenGetPluginUrlAsync_ThenPluginUrlIsReturned()
     {
-        _marketPluginFetcher.Setup(x => x.GetProjectsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<MarketPlaceProject>
+        _marketPluginFetcher.Setup(x => x.GetProjectsAsync())
+            .Returns(new List<MarketPlaceProject>
             {
                 _fixture.Create<MarketPlaceProject>(),
                 _fixture.Build<MarketPlaceProject>()
@@ -89,7 +85,7 @@ public class PluginUrlFetcherTests
                     .Create(),
             });
 
-        var url = await _pluginUrlFetcher.GetPluginUrlAsync("plugin", "1.0.0", It.IsAny<CancellationToken>());
+        var url = _pluginUrlFetcher.GetPluginUrl("plugin", "1.0.0");
 
         Assert.Equal("url", url);
     }

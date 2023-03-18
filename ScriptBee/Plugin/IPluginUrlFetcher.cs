@@ -1,9 +1,6 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ScriptBee.Plugin;
+﻿namespace ScriptBee.Plugin;
 
 public interface IPluginUrlFetcher
 {
-    Task<string> GetPluginUrlAsync(string pluginId, string version, CancellationToken cancellationToken = default);
+    string GetPluginUrl(string pluginId, string version);
 }

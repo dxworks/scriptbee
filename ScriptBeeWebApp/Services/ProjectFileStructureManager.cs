@@ -17,6 +17,12 @@ public class ProjectFileStructureManager : IProjectFileStructureManager
         _configFoldersService = configFoldersService;
     }
 
+    public void CreateScriptBeeFolderStructure()
+    {
+        Directory.CreateDirectory(ConfigFolders.PathToProjects);
+        Directory.CreateDirectory(ConfigFolders.PathToPlugins);
+    }
+
     public void CreateProjectFolderStructure(string projectId)
     {
         var projectPath = Path.Combine(ConfigFolders.PathToProjects, projectId);

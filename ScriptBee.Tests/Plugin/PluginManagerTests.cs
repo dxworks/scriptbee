@@ -4,6 +4,7 @@ using Moq;
 using ScriptBee.Config;
 using ScriptBee.Plugin;
 using ScriptBee.Plugin.Installer;
+using ScriptBee.ProjectContext;
 using ScriptBee.Tests.Plugin.Internals;
 using Serilog;
 using Xunit;
@@ -16,6 +17,7 @@ public class PluginManagerTests
     private readonly Mock<IPluginLoader> _pluginLoaderMock;
     private readonly Mock<IPluginUninstaller> _pluginUninstallerMock;
     private readonly Mock<ILogger> _loggerMock;
+    private readonly Mock<IProjectFileStructureManager> _projectFileStructureManagerMock;
 
     private readonly PluginManager _pluginManager;
 
@@ -24,10 +26,11 @@ public class PluginManagerTests
         _pluginReaderMock = new Mock<IPluginReader>();
         _pluginLoaderMock = new Mock<IPluginLoader>();
         _pluginUninstallerMock = new Mock<IPluginUninstaller>();
+        _projectFileStructureManagerMock = new Mock<IProjectFileStructureManager>();
         _loggerMock = new Mock<ILogger>();
 
         _pluginManager = new PluginManager(_pluginReaderMock.Object, _pluginLoaderMock.Object,
-            _pluginUninstallerMock.Object, _loggerMock.Object);
+            _pluginUninstallerMock.Object, _projectFileStructureManagerMock.Object, _loggerMock.Object);
     }
 
     [Fact]
@@ -55,6 +58,7 @@ public class PluginManagerTests
         _pluginManager.LoadPlugins();
 
         _pluginLoaderMock.Verify(x => x.Load(It.IsAny<Models.Plugin>()), Times.Exactly(3));
+        _projectFileStructureManagerMock.Verify(x => x.CreateScriptBeeFolderStructure(), Times.Once());
     }
 
     [Fact]
@@ -79,6 +83,7 @@ public class PluginManagerTests
 
         _loggerMock.Verify(l => l.Error(expectedException, "Failed to load plugin {Plugin}", testPlugin2),
             Times.Once());
+        _projectFileStructureManagerMock.Verify(x => x.CreateScriptBeeFolderStructure(), Times.Once());
     }
 
     [Fact]
@@ -90,5 +95,6 @@ public class PluginManagerTests
         _pluginManager.LoadPlugins();
 
         _pluginUninstallerMock.Verify(x => x.DeleteMarkedPlugins(), Times.Once());
+        _projectFileStructureManagerMock.Verify(x => x.CreateScriptBeeFolderStructure(), Times.Once());
     }
 }

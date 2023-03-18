@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using ScriptBee.Marketplace.Client.Services;
+﻿using ScriptBee.Marketplace.Client.Services;
 using ScriptBee.Plugin;
 using ScriptBeeWebApp.Data.Exceptions;
 
@@ -17,10 +13,9 @@ public class PluginUrlFetcher : IPluginUrlFetcher
         _marketPluginFetcher = marketPluginFetcher;
     }
 
-    public async Task<string> GetPluginUrlAsync(string pluginId, string version,
-        CancellationToken cancellationToken = default)
+    public string GetPluginUrl(string pluginId, string version)
     {
-        var plugins = await _marketPluginFetcher.GetProjectsAsync(cancellationToken);
+        var plugins = _marketPluginFetcher.GetProjectsAsync();
 
         var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
         if (plugin is null)

@@ -7,11 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DxWorks.ScriptBee.Plugin.Api" Version="1.1.0"/>
         <PackageReference Include="Jint" Version="3.0.0-beta-2033" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>

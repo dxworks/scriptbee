@@ -45,8 +45,8 @@ public class BundlePluginInstallerTests
     public async Task GivenSimplePlugin_WhenInstall_ThenPluginIsInstalledSuccessfully(PluginList pluginList)
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(pluginList.Plugins);
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId", "1.0.0"))
+            .Returns("url");
         _simplePluginInstallerMock.Setup(x => x.Install("url", "pluginId", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("plugin_folder");
 
@@ -62,8 +62,8 @@ public class BundlePluginInstallerTests
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(pluginList.Plugins);
         _pluginFetcherMock.Setup(x =>
-                x.GetPluginUrlAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception());
+                x.GetPluginUrl(It.IsAny<string>(), It.IsAny<string>()))
+            .Throws(new Exception());
 
         await Assert.ThrowsAsync<Exception>(() =>
             _bundlePluginInstaller.Install("pluginId", "1.0.0", It.IsAny<CancellationToken>()));
@@ -76,8 +76,8 @@ public class BundlePluginInstallerTests
     public async Task GivenSimplePluginAndInstallFails_WhenInstall_ThenPluginIsNotInstalled(PluginList pluginList)
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(pluginList.Plugins);
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId", "1.0.0"))
+            .Returns("url");
         _simplePluginInstallerMock.Setup(x =>
                 x.Install(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Throws(new Exception());
@@ -96,8 +96,8 @@ public class BundlePluginInstallerTests
             {
                 CreatePlugin("pluginName", "1.0.0"),
             });
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginName", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginName", "1.0.0"))
+            .Returns("url");
 
         var pluginFolders = await _bundlePluginInstaller.Install("pluginName", "1.0.0", It.IsAny<CancellationToken>());
 
@@ -116,8 +116,8 @@ public class BundlePluginInstallerTests
             {
                 CreatePlugin("pluginName", "10.0.0"),
             });
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginName", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginName", "1.0.0"))
+            .Returns("url");
 
         var pluginFolders = await _bundlePluginInstaller.Install("pluginName", "1.0.0", It.IsAny<CancellationToken>());
 
@@ -139,8 +139,8 @@ public class BundlePluginInstallerTests
                 CreatePlugin("pluginName", "1.2.3", "plugin_folder_4"),
                 CreatePlugin("pluginName", "1.5.0", "plugin_folder_5"),
             });
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginName", "14.3.1", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginName", "14.3.1"))
+            .Returns("url");
         _simplePluginInstallerMock.Setup(x => x.Install("url", "pluginName", "14.3.1", It.IsAny<CancellationToken>()))
             .ReturnsAsync("plugin_folder");
 
@@ -198,8 +198,8 @@ public class BundlePluginInstallerTests
     public async Task GivenBundlePluginThatHasNoPluginInFolder_WhenInstall_ThenOnlyFolderIsInstalled()
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(new List<Models.Plugin>());
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("bundle", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("bundle", "1.0.0"))
+            .Returns("url");
         _simplePluginInstallerMock
             .Setup(x => x.Install("url", "bundle", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("bundle_folder");
@@ -259,17 +259,17 @@ public class BundlePluginInstallerTests
     public async Task GivenBundleWithBundles_WhenInstall_ThenPluginsAreInstalled()
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(new List<Models.Plugin>());
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("bundle", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("bundle", "1.0.0"))
+            .Returns("url");
         _simplePluginInstallerMock.Setup(x => x.Install("url", "bundle", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("bundle_folder");
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId1", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url_plugin1");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId1", "1.0.0"))
+            .Returns("url_plugin1");
         _simplePluginInstallerMock
             .Setup(x => x.Install("url_plugin1", "pluginId1", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("plugin_folder1");
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId2", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url_plugin2");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId2", "1.0.0"))
+            .Returns("url_plugin2");
         _simplePluginInstallerMock
             .Setup(x => x.Install("url_plugin2", "pluginId2", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("plugin_folder2");
@@ -314,10 +314,10 @@ public class BundlePluginInstallerTests
     public async Task GivenBundlePluginThatFails_WhenInstall_ThenDataIsRemoved()
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(new List<Models.Plugin>());
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("bundle", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId", "1.0.0", It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception());
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("bundle", "1.0.0"))
+            .Returns("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId", "1.0.0"))
+            .Throws(new Exception());
         _simplePluginInstallerMock.Setup(x => x.Install("url", "bundle", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("bundle_folder");
         _pluginReaderMock.Setup(x => x.ReadPlugin("bundle_folder")).Returns(CreateBundlePlugin("bundle", "1.0.0",
@@ -335,17 +335,17 @@ public class BundlePluginInstallerTests
     public async Task GivenBundleWithMultiplePluginsWhereOneFails_WhenInstall_ThenDataIsRemoved()
     {
         _pluginReaderMock.Setup(x => x.ReadPlugins(ConfigFolders.PathToPlugins)).Returns(new List<Models.Plugin>());
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("bundle", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("bundle", "1.0.0"))
+            .Returns("url");
         _simplePluginInstallerMock.Setup(x => x.Install("url", "bundle", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("bundle_folder");
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId1", "1.0.0", It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url_plugin1");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId1", "1.0.0"))
+            .Returns("url_plugin1");
         _simplePluginInstallerMock
             .Setup(x => x.Install("url_plugin1", "pluginId1", "1.0.0", It.IsAny<CancellationToken>()))
             .ReturnsAsync("plugin_folder1");
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync("pluginId2", "2.0.0", It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception());
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl("pluginId2", "2.0.0"))
+            .Throws(new Exception());
         _pluginReaderMock.Setup(x => x.ReadPlugin("bundle_folder"))
             .Returns(CreateBundlePlugin("bundle", "1.0.0",
                 new TestBundlePlugin(PluginKind.Plugin, "pluginId1", "1.0.0"),
@@ -356,7 +356,7 @@ public class BundlePluginInstallerTests
             _bundlePluginInstaller.Install("bundle", "1.0.0", It.IsAny<CancellationToken>()));
 
         _pluginFetcherMock.Verify(
-            x => x.GetPluginUrlAsync("pluginId2", "2.0.0", It.IsAny<CancellationToken>()), Times.Once());
+            x => x.GetPluginUrl("pluginId2", "2.0.0"), Times.Once());
         _simplePluginInstallerMock.Verify(
             x => x.Install(It.IsAny<string>(), "pluginId2", "2.0.0", It.IsAny<CancellationToken>()), Times.Never());
 
@@ -369,8 +369,8 @@ public class BundlePluginInstallerTests
     private void SetupBundlePluginMocks(string bundleName, string bundleVersion, int pluginCount,
         params TestBundlePlugin[] bundleExtensionPoints)
     {
-        _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync(bundleName, bundleVersion, It.IsAny<CancellationToken>()))
-            .ReturnsAsync("url");
+        _pluginFetcherMock.Setup(x => x.GetPluginUrl(bundleName, bundleVersion))
+            .Returns("url");
         _simplePluginInstallerMock
             .Setup(x => x.Install("url", bundleName, bundleVersion, It.IsAny<CancellationToken>()))
             .ReturnsAsync("bundle_folder");
@@ -383,8 +383,8 @@ public class BundlePluginInstallerTests
             var pluginUrl = $"url{i}";
             testPlugins.Add(new TestBundlePlugin(PluginKind.Plugin, pluginId, "1.0.0"));
 
-            _pluginFetcherMock.Setup(x => x.GetPluginUrlAsync(pluginId, "1.0.0", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(pluginUrl);
+            _pluginFetcherMock.Setup(x => x.GetPluginUrl(pluginId, "1.0.0"))
+                .Returns(pluginUrl);
             _simplePluginInstallerMock
                 .Setup(x => x.Install(pluginUrl, pluginId, "1.0.0", It.IsAny<CancellationToken>()))
                 .ReturnsAsync($"plugin_folder{i}");
