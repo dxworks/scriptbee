@@ -37,7 +37,7 @@ public class BundlePluginUninstallerTests
 
         var versions = _bundlePluginUninstaller.Uninstall("plugin", "1.0.0");
 
-        Assert.Equal(1, versions.Count);
+        Assert.Single(versions);
         Assert.Equal("1.0.0", versions[0].Version);
         Assert.Equal("plugin", versions[0].PluginId);
         _pluginUninstaller.Verify(x => x.Uninstall("plugin_path"), Times.Once());
@@ -53,7 +53,7 @@ public class BundlePluginUninstallerTests
         var versions = _bundlePluginUninstaller.Uninstall("plugin", "1.0.0");
 
 
-        Assert.Equal(1, versions.Count);
+        Assert.Single(versions);
         Assert.Equal("1.0.0", versions[0].Version);
         Assert.Equal("plugin", versions[0].PluginId);
         _pluginUninstaller.Verify(x => x.Uninstall("plugin_path"), Times.Once());

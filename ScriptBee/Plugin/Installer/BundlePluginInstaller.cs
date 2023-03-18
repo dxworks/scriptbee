@@ -42,9 +42,7 @@ public class BundlePluginInstaller : IBundlePluginInstaller
     }
 
     private async Task<(List<string> installedPluginFolders, List<string> pluginFoldersToUninstall)>
-        InstallPluginBundle(string pluginId,
-            string version,
-            CancellationToken cancellationToken = default)
+        InstallPluginBundle(string pluginId, string version, CancellationToken cancellationToken = default)
     {
         var (bundleFolder, existingVersionsToUninstall) = await InstallPlugin(pluginId, version, cancellationToken);
 
@@ -102,7 +100,7 @@ public class BundlePluginInstaller : IBundlePluginInstaller
             return (null, installedPluginVersions);
         }
 
-        var url = await _pluginUrlFetcher.GetPluginUrlAsync(pluginId, version, cancellationToken);
+        var url = _pluginUrlFetcher.GetPluginUrl(pluginId, version);
         var pluginFolder = await _simplePluginInstaller.Install(url, pluginId, version, cancellationToken);
 
         return (pluginFolder, installedPluginVersions);

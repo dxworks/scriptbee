@@ -5,6 +5,8 @@ namespace ScriptBee.ProjectContext;
 
 public interface IProjectFileStructureManager
 {
+    public void CreateScriptBeeFolderStructure();
+    
     public void CreateProjectFolderStructure(string projectId);
 
     public void DeleteProjectFolderStructure(string projectId);

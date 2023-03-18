@@ -14,10 +14,13 @@ public sealed class MarketPluginFetcher : IMarketPluginFetcher
         _hubClient = hubClient;
     }
 
-    public async Task<IEnumerable<MarketPlaceProject>> GetProjectsAsync(CancellationToken cancellationToken = default)
+    public async Task UpdateRepositoryAsync(CancellationToken cancellationToken = default)
     {
         await _hubClient.UpdateRepositoryAsync(cancellationToken);
+    }
 
+    public IEnumerable<MarketPlaceProject> GetProjectsAsync()
+    {
         return _hubClient.GetScriptBeeProjects()
             .Select(ConvertToPlugin);
     }

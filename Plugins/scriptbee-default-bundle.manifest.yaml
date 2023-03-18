@@ -37,8 +37,9 @@ scriptBee:
   id: scriptbee-default-bundle
   type: bundle
   versions:
-    - version: 1.0.0
+    - version: 1.1.1
+      tag: 1.1.1
       name: dxworks/scriptbee
-      sourceCode: https://github.com/dxworks/scriptbee/tree/master/Plugins
-      manifest: https://raw.githubusercontent.com/dxworks/honeydew/v1.0.0/Plugins/manifest.yaml
+      sourceCode: https://github.com/dxworks/scriptbee/tree/1.1.1/Plugins
+      manifest: https://raw.githubusercontent.com/dxworks/scriptbee/1.1.1/Plugins/manifest.yaml
       asset: scriptbee-default-bundle.zip
