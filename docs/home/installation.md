@@ -1,5 +1,11 @@
 ﻿# Installation
 
+## Prerequisites
+
+- Mongo 4.4
+- Dotnet 6.0
+- Node 16.0
+
 ## Docker Compose
 
 You start ScriptBee using Docker. In order to do so, you need to setup a MongoDB server and set the connection string as
@@ -11,7 +17,7 @@ An example of the `docker-compose.yaml`:
 version: "3.8"
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:4.4
     container_name: mongo
     restart: unless-stopped
     volumes:
