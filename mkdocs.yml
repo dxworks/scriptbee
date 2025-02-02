@@ -72,3 +72,4 @@ nav:
       - Diagram: architecture/diagram.md
       - Overview: architecture/overview.md
       - Features: architecture/features.md
+      - RBAC: architecture/rbac.md
