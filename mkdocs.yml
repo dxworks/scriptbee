@@ -68,3 +68,7 @@ nav:
       - Writing Your First Javascript Script: scripts/first_javascript_script.md
   - Results:
       - View Results: results/view.md
+  - Architecture: 
+      - Diagram: architecture/diagram.md
+      - Overview: architecture/overview.md
+      - Features: architecture/features.md
