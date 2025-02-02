@@ -1,12 +1,10 @@
-﻿namespace ScriptBeeWebApp.Extensions;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ScriptBee.Common.Web.Extensions;
 
 public static class EndpointDefinitionExtensions
 {
-    public static void AddEndpointDefinitions(this IServiceCollection services)
-    {
-        services.AddEndpointDefinitions(typeof(IEndpointDefinition));
-    }
-
     public static void AddEndpointDefinitions(this IServiceCollection services, params Type[] scanMarkers)
     {
         var endpointDefinitions = new List<IEndpointDefinition>();
@@ -26,16 +24,17 @@ public static class EndpointDefinitionExtensions
             endpointDefinition.DefineServices(services);
         }
 
-        services.AddSingleton(endpointDefinitions as IReadOnlyCollection<IEndpointDefinition>);
+        services.AddSingleton<IReadOnlyCollection<IEndpointDefinition>>(endpointDefinitions);
     }
 
-    public static void UseEndpointDefinitions(this WebApplication app)
+    public static void UseEndpointDefinitions(this WebApplication app, string prefix)
     {
         var endpointDefinitions = app.Services.GetRequiredService<IReadOnlyCollection<IEndpointDefinition>>();
+        var group = app.MapGroup(prefix);
 
         foreach (var endpointDefinition in endpointDefinitions)
         {
-            endpointDefinition.DefineEndpoints(app);
+            endpointDefinition.DefineEndpoints(group);
         }
     }
 }

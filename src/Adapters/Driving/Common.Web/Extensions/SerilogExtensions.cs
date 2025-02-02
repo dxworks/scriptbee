@@ -1,8 +1,10 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 using Serilog.Events;
 using ILogger = Serilog.ILogger;
 
-namespace ScriptBeeWebApp.Extensions;
+namespace ScriptBee.Common.Web.Extensions;
 
 public static class SerilogExtensions
 {
@@ -18,5 +20,12 @@ public static class SerilogExtensions
         services.AddSingleton<ILogger>(_ => logger);
 
         return services;
+    }
+
+    public static IHostBuilder UseSerilog(this IHostBuilder hostBuilder)
+    {
+        return hostBuilder.UseSerilog((context, services, config) => config
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services));
     }
 }

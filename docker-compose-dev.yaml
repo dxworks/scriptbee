@@ -1,34 +1,9 @@
-﻿version: "3.8"
-services:
-  mongo:
-    image: mongo:4.4
-    container_name: mongo
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - ${MONGODB_DATA}/db:/data/db
-  
-  mongo-express:
-    image: mongo-express
-    container_name: mexpress
+﻿services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.0
     environment:
-      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/?authSource=admin
-    links:
-      - mongo
-    restart: unless-stopped
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    entrypoint: ["/opt/keycloak/bin/kc.sh", "start-dev"]
     ports:
-      - "8081:8081"
-
-  scripbee:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    volumes:
-      - ${SCRIPTBEE_DATA}:/root/.scriptbee
-    environment:
-      - ConnectionStrings__mongodb=mongodb://mongo:27017/ScriptBee?authSource=admin
-    depends_on:
-      - mongo
-    ports:
-      - "4201:80"
+      - 28080:8080
