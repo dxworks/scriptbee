@@ -2,7 +2,6 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using ScriptBee.Gateway.Web.EndpointDefinitions.Project;
 using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Web.Tests;
@@ -25,8 +24,8 @@ public class TestApiCaller<T>(string endpoint, ITestOutputHelper testOutputHelpe
     {
         using var client = TestWebApplicationFactory<Program>.CreateClient(testOutputHelper, []);
 
-        var content = new StringContent(JsonSerializer.Serialize<CreateProject.WebCreateProjectCommand?>(null),
-            Encoding.UTF8, MediaTypeNames.Application.Json);
+        var content = new StringContent(JsonSerializer.Serialize<object?>(null), Encoding.UTF8,
+            MediaTypeNames.Application.Json);
 
         var response = await client.PostAsync(endpoint, content);
         return response;

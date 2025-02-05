@@ -1,15 +1,14 @@
 ﻿// TODO: uncomment and implement when functionality is refactored
-// using FluentValidation;
 // using ScriptBee.Marketplace.Client;
 // using ScriptBee.Plugin;
-// using ScriptBeeWebApp.EndpointDefinitions.Arguments.Validation;
-// using ScriptBeeWebApp.Extensions;
 // using ScriptBeeWebApp.Hubs;
 
+using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Gateway.Web.EndpointDefinitions;
+using ScriptBee.Gateway.Web.EndpointDefinitions.Validation;
 using ScriptBee.Gateway.Web.Extensions;
 using Serilog;
 
@@ -24,13 +23,14 @@ builder.Services
     .AddJwtAuthentication(builder.Configuration)
     .AddSerilog()
     .AddOpenApi()
+    .AddValidatorsFromAssemblyContaining<IValidationMarker>()
+    .AddProblemDetailsDefaults()
     // .AddMongoDb(mongoConnectionString)
     // .AddUtilityServices()
     // .AddPluginServices()
     // .AddScriptBeeMarketplaceClient()
     // .AddFileWatcherServices()
     // .AddControllerServices(userFolderConfigurationSection)
-    // .AddValidatorsFromAssemblyContaining<IValidationMarker>()
     .AddSignalR();
 
 builder.Services.AddEndpointDefinitions(typeof(IEndpointDefinition), typeof(IEndpointDefinitionMarker));
