@@ -51,7 +51,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSerilogRequestLogging();
-app.UseExceptionHandler("/error");
+
+app.UseExceptionEndpoint();
 
 app.UseAuthentication();
 app.UseAuthorization();
