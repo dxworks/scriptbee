@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ScriptBee.Domain.Model.Authorization;
 
 namespace ScriptBee.Gateway.Web.Tests;
 
@@ -13,7 +14,7 @@ public class TestAuthHandler(
     : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
     public const string TestAuthenticationScheme = "TestScheme";
-    public List<string> Roles { get; set; } = [];
+    public List<UserRole> Roles { get; init; } = [];
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
@@ -27,7 +28,7 @@ public class TestAuthHandler(
             new(ClaimTypes.Name, "TestUser"),
         };
 
-        claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(Roles.Select(role => new Claim(ClaimTypes.Role, role.Type)));
 
         var identity = new ClaimsIdentity(claims, TestAuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);

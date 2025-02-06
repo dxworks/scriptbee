@@ -2,15 +2,14 @@
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Web.Tests;
 
-public class TestApiCaller<T>(string endpoint, ITestOutputHelper testOutputHelper)
+public class TestApiCaller<T>(string endpoint)
 {
-    public async Task<HttpResponseMessage> PostApi(List<string> roles, T? data = default)
+    public async Task<HttpResponseMessage> PostApi(TestWebApplicationFactory<Program> factory, T? data = default)
     {
-        using var client = TestWebApplicationFactory<Program>.CreateClient(testOutputHelper, roles);
+        using var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue(TestAuthHandler.TestAuthenticationScheme);
 
@@ -20,9 +19,9 @@ public class TestApiCaller<T>(string endpoint, ITestOutputHelper testOutputHelpe
         return response;
     }
 
-    public async Task<HttpResponseMessage> PostApiWithoutAuthorization()
+    public async Task<HttpResponseMessage> PostApiWithoutAuthorization(TestWebApplicationFactory<Program> factory)
     {
-        using var client = TestWebApplicationFactory<Program>.CreateClient(testOutputHelper, []);
+        using var client = factory.CreateClient();
 
         var content = new StringContent(JsonSerializer.Serialize<object?>(null), Encoding.UTF8,
             MediaTypeNames.Application.Json);

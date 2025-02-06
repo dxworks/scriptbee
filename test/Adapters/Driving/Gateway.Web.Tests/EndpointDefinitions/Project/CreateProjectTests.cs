@@ -1,43 +1,86 @@
 ﻿using System.Net;
-using ScriptBee.Gateway.Web.EndpointDefinitions.Project;
+using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
+using ScriptBee.Domain.Model.Authorization;
+using ScriptBee.Domain.Model.Projects;
+using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Ports.Driving.UseCases.Projects;
+using ScriptBee.Tests.Common;
+using Shouldly;
 using Xunit.Abstractions;
+using static ScriptBee.Gateway.Web.Tests.ProblemValidationUtils;
 
 namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
 
 public class CreateProjectTests(ITestOutputHelper outputHelper)
 {
-    private readonly TestApiCaller<CreateProject.WebCreateProjectCommand> _api = new("/api/scriptbee/projects",
-        outputHelper);
+    private const string TestUrl = "/api/scriptbee/projects";
+    private readonly TestApiCaller<WebCreateProjectCommand> _api = new(TestUrl);
 
     [Fact]
-    public async Task MaintainerRole_ShouldReturnCreated()
+    public async Task AdministratorRoleWithInvalidRequestBody_ShouldReturnBadRequest()
     {
-        var response = await _api.PostApi(["MAINTAINER"]);
+        var response =
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]),
+                new WebCreateProjectCommand(""));
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        await AssertValidationProblem(response.Content, TestUrl,
+            new
+            {
+                Name = new List<string> { "'Name' must not be empty." }
+            });
+    }
+
+    [Fact]
+    public async Task AdministratorRoleWithEmptyBody_ShouldReturnBadRequest()
+    {
+        var response =
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]));
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        await AssertEmptyRequestBodyProblem(response.Content, TestUrl);
+    }
+
+    [Fact]
+    public async Task AdministratorRole_ShouldReturnCreated()
+    {
+        var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
+        createProjectUseCase.CreateProject(new CreateProjectCommand("project name"), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new Domain.Model.Projects.Project(new ProjectId("id"), "name")));
+
+        var response =
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
+                    services => { services.AddSingleton(createProjectUseCase); }),
+                new WebCreateProjectCommand("project name"));
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        var createProjectResponse = await response.ReadContentAsync<WebCreateProjectResponse>();
+        createProjectResponse.Id.ShouldBe("id");
+        createProjectResponse.Name.ShouldBe("name");
     }
 
     [Fact]
     public async Task OtherRole_ShouldReturnForbidden()
     {
-        var response = await _api.PostApi(["OTHER"]);
+        var response = await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
 
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
     [Fact]
     public async Task NoRoles_ShouldReturnForbidden()
     {
-        var response = await _api.PostApi([]);
+        var response = await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, []));
 
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
     [Fact]
     public async Task UnauthorizedUser_ShouldReturnUnauthorized()
     {
-        var response = await _api.PostApiWithoutAuthorization();
+        var response = await _api.PostApiWithoutAuthorization(new TestWebApplicationFactory<Program>(outputHelper));
 
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 }

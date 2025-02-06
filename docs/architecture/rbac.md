@@ -13,8 +13,8 @@ Roles:
 |----------------|---------|---------|------------|---------------|
 | view_project   | &check; | &check; | &check;    | &check;       |
 | update_project |         |         | &check;    | &check;       |
-| create_project |         |         | &check;    | &check;       |
 | delete_project |         |         | &check;    | &check;       |
+| create_project |         |         |            | &check;       |
 
 ## User Management
 

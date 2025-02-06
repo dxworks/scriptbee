@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup>
+        <RootNamespace>ScriptBee.Domain.Service</RootNamespace>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\Ports\Driving\UseCases\UseCases.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -71,7 +71,7 @@ app.UseEndpoints(_ => { });
 
 // app.MapHub<FileWatcherHub>("/api/fileWatcherHub");
 
-app.UseEndpointDefinitions("/api/scriptbee");
+app.UseEndpointDefinitions();
 
 // var pluginManager = app.Services.GetRequiredService<PluginManager>();
 

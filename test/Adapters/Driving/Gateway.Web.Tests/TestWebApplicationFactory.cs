@@ -6,26 +6,28 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ScriptBee.Domain.Model.Authorization;
 using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Web.Tests;
 
-public class TestWebApplicationFactory<TStartup>(ITestOutputHelper output, List<string> roles)
+public class TestWebApplicationFactory<TStartup>(
+    ITestOutputHelper output,
+    List<UserRole> roles,
+    Action<IServiceCollection>? configureDelegate = null)
     : WebApplicationFactory<TStartup>
     where TStartup : class
 {
-    public static HttpClient CreateClient(ITestOutputHelper output, List<string> roles)
+    public TestWebApplicationFactory(ITestOutputHelper output) : this(output, [])
     {
-        var factory = new TestWebApplicationFactory<TStartup>(output, roles);
-        return factory.CreateClient();
     }
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        builder.ConfigureServices(_ =>
+        if (configureDelegate != null)
         {
-            // TODO: Add mocks
-        });
+            builder.ConfigureServices(configureDelegate);
+        }
 
         return base.CreateHost(builder);
     }
@@ -35,8 +37,8 @@ public class TestWebApplicationFactory<TStartup>(ITestOutputHelper output, List<
         builder.ConfigureLogging(logging =>
         {
             logging.ClearProviders();
+            logging.Services.AddSingleton<ILoggerFactory, LoggerFactory>();
             logging.AddProvider(new XUnitLoggerProvider(output));
-            logging.AddDebug();
         });
 
         builder.ConfigureServices(services =>

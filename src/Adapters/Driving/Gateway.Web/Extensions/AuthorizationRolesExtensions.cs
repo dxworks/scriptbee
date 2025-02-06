@@ -1,20 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using ScriptBee.Domain.Model.Authorization;
 
 namespace ScriptBee.Gateway.Web.Extensions;
 
 public static class AuthorizationRolesExtensions
 {
+    public const string CreateProjectPolicy = "create_project";
+
     public static IServiceCollection AddAuthorizationRules(this IServiceCollection services)
     {
         services
             .AddAuthorizationBuilder()
-            .AddPolicyForMaintainer("create_project");
+            .AddPolicyForCreateProject();
         return services;
     }
 
-    private static AuthorizationBuilder AddPolicyForMaintainer(this AuthorizationBuilder authorizationBuilder,
-        string policyName)
+    private static AuthorizationBuilder AddPolicyForCreateProject(this AuthorizationBuilder authorizationBuilder)
     {
-        return authorizationBuilder.AddPolicy(policyName, policy => policy.RequireRole("MAINTAINER"));
+        return authorizationBuilder.AddPolicy(CreateProjectPolicy,
+            policy => policy.RequireRole(UserRole.Administrator.Type));
     }
 }

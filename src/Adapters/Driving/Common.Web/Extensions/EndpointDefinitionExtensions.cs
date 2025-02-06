@@ -27,14 +27,13 @@ public static class EndpointDefinitionExtensions
         services.AddSingleton<IReadOnlyCollection<IEndpointDefinition>>(endpointDefinitions);
     }
 
-    public static void UseEndpointDefinitions(this WebApplication app, string prefix)
+    public static void UseEndpointDefinitions(this WebApplication app)
     {
         var endpointDefinitions = app.Services.GetRequiredService<IReadOnlyCollection<IEndpointDefinition>>();
-        var group = app.MapGroup(prefix);
 
         foreach (var endpointDefinition in endpointDefinitions)
         {
-            endpointDefinition.DefineEndpoints(group);
+            endpointDefinition.DefineEndpoints(app);
         }
     }
 }

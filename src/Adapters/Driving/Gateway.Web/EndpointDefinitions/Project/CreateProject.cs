@@ -1,25 +1,35 @@
-﻿using ScriptBee.Common.Web;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.Validation;
+using ScriptBee.Domain.Service.Projects;
+using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Gateway.Web.Extensions;
+using ScriptBee.Ports.Driving.UseCases.Projects;
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project;
 
 public class CreateProject : IEndpointDefinition
 {
+    public void DefineServices(IServiceCollection services)
+    {
+        services.AddSingleton<ICreateProjectUseCase, CreateProjectService>();
+    }
+
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/projects", PostCreateProject)
-            .RequireAuthorization("create_project");
+        app.MapPost("/api/scriptbee/projects", PostCreateProject)
+            .RequireAuthorization(AuthorizationRolesExtensions.CreateProjectPolicy)
+            .WithRequestValidation<WebCreateProjectCommand>();
     }
 
-    private static async Task<IResult> PostCreateProject(
-        // [FromBody] CreateProject createProject,
-        // IProjectManager projectManager, IProjectModelService projectModelService,
-        // IProjectFileStructureManager projectFileStructureManager, IValidator<CreateProject> validator,
-        CancellationToken cancellationToken)
+    private static async Task<Created<WebCreateProjectResponse>> PostCreateProject(
+        [FromBody] WebCreateProjectCommand command,
+        ICreateProjectUseCase useCase, CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
+        var project = await useCase.CreateProject(command.Map(), cancellationToken);
 
-        return Results.Ok();
+        var response = WebCreateProjectResponse.Map(project);
+        return TypedResults.Created($"/api/scriptbee/projects/{response.Id}", response);
     }
-
-    public record WebCreateProjectCommand(string Name);
 }
