@@ -2,12 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>ScriptBee.Domain.Service.Tests</RootNamespace>
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
-
-    <ItemGroup>
-        <Using Include="Xunit"/>
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\Application\Domain\Service\Service.csproj" />

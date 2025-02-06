@@ -4,4 +4,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <PropertyGroup Condition="'$(ProjectName.ToLower().Contains(`test`))' == 'true'">
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    
+    <ItemGroup Condition="'$(ProjectName.ToLower().Contains(`test`))' == 'true'">
+        <Using Include="Xunit"/>
+    </ItemGroup>
 </Project>

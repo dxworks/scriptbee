@@ -14,7 +14,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
+var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
 // var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 
 // TODO: move service registration in Endpoint Definitions 
@@ -25,7 +25,7 @@ builder.Services
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IValidationMarker>()
     .AddProblemDetailsDefaults()
-    // .AddMongoDb(mongoConnectionString)
+    .AddMongoDb(mongoConnectionString)
     // .AddUtilityServices()
     // .AddPluginServices()
     // .AddScriptBeeMarketplaceClient()

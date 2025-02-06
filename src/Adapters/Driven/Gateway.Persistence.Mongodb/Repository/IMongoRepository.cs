@@ -1,8 +1,6 @@
-﻿using ScriptBee.Models;
+﻿namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
 
-namespace ScriptBeeWebApp.Repository;
-
-public interface IMongoService<T> where T : IDocument
+public interface IMongoRepository<T> where T : IDocument
 {
     public Task CreateDocument(T model, CancellationToken cancellationToken);
 

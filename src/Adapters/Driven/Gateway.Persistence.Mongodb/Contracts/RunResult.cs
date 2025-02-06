@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ScriptBee.Models;
+﻿namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 
 public class RunResult
 {

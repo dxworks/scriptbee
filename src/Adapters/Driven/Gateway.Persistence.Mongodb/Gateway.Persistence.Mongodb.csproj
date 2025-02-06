@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup>
+        <RootNamespace>ScriptBee.Gateway.Persistence.Mongodb</RootNamespace>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Projects\Ports.Projects.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Bson" />
+      <PackageReference Include="MongoDB.Driver" />
+      <PackageReference Include="MongoDB.Driver.GridFS" />
+    </ItemGroup>
+
+</Project>

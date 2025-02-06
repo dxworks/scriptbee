@@ -14,7 +14,9 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Application\Domain\Model\Model.csproj" />
         <ProjectReference Include="..\..\..\Application\Domain\Service\Service.csproj" />
+        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Projects\Ports.Projects.csproj" />
         <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases\UseCases.csproj" />
+        <ProjectReference Include="..\..\Driven\Gateway.Persistence.Mongodb\Gateway.Persistence.Mongodb.csproj" />
         <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
     </ItemGroup>
 

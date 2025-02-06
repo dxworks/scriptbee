@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ScriptBee.Models;
+﻿namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 
 public class Run
 {

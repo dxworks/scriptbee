@@ -47,7 +47,7 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
         createProjectUseCase.CreateProject(new CreateProjectCommand("project name"), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new Domain.Model.Projects.Project(new ProjectId("id"), "name")));
+            .Returns(Task.FromResult(new Domain.Model.Projects.Project(ProjectId.FromValue("id"), "name")));
 
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],

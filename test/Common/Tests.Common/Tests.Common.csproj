@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <RootNamespace>ScriptBee.Tests.Common</RootNamespace>
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
 </Project>

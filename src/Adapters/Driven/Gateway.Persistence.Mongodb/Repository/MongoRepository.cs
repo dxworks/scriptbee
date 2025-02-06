@@ -1,18 +1,10 @@
 ﻿using MongoDB.Driver;
-using ScriptBee.Models;
 
-namespace ScriptBeeWebApp.Repository;
+namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
 
-public abstract class MongoService<T> : IMongoService<T>
+public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRepository<T>
     where T : IDocument
 {
-    protected readonly IMongoCollection<T> mongoCollection;
-
-    protected MongoService(IMongoCollection<T> mongoCollection)
-    {
-        this.mongoCollection = mongoCollection;
-    }
-
     public Task CreateDocument(T model, CancellationToken cancellationToken)
     {
         return mongoCollection.InsertOneAsync(model, cancellationToken: cancellationToken);

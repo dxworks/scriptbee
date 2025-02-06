@@ -1,4 +1,4 @@
 ﻿namespace ScriptBee.Domain.Model.Authorization;
 
 [Serializable]
-public class UnknownUserRoleException(string type) : Exception(type);
+public sealed class UnknownUserRoleException(string type) : Exception(type);
