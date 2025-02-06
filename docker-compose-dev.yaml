@@ -1,9 +1,31 @@
 ﻿services:
+  mongo:
+    image: mongo:8.0.4
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ${MONGODB_DATA}/db:/data/db
+  
+  mongo-express:
+    image: mongo-express:1.0.2-18
+    container_name: mexpress
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/?authSource=admin
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.0
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    entrypoint: ["/opt/keycloak/bin/kc.sh", "start-dev"]
+    entrypoint: [ "/opt/keycloak/bin/kc.sh", "start-dev" ]
     ports:
-      - 28080:8080
+      - "28080:8080"

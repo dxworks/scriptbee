@@ -6,6 +6,15 @@ services:
     restart: unless-stopped
     volumes:
       - ${MONGODB_DATA}:/data/db
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.0
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    entrypoint: [ "/opt/keycloak/bin/kc.sh", "start-dev" ]
+    ports:
+      - "28080:8080"
   
   scripbee:
     image: dxworks/scriptbee
@@ -19,3 +28,4 @@ services:
       - UserFolder__UserFolderPath=${SCRIPTBEE_DATA}
     depends_on:
       - mongo
+      - keycloak
