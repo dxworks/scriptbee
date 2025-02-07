@@ -1,8 +1,9 @@
 ﻿using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using OneOf;
 using ScriptBee.Domain.Model.Authorization;
-using ScriptBee.Domain.Model.Projects;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Ports.Driving.UseCases.Projects;
 using ScriptBee.Tests.Common;
@@ -47,7 +48,8 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
         createProjectUseCase.CreateProject(new CreateProjectCommand("project name"), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new Domain.Model.Projects.Project(ProjectId.FromValue("id"), "name")));
+            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
+                new ProjectDetails(ProjectId.FromValue("id"), "name")));
 
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
@@ -58,6 +60,26 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
         var createProjectResponse = await response.ReadContentAsync<WebCreateProjectResponse>();
         createProjectResponse.Id.ShouldBe("id");
         createProjectResponse.Name.ShouldBe("name");
+    }
+
+    [Fact]
+    public async Task AdministratorRoleAndExistingId_ShouldReturnConflict()
+    {
+        var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
+        createProjectUseCase.CreateProject(new CreateProjectCommand("project name"), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
+                new ProjectIdAlreadyInUseError(ProjectId.FromValue("id"))));
+
+        var response =
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
+                    services => { services.AddSingleton(createProjectUseCase); }),
+                new WebCreateProjectCommand("project name"));
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+        await AssertConflictProblem(response.Content, TestUrl,
+            "Project ID Already In Use",
+            "A project with the ID 'id' already exists. Use a unique Project ID or update the existing project."
+        );
     }
 
     [Fact]

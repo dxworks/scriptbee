@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "test\Common
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Persistence.Mongodb", "src\Adapters\Driven\Gateway.Persistence.Mongodb\Gateway.Persistence.Mongodb.csproj", "{DE9D5A0B-39F9-4E3D-ACED-CB72CE7CE7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Projects", "src\Application\Ports\Driven\Ports.Projects\Ports.Projects.csproj", "{68F93E0C-C50D-4CB0-A177-531A4FAA2047}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Project", "src\Application\Ports\Driven\Ports.Project\Ports.Project.csproj", "{68F93E0C-C50D-4CB0-A177-531A4FAA2047}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Persistence.Mongodb.Tests", "test\Adapters\Driven\Gateway.Persistence.Mongodb.Tests\Gateway.Persistence.Mongodb.Tests.csproj", "{B631765A-F54F-4707-BCE9-D994C926C8CB}"
 EndProject

@@ -1,9 +1,11 @@
-﻿namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
+﻿using ScriptBee.Domain.Model.Project;
+
+namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 
 public record WebCreateProjectResponse(string Id, string Name)
 {
-    public static WebCreateProjectResponse Map(Domain.Model.Projects.Project project)
+    public static WebCreateProjectResponse Map(ProjectDetails projectDetails)
     {
-        return new WebCreateProjectResponse(project.Id.Value, project.Name);
+        return new WebCreateProjectResponse(projectDetails.Id.Value, projectDetails.Name);
     }
 }

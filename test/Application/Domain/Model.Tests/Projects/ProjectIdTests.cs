@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Projects;
+﻿using ScriptBee.Domain.Model.Project;
 using Shouldly;
 
 namespace ScriptBee.Domain.Model.Tests.Projects;

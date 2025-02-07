@@ -1,5 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using ScriptBee.Domain.Model.Projects;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
@@ -16,12 +16,12 @@ public class ProjectModel : IDocument
     public string? Linker { get; set; }
     public Run? LastRun { get; set; }
 
-    public static ProjectModel From(Project project, DateTime creationDate)
+    public static ProjectModel From(ProjectDetails projectDetails, DateTime creationDate)
     {
         return new ProjectModel
         {
-            Id = project.Id.Value,
-            Name = project.Name,
+            Id = projectDetails.Id.Value,
+            Name = projectDetails.Name,
             CreationDate = creationDate,
         };
     }

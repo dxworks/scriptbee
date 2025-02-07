@@ -1,6 +1,6 @@
 ﻿using Slugify;
 
-namespace ScriptBee.Domain.Model.Projects;
+namespace ScriptBee.Domain.Model.Project;
 
 public sealed record ProjectId
 {

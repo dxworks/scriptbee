@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.Problems;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Service.Projects;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
@@ -23,13 +23,22 @@ public class CreateProject : IEndpointDefinition
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 
-    private static async Task<Created<WebCreateProjectResponse>> PostCreateProject(
+    private static async Task<IResult> PostCreateProject(
         [FromBody] WebCreateProjectCommand command,
         ICreateProjectUseCase useCase, CancellationToken cancellationToken = default)
     {
-        var project = await useCase.CreateProject(command.Map(), cancellationToken);
+        var result = await useCase.CreateProject(command.Map(), cancellationToken);
 
-        var response = WebCreateProjectResponse.Map(project);
-        return TypedResults.Created($"/api/scriptbee/projects/{response.Id}", response);
+        return result.Match<IResult>(
+            projectDetails =>
+            {
+                var response = WebCreateProjectResponse.Map(projectDetails);
+                return TypedResults.Created($"/api/scriptbee/projects/{response.Id}", response);
+            },
+            error => ProblemsFactory.Conflict(
+                "Project ID Already In Use",
+                $"A project with the ID '{error.Id.Value}' already exists. Use a unique Project ID or update the existing project."
+            )
+        );
     }
 }
