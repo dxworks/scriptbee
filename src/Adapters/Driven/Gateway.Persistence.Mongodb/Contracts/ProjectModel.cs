@@ -16,13 +16,18 @@ public class ProjectModel : IDocument
     public string? Linker { get; set; }
     public Run? LastRun { get; set; }
 
-    public static ProjectModel From(ProjectDetails projectDetails, DateTime creationDate)
+    public ProjectDetails ToProjectDetails()
+    {
+        return new ProjectDetails(ProjectId.FromValue(Id), Name, CreationDate);
+    }
+
+    public static ProjectModel From(ProjectDetails projectDetails)
     {
         return new ProjectModel
         {
             Id = projectDetails.Id.Value,
             Name = projectDetails.Name,
-            CreationDate = creationDate,
+            CreationDate = projectDetails.CreationDate,
         };
     }
 }

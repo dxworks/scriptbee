@@ -20,11 +20,11 @@ public class DeleteProjectServiceTest
     public async Task DeleteProjectSuccessfully()
     {
         var projectId = ProjectId.Create("id");
-        _deleteProject.DeleteProject(projectId)
+        _deleteProject.Delete(projectId)
             .Returns(Task.CompletedTask);
 
         await _deleteProjectService.DeleteProject(new DeleteProjectCommand(projectId));
 
-        await _deleteProject.Received(1).DeleteProject(projectId);
+        await _deleteProject.Received(1).Delete(projectId);
     }
 }

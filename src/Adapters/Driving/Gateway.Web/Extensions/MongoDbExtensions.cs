@@ -35,6 +35,8 @@ public static class MongoDbExtensions
                 _ => mongoDatabase.GetCollection<ProjectModel>("Projects"))
             .AddSingleton<IMongoRepository<ProjectModel>, MongoRepository<ProjectModel>>()
             .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
-            .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>();
+            .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
+            .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
+            .AddSingleton<IGetProject, ProjectPersistenceAdapter>();
     }
 }

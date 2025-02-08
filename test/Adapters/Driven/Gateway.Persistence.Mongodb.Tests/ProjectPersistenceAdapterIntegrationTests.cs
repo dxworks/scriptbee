@@ -20,9 +20,9 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task CreateNewProject()
     {
-        var project = new ProjectDetails(ProjectId.Create("id"), "name");
+        var project = new ProjectDetails(ProjectId.Create("id"), "name", DateTime.UtcNow);
 
-        var result = await _adapter.CreateProject(project, CancellationToken.None);
+        var result = await _adapter.Create(project, CancellationToken.None);
 
         result.IsT0.ShouldBeTrue();
         var savedProject = await _mongoCollection.Find(p => p.Id == "id").FirstOrDefaultAsync();
@@ -35,10 +35,10 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     public async Task GivenIdAlreadyExists_CreateProject_ExpectProjectAlreadyExistsError()
     {
         var projectId = ProjectId.Create("existing-id");
-        var project = new ProjectDetails(projectId, "name");
+        var project = new ProjectDetails(projectId, "name", DateTime.UtcNow);
         await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "existing-id", Name = "existing" });
 
-        var result = await _adapter.CreateProject(project, CancellationToken.None);
+        var result = await _adapter.Create(project, CancellationToken.None);
 
         result.AsT1.ShouldBe(new ProjectIdAlreadyInUseError(projectId));
     }
@@ -49,7 +49,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var projectId = ProjectId.FromValue("to-delete");
         await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "to-delete", Name = "to-delete" });
 
-        await _adapter.DeleteProject(projectId, CancellationToken.None);
+        await _adapter.Delete(projectId, CancellationToken.None);
 
         var project = await _mongoCollection.Find(p => p.Id == "to-delete").FirstOrDefaultAsync();
         project.ShouldBeNull();
@@ -60,6 +60,46 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var projectId = ProjectId.Create("to-delete-not-existing-id");
 
-        await Should.NotThrowAsync(async () => await _adapter.DeleteProject(projectId, CancellationToken.None));
+        await Should.NotThrowAsync(async () => await _adapter.Delete(projectId, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task GetAllProjects()
+    {
+        var creationDate = DateTime.UtcNow;
+        await _mongoCollection.InsertOneAsync(new ProjectModel
+            { Id = "all-projects-id", Name = "all-projects-id", CreationDate = creationDate });
+
+        var projectDetailsList = await _adapter.GetAll(CancellationToken.None);
+
+        var projectId = ProjectId.FromValue("all-projects-id");
+        var projectDetails = projectDetailsList.First(x => x.Id == projectId);
+        projectDetails.Id.ShouldBe(ProjectId.FromValue("all-projects-id"));
+        projectDetails.Name.ShouldBe("all-projects-id");
+        projectDetails.CreationDate.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task GetProjectById()
+    {
+        var creationDate = DateTime.UtcNow;
+        await _mongoCollection.InsertOneAsync(new ProjectModel
+            { Id = "get-project-by-id", Name = "get-project-by-id", CreationDate = creationDate });
+
+        var result = await _adapter.GetById(ProjectId.Create("get-project-by-id"), CancellationToken.None);
+
+        result.AsT0.Id.ShouldBe(ProjectId.FromValue("get-project-by-id"));
+        result.AsT0.Name.ShouldBe("get-project-by-id");
+        result.AsT0.CreationDate.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task GivenNoProject_GetProjectById_ShouldReturnProjectDoesNotExistsError()
+    {
+        var result = await _adapter.GetById(ProjectId.Create("get-project-by-not-existing-id"), CancellationToken.None);
+
+        result.ShouldBe(
+            new ProjectDoesNotExistsError(ProjectId.FromValue("get-project-by-not-existing-id"))
+        );
     }
 }

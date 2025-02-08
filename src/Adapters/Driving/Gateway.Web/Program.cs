@@ -30,7 +30,7 @@ builder.Services
     .AddValidatorsFromAssemblyContaining<IValidationMarker>()
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
-    // .AddUtilityServices()
+    .AddCommonServices()
     // .AddPluginServices()
     // .AddScriptBeeMarketplaceClient()
     // .AddFileWatcherServices()

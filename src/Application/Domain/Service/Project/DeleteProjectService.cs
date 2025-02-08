@@ -7,6 +7,6 @@ public class DeleteProjectService(IDeleteProject deleteProject) : IDeleteProject
 {
     public async Task DeleteProject(DeleteProjectCommand command, CancellationToken cancellationToken = default)
     {
-        await deleteProject.DeleteProject(command.Id, cancellationToken);
+        await deleteProject.Delete(command.Id, cancellationToken);
     }
 }

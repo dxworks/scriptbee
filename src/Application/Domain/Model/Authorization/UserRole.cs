@@ -1,5 +1,6 @@
 ﻿namespace ScriptBee.Domain.Model.Authorization;
 
+[Serializable]
 public sealed record UserRole(string Type)
 {
     public static readonly UserRole Guest = new("GUEST");

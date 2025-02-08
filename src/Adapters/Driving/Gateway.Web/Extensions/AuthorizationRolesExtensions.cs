@@ -8,6 +8,7 @@ public static class AuthorizationRolesExtensions
 {
     public const string CreateProjectPolicy = "create_project";
     public const string DeleteProjectPolicy = "delete_project";
+    public const string ViewProjectPolicy = "view_project";
 
     public static TBuilder AddAuthorizationPolicy<TBuilder>(this TBuilder builder, string policyName,
         IConfiguration configuration) where TBuilder : IEndpointConventionBuilder
@@ -29,6 +30,9 @@ public static class AuthorizationRolesExtensions
     {
         return authorizationBuilder
             .AddPolicy(CreateProjectPolicy, policy => policy.RequireRole(UserRole.Administrator.Type))
-            .AddPolicy(DeleteProjectPolicy, policy => policy.RequireRole(UserRole.Administrator.Type));
+            .AddPolicy(DeleteProjectPolicy, policy => policy.RequireRole(UserRole.Administrator.Type))
+            .AddPolicy(ViewProjectPolicy,
+                policy => policy.RequireRole(UserRole.Guest.Type,
+                    UserRole.Analyst.Type, UserRole.Maintainer.Type, UserRole.Administrator.Type));
     }
 }

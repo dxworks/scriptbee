@@ -37,7 +37,8 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     public async Task AdministratorRoleWithEmptyBody_ShouldReturnBadRequest()
     {
         var response =
-            await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]));
+            await _api.PostApi<WebCreateProjectCommand>(
+                new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]));
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         await AssertEmptyRequestBodyProblem(response.Content, TestUrl);
@@ -49,7 +50,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
         createProjectUseCase.CreateProject(new CreateProjectCommand("id", "project name"), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
-                new ProjectDetails(ProjectId.Create("id"), "name")));
+                new ProjectDetails(ProjectId.Create("id"), "name", DateTime.Parse("2024-02-08"))));
 
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
@@ -85,7 +86,9 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task OtherRole_ShouldReturnForbidden()
     {
-        var response = await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
+        var response =
+            await _api.PostApi<WebCreateProjectCommand>(
+                new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
 
         response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
@@ -93,7 +96,8 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task NoRoles_ShouldReturnForbidden()
     {
-        var response = await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, []));
+        var response =
+            await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, []));
 
         response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }

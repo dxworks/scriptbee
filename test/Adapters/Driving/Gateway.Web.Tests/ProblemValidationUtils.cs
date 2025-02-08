@@ -38,6 +38,18 @@ public static class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
+    public static async Task AssertNotFoundProblem(HttpContent responseContent, string url, string title, string detail)
+    {
+        var problemDetails = (await responseContent.ReadFromJsonAsync<ProblemDetails>())!;
+
+        problemDetails.Type.ShouldBe("https://tools.ietf.org/html/rfc9110#section-15.5.5");
+        problemDetails.Status.ShouldBe(StatusCodes.Status404NotFound);
+        problemDetails.Title.ShouldBe(title);
+        problemDetails.Detail.ShouldBe(detail);
+        problemDetails.Instance.ShouldBe(url);
+        AssertDynamicProblemExtensionsNotNull(problemDetails);
+    }
+
     private static void AssertBadRequest(string url, ProblemDetails problemDetails, string title, string? detail)
     {
         problemDetails.Type.ShouldBe("https://tools.ietf.org/html/rfc9110#section-15.5.1");

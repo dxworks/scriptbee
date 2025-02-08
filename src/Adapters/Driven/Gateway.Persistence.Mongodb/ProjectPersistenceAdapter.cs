@@ -10,14 +10,14 @@ using ILogger = Serilog.ILogger;
 namespace ScriptBee.Gateway.Persistence.Mongodb;
 
 public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepository, ILogger logger)
-    : ICreateProject, IDeleteProject
+    : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject
 {
-    public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> CreateProject(ProjectDetails projectDetails,
+    public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(ProjectDetails projectDetails,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            await mongoRepository.CreateDocument(ProjectModel.From(projectDetails, DateTime.UtcNow), cancellationToken);
+            await mongoRepository.CreateDocument(ProjectModel.From(projectDetails), cancellationToken);
         }
         catch (MongoWriteException e)
         {
@@ -28,8 +28,27 @@ public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepos
         return new Unit();
     }
 
-    public async Task DeleteProject(ProjectId projectId, CancellationToken cancellationToken = default)
+    public async Task Delete(ProjectId projectId, CancellationToken cancellationToken = default)
     {
         await mongoRepository.DeleteDocument(projectId.Value, cancellationToken);
+    }
+
+    public async Task<List<ProjectDetails>> GetAll(CancellationToken cancellationToken = default)
+    {
+        var projectModels = await mongoRepository.GetAllDocuments(cancellationToken);
+        return projectModels.Select(model => model.ToProjectDetails()).ToList();
+    }
+
+    public async Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> GetById(ProjectId projectId,
+        CancellationToken cancellationToken = default)
+    {
+        var projectModel = await mongoRepository.GetDocument(projectId.Value, cancellationToken);
+
+        if (projectModel == null)
+        {
+            return new ProjectDoesNotExistsError(projectId);
+        }
+
+        return projectModel.ToProjectDetails();
     }
 }

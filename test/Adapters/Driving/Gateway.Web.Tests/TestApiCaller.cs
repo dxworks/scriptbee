@@ -47,4 +47,23 @@ public class TestApiCaller(string endpoint)
         var response = await client.DeleteAsync(endpoint);
         return response;
     }
+
+
+    public async Task<HttpResponseMessage> GetApi(TestWebApplicationFactory<Program> factory)
+    {
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(TestAuthHandler.TestAuthenticationScheme);
+
+        var response = await client.GetAsync(endpoint);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> GetApiWithoutAuthorization(TestWebApplicationFactory<Program> factory)
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync(endpoint);
+        return response;
+    }
 }

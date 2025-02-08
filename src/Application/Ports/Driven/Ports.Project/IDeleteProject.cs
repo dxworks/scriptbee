@@ -4,5 +4,5 @@ namespace ScriptBee.Ports.Driven.Project;
 
 public interface IDeleteProject
 {
-    Task DeleteProject(ProjectId projectId, CancellationToken cancellationToken = default);
+    Task Delete(ProjectId projectId, CancellationToken cancellationToken = default);
 }
