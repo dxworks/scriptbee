@@ -31,8 +31,10 @@ public static class MongoDbExtensions
     private static IServiceCollection AddProjectAdapters(IServiceCollection services, IMongoDatabase mongoDatabase)
     {
         return services
-            .AddSingleton<IMongoCollection<ProjectModel>>(_ => mongoDatabase.GetCollection<ProjectModel>("Projects"))
+            .AddSingleton<IMongoCollection<ProjectModel>>(
+                _ => mongoDatabase.GetCollection<ProjectModel>("Projects"))
             .AddSingleton<IMongoRepository<ProjectModel>, MongoRepository<ProjectModel>>()
-            .AddSingleton<ICreateProject, ProjectPersistenceAdapter>();
+            .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
+            .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>();
     }
 }

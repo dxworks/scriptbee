@@ -10,7 +10,7 @@ using ScriptBee.Ports.Driving.UseCases.Project;
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project;
 
-public class CreateProject : IEndpointDefinition
+public class CreateProjectEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
@@ -19,12 +19,12 @@ public class CreateProject : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
     {
-        app.MapPost("/api/scriptbee/projects", PostCreateProject)
+        app.MapPost("/api/scriptbee/projects", CreateProject)
             .AddAuthorizationPolicy(AuthorizationRolesExtensions.CreateProjectPolicy, configuration)
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 
-    private static async Task<Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>> PostCreateProject(
+    private static async Task<Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>> CreateProject(
         HttpContext context,
         [FromBody] WebCreateProjectCommand command,
         ICreateProjectUseCase useCase, CancellationToken cancellationToken = default)

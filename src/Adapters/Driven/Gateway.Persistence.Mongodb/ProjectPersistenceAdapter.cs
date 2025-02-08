@@ -9,7 +9,8 @@ using ILogger = Serilog.ILogger;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb;
 
-public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepository, ILogger logger) : ICreateProject
+public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepository, ILogger logger)
+    : ICreateProject, IDeleteProject
 {
     public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> CreateProject(ProjectDetails projectDetails,
         CancellationToken cancellationToken = default)
@@ -25,5 +26,10 @@ public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepos
         }
 
         return new Unit();
+    }
+
+    public async Task DeleteProject(ProjectId projectId, CancellationToken cancellationToken = default)
+    {
+        await mongoRepository.DeleteDocument(projectId.Value, cancellationToken);
     }
 }

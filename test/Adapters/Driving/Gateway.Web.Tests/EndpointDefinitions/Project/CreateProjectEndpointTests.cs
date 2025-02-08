@@ -13,10 +13,10 @@ using static ScriptBee.Gateway.Web.Tests.ProblemValidationUtils;
 
 namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
 
-public class CreateProjectTests(ITestOutputHelper outputHelper)
+public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
 {
     private const string TestUrl = "/api/scriptbee/projects";
-    private readonly TestApiCaller<WebCreateProjectCommand> _api = new(TestUrl);
+    private readonly TestApiCaller _api = new(TestUrl);
 
     [Fact]
     public async Task AdministratorRoleWithInvalidRequestBody_ShouldReturnBadRequest()
@@ -37,7 +37,7 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     public async Task AdministratorRoleWithEmptyBody_ShouldReturnBadRequest()
     {
         var response =
-            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]));
+            await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]));
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         await AssertEmptyRequestBodyProblem(response.Content, TestUrl);
@@ -85,7 +85,7 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task OtherRole_ShouldReturnForbidden()
     {
-        var response = await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
+        var response = await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
 
         response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
@@ -93,7 +93,7 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task NoRoles_ShouldReturnForbidden()
     {
-        var response = await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, []));
+        var response = await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, []));
 
         response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }

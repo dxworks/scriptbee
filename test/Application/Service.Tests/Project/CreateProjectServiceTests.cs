@@ -7,7 +7,7 @@ using ScriptBee.Ports.Driven.Project;
 using ScriptBee.Ports.Driving.UseCases.Project;
 using Shouldly;
 
-namespace ScriptBee.Domain.Service.Tests;
+namespace ScriptBee.Domain.Service.Tests.Project;
 
 public class CreateProjectServiceTests
 {

@@ -32,7 +32,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     }
 
     [Fact]
-    public async Task GivenIdAlreadyExists_ExpectProjectAlreadyExistsError()
+    public async Task GivenIdAlreadyExists_CreateProject_ExpectProjectAlreadyExistsError()
     {
         var projectId = ProjectId.Create("existing-id");
         var project = new ProjectDetails(projectId, "name");
@@ -41,5 +41,25 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var result = await _adapter.CreateProject(project, CancellationToken.None);
 
         result.AsT1.ShouldBe(new ProjectIdAlreadyInUseError(projectId));
+    }
+
+    [Fact]
+    public async Task DeleteProject()
+    {
+        var projectId = ProjectId.FromValue("to-delete");
+        await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "to-delete", Name = "to-delete" });
+
+        await _adapter.DeleteProject(projectId, CancellationToken.None);
+
+        var project = await _mongoCollection.Find(p => p.Id == "to-delete").FirstOrDefaultAsync();
+        project.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task GivenNotExistingId_DeleteProject_ExpectNoError()
+    {
+        var projectId = ProjectId.Create("to-delete-not-existing-id");
+
+        await Should.NotThrowAsync(async () => await _adapter.DeleteProject(projectId, CancellationToken.None));
     }
 }

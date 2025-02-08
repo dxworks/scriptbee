@@ -5,9 +5,9 @@ using System.Text.Json;
 
 namespace ScriptBee.Gateway.Web.Tests;
 
-public class TestApiCaller<T>(string endpoint)
+public class TestApiCaller(string endpoint)
 {
-    public async Task<HttpResponseMessage> PostApi(TestWebApplicationFactory<Program> factory, T? data = default)
+    public async Task<HttpResponseMessage> PostApi<T>(TestWebApplicationFactory<Program> factory, T? data = default)
     {
         using var client = factory.CreateClient();
         client.DefaultRequestHeaders.Authorization =
@@ -27,6 +27,24 @@ public class TestApiCaller<T>(string endpoint)
             MediaTypeNames.Application.Json);
 
         var response = await client.PostAsync(endpoint, content);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> DeleteApi(TestWebApplicationFactory<Program> factory)
+    {
+        using var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue(TestAuthHandler.TestAuthenticationScheme);
+
+        var response = await client.DeleteAsync(endpoint);
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> DeleteApiWithoutAuthorization(TestWebApplicationFactory<Program> factory)
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.DeleteAsync(endpoint);
         return response;
     }
 }

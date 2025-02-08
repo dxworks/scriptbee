@@ -7,6 +7,7 @@ namespace ScriptBee.Gateway.Web.Extensions;
 public static class AuthorizationRolesExtensions
 {
     public const string CreateProjectPolicy = "create_project";
+    public const string DeleteProjectPolicy = "delete_project";
 
     public static TBuilder AddAuthorizationPolicy<TBuilder>(this TBuilder builder, string policyName,
         IConfiguration configuration) where TBuilder : IEndpointConventionBuilder
@@ -20,13 +21,14 @@ public static class AuthorizationRolesExtensions
     {
         services
             .AddAuthorizationBuilder()
-            .AddPolicyForCreateProject();
+            .AddPoliciesForProject();
         return services;
     }
 
-    private static AuthorizationBuilder AddPolicyForCreateProject(this AuthorizationBuilder authorizationBuilder)
+    private static AuthorizationBuilder AddPoliciesForProject(this AuthorizationBuilder authorizationBuilder)
     {
-        return authorizationBuilder.AddPolicy(CreateProjectPolicy,
-            policy => policy.RequireRole(UserRole.Administrator.Type));
+        return authorizationBuilder
+            .AddPolicy(CreateProjectPolicy, policy => policy.RequireRole(UserRole.Administrator.Type))
+            .AddPolicy(DeleteProjectPolicy, policy => policy.RequireRole(UserRole.Administrator.Type));
     }
 }

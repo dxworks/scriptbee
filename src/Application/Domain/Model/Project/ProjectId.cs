@@ -16,4 +16,9 @@ public sealed record ProjectId
         var slug = new SlugHelper().GenerateSlug(value);
         return new ProjectId(slug);
     }
+
+    public static ProjectId FromValue(string value)
+    {
+        return new ProjectId(value);
+    }
 }
