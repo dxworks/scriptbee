@@ -1,11 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using ScriptBee.Domain.Model.Authorization;
+using ScriptBee.Gateway.Web.Config;
 
 namespace ScriptBee.Gateway.Web.Extensions;
 
 public static class AuthorizationRolesExtensions
 {
     public const string CreateProjectPolicy = "create_project";
+
+    public static TBuilder AddAuthorizationPolicy<TBuilder>(this TBuilder builder, string policyName,
+        IConfiguration configuration) where TBuilder : IEndpointConventionBuilder
+    {
+        var featuresSettings = configuration.GetSection("Features").Get<FeaturesSettings>() ?? new FeaturesSettings();
+
+        return featuresSettings.DisableAuthorization ? builder : builder.RequireAuthorization(policyName);
+    }
 
     public static IServiceCollection AddAuthorizationRules(this IServiceCollection services)
     {

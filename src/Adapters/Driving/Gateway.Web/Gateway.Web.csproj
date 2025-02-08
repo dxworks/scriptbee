@@ -9,6 +9,7 @@
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     </ItemGroup>
 
     <ItemGroup>

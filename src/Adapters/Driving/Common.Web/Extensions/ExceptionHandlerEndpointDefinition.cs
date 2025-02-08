@@ -24,34 +24,19 @@ public static class ExceptionHandlerEndpointDefinition
 
     private static IResult HandleGenericError(HttpContext context)
     {
-        var (instance, requestId, traceId) = ProblemDetailsExtensions.GetAdditionalProblemDetails(context);
-        return Results.InternalServerError(new ProblemDetails
-        {
-            Title = "An unexpected error occurred.",
-            Detail = "Please contact support or try again later.",
-            Instance = GetOriginalEndpoint(context) ?? instance,
-            Extensions =
-            {
-                { "requestId", requestId },
-                { "traceId", traceId }
-            }
-        });
+        return Results.InternalServerError(context.ToProblemDetails(
+            "An unexpected error occurred.",
+            "Please contact support or try again later."
+        ));
     }
 
     private static BadRequest<ProblemDetails> HandleEmptyRequestBody(HttpContext context)
     {
-        var (instance, requestId, traceId) = ProblemDetailsExtensions.GetAdditionalProblemDetails(context);
-        return TypedResults.BadRequest(new ProblemDetails
-        {
-            Title = "Request body is required.",
-            Detail = "The request body was missing or empty.",
-            Instance = GetOriginalEndpoint(context) ?? instance,
-            Extensions =
-            {
-                { "requestId", requestId },
-                { "traceId", traceId }
-            }
-        });
+        return TypedResults.BadRequest(
+            context.ToProblemDetails(
+                "Request body is required.",
+                "The request body was missing or empty."
+            ));
     }
 
     private static Exception? GetException(HttpContext context, ILogger logger)
@@ -70,11 +55,5 @@ public static class ExceptionHandlerEndpointDefinition
         }
 
         return exception;
-    }
-
-    private static string? GetOriginalEndpoint(HttpContext context)
-    {
-        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-        return exceptionHandlerPathFeature?.Path;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ScriptBee.Common.Web;
@@ -9,5 +10,5 @@ public interface IEndpointDefinition
     {
     }
 
-    void DefineEndpoints(IEndpointRouteBuilder app);
+    void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration);
 }

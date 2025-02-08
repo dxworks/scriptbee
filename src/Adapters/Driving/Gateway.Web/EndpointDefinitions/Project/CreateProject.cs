@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Problems;
+using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Service.Projects;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
@@ -16,29 +17,31 @@ public class CreateProject : IEndpointDefinition
         services.AddSingleton<ICreateProjectUseCase, CreateProjectService>();
     }
 
-    public void DefineEndpoints(IEndpointRouteBuilder app)
+    public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
     {
         app.MapPost("/api/scriptbee/projects", PostCreateProject)
-            .RequireAuthorization(AuthorizationRolesExtensions.CreateProjectPolicy)
+            .AddAuthorizationPolicy(AuthorizationRolesExtensions.CreateProjectPolicy, configuration)
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 
-    private static async Task<IResult> PostCreateProject(
+    private static async Task<Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>> PostCreateProject(
+        HttpContext context,
         [FromBody] WebCreateProjectCommand command,
         ICreateProjectUseCase useCase, CancellationToken cancellationToken = default)
     {
         var result = await useCase.CreateProject(command.Map(), cancellationToken);
 
-        return result.Match<IResult>(
+        return result.Match<Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>>(
             projectDetails =>
             {
                 var response = WebCreateProjectResponse.Map(projectDetails);
                 return TypedResults.Created($"/api/scriptbee/projects/{response.Id}", response);
             },
-            error => ProblemsFactory.Conflict(
-                "Project ID Already In Use",
-                $"A project with the ID '{error.Id.Value}' already exists. Use a unique Project ID or update the existing project."
-            )
+            error => TypedResults.Conflict(
+                context.ToProblemDetails(
+                    "Project ID Already In Use",
+                    $"A project with the ID '{error.Id.Value}' already exists. Use a unique Project ID or update the existing project."
+                ))
         );
     }
 }

@@ -7,6 +7,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Gateway.Web.Config;
 using ScriptBee.Gateway.Web.EndpointDefinitions;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Validation;
 using ScriptBee.Gateway.Web.Extensions;
@@ -16,11 +17,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
 // var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
+var jwtSettings = builder.Configuration.GetRequiredSection("Jwt").Get<JwtSettings>()!;
+var featuresSettings = builder.Configuration.GetSection("Features").Get<FeaturesSettings>() ?? new FeaturesSettings();
 
 // TODO: move service registration in Endpoint Definitions 
+
 builder.Services
     .AddAuthorizationRules()
-    .AddJwtAuthentication(builder.Configuration)
+    .AddJwtAuthentication(jwtSettings)
     .AddSerilog()
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IValidationMarker>()
@@ -43,8 +47,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // TODO: add authorization
     app.MapOpenApi();
+    app.MapSwaggerUi();
+}
+
+if (!featuresSettings.DisableAuthorization)
+{
+    app.UseAuthentication();
 }
 
 app.UseStaticFiles();
@@ -54,8 +63,10 @@ app.UseSerilogRequestLogging();
 
 app.UseExceptionEndpoint();
 
-app.UseAuthentication();
-app.UseAuthorization();
+if (!featuresSettings.DisableAuthorization)
+{
+    app.UseAuthorization();
+}
 
 app.UseEndpoints(_ => { });
 
@@ -71,7 +82,7 @@ app.UseEndpoints(_ => { });
 
 // app.MapHub<FileWatcherHub>("/api/fileWatcherHub");
 
-app.UseEndpointDefinitions();
+app.UseEndpointDefinitions(builder.Configuration);
 
 // var pluginManager = app.Services.GetRequiredService<PluginManager>();
 
