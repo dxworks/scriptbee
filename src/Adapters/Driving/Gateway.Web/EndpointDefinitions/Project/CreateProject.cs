@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
-using ScriptBee.Domain.Service.Projects;
+using ScriptBee.Domain.Service.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Gateway.Web.Extensions;
-using ScriptBee.Ports.Driving.UseCases.Projects;
+using ScriptBee.Ports.Driving.UseCases.Project;
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project;
 

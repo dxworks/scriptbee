@@ -2,9 +2,9 @@
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Domain.Service.Projects;
-using ScriptBee.Ports.Driven.Projects;
-using ScriptBee.Ports.Driving.UseCases.Projects;
+using ScriptBee.Domain.Service.Project;
+using ScriptBee.Ports.Driven.Project;
+using ScriptBee.Ports.Driving.UseCases.Project;
 using Shouldly;
 
 namespace ScriptBee.Domain.Service.Tests;
@@ -22,11 +22,11 @@ public class CreateProjectServiceTests
     [Fact]
     public async Task CreateProjectSuccessfully()
     {
-        var expectedProjectDetails = new ProjectDetails(ProjectId.FromValue("name"), "name");
+        var expectedProjectDetails = new ProjectDetails(ProjectId.Create("id"), "name");
         _createProject.CreateProject(expectedProjectDetails)
             .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(new Unit()));
 
-        var projectDetails = await _createProjectService.CreateProject(new CreateProjectCommand("name"));
+        var projectDetails = await _createProjectService.CreateProject(new CreateProjectCommand("id", "name"));
 
         projectDetails.ShouldBe(expectedProjectDetails);
         await _createProject.Received(1).CreateProject(expectedProjectDetails);
@@ -35,14 +35,14 @@ public class CreateProjectServiceTests
     [Fact]
     public async Task CreateProject_ShouldReturnProjectIdAlreadyInUse()
     {
-        var projectId = ProjectId.FromValue("name");
+        var projectId = ProjectId.Create("id");
         var expectedProjectDetails = new ProjectDetails(projectId, "name");
         var error = new ProjectIdAlreadyInUseError(projectId);
         _createProject.CreateProject(expectedProjectDetails)
             .Returns(
                 Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(error));
 
-        var projectDetails = await _createProjectService.CreateProject(new CreateProjectCommand("name"));
+        var projectDetails = await _createProjectService.CreateProject(new CreateProjectCommand("id", "name"));
 
         projectDetails.ShouldBe(error);
         await _createProject.Received(1).CreateProject(expectedProjectDetails);

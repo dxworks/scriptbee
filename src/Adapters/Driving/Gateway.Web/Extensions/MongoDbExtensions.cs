@@ -3,7 +3,7 @@ using ScriptBee.Gateway.Persistence.Mongodb;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Exceptions;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Driven.Projects;
+using ScriptBee.Ports.Driven.Project;
 
 namespace ScriptBee.Gateway.Web.Extensions;
 

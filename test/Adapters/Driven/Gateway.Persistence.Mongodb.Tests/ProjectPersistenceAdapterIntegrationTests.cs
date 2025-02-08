@@ -20,7 +20,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task CreateNewProject()
     {
-        var project = new ProjectDetails(ProjectId.FromValue("id"), "name");
+        var project = new ProjectDetails(ProjectId.Create("id"), "name");
 
         var result = await _adapter.CreateProject(project, CancellationToken.None);
 
@@ -34,7 +34,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task GivenIdAlreadyExists_ExpectProjectAlreadyExistsError()
     {
-        var projectId = ProjectId.FromValue("existing-id");
+        var projectId = ProjectId.Create("existing-id");
         var project = new ProjectDetails(projectId, "name");
         await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "existing-id", Name = "existing" });
 

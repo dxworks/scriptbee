@@ -1,16 +1,16 @@
 ﻿using OneOf;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Driven.Projects;
-using ScriptBee.Ports.Driving.UseCases.Projects;
+using ScriptBee.Ports.Driven.Project;
+using ScriptBee.Ports.Driving.UseCases.Project;
 
-namespace ScriptBee.Domain.Service.Projects;
+namespace ScriptBee.Domain.Service.Project;
 
 public class CreateProjectService(ICreateProject createProject) : ICreateProjectUseCase
 {
     public async Task<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>> CreateProject(CreateProjectCommand command,
         CancellationToken cancellationToken = default)
     {
-        var projectDetails = new ProjectDetails(ProjectId.FromName(command.Name), command.Name);
+        var projectDetails = new ProjectDetails(ProjectId.Create(command.Id), command.Name);
 
         var result = await createProject.CreateProject(projectDetails, cancellationToken);
 

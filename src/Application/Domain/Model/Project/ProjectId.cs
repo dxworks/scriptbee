@@ -11,14 +11,9 @@ public sealed record ProjectId
         Value = value;
     }
 
-    public static ProjectId FromValue(string value)
+    public static ProjectId Create(string value)
     {
-        return new ProjectId(value);
-    }
-
-    public static ProjectId FromName(string name)
-    {
-        var slug = new SlugHelper().GenerateSlug(name);
+        var slug = new SlugHelper().GenerateSlug(value);
         return new ProjectId(slug);
     }
 }

@@ -4,7 +4,7 @@ using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Driven.Projects;
+using ScriptBee.Ports.Driven.Project;
 using ILogger = Serilog.ILogger;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb;

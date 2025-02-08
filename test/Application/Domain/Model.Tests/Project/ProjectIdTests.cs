@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Domain.Model.Project;
 using Shouldly;
 
-namespace ScriptBee.Domain.Model.Tests.Projects;
+namespace ScriptBee.Domain.Model.Tests.Project;
 
 public class ProjectIdTests
 {
@@ -13,9 +13,9 @@ public class ProjectIdTests
     [InlineData("   LeadingAndTrailing Spaces   ", "leadingandtrailing-spaces")]
     [InlineData("MixeD Case StriNG", "mixed-case-string")]
     [InlineData("", "")]
-    public void FromName_ShouldSlugifyName(string input, string expectedSlug)
+    public void Create_ShouldSlugifyId(string input, string expectedSlug)
     {
-        var projectId = ProjectId.FromName(input);
+        var projectId = ProjectId.Create(input);
 
         projectId.Value.ShouldBe(expectedSlug);
     }

@@ -1,7 +1,7 @@
 ﻿using OneOf;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Driving.UseCases.Projects;
+namespace ScriptBee.Ports.Driving.UseCases.Project;
 
 public interface ICreateProjectUseCase
 {

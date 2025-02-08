@@ -5,7 +5,7 @@ using OneOf;
 using ScriptBee.Domain.Model.Authorization;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
-using ScriptBee.Ports.Driving.UseCases.Projects;
+using ScriptBee.Ports.Driving.UseCases.Project;
 using ScriptBee.Tests.Common;
 using Shouldly;
 using Xunit.Abstractions;
@@ -23,7 +23,7 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     {
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]),
-                new WebCreateProjectCommand(""));
+                new WebCreateProjectCommand("id", ""));
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         await AssertValidationProblem(response.Content, TestUrl,
@@ -47,14 +47,14 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     public async Task AdministratorRole_ShouldReturnCreated()
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
-        createProjectUseCase.CreateProject(new CreateProjectCommand("project name"), Arg.Any<CancellationToken>())
+        createProjectUseCase.CreateProject(new CreateProjectCommand("id", "project name"), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
-                new ProjectDetails(ProjectId.FromValue("id"), "name")));
+                new ProjectDetails(ProjectId.Create("id"), "name")));
 
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
                     services => { services.AddSingleton(createProjectUseCase); }),
-                new WebCreateProjectCommand("project name"));
+                new WebCreateProjectCommand("id", "project name"));
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         var createProjectResponse = await response.ReadContentAsync<WebCreateProjectResponse>();
@@ -66,14 +66,14 @@ public class CreateProjectTests(ITestOutputHelper outputHelper)
     public async Task AdministratorRoleAndExistingId_ShouldReturnConflict()
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
-        createProjectUseCase.CreateProject(new CreateProjectCommand("project name"), Arg.Any<CancellationToken>())
+        createProjectUseCase.CreateProject(new CreateProjectCommand("id", "project name"), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
-                new ProjectIdAlreadyInUseError(ProjectId.FromValue("id"))));
+                new ProjectIdAlreadyInUseError(ProjectId.Create("id"))));
 
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
                     services => { services.AddSingleton(createProjectUseCase); }),
-                new WebCreateProjectCommand("project name"));
+                new WebCreateProjectCommand("id", "project name"));
 
         response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
         await AssertConflictProblem(response.Content, TestUrl,
