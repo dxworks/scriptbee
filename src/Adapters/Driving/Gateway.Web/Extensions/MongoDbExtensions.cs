@@ -20,7 +20,8 @@ public static class MongoDbExtensions
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        return services.AddAdapters(mongoDatabase);
+        return services.AddSingleton<IMongoClient>(mongoClient)
+            .AddAdapters(mongoDatabase);
     }
 
     private static IServiceCollection AddAdapters(this IServiceCollection services, IMongoDatabase mongoDatabase)

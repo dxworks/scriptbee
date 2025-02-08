@@ -23,6 +23,7 @@ var featuresSettings = builder.Configuration.GetSection("Features").Get<Features
 // TODO: move service registration in Endpoint Definitions 
 
 builder.Services
+    .AddConfiguredHealthChecks()
     .AddAuthorizationRules()
     .AddJwtAuthentication(jwtSettings)
     .AddSerilog()
@@ -58,6 +59,8 @@ if (!featuresSettings.DisableAuthorization)
 
 app.UseStaticFiles();
 app.UseRouting();
+
+app.MapHealthChecksEndpoint();
 
 app.UseSerilogRequestLogging();
 
