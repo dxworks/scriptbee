@@ -9,7 +9,7 @@
 For the Kubernetes deployment, the following environment variables need to be set
 
 ```dotenv
-FEATURES_DEPLOYMENT_CALCULATION=kubernetes
+FEATURES__DEPLOYMENT_CALCULATION=kubernetes
 ```
 
 ### Docker Swarm
@@ -17,5 +17,15 @@ FEATURES_DEPLOYMENT_CALCULATION=kubernetes
 For the Docker swarm deployment, the following environment variables need to be set
 
 ```dotenv
-FEATURES_DEPLOYMENT_CALCULATION=docker
+FEATURES__DEPLOYMENT_CALCULATION=docker
+```
+
+## Authorization
+
+Authorization can be disabled entirely
+
+> Not recommended for production
+
+```dotenv
+FEATURES_DISABLEAUTHORIZATION=true
 ```
