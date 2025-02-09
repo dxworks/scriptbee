@@ -4,18 +4,30 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ProjectService } from '../../services/projects/project.service';
-import { LoadingProgressBarComponent } from '../../components/loading-progress-bar/loading-progress-bar.component';
-import { Project } from '../../types/project';
+import { ProjectService } from '../../../services/projects/project.service';
+import { LoadingProgressBarComponent } from '../../../components/loading-progress-bar/loading-progress-bar.component';
+import { Project } from '../../../types/project';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-projects',
+  selector: 'app-projects-page',
   templateUrl: './projects-page.component.html',
   styleUrls: ['./projects-page.component.scss'],
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, LoadingProgressBarComponent, MatIcon, MatButton, DatePipe],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    LoadingProgressBarComponent,
+    MatIcon,
+    MatButton,
+    DatePipe,
+    RouterLink,
+  ],
 })
 export class ProjectsPage {
   displayedColumns: string[] = ['id', 'name', 'creationDate'];

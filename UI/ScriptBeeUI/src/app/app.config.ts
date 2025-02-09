@@ -1,4 +1,4 @@
-import { ApplicationConfig, EnvironmentProviders, Provider, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -14,6 +14,9 @@ import {
   withAutoRefreshToken,
 } from 'keycloak-angular';
 import { environment } from '../environments/environment';
+import { AuthService } from './services/auth/auth.service';
+import { MockedAuthService } from './services/auth/mocked-auth.service';
+import { IAuthService } from './services/auth/iauth.service';
 
 const provideKeycloakAngular = () =>
   provideKeycloak({
@@ -49,6 +52,10 @@ const provideBearerTokenConfig = () => {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: IAuthService,
+      useClass: environment.production ? AuthService : MockedAuthService,
+    },
     provideKeycloakAngular(),
     provideBearerTokenConfig(),
     provideZoneChangeDetection({ eventCoalescing: true }),
