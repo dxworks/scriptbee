@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ProjectsPage } from './pages/projects/projects-page.component';
 // import { ProjectsComponent } from './projects/projects.component';
 // import { ProjectDetailsComponent } from './project-details/components/project-details.component';
 // import { DetailsContentComponent } from './project-details/components/details-content/details-content.component';
@@ -9,8 +10,8 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   // {path: '', component: HomeComponent, pathMatch: 'full'},
-  // { path: '', redirectTo: 'projects', pathMatch: 'full' },
-  // { path: 'projects', component: ProjectsComponent },
+  { path: '', redirectTo: 'projects', pathMatch: 'full' },
+  { path: 'projects', component: ProjectsPage },
   // { path: 'plugins', component: PluginsMarketplaceDashboardComponent },
   // {
   //   path: 'projects/:id',

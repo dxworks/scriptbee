@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 @use './styles/common';
-@use './app/themes/yellow_deep-orange_theme-colors';
+@use 'themes/yellow_deep-orange_theme-colors';
 
 html {
   @include mat.theme(

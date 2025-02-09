@@ -5,13 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ThemeService } from '../../services/theme/theme.service';
-import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.scss'],
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSlideToggleModule, RouterLink, NgOptimizedImage],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSlideToggleModule, RouterLink],
 })
 export class NavMenuComponent {
   constructor(public themeService: ThemeService) {}
