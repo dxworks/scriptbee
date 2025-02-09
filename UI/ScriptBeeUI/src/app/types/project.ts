@@ -7,3 +7,8 @@ export interface Project {
 export interface ProjectListResponse {
   projects: Project[];
 }
+
+export interface CreateProjectRequest {
+  id: string;
+  name: string;
+}

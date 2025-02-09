@@ -11,6 +11,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-projects-page',
@@ -37,10 +38,14 @@ export class ProjectsPage {
   sort = viewChild.required(MatSort);
   projectsService = inject(ProjectService);
 
+  getAllProjectsResource = rxResource({
+    loader: () => this.projectsService.getAllProjects(),
+  });
+
   constructor() {
     // TODO: handle errors
     effect(() => {
-      this.dataSource.data = this.projectsService.projectsResource.value() || [];
+      this.dataSource.data = this.getAllProjectsResource.value() || [];
     });
 
     effect(() => {
@@ -56,11 +61,6 @@ export class ProjectsPage {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  onCreateButtonClick() {
-    console.log('create project');
-    // TODO: redirect to create page
   }
 
   onRowClick(row: Project) {

@@ -1,0 +1,39 @@
+<div class="center-column">
+  <h2>Create a new project</h2>
+  <p>A project contains all project files, analysis and results</p>
+
+  <div class="center-column fields-container">
+    <div class="project-id-container">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Project Id</mat-label>
+        <input matInput placeholder="Id" [formControl]="projectId" (blur)="updateProjectIdErrorMessage()" required />
+        @if (projectId.invalid) {
+          <mat-error>{{ projectIdErrorMessage() }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (!projectId.invalid) {
+        <div>Your project id will be: {{ projectId.value | slugify }}</div>
+      }
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Name" [formControl]="projectName" (blur)="updateProjectNameErrorMessage()" required />
+
+      @if (projectName.invalid) {
+        <mat-error>{{ projectNameErrorMessage() }}</mat-error>
+      }
+    </mat-form-field>
+
+    @if (isCreating()) {
+      <app-loading-progress-bar title="Creating project..."></app-loading-progress-bar>
+    }
+
+    @if (creatingError()) {
+      <app-error-state [error]="creatingError()!"></app-error-state>
+    }
+
+    <button mat-flat-button [disabled]="projectId.invalid || projectName.invalid" (click)="onCreate()">Create</button>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<mat-card class="example-card" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-title>{{ error().title }}</mat-card-title>
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="error-detail">{{ error().detail }}</div>
+
+    <mat-accordion>
+      @for (validationError of validationErrors(); track validationError.name) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Validation Error for {{ validationError.name }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          @for (message of validationError.messages; track message) {
+            <p>{{ message }}</p>
+          }
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>

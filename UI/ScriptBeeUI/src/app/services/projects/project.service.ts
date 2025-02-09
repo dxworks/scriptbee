@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ProjectListResponse } from '../../types/project';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { CreateProjectRequest, Project, ProjectListResponse } from '../../types/project';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,27 +11,25 @@ export class ProjectService {
 
   constructor(private http: HttpClient) {}
 
-  projectsResource = rxResource({
-    loader: () => this.http.get<ProjectListResponse>(this.projectsAPIUrl).pipe(map((r) => r.projects)),
-  });
+  getAllProjects(): Observable<Project[]> {
+    return this.http.get<ProjectListResponse>(this.projectsAPIUrl).pipe(map((r) => r.projects));
+  }
 
-  // getAllProjects(): Observable<ProjectData[]> {
-  //   return this.http.get<ReturnedProject[]>(this.projectsAPIUrl, { headers: contentHeaders }).pipe(
-  //     map((data: ReturnedProject[]) => {
-  //       return data.map((project: ReturnedProject) => {
-  //         return ProjectService.convertReturnedProjectToProject(project);
-  //       });
-  //     })
-  //   );
-  // }
+  createProject(projectId: string, projectName: string) {
+    const body: CreateProjectRequest = {
+      id: projectId,
+      name: projectName,
+    };
+    return this.http.post(this.projectsAPIUrl, body);
+  }
 
-  // getProject(projectId: string): Observable<ProjectData> {
-  //   return this.http.get<ReturnedProject>(`${this.projectsAPIUrl}/${projectId}`, { headers: contentHeaders }).pipe(
-  //     map((data: ReturnedProject) => {
-  //       return ProjectService.convertReturnedProjectToProject(data);
-  //     })
-  //   );
-  // }
+  getProject(projectId: string): Observable<Project> {
+    return this.http.get<Project>(`${this.projectsAPIUrl}/${projectId}`);
+  }
+
+  deleteProject(projectId: string) {
+    return this.http.delete(`${this.projectsAPIUrl}/${projectId}`);
+  }
 
   // getProjectContext(projectId: string): Observable<TreeNode[]> {
   //   return this.http.get<ReturnedContextSlice[]>(`${this.projectsAPIUrl}/context/${projectId}`, { headers: contentHeaders }).pipe(
@@ -42,30 +39,6 @@ export class ProjectService {
   //   );
   // }
 
-  // getAllProjects(): Observable<ProjectData[]> {
-  //   return this.http.get<ReturnedProject[]>(this.projectsAPIUrl, { headers: contentHeaders }).pipe(
-  //     map((data: ReturnedProject[]) => {
-  //       return data.map((project: ReturnedProject) => {
-  //         return ProjectService.convertReturnedProjectToProject(project);
-  //       });
-  //     })
-  //   );
-  // }
-
-  // createProject(projectId: string, projectName: string) {
-  //   return this.http.post(
-  //     this.projectsAPIUrl,
-  //     {
-  //       projectId: projectId,
-  //       projectName: projectName,
-  //     },
-  //     { headers: contentHeaders }
-  //   );
-  // }
-  //
-  // deleteProject(projectId: string) {
-  //   return this.http.delete(`${this.projectsAPIUrl}/${projectId}`, { headers: contentHeaders });
-  // }
   //
   // private static convertReturnedProjectToProject(returnedProject: ReturnedProject): ProjectData {
   //   function mapFiles(file: ReturnedNode) {

@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 import { ProjectsPage } from './pages/projects/projects-page/projects-page.component';
+import { CreateProjectPage } from './pages/projects/create-project/create-project.component';
 
 export const routes: Routes = [
-  // {path: '', component: HomeComponent, pathMatch: 'full'},
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
   { path: 'projects', component: ProjectsPage },
+  { path: 'create-project', component: CreateProjectPage },
   // { path: 'plugins', component: PluginsMarketplaceDashboardComponent },
   // {
   //   path: 'projects/:id',

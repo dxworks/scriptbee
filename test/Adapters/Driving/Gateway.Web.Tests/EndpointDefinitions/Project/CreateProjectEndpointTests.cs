@@ -48,9 +48,10 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     public async Task AdministratorRole_ShouldReturnCreated()
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
+        var creationDate = DateTime.Parse("2024-02-08");
         createProjectUseCase.CreateProject(new CreateProjectCommand("id", "project name"), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
-                new ProjectDetails(ProjectId.Create("id"), "name", DateTime.Parse("2024-02-08"))));
+                new ProjectDetails(ProjectId.Create("id"), "name", creationDate)));
 
         var response =
             await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
@@ -61,6 +62,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
         var createProjectResponse = await response.ReadContentAsync<WebCreateProjectResponse>();
         createProjectResponse.Id.ShouldBe("id");
         createProjectResponse.Name.ShouldBe("name");
+        createProjectResponse.CreationDate.ShouldBe(creationDate);
     }
 
     [Fact]

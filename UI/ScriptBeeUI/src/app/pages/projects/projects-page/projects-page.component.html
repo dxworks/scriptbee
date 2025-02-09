@@ -6,13 +6,13 @@
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
-    <button mat-flat-button (click)="onCreateButtonClick()">
+    <button mat-flat-button routerLink="/create-project">
       Create Project
       <mat-icon>create</mat-icon>
     </button>
   </div>
 
-  @if (projectsService.projectsResource.isLoading()) {
+  @if (getAllProjectsResource.isLoading()) {
     <app-loading-progress-bar title="Loading projects..."></app-loading-progress-bar>
   }
 
