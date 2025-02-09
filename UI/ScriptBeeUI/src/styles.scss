@@ -1,0 +1,39 @@
+@use '@angular/material' as mat;
+@use './styles/common';
+@use './app/themes/yellow_deep-orange_theme-colors';
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: yellow_deep-orange_theme-colors.$primary-palette,
+        tertiary: yellow_deep-orange_theme-colors.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+.darkMode {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: dark,
+        primary: yellow_deep-orange_theme-colors.$primary-palette,
+        tertiary: yellow_deep-orange_theme-colors.$tertiary-palette,
+      ),
+    )
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
