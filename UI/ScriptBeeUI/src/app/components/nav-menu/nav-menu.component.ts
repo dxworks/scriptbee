@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ThemeService } from '../../services/theme/theme.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -13,5 +14,8 @@ import { ThemeService } from '../../services/theme/theme.service';
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSlideToggleModule, RouterLink],
 })
 export class NavMenuComponent {
-  constructor(public themeService: ThemeService) {}
+  constructor(
+    public themeService: ThemeService,
+    public authService: AuthService
+  ) {}
 }

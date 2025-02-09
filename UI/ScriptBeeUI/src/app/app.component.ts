@@ -8,6 +8,4 @@ import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'ScriptBeeUI';
-}
+export class AppComponent {}

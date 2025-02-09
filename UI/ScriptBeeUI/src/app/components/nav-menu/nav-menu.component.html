@@ -10,4 +10,8 @@
   <mat-slide-toggle [checked]="themeService.darkMode()" (toggleChange)="themeService.toggleDarkMode()" labelPosition="before">
     <mat-icon>bedtime</mat-icon>
   </mat-slide-toggle>
+
+  @if (authService.authenticated()) {
+    <button mat-stroked-button class="logout-button" (click)="authService.logout()">Logout</button>
+  }
 </mat-toolbar>
