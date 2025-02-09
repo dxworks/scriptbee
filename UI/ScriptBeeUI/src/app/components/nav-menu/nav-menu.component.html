@@ -1,0 +1,13 @@
+<mat-toolbar>
+  <a routerLink="/" style="margin-top: 12px" class="primary-light-background">
+    <img ngSrc="/images/logo_text_mini.png" alt="logo" height="48" width="112" />
+  </a>
+  <button mat-button routerLink="/projects">Projects</button>
+  <button mat-button routerLink="/plugins">Plugins</button>
+
+  <span class="flex-spacer"></span>
+
+  <mat-slide-toggle [checked]="themeService.darkMode()" (toggleChange)="themeService.toggleDarkMode()" labelPosition="before">
+    <mat-icon>bedtime</mat-icon>
+  </mat-slide-toggle>
+</mat-toolbar>
