@@ -17,7 +17,7 @@ public class DeleteProjectEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
     {
-        app.MapDelete("/api/scriptbee/projects/{projectId}", DeleteProject)
+        app.MapDelete("/api/projects/{projectId}", DeleteProject)
             .AddAuthorizationPolicy(AuthorizationRolesExtensions.DeleteProjectPolicy, configuration);
     }
 

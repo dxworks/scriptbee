@@ -19,7 +19,7 @@ public class CreateProjectEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
     {
-        app.MapPost("/api/scriptbee/projects", CreateProject)
+        app.MapPost("/api/projects", CreateProject)
             .AddAuthorizationPolicy(AuthorizationRolesExtensions.CreateProjectPolicy, configuration)
             .WithRequestValidation<WebCreateProjectCommand>();
     }
@@ -35,7 +35,7 @@ public class CreateProjectEndpoint : IEndpointDefinition
             projectDetails =>
             {
                 var response = WebCreateProjectResponse.Map(projectDetails);
-                return TypedResults.Created($"/api/scriptbee/projects/{response.Id}", response);
+                return TypedResults.Created($"/api/projects/{response.Id}", response);
             },
             error => TypedResults.Conflict(
                 context.ToProblemDetails(

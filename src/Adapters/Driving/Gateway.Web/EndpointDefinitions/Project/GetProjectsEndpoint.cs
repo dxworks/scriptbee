@@ -19,9 +19,9 @@ public class GetProjectsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
     {
-        app.MapGet("/api/scriptbee/projects", GetAllProjects)
+        app.MapGet("/api/projects", GetAllProjects)
             .AddAuthorizationPolicy(AuthorizationRolesExtensions.ViewProjectPolicy, configuration);
-        app.MapGet("/api/scriptbee/projects/{projectId}", GetProjectById)
+        app.MapGet("/api/projects/{projectId}", GetProjectById)
             .AddAuthorizationPolicy(AuthorizationRolesExtensions.ViewProjectPolicy, configuration);
     }
 

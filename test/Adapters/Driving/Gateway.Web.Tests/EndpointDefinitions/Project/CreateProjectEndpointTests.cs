@@ -15,7 +15,7 @@ namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
 
 public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
 {
-    private const string TestUrl = "/api/scriptbee/projects";
+    private const string TestUrl = "/api/projects";
     private readonly TestApiCaller _api = new(TestUrl);
 
     [Fact]

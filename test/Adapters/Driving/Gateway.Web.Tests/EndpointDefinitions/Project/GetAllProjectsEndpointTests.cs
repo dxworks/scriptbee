@@ -13,7 +13,7 @@ namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
 
 public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
 {
-    private const string TestUrl = "/api/scriptbee/projects";
+    private const string TestUrl = "/api/projects";
     private readonly TestApiCaller _api = new(TestUrl);
 
     public static TheoryData<string> ProvideUserRoleTypes =
@@ -25,10 +25,11 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
     {
         var role = UserRole.FromType(roleType);
         var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
+        var creationDate = DateTime.Parse("2024-02-08");
         getProjectsUseCase.GetAllProjects(Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new List<ProjectDetails>
             {
-                new(ProjectId.Create("id"), "name", DateTime.Parse("2024-02-08"))
+                new(ProjectId.Create("id"), "name", creationDate)
             }));
 
         var response = await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper, [role],
@@ -37,7 +38,7 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getProjectListResponse = await response.ReadContentAsync<WebGetProjectListResponse>();
         getProjectListResponse.ShouldBeEquivalentTo(
-            new WebGetProjectListResponse([new WebGetProjectDetailsResponse("id", "name")])
+            new WebGetProjectListResponse([new WebGetProjectDetailsResponse("id", "name", creationDate)])
         );
     }
 

@@ -13,7 +13,7 @@ namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
 
 public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
 {
-    private const string TestUrl = "/api/scriptbee/projects/id";
+    private const string TestUrl = "/api/projects/id";
     private readonly TestApiCaller _api = new(TestUrl);
 
     [Fact]

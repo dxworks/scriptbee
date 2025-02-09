@@ -15,7 +15,7 @@ namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
 
 public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
 {
-    private const string TestUrl = "/api/scriptbee/projects/id";
+    private const string TestUrl = "/api/projects/id";
     private readonly TestApiCaller _api = new(TestUrl);
 
     public static TheoryData<string> ProvideUserRoleTypes =
@@ -29,16 +29,17 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
         var projectId = ProjectId.FromValue("id");
         var query = new GetProjectQuery(projectId);
         var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
+        var creationDate = DateTime.Parse("2024-02-08");
         getProjectsUseCase.GetProject(query, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                new ProjectDetails(projectId, "name", DateTime.Parse("2024-02-08"))));
+                new ProjectDetails(projectId, "name", creationDate)));
 
         var response = await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper, [role],
             services => { services.AddSingleton(getProjectsUseCase); }));
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getResponse = await response.ReadContentAsync<WebGetProjectDetailsResponse>();
-        getResponse.ShouldBe(new WebGetProjectDetailsResponse("id", "name"));
+        getResponse.ShouldBe(new WebGetProjectDetailsResponse("id", "name", creationDate));
     }
 
     [Theory]
