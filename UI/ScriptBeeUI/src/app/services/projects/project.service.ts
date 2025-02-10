@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CreateProjectRequest, Project, ProjectListResponse } from '../../types/project';
+import { CreateProjectRequest, CreateProjectResponse, Project, ProjectListResponse } from '../../types/project';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class ProjectService {
       id: projectId,
       name: projectName,
     };
-    return this.http.post(this.projectsAPIUrl, body);
+    return this.http.post<CreateProjectResponse>(this.projectsAPIUrl, body);
   }
 
   getProject(projectId: string): Observable<Project> {

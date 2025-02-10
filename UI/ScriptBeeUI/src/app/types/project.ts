@@ -12,3 +12,9 @@ export interface CreateProjectRequest {
   id: string;
   name: string;
 }
+
+export interface CreateProjectResponse {
+  id: string;
+  name: string;
+  creationDate: string;
+}

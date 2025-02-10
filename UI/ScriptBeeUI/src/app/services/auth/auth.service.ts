@@ -14,13 +14,13 @@ export class AuthService implements IAuthService {
   constructor(private readonly keycloak: Keycloak) {
     effect(() => {
       if (!this.authenticated()) {
-        void this.keycloak.login();
+        this.keycloak.login().then();
       }
     });
   }
 
   logout() {
-    void this.keycloak.logout();
+    this.keycloak.logout().then();
   }
 
   private isAuthenticated(keycloakEvent: KeycloakEvent) {

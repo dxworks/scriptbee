@@ -1,4 +1,4 @@
-import { Component, effect, inject, viewChild } from '@angular/core';
+import { Component, computed, effect, viewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -10,8 +10,12 @@ import { Project } from '../../../types/project';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
+import { ErrorResponse } from '../../../types/api';
+import { DEFAULT_ERROR_RESPONSE } from '../../../utils/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-projects-page',
@@ -28,6 +32,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
     MatButton,
     DatePipe,
     RouterLink,
+    ErrorStateComponent,
   ],
 })
 export class ProjectsPage {
@@ -36,14 +41,25 @@ export class ProjectsPage {
 
   paginator = viewChild.required(MatPaginator);
   sort = viewChild.required(MatSort);
-  projectsService = inject(ProjectService);
+
+  getAllProjectsError = computed<ErrorResponse | undefined>(() => {
+    const error = this.getAllProjectsResource.error() as HttpErrorResponse | undefined;
+
+    if (!error) {
+      return undefined;
+    }
+
+    return error.error ?? DEFAULT_ERROR_RESPONSE;
+  });
 
   getAllProjectsResource = rxResource({
     loader: () => this.projectsService.getAllProjects(),
   });
 
-  constructor() {
-    // TODO: handle errors
+  constructor(
+    private projectsService: ProjectService,
+    private router: Router
+  ) {
     effect(() => {
       this.dataSource.data = this.getAllProjectsResource.value() || [];
     });
@@ -64,8 +80,6 @@ export class ProjectsPage {
   }
 
   onRowClick(row: Project) {
-    // TODO: redirect to project page
-    console.log(row);
-    // this.router.navigate([`/projects/${row.projectId}`]).then();
+    this.router.navigate([`/projects/${row.id}`]).then();
   }
 }

@@ -54,12 +54,13 @@ export class CreateProjectPage {
 
   onCreate() {
     this.isCreating.set(true);
+    this.creatingError.set(undefined);
 
     if (this.projectId.value && this.projectName.value) {
       this.projectService.createProject(this.projectId.value, this.projectName.value).subscribe({
-        next: () => {
-          void this.router.navigate(['/projects']);
+        next: (response) => {
           this.isCreating.set(false);
+          this.router.navigate([`/projects/${response.id}`]).then();
         },
         error: (error: HttpErrorResponse) => {
           this.creatingError.set(error.error ?? DEFAULT_ERROR_RESPONSE);
