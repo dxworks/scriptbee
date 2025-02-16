@@ -6,11 +6,9 @@ import { SlugifyPipe } from '../../../pipes/slugify.pipe';
 import { MatButton } from '@angular/material/button';
 import { LoadingProgressBarComponent } from '../../../components/loading-progress-bar/loading-progress-bar.component';
 import { ProjectService } from '../../../services/projects/project.service';
-import { ErrorResponse } from '../../../types/api';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { DEFAULT_ERROR_RESPONSE } from '../../../utils/api';
+import { apiHandler } from '../../../utils/apiHandler';
 
 @Component({
   selector: 'app-create-project',
@@ -36,8 +34,10 @@ export class CreateProjectPage {
   projectIdErrorMessage = signal('');
   projectNameErrorMessage = signal('');
 
-  isCreating = signal(false);
-  creatingError = signal<ErrorResponse | undefined>(undefined);
+  createProjectHandler = apiHandler(
+    (x: { id: string; name: string }) => this.projectService.createProject(x.id, x.name),
+    (response) => this.router.navigate([`/projects/${response.id}`])
+  );
 
   constructor(
     private projectService: ProjectService,
@@ -53,20 +53,8 @@ export class CreateProjectPage {
   }
 
   onCreate() {
-    this.isCreating.set(true);
-    this.creatingError.set(undefined);
-
     if (this.projectId.value && this.projectName.value) {
-      this.projectService.createProject(this.projectId.value, this.projectName.value).subscribe({
-        next: (response) => {
-          this.isCreating.set(false);
-          this.router.navigate([`/projects/${response.id}`]).then();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.creatingError.set(error.error ?? DEFAULT_ERROR_RESPONSE);
-          this.isCreating.set(false);
-        },
-      });
+      this.createProjectHandler.execute({ id: this.projectId.value, name: this.projectName.value });
     }
   }
 

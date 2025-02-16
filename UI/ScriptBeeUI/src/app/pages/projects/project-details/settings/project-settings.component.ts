@@ -19,12 +19,12 @@ export class ProjectSettingsPage {
 
   getProjectResource = createRxResourceHandler({
     request: () => this.projectId(),
-    loader: (params) => this.projectsService.getProject(params.request),
+    loader: (params) => this.projectService.getProject(params.request),
   });
 
   constructor(
     route: ActivatedRoute,
-    private projectsService: ProjectService
+    private projectService: ProjectService
   ) {
     route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: (paramMap) => {

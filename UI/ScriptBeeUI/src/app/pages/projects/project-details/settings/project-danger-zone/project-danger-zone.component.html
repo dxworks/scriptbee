@@ -11,12 +11,12 @@
     <mat-card-content>
       <p>Once project is deleted, all data will be removed</p>
 
-      @if (isDeleting()) {
+      @if (deleteProjectHandler.loading()) {
         <app-loading-progress-bar title="Deleting project..."></app-loading-progress-bar>
       }
 
-      @if (deletingError()) {
-        <app-error-state [error]="deletingError()!"></app-error-state>
+      @if (deleteProjectHandler.error()) {
+        <app-error-state [error]="deleteProjectHandler.error()!"></app-error-state>
       }
     </mat-card-content>
     <mat-card-actions>
