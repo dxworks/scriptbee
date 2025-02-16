@@ -1,10 +1,9 @@
 import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 
 @Directive({
-  selector: '[appFileDrop]'
+  selector: '[appFileDrop]',
 })
 export class FileDropDirective {
-
   @Output() filesDropped = new EventEmitter<FileList>();
   @Output() filesHovered = new EventEmitter<boolean>();
 
@@ -28,5 +27,4 @@ export class FileDropDirective {
     $event.preventDefault();
     this.filesHovered.emit(false);
   }
-
 }

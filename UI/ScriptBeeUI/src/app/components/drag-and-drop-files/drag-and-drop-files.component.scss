@@ -24,13 +24,13 @@ progress::-webkit-progress-value {
   transition: width 0.1s ease;
 }
 
-.aligned-item{
+.aligned-item {
   margin-top: 8px;
   margin-left: 8px;
   margin-bottom: 8px;
 }
 
-.no-files{
+.no-files {
   margin-top: 8px;
   margin-left: 8px;
   margin-bottom: 8px;
@@ -46,4 +46,13 @@ progress::-webkit-progress-value {
 
 .text-with-opacity {
   opacity: 80%;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+}
+
+.button-icon-error {
+  color: var(--mat-sys-error);
 }

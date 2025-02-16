@@ -1,5 +1,4 @@
 ﻿export class Upload {
-
   file: File;
   name?: string;
   url?: string;

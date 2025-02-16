@@ -1,0 +1,30 @@
+<div class="dropzone" appFileDrop (filesHovered)="toggleHover($event)" (filesDropped)="addFiles($event)" [class.hovering]="isHovering">
+  <p class="drag-and-drop-text">Drag and Drop Files</p>
+
+  <input #modelFileInput id="modelFile" hidden multiple type="file" (change)="onFileChange($event)" />
+  <button mat-flat-button (click)="openBrowseFilesDialog()">
+    <mat-icon aria-hidden="false" aria-label="Edit Icon">publish</mat-icon>
+    <span>Browse Files</span>
+  </button>
+</div>
+
+<mat-list>
+  @if (files.length > 0) {
+    <div class="aligned-item text-with-opacity bold-text">Files</div>
+  } @else {
+    <div class="no-files text-with-opacity bold-text">No files available for upload</div>
+  }
+
+  @for (file of files; track file.webkitRelativePath; let index = $index) {
+    <mat-list-item>
+      <mat-icon matListItemIcon>description</mat-icon>
+      <div matListItemTitle class="list-item">
+        <div>{{ file.name }}</div>
+
+        <button mat-icon-button class="button-icon-error" (click)="onClearButtonClick(index)">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
+  }
+</mat-list>

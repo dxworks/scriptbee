@@ -1,0 +1,36 @@
+<div class="project-model-section-title project-model-content-after-divider">Upload Models</div>
+
+@if (getLoadersResource.isLoading()) {
+  <app-centered-spinner text="Loading Loader Plugins"></app-centered-spinner>
+} @else if (getLoadersResource.error()) {
+  <app-error-state [error]="getLoadersResource.error()!"></app-error-state>
+} @else {
+  <mat-form-field class="select-loader" appearance="fill">
+    <mat-label>Loader</mat-label>
+    <mat-select [value]="selectedLoaderId()" (valueChange)="selectedLoaderId.set($event)">
+      @for (loader of getLoadersResource.value()!; track loader.id) {
+        <mat-option [value]="loader.id">
+          {{ loader.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+}
+
+<app-drag-and-drop-files [(files)]="files"></app-drag-and-drop-files>
+
+<div class="warning keep-in-mind">Keep in mind: When uploading new models for a particular loader, the references to previous uploads will be deleted!</div>
+
+@if (uploadModelsHandler.isLoading()) {
+  <app-centered-spinner text="Uploading Files"></app-centered-spinner>
+} @else if (uploadModelsHandler.error()) {
+  <app-error-state [error]="uploadModelsHandler.error()!"></app-error-state>
+}
+
+<div class="upload-files-container">
+  <button mat-flat-button [disabled]="files.length === 0 || uploadModelsHandler.isLoading()" (click)="onUploadFilesClick()">Upload Files</button>
+
+  @if (!selectedLoaderId()) {
+    <div class="warning">A loader must be selected in order to upload models</div>
+  }
+</div>

@@ -1,12 +1,16 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { FileDropDirective } from '../../directives/file-drop-directive/file-drop.directive';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-drag-and-drop-files',
   templateUrl: './drag-and-drop-files.component.html',
-  styleUrls: ['./drag-and-drop-files.component.scss']
+  styleUrls: ['./drag-and-drop-files.component.scss'],
+  imports: [MatIcon, FileDropDirective, MatButtonModule, MatListModule],
 })
 export class DragAndDropFilesComponent {
-
   @ViewChild('modelFileInput') modelFileInput?: ElementRef;
   @Output() filesChange = new EventEmitter<File[]>();
 
@@ -15,6 +19,13 @@ export class DragAndDropFilesComponent {
 
   toggleHover(event: boolean) {
     this.isHovering = event;
+  }
+
+  onFileChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement && inputElement.files) {
+      this.addFiles(inputElement.files);
+    }
   }
 
   addFiles(files: FileList) {
@@ -32,11 +43,11 @@ export class DragAndDropFilesComponent {
       return;
     }
 
-    this.modelFileInput.nativeElement.value = "";
+    this.modelFileInput.nativeElement.value = '';
     this.modelFileInput.nativeElement.click();
   }
 
-  onClearButtonClick(index) {
+  onClearButtonClick(index: number) {
     this.files.splice(index, 1);
   }
 }

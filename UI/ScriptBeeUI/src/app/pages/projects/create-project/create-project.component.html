@@ -26,7 +26,7 @@
       }
     </mat-form-field>
 
-    @if (createProjectHandler.loading()) {
+    @if (createProjectHandler.isLoading()) {
       <app-loading-progress-bar title="Creating project..."></app-loading-progress-bar>
     }
 

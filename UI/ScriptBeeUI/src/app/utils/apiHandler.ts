@@ -8,7 +8,7 @@ export function apiHandler<ActionResult, SuccessResult, Error extends ErrorRespo
   action: (parameters: ActionParameters) => Observable<ActionResult>,
   onSuccess?: (data: ActionResult) => SuccessResult | Promise<SuccessResult>
 ): {
-  loading: Signal<boolean>;
+  isLoading: Signal<boolean>;
   error: Signal<Error | undefined>;
   execute: (parameters: ActionParameters) => void;
 } {
@@ -38,5 +38,5 @@ export function apiHandler<ActionResult, SuccessResult, Error extends ErrorRespo
       });
   }
 
-  return { loading, error, execute };
+  return { isLoading: loading, error, execute };
 }

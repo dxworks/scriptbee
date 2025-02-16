@@ -1,7 +1,4 @@
-﻿export interface TreeNode {
-  name: string;
-  children?: TreeNode[];
-}
+import { TreeNode } from '../types/tree-node';
 
 export function updateTreeNodeArray(treeNodes: TreeNode[], name: string, children: string[]) {
   const indexOfNode = treeNodes.findIndex((node) => node.name === name);

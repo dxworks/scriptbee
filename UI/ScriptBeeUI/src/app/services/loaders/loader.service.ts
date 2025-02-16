@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { contentHeaders } from '../../shared/headers';
-import { TreeNode } from '../../shared/tree-node';
-import { LoadModel } from './load-model';
-import { ReturnedContextSlice } from '../../project-details/services/returned-context-slice';
+import { TreeNode } from '../../types/tree-node';
+import { Loader, LoadModel } from '../../types/load-model';
+import { ReturnedContextSlice } from '../../types/returned-context-slice';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +14,7 @@ export class LoaderService {
   constructor(private http: HttpClient) {}
 
   getAllLoaders() {
-    return this.http.get<string[]>(this.loadersAPIUrl, { headers: contentHeaders });
+    return this.http.get<Loader[]>(this.loadersAPIUrl);
   }
 
   loadModels(projectId: string, checkedFiles: TreeNode[]) {
@@ -25,18 +24,18 @@ export class LoaderService {
         .filter((treeNode) => treeNode.children && treeNode.children.length > 0)
         .map((treeNode) => ({
           loaderName: treeNode.name,
-          models: treeNode.children.map((child) => child.name),
+          models: (treeNode.children ?? []).map((child: any) => child.name),
         })),
     };
 
-    return this.http.post<ReturnedContextSlice[]>(this.loadersAPIUrl, loadModels, { headers: contentHeaders });
+    return this.http.post<ReturnedContextSlice[]>(this.loadersAPIUrl, loadModels);
   }
 
   reloadProjectContext(projectId: string) {
-    return this.http.post<ReturnedContextSlice[]>(`${this.loadersAPIUrl}/${projectId}`, { headers: contentHeaders });
+    return this.http.post<ReturnedContextSlice[]>(`${this.loadersAPIUrl}/${projectId}`, null);
   }
 
   clearProjectContext(projectId: string) {
-    return this.http.post(`${this.loadersClearContextAPIUrl}/${projectId}`, { headers: contentHeaders });
+    return this.http.post(`${this.loadersClearContextAPIUrl}/${projectId}`, null);
   }
 }

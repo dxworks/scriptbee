@@ -35,7 +35,7 @@ export class CreateProjectPage {
   projectNameErrorMessage = signal('');
 
   createProjectHandler = apiHandler(
-    (x: { id: string; name: string }) => this.projectService.createProject(x.id, x.name),
+    (params: { id: string; name: string }) => this.projectService.createProject(params.id, params.name),
     (response) => this.router.navigate([`/projects/${response.id}`])
   );
 
