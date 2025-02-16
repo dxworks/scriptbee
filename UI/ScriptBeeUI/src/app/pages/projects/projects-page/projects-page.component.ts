@@ -1,4 +1,4 @@
-import { Component, computed, effect, viewChild } from '@angular/core';
+import { Component, effect, viewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -11,11 +11,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { rxResource } from '@angular/core/rxjs-interop';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
-import { ErrorResponse } from '../../../types/api';
-import { DEFAULT_ERROR_RESPONSE } from '../../../utils/api';
-import { HttpErrorResponse } from '@angular/common/http';
+import { createRxResourceHandler } from '../../../utils/resource';
 
 @Component({
   selector: 'app-projects-page',
@@ -42,17 +39,7 @@ export class ProjectsPage {
   paginator = viewChild.required(MatPaginator);
   sort = viewChild.required(MatSort);
 
-  getAllProjectsError = computed<ErrorResponse | undefined>(() => {
-    const error = this.getAllProjectsResource.error() as HttpErrorResponse | undefined;
-
-    if (!error) {
-      return undefined;
-    }
-
-    return error.error ?? DEFAULT_ERROR_RESPONSE;
-  });
-
-  getAllProjectsResource = rxResource({
+  getAllProjectsResource = createRxResourceHandler({
     loader: () => this.projectsService.getAllProjects(),
   });
 

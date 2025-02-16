@@ -1,0 +1,10 @@
+<div>
+  <h1 mat-dialog-title style="text-align: center">Confirm deletion</h1>
+  <div mat-dialog-content>
+    <div>Are you sure you want to delete this project?</div>
+  </div>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial>CANCEL</button>
+    <button mat-button [mat-dialog-close]="true">DELETE</button>
+  </mat-dialog-actions>
+</div>
