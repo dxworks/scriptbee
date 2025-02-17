@@ -1,6 +1,11 @@
 <nav mat-tab-nav-bar mat-stretch-tabs [tabPanel]="tabPanel">
   @for (tab of tabInfo; track tab.link) {
-    <a mat-tab-link (click)="selectTab(tab)" [active]="activeTab() == tab"> {{ tab.name }} </a>
+    <a mat-tab-link (click)="selectTab(tab)" [active]="activeTab() == tab">
+      <span class="tab-icon">
+        <mat-icon>{{ tab.icon }}</mat-icon>
+      </span>
+      {{ tab.name }}
+    </a>
   }
 </nav>
 <mat-tab-nav-panel #tabPanel>

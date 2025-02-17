@@ -3,10 +3,12 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { MatTabsModule } from '@angular/material/tabs';
 import { filter, first } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIcon } from '@angular/material/icon';
 
 interface TabInfo {
   link: string;
   name: string;
+  icon: string;
 }
 
 @Component({
@@ -14,21 +16,24 @@ interface TabInfo {
   templateUrl: './project-details-page.component.html',
   styleUrls: ['./project-details-page.component.scss'],
   providers: [],
-  imports: [MatTabsModule, RouterOutlet],
+  imports: [MatTabsModule, RouterOutlet, MatIcon],
 })
 export class ProjectDetailsPage {
   tabInfo: TabInfo[] = [
     {
       link: 'model',
       name: 'Model',
+      icon: 'model_training',
     },
     {
       link: 'analysis',
       name: 'Analysis',
+      icon: 'query_stats',
     },
     {
       link: 'settings',
       name: 'Settings',
+      icon: 'settings',
     },
   ];
   activeTab = signal(this.tabInfo[0]);
