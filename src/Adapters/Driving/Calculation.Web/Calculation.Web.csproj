@@ -1,17 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <RootNamespace>ScriptBee.Gateway.Web</RootNamespace>
+        <RootNamespace>ScriptBee.Calculation.Web</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Driven\Gateway.Persistence.Mongodb\Gateway.Persistence.Mongodb.csproj" />
         <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
     </ItemGroup>
 

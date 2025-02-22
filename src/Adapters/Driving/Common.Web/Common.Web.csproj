@@ -5,12 +5,21 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNetCore.HealthChecks.MongoDb" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Polly"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Expressions"/>
         <PackageReference Include="Serilog.Settings.Configuration"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Application\Domain\Model\Model.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Domain\Service\Service.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases\UseCases.csproj"/>
+    </ItemGroup>
 </Project>

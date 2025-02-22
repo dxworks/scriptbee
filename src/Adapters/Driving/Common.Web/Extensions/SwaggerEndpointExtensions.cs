@@ -1,4 +1,6 @@
-﻿namespace ScriptBee.Gateway.Web.Extensions;
+﻿using Microsoft.AspNetCore.Builder;
+
+namespace ScriptBee.Common.Web.Extensions;
 
 public static class SwaggerEndpointExtensions
 {

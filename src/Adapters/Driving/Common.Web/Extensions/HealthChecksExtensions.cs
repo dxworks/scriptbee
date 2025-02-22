@@ -1,7 +1,9 @@
 ﻿using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ScriptBee.Gateway.Web.Extensions;
+namespace ScriptBee.Common.Web.Extensions;
 
 public static class HealthChecksExtensions
 {
