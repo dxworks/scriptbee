@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ScriptBee.Common.Web.Extensions;
@@ -28,13 +27,13 @@ public static class EndpointDefinitionExtensions
         services.AddSingleton<IReadOnlyCollection<IEndpointDefinition>>(endpointDefinitions);
     }
 
-    public static void UseEndpointDefinitions(this WebApplication app, IConfiguration configuration)
+    public static void UseEndpointDefinitions(this WebApplication app)
     {
         var endpointDefinitions = app.Services.GetRequiredService<IReadOnlyCollection<IEndpointDefinition>>();
 
         foreach (var endpointDefinition in endpointDefinitions)
         {
-            endpointDefinition.DefineEndpoints(app, configuration);
+            endpointDefinition.DefineEndpoints(app);
         }
     }
 }

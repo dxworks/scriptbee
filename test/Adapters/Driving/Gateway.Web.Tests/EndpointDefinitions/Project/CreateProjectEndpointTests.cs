@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model.Authorization;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Ports.Driving.UseCases.Project;
@@ -19,10 +18,10 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     private readonly TestApiCaller _api = new(TestUrl);
 
     [Fact]
-    public async Task AdministratorRoleWithInvalidRequestBody_ShouldReturnBadRequest()
+    public async Task InvalidRequestBody_ShouldReturnBadRequest()
     {
         var response =
-            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]),
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper),
                 new WebCreateProjectCommand("id", ""));
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -34,18 +33,18 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     }
 
     [Fact]
-    public async Task AdministratorRoleWithEmptyBody_ShouldReturnBadRequest()
+    public async Task EmptyBody_ShouldReturnBadRequest()
     {
         var response =
             await _api.PostApi<WebCreateProjectCommand>(
-                new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator]));
+                new TestWebApplicationFactory<Program>(outputHelper));
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         await AssertEmptyRequestBodyProblem(response.Content, TestUrl);
     }
 
     [Fact]
-    public async Task AdministratorRole_ShouldReturnCreated()
+    public async Task ShouldReturnCreated()
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
         var creationDate = DateTime.Parse("2024-02-08");
@@ -54,7 +53,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                 new ProjectDetails(ProjectId.Create("id"), "name", creationDate)));
 
         var response =
-            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper,
                     services => { services.AddSingleton(createProjectUseCase); }),
                 new WebCreateProjectCommand("id", "project name"));
 
@@ -66,7 +65,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     }
 
     [Fact]
-    public async Task AdministratorRoleAndExistingId_ShouldReturnConflict()
+    public async Task ExistingId_ShouldReturnConflict()
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
         createProjectUseCase.CreateProject(new CreateProjectCommand("id", "project name"), Arg.Any<CancellationToken>())
@@ -74,7 +73,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                 new ProjectIdAlreadyInUseError(ProjectId.Create("id"))));
 
         var response =
-            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
+            await _api.PostApi(new TestWebApplicationFactory<Program>(outputHelper,
                     services => { services.AddSingleton(createProjectUseCase); }),
                 new WebCreateProjectCommand("id", "project name"));
 
@@ -83,32 +82,5 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
             "Project ID Already In Use",
             "A project with the ID 'id' already exists. Use a unique Project ID or update the existing project."
         );
-    }
-
-    [Fact]
-    public async Task OtherRole_ShouldReturnForbidden()
-    {
-        var response =
-            await _api.PostApi<WebCreateProjectCommand>(
-                new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
-    }
-
-    [Fact]
-    public async Task NoRoles_ShouldReturnForbidden()
-    {
-        var response =
-            await _api.PostApi<WebCreateProjectCommand>(new TestWebApplicationFactory<Program>(outputHelper, []));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
-    }
-
-    [Fact]
-    public async Task UnauthorizedUser_ShouldReturnUnauthorized()
-    {
-        var response = await _api.PostApiWithoutAuthorization(new TestWebApplicationFactory<Program>(outputHelper));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 }

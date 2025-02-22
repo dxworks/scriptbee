@@ -1,28 +1,19 @@
-﻿using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using ScriptBee.Domain.Model.Authorization;
 using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Web.Tests;
 
 public class TestWebApplicationFactory<TStartup>(
     ITestOutputHelper output,
-    List<UserRole> roles,
     Action<IServiceCollection>? configureDelegate = null)
     : WebApplicationFactory<TStartup>
     where TStartup : class
 {
-    public TestWebApplicationFactory(ITestOutputHelper output) : this(output, [])
-    {
-    }
-
     protected override IHost CreateHost(IHostBuilder builder)
     {
         if (configureDelegate != null)
@@ -37,7 +28,6 @@ public class TestWebApplicationFactory<TStartup>(
     {
         ConfigureLoggingServices(builder);
         ConfigureConfigurations(builder);
-        ConfigureServices(builder);
     }
 
     private void ConfigureLoggingServices(IWebHostBuilder builder)
@@ -52,10 +42,7 @@ public class TestWebApplicationFactory<TStartup>(
 
     private static void ConfigureConfigurations(IWebHostBuilder builder)
     {
-        var configurationValues = new Dictionary<string, string?>
-        {
-            { "Features:DisableAuthorization", "false" }
-        };
+        var configurationValues = new Dictionary<string, string?>();
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationValues)
             .Build();
@@ -66,27 +53,5 @@ public class TestWebApplicationFactory<TStartup>(
             {
                 configurationBuilder.AddInMemoryCollection(configurationValues);
             });
-    }
-
-    private void ConfigureServices(IWebHostBuilder builder)
-    {
-        builder.ConfigureServices(services =>
-        {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = TestAuthHandler.TestAuthenticationScheme;
-                options.DefaultChallengeScheme = TestAuthHandler.TestAuthenticationScheme;
-            }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                TestAuthHandler.TestAuthenticationScheme, _ => { });
-
-            services.AddScoped<TestAuthHandler>(provider => new TestAuthHandler(
-                provider.GetRequiredService<IOptionsMonitor<AuthenticationSchemeOptions>>(),
-                provider.GetRequiredService<ILoggerFactory>(),
-                provider.GetRequiredService<UrlEncoder>()
-            )
-            {
-                Roles = roles
-            });
-        });
     }
 }

@@ -5,7 +5,6 @@ using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Service.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
-using ScriptBee.Gateway.Web.Extensions;
 using ScriptBee.Ports.Driving.UseCases.Project;
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project;
@@ -17,10 +16,9 @@ public class CreateProjectEndpoint : IEndpointDefinition
         services.AddSingleton<ICreateProjectUseCase, CreateProjectService>();
     }
 
-    public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
+    public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects", CreateProject)
-            .AddAuthorizationPolicy(AuthorizationRolesExtensions.CreateProjectPolicy, configuration)
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 

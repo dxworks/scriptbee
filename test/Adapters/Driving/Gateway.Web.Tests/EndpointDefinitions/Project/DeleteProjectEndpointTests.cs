@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
-using ScriptBee.Domain.Model.Authorization;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Driving.UseCases.Project;
 using Shouldly;
@@ -17,7 +16,7 @@ public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
     private readonly TestApiCaller _api = new(TestUrl);
 
     [Fact]
-    public async Task AdministratorRole_ShouldReturnNoContent()
+    public async Task ShouldReturnNoContent()
     {
         var deleteProjectUseCase = Substitute.For<IDeleteProjectUseCase>();
         deleteProjectUseCase
@@ -25,33 +24,9 @@ public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult<OneOf<Unit>>(new Unit()));
 
         var response =
-            await _api.DeleteApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Administrator],
+            await _api.DeleteApi(new TestWebApplicationFactory<Program>(outputHelper,
                 services => { services.AddSingleton(deleteProjectUseCase); }));
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-    }
-
-    [Fact]
-    public async Task OtherRole_ShouldReturnForbidden()
-    {
-        var response = await _api.DeleteApi(new TestWebApplicationFactory<Program>(outputHelper, [UserRole.Guest]));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
-    }
-
-    [Fact]
-    public async Task NoRoles_ShouldReturnForbidden()
-    {
-        var response = await _api.DeleteApi(new TestWebApplicationFactory<Program>(outputHelper, []));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
-    }
-
-    [Fact]
-    public async Task UnauthorizedUser_ShouldReturnUnauthorized()
-    {
-        var response = await _api.DeleteApiWithoutAuthorization(new TestWebApplicationFactory<Program>(outputHelper));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 }

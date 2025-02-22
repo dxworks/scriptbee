@@ -5,7 +5,6 @@ using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Service.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
-using ScriptBee.Gateway.Web.Extensions;
 using ScriptBee.Ports.Driving.UseCases.Project;
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project;
@@ -17,12 +16,10 @@ public class GetProjectsEndpoint : IEndpointDefinition
         services.AddSingleton<IGetProjectsUseCase, GetProjectsService>();
     }
 
-    public void DefineEndpoints(IEndpointRouteBuilder app, IConfiguration configuration)
+    public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects", GetAllProjects)
-            .AddAuthorizationPolicy(AuthorizationRolesExtensions.ViewProjectPolicy, configuration);
-        app.MapGet("/api/projects/{projectId}", GetProjectById)
-            .AddAuthorizationPolicy(AuthorizationRolesExtensions.ViewProjectPolicy, configuration);
+        app.MapGet("/api/projects", GetAllProjects);
+        app.MapGet("/api/projects/{projectId}", GetProjectById);
     }
 
     private static async Task<Ok<WebGetProjectListResponse>> GetAllProjects(

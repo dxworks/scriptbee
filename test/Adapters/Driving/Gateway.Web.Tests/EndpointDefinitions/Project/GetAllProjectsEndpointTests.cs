@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using ScriptBee.Domain.Model.Authorization;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Ports.Driving.UseCases.Project;
@@ -16,14 +15,9 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
     private const string TestUrl = "/api/projects";
     private readonly TestApiCaller _api = new(TestUrl);
 
-    public static TheoryData<string> ProvideUserRoleTypes =
-        [UserRole.Guest.Type, UserRole.Analyst.Type, UserRole.Maintainer.Type, UserRole.Administrator.Type];
-
-    [Theory]
-    [MemberData(nameof(ProvideUserRoleTypes))]
-    public async Task GivenRole_ShouldReturnProjectDetailsList(string roleType)
+    [Fact]
+    public async Task ShouldReturnProjectDetailsList()
     {
-        var role = UserRole.FromType(roleType);
         var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
         var creationDate = DateTime.Parse("2024-02-08");
         getProjectsUseCase.GetAllProjects(Arg.Any<CancellationToken>())
@@ -32,7 +26,7 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
                 new(ProjectId.Create("id"), "name", creationDate)
             }));
 
-        var response = await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper, [role],
+        var response = await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper,
             services => { services.AddSingleton(getProjectsUseCase); }));
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -40,22 +34,5 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
         getProjectListResponse.ShouldBeEquivalentTo(
             new WebGetProjectListResponse([new WebGetProjectDetailsResponse("id", "name", creationDate)])
         );
-    }
-
-    [Fact]
-    public async Task NoRoles_ShouldReturnForbidden()
-    {
-        var response =
-            await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper, []));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
-    }
-
-    [Fact]
-    public async Task UnauthorizedUser_ShouldReturnUnauthorized()
-    {
-        var response = await _api.GetApiWithoutAuthorization(new TestWebApplicationFactory<Program>(outputHelper));
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 }
