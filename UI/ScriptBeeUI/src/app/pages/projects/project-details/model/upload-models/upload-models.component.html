@@ -1,7 +1,7 @@
 <div class="project-model-section-title project-model-content-after-divider">Upload Models</div>
 
 @if (getLoadersResource.isLoading()) {
-  <app-centered-spinner text="Loading Loader Plugins"></app-centered-spinner>
+  <app-centered-spinner text="Loading Loader"></app-centered-spinner>
 } @else if (getLoadersResource.error()) {
   <app-error-state [error]="getLoadersResource.error()!"></app-error-state>
 } @else {
