@@ -1,0 +1,13 @@
+<div class="project-model-section-title project-model-content-after-divider">Load Models</div>
+
+<app-selectable-tree [data]="savedFiles()" (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-selectable-tree>
+
+@if (loadModelsHandler.isLoading()) {
+  <app-centered-spinner text="Loading Models"></app-centered-spinner>
+} @else if (loadModelsHandler.error()) {
+  <app-error-state [error]="loadModelsHandler.error()!"></app-error-state>
+}
+
+<button class="load-button" mat-raised-button [disabled]="checkedFiles().length === 0 || loadModelsHandler.isLoading()" (click)="onLoadFilesClick()">
+  Load Files
+</button>

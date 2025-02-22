@@ -47,19 +47,4 @@ export class ProjectModelPage {
       },
     });
   }
-
-  // projectData$ = this.projectStore.projectData;
-  // projectDataLoading$ = this.projectStore.projectDataLoading;
-  // projectDataError$ = this.projectStore.projectDataError;
-
-  ngOnInit(): void {
-    //   this.projectStore.loadProjectData();
-    //
-    //   this.projectStore.projectData.subscribe((projectData) => {
-    //     if (projectData) {
-    //       this.loaderStore.setSavedFiles(projectData.savedFiles);
-    //       this.loaderStore.setLoadedFiles(projectData.loadedFiles);
-    //     }
-    //   });
-  }
 }
