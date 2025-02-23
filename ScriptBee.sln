@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Persistence.Mongodb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculation.Web", "src\Adapters\Driving\Calculation.Web\Calculation.Web.csproj", "{D28582D6-9925-4850-A73A-7861F6F863DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Calculation", "src\Application\Ports\Driven\Ports.Calculation\Ports.Calculation.csproj", "{C18525B6-2558-416E-9D9E-AAE063EA88A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculation.Instance.Docker", "src\Adapters\Driven\Calculation.Instance.Docker\Calculation.Instance.Docker.csproj", "{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,5 +89,13 @@ Global
 		{D28582D6-9925-4850-A73A-7861F6F863DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D28582D6-9925-4850-A73A-7861F6F863DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D28582D6-9925-4850-A73A-7861F6F863DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18525B6-2558-416E-9D9E-AAE063EA88A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18525B6-2558-416E-9D9E-AAE063EA88A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18525B6-2558-416E-9D9E-AAE063EA88A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18525B6-2558-416E-9D9E-AAE063EA88A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
