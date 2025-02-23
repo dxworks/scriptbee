@@ -2,7 +2,9 @@
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
+using ScriptBee.Tests.Common;
 using Shouldly;
+using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Tests;
 
@@ -11,10 +13,11 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     private readonly ProjectPersistenceAdapter _adapter;
     private readonly IMongoCollection<ProjectModel> _mongoCollection;
 
-    public ProjectPersistenceAdapterIntegrationTests(MongoDbFixture fixture)
+    public ProjectPersistenceAdapterIntegrationTests(MongoDbFixture fixture, ITestOutputHelper outputHelper)
     {
         _mongoCollection = fixture.GetCollection<ProjectModel>("Projects");
-        _adapter = new ProjectPersistenceAdapter(new MongoRepository<ProjectModel>(_mongoCollection), new TestLogger());
+        _adapter = new ProjectPersistenceAdapter(new MongoRepository<ProjectModel>(_mongoCollection),
+            new XunitLogger(outputHelper));
     }
 
     [Fact]

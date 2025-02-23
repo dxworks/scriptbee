@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Gateway.Persistence.Mongodb\Gateway.Persistence.Mongodb.csproj" />
+      <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
     </ItemGroup>
 
 </Project>
