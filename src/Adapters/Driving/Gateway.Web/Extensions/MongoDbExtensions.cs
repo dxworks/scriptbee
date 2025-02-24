@@ -3,6 +3,7 @@ using ScriptBee.Gateway.Persistence.Mongodb;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Exceptions;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
+using ScriptBee.Ports.Driven.Calculation;
 using ScriptBee.Ports.Driven.Project;
 
 namespace ScriptBee.Gateway.Web.Extensions;
@@ -26,10 +27,12 @@ public static class MongoDbExtensions
 
     private static IServiceCollection AddAdapters(this IServiceCollection services, IMongoDatabase mongoDatabase)
     {
-        return AddProjectAdapters(services, mongoDatabase);
+        return services
+            .AddProjectAdapters(mongoDatabase)
+            .AddProjectInstancesAdapters(mongoDatabase);
     }
 
-    private static IServiceCollection AddProjectAdapters(IServiceCollection services, IMongoDatabase mongoDatabase)
+    private static IServiceCollection AddProjectAdapters(this IServiceCollection services, IMongoDatabase mongoDatabase)
     {
         return services
             .AddSingleton<IMongoCollection<ProjectModel>>(
@@ -39,5 +42,15 @@ public static class MongoDbExtensions
             .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
             .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
             .AddSingleton<IGetProject, ProjectPersistenceAdapter>();
+    }
+
+    private static IServiceCollection AddProjectInstancesAdapters(this IServiceCollection services,
+        IMongoDatabase mongoDatabase)
+    {
+        return services
+            .AddSingleton<IMongoCollection<ProjectInstance>>(
+                _ => mongoDatabase.GetCollection<ProjectInstance>("Instances"))
+            .AddSingleton<IMongoRepository<ProjectInstance>, MongoRepository<ProjectInstance>>()
+            .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>();
     }
 }
