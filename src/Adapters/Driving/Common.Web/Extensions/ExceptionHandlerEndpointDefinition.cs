@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using ILogger = Serilog.ILogger;
+using Microsoft.Extensions.Logging;
 
 namespace ScriptBee.Common.Web.Extensions;
 
@@ -46,12 +46,12 @@ public static class ExceptionHandlerEndpointDefinition
 
         if (exception?.InnerException is not null)
         {
-            logger.Error(exception.InnerException, "Exception occurred because of {ExceptionMessage}",
+            logger.LogError(exception.InnerException, "Exception occurred because of {ExceptionMessage}",
                 exception.Message);
         }
         else
         {
-            logger.Error(exception, "Exception occurred");
+            logger.LogError(exception, "Exception occurred");
         }
 
         return exception;

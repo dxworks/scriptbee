@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using ILogger = Serilog.ILogger;
 
 namespace ScriptBee.Common.Web.Extensions;
 
