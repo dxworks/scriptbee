@@ -24,7 +24,7 @@ public class XunitLogger(ITestOutputHelper outputHelper) : ILogger
         }
 
         var message = formatter(state, exception);
-        var logString = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{logLevel}] {message}";
+        var logString = $"{DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss} [{logLevel}] {message}";
 
         if (exception != null)
         {

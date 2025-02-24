@@ -47,7 +47,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     public async Task ShouldReturnCreated()
     {
         var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
-        var creationDate = DateTime.Parse("2024-02-08");
+        var creationDate = DateTimeOffset.Parse("2024-02-08");
         createProjectUseCase.CreateProject(new CreateProjectCommand("id", "project name"), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
                 new ProjectDetails(ProjectId.Create("id"), "name", creationDate)));

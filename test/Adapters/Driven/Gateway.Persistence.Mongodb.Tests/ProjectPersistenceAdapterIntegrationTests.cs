@@ -23,7 +23,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task CreateNewProject()
     {
-        var project = new ProjectDetails(ProjectId.Create("id"), "name", DateTime.UtcNow);
+        var project = new ProjectDetails(ProjectId.Create("id"), "name", DateTimeOffset.UtcNow);
 
         var result = await _adapter.Create(project, CancellationToken.None);
 
@@ -31,14 +31,14 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var savedProject = await _mongoCollection.Find(p => p.Id == "id").FirstOrDefaultAsync();
         savedProject.Id.ShouldBe("id");
         savedProject.Name.ShouldBe("name");
-        savedProject.CreationDate.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+        savedProject.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
     }
 
     [Fact]
     public async Task GivenIdAlreadyExists_CreateProject_ExpectProjectAlreadyExistsError()
     {
         var projectId = ProjectId.Create("existing-id");
-        var project = new ProjectDetails(projectId, "name", DateTime.UtcNow);
+        var project = new ProjectDetails(projectId, "name", DateTimeOffset.UtcNow);
         await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "existing-id", Name = "existing" });
 
         var result = await _adapter.Create(project, CancellationToken.None);
@@ -69,7 +69,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task GetAllProjects()
     {
-        var creationDate = DateTime.UtcNow;
+        var creationDate = DateTimeOffset.UtcNow;
         await _mongoCollection.InsertOneAsync(new ProjectModel
             { Id = "all-projects-id", Name = "all-projects-id", CreationDate = creationDate });
 
@@ -79,13 +79,13 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var projectDetails = projectDetailsList.First(x => x.Id == projectId);
         projectDetails.Id.ShouldBe(ProjectId.FromValue("all-projects-id"));
         projectDetails.Name.ShouldBe("all-projects-id");
-        projectDetails.CreationDate.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        projectDetails.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
     }
 
     [Fact]
     public async Task GetProjectById()
     {
-        var creationDate = DateTime.UtcNow;
+        var creationDate = DateTimeOffset.UtcNow;
         await _mongoCollection.InsertOneAsync(new ProjectModel
             { Id = "get-project-by-id", Name = "get-project-by-id", CreationDate = creationDate });
 
@@ -93,7 +93,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
 
         result.AsT0.Id.ShouldBe(ProjectId.FromValue("get-project-by-id"));
         result.AsT0.Name.ShouldBe("get-project-by-id");
-        result.AsT0.CreationDate.ShouldBe(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
     }
 
     [Fact]

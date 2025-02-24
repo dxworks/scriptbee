@@ -11,6 +11,6 @@ public class DateTimeProviderTest
     {
         var dateTime = _dateTimeProvider.UtcNow();
 
-        dateTime.ShouldBe(DateTime.UtcNow, TimeSpan.FromMilliseconds(100));
+        dateTime.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(100));
     }
 }

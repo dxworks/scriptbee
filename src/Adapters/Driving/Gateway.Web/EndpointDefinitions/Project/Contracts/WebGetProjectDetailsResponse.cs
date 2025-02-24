@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 
-public record WebGetProjectDetailsResponse(string Id, string Name, DateTime CreationDate)
+public record WebGetProjectDetailsResponse(string Id, string Name, DateTimeOffset CreationDate)
 {
     public static WebGetProjectDetailsResponse Map(ProjectDetails projectDetails)
     {

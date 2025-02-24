@@ -23,7 +23,7 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
         var projectId = ProjectId.FromValue("id");
         var query = new GetProjectQuery(projectId);
         var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
-        var creationDate = DateTime.Parse("2024-02-08");
+        var creationDate = DateTimeOffset.Parse("2024-02-08");
         getProjectsUseCase.GetProject(query, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
                 new ProjectDetails(projectId, "name", creationDate)));

@@ -24,7 +24,7 @@ public class CreateProjectServiceTests
     [Fact]
     public async Task CreateProjectSuccessfully()
     {
-        var creationDate = DateTime.Parse("2024-02-08");
+        var creationDate = DateTimeOffset.Parse("2024-02-08");
         var expectedProjectDetails = new ProjectDetails(ProjectId.Create("id"), "name", creationDate);
         _createProject.Create(expectedProjectDetails)
             .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(new Unit()));
@@ -40,7 +40,7 @@ public class CreateProjectServiceTests
     public async Task CreateProject_ShouldReturnProjectIdAlreadyInUse()
     {
         var projectId = ProjectId.Create("id");
-        var creationDate = DateTime.Parse("2024-02-08");
+        var creationDate = DateTimeOffset.Parse("2024-02-08");
         var expectedProjectDetails = new ProjectDetails(projectId, "name", creationDate);
         var error = new ProjectIdAlreadyInUseError(projectId);
         _createProject.Create(expectedProjectDetails)
