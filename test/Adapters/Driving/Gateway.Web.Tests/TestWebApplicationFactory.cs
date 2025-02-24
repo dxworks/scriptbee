@@ -38,6 +38,11 @@ public class TestWebApplicationFactory<TStartup>(
             logging.Services.AddSingleton<ILoggerFactory, LoggerFactory>();
             logging.AddProvider(new XUnitLoggerProvider(output));
         });
+
+        builder.ConfigureServices(services =>
+        {
+            services.AddSingleton(provider => provider.GetRequiredService<ILoggerFactory>().CreateLogger("Test"));
+        });
     }
 
     private static void ConfigureConfigurations(IWebHostBuilder builder)

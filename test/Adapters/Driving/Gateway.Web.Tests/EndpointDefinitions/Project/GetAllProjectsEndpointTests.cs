@@ -32,8 +32,7 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getProjectListResponse = await response.ReadContentAsync<WebGetProjectListResponse>();
-        getProjectListResponse.ShouldBeEquivalentTo(
-            new WebGetProjectListResponse([new WebGetProjectDetailsResponse("id", "name", creationDate)])
-        );
+        getProjectListResponse.Projects.ShouldBeEquivalentTo(new List<WebGetProjectDetailsResponse>
+            { new("id", "name", creationDate) });
     }
 }
