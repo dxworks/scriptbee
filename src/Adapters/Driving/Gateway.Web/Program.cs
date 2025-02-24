@@ -14,12 +14,13 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
+
 // var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 
-// TODO: move service registration in Endpoint Definitions 
+// TODO: move service registration in Endpoint Definitions
 
-builder.Services
-    .AddConfiguredHealthChecks()
+builder
+    .Services.AddConfiguredHealthChecks()
     .AddSerilog()
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
@@ -32,9 +33,15 @@ builder.Services
     // .AddControllerServices(userFolderConfigurationSection)
     .AddSignalR();
 
-builder.Services.AddEndpointDefinitions(typeof(IEndpointDefinition), typeof(IEndpointDefinitionMarker));
+builder.Services.AddEndpointDefinitions(
+    typeof(IEndpointDefinition),
+    typeof(IEndpointDefinitionMarker)
+);
 
-builder.Services.Configure<KestrelServerOptions>(options => { options.Limits.MaxRequestBodySize = null; });
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = null;
+});
 
 builder.Host.UseSerilog();
 

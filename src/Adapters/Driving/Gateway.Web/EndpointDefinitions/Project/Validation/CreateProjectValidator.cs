@@ -7,9 +7,7 @@ public class CreateProjectValidator : AbstractValidator<WebCreateProjectCommand>
 {
     public CreateProjectValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty();
-        RuleFor(x => x.Name)
-            .NotEmpty();
+        RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty();
     }
 }

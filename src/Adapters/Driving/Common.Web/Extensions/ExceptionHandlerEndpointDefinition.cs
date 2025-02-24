@@ -19,15 +19,19 @@ public static class ExceptionHandlerEndpointDefinition
     {
         var exception = GetException(context, logger);
 
-        return exception is BadHttpRequestException ? HandleEmptyRequestBody(context) : HandleGenericError(context);
+        return exception is BadHttpRequestException
+            ? HandleEmptyRequestBody(context)
+            : HandleGenericError(context);
     }
 
     private static IResult HandleGenericError(HttpContext context)
     {
-        return Results.InternalServerError(context.ToProblemDetails(
-            "An unexpected error occurred.",
-            "Please contact support or try again later."
-        ));
+        return Results.InternalServerError(
+            context.ToProblemDetails(
+                "An unexpected error occurred.",
+                "Please contact support or try again later."
+            )
+        );
     }
 
     private static BadRequest<ProblemDetails> HandleEmptyRequestBody(HttpContext context)
@@ -36,7 +40,8 @@ public static class ExceptionHandlerEndpointDefinition
             context.ToProblemDetails(
                 "Request body is required.",
                 "The request body was missing or empty."
-            ));
+            )
+        );
     }
 
     private static Exception? GetException(HttpContext context, ILogger logger)
@@ -46,8 +51,11 @@ public static class ExceptionHandlerEndpointDefinition
 
         if (exception?.InnerException is not null)
         {
-            logger.LogError(exception.InnerException, "Exception occurred because of {ExceptionMessage}",
-                exception.Message);
+            logger.LogError(
+                exception.InnerException,
+                "Exception occurred because of {ExceptionMessage}",
+                exception.Message
+            );
         }
         else
         {

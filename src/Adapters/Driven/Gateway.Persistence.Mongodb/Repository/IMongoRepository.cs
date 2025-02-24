@@ -2,7 +2,8 @@
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
 
-public interface IMongoRepository<T> where T : IDocument
+public interface IMongoRepository<T>
+    where T : IDocument
 {
     public Task CreateDocument(T model, CancellationToken cancellationToken);
 
@@ -11,8 +12,10 @@ public interface IMongoRepository<T> where T : IDocument
 
     public Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken);
 
-    public Task<IEnumerable<T>> GetAllDocuments(Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken);
+    public Task<IEnumerable<T>> GetAllDocuments(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    );
 
     public Task UpdateDocument(T model, CancellationToken cancellationToken);
 

@@ -22,15 +22,22 @@ public class GetProjectsServiceTests
     [Fact]
     public async Task GetAllProjects()
     {
-        var expectedProjectDetails =
-            new ProjectDetails(ProjectId.Create("id"), "name", DateTimeOffset.Parse("2024-02-08"));
-        IEnumerable<ProjectDetails> projectDetails = new List<ProjectDetails> { expectedProjectDetails };
-        _getAllProjects.GetAll()
-            .Returns(Task.FromResult(projectDetails));
+        var expectedProjectDetails = new ProjectDetails(
+            ProjectId.Create("id"),
+            "name",
+            DateTimeOffset.Parse("2024-02-08")
+        );
+        IEnumerable<ProjectDetails> projectDetails = new List<ProjectDetails>
+        {
+            expectedProjectDetails,
+        };
+        _getAllProjects.GetAll().Returns(Task.FromResult(projectDetails));
 
         var projectDetailsList = await _getProjectsService.GetAllProjects();
 
-        projectDetailsList.ShouldBeEquivalentTo(new List<ProjectDetails> { expectedProjectDetails });
+        projectDetailsList.ShouldBeEquivalentTo(
+            new List<ProjectDetails> { expectedProjectDetails }
+        );
     }
 
     [Fact]
@@ -38,9 +45,18 @@ public class GetProjectsServiceTests
     {
         var projectId = ProjectId.Create("id");
         var query = new GetProjectQuery(projectId);
-        var expectedProjectDetails = new ProjectDetails(projectId, "name", DateTimeOffset.Parse("2024-02-08"));
-        _getProject.GetById(projectId)
-            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(expectedProjectDetails));
+        var expectedProjectDetails = new ProjectDetails(
+            projectId,
+            "name",
+            DateTimeOffset.Parse("2024-02-08")
+        );
+        _getProject
+            .GetById(projectId)
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    expectedProjectDetails
+                )
+            );
 
         var projectDetails = await _getProjectsService.GetProject(query);
 
@@ -53,8 +69,11 @@ public class GetProjectsServiceTests
         var projectId = ProjectId.Create("id");
         var query = new GetProjectQuery(projectId);
         var expectedError = new ProjectDoesNotExistsError(projectId);
-        _getProject.GetById(projectId)
-            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(expectedError));
+        _getProject
+            .GetById(projectId)
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(expectedError)
+            );
 
         var error = await _getProjectsService.GetProject(query);
 

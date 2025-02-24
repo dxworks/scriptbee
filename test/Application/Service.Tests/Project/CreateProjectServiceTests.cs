@@ -25,12 +25,19 @@ public class CreateProjectServiceTests
     public async Task CreateProjectSuccessfully()
     {
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        var expectedProjectDetails = new ProjectDetails(ProjectId.Create("id"), "name", creationDate);
-        _createProject.Create(expectedProjectDetails)
+        var expectedProjectDetails = new ProjectDetails(
+            ProjectId.Create("id"),
+            "name",
+            creationDate
+        );
+        _createProject
+            .Create(expectedProjectDetails)
             .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(new Unit()));
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
-        var projectDetails = await _createProjectService.CreateProject(new CreateProjectCommand("id", "name"));
+        var projectDetails = await _createProjectService.CreateProject(
+            new CreateProjectCommand("id", "name")
+        );
 
         projectDetails.ShouldBe(expectedProjectDetails);
         await _createProject.Received(1).Create(expectedProjectDetails);
@@ -43,12 +50,14 @@ public class CreateProjectServiceTests
         var creationDate = DateTimeOffset.Parse("2024-02-08");
         var expectedProjectDetails = new ProjectDetails(projectId, "name", creationDate);
         var error = new ProjectIdAlreadyInUseError(projectId);
-        _createProject.Create(expectedProjectDetails)
-            .Returns(
-                Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(error));
+        _createProject
+            .Create(expectedProjectDetails)
+            .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(error));
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
-        var projectDetails = await _createProjectService.CreateProject(new CreateProjectCommand("id", "name"));
+        var projectDetails = await _createProjectService.CreateProject(
+            new CreateProjectCommand("id", "name")
+        );
 
         projectDetails.ShouldBe(error);
         await _createProject.Received(1).Create(expectedProjectDetails);

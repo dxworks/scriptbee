@@ -17,12 +17,10 @@ public class GetLoadersEndpoint : IEndpointDefinition
     }
 
     private static async Task<Ok<List<WebLoader>>> GetAllLoaders(
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         await Task.CompletedTask;
-        return TypedResults.Ok(new List<WebLoader>
-        {
-            new("test-loader-1", "Test Loader"),
-        });
+        return TypedResults.Ok(new List<WebLoader> { new("test-loader-1", "Test Loader") });
     }
 }

@@ -15,54 +15,66 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
     public ProjectInstancesPersistenceAdapterTest(MongoDbFixture fixture)
     {
         _mongoCollection = fixture.GetCollection<ProjectInstance>("Instances");
-        _adapter = new ProjectInstancesPersistenceAdapter(new MongoRepository<ProjectInstance>(_mongoCollection));
+        _adapter = new ProjectInstancesPersistenceAdapter(
+            new MongoRepository<ProjectInstance>(_mongoCollection)
+        );
     }
 
     [Fact]
     public async Task GetAllForProjectId()
     {
         var creationDate = DateTimeOffset.UtcNow;
-        await _mongoCollection.InsertOneAsync(new ProjectInstance
-        {
-            Id = "all-instance-id-1",
-            ProjectId = "all-project-id-1",
-            Url = "http://test:80",
-            CreationDate = creationDate
-        });
-        await _mongoCollection.InsertOneAsync(new ProjectInstance
-        {
-            Id = "all-instance-id-2",
-            ProjectId = "all-project-id-2",
-            Url = "http://test:80",
-            CreationDate = creationDate
-        });
-        await _mongoCollection.InsertOneAsync(new ProjectInstance
-        {
-            Id = "all-instance-id-3",
-            ProjectId = "all-project-id-1",
-            Url = "http://test:80",
-            CreationDate = creationDate
-        });
-
-
-        var instanceInfos =
-            await _adapter.GetAll(ProjectId.FromValue("all-project-id-1"), CancellationToken.None);
-
-        instanceInfos.ToList().ShouldBeEquivalentTo(
-            new List<CalculationInstanceInfo>
+        await _mongoCollection.InsertOneAsync(
+            new ProjectInstance
             {
-                new(
-                    CalculationInstanceId.FromValue("all-instance-id-1"),
-                    ProjectId.FromValue("all-project-id-1"),
-                    "http://test:80",
-                    creationDate
-                ),
-                new(
-                    CalculationInstanceId.FromValue("all-instance-id-3"),
-                    ProjectId.FromValue("all-project-id-1"),
-                    "http://test:80",
-                    creationDate)
+                Id = "all-instance-id-1",
+                ProjectId = "all-project-id-1",
+                Url = "http://test:80",
+                CreationDate = creationDate,
             }
         );
+        await _mongoCollection.InsertOneAsync(
+            new ProjectInstance
+            {
+                Id = "all-instance-id-2",
+                ProjectId = "all-project-id-2",
+                Url = "http://test:80",
+                CreationDate = creationDate,
+            }
+        );
+        await _mongoCollection.InsertOneAsync(
+            new ProjectInstance
+            {
+                Id = "all-instance-id-3",
+                ProjectId = "all-project-id-1",
+                Url = "http://test:80",
+                CreationDate = creationDate,
+            }
+        );
+
+        var instanceInfos = await _adapter.GetAll(
+            ProjectId.FromValue("all-project-id-1"),
+            CancellationToken.None
+        );
+
+        instanceInfos
+            .ToList()
+            .ShouldBeEquivalentTo(
+                new List<CalculationInstanceInfo>
+                {
+                    new(
+                        CalculationInstanceId.FromValue("all-instance-id-1"),
+                        ProjectId.FromValue("all-project-id-1"),
+                        "http://test:80",
+                        creationDate
+                    ),
+                    new(
+                        CalculationInstanceId.FromValue("all-instance-id-3"),
+                        ProjectId.FromValue("all-project-id-1"),
+                        "http://test:80",
+                        creationDate
+                    ),
+                }
+            );
     }
 }

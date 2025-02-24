@@ -5,6 +5,8 @@ namespace ScriptBee.Ports.Driven.Calculation;
 
 public interface IGetAllProjectInstances
 {
-    Task<IEnumerable<CalculationInstanceInfo>> GetAll(ProjectId projectId,
-        CancellationToken cancellationToken = default);
+    Task<IEnumerable<CalculationInstanceInfo>> GetAll(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default
+    );
 }

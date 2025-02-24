@@ -5,7 +5,8 @@ namespace ScriptBee.Tests.Common;
 
 public class XunitLogger(ITestOutputHelper outputHelper) : ILogger
 {
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    public IDisposable? BeginScope<TState>(TState state)
+        where TState : notnull
     {
         return new NoopDisposable();
     }
@@ -15,8 +16,13 @@ public class XunitLogger(ITestOutputHelper outputHelper) : ILogger
         return true;
     }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
-        Func<TState, Exception?, string> formatter)
+    public void Log<TState>(
+        LogLevel logLevel,
+        EventId eventId,
+        TState state,
+        Exception? exception,
+        Func<TState, Exception?, string> formatter
+    )
     {
         if (!IsEnabled(logLevel))
         {
@@ -36,8 +42,6 @@ public class XunitLogger(ITestOutputHelper outputHelper) : ILogger
 
     private class NoopDisposable : IDisposable
     {
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

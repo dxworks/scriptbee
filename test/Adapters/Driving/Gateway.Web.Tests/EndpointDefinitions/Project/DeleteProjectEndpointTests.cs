@@ -20,12 +20,21 @@ public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
     {
         var deleteProjectUseCase = Substitute.For<IDeleteProjectUseCase>();
         deleteProjectUseCase
-            .DeleteProject(new DeleteProjectCommand(ProjectId.FromValue("id")), Arg.Any<CancellationToken>())
+            .DeleteProject(
+                new DeleteProjectCommand(ProjectId.FromValue("id")),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.FromResult<OneOf<Unit>>(new Unit()));
 
-        var response =
-            await _api.DeleteApi(new TestWebApplicationFactory<Program>(outputHelper,
-                services => { services.AddSingleton(deleteProjectUseCase); }));
+        var response = await _api.DeleteApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(deleteProjectUseCase);
+                }
+            )
+        );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
     }

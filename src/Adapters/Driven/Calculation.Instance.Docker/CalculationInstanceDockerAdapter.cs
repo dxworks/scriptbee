@@ -7,34 +7,49 @@ using ScriptBee.Ports.Driven.Calculation;
 
 namespace ScriptBee.Calculation.Instance.Docker;
 
-public class CalculationInstanceDockerAdapter(IOptions<CalculationDockerConfig> config, ILogger logger)
-    : IAllocateInstance, IDeallocateInstance
+public class CalculationInstanceDockerAdapter(
+    IOptions<CalculationDockerConfig> config,
+    ILogger logger
+) : IAllocateInstance, IDeallocateInstance
 {
-    public async Task<string> Allocate(string imageName, CancellationToken cancellationToken = default)
+    public async Task<string> Allocate(
+        string imageName,
+        CancellationToken cancellationToken = default
+    )
     {
         var calculationDockerConfig = config.Value;
-        using var client = new DockerClientConfiguration(new Uri(calculationDockerConfig.DockerSocket))
-            .CreateClient();
+        using var client = new DockerClientConfiguration(
+            new Uri(calculationDockerConfig.DockerSocket)
+        ).CreateClient();
 
         await PullImageIfNeeded(client, imageName, cancellationToken);
 
-        var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters
-        {
-            Name = "scriptbee-calculation",
-            Image = imageName,
-            HostConfig = new HostConfig
+        var response = await client.Containers.CreateContainerAsync(
+            new CreateContainerParameters
             {
-                NetworkMode = calculationDockerConfig.Network
-            }
-        }, cancellationToken);
+                Name = "scriptbee-calculation",
+                Image = imageName,
+                HostConfig = new HostConfig { NetworkMode = calculationDockerConfig.Network },
+            },
+            cancellationToken
+        );
 
         logger.LogInformation("Container Created: {ID}", response.ID);
 
-        await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters(), cancellationToken);
+        await client.Containers.StartContainerAsync(
+            response.ID,
+            new ContainerStartParameters(),
+            cancellationToken
+        );
         logger.LogInformation("Container started successfully");
 
-        return await GetContainerUrl(client, response.ID, calculationDockerConfig.Network,
-            calculationDockerConfig.Port, cancellationToken);
+        return await GetContainerUrl(
+            client,
+            response.ID,
+            calculationDockerConfig.Network,
+            calculationDockerConfig.Port,
+            cancellationToken
+        );
     }
 
     public Task Deallocate(CalculationInstanceInfo calculationInstanceInfo)
@@ -42,31 +57,47 @@ public class CalculationInstanceDockerAdapter(IOptions<CalculationDockerConfig> 
         throw new NotImplementedException();
     }
 
-    private static async Task<string> GetContainerUrl(DockerClient client, string containerId, string networkName,
+    private static async Task<string> GetContainerUrl(
+        DockerClient client,
+        string containerId,
+        string networkName,
         int port,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
-        var containerInfo = await client.Containers.InspectContainerAsync(containerId, cancellationToken);
+        var containerInfo = await client.Containers.InspectContainerAsync(
+            containerId,
+            cancellationToken
+        );
 
         return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
             ? $"http://{network.IPAddress}:{port}"
             : $"http://localhost:{port}";
     }
 
-    private async Task PullImageIfNeeded(DockerClient client, string imageName,
-        CancellationToken cancellationToken = default)
+    private async Task PullImageIfNeeded(
+        DockerClient client,
+        string imageName,
+        CancellationToken cancellationToken = default
+    )
     {
         var parts = imageName.Split(":");
         var image = parts[0];
         var tag = parts[1];
 
-        var images = await client.Images.ListImagesAsync(new ImagesListParameters
-        {
-            Filters = new Dictionary<string, IDictionary<string, bool>>
+        var images = await client.Images.ListImagesAsync(
+            new ImagesListParameters
             {
-                { "reference", new Dictionary<string, bool> { { $"{image}:{tag}", true } } }
-            }
-        }, cancellationToken);
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "reference",
+                        new Dictionary<string, bool> { { $"{image}:{tag}", true } }
+                    },
+                },
+            },
+            cancellationToken
+        );
 
         if (images.Count == 0)
         {
@@ -74,8 +105,11 @@ public class CalculationInstanceDockerAdapter(IOptions<CalculationDockerConfig> 
             await client.Images.CreateImageAsync(
                 new ImagesCreateParameters { FromImage = image, Tag = tag },
                 new AuthConfig(),
-                new Progress<JSONMessage>(msg => logger.LogInformation("Pulling image status {Status}", msg.Status)),
-                cancellationToken);
+                new Progress<JSONMessage>(msg =>
+                    logger.LogInformation("Pulling image status {Status}", msg.Status)
+                ),
+                cancellationToken
+            );
         }
         else
         {

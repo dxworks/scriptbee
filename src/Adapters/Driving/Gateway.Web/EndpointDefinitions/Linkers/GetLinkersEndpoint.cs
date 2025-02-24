@@ -17,12 +17,10 @@ public class GetLinkersEndpoint : IEndpointDefinition
     }
 
     private static async Task<Ok<List<WebLinker>>> GetAllLinkers(
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         await Task.CompletedTask;
-        return TypedResults.Ok(new List<WebLinker>
-        {
-            new("test-linker-1", "Test Linker"),
-        });
+        return TypedResults.Ok(new List<WebLinker> { new("test-linker-1", "Test Linker") });
     }
 }

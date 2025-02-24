@@ -24,12 +24,23 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
         var query = new GetProjectQuery(projectId);
         var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        getProjectsUseCase.GetProject(query, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                new ProjectDetails(projectId, "name", creationDate)));
+        getProjectsUseCase
+            .GetProject(query, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    new ProjectDetails(projectId, "name", creationDate)
+                )
+            );
 
-        var response = await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper,
-            services => { services.AddSingleton(getProjectsUseCase); }));
+        var response = await _api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(getProjectsUseCase);
+                }
+            )
+        );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getResponse = await response.ReadContentAsync<WebGetProjectDetailsResponse>();
@@ -42,15 +53,28 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
         var projectId = ProjectId.FromValue("id");
         var query = new GetProjectQuery(projectId);
         var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
-        getProjectsUseCase.GetProject(query, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                new ProjectDoesNotExistsError(projectId)));
+        getProjectsUseCase
+            .GetProject(query, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    new ProjectDoesNotExistsError(projectId)
+                )
+            );
 
-        var response = await _api.GetApi(new TestWebApplicationFactory<Program>(outputHelper,
-            services => { services.AddSingleton(getProjectsUseCase); }));
+        var response = await _api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(getProjectsUseCase);
+                }
+            )
+        );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(response.Content, TestUrl,
+        await AssertNotFoundProblem(
+            response.Content,
+            TestUrl,
             "Project Not Found",
             "A project with the ID 'id' does not exists."
         );

@@ -6,6 +6,8 @@ public record WebGetProjectListResponse(IEnumerable<WebGetProjectDetailsResponse
 {
     public static WebGetProjectListResponse Map(IEnumerable<ProjectDetails> projectDetails)
     {
-        return new WebGetProjectListResponse(projectDetails.Select(WebGetProjectDetailsResponse.Map));
+        return new WebGetProjectListResponse(
+            projectDetails.Select(WebGetProjectDetailsResponse.Map)
+        );
     }
 }

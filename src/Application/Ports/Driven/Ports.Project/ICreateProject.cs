@@ -6,6 +6,8 @@ namespace ScriptBee.Ports.Driven.Project;
 
 public interface ICreateProject
 {
-    Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default);
+    Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(
+        ProjectDetails projectDetails,
+        CancellationToken cancellationToken = default
+    );
 }

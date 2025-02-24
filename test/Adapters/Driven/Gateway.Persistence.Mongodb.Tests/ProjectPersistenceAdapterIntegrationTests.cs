@@ -13,11 +13,16 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     private readonly ProjectPersistenceAdapter _adapter;
     private readonly IMongoCollection<ProjectModel> _mongoCollection;
 
-    public ProjectPersistenceAdapterIntegrationTests(MongoDbFixture fixture, ITestOutputHelper outputHelper)
+    public ProjectPersistenceAdapterIntegrationTests(
+        MongoDbFixture fixture,
+        ITestOutputHelper outputHelper
+    )
     {
         _mongoCollection = fixture.GetCollection<ProjectModel>("Projects");
-        _adapter = new ProjectPersistenceAdapter(new MongoRepository<ProjectModel>(_mongoCollection),
-            new XunitLogger(outputHelper));
+        _adapter = new ProjectPersistenceAdapter(
+            new MongoRepository<ProjectModel>(_mongoCollection),
+            new XunitLogger(outputHelper)
+        );
     }
 
     [Fact]
@@ -39,7 +44,9 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var projectId = ProjectId.Create("existing-id");
         var project = new ProjectDetails(projectId, "name", DateTimeOffset.UtcNow);
-        await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "existing-id", Name = "existing" });
+        await _mongoCollection.InsertOneAsync(
+            new ProjectModel { Id = "existing-id", Name = "existing" }
+        );
 
         var result = await _adapter.Create(project, CancellationToken.None);
 
@@ -50,7 +57,9 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     public async Task DeleteProject()
     {
         var projectId = ProjectId.FromValue("to-delete");
-        await _mongoCollection.InsertOneAsync(new ProjectModel { Id = "to-delete", Name = "to-delete" });
+        await _mongoCollection.InsertOneAsync(
+            new ProjectModel { Id = "to-delete", Name = "to-delete" }
+        );
 
         await _adapter.Delete(projectId, CancellationToken.None);
 
@@ -63,15 +72,23 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var projectId = ProjectId.Create("to-delete-not-existing-id");
 
-        await Should.NotThrowAsync(async () => await _adapter.Delete(projectId, CancellationToken.None));
+        await Should.NotThrowAsync(
+            async () => await _adapter.Delete(projectId, CancellationToken.None)
+        );
     }
 
     [Fact]
     public async Task GetAllProjects()
     {
         var creationDate = DateTimeOffset.UtcNow;
-        await _mongoCollection.InsertOneAsync(new ProjectModel
-            { Id = "all-projects-id", Name = "all-projects-id", CreationDate = creationDate });
+        await _mongoCollection.InsertOneAsync(
+            new ProjectModel
+            {
+                Id = "all-projects-id",
+                Name = "all-projects-id",
+                CreationDate = creationDate,
+            }
+        );
 
         var projectDetailsList = await _adapter.GetAll(CancellationToken.None);
 
@@ -86,10 +103,19 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     public async Task GetProjectById()
     {
         var creationDate = DateTimeOffset.UtcNow;
-        await _mongoCollection.InsertOneAsync(new ProjectModel
-            { Id = "get-project-by-id", Name = "get-project-by-id", CreationDate = creationDate });
+        await _mongoCollection.InsertOneAsync(
+            new ProjectModel
+            {
+                Id = "get-project-by-id",
+                Name = "get-project-by-id",
+                CreationDate = creationDate,
+            }
+        );
 
-        var result = await _adapter.GetById(ProjectId.Create("get-project-by-id"), CancellationToken.None);
+        var result = await _adapter.GetById(
+            ProjectId.Create("get-project-by-id"),
+            CancellationToken.None
+        );
 
         result.AsT0.Id.ShouldBe(ProjectId.FromValue("get-project-by-id"));
         result.AsT0.Name.ShouldBe("get-project-by-id");
@@ -99,7 +125,10 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task GivenNoProject_GetProjectById_ShouldReturnProjectDoesNotExistsError()
     {
-        var result = await _adapter.GetById(ProjectId.Create("get-project-by-not-existing-id"), CancellationToken.None);
+        var result = await _adapter.GetById(
+            ProjectId.Create("get-project-by-not-existing-id"),
+            CancellationToken.None
+        );
 
         result.ShouldBe(
             new ProjectDoesNotExistsError(ProjectId.FromValue("get-project-by-not-existing-id"))

@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,22 +9,26 @@ public static class ProblemDetailsExtensions
 {
     public static IServiceCollection AddProblemDetailsDefaults(this IServiceCollection services)
     {
-        return services
-            .AddProblemDetails(options =>
+        return services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = context =>
             {
-                options.CustomizeProblemDetails = context =>
-                {
-                    var (instance, requestId, traceId) = GetAdditionalProblemDetails(context.HttpContext);
+                var (instance, requestId, traceId) = GetAdditionalProblemDetails(
+                    context.HttpContext
+                );
 
-                    context.ProblemDetails.Instance = instance;
-                    context.ProblemDetails.Extensions.TryAdd("requestId", requestId);
-                    context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
-                };
-            });
+                context.ProblemDetails.Instance = instance;
+                context.ProblemDetails.Extensions.TryAdd("requestId", requestId);
+                context.ProblemDetails.Extensions.TryAdd("traceId", traceId);
+            };
+        });
     }
 
-    public static (string instance, string? requestId, ActivityTraceId? traceId) GetAdditionalProblemDetails(
-        HttpContext context)
+    public static (
+        string instance,
+        string? requestId,
+        ActivityTraceId? traceId
+    ) GetAdditionalProblemDetails(HttpContext context)
     {
         var activity = context.Features.Get<IHttpActivityFeature>()?.Activity;
 
@@ -37,7 +39,11 @@ public static class ProblemDetailsExtensions
         return (instance, requestId, traceId);
     }
 
-    public static ProblemDetails ToProblemDetails(this HttpContext context, string title, string detail)
+    public static ProblemDetails ToProblemDetails(
+        this HttpContext context,
+        string title,
+        string detail
+    )
     {
         var (instance, requestId, traceId) = GetAdditionalProblemDetails(context);
         return new ProblemDetails
@@ -45,11 +51,7 @@ public static class ProblemDetailsExtensions
             Title = title,
             Detail = detail,
             Instance = GetOriginalEndpoint(context) ?? instance,
-            Extensions =
-            {
-                { "requestId", requestId },
-                { "traceId", traceId }
-            }
+            Extensions = { { "requestId", requestId }, { "traceId", traceId } },
         };
     }
 

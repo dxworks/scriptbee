@@ -5,6 +5,8 @@ namespace ScriptBee.Ports.Driving.UseCases.Calculation;
 
 public interface IGetProjectInstancesUseCase
 {
-    Task<IEnumerable<CalculationInstanceInfo>> GetAllInstances(ProjectId projectId,
-        CancellationToken cancellationToken = default);
+    Task<IEnumerable<CalculationInstanceInfo>> GetAllInstances(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default
+    );
 }

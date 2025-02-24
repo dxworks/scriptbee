@@ -7,7 +7,6 @@ public static class CommonServicesExtensions
 {
     public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
-        return services
-            .AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        return services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
     }
 }

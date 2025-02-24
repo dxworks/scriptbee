@@ -23,7 +23,8 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
     private static async Task<Ok<WebGetProjectInstancesListResponse>> GetAllInstances(
         [FromRoute] string projectId,
         IGetProjectInstancesUseCase useCase,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var id = ProjectId.FromValue(projectId);
         var calculationInstanceInfos = await useCase.GetAllInstances(id, cancellationToken);

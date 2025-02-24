@@ -9,15 +9,22 @@ using ScriptBee.Ports.Driven.Project;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb;
 
-public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepository, ILogger logger)
-    : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject
+public class ProjectPersistenceAdapter(
+    IMongoRepository<ProjectModel> mongoRepository,
+    ILogger logger
+) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject
 {
-    public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default)
+    public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(
+        ProjectDetails projectDetails,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            await mongoRepository.CreateDocument(ProjectModel.From(projectDetails), cancellationToken);
+            await mongoRepository.CreateDocument(
+                ProjectModel.From(projectDetails),
+                cancellationToken
+            );
         }
         catch (MongoWriteException e)
         {
@@ -33,14 +40,18 @@ public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepos
         await mongoRepository.DeleteDocument(projectId.Value, cancellationToken);
     }
 
-    public async Task<IEnumerable<ProjectDetails>> GetAll(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ProjectDetails>> GetAll(
+        CancellationToken cancellationToken = default
+    )
     {
         var projectModels = await mongoRepository.GetAllDocuments(cancellationToken);
         return projectModels.Select(model => model.ToProjectDetails());
     }
 
-    public async Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> GetById(ProjectId projectId,
-        CancellationToken cancellationToken = default)
+    public async Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> GetById(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default
+    )
     {
         var projectModel = await mongoRepository.GetDocument(projectId.Value, cancellationToken);
 

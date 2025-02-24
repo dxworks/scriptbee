@@ -13,7 +13,9 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
 
     public async Task<T?> GetDocument(string id, CancellationToken cancellationToken)
     {
-        var result = await mongoCollection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+        var result = await mongoCollection
+            .Find(x => x.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
         return result;
     }
 
@@ -28,16 +30,22 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllDocuments(Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken)
+    public async Task<IEnumerable<T>> GetAllDocuments(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    )
     {
         return await mongoCollection.Find(predicate).ToListAsync(cancellationToken);
     }
 
     public async Task UpdateDocument(T model, CancellationToken cancellationToken)
     {
-        await mongoCollection.ReplaceOneAsync(x => x.Id == model.Id, model, new ReplaceOptions { IsUpsert = true },
-            cancellationToken);
+        await mongoCollection.ReplaceOneAsync(
+            x => x.Id == model.Id,
+            model,
+            new ReplaceOptions { IsUpsert = true },
+            cancellationToken
+        );
     }
 
     public async Task DeleteDocument(string id, CancellationToken cancellationToken)

@@ -9,11 +9,15 @@ namespace ScriptBee.Gateway.Persistence.Mongodb;
 public class ProjectInstancesPersistenceAdapter(IMongoRepository<ProjectInstance> mongoRepository)
     : IGetAllProjectInstances
 {
-    public async Task<IEnumerable<CalculationInstanceInfo>> GetAll(ProjectId projectId,
-        CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<CalculationInstanceInfo>> GetAll(
+        ProjectId projectId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var projectInstances = await mongoRepository.GetAllDocuments(instance => instance.ProjectId == projectId.Value,
-            cancellationToken);
+        var projectInstances = await mongoRepository.GetAllDocuments(
+            instance => instance.ProjectId == projectId.Value,
+            cancellationToken
+        );
 
         return projectInstances.Select(instance => instance.ToCalculationInstanceInfo());
     }

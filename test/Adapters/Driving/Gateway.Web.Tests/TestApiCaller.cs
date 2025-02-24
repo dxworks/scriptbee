@@ -6,11 +6,18 @@ namespace ScriptBee.Gateway.Web.Tests;
 
 public class TestApiCaller(string endpoint)
 {
-    public async Task<HttpResponseMessage> PostApi<T>(TestWebApplicationFactory<Program> factory, T? data = default)
+    public async Task<HttpResponseMessage> PostApi<T>(
+        TestWebApplicationFactory<Program> factory,
+        T? data = default
+    )
     {
         using var client = factory.CreateClient();
 
-        var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, MediaTypeNames.Application.Json);
+        var content = new StringContent(
+            JsonSerializer.Serialize(data),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json
+        );
 
         var response = await client.PostAsync(endpoint, content);
         return response;

@@ -5,9 +5,7 @@ namespace ScriptBee.Common.Web;
 
 public interface IEndpointDefinition
 {
-    void DefineServices(IServiceCollection services)
-    {
-    }
+    void DefineServices(IServiceCollection services) { }
 
     void DefineEndpoints(IEndpointRouteBuilder app);
 }

@@ -22,10 +22,14 @@ public class CreateProjectEndpoint : IEndpointDefinition
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 
-    private static async Task<Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>> CreateProject(
+    private static async Task<
+        Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>
+    > CreateProject(
         HttpContext context,
         [FromBody] WebCreateProjectCommand command,
-        ICreateProjectUseCase useCase, CancellationToken cancellationToken = default)
+        ICreateProjectUseCase useCase,
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await useCase.CreateProject(command.Map(), cancellationToken);
 
@@ -35,11 +39,13 @@ public class CreateProjectEndpoint : IEndpointDefinition
                 var response = WebCreateProjectResponse.Map(projectDetails);
                 return TypedResults.Created($"/api/projects/{response.Id}", response);
             },
-            error => TypedResults.Conflict(
-                context.ToProblemDetails(
-                    "Project ID Already In Use",
-                    $"A project with the ID '{error.Id.Value}' already exists. Use a unique Project ID or update the existing project."
-                ))
+            error =>
+                TypedResults.Conflict(
+                    context.ToProblemDetails(
+                        "Project ID Already In Use",
+                        $"A project with the ID '{error.Id.Value}' already exists. Use a unique Project ID or update the existing project."
+                    )
+                )
         );
     }
 }

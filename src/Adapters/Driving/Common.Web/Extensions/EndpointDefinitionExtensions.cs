@@ -5,18 +5,24 @@ namespace ScriptBee.Common.Web.Extensions;
 
 public static class EndpointDefinitionExtensions
 {
-    public static void AddEndpointDefinitions(this IServiceCollection services, params Type[] scanMarkers)
+    public static void AddEndpointDefinitions(
+        this IServiceCollection services,
+        params Type[] scanMarkers
+    )
     {
         var endpointDefinitions = new List<IEndpointDefinition>();
 
         foreach (var scanMarker in scanMarkers)
         {
             endpointDefinitions.AddRange(
-                scanMarker.Assembly.ExportedTypes
-                    .Where(x => typeof(IEndpointDefinition).IsAssignableFrom(x) &&
-                                x is { IsInterface: false, IsAbstract: false })
+                scanMarker
+                    .Assembly.ExportedTypes.Where(x =>
+                        typeof(IEndpointDefinition).IsAssignableFrom(x)
+                        && x is { IsInterface: false, IsAbstract: false }
+                    )
                     .Select(Activator.CreateInstance)
-                    .Cast<IEndpointDefinition>());
+                    .Cast<IEndpointDefinition>()
+            );
         }
 
         foreach (var endpointDefinition in endpointDefinitions)
@@ -29,7 +35,9 @@ public static class EndpointDefinitionExtensions
 
     public static void UseEndpointDefinitions(this WebApplication app)
     {
-        var endpointDefinitions = app.Services.GetRequiredService<IReadOnlyCollection<IEndpointDefinition>>();
+        var endpointDefinitions = app.Services.GetRequiredService<
+            IReadOnlyCollection<IEndpointDefinition>
+        >();
 
         foreach (var endpointDefinition in endpointDefinitions)
         {

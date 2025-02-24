@@ -25,8 +25,7 @@ public class CreateProjectValidatorTests
 
         var result = await _createProjectValidator.TestValidateAsync(createProject);
 
-        result.ShouldHaveValidationErrorFor(x => x.Id)
-            .WithErrorMessage("'Id' must not be empty.");
+        result.ShouldHaveValidationErrorFor(x => x.Id).WithErrorMessage("'Id' must not be empty.");
     }
 
     [Fact]
@@ -36,8 +35,7 @@ public class CreateProjectValidatorTests
 
         var result = await _createProjectValidator.TestValidateAsync(createProject);
 
-        result.ShouldHaveValidationErrorFor(x => x.Id)
-            .WithErrorMessage("'Id' must not be empty.");
+        result.ShouldHaveValidationErrorFor(x => x.Id).WithErrorMessage("'Id' must not be empty.");
     }
 
     [Fact]
@@ -47,7 +45,8 @@ public class CreateProjectValidatorTests
 
         var result = await _createProjectValidator.TestValidateAsync(createProject);
 
-        result.ShouldHaveValidationErrorFor(x => x.Name)
+        result
+            .ShouldHaveValidationErrorFor(x => x.Name)
             .WithErrorMessage("'Name' must not be empty.");
     }
 
@@ -58,7 +57,8 @@ public class CreateProjectValidatorTests
 
         var result = await _createProjectValidator.TestValidateAsync(createProject);
 
-        result.ShouldHaveValidationErrorFor(x => x.Name)
+        result
+            .ShouldHaveValidationErrorFor(x => x.Name)
             .WithErrorMessage("'Name' must not be empty.");
     }
 
@@ -69,9 +69,9 @@ public class CreateProjectValidatorTests
 
         var result = await _createProjectValidator.TestValidateAsync(createProject);
 
-        result.ShouldHaveValidationErrorFor(x => x.Name)
+        result
+            .ShouldHaveValidationErrorFor(x => x.Name)
             .WithErrorMessage("'Name' must not be empty.");
-        result.ShouldHaveValidationErrorFor(x => x.Id)
-            .WithErrorMessage("'Id' must not be empty.");
+        result.ShouldHaveValidationErrorFor(x => x.Id).WithErrorMessage("'Id' must not be empty.");
     }
 }

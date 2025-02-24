@@ -5,7 +5,10 @@ namespace ScriptBee.Domain.Service.Calculation;
 
 public class CalculationInstanceService : ICalculationInstanceUseCase
 {
-    public Task<CalculationInstanceInfo> Allocate(CalculationInstanceCommand command, CancellationToken cancellationToken = default)
+    public Task<CalculationInstanceInfo> Allocate(
+        CalculationInstanceCommand command,
+        CancellationToken cancellationToken = default
+    )
     {
         throw new NotImplementedException();
     }

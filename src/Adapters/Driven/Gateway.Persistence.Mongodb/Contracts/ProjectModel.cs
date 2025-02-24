@@ -6,7 +6,8 @@ namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 
 public class ProjectModel : IDocument
 {
-    [BsonId] public required string Id { get; set; }
+    [BsonId]
+    public required string Id { get; set; }
     public required string Name { get; init; }
     public DateTimeOffset CreationDate { get; init; }
 

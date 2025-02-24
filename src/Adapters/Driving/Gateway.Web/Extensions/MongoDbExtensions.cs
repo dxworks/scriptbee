@@ -10,7 +10,10 @@ namespace ScriptBee.Gateway.Web.Extensions;
 
 public static class MongoDbExtensions
 {
-    public static IServiceCollection AddMongoDb(this IServiceCollection services, string? connectionString)
+    public static IServiceCollection AddMongoDb(
+        this IServiceCollection services,
+        string? connectionString
+    )
     {
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -21,22 +24,28 @@ public static class MongoDbExtensions
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        return services.AddSingleton<IMongoClient>(mongoClient)
-            .AddAdapters(mongoDatabase);
+        return services.AddSingleton<IMongoClient>(mongoClient).AddAdapters(mongoDatabase);
     }
 
-    private static IServiceCollection AddAdapters(this IServiceCollection services, IMongoDatabase mongoDatabase)
+    private static IServiceCollection AddAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
     {
         return services
             .AddProjectAdapters(mongoDatabase)
             .AddProjectInstancesAdapters(mongoDatabase);
     }
 
-    private static IServiceCollection AddProjectAdapters(this IServiceCollection services, IMongoDatabase mongoDatabase)
+    private static IServiceCollection AddProjectAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
     {
         return services
-            .AddSingleton<IMongoCollection<ProjectModel>>(
-                _ => mongoDatabase.GetCollection<ProjectModel>("Projects"))
+            .AddSingleton<IMongoCollection<ProjectModel>>(_ =>
+                mongoDatabase.GetCollection<ProjectModel>("Projects")
+            )
             .AddSingleton<IMongoRepository<ProjectModel>, MongoRepository<ProjectModel>>()
             .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
             .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
@@ -44,12 +53,15 @@ public static class MongoDbExtensions
             .AddSingleton<IGetProject, ProjectPersistenceAdapter>();
     }
 
-    private static IServiceCollection AddProjectInstancesAdapters(this IServiceCollection services,
-        IMongoDatabase mongoDatabase)
+    private static IServiceCollection AddProjectInstancesAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
     {
         return services
-            .AddSingleton<IMongoCollection<ProjectInstance>>(
-                _ => mongoDatabase.GetCollection<ProjectInstance>("Instances"))
+            .AddSingleton<IMongoCollection<ProjectInstance>>(_ =>
+                mongoDatabase.GetCollection<ProjectInstance>("Instances")
+            )
             .AddSingleton<IMongoRepository<ProjectInstance>, MongoRepository<ProjectInstance>>()
             .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>();
     }

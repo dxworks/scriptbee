@@ -24,29 +24,35 @@ public class GetProjectsEndpoint : IEndpointDefinition
 
     private static async Task<Ok<WebGetProjectListResponse>> GetAllProjects(
         IGetProjectsUseCase useCase,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await useCase.GetAllProjects(cancellationToken);
 
         return TypedResults.Ok(WebGetProjectListResponse.Map(result));
     }
 
-    private static async Task<Results<Ok<WebGetProjectDetailsResponse>, NotFound<ProblemDetails>>> GetProjectById(
+    private static async Task<
+        Results<Ok<WebGetProjectDetailsResponse>, NotFound<ProblemDetails>>
+    > GetProjectById(
         HttpContext context,
         [FromRoute] string projectId,
         IGetProjectsUseCase useCase,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var query = new GetProjectQuery(ProjectId.FromValue(projectId));
         var result = await useCase.GetProject(query, cancellationToken);
 
         return result.Match<Results<Ok<WebGetProjectDetailsResponse>, NotFound<ProblemDetails>>>(
             projectDetails => TypedResults.Ok(WebGetProjectDetailsResponse.Map(projectDetails)),
-            error => TypedResults.NotFound(
-                context.ToProblemDetails(
-                    "Project Not Found",
-                    $"A project with the ID '{error.Id.Value}' does not exists."
-                ))
+            error =>
+                TypedResults.NotFound(
+                    context.ToProblemDetails(
+                        "Project Not Found",
+                        $"A project with the ID '{error.Id.Value}' does not exists."
+                    )
+                )
         );
     }
 }

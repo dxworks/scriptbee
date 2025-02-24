@@ -10,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
 
-builder.Services
-    .AddConfiguredHealthChecks()
+builder
+    .Services.AddConfiguredHealthChecks()
     .AddSerilog()
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
@@ -19,9 +19,15 @@ builder.Services
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices();
 
-builder.Services.AddEndpointDefinitions(typeof(IEndpointDefinition), typeof(IEndpointDefinitionMarker));
+builder.Services.AddEndpointDefinitions(
+    typeof(IEndpointDefinition),
+    typeof(IEndpointDefinitionMarker)
+);
 
-builder.Services.Configure<KestrelServerOptions>(options => { options.Limits.MaxRequestBodySize = null; });
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = null;
+});
 
 builder.Host.UseSerilog();
 
@@ -45,7 +51,6 @@ app.UseExceptionEndpoint();
 app.UseEndpoints(_ => { });
 
 app.UseEndpointDefinitions();
-
 
 app.Run();
 

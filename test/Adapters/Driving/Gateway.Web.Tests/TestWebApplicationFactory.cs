@@ -10,8 +10,8 @@ namespace ScriptBee.Gateway.Web.Tests;
 
 public class TestWebApplicationFactory<TStartup>(
     ITestOutputHelper output,
-    Action<IServiceCollection>? configureDelegate = null)
-    : WebApplicationFactory<TStartup>
+    Action<IServiceCollection>? configureDelegate = null
+) : WebApplicationFactory<TStartup>
     where TStartup : class
 {
     protected override IHost CreateHost(IHostBuilder builder)
@@ -41,7 +41,9 @@ public class TestWebApplicationFactory<TStartup>(
 
         builder.ConfigureServices(services =>
         {
-            services.AddSingleton(provider => provider.GetRequiredService<ILoggerFactory>().CreateLogger("Test"));
+            services.AddSingleton(provider =>
+                provider.GetRequiredService<ILoggerFactory>().CreateLogger("Test")
+            );
         });
     }
 

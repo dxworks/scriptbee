@@ -9,6 +9,7 @@ public record WebGetProjectDetailsResponse(string Id, string Name, DateTimeOffse
         return new WebGetProjectDetailsResponse(
             projectDetails.Id.Value,
             projectDetails.Name,
-            projectDetails.CreationDate);
+            projectDetails.CreationDate
+        );
     }
 }

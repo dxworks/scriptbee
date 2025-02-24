@@ -39,7 +39,11 @@ public class MongoDbFixture : IAsyncLifetime
 
     private static int GetAvailablePort()
     {
-        using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        using var socket = new Socket(
+            AddressFamily.InterNetwork,
+            SocketType.Stream,
+            ProtocolType.Tcp
+        );
         socket.Bind(new IPEndPoint(IPAddress.Loopback, 0));
         socket.Listen(1);
         var endPoint = (IPEndPoint)socket.LocalEndPoint!;

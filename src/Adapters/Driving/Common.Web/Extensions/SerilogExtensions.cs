@@ -23,8 +23,9 @@ public static class SerilogExtensions
 
     public static IHostBuilder UseSerilog(this IHostBuilder hostBuilder)
     {
-        return hostBuilder.UseSerilog((context, services, config) => config
-            .ReadFrom.Configuration(context.Configuration)
-            .ReadFrom.Services(services));
+        return hostBuilder.UseSerilog(
+            (context, services, config) =>
+                config.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services)
+        );
     }
 }

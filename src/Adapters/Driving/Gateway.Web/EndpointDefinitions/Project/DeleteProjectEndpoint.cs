@@ -21,9 +21,14 @@ public class DeleteProjectEndpoint : IEndpointDefinition
 
     private static async Task<NoContent> DeleteProject(
         [FromRoute] string projectId,
-        IDeleteProjectUseCase useCase, CancellationToken cancellationToken = default)
+        IDeleteProjectUseCase useCase,
+        CancellationToken cancellationToken = default
+    )
     {
-        await useCase.DeleteProject(new DeleteProjectCommand(ProjectId.FromValue(projectId)), cancellationToken);
+        await useCase.DeleteProject(
+            new DeleteProjectCommand(ProjectId.FromValue(projectId)),
+            cancellationToken
+        );
 
         return TypedResults.NoContent();
     }
