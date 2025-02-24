@@ -11,5 +11,6 @@
     
     <ItemGroup Condition="'$(ProjectName.ToLower().Contains(`test`))' == 'true'">
         <Using Include="Xunit"/>
+        <Using Include="Shouldly"/>
     </ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-﻿using Shouldly;
-
-namespace ScriptBee.Domain.Service.Tests;
+﻿namespace ScriptBee.Domain.Service.Tests;
 
 public class DateTimeProviderTest
 {

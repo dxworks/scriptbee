@@ -5,7 +5,6 @@ using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Driving.UseCases.Project;
-using Shouldly;
 using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;

@@ -6,7 +6,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Ports.Driving.UseCases.Project;
 using ScriptBee.Tests.Common;
-using Shouldly;
 using Xunit.Abstractions;
 using static ScriptBee.Gateway.Web.Tests.ProblemValidationUtils;
 

@@ -3,7 +3,6 @@ using ScriptBee.Domain.Model.Calculation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Service.Calculation;
 using ScriptBee.Ports.Driven.Calculation;
-using Shouldly;
 
 namespace ScriptBee.Domain.Service.Tests.Calculation;
 

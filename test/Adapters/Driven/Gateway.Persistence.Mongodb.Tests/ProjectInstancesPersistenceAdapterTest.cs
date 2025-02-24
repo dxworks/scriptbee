@@ -3,7 +3,6 @@ using ScriptBee.Domain.Model.Calculation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
-using Shouldly;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Tests;
 

@@ -1,5 +1,4 @@
 ﻿using ScriptBee.Domain.Model.Project;
-using Shouldly;
 
 namespace ScriptBee.Domain.Model.Tests.Project;
 

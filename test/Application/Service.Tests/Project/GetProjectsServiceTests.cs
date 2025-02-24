@@ -4,7 +4,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Service.Project;
 using ScriptBee.Ports.Driven.Project;
 using ScriptBee.Ports.Driving.UseCases.Project;
-using Shouldly;
 
 namespace ScriptBee.Domain.Service.Tests.Project;
 

@@ -3,7 +3,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
-using Shouldly;
 using Xunit.Abstractions;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Tests;
