@@ -1,3 +1,5 @@
-﻿namespace ScriptBee.Domain.Model.Calculation;
+﻿using ScriptBee.Domain.Model.Project;
 
-public record CalculationInstanceInfo(CalculationInstanceId Id, string Url);
+namespace ScriptBee.Domain.Model.Calculation;
+
+public record CalculationInstanceInfo(CalculationInstanceId Id, ProjectId ProjectId, string Url, DateTimeOffset CreationDate);

@@ -1,19 +1,28 @@
-﻿using MongoDB.Driver;
+﻿using System.Net;
+using System.Net.Sockets;
+using MongoDB.Driver;
 using Testcontainers.MongoDb;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Tests;
 
 public class MongoDbFixture : IAsyncLifetime
 {
-    private readonly MongoDbContainer _container = new MongoDbBuilder()
-        .WithImage("mongo:8.0.4")
-        .WithPortBinding(1337, 27017)
-        .WithCleanUp(true)
-        .Build();
+    private readonly MongoDbContainer _container;
 
     private IMongoDatabase Database { get; set; } = null!;
 
     public IMongoCollection<T> GetCollection<T>(string name) => Database.GetCollection<T>(name);
+
+    public MongoDbFixture()
+    {
+        var freePort = GetAvailablePort();
+
+        _container = new MongoDbBuilder()
+            .WithImage("mongo:8.0.4")
+            .WithPortBinding(freePort, 27017)
+            .WithCleanUp(true)
+            .Build();
+    }
 
     public async Task InitializeAsync()
     {
@@ -26,5 +35,14 @@ public class MongoDbFixture : IAsyncLifetime
     public async Task DisposeAsync()
     {
         await _container.StopAsync();
+    }
+
+    private static int GetAvailablePort()
+    {
+        using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        socket.Bind(new IPEndPoint(IPAddress.Loopback, 0));
+        socket.Listen(1);
+        var endPoint = (IPEndPoint)socket.LocalEndPoint!;
+        return endPoint.Port;
     }
 }

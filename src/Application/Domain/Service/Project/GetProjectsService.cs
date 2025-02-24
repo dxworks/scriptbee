@@ -7,7 +7,7 @@ namespace ScriptBee.Domain.Service.Project;
 
 public class GetProjectsService(IGetAllProjects getAllProjects, IGetProject getProject) : IGetProjectsUseCase
 {
-    public async Task<List<ProjectDetails>> GetAllProjects(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ProjectDetails>> GetAllProjects(CancellationToken cancellationToken = default)
     {
         return await getAllProjects.GetAll(cancellationToken);
     }

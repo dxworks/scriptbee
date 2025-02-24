@@ -6,9 +6,9 @@ namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 
 public class ProjectModel : IDocument
 {
-    [BsonId] public string Id { get; set; } = null!;
-    public string Name { get; set; } = "";
-    public DateTime CreationDate { get; set; }
+    [BsonId] public required string Id { get; set; }
+    public required string Name { get; init; }
+    public DateTimeOffset CreationDate { get; init; }
 
     public Dictionary<string, List<FileData>> SavedFiles { get; set; } = new();
     public Dictionary<string, List<FileData>> LoadedFiles { get; set; } = new();

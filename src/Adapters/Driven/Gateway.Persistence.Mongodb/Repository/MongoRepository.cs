@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
 
@@ -22,9 +23,15 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         return document != null;
     }
 
-    public async Task<List<T>> GetAllDocuments(CancellationToken cancellationToken)
+    public async Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken)
     {
         return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<T>> GetAllDocuments(Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken)
+    {
+        return await mongoCollection.Find(predicate).ToListAsync(cancellationToken);
     }
 
     public async Task UpdateDocument(T model, CancellationToken cancellationToken)

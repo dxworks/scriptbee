@@ -1,11 +1,11 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
 using ScriptBee.Gateway.Persistence.Mongodb.Repository;
 using ScriptBee.Ports.Driven.Project;
-using ILogger = Serilog.ILogger;
 
 namespace ScriptBee.Gateway.Persistence.Mongodb;
 
@@ -21,7 +21,7 @@ public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepos
         }
         catch (MongoWriteException e)
         {
-            logger.Error(e, "Project with id {Id} already exists", projectDetails.Id);
+            logger.LogError(e, "Project with id {Id} already exists", projectDetails.Id);
             return new ProjectIdAlreadyInUseError(projectDetails.Id);
         }
 
@@ -33,10 +33,10 @@ public class ProjectPersistenceAdapter(IMongoRepository<ProjectModel> mongoRepos
         await mongoRepository.DeleteDocument(projectId.Value, cancellationToken);
     }
 
-    public async Task<List<ProjectDetails>> GetAll(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ProjectDetails>> GetAll(CancellationToken cancellationToken = default)
     {
         var projectModels = await mongoRepository.GetAllDocuments(cancellationToken);
-        return projectModels.Select(model => model.ToProjectDetails()).ToList();
+        return projectModels.Select(model => model.ToProjectDetails());
     }
 
     public async Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> GetById(ProjectId projectId,

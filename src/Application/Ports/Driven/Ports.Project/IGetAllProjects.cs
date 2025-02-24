@@ -4,5 +4,5 @@ namespace ScriptBee.Ports.Driven.Project;
 
 public interface IGetAllProjects
 {
-    Task<List<ProjectDetails>> GetAll(CancellationToken cancellationToken = default);
+    Task<IEnumerable<ProjectDetails>> GetAll(CancellationToken cancellationToken = default);
 }

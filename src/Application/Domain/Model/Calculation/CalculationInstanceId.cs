@@ -9,7 +9,7 @@ public sealed record CalculationInstanceId
         Value = value;
     }
 
-    public static CalculationInstanceId Create(string value)
+    public static CalculationInstanceId FromValue(string value)
     {
         return new CalculationInstanceId(value);
     }

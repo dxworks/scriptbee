@@ -6,13 +6,13 @@
     
     <ItemGroup>
       <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Project\Ports.Project.csproj" />
+      <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Calculation\Ports.Calculation.csproj" />
     </ItemGroup>
     
     <ItemGroup>
       <PackageReference Include="MongoDB.Bson" />
       <PackageReference Include="MongoDB.Driver" />
       <PackageReference Include="MongoDB.Driver.GridFS" />
-      <PackageReference Include="Serilog.AspNetCore"/>
     </ItemGroup>
 
 </Project>

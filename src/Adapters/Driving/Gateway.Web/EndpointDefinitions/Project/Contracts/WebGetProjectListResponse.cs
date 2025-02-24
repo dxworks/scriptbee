@@ -2,10 +2,10 @@
 
 namespace ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
 
-public record WebGetProjectListResponse(List<WebGetProjectDetailsResponse> Projects)
+public record WebGetProjectListResponse(IEnumerable<WebGetProjectDetailsResponse> Projects)
 {
-    public static WebGetProjectListResponse Map(List<ProjectDetails> projectDetails)
+    public static WebGetProjectListResponse Map(IEnumerable<ProjectDetails> projectDetails)
     {
-        return new WebGetProjectListResponse(projectDetails.Select(WebGetProjectDetailsResponse.Map).ToList());
+        return new WebGetProjectListResponse(projectDetails.Select(WebGetProjectDetailsResponse.Map));
     }
 }

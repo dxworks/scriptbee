@@ -1,4 +1,6 @@
-﻿namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
+﻿using System.Linq.Expressions;
+
+namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
 
 public interface IMongoRepository<T> where T : IDocument
 {
@@ -7,7 +9,10 @@ public interface IMongoRepository<T> where T : IDocument
     public Task<T?> GetDocument(string id, CancellationToken cancellationToken);
     public Task<bool> DocumentExists(string id, CancellationToken cancellationToken);
 
-    public Task<List<T>> GetAllDocuments(CancellationToken cancellationToken);
+    public Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken);
+
+    public Task<IEnumerable<T>> GetAllDocuments(Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken);
 
     public Task UpdateDocument(T model, CancellationToken cancellationToken);
 

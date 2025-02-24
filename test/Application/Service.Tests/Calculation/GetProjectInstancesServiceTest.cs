@@ -22,7 +22,7 @@ public class GetProjectInstancesServiceTest
     {
         var projectId = ProjectId.FromValue("project-id");
         IEnumerable<CalculationInstanceInfo> expectedCalculationInstanceInfos =
-            [new(CalculationInstanceId.Create("id"), "http://url:8080")];
+            [new(CalculationInstanceId.FromValue("id"), projectId, "http://url:8080", DateTimeOffset.UtcNow)];
         _getAllProjectInstances.GetAll(projectId)
             .Returns(Task.FromResult(expectedCalculationInstanceInfos));
 
