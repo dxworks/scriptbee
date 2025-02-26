@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace ScriptBee.Gateway.Web.Tests;
+namespace ScriptBee.Web.Tests;
 
 public class TestWebApplicationFactory<TStartup>(
     ITestOutputHelper output,
@@ -39,12 +39,12 @@ public class TestWebApplicationFactory<TStartup>(
             logging.AddProvider(new XUnitLoggerProvider(output));
         });
 
-        builder.ConfigureServices(services =>
-        {
-            services.AddSingleton(provider =>
-                provider.GetRequiredService<ILoggerFactory>().CreateLogger("Test")
-            );
-        });
+        // builder.ConfigureServices(services =>
+        // {
+        //     services.AddSingleton(provider =>
+        //         provider.GetRequiredService<ILoggerFactory>().CreateLogger("Test")
+        //     );
+        // });
     }
 
     private static void ConfigureConfigurations(IWebHostBuilder builder)

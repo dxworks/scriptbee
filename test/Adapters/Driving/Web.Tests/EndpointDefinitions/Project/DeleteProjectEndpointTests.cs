@@ -4,10 +4,10 @@ using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Driving.UseCases.Project;
+using ScriptBee.Project.UseCases;
 using Xunit.Abstractions;
 
-namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
+namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 
 public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
 {

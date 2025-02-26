@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ScriptBee.Gateway.Web.Tests;
+namespace ScriptBee.Web.Tests;
 
 public static class ProblemValidationUtils
 {

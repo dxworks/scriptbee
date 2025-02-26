@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace ScriptBee.Gateway.Web.Tests;
+namespace ScriptBee.Web.Tests;
 
 public class TestApiCaller(string endpoint)
 {

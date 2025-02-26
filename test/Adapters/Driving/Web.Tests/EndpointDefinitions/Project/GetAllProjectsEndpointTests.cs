@@ -2,12 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
-using ScriptBee.Ports.Driving.UseCases.Project;
+using ScriptBee.Project.UseCases;
 using ScriptBee.Tests.Common;
+using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using Xunit.Abstractions;
 
-namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project;
+namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 
 public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
 {

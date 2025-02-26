@@ -1,8 +1,8 @@
 ﻿using FluentValidation.TestHelper;
-using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Contracts;
-using ScriptBee.Gateway.Web.EndpointDefinitions.Project.Validation;
+using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Web.EndpointDefinitions.Project.Validation;
 
-namespace ScriptBee.Gateway.Web.Tests.EndpointDefinitions.Project.Validation;
+namespace ScriptBee.Web.Tests.EndpointDefinitions.Project.Validation;
 
 public class CreateProjectValidatorTests
 {
