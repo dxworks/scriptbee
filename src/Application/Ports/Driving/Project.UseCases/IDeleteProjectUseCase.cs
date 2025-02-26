@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Ports.Driving.UseCases.Project;
+﻿namespace ScriptBee.Project.UseCases;
 
 public interface IDeleteProjectUseCase
 {

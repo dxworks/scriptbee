@@ -1,5 +1,5 @@
 ﻿using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Driving.UseCases.Project;
+namespace ScriptBee.Project.UseCases;
 
 public record GetProjectQuery(ProjectId Id);
