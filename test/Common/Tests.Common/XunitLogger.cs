@@ -3,7 +3,7 @@ using Xunit.Abstractions;
 
 namespace ScriptBee.Tests.Common;
 
-public class XunitLogger(ITestOutputHelper outputHelper) : ILogger
+public class XunitLogger<T>(ITestOutputHelper outputHelper) : ILogger<T>
 {
     public IDisposable? BeginScope<TState>(TState state)
         where TState : notnull

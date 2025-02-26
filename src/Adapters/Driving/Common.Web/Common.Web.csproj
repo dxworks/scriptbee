@@ -19,7 +19,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Application\Domain\Model\Model.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Domain\Service\Service.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases\UseCases.csproj"/>
     </ItemGroup>
 </Project>
