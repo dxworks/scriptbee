@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Ports.Driven.Calculation;
+﻿namespace ScriptBee.Analysis.Ports;
 
 public interface IAllocateInstance
 {

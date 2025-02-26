@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
+using ScriptBee.Analysis.Ports;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Driven.Calculation;
 
 namespace ScriptBee.Analysis.Service.Tests;
 

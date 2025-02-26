@@ -1,7 +1,7 @@
-﻿using ScriptBee.Analysis.UseCases;
+﻿using ScriptBee.Analysis.Ports;
+using ScriptBee.Analysis.UseCases;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Driven.Calculation;
 
 namespace ScriptBee.Analysis.Service;
 

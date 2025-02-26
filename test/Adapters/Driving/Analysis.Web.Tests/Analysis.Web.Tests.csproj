@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>ScriptBee.Web.Tests</RootNamespace>
+        <RootNamespace>ScriptBee.Analysis.Web.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -9,7 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\..\src\Adapters\Driving\Web\Web.csproj" />
+        <ProjectReference Include="..\..\..\..\src\Adapters\Driving\Analysis.Web\Analysis.Web.csproj" />
         <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
     </ItemGroup>
 </Project>
