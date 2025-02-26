@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Application\Ports\Driven\Analysis.Ports\Analysis.Ports.csproj" />
+      <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Analysis\Ports.Analysis.csproj" />
     </ItemGroup>
 
     <ItemGroup>

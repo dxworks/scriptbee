@@ -1,4 +1,4 @@
-﻿using ScriptBee.Project.UseCases;
+﻿using ScriptBee.UseCases.Project;
 
 namespace ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 

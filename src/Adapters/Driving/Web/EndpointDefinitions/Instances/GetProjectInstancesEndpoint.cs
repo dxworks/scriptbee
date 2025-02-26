@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using ScriptBee.Analysis.Service;
-using ScriptBee.Analysis.UseCases;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Service.Project.Analysis;
+using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Instances;

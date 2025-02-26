@@ -5,7 +5,7 @@ using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Contracts;
 using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Project.Ports;
+using ScriptBee.Ports.Project;
 
 namespace ScriptBee.Persistence.Mongodb;
 

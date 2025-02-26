@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Project.UseCases;
 using ScriptBee.Tests.Common;
+using ScriptBee.UseCases.Project;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using Xunit.Abstractions;
 

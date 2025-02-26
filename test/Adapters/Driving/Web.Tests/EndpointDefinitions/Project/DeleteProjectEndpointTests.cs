@@ -4,7 +4,7 @@ using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Project.UseCases;
+using ScriptBee.UseCases.Project;
 using Xunit.Abstractions;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;

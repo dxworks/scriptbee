@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Project.Service;
-using ScriptBee.Project.UseCases;
+using ScriptBee.Service.Project;
+using ScriptBee.UseCases.Project;
 
 namespace ScriptBee.Web.EndpointDefinitions.Project;
 
