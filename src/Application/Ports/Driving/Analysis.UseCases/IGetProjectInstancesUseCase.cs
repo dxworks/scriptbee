@@ -1,11 +1,11 @@
-﻿using ScriptBee.Domain.Model.Calculation;
+﻿using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Driving.UseCases.Calculation;
+namespace ScriptBee.Analysis.UseCases;
 
 public interface IGetProjectInstancesUseCase
 {
-    Task<IEnumerable<CalculationInstanceInfo>> GetAllInstances(
+    Task<IEnumerable<InstanceInfo>> GetAllInstances(
         ProjectId projectId,
         CancellationToken cancellationToken = default
     );
