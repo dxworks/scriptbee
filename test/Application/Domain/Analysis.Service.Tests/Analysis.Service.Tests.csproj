@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>ScriptBee.Analysis.Service.Tests</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\..\src\Application\Domain\Analysis.Service\Analysis.Service.csproj" />
+    </ItemGroup>
+</Project>

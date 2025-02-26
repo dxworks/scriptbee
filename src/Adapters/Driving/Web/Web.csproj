@@ -12,7 +12,9 @@
     <ItemGroup>
         <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
         <ProjectReference Include="..\..\..\Common\Common.csproj" />
+        <ProjectReference Include="..\..\..\Application\Domain\Analysis.Service\Analysis.Service.csproj" />
         <ProjectReference Include="..\..\..\Application\Domain\Project.Service\Project.Service.csproj" />
+        <ProjectReference Include="..\..\..\Application\Ports\Driving\Analysis.UseCases\Analysis.UseCases.csproj" />
         <ProjectReference Include="..\..\..\Application\Ports\Driving\Project.UseCases\Project.UseCases.csproj" />
         <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj" />
     </ItemGroup>

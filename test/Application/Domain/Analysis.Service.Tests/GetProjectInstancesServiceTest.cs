@@ -1,15 +1,15 @@
 ﻿using NSubstitute;
-using ScriptBee.Domain.Model.Calculation;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Domain.Service.Calculation;
 using ScriptBee.Ports.Driven.Calculation;
 
-namespace ScriptBee.Domain.Service.Tests.Calculation;
+namespace ScriptBee.Analysis.Service.Tests;
 
 public class GetProjectInstancesServiceTest
 {
     private readonly IGetAllProjectInstances _getAllProjectInstances =
         Substitute.For<IGetAllProjectInstances>();
+
     private readonly GetProjectInstancesService _getProjectInstancesService;
 
     public GetProjectInstancesServiceTest()
@@ -21,10 +21,10 @@ public class GetProjectInstancesServiceTest
     public async Task GetAllProjectInstances()
     {
         var projectId = ProjectId.FromValue("project-id");
-        IEnumerable<CalculationInstanceInfo> expectedCalculationInstanceInfos =
+        IEnumerable<InstanceInfo> expectedCalculationInstanceInfos =
         [
             new(
-                CalculationInstanceId.FromValue("id"),
+                InstanceId.FromValue("id"),
                 projectId,
                 "http://url:8080",
                 DateTimeOffset.UtcNow
