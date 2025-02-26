@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Domain.Service.Tests;
+﻿namespace ScriptBee.Common.Tests;
 
 public class DateTimeProviderTest
 {

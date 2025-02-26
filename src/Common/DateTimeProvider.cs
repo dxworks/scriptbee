@@ -1,6 +1,4 @@
-﻿using ScriptBee.Ports.Driving.UseCases;
-
-namespace ScriptBee.Domain.Service;
+﻿namespace ScriptBee.Common;
 
 public class DateTimeProvider : IDateTimeProvider
 {

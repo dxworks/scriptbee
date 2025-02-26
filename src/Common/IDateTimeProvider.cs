@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Ports.Driving.UseCases;
+﻿namespace ScriptBee.Common;
 
 public interface IDateTimeProvider
 {
