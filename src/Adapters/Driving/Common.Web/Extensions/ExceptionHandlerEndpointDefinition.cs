@@ -15,7 +15,7 @@ public static class ExceptionHandlerEndpointDefinition
         app.UseExceptionHandler("/error");
     }
 
-    private static IResult HandleError(HttpContext context, ILogger logger)
+    private static IResult HandleError(HttpContext context, ILogger<object> logger)
     {
         var exception = GetException(context, logger);
 
