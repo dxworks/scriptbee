@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Driven.Project;
+namespace ScriptBee.Project.Ports;
 
 public interface IDeleteProject
 {

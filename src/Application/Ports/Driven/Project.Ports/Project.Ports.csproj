@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>ScriptBee.Ports.Driven.Project</RootNamespace>
+        <RootNamespace>ScriptBee.Project.Ports</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
