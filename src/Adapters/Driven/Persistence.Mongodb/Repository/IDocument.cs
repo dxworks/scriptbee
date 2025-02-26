@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
+﻿namespace ScriptBee.Persistence.Mongodb.Repository;
 
 public interface IDocument
 {

@@ -1,11 +1,11 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
-using ScriptBee.Gateway.Persistence.Mongodb.Repository;
+using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
 using Xunit.Abstractions;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb.Tests;
+namespace ScriptBee.Persistence.Mongodb.Tests;
 
 public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFixture>
 {
@@ -20,7 +20,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         _mongoCollection = fixture.GetCollection<ProjectModel>("Projects");
         _adapter = new ProjectPersistenceAdapter(
             new MongoRepository<ProjectModel>(_mongoCollection),
-            new XunitLogger(outputHelper)
+            new XunitLogger<ProjectPersistenceAdapter>(outputHelper)
         );
     }
 

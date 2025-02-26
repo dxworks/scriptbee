@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
+namespace ScriptBee.Persistence.Mongodb.Repository;
 
 public interface IMongoRepository<T>
     where T : IDocument

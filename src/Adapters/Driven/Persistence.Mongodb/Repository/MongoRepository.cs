@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using MongoDB.Driver;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb.Repository;
+namespace ScriptBee.Persistence.Mongodb.Repository;
 
 public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRepository<T>
     where T : IDocument

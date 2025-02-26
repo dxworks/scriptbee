@@ -1,10 +1,10 @@
 ﻿using MongoDB.Driver;
-using ScriptBee.Domain.Model.Calculation;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
-using ScriptBee.Gateway.Persistence.Mongodb.Repository;
+using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb.Tests;
+namespace ScriptBee.Persistence.Mongodb.Tests;
 
 public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 {
@@ -59,16 +59,16 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
         instanceInfos
             .ToList()
             .ShouldBeEquivalentTo(
-                new List<CalculationInstanceInfo>
+                new List<InstanceInfo>
                 {
                     new(
-                        CalculationInstanceId.FromValue("all-instance-id-1"),
+                        InstanceId.FromValue("all-instance-id-1"),
                         ProjectId.FromValue("all-project-id-1"),
                         "http://test:80",
                         creationDate
                     ),
                     new(
-                        CalculationInstanceId.FromValue("all-instance-id-3"),
+                        InstanceId.FromValue("all-instance-id-3"),
                         ProjectId.FromValue("all-project-id-1"),
                         "http://test:80",
                         creationDate

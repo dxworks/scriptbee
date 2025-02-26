@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Gateway.Persistence.Mongodb.Exceptions;
+﻿namespace ScriptBee.Persistence.Mongodb.Exceptions;
 
 [Serializable]
 public sealed class InvalidMongoConfigurationException()

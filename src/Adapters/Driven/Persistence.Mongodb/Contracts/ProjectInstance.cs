@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using ScriptBee.Domain.Model.Calculation;
-using ScriptBee.Gateway.Persistence.Mongodb.Repository;
+using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
+namespace ScriptBee.Persistence.Mongodb.Contracts;
 
 public class ProjectInstance : IDocument
 {
@@ -12,17 +12,17 @@ public class ProjectInstance : IDocument
     public required string Url { get; init; }
     public DateTimeOffset CreationDate { get; init; }
 
-    public CalculationInstanceInfo ToCalculationInstanceInfo()
+    public InstanceInfo ToCalculationInstanceInfo()
     {
-        return new CalculationInstanceInfo(
-            CalculationInstanceId.FromValue(Id),
+        return new InstanceInfo(
+            InstanceId.FromValue(Id),
             Domain.Model.Project.ProjectId.FromValue(ProjectId),
             Url,
             CreationDate
         );
     }
 
-    public static ProjectInstance From(CalculationInstanceInfo instanceInfo)
+    public static ProjectInstance From(InstanceInfo instanceInfo)
     {
         return new ProjectInstance
         {

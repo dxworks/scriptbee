@@ -3,15 +3,15 @@ using MongoDB.Driver;
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Gateway.Persistence.Mongodb.Contracts;
-using ScriptBee.Gateway.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Driven.Project;
+using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Project.Ports;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb;
+namespace ScriptBee.Persistence.Mongodb;
 
 public class ProjectPersistenceAdapter(
     IMongoRepository<ProjectModel> mongoRepository,
-    ILogger logger
+    ILogger<ProjectPersistenceAdapter> logger
 ) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject
 {
     public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(

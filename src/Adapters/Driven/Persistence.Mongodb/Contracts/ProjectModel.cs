@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Gateway.Persistence.Mongodb.Repository;
+using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Gateway.Persistence.Mongodb.Contracts;
+namespace ScriptBee.Persistence.Mongodb.Contracts;
 
 public class ProjectModel : IDocument
 {
