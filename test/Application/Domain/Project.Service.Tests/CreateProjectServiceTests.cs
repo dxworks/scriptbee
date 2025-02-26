@@ -1,13 +1,12 @@
 ﻿using NSubstitute;
 using OneOf;
+using ScriptBee.Common;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Domain.Service.Project;
-using ScriptBee.Ports.Driven.Project;
-using ScriptBee.Ports.Driving.UseCases;
-using ScriptBee.Ports.Driving.UseCases.Project;
+using ScriptBee.Project.Ports;
+using ScriptBee.Project.UseCases;
 
-namespace ScriptBee.Domain.Service.Tests.Project;
+namespace ScriptBee.Project.Service.Tests;
 
 public class CreateProjectServiceTests
 {

@@ -1,35 +1,49 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web", "src\Adapters\Driving\Gateway.Web\Gateway.Web.csproj", "{B070D414-EBF5-4E6D-AF75-1E29B883A6A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "src\Adapters\Driving\Web\Web.csproj", "{B070D414-EBF5-4E6D-AF75-1E29B883A6A7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Web", "src\Adapters\Driving\Common.Web\Common.Web.csproj", "{205C62C7-EB67-4EB4-A95C-8FCC8F03B8F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Web.Tests", "test\Adapters\Driving\Gateway.Web.Tests\Gateway.Web.Tests.csproj", "{6A7363FC-38A6-47A9-B6ED-01825A88F639}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Tests", "test\Adapters\Driving\Web.Tests\Web.Tests.csproj", "{6A7363FC-38A6-47A9-B6ED-01825A88F639}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "src\Application\Domain\Model\Model.csproj", "{DE43F6DA-0BF4-4387-80AC-C26B02922EBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model.Tests", "test\Application\Domain\Model.Tests\Model.Tests.csproj", "{25F71468-ACEF-4877-B084-C8DDE247DF68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UseCases", "src\Application\Ports\Driving\UseCases\UseCases.csproj", "{54FAFB87-19BE-4D34-8E31-98E1B0E0DDDC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "src\Application\Domain\Service\Service.csproj", "{C57951B9-5109-4C0C-AE14-6BBB08311307}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.UseCases", "src\Application\Ports\Driving\Project.UseCases\Project.UseCases.csproj", "{54FAFB87-19BE-4D34-8E31-98E1B0E0DDDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Tests", "test\Application\Service.Tests\Service.Tests.csproj", "{DCA8484A-329C-4496-BDE1-A87D22C166CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "test\Common\Tests.Common\Tests.Common.csproj", "{992E0221-042E-466E-BC62-609E4FBF1714}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Persistence.Mongodb", "src\Adapters\Driven\Gateway.Persistence.Mongodb\Gateway.Persistence.Mongodb.csproj", "{DE9D5A0B-39F9-4E3D-ACED-CB72CE7CE7F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence.Mongodb", "src\Adapters\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj", "{DE9D5A0B-39F9-4E3D-ACED-CB72CE7CE7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Project", "src\Application\Ports\Driven\Ports.Project\Ports.Project.csproj", "{68F93E0C-C50D-4CB0-A177-531A4FAA2047}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Ports", "src\Application\Ports\Driven\Project.Ports\Project.Ports.csproj", "{68F93E0C-C50D-4CB0-A177-531A4FAA2047}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway.Persistence.Mongodb.Tests", "test\Adapters\Driven\Gateway.Persistence.Mongodb.Tests\Gateway.Persistence.Mongodb.Tests.csproj", "{B631765A-F54F-4707-BCE9-D994C926C8CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence.Mongodb.Tests", "test\Adapters\Driven\Persistence.Mongodb.Tests\Persistence.Mongodb.Tests.csproj", "{B631765A-F54F-4707-BCE9-D994C926C8CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculation.Web", "src\Adapters\Driving\Calculation.Web\Calculation.Web.csproj", "{D28582D6-9925-4850-A73A-7861F6F863DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Web", "src\Adapters\Driving\Analysis.Web\Analysis.Web.csproj", "{D28582D6-9925-4850-A73A-7861F6F863DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Calculation", "src\Application\Ports\Driven\Ports.Calculation\Ports.Calculation.csproj", "{C18525B6-2558-416E-9D9E-AAE063EA88A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Ports", "src\Application\Ports\Driven\Analysis.Ports\Analysis.Ports.csproj", "{C18525B6-2558-416E-9D9E-AAE063EA88A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculation.Instance.Docker", "src\Adapters\Driven\Calculation.Instance.Docker\Calculation.Instance.Docker.csproj", "{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Instance.Docker", "src\Adapters\Driven\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj", "{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Web.Tests", "test\Adapters\Driving\Analysis.Web.Tests\Analysis.Web.Tests.csproj", "{2D25CA6A-4C60-497B-AF8F-C5FA1DE8639A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.UseCases", "src\Application\Ports\Driving\Analysis.UseCases\Analysis.UseCases.csproj", "{80718DF2-2253-41C8-AC98-8112490E8638}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "src\Common\Common.csproj", "{F8ABAE3B-A26F-4AC4-B0FA-E1EFDC687249}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "test\Common\Common.Tests\Common.Tests.csproj", "{3F56A879-42F5-447F-B056-0EDE704AA173}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service", "src\Application\Domain\Project.Service\Project.Service.csproj", "{FB230CD2-EF1A-461A-8C87-655B66CF905C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service", "src\Application\Domain\Analysis.Service\Analysis.Service.csproj", "{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service.Tests", "test\Application\Domain\Analysis.Service.Tests\Analysis.Service.Tests.csproj", "{08C868B4-76B5-4DEF-BD51-503A65A3E830}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service.Tests", "test\Application\Domain\Project.Service.Tests\Project.Service.Tests.csproj", "{B4274008-B460-44E4-9632-8FE9014A948F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +75,6 @@ Global
 		{54FAFB87-19BE-4D34-8E31-98E1B0E0DDDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54FAFB87-19BE-4D34-8E31-98E1B0E0DDDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54FAFB87-19BE-4D34-8E31-98E1B0E0DDDC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C57951B9-5109-4C0C-AE14-6BBB08311307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C57951B9-5109-4C0C-AE14-6BBB08311307}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C57951B9-5109-4C0C-AE14-6BBB08311307}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C57951B9-5109-4C0C-AE14-6BBB08311307}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCA8484A-329C-4496-BDE1-A87D22C166CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCA8484A-329C-4496-BDE1-A87D22C166CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCA8484A-329C-4496-BDE1-A87D22C166CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,5 +107,37 @@ Global
 		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A96A726-BE7B-439F-9DA9-1DB1F7EF89D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D25CA6A-4C60-497B-AF8F-C5FA1DE8639A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D25CA6A-4C60-497B-AF8F-C5FA1DE8639A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D25CA6A-4C60-497B-AF8F-C5FA1DE8639A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D25CA6A-4C60-497B-AF8F-C5FA1DE8639A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80718DF2-2253-41C8-AC98-8112490E8638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80718DF2-2253-41C8-AC98-8112490E8638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80718DF2-2253-41C8-AC98-8112490E8638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80718DF2-2253-41C8-AC98-8112490E8638}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8ABAE3B-A26F-4AC4-B0FA-E1EFDC687249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8ABAE3B-A26F-4AC4-B0FA-E1EFDC687249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8ABAE3B-A26F-4AC4-B0FA-E1EFDC687249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8ABAE3B-A26F-4AC4-B0FA-E1EFDC687249}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F56A879-42F5-447F-B056-0EDE704AA173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F56A879-42F5-447F-B056-0EDE704AA173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F56A879-42F5-447F-B056-0EDE704AA173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F56A879-42F5-447F-B056-0EDE704AA173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB230CD2-EF1A-461A-8C87-655B66CF905C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB230CD2-EF1A-461A-8C87-655B66CF905C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB230CD2-EF1A-461A-8C87-655B66CF905C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB230CD2-EF1A-461A-8C87-655B66CF905C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4274008-B460-44E4-9632-8FE9014A948F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4274008-B460-44E4-9632-8FE9014A948F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4274008-B460-44E4-9632-8FE9014A948F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4274008-B460-44E4-9632-8FE9014A948F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

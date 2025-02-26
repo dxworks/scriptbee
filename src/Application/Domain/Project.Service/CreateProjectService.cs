@@ -1,10 +1,10 @@
 ﻿using OneOf;
+using ScriptBee.Common;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Driven.Project;
-using ScriptBee.Ports.Driving.UseCases;
-using ScriptBee.Ports.Driving.UseCases.Project;
+using ScriptBee.Project.Ports;
+using ScriptBee.Project.UseCases;
 
-namespace ScriptBee.Domain.Service.Project;
+namespace ScriptBee.Project.Service;
 
 public class CreateProjectService(ICreateProject createProject, IDateTimeProvider dateTimeProvider)
     : ICreateProjectUseCase
