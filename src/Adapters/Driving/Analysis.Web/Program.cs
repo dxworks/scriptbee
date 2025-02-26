@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using ScriptBee.Calculation.Web.EndpointDefinitions;
-using ScriptBee.Calculation.Web.Extensions;
+using ScriptBee.Analysis.Web.EndpointDefinitions;
+using ScriptBee.Analysis.Web.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using Serilog;

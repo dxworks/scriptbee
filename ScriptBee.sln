@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model.Tests", "test\Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.UseCases", "src\Application\Ports\Driving\Project.UseCases\Project.UseCases.csproj", "{54FAFB87-19BE-4D34-8E31-98E1B0E0DDDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Tests", "test\Application\Service.Tests\Service.Tests.csproj", "{DCA8484A-329C-4496-BDE1-A87D22C166CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service.Tests", "test\Application\Domain\Analysis.Service.Tests\Analysis.Service.Tests.csproj", "{DCA8484A-329C-4496-BDE1-A87D22C166CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "test\Common\Tests.Common\Tests.Common.csproj", "{992E0221-042E-466E-BC62-609E4FBF1714}"
 EndProject
@@ -41,9 +41,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service", "src\Appl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service", "src\Application\Domain\Analysis.Service\Analysis.Service.csproj", "{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service.Tests", "test\Application\Domain\Analysis.Service.Tests\Analysis.Service.Tests.csproj", "{08C868B4-76B5-4DEF-BD51-503A65A3E830}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service.Tests", "test\Application\Domain\Project.Service.Tests\Project.Service.Tests.csproj", "{B4274008-B460-44E4-9632-8FE9014A948F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Service.Tests", "test\Application\Domain\Analysis.Service.Tests\Analysis.Service.Tests.csproj", "{32C4498B-88A7-405C-A996-0A4173499E5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,13 +131,13 @@ Global
 		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{635A1F4A-EA0E-46F3-A650-7DB5E807DBA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08C868B4-76B5-4DEF-BD51-503A65A3E830}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B4274008-B460-44E4-9632-8FE9014A948F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4274008-B460-44E4-9632-8FE9014A948F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4274008-B460-44E4-9632-8FE9014A948F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4274008-B460-44E4-9632-8FE9014A948F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32C4498B-88A7-405C-A996-0A4173499E5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32C4498B-88A7-405C-A996-0A4173499E5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32C4498B-88A7-405C-A996-0A4173499E5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32C4498B-88A7-405C-A996-0A4173499E5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

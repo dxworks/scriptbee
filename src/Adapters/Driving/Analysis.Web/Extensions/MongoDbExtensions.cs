@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
+using ScriptBee.Persistence.Mongodb.Exceptions;
 
-namespace ScriptBee.Calculation.Web.Extensions;
+namespace ScriptBee.Analysis.Web.Extensions;
 
 public static class MongoDbExtensions
 {
@@ -11,7 +12,7 @@ public static class MongoDbExtensions
     {
         if (string.IsNullOrEmpty(connectionString))
         {
-            // throw new InvalidMongoConfigurationException();
+            throw new InvalidMongoConfigurationException();
         }
 
         var mongoUrl = new MongoUrl(connectionString);

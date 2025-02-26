@@ -1,7 +1,6 @@
-﻿using ScriptBee.Domain.Service;
-using ScriptBee.Ports.Driving.UseCases;
+﻿using ScriptBee.Common;
 
-namespace ScriptBee.Calculation.Web.Extensions;
+namespace ScriptBee.Analysis.Web.Extensions;
 
 public static class CommonServicesExtensions
 {
