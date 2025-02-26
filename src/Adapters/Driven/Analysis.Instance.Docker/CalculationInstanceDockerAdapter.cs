@@ -2,14 +2,14 @@
 using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using ScriptBee.Domain.Model.Calculation;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Ports.Driven.Calculation;
 
-namespace ScriptBee.Calculation.Instance.Docker;
+namespace ScriptBee.Analysis.Instance.Docker;
 
 public class CalculationInstanceDockerAdapter(
     IOptions<CalculationDockerConfig> config,
-    ILogger logger
+    ILogger<CalculationInstanceDockerAdapter> logger
 ) : IAllocateInstance, IDeallocateInstance
 {
     public async Task<string> Allocate(
@@ -52,7 +52,7 @@ public class CalculationInstanceDockerAdapter(
         );
     }
 
-    public Task Deallocate(CalculationInstanceInfo calculationInstanceInfo)
+    public Task Deallocate(InstanceInfo calculationInstanceInfo)
     {
         throw new NotImplementedException();
     }

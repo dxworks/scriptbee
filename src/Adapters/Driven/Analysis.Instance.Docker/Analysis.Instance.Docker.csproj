@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>ScriptBee.Calculation.Instance.Docker</RootNamespace>
+        <RootNamespace>ScriptBee.Analysis.Instance.Docker</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Calculation\Ports.Calculation.csproj" />
+      <ProjectReference Include="..\..\..\Application\Ports\Driven\Analysis.Ports\Analysis.Ports.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -13,5 +13,4 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     </ItemGroup>
-
 </Project>

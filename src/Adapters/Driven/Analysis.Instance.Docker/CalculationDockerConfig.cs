@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Calculation.Instance.Docker;
+﻿namespace ScriptBee.Analysis.Instance.Docker;
 
 public class CalculationDockerConfig
 {
