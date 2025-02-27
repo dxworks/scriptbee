@@ -6,6 +6,6 @@ public record WebGetProjectInstance(string Id, DateTimeOffset CreationDate)
 {
     public static WebGetProjectInstance Map(InstanceInfo info)
     {
-        return new WebGetProjectInstance(info.Id.Value, info.CreationDate);
+        return new WebGetProjectInstance(info.Id.ToString(), info.CreationDate);
     }
 }

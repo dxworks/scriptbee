@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Project.Tests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Analysis.Tests", "test\Application\Domain\Service.Analysis.Tests\Service.Analysis.Tests.csproj", "{32C4498B-88A7-405C-A996-0A4173499E5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Instance", "src\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj", "{6CF369BB-97B9-4001-B44C-50502C3DAF81}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,5 +135,9 @@ Global
 		{32C4498B-88A7-405C-A996-0A4173499E5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32C4498B-88A7-405C-A996-0A4173499E5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32C4498B-88A7-405C-A996-0A4173499E5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

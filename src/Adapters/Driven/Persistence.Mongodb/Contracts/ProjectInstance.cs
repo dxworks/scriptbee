@@ -26,7 +26,7 @@ public class ProjectInstance : IDocument
     {
         return new ProjectInstance
         {
-            Id = instanceInfo.Id.Value,
+            Id = instanceInfo.Id.ToString(),
             ProjectId = instanceInfo.ProjectId.Value,
             Url = instanceInfo.Url,
             CreationDate = instanceInfo.CreationDate,

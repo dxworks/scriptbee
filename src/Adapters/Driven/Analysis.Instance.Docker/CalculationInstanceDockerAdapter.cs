@@ -3,7 +3,7 @@ using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Domain.Model.Analysis;
-using ScriptBee.Ports.Analysis;
+using ScriptBee.Ports.Instance;
 
 namespace ScriptBee.Analysis.Instance.Docker;
 
@@ -13,7 +13,7 @@ public class CalculationInstanceDockerAdapter(
 ) : IAllocateInstance, IDeallocateInstance
 {
     public async Task<string> Allocate(
-        string imageName,
+        AnalysisInstanceImage image,
         CancellationToken cancellationToken = default
     )
     {
@@ -22,13 +22,13 @@ public class CalculationInstanceDockerAdapter(
             new Uri(calculationDockerConfig.DockerSocket)
         ).CreateClient();
 
-        await PullImageIfNeeded(client, imageName, cancellationToken);
+        await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
                 Name = "scriptbee-calculation",
-                Image = imageName,
+                Image = image.ImageName,
                 HostConfig = new HostConfig { NetworkMode = calculationDockerConfig.Network },
             },
             cancellationToken
