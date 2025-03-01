@@ -3,9 +3,9 @@ using ScriptBee.Domain.Model.Analysis;
 
 namespace ScriptBee.Ports.Project.Analysis;
 
-public interface IGetAnalysisResult
+public interface IGetAnalysis
 {
-    Task<OneOf<AnalysisResult, AnalysisDoesNotExistsError>> GetById(
+    Task<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>> GetById(
         AnalysisId analysisId,
         CancellationToken cancellationToken = default
     );

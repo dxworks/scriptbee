@@ -1,26 +1,28 @@
-﻿namespace ScriptBee.Domain.Model.Analysis;
+﻿using ScriptBee.Domain.Model.Project;
 
-public record AnalysisResult(
+namespace ScriptBee.Domain.Model.Analysis;
+
+public record AnalysisInfo(
     AnalysisId Id,
-    InstanceInfo InstanceInfo,
+    ProjectId ProjectId,
     AnalysisStatus Status,
     AnalysisMetadata Metadata,
-    IEnumerable<Result> Results,
+    IEnumerable<ResultSummary> Results,
     IEnumerable<AnalysisError> Errors,
     DateTimeOffset CreationDate,
     DateTimeOffset? FinishedDate
 )
 {
-    public static AnalysisResult Started(
+    public static AnalysisInfo Started(
         AnalysisId analysisId,
-        InstanceInfo instanceInfo,
+        ProjectId projectId,
         AnalysisMetadata metadata,
         DateTimeOffset creationDate
     )
     {
-        return new AnalysisResult(
+        return new AnalysisInfo(
             analysisId,
-            instanceInfo,
+            projectId,
             AnalysisStatus.Started,
             metadata,
             [],

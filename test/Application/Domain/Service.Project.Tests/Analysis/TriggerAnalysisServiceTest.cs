@@ -44,13 +44,7 @@ public class TriggerAnalysisServiceTest
         );
         var instanceIdGuid = Guid.NewGuid();
         var analysisIdGuid = Guid.NewGuid();
-        var analysisId = AnalysisId.FromGuid(analysisIdGuid);
-        var instanceInfo = new InstanceInfo(
-            InstanceId.FromGuid(instanceIdGuid),
-            projectId,
-            "http://instance",
-            creationDate
-        );
+        var analysisId = new AnalysisId(analysisIdGuid);
         _dateTimeProvider.UtcNow().Returns(creationDate);
         _guidProvider.NewGuid().Returns(instanceIdGuid, analysisIdGuid);
         _getAllProjectInstances
@@ -61,7 +55,7 @@ public class TriggerAnalysisServiceTest
         var analysisResult = await _triggerAnalysisService.Trigger(command);
 
         analysisResult.Id.ShouldBeEquivalentTo(analysisId);
-        analysisResult.InstanceInfo.ShouldBe(instanceInfo);
+        analysisResult.ProjectId.ShouldBe(projectId);
         analysisResult.Status.ShouldBe(AnalysisStatus.Started);
         analysisResult.Results.ShouldBeEmpty();
         analysisResult.Errors.ShouldBeEmpty();
@@ -83,9 +77,9 @@ public class TriggerAnalysisServiceTest
             ["linker"]
         );
         var analysisIdGuid = Guid.NewGuid();
-        var analysisId = AnalysisId.FromGuid(analysisIdGuid);
+        var analysisId = new AnalysisId(analysisIdGuid);
         var instanceInfo = new InstanceInfo(
-            InstanceId.FromGuid(Guid.NewGuid()),
+            new InstanceId(Guid.NewGuid()),
             projectId,
             "http://instance",
             DateTimeOffset.Now
@@ -101,7 +95,7 @@ public class TriggerAnalysisServiceTest
         var analysisResult = await _triggerAnalysisService.Trigger(command);
 
         analysisResult.Id.ShouldBeEquivalentTo(analysisId);
-        analysisResult.InstanceInfo.ShouldBe(instanceInfo);
+        analysisResult.ProjectId.ShouldBe(projectId);
         analysisResult.Status.ShouldBe(AnalysisStatus.Started);
         analysisResult.Results.ShouldBeEmpty();
         analysisResult.Errors.ShouldBeEmpty();

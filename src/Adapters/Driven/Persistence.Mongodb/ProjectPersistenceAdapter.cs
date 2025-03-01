@@ -3,14 +3,14 @@ using MongoDB.Driver;
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Ports.Project;
 
 namespace ScriptBee.Persistence.Mongodb;
 
 public class ProjectPersistenceAdapter(
-    IMongoRepository<ProjectModel> mongoRepository,
+    IMongoRepository<MongodbProjectModel> mongoRepository,
     ILogger<ProjectPersistenceAdapter> logger
 ) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject
 {
@@ -22,7 +22,7 @@ public class ProjectPersistenceAdapter(
         try
         {
             await mongoRepository.CreateDocument(
-                ProjectModel.From(projectDetails),
+                MongodbProjectModel.From(projectDetails),
                 cancellationToken
             );
         }

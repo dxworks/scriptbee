@@ -4,7 +4,7 @@ namespace ScriptBee.UseCases.Project.Analysis;
 
 public interface ITriggerAnalysisUseCase
 {
-    Task<AnalysisResult> Trigger(
+    Task<AnalysisInfo> Trigger(
         TriggerAnalysisCommand command,
         CancellationToken cancellationToken = default
     );

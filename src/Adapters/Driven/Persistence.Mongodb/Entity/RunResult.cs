@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Persistence.Mongodb.Contracts;
+﻿namespace ScriptBee.Persistence.Mongodb.Entity;
 
 public class RunResult
 {

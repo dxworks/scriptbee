@@ -25,7 +25,7 @@ public class GetProjectInstancesServiceTest
         IEnumerable<InstanceInfo> expectedCalculationInstanceInfos =
         [
             new(
-                InstanceId.FromGuid(Guid.NewGuid()),
+                new InstanceId(Guid.NewGuid()),
                 projectId,
                 "http://url:8080",
                 DateTimeOffset.UtcNow

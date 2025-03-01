@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Domain.Model.Project;
 
-public sealed record ProjectId
+public readonly record struct ProjectId
 {
     public string Value { get; }
 
@@ -21,4 +21,6 @@ public sealed record ProjectId
     {
         return new ProjectId(value);
     }
+
+    public override string ToString() => Value;
 }

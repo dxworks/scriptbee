@@ -2,9 +2,9 @@
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Persistence.Mongodb.Contracts;
+namespace ScriptBee.Persistence.Mongodb.Entity;
 
-public class ProjectInstance : IDocument
+public class MongodbProjectInstance : IDocument
 {
     [BsonId]
     public required string Id { get; set; }
@@ -15,16 +15,16 @@ public class ProjectInstance : IDocument
     public InstanceInfo ToCalculationInstanceInfo()
     {
         return new InstanceInfo(
-            InstanceId.FromValue(Id),
+            new InstanceId(Id),
             Domain.Model.Project.ProjectId.FromValue(ProjectId),
             Url,
             CreationDate
         );
     }
 
-    public static ProjectInstance From(InstanceInfo instanceInfo)
+    public static MongodbProjectInstance From(InstanceInfo instanceInfo)
     {
-        return new ProjectInstance
+        return new MongodbProjectInstance
         {
             Id = instanceInfo.Id.ToString(),
             ProjectId = instanceInfo.ProjectId.Value,

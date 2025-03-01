@@ -52,4 +52,12 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
     {
         await mongoCollection.DeleteOneAsync(x => x.Id == id, cancellationToken);
     }
+
+    public async Task DeleteDocument(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    )
+    {
+        await mongoCollection.DeleteOneAsync(predicate, cancellationToken);
+    }
 }

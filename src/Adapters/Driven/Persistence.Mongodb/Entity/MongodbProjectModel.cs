@@ -2,9 +2,9 @@
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Persistence.Mongodb.Contracts;
+namespace ScriptBee.Persistence.Mongodb.Entity;
 
-public class ProjectModel : IDocument
+public class MongodbProjectModel : IDocument
 {
     [BsonId]
     public required string Id { get; set; }
@@ -22,9 +22,9 @@ public class ProjectModel : IDocument
         return new ProjectDetails(ProjectId.FromValue(Id), Name, CreationDate);
     }
 
-    public static ProjectModel From(ProjectDetails projectDetails)
+    public static MongodbProjectModel From(ProjectDetails projectDetails)
     {
-        return new ProjectModel
+        return new MongodbProjectModel
         {
             Id = projectDetails.Id.Value,
             Name = projectDetails.Name,

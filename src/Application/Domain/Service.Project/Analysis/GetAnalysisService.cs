@@ -6,24 +6,22 @@ using ScriptBee.UseCases.Project.Analysis;
 
 namespace ScriptBee.Service.Project.Analysis;
 
-public class GetAnalysisService(
-    IGetAllAnalysisResults getAllAnalysisResults,
-    IGetAnalysisResult getAnalysisResult
-) : IGetAnalysisUseCase
+public class GetAnalysisService(IGetAllAnalyses getAllAnalyses, IGetAnalysis getAnalysis)
+    : IGetAnalysisUseCase
 {
-    public async Task<IEnumerable<AnalysisResult>> GetAll(
+    public async Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
         CancellationToken cancellationToken = default
     )
     {
-        return await getAllAnalysisResults.GetAll(projectId, cancellationToken);
+        return await getAllAnalyses.GetAll(projectId, cancellationToken);
     }
 
-    public async Task<OneOf<AnalysisResult, AnalysisDoesNotExistsError>> GetById(
+    public async Task<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>> GetById(
         AnalysisId analysisId,
         CancellationToken cancellationToken = default
     )
     {
-        return await getAnalysisResult.GetById(analysisId, cancellationToken);
+        return await getAnalysis.GetById(analysisId, cancellationToken);
     }
 }

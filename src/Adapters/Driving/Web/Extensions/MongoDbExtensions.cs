@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Persistence.Mongodb;
-using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Exceptions;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Ports.Analysis;
@@ -44,10 +44,13 @@ public static class MongoDbExtensions
     )
     {
         return services
-            .AddSingleton<IMongoCollection<ProjectModel>>(_ =>
-                mongoDatabase.GetCollection<ProjectModel>("Projects")
+            .AddSingleton<IMongoCollection<MongodbProjectModel>>(_ =>
+                mongoDatabase.GetCollection<MongodbProjectModel>("Projects")
             )
-            .AddSingleton<IMongoRepository<ProjectModel>, MongoRepository<ProjectModel>>()
+            .AddSingleton<
+                IMongoRepository<MongodbProjectModel>,
+                MongoRepository<MongodbProjectModel>
+            >()
             .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
             .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
             .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
@@ -60,10 +63,13 @@ public static class MongoDbExtensions
     )
     {
         return services
-            .AddSingleton<IMongoCollection<ProjectInstance>>(_ =>
-                mongoDatabase.GetCollection<ProjectInstance>("Instances")
+            .AddSingleton<IMongoCollection<MongodbProjectInstance>>(_ =>
+                mongoDatabase.GetCollection<MongodbProjectInstance>("Instances")
             )
-            .AddSingleton<IMongoRepository<ProjectInstance>, MongoRepository<ProjectInstance>>()
+            .AddSingleton<
+                IMongoRepository<MongodbProjectInstance>,
+                MongoRepository<MongodbProjectInstance>
+            >()
             .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>();
     }

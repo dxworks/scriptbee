@@ -14,7 +14,7 @@ public class TriggerAnalysisService(
     IAllocateInstance allocateInstance
 ) : ITriggerAnalysisUseCase
 {
-    public async Task<AnalysisResult> Trigger(
+    public async Task<AnalysisInfo> Trigger(
         TriggerAnalysisCommand command,
         CancellationToken cancellationToken = default
     )
@@ -22,10 +22,11 @@ public class TriggerAnalysisService(
         var instanceInfo = await GetFirstPermanentInstanceOrAllocate(command, cancellationToken);
 
         // TODO FIXIT: call analysis instance
+        // TODO FIXIT: persist analysis
 
-        return AnalysisResult.Started(
-            AnalysisId.FromGuid(guidProvider.NewGuid()),
-            instanceInfo,
+        return AnalysisInfo.Started(
+            new AnalysisId(guidProvider.NewGuid()),
+            instanceInfo.ProjectId,
             new AnalysisMetadata(command.Loaders, command.Linkers),
             dateTimeProvider.UtcNow()
         );
@@ -60,7 +61,7 @@ public class TriggerAnalysisService(
         var instanceUrl = await allocateInstance.Allocate(image, cancellationToken);
 
         return new InstanceInfo(
-            InstanceId.FromGuid(guidProvider.NewGuid()),
+            new InstanceId(guidProvider.NewGuid()),
             projectId,
             instanceUrl,
             dateTimeProvider.UtcNow()

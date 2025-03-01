@@ -20,4 +20,9 @@ public interface IMongoRepository<T>
     public Task UpdateDocument(T model, CancellationToken cancellationToken);
 
     public Task DeleteDocument(string id, CancellationToken cancellationToken);
+
+    public Task DeleteDocument(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    );
 }

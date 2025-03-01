@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
 using Xunit.Abstractions;
@@ -10,16 +10,16 @@ namespace ScriptBee.Persistence.Mongodb.Tests;
 public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFixture>
 {
     private readonly ProjectPersistenceAdapter _adapter;
-    private readonly IMongoCollection<ProjectModel> _mongoCollection;
+    private readonly IMongoCollection<MongodbProjectModel> _mongoCollection;
 
     public ProjectPersistenceAdapterIntegrationTests(
         MongoDbFixture fixture,
         ITestOutputHelper outputHelper
     )
     {
-        _mongoCollection = fixture.GetCollection<ProjectModel>("Projects");
+        _mongoCollection = fixture.GetCollection<MongodbProjectModel>("Projects");
         _adapter = new ProjectPersistenceAdapter(
-            new MongoRepository<ProjectModel>(_mongoCollection),
+            new MongoRepository<MongodbProjectModel>(_mongoCollection),
             new XunitLogger<ProjectPersistenceAdapter>(outputHelper)
         );
     }
@@ -44,7 +44,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var projectId = ProjectId.Create("existing-id");
         var project = new ProjectDetails(projectId, "name", DateTimeOffset.UtcNow);
         await _mongoCollection.InsertOneAsync(
-            new ProjectModel { Id = "existing-id", Name = "existing" }
+            new MongodbProjectModel { Id = "existing-id", Name = "existing" }
         );
 
         var result = await _adapter.Create(project, CancellationToken.None);
@@ -57,7 +57,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var projectId = ProjectId.FromValue("to-delete");
         await _mongoCollection.InsertOneAsync(
-            new ProjectModel { Id = "to-delete", Name = "to-delete" }
+            new MongodbProjectModel { Id = "to-delete", Name = "to-delete" }
         );
 
         await _adapter.Delete(projectId, CancellationToken.None);
@@ -81,7 +81,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var creationDate = DateTimeOffset.UtcNow;
         await _mongoCollection.InsertOneAsync(
-            new ProjectModel
+            new MongodbProjectModel
             {
                 Id = "all-projects-id",
                 Name = "all-projects-id",
@@ -103,7 +103,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var creationDate = DateTimeOffset.UtcNow;
         await _mongoCollection.InsertOneAsync(
-            new ProjectModel
+            new MongodbProjectModel
             {
                 Id = "get-project-by-id",
                 Name = "get-project-by-id",

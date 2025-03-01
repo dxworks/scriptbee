@@ -1,16 +1,9 @@
 ﻿namespace ScriptBee.Domain.Model.Analysis;
 
-public sealed record ResultId
+public readonly record struct ResultId(Guid Value)
 {
-    public string Value { get; }
+    public ResultId(string value)
+        : this(Guid.Parse(value)) { }
 
-    private ResultId(string value)
-    {
-        Value = value;
-    }
-
-    public static ResultId FromValue(string value)
-    {
-        return new ResultId(value);
-    }
+    public override string ToString() => Value.ToString();
 }

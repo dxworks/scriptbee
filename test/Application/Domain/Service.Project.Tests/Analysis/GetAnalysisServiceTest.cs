@@ -9,37 +9,31 @@ namespace ScriptBee.Service.Project.Tests.Analysis;
 
 public class GetAnalysisServiceTest
 {
-    private readonly IGetAllAnalysisResults _getAllAnalysisResults =
-        Substitute.For<IGetAllAnalysisResults>();
+    private readonly IGetAllAnalyses _getAllAnalyses = Substitute.For<IGetAllAnalyses>();
 
-    private readonly IGetAnalysisResult _getAnalysisResult = Substitute.For<IGetAnalysisResult>();
+    private readonly IGetAnalysis _getAnalysis = Substitute.For<IGetAnalysis>();
 
     private readonly GetAnalysisService _getAnalysisService;
 
     public GetAnalysisServiceTest()
     {
-        _getAnalysisService = new GetAnalysisService(_getAllAnalysisResults, _getAnalysisResult);
+        _getAnalysisService = new GetAnalysisService(_getAllAnalyses, _getAnalysis);
     }
 
     [Fact]
     public async Task GetAllAnalyses()
     {
         var projectId = ProjectId.FromValue("project-id");
-        IEnumerable<AnalysisResult> expectedAnalysisResults =
+        IEnumerable<AnalysisInfo> expectedAnalysisResults =
         [
-            AnalysisResult.Started(
-                AnalysisId.FromGuid(Guid.NewGuid()),
-                new InstanceInfo(
-                    InstanceId.FromGuid(Guid.NewGuid()),
-                    projectId,
-                    "http://url:8080",
-                    DateTimeOffset.UtcNow
-                ),
+            AnalysisInfo.Started(
+                new AnalysisId(Guid.NewGuid()),
+                projectId,
                 new AnalysisMetadata([], []),
                 DateTimeOffset.Now
             ),
         ];
-        _getAllAnalysisResults.GetAll(projectId).Returns(Task.FromResult(expectedAnalysisResults));
+        _getAllAnalyses.GetAll(projectId).Returns(Task.FromResult(expectedAnalysisResults));
 
         var analysisResults = await _getAnalysisService.GetAll(projectId);
 
@@ -49,22 +43,17 @@ public class GetAnalysisServiceTest
     [Fact]
     public async Task GetAnalysis()
     {
-        var analysisId = AnalysisId.FromGuid(Guid.NewGuid());
-        var expectedAnalysis = AnalysisResult.Started(
-            AnalysisId.FromGuid(Guid.NewGuid()),
-            new InstanceInfo(
-                InstanceId.FromGuid(Guid.NewGuid()),
-                ProjectId.FromValue("project-id"),
-                "http://url:8080",
-                DateTimeOffset.UtcNow
-            ),
+        var analysisId = new AnalysisId(Guid.NewGuid());
+        var expectedAnalysis = AnalysisInfo.Started(
+            new AnalysisId(Guid.NewGuid()),
+            ProjectId.FromValue("project-id"),
             new AnalysisMetadata([], []),
             DateTimeOffset.Now
         );
-        _getAnalysisResult
+        _getAnalysis
             .GetById(analysisId)
             .Returns(
-                Task.FromResult<OneOf<AnalysisResult, AnalysisDoesNotExistsError>>(expectedAnalysis)
+                Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(expectedAnalysis)
             );
 
         var analysisResult = await _getAnalysisService.GetById(analysisId);
@@ -75,12 +64,12 @@ public class GetAnalysisServiceTest
     [Fact]
     public async Task GivenNoAnalysis_ShouldReturnAnalysisDoesNotExistsError()
     {
-        var analysisId = AnalysisId.FromGuid(Guid.NewGuid());
+        var analysisId = new AnalysisId(Guid.NewGuid());
         var expectedError = new AnalysisDoesNotExistsError(analysisId);
-        _getAnalysisResult
+        _getAnalysis
             .GetById(analysisId)
             .Returns(
-                Task.FromResult<OneOf<AnalysisResult, AnalysisDoesNotExistsError>>(expectedError)
+                Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(expectedError)
             );
 
         var analysisResult = await _getAnalysisService.GetById(analysisId);

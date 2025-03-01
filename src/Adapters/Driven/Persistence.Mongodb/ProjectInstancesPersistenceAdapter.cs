@@ -1,15 +1,15 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Persistence.Mongodb.Contracts;
+using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Project.Analysis;
 
 namespace ScriptBee.Persistence.Mongodb;
 
-public class ProjectInstancesPersistenceAdapter(IMongoRepository<ProjectInstance> mongoRepository)
-    : ICreateProjectInstance,
-        IGetAllProjectInstances
+public class ProjectInstancesPersistenceAdapter(
+    IMongoRepository<MongodbProjectInstance> mongoRepository
+) : ICreateProjectInstance, IGetAllProjectInstances
 {
     public async Task<InstanceInfo> Create(
         ProjectId projectId,
@@ -17,12 +17,12 @@ public class ProjectInstancesPersistenceAdapter(IMongoRepository<ProjectInstance
     )
     {
         var calculationInstanceInfo = new InstanceInfo(
-            InstanceId.FromValue("test"),
+            new InstanceId("test"),
             projectId,
             "http://localhost:5002",
             DateTimeOffset.UtcNow
         );
-        var projectInstance = ProjectInstance.From(calculationInstanceInfo);
+        var projectInstance = MongodbProjectInstance.From(calculationInstanceInfo);
 
         await mongoRepository.CreateDocument(projectInstance, cancellationToken);
 

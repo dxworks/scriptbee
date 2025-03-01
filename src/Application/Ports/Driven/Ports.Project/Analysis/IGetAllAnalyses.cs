@@ -3,9 +3,9 @@ using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.Ports.Project.Analysis;
 
-public interface IGetAllAnalysisResults
+public interface IGetAllAnalyses
 {
-    Task<IEnumerable<AnalysisResult>> GetAll(
+    Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
         CancellationToken cancellationToken = default
     );
