@@ -2,7 +2,9 @@
   <!-- Leaf node -->
   <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
     <div class="leaf-node">
-      {{ node.name }}
+      <mat-checkbox [checked]="selection.isSelected(node)" (change)="toggleSelection(node)" (click)="$event.stopPropagation()">
+        {{ node.name }}
+      </mat-checkbox>
     </div>
   </mat-nested-tree-node>
 
@@ -14,7 +16,13 @@
           {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      {{ node.name }}
+      <mat-checkbox
+        [indeterminate]="isIndeterminate(node)"
+        [checked]="selection.isSelected(node)"
+        (change)="toggleSelection(node)"
+        (click)="$event.stopPropagation()">
+        {{ node.name }}
+      </mat-checkbox>
     </div>
     <div [class.selectable-tree-invisible]="!tree.isExpanded(node)" role="group">
       <ng-container matTreeNodeOutlet></ng-container>

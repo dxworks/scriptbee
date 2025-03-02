@@ -6,7 +6,7 @@ import { CenteredSpinnerComponent } from '../../../../../components/centered-spi
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { apiHandler } from '../../../../../utils/apiHandler';
 import { MatButton } from '@angular/material/button';
-import { NonSelectableTreeComponent } from '../../../../../components/non-selectable-tree/non-selectable-tree.component';
+import { SelectableTreeComponent } from '../../../../../components/selectable-tree/selectable-tree.component';
 import { TreeNode } from '../../../../../types/tree-node';
 import { ProjectContext } from '../../../../../types/returned-context-slice';
 
@@ -14,7 +14,7 @@ import { ProjectContext } from '../../../../../types/returned-context-slice';
   selector: 'app-project-context',
   templateUrl: './project-context.component.html',
   styleUrls: ['./project-context.component.scss'],
-  imports: [CenteredSpinnerComponent, ErrorStateComponent, MatButton, NonSelectableTreeComponent],
+  imports: [CenteredSpinnerComponent, ErrorStateComponent, MatButton, SelectableTreeComponent],
 })
 export class ProjectContextComponent {
   projectId = input.required<string>();

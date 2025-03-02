@@ -21,7 +21,7 @@
     <app-error-state [error]="reloadContextHandler.error()!"></app-error-state>
   }
 
-  <app-non-selectable-tree [data]="context()"></app-non-selectable-tree>
+  <app-selectable-tree [data]="context()"></app-selectable-tree>
 
   <div class="action-buttons-container">
     <button mat-flat-button [disabled]="reloadContextHandler.isLoading()" (click)="onReloadModelsClick()">Reload Models</button>

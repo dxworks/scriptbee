@@ -16,10 +16,15 @@ export class AnalysisComponent {
   projectId = signal<string | undefined>(undefined);
   analysisId = signal<string | undefined>(undefined);
 
+  // TODO FIXIT: handle loading
   // TODO FIXIT: add the possibility to select the analysis (analysis should have also runIndex to be displayed to the user)
   // TODO FIXIT: select the last analysis by default
 
   constructor(route: ActivatedRoute) {
+    route.queryParamMap.subscribe((params) => {
+      console.log('queryParamMap', params);
+    });
+
     route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: (paramMap) => {
         this.projectId.set(paramMap.get('id') ?? undefined);

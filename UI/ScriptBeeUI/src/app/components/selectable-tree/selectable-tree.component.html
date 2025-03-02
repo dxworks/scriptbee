@@ -1,10 +1,19 @@
-<mat-tree #tree [dataSource]="data()" [childrenAccessor]="childrenAccessor" class="selectable-tree">
+<mat-tree #tree [dataSource]="data()" [childrenAccessor]="childrenAccessor" class="non-selectable-tree">
   <!-- Leaf node -->
   <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
     <div class="leaf-node">
-      <mat-checkbox [checked]="selection.isSelected(node)" (change)="toggleSelection(node)" (click)="$event.stopPropagation()">
+      <span class="node-with-icon">
+        @if (fileIcon()) {
+          <mat-icon>description</mat-icon>
+        }
+
         {{ node.name }}
-      </mat-checkbox>
+
+        @if (enableDelete()) {
+          <div class="flex-spacer"></div>
+          <app-tree-actions-menu (onDelete)="onDelete.emit(node)" />
+        }
+      </span>
     </div>
   </mat-nested-tree-node>
 
@@ -16,15 +25,22 @@
           {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <mat-checkbox
-        [indeterminate]="isIndeterminate(node)"
-        [checked]="selection.isSelected(node)"
-        (change)="toggleSelection(node)"
-        (click)="$event.stopPropagation()">
-        {{ node.name }}
-      </mat-checkbox>
+      <div class="folder-node">
+        <span class="node-with-icon">
+          @if (folderIcon()) {
+            <mat-icon>folder</mat-icon>
+          }
+
+          {{ node.name }}
+
+          @if (enableDelete()) {
+            <div class="flex-spacer"></div>
+            <app-tree-actions-menu (onDelete)="onDelete.emit(node)" />
+          }
+        </span>
+      </div>
     </div>
-    <div [class.selectable-tree-invisible]="!tree.isExpanded(node)" role="group">
+    <div [class.non-selectable-tree-invisible]="!tree.isExpanded(node)" role="group">
       <ng-container matTreeNodeOutlet></ng-container>
     </div>
   </mat-nested-tree-node>
