@@ -1,12 +1,13 @@
 ﻿import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ScriptsContentComponent } from './scripts-content/scripts-content.component';
+import { ScriptTreeComponent } from './script-tree/script-tree.component';
 
 @Component({
   selector: 'app-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.scss'],
-  imports: [AngularSplitModule, ScriptsContentComponent],
+  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent],
 })
 export class AnalysisComponent implements OnInit, OnDestroy {
   // projectId = '';
@@ -40,11 +41,4 @@ export class AnalysisComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // this.fileSystemService.removeFileWatcher(this.projectId).subscribe();
   }
-
-  // onCreateNewScriptButtonClick() {
-  //   this.dialog.open(CreateScriptDialogComponent, {
-  //     disableClose: true,
-  //     data: { projectId: this.projectId },
-  //   });
-  // }
 }
