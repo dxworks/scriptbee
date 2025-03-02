@@ -26,7 +26,10 @@ export class PluginMarketplaceDashboardListItemComponent {
   selectedVersion: string | undefined;
   loading = false;
 
-  constructor(private pluginService: PluginService, private snackbar: MatSnackBar) {}
+  constructor(
+    private pluginService: PluginService,
+    private snackbar: MatSnackBar
+  ) {}
 
   onInstallButtonClick() {
     this.loading = true;

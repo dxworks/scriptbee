@@ -1,0 +1,6 @@
+<div class="main-div" fxLayout="column">
+  <h1>Plugins Marketplace</h1>
+
+  <app-plugin-marketplace-dashboard-list [plugins]="marketPlacePlugins$ | async" [error]="marketplacePluginsError$ | async" fxFlex>
+  </app-plugin-marketplace-dashboard-list>
+</div>

@@ -5,7 +5,7 @@ export interface Plugin {
   name: string;
   description: string;
   author: string;
-  extensionPoints: ExtensionPoint[]
+  extensionPoints: ExtensionPoint[];
 }
 
 interface BasicExtensionPoint {
@@ -47,10 +47,9 @@ interface UIExtensionPoint extends BasicExtensionPoint {
 }
 
 type ExtensionPoint =
-  HelperFunctionsExtensionPoint
+  | HelperFunctionsExtensionPoint
   | ScriptGeneratorExtensionPoint
   | ScriptRunnerExtensionPoint
   | LoaderExtensionPoint
   | LinkerExtensionPoint
   | UIExtensionPoint;
-

@@ -6,7 +6,7 @@ import { contentHeaders } from '../../shared/headers';
 import { MarketplaceProject } from './marketplace-project';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PluginService {
   private pluginsApi = '/api/plugins';
@@ -15,7 +15,7 @@ export class PluginService {
 
   getAllLoadedPlugins(): Observable<Plugin[]> {
     return this.http.get<Plugin[]>(this.pluginsApi, {
-      headers: contentHeaders
+      headers: contentHeaders,
     });
   }
 
@@ -28,7 +28,7 @@ export class PluginService {
       `${this.pluginsApi}/install`,
       {
         pluginId,
-        version
+        version,
       },
       { headers: contentHeaders }
     );
