@@ -1,0 +1,41 @@
+@switch (parameter().type) {
+  @case ('string') {
+    <mat-form-field>
+      <mat-label>Parameter Value</mat-label>
+      <input id="parameter-value-string" matInput placeholder="Value" [ngModel]="parameter().value" (ngModelChange)="onParameterValueChange($event)" />
+    </mat-form-field>
+  }
+  @case ('integer') {
+    <mat-form-field>
+      <mat-label>Parameter Value</mat-label>
+      <input
+        id="parameter-value-integer"
+        matInput
+        placeholder="Value"
+        [ngModel]="parameter().value"
+        type="number"
+        step="1"
+        (ngModelChange)="onParameterValueChange($event)" />
+    </mat-form-field>
+  }
+  @case ('float') {
+    <mat-form-field>
+      <mat-label>Parameter Value</mat-label>
+      <input
+        id="parameter-value-float"
+        matInput
+        placeholder="Value"
+        [ngModel]="parameter().value"
+        type="number"
+        (ngModelChange)="onParameterValueChange($event)" />
+    </mat-form-field>
+  }
+  @case ('boolean') {
+    <mat-checkbox id="paramter-value-boolean" [checked]="isCheckedValue(parameter().value)" (change)="onParameterValueChange($event.checked)">
+      Parameter Value
+    </mat-checkbox>
+  }
+  @default {
+    <div>unsupported parameter type</div>
+  }
+}

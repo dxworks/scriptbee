@@ -1,11 +1,11 @@
 export type ParameterType = 'string' | 'integer' | 'float' | 'boolean';
 
+export type ParameterValue = string | number | boolean;
+
 export interface Parameter {
-  id: string;
   name: string;
   type: ParameterType;
-  value?: string;
-  nameError?: string;
+  value?: ParameterValue;
 }
 
 export interface ScriptLanguage {

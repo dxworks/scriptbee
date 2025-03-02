@@ -4,6 +4,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { SelectableTreeComponent } from '../../../../../components/selectable-tree/selectable-tree.component';
 import { TreeNode } from '../../../../../types/tree-node';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateScriptDialogComponent } from './create-script-dialog/create-script-dialog.component';
 
 @Component({
   selector: 'app-script-tree',
@@ -33,11 +35,13 @@ export class ScriptTreeComponent {
     },
   ]);
 
+  constructor(private dialog: MatDialog) {}
+
   onCreateNewScriptButtonClick() {
-    //   this.dialog.open(CreateScriptDialogComponent, {
-    //     disableClose: true,
-    //     data: { projectId: this.projectId },
-    //   });
+    this.dialog.open(CreateScriptDialogComponent, {
+      disableClose: true,
+      data: { projectId: this.projectId() },
+    });
   }
 
   onNodeDelete(node: TreeNode) {
