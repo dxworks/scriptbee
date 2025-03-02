@@ -30,46 +30,4 @@ export class ProjectService {
   deleteProject(projectId: string) {
     return this.http.delete(`${this.projectsAPIUrl}/${projectId}`);
   }
-
-  // getProjectContext(projectId: string): Observable<TreeNode[]> {
-  //   return this.http.get<ReturnedContextSlice[]>(`${this.projectsAPIUrl}/context/${projectId}`, { headers: contentHeaders }).pipe(
-  //     map((data: ReturnedContextSlice[]) => {
-  //       return ProjectService.convertReturnedContextSlicesToContext(data);
-  //     })
-  //   );
-  // }
-
-  //
-  // private static convertReturnedProjectToProject(returnedProject: ReturnedProject): ProjectData {
-  //   function mapFiles(file: ReturnedNode) {
-  //     return {
-  //       name: file.loaderName,
-  //       children: file.files.map((f) => ({
-  //         name: f,
-  //       })),
-  //     };
-  //   }
-  //
-  //   const savedFiles: TreeNode[] = returnedProject.savedFiles.map((file) => mapFiles(file));
-  //   const loadedFiles: TreeNode[] = returnedProject.loadedFiles.map((file) => mapFiles(file));
-  //
-  //   return {
-  //     projectId: returnedProject.id,
-  //     projectName: returnedProject.name,
-  //     creationDate: returnedProject.creationDate,
-  //     linker: returnedProject.linker,
-  //     loaders: returnedProject.loaders,
-  //     savedFiles: savedFiles,
-  //     loadedFiles: loadedFiles,
-  //   };
-  // }
-  //
-  // private static convertReturnedContextSlicesToContext(contextSlices: ReturnedContextSlice[]) {
-  //   return contextSlices.map((slice) => ({
-  //     name: slice.name,
-  //     children: slice.models.map((model) => ({
-  //       name: model,
-  //     })),
-  //   }));
-  // }
 }

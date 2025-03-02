@@ -12,6 +12,8 @@ import { LinkModelsComponent } from './link-models/link-models.component';
 import { CurrentlyLoadedModelsComponent } from './currently-loaded-models/currently-loaded-models.component';
 import { ProjectContextComponent } from './project-context/project-context.component';
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
+import { InstanceService } from '../../../../services/instances/instance.service';
+import { CenteredSpinnerComponent } from '../../../../components/centered-spinner/centered-spinner.component';
 
 @Component({
   selector: 'app-project-model-page',
@@ -27,19 +29,26 @@ import { LoadingProgressBarComponent } from '../../../../components/loading-prog
     CurrentlyLoadedModelsComponent,
     ProjectContextComponent,
     LoadingProgressBarComponent,
+    CenteredSpinnerComponent,
   ],
 })
 export class ProjectModelPage {
   projectId = signal<string | undefined>(undefined);
 
-  getProjectResource = createRxResourceHandler({
+  projectResource = createRxResourceHandler({
     request: () => this.projectId(),
     loader: (params) => this.projectService.getProject(params.request),
   });
 
+  currentInstanceInfoResource = createRxResourceHandler({
+    request: () => this.projectId(),
+    loader: (params) => this.instanceService.getCurrentInstance(params.request),
+  });
+
   constructor(
     route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private instanceService: InstanceService
   ) {
     route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: (paramMap) => {

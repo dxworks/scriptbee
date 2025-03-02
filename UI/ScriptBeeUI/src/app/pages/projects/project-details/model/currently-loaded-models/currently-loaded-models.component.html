@@ -1,17 +1,11 @@
 ﻿<div class="project-model-section-title project-model-content-after-divider">Currently loaded models</div>
 
-@if (getCurrentInstanceInfoResource.isLoading()) {
-  <app-centered-spinner text="Loading Info"></app-centered-spinner>
-} @else if (getCurrentInstanceInfoResource.error()) {
-  <app-error-state [error]="getCurrentInstanceInfoResource.error()!"></app-error-state>
-} @else {
-  <div class="currently-loaded-models-content">
-    <span>Used Linkers: </span>
-    @for (linker of getCurrentInstanceInfoResource.value()?.linkers; track linker) {
-      {{ linker }}
-    }
-    <div>
-      <app-non-selectable-tree [data]="loadedFiles()"></app-non-selectable-tree>
-    </div>
+<div class="currently-loaded-models-content">
+  <span>Used Linkers: </span>
+  @for (linker of instanceInfo().linkers; track linker) {
+    {{ linker }}
+  }
+  <div>
+    <app-non-selectable-tree [data]="loadedFiles()"></app-non-selectable-tree>
   </div>
-}
+</div>
