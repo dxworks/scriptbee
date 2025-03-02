@@ -1,44 +1,29 @@
-﻿import { Component, OnDestroy, OnInit } from '@angular/core';
+﻿import { Component, signal } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ScriptsContentComponent } from './scripts-content/scripts-content.component';
 import { ScriptTreeComponent } from './script-tree/script-tree.component';
+import { AnalysisOutputComponent } from './output/analysis-output.component';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.scss'],
-  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent],
+  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent, AnalysisOutputComponent],
 })
-export class AnalysisComponent implements OnInit, OnDestroy {
-  // projectId = '';
-  //
-  // outputFiles: OutputFile[] = [];
-  // runIndex: number | undefined;
-  // outputErrorsId: string | undefined;
-  // consoleOutputId: string | undefined;
+export class AnalysisComponent {
+  projectId = signal<string | undefined>(undefined);
+  analysisId = signal<string | undefined>(undefined);
 
-  constructor() {} // private store: Store // private snackBar: MatSnackBar, // private dialog: MatDialog, // private route: ActivatedRoute, // private router: Router, // private fileSystemService: FileSystemService, // private projectStore: ProjectStore,
+  // TODO FIXIT: add the possibility to select the analysis (analysis should have also runIndex to be displayed to the user)
+  // TODO FIXIT: select the last analysis by default
 
-  ngOnInit(): void {
-    // this.projectId = this.projectStore.getProjectId();
-    // this.fileSystemService.addFileWatcher(this.projectId).subscribe();
-    //
-    // this.store.select(selectLastRunOutput).subscribe({
-    //   next: (outputState) => {
-    //     this.outputErrorsId = outputState.results.filter((x) => x.type === 'RunError').map((x) => x.id)[0];
-    //     this.consoleOutputId = outputState.results.filter((x) => x.type === 'Console').map((x) => x.id)[0];
-    //     this.outputFiles = outputState.results
-    //       .filter((x) => x.type === 'File')
-    //       .map((x) => ({
-    //         fileId: x.id,
-    //         fileName: x.name,
-    //       }));
-    //     this.runIndex = outputState.runIndex;
-    //   },
-    // });
-  }
-
-  ngOnDestroy(): void {
-    // this.fileSystemService.removeFileWatcher(this.projectId).subscribe();
+  constructor(route: ActivatedRoute) {
+    route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
+      next: (paramMap) => {
+        this.projectId.set(paramMap.get('id') ?? undefined);
+      },
+    });
   }
 }

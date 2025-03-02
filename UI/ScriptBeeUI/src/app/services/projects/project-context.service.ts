@@ -7,19 +7,17 @@ import { ProjectContext } from '../../types/returned-context-slice';
   providedIn: 'root',
 })
 export class ProjectContextService {
-  private projectsAPIUrl = '/api/projects';
-
   constructor(private http: HttpClient) {}
 
   getProjectContext(projectId: string, instanceId: string): Observable<ProjectContext> {
-    return this.http.get<ProjectContext>(`${this.projectsAPIUrl}/${projectId}/instances/${instanceId}/context`);
+    return this.http.get<ProjectContext>(`/api/projects/${projectId}/instances/${instanceId}/context`);
   }
 
   clearContext(projectId: string, instanceId: string) {
-    return this.http.post<void>(`${this.projectsAPIUrl}/${projectId}/instances/${instanceId}/context/clear`, {});
+    return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/clear`, {});
   }
 
   reloadContext(projectId: string, instanceId: string) {
-    return this.http.post<void>(`${this.projectsAPIUrl}/${projectId}/instances/${instanceId}/context/reload`, {});
+    return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/reload`, {});
   }
 }

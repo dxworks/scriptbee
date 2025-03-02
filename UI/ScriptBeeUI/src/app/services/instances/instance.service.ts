@@ -7,11 +7,9 @@ import { InstanceInfo } from '../../types/instance';
   providedIn: 'root',
 })
 export class InstanceService {
-  private projectsAPIUrl = '/api/projects';
-
   constructor(private http: HttpClient) {}
 
   getCurrentInstance(projectId: string): Observable<InstanceInfo> {
-    return this.http.get<InstanceInfo>(`${this.projectsAPIUrl}/${projectId}/instances/current`);
+    return this.http.get<InstanceInfo>(`/api/projects/${projectId}/instances/current`);
   }
 }

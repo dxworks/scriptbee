@@ -1,13 +1,17 @@
-<div style="height: 100%;">
-  <div *ngIf="outputFiles.length >= 2" fxLayout="row" fxLayoutAlign="start center">
-    <span>Download all files: </span>
-    <button mat-icon-button color="accent" (click)="onDownloadAllButtonClick()">
-      <mat-icon>download</mat-icon>
-    </button>
-  </div>
-  <button class="file-button" *ngFor="let file of outputFiles" mat-raised-button color="primary"
-          (click)="onDownloadFileButtonClick(file)">
+@if (files().length === 0) {
+  <div class="no-output-files">There are no output files</div>
+}
+
+@if (files().length >= 2) {
+  <button class="file-button" mat-stroked-button (click)="onDownloadAllButtonClick()">
     <mat-icon>download</mat-icon>
-    {{file.fileName}}
+    Download All
   </button>
-</div>
+}
+
+@for (file of files(); track file.id) {
+  <button class="file-button" mat-raised-button (click)="onDownloadFileButtonClick(file)">
+    <mat-icon>download</mat-icon>
+    {{ file.name }}
+  </button>
+}

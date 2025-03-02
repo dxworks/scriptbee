@@ -1,0 +1,17 @@
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Console Output">
+    <div class="output-tab-content">
+      <app-console-output [content]="consoleContent()" />
+    </div>
+  </mat-tab>
+  <mat-tab label="Output Errors">
+    <div class="output-tab-content">
+      <app-output-errors [errors]="outputErrors()" />
+    </div>
+  </mat-tab>
+  <mat-tab label="File Output">
+    <div class="output-tab-content">
+      <app-file-output [files]="files()" />
+    </div>
+  </mat-tab>
+</mat-tab-group>

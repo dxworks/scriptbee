@@ -3,39 +3,17 @@
     <as-split-area size="65">
       <as-split direction="horizontal">
         <as-split-area size="20">
-          <app-script-tree/>
+          <app-script-tree />
         </as-split-area>
 
         <as-split-area size="80">
-          <app-scripts-content/>
+          <app-scripts-content />
         </as-split-area>
       </as-split>
     </as-split-area>
 
     <as-split-area size="35">
-      <!--          <mat-tab-group fxFlex class='output-tabs' animationDuration='0ms' headerPosition='below'>-->
-      <!--            &lt;!&ndash;        todo: when ui plugins are ready &ndash;&gt;-->
-      <!--            &lt;!&ndash;        <ng-container *ngFor="let result of resultsService.resultsComponents | async">&ndash;&gt;-->
-      <!--            &lt;!&ndash;          <mat-tab label="{{result.name}}">&ndash;&gt;-->
-      <!--            &lt;!&ndash;            <div *ngIf="result.component && !result.module">&ndash;&gt;-->
-      <!--            &lt;!&ndash;              <ng-container *ngComponentOutlet="result.component">AA</ng-container>&ndash;&gt;-->
-      <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-      <!--            &lt;!&ndash;            <div *ngIf="result.module">&ndash;&gt;-->
-      <!--            &lt;!&ndash;              <ng-container [ngComponentOutlet]="result.component"&ndash;&gt;-->
-      <!--            &lt;!&ndash;                            [ngComponentOutletNgModule]="result.module"></ng-container>&ndash;&gt;-->
-      <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-      <!--            &lt;!&ndash;          </mat-tab>&ndash;&gt;-->
-      <!--            &lt;!&ndash;        </ng-container>&ndash;&gt;-->
-      <!--            <mat-tab label='Console Output'>-->
-      <!--              <app-console-output [outputId]='consoleOutputId'></app-console-output>-->
-      <!--            </mat-tab>-->
-      <!--            <mat-tab label='Output Errors'>-->
-      <!--              <app-output-errors [outputId]='outputErrorsId'></app-output-errors>-->
-      <!--            </mat-tab>-->
-      <!--            <mat-tab label='File Output'>-->
-      <!--              <app-file-output [outputFiles]='outputFiles' [projectId]='projectId' [runIndex]='runIndex'></app-file-output>-->
-      <!--            </mat-tab>-->
-      <!--          </mat-tab-group>-->
+      <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
     </as-split-area>
   </as-split>
 </div>
