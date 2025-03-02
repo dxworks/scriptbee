@@ -4,4 +4,10 @@
   </button>
 </div>
 
-<app-selectable-tree [data]="fileTreeNodes()" fileIcon="description" folderIcon="folder" [enableDelete]="true" (onDelete)="onNodeDelete($event)" />
+<app-selectable-tree
+  [data]="fileTreeNodes()"
+  fileIcon="description"
+  folderIcon="folder"
+  [enableDelete]="true"
+  (onDelete)="onNodeDelete($event)"
+  (onClick)="onNodeClick($event)" />

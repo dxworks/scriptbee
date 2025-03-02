@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -13,6 +13,8 @@ import { TreeNode } from '../../../../../types/tree-node';
 })
 export class ScriptTreeComponent {
   projectId = input.required<string>();
+
+  onFileSelected = output<TreeNode>();
 
   fileTreeNodes = signal<TreeNode[]>([
     {
@@ -41,5 +43,9 @@ export class ScriptTreeComponent {
   onNodeDelete(node: TreeNode) {
     // TODO FIXIT: implement it
     console.log('delete node', node);
+  }
+
+  onNodeClick(node: TreeNode) {
+    this.onFileSelected.emit(node);
   }
 }

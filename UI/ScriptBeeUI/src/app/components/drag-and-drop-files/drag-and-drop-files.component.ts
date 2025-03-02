@@ -1,8 +1,8 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { FileDropDirective } from '../../directives/file-drop-directive/file-drop.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { FileDropDirective } from '../../directives/file-drop.directive';
 
 @Component({
   selector: 'app-drag-and-drop-files',

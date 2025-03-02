@@ -1,2 +1,5 @@
-﻿<app-no-scripts />
-<!--TODO: display no scripts or monaco editor other based on the query param -->
+﻿@if (filePath()) {
+  <app-selected-script [filePath]="filePath()!" />
+} @else {
+  <app-no-scripts />
+}

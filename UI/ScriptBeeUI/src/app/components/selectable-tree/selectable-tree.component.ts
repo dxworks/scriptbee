@@ -21,6 +21,7 @@ export class SelectableTreeComponent {
   enableDelete = input<boolean>(false);
 
   onDelete = output<TreeNode>();
+  onClick = output<TreeNode>();
 
   childrenAccessor = (node: TreeNodeWithParent) => node.children ?? [];
 

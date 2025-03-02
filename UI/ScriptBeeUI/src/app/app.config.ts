@@ -17,6 +17,7 @@ import { environment } from '../environments/environment';
 import { AuthService } from './services/auth/auth.service';
 import { MockedAuthService } from './services/auth/mocked-auth.service';
 import { IAuthService } from './services/auth/iauth.service';
+import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
 
 const provideKeycloakAngular = () =>
   provideKeycloak({
@@ -62,5 +63,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
+    provideMonacoEditor(),
   ],
 };
