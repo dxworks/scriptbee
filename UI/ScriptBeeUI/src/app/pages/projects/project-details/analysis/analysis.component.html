@@ -1,0 +1,54 @@
+﻿<div class="main-scripts-div">
+  <as-split direction="vertical">
+    <as-split-area size="65">
+      <as-split direction="horizontal">
+        <as-split-area size="20">
+          <!--              <div class='tree-div'>-->
+          <!--                <div fxLayout='row' fxLayoutAlign='end'>-->
+          <!--                  <button mat-icon-button color='warn' matTooltip='Create new script'-->
+          <!--                          (click)='onCreateNewScriptButtonClick()'>-->
+          <!--                    <mat-icon>note_add</mat-icon>-->
+          <!--                  </button>-->
+          <!--                </div>-->
+
+          <!--                <app-script-tree [projectId]='projectId'></app-script-tree>-->
+          <!--              </div>-->
+        </as-split-area>
+
+        <as-split-area size="80">
+          <app-scripts-content />
+
+          <!--              <div fxFlex style='height: 100%; overflow: hidden'>-->
+          <!--                <router-outlet></router-outlet>-->
+          <!--              </div>-->
+        </as-split-area>
+      </as-split>
+    </as-split-area>
+
+    <as-split-area size="35">
+      <!--          <mat-tab-group fxFlex class='output-tabs' animationDuration='0ms' headerPosition='below'>-->
+      <!--            &lt;!&ndash;        todo: when ui plugins are ready &ndash;&gt;-->
+      <!--            &lt;!&ndash;        <ng-container *ngFor="let result of resultsService.resultsComponents | async">&ndash;&gt;-->
+      <!--            &lt;!&ndash;          <mat-tab label="{{result.name}}">&ndash;&gt;-->
+      <!--            &lt;!&ndash;            <div *ngIf="result.component && !result.module">&ndash;&gt;-->
+      <!--            &lt;!&ndash;              <ng-container *ngComponentOutlet="result.component">AA</ng-container>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            <div *ngIf="result.module">&ndash;&gt;-->
+      <!--            &lt;!&ndash;              <ng-container [ngComponentOutlet]="result.component"&ndash;&gt;-->
+      <!--            &lt;!&ndash;                            [ngComponentOutletNgModule]="result.module"></ng-container>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+      <!--            &lt;!&ndash;          </mat-tab>&ndash;&gt;-->
+      <!--            &lt;!&ndash;        </ng-container>&ndash;&gt;-->
+      <!--            <mat-tab label='Console Output'>-->
+      <!--              <app-console-output [outputId]='consoleOutputId'></app-console-output>-->
+      <!--            </mat-tab>-->
+      <!--            <mat-tab label='Output Errors'>-->
+      <!--              <app-output-errors [outputId]='outputErrorsId'></app-output-errors>-->
+      <!--            </mat-tab>-->
+      <!--            <mat-tab label='File Output'>-->
+      <!--              <app-file-output [outputFiles]='outputFiles' [projectId]='projectId' [runIndex]='runIndex'></app-file-output>-->
+      <!--            </mat-tab>-->
+      <!--          </mat-tab-group>-->
+    </as-split-area>
+  </as-split>
+</div>

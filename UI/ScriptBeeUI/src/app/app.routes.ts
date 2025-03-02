@@ -3,7 +3,7 @@ import { ProjectsPage } from './pages/projects/projects-page/projects-page.compo
 import { CreateProjectPage } from './pages/projects/create-project/create-project.component';
 import { ProjectDetailsPage } from './pages/projects/project-details/project-details-page.component';
 import { ProjectModelPage } from './pages/projects/project-details/model/project-model-page.component';
-import { ScriptsContentComponent } from './pages/projects/project-details/analysis/scripts-content.component';
+import { AnalysisComponent } from './pages/projects/project-details/analysis/analysis.component';
 import { ProjectSettingsPage } from './pages/projects/project-details/settings/project-settings.component';
 
 export const routes: Routes = [
@@ -15,14 +15,13 @@ export const routes: Routes = [
     path: 'projects/:id',
     component: ProjectDetailsPage,
     children: [
-      { path: 'model', component: ProjectModelPage },
+      {
+        path: 'model',
+        component: ProjectModelPage,
+      },
       {
         path: 'analysis',
-        component: ScriptsContentComponent,
-        // children: [
-        //   { path: '', component: NoScriptsComponent },
-        //   { path: ':scriptPath', component: SelectedScriptComponent },
-        // ],
+        component: AnalysisComponent,
       },
       { path: 'settings', component: ProjectSettingsPage },
       { path: '**', redirectTo: 'model' },
