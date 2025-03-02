@@ -37,7 +37,6 @@ export class CreateScriptDialogComponent {
   scriptPath = signal('');
   scriptLanguage = signal('');
   parameters = signal<Parameter[]>([]);
-
   hasParameterErrors = signal<boolean>(true);
 
   isOkDisabled = computed(() => !this.scriptPath() || !this.scriptLanguage() || this.hasParameterErrors());

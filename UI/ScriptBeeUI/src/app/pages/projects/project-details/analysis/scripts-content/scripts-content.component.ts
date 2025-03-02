@@ -9,5 +9,6 @@ import { SelectedScriptComponent } from './selected-script/selected-script.compo
   imports: [NoScriptsComponent, SelectedScriptComponent],
 })
 export class ScriptsContentComponent {
+  projectId = input.required<string>();
   filePath = input<string | null>(null);
 }

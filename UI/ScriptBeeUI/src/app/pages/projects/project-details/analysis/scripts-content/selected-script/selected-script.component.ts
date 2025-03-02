@@ -8,6 +8,8 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { SafeUrlPipe } from '../../../../../../pipes/safe-url.pipe';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { EditParametersDialogComponent } from './edit-parameters-dialog/edit-parameters-dialog.component';
 
 @Component({
   selector: 'app-selected-script',
@@ -16,6 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   imports: [EditorComponent, MatButtonModule, MatIconModule, MatTooltip, CdkCopyToClipboard, SafeUrlPipe, FormsModule],
 })
 export class SelectedScriptComponent implements OnInit {
+  projectId = input.required<string>();
   filePath = input.required<string>();
 
   editorOptions = computed(() => {
@@ -28,8 +31,9 @@ export class SelectedScriptComponent implements OnInit {
   });
 
   code = signal<string>('');
-  // scriptPath = '';
-  // projectId = '';
+
+  // TODO FIXIT: absolute path computed
+  // TODO FIXIT: parameters computed
   projectAbsolutePath = signal('abc');
   // isLoadingResults = false;
   // scriptContentError$ = this.scriptsStore.scriptContentError;
@@ -39,15 +43,8 @@ export class SelectedScriptComponent implements OnInit {
   //
   constructor(
     private themeService: ThemeService,
-    private snackBar: MatSnackBar
-    //   private projectStore: ProjectStore,
-    //   private fileSystemService: FileSystemService,
-    //   private route: ActivatedRoute,
-    //   private runScriptService: RunScriptService,
-    //   private store: Store,
-    //   private scriptsStore: ScriptsStore,
-    //   private notificationService: NotificationsService,
-    //   private dialog: MatDialog
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   //
@@ -181,15 +178,13 @@ export class SelectedScriptComponent implements OnInit {
   // }
 
   onEditParametersButtonClick() {
-    //   const scriptParameters = this.scriptsStore.getScriptParameters(this.projectId, this.scriptPath);
-    //
-    //   this.dialog.open(EditParametersDialogComponent, {
-    //     disableClose: true,
-    //     data: {
-    //       scriptId: this.scriptPath,
-    //       projectId: this.projectId,
-    //       parameters: scriptParameters,
-    //     },
-    //   });
+    this.dialog.open(EditParametersDialogComponent, {
+      disableClose: true,
+      data: {
+        projectId: this.projectId(),
+        // TODO FIXIT: pass script parameters
+        parameters: [],
+      },
+    });
   }
 }

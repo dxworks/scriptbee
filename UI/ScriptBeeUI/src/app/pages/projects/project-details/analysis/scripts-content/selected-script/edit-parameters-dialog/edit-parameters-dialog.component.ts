@@ -1,54 +1,65 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EditParametersDialogData } from './edit-parameters-dialog-data';
-import { Parameter } from '../../../services/script-types';
-import { UpdateScriptStore } from '../../../stores/update-script-store.service';
+import { Component, computed, Inject, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { Parameter } from '../../../../../../../types/script-types';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { ScriptParametersListComponent } from '../../../../../../../components/script-parameters-list/script-parameters-list.component';
+
+export interface EditParametersDialogData {
+  projectId: string;
+  parameters: Parameter[];
+}
 
 @Component({
   selector: 'app-edit-parameters-dialog',
   templateUrl: './edit-parameters-dialog.component.html',
   styleUrls: ['./edit-parameters-dialog.component.scss'],
-  providers: [UpdateScriptStore],
+  imports: [
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatExpansionModule,
+    MatSelectModule,
+    MatButtonModule,
+    FormsModule,
+    ScriptParametersListComponent,
+  ],
 })
 export class EditParametersDialogComponent {
-  isUpdatingScript$ = this.updateScriptStore.updateScriptLoading;
-  updateScriptError$ = this.updateScriptStore.updateScriptError;
+  parameters = signal<Parameter[]>([]);
+  hasParameterErrors = signal<boolean>(true);
+
+  isUpdateDisabled = computed(() => this.hasParameterErrors());
 
   constructor(
     public dialogRef: MatDialogRef<EditParametersDialogData>,
-    @Inject(MAT_DIALOG_DATA) public data: EditParametersDialogData,
-    private updateScriptStore: UpdateScriptStore
-  ) {
-    this.updateScriptStore.updateScriptResult.subscribe((result) => {
-      if (result) {
-        this.dialogRef.close();
-      }
-    });
-  }
+    @Inject(MAT_DIALOG_DATA) public data: EditParametersDialogData
+  ) {}
 
   onParametersChange(parameters: Parameter[]) {
-    this.data.parameters = parameters;
+    this.parameters.set(parameters);
+  }
+
+  onHasParameterErrors(hasErrors: boolean) {
+    this.hasParameterErrors.set(hasErrors);
   }
 
   onCancelClick() {
     this.dialogRef.close();
   }
 
-  isUpdateDisabled(): boolean {
-    const parametersAreValid = this.data.parameters.every((parameter) => !parameter.nameError);
-
-    return !parametersAreValid;
-  }
-
   onUpdateClick() {
-    this.updateScriptStore.updateScript({
-      id: this.data.scriptId,
-      projectId: this.data.projectId,
-      parameters: this.data.parameters.map((parameter) => ({
-        name: parameter.name,
-        type: parameter.type,
-        value: parameter.value,
-      })),
-    });
+    // TODO FIXIT: call api
+    // this.updateScriptStore.updateScript({
+    //   id: this.data.scriptId,
+    //   projectId: this.data.projectId,
+    //   parameters: this.data.parameters.map((parameter) => ({
+    //     name: parameter.name,
+    //     type: parameter.type,
+    //     value: parameter.value,
+    //   })),
+    // });
   }
 }
