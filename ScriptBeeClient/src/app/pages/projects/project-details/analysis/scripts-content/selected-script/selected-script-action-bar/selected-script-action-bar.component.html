@@ -1,0 +1,14 @@
+<div class="top-action-buttons">
+  <button mat-icon-button matTooltip="Copy path to clipboard" [cdkCopyToClipboard]="script().absolutePath" (click)="onCopyToClipboardButtonClick()">
+    <mat-icon>content_copy</mat-icon>
+  </button>
+  <a mat-icon-button matTooltip="Open in VS Code" [href]="'vscode://file/' + script().absolutePath | safeUrl">
+    <mat-icon svgIcon="microsoft-visual-studio-code"></mat-icon>
+  </a>
+  <button mat-icon-button matTooltip="Edit Parameters" (click)="onEditParametersButtonClick()">
+    <mat-icon>tune</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Run script" (click)="onRunScriptButtonClick()">
+    <mat-icon>play_arrow</mat-icon>
+  </button>
+</div>

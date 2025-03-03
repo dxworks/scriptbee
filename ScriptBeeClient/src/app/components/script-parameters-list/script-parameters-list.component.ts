@@ -1,6 +1,6 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { Parameter } from '../../types/script-types';
+import { ScriptParameter } from '../../types/script-types';
 import { ParameterWithError, ScriptParameterComponent } from './script-parameter/script-parameter.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
@@ -13,9 +13,9 @@ import { MatDivider } from '@angular/material/divider';
   imports: [ScriptParameterComponent, MatButtonModule, MatDivider],
 })
 export class ScriptParametersListComponent {
-  parameters = input.required<Parameter[]>();
+  parameters = input.required<ScriptParameter[]>();
 
-  parametersChange = output<Parameter[]>();
+  parametersChange = output<ScriptParameter[]>();
   hasParameterErrors = output<boolean>();
 
   parametersWithErrors = computed<ParameterWithError[]>(() => {
@@ -53,7 +53,7 @@ export class ScriptParametersListComponent {
     this.parametersChange.emit(this.parameters().map((p, index) => (index === parameter.index ? parameter : p)));
   }
 
-  private getParameterError(parameter: Parameter, parameters: Parameter[]): string | undefined {
+  private getParameterError(parameter: ScriptParameter, parameters: ScriptParameter[]): string | undefined {
     if (!parameter.name) {
       return 'Parameter name is required';
     }
@@ -65,7 +65,7 @@ export class ScriptParametersListComponent {
     return undefined;
   }
 
-  private isParameterNameUnique(parameter: Parameter, parameters: Parameter[]): boolean {
+  private isParameterNameUnique(parameter: ScriptParameter, parameters: ScriptParameter[]): boolean {
     let numbersOfApparitions = 0;
     for (let i = 0; i < parameters.length; i++) {
       if (parameters[i].name === parameter.name) {

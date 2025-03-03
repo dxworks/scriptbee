@@ -10,5 +10,5 @@ import { SelectedScriptComponent } from './selected-script/selected-script.compo
 })
 export class ScriptsContentComponent {
   projectId = input.required<string>();
-  filePath = input<string | null>(null);
+  fileId = input<string | null>(null);
 }

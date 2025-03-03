@@ -1,3 +1,5 @@
+import { ScriptLanguage, ScriptParameter } from './script-types';
+
 export interface Project {
   id: string;
   name: string;
@@ -25,4 +27,13 @@ export interface ProjectStructureNode {
   path: string;
   absolutePath: string;
   children?: ProjectStructureNode[];
+}
+
+export interface ProjectScript {
+  id: string;
+  name: string;
+  path: string;
+  absolutePath: string;
+  scriptLanguage: ScriptLanguage;
+  parameters: ScriptParameter[];
 }

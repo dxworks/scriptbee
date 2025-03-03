@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ProjectStructureNode } from '../../types/project';
-import { Observable } from 'rxjs';
+import { ProjectScript, ProjectStructureNode } from '../../types/project';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +12,11 @@ export class ProjectStructureService {
     return this.http.get<ProjectStructureNode[]>(`/api/projects/${projectId}/structure`);
   }
 
+  getProjectScript(projectId: string, scriptId: string) {
+    return this.http.get<ProjectScript>(`/api/projects/${projectId}/scripts/${scriptId}`);
+  }
+
   getScriptContent(projectId: string, scriptId: string) {
-    return this.http.get<string>(`/api/projects/${projectId}/structure`, {
-      params: {
-        scriptId,
-      },
-    });
+    return this.http.get<string>(`/api/projects/${projectId}/scripts/${scriptId}/content`);
   }
 }

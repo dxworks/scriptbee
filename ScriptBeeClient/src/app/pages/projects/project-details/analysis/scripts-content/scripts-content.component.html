@@ -1,5 +1,5 @@
-﻿@if (filePath()) {
-  <app-selected-script [projectId]="projectId()" [filePath]="filePath()!" />
+﻿@if (fileId()) {
+  <app-selected-script [projectId]="projectId()" [scriptId]="fileId()!" />
 } @else {
   <app-no-scripts />
 }

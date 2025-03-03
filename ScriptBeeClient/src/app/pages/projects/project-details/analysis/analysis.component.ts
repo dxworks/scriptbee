@@ -17,7 +17,7 @@ export class AnalysisComponent {
   projectId = signal<string | undefined>(undefined);
   analysisId = signal<string | undefined>(undefined);
 
-  selectedFilePath = signal<string | null>(null);
+  selectedFileId = signal<string | null>(null);
 
   // TODO FIXIT: handle loading
   // TODO FIXIT: add the possibility to select the analysis (analysis should have also runIndex to be displayed to the user)
@@ -28,7 +28,7 @@ export class AnalysisComponent {
     private router: Router
   ) {
     route.queryParamMap.subscribe((params) => {
-      this.selectedFilePath.set(params.get('file'));
+      this.selectedFileId.set(params.get('fileId'));
     });
 
     route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
@@ -42,7 +42,7 @@ export class AnalysisComponent {
     this.router
       .navigate([], {
         relativeTo: this.route,
-        queryParams: { file: node.name },
+        queryParams: { fileId: node.name },
         queryParamsHandling: 'merge',
       })
       .then();

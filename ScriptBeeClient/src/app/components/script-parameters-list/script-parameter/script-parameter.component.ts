@@ -1,6 +1,6 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
-import { Parameter, ParameterType, ParameterValue } from '../../../types/script-types';
+import { ScriptParameter, ParameterType, ParameterValue } from '../../../types/script-types';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -20,7 +20,7 @@ class ParameterNameErrorMatcher implements ErrorStateMatcher {
   }
 }
 
-export type ParameterWithError = Parameter & {
+export type ParameterWithError = ScriptParameter & {
   index: number;
   error?: string;
 };

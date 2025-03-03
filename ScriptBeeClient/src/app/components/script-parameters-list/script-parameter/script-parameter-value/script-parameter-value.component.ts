@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
-import { Parameter, ParameterValue } from '../../../../types/script-types';
+import { ScriptParameter, ParameterValue } from '../../../../types/script-types';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
@@ -14,7 +14,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
   imports: [MatSelectModule, MatButtonModule, MatIconModule, MatInput, FormsModule, MatCheckbox],
 })
 export class ScriptParameterValueComponent {
-  parameter = input.required<Parameter>();
+  parameter = input.required<ScriptParameter>();
 
   valueChange = output<ParameterValue>();
 

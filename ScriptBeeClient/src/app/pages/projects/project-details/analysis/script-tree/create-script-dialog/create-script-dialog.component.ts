@@ -1,5 +1,5 @@
 import { Component, computed, Inject, signal } from '@angular/core';
-import { Parameter, ScriptLanguage } from '../../../../../../types/script-types';
+import { ScriptParameter, ScriptLanguage } from '../../../../../../types/script-types';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormField } from '@angular/material/form-field';
@@ -36,7 +36,7 @@ export class CreateScriptDialogComponent {
 
   scriptPath = signal('');
   scriptLanguage = signal('');
-  parameters = signal<Parameter[]>([]);
+  parameters = signal<ScriptParameter[]>([]);
   hasParameterErrors = signal<boolean>(true);
 
   isOkDisabled = computed(() => !this.scriptPath() || !this.scriptLanguage() || this.hasParameterErrors());
@@ -46,7 +46,7 @@ export class CreateScriptDialogComponent {
     public dialogRef: MatDialogRef<CreateScriptDialogComponent>
   ) {}
 
-  onParametersChange(parameters: Parameter[]) {
+  onParametersChange(parameters: ScriptParameter[]) {
     this.parameters.set(parameters);
   }
 

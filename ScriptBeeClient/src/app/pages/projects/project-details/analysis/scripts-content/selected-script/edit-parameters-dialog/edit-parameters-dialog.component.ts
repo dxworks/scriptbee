@@ -1,6 +1,6 @@
 import { Component, computed, Inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
-import { Parameter } from '../../../../../../../types/script-types';
+import { ScriptParameter } from '../../../../../../../types/script-types';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +9,7 @@ import { ScriptParametersListComponent } from '../../../../../../../components/s
 
 export interface EditParametersDialogData {
   projectId: string;
-  parameters: Parameter[];
+  parameters: ScriptParameter[];
 }
 
 @Component({
@@ -28,7 +28,7 @@ export interface EditParametersDialogData {
   ],
 })
 export class EditParametersDialogComponent {
-  parameters = signal<Parameter[]>([]);
+  parameters = signal<ScriptParameter[]>([]);
   hasParameterErrors = signal<boolean>(true);
 
   isUpdateDisabled = computed(() => this.hasParameterErrors());
@@ -38,7 +38,7 @@ export class EditParametersDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: EditParametersDialogData
   ) {}
 
-  onParametersChange(parameters: Parameter[]) {
+  onParametersChange(parameters: ScriptParameter[]) {
     this.parameters.set(parameters);
   }
 
