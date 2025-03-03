@@ -1,5 +1,5 @@
 import { Component, computed, Inject, signal } from '@angular/core';
-import { ScriptParameter, ScriptLanguage } from '../../../../../../types/script-types';
+import { ScriptParameter } from '../../../../../../types/script-types';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormField } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { ScriptParametersListComponent } from '../../../../../../components/script-parameters-list/script-parameters-list.component';
+import { CreateScriptDialogScriptLanguageComponent } from './create-script-dialog-script-language/create-script-dialog-script-language.component';
 
 export interface CreateScriptDialogData {
   projectId: string;
@@ -28,12 +29,10 @@ export interface CreateScriptDialogData {
     FormsModule,
     MatInput,
     ScriptParametersListComponent,
+    CreateScriptDialogScriptLanguageComponent,
   ],
 })
 export class CreateScriptDialogComponent {
-  // TODO FIXIT: load script languages from API
-  availableScriptLanguages = signal<ScriptLanguage[]>([{ name: 'C#', extension: '.cs' }]);
-
   scriptPath = signal('');
   scriptLanguage = signal('');
   parameters = signal<ScriptParameter[]>([]);

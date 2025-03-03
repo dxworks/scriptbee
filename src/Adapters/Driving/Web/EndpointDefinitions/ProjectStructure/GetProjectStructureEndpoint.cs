@@ -15,6 +15,10 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/structure", GetProjectStructure);
+        app.MapGet(
+            "/api/projects/{projectId}/structure/available-script-types",
+            GetAvailableScriptTypes
+        );
     }
 
     private static async Task<Ok<IEnumerable<WebProjectStructureNode>>> GetProjectStructure(
@@ -88,6 +92,22 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
                         },
                     ],
                 },
+            ]
+        );
+    }
+
+    private static async Task<Ok<IEnumerable<WebScriptLanguage>>> GetAvailableScriptTypes(
+        [FromRoute] string projectId
+    )
+    {
+        await Task.CompletedTask;
+        // TODO FIXIT: remove hardcoded value
+
+        return TypedResults.Ok<IEnumerable<WebScriptLanguage>>(
+            [
+                new WebScriptLanguage("csharp", ".cs"),
+                new WebScriptLanguage("python", ".py"),
+                new WebScriptLanguage("javascript", ".js"),
             ]
         );
     }

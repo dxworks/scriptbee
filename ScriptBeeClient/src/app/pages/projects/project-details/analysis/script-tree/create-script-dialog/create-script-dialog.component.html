@@ -6,14 +6,7 @@
       <input id="script-name" matInput [(ngModel)]="scriptPath" />
     </mat-form-field>
 
-    <mat-form-field class="dialog-field" appearance="fill">
-      <mat-label>Script Type</mat-label>
-      <mat-select id="script-language" [(ngModel)]="scriptLanguage">
-        @for (scriptLanguage of availableScriptLanguages(); track scriptLanguage.name) {
-          <mat-option [value]="scriptLanguage.name">{{ scriptLanguage.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <app-create-script-dialog-script-language [projectId]="data.projectId" [(scriptLanguage)]="scriptLanguage" />
   </div>
 
   <div class="text-alignment"><i>The corresponding file extension will be automatically added to the name</i></div>

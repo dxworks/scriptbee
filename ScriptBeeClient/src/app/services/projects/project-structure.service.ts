@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProjectScript, ProjectStructureNode } from '../../types/project';
+import { ScriptLanguage } from '../../types/script-types';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,10 @@ export class ProjectStructureService {
 
   getProjectStructure(projectId: string) {
     return this.http.get<ProjectStructureNode[]>(`/api/projects/${projectId}/structure`);
+  }
+
+  getAvailableScriptTypes(projectId: string) {
+    return this.http.get<ScriptLanguage[]>(`/api/projects/${projectId}/structure/available-script-types`);
   }
 
   getProjectScript(projectId: string, scriptId: string) {
