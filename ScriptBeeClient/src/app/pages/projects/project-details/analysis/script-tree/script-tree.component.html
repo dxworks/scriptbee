@@ -4,10 +4,16 @@
   </button>
 </div>
 
-<app-selectable-tree
-  [data]="fileTreeNodes()"
-  fileIcon="description"
-  folderIcon="folder"
-  [enableDelete]="true"
-  (onDelete)="onNodeDelete($event)"
-  (onClick)="onNodeClick($event)" />
+@if (projectStructureResource.isLoading()) {
+  <app-loading-progress-bar title="Loading Project Structure..."></app-loading-progress-bar>
+} @else if (projectStructureResource.error()) {
+  <app-error-state [error]="projectStructureResource.error()!"></app-error-state>
+} @else {
+  <app-selectable-tree
+    [data]="projectStructureResource.value()!"
+    fileIcon="description"
+    folderIcon="folder"
+    [enableDelete]="true"
+    (onDelete)="onNodeDelete($event)"
+    (onClick)="onNodeClick($event)" />
+}

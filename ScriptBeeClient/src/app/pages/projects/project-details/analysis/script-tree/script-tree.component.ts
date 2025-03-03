@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -6,36 +6,31 @@ import { SelectableTreeComponent } from '../../../../../components/selectable-tr
 import { TreeNode } from '../../../../../types/tree-node';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateScriptDialogComponent } from './create-script-dialog/create-script-dialog.component';
+import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
+import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
+import { createRxResourceHandler } from '../../../../../utils/resource';
+import { ProjectStructureService } from '../../../../../services/projects/project-structure.service';
 
 @Component({
   selector: 'app-script-tree',
   templateUrl: './script-tree.component.html',
   styleUrls: ['./script-tree.component.scss'],
-  imports: [MatIconButton, MatTooltip, MatIcon, SelectableTreeComponent],
+  imports: [MatIconButton, MatTooltip, MatIcon, SelectableTreeComponent, ErrorStateComponent, LoadingProgressBarComponent],
 })
 export class ScriptTreeComponent {
   projectId = input.required<string>();
 
   onFileSelected = output<TreeNode>();
 
-  fileTreeNodes = signal<TreeNode[]>([
-    {
-      name: 'folder1',
-      children: [{ name: 'sub-folder-1', children: [{ name: 'file' }] }],
-    },
-    {
-      name: 'folder-2',
-      children: [
-        {
-          name: 'sub-folder-1',
-          children: [{ name: 'file' }],
-        },
-        { name: 'file-2' },
-      ],
-    },
-  ]);
+  projectStructureResource = createRxResourceHandler({
+    request: () => this.projectId(),
+    loader: (params) => this.projectStructureService.getProjectStructure(params.request),
+  });
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private projectStructureService: ProjectStructureService,
+    private dialog: MatDialog
+  ) {}
 
   onCreateNewScriptButtonClick() {
     this.dialog.open(CreateScriptDialogComponent, {

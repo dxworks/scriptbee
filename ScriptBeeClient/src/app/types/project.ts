@@ -18,3 +18,11 @@ export interface CreateProjectResponse {
   name: string;
   creationDate: string;
 }
+
+export interface ProjectStructureNode {
+  id: string;
+  name: string;
+  path: string;
+  absolutePath: string;
+  children?: ProjectStructureNode[];
+}
