@@ -11,6 +11,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\Common.csproj" />
         <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Analysis\UseCases.Analysis.csproj"/>
         <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj" />
     </ItemGroup>
 
