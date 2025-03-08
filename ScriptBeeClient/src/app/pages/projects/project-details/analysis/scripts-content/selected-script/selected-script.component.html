@@ -1,0 +1,11 @@
+@if (scriptResource.isLoading() || scriptContentResource.isLoading()) {
+  <app-loading-progress-bar title="Loading Script..."></app-loading-progress-bar>
+} @else if (scriptResource.error()) {
+  <app-error-state [error]="scriptResource.error()!"></app-error-state>
+} @else if (scriptContentResource.error()) {
+  <app-error-state [error]="scriptContentResource.error()!"></app-error-state>
+} @else {
+  <app-selected-script-action-bar [projectId]="projectId()" [script]="scriptResource.value()!" />
+
+  <ngx-monaco-editor style="height: 100%" [options]="editorOptions()" [ngModel]="scriptContentResource.value()"></ngx-monaco-editor>
+}

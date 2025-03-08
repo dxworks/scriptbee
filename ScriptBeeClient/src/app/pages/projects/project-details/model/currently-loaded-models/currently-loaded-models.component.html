@@ -1,0 +1,11 @@
+﻿<div class="project-model-section-title project-model-content-after-divider">Currently loaded models</div>
+
+<div class="currently-loaded-models-content">
+  <span>Used Linkers: </span>
+  @for (linker of instanceInfo().linkers; track linker) {
+    {{ linker }}
+  }
+  <div>
+    <app-selectable-tree [data]="loadedFiles()"></app-selectable-tree>
+  </div>
+</div>

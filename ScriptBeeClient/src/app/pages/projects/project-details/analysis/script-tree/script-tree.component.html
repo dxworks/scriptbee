@@ -1,0 +1,19 @@
+<div class="create-new-script-container">
+  <button mat-icon-button aria-label="create new script" matTooltip="Create new script" (click)="onCreateNewScriptButtonClick()">
+    <mat-icon>note_add</mat-icon>
+  </button>
+</div>
+
+@if (projectStructureResource.isLoading()) {
+  <app-loading-progress-bar title="Loading Project Structure..."></app-loading-progress-bar>
+} @else if (projectStructureResource.error()) {
+  <app-error-state [error]="projectStructureResource.error()!"></app-error-state>
+} @else {
+  <app-selectable-tree
+    [data]="projectStructureResource.value()!"
+    fileIcon="description"
+    folderIcon="folder"
+    [enableDelete]="true"
+    (onDelete)="onNodeDelete($event)"
+    (onClick)="onNodeClick($event)" />
+}

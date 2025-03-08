@@ -1,0 +1,32 @@
+<div class="project-model-section-title project-model-content-after-divider">Link Models</div>
+
+@if (getLinkersResource.isLoading()) {
+  <app-centered-spinner text="Loading Linker"></app-centered-spinner>
+} @else if (getLinkersResource.error()) {
+  <app-error-state [error]="getLinkersResource.error()!"></app-error-state>
+} @else {
+  <mat-form-field class="select-linker" appearance="fill">
+    <mat-label>Linker</mat-label>
+    <mat-select [value]="selectedLinkerId()" (valueChange)="selectedLinkerId.set($event)">
+      @for (loader of getLinkersResource.value()!; track loader.id) {
+        <mat-option [value]="loader.id">
+          {{ loader.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+}
+
+@if (linkModelsHandler.isLoading()) {
+  <app-centered-spinner text="Linking Models"></app-centered-spinner>
+} @else if (linkModelsHandler.error()) {
+  <app-error-state [error]="linkModelsHandler.error()!"></app-error-state>
+}
+
+<div class="link-models-container">
+  <button class="link-button" mat-flat-button [disabled]="!selectedLinkerId() || linkModelsHandler.isLoading()" (click)="onLinkButtonClick()">Link</button>
+
+  @if (!selectedLinkerId()) {
+    <div class="warning">A loader must be selected in order to upload models</div>
+  }
+</div>

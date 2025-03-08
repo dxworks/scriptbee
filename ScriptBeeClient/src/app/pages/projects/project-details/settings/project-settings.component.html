@@ -1,0 +1,13 @@
+@if (getProjectResource.isLoading()) {
+  <app-loading-progress-bar title="Loading project..."></app-loading-progress-bar>
+} @else if (getProjectResource.error()) {
+  <div style="margin: 1rem" class="center-column">
+    <app-error-state style="width: 400px" [error]="getProjectResource.error()!"></app-error-state>
+  </div>
+} @else {
+  <div class="center-column project-settings-container">
+    <app-project-information [project]="getProjectResource.value()!" />
+
+    <app-project-danger-zone [project]="getProjectResource.value()!" />
+  </div>
+}

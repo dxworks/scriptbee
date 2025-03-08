@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>ScriptBee.Common</RootNamespace>
+    </PropertyGroup>
+
+</Project>

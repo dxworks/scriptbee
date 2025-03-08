@@ -1,0 +1,19 @@
+﻿<div class="main-scripts-div">
+  <as-split direction="vertical">
+    <as-split-area size="65">
+      <as-split direction="horizontal">
+        <as-split-area size="25">
+          <app-script-tree [projectId]="projectId()!" (onFileSelected)="onFileSelected($event)" />
+        </as-split-area>
+
+        <as-split-area size="75">
+          <app-scripts-content [projectId]="projectId()!" [fileId]="selectedFileId()" />
+        </as-split-area>
+      </as-split>
+    </as-split-area>
+
+    <as-split-area size="35">
+      <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
+    </as-split-area>
+  </as-split>
+</div>

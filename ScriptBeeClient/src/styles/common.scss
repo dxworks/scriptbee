@@ -1,0 +1,27 @@
+.flex-spacer {
+  flex: 1 1 auto;
+}
+
+.center-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.warning {
+  margin-left: 8px;
+  color: var(--mat-sys-secondary);
+}
+
+.project-model-section-title {
+  font-size: 22px;
+  font-weight: bold;
+  opacity: 80%;
+}
+
+.project-model-content-after-divider {
+  margin-top: 24px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}

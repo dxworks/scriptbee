@@ -1,0 +1,21 @@
+.non-selectable-tree-invisible {
+  display: none;
+}
+
+.non-selectable-tree .mat-nested-tree-node div[role='group'] {
+  padding-left: 32px;
+}
+
+.non-selectable-tree div[role='group'] > .mat-nested-tree-node {
+  padding: 0 !important;
+}
+
+.non-selectable-tree .leaf-node {
+  padding-left: 32px;
+}
+
+.node-with-icon {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}

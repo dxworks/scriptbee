@@ -1,0 +1,12 @@
+<div class="no-script-main-div">
+  <div class="title-style">Creating and executing a script - Short tutorial</div>
+
+  @for (action of actions; track action.name; let index = $index) {
+    <div class="instr">
+      <button class="icon-button" mat-mini-fab disableRipple>
+        <span style="font-size: 16px; font-weight: bold">{{ index + 1 }}</span>
+      </button>
+      &nbsp; {{ action.name }}
+    </div>
+  }
+</div>

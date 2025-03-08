@@ -1,0 +1,38 @@
+﻿<h1 mat-dialog-title style="text-align: center">Create new script</h1>
+<div mat-dialog-content>
+  <div>
+    <mat-form-field class="dialog-field" appearance="fill">
+      <mat-label>Script Name</mat-label>
+      <input id="script-name" matInput [(ngModel)]="scriptPath" />
+    </mat-form-field>
+
+    <app-create-script-dialog-script-language [projectId]="data.projectId" [(scriptLanguage)]="scriptLanguage" />
+  </div>
+
+  <div class="text-alignment"><i>The corresponding file extension will be automatically added to the name</i></div>
+
+  <mat-accordion class="parameters-expansion-panel">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Parameters</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-script-parameters-list
+        [parameters]="parameters()"
+        (parametersChange)="onParametersChange($event)"
+        (hasParameterErrors)="onHasParameterErrors($event)" />
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  @if (createScriptHandler.isLoading()) {
+    <app-loading-progress-bar title="Creating script..."></app-loading-progress-bar>
+  }
+
+  @if (createScriptHandler.error()) {
+    <app-error-state [error]="createScriptHandler.error()!"></app-error-state>
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onOkClick()" [disabled]="isOkDisabled()">OK</button>
+  <button mat-button (click)="onCancelClick()">CANCEL</button>
+</div>

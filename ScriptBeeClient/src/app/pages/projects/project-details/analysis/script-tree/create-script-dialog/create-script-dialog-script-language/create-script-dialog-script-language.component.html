@@ -1,0 +1,14 @@
+﻿@if (availableScriptLanguagesResource.isLoading()) {
+  <app-loading-progress-bar title="Loading Script Languages..."></app-loading-progress-bar>
+} @else if (availableScriptLanguagesResource.error()) {
+  <app-error-state [error]="availableScriptLanguagesResource.error()!"></app-error-state>
+} @else {
+  <mat-form-field class="dialog-field" appearance="fill">
+    <mat-label>Script Type</mat-label>
+    <mat-select id="script-language" [(ngModel)]="scriptLanguage">
+      @for (scriptLanguage of availableScriptLanguagesResource.value(); track scriptLanguage.name) {
+        <mat-option [value]="scriptLanguage.name">{{ scriptLanguage.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+}

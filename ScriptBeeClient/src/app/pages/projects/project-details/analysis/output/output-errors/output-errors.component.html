@@ -1,0 +1,7 @@
+@for (error of errors(); track error.title; let index = $index) {
+  <div class="output-error-line">
+    <div>{{ error.title }}</div>
+    <div>{{ error.message }}</div>
+    <div>{{ error.severity }}</div>
+  </div>
+}

@@ -31,3 +31,11 @@ For local development, run the following command:
 ```sh 
 docker-compose -f docker-compose-dev.yaml up
 ```
+
+## Project structure
+
+- DxWorks.ScriptBee.Plugin.Api - the project with the plugin interface
+- Plugins - folder with the default bundle plugin
+- Domain - main business logic
+- Driving - Web Application
+- Driven - Database adapter

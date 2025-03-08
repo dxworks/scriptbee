@@ -1,0 +1,58 @@
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-weight: 200;
+  height: 180px;
+  border: 4px dashed;
+  border-radius: 24px;
+  color: var(--mat-sys-primary);
+  margin: 24px 8px;
+
+  &.hovering {
+    border: 4px solid;
+    color: var(--mat-sys-secondary);
+  }
+
+  .file-label {
+    font-size: 16px;
+  }
+}
+
+progress::-webkit-progress-value {
+  transition: width 0.1s ease;
+}
+
+.aligned-item {
+  margin-top: 8px;
+  margin-left: 8px;
+  margin-bottom: 8px;
+}
+
+.no-files {
+  margin-top: 8px;
+  margin-left: 8px;
+  margin-bottom: 8px;
+}
+
+.drag-and-drop-text {
+  font-weight: bold;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.text-with-opacity {
+  opacity: 80%;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+}
+
+.button-icon-error {
+  color: var(--mat-sys-error);
+}

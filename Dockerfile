@@ -1,5 +1,5 @@
 ﻿# Build the client app
-FROM node:18 as build_client
+FROM node:22 AS build_client
 
 WORKDIR /src
 
@@ -10,26 +10,40 @@ RUN npm install
 COPY ./ScriptBeeClient/src ./src
 COPY ./ScriptBeeClient/angular.json .
 COPY ./ScriptBeeClient/tsconfig*.json ./
-COPY ./ScriptBeeClient/webpack*.config.js ./
 
 RUN npm run build-prod
 
 # Build the backend web app
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build_webapp
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build_webapp
 
 WORKDIR /app
 
+COPY Directory.Packages.props Directory.Packages.props
+COPY Directory.Build.props Directory.Build.props
+
 COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
-COPY ScriptBee ./ScriptBee
-COPY ScriptBee.Marketplace.Client ./ScriptBee.Marketplace.Client
-COPY ScriptBeeWebApp ./ScriptBeeWebApp
+# COPY ScriptBee.Marketplace.Client ./ScriptBee.Marketplace.Client
+COPY src/Common src/Common
 
-RUN dotnet restore ./ScriptBeeWebApp
+COPY src/Application/Domain src/Application/Domain
 
-RUN dotnet publish ./ScriptBeeWebApp -c Release -o publish --no-restore
+COPY src/Application/Ports/Driving src/Application/Ports/Driving
+COPY src/Application/Ports/Driven/Ports.Analysis src/Application/Ports/Driven/Ports.Analysis
+COPY src/Application/Ports/Driven/Ports.Instance src/Application/Ports/Driven/Ports.Instance
+COPY src/Application/Ports/Driven/Ports.Project src/Application/Ports/Driven/Ports.Project
+
+COPY src/Adapters/Driven/Persistence.Mongodb src/Adapters/Driven/Persistence.Mongodb
+COPY src/Adapters/Driven/Analysis.Instance.Docker src/Adapters/Driven/Analysis.Instance.Docker
+
+COPY src/Adapters/Driving/Common.Web src/Adapters/Driving/Common.Web
+COPY src/Adapters/Driving/Web src/Adapters/Driving/Web
+
+RUN dotnet restore ./src/Adapters/Driving/Web
+
+RUN dotnet publish ./src/Adapters/Driving/Web -c Release -o publish --no-restore
 
 # Build the final image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 
 EXPOSE 80
 EXPOSE 443
@@ -38,8 +52,8 @@ WORKDIR /app
 
 COPY --from=build_webapp /app/publish .
 
-COPY --from=build_client /src/dist/scriptbeewebapp /app/wwwroot
+COPY --from=build_client /src/dist/script-bee-ui /app/wwwroot
 
-ENV LD_LIBRARY_PATH=/app/runtimes/debian.9-x64/native/
+#ENV LD_LIBRARY_PATH=/app/runtimes/debian.9-x64/native/
 
-ENTRYPOINT ["dotnet", "ScriptBeeWebApp.dll"]
+ENTRYPOINT ["dotnet", "Web.dll"]

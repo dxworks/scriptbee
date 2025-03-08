@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+
+mat-toolbar {
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--mat-sys-primary-container),
+    )
+  );
+}
+
+.logout-button {
+  margin-left: 1rem;
+}

@@ -1,0 +1,41 @@
+@if (projectResource.isLoading()) {
+  <app-loading-progress-bar title="Loading project..."></app-loading-progress-bar>
+} @else if (projectResource.error()) {
+  <div style="margin: 1rem" class="center-column">
+    <app-error-state style="width: 400px" [error]="projectResource.error()!"></app-error-state>
+  </div>
+} @else {
+  <div class="project-details-main-div">
+    <mat-card class="project-details-card" appearance="outlined">
+      <app-upload-models [projectId]="projectId()!"></app-upload-models>
+
+      <mat-divider></mat-divider>
+
+      <app-load-models [projectId]="projectId()!"></app-load-models>
+
+      <mat-divider></mat-divider>
+
+      <app-link-models [projectId]="projectId()!"></app-link-models>
+
+      <mat-divider></mat-divider>
+
+      @if (currentInstanceInfoResource.isLoading()) {
+        <app-centered-spinner text="Loading Info"></app-centered-spinner>
+      } @else if (currentInstanceInfoResource.error()) {
+        <app-error-state [error]="currentInstanceInfoResource.error()!"></app-error-state>
+      } @else {
+        <app-currently-loaded-models [instanceInfo]="currentInstanceInfoResource.value()!"></app-currently-loaded-models>
+      }
+
+      <mat-divider></mat-divider>
+
+      @if (currentInstanceInfoResource.isLoading()) {
+        <app-centered-spinner text="Loading Info"></app-centered-spinner>
+      } @else if (currentInstanceInfoResource.error()) {
+        <app-error-state [error]="currentInstanceInfoResource.error()!"></app-error-state>
+      } @else {
+        <app-project-context [projectId]="projectId()!" [instanceInfo]="currentInstanceInfoResource.value()!"></app-project-context>
+      }
+    </mat-card>
+  </div>
+}

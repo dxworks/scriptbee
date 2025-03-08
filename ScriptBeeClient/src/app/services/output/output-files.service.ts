@@ -1,45 +1,49 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { contentHeaders } from '../../shared/headers';
+import { AnalysisConsoleOutput, AnalysisFileOutput, AnalysisRunErrorOutput } from '../../types/analysis-results';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OutputFilesService {
-  private getOutputDataUrl = '/api/output';
-  private downloadFileApiURL = '/api/output/files/download';
-  private downloadAllApiURL = '/api/output/files/downloadAll';
-
   constructor(private http: HttpClient) {}
+
+  getConsoleOutput(projectId: string, analysisId: string) {
+    return this.http.get<AnalysisConsoleOutput>(`/api/projects/${projectId}/analyses/${analysisId}/results/console`);
+  }
+
+  getErrorOutputs(projectId: string, analysisId: string) {
+    return this.http.get<AnalysisRunErrorOutput>(`/api/projects/${projectId}/analyses/${analysisId}/results/errors`);
+  }
+
+  getFileOutputs(projectId: string, analysisId: string) {
+    return this.http.get<AnalysisFileOutput>(`/api/projects/${projectId}/analyses/${analysisId}/results/files`);
+  }
 
   downloadFile(id: string, name: string) {
     return this.http.post(
-      this.downloadFileApiURL,
+      '/api/output/files/download',
       { id, name },
       {
-        headers: contentHeaders,
-        responseType: 'blob'
+        responseType: 'blob',
       }
     );
   }
 
   downloadAll(projectId: string, runIndex: number) {
     return this.http.post(
-      this.downloadAllApiURL,
+      '/api/output/files/downloadAll',
       {
         projectId,
-        runIndex
+        runIndex,
       },
       {
-        headers: contentHeaders,
-        responseType: 'blob'
+        responseType: 'blob',
       }
     );
   }
 
   fetchOutput(outputId: string) {
-    return this.http.get<string>(`${this.getOutputDataUrl}/${outputId}`, {
-      headers: contentHeaders
-    });
+    return this.http.get<string>(`/api/output/${outputId}`);
   }
 }

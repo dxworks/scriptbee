@@ -1,0 +1,11 @@
+.parameter-row {
+  display: flex;
+  align-items: center;
+  margin: 4px;
+  justify-content: space-evenly;
+}
+
+.parameter-row-fields {
+  display: flex;
+  flex-direction: column;
+}

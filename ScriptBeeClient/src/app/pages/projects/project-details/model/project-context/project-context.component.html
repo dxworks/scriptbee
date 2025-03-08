@@ -1,0 +1,31 @@
+﻿<div class="project-model-section-title project-model-content-after-divider">Project Context</div>
+
+@if (projectContextResource.isLoading()) {
+  <app-centered-spinner text="Loading Context"></app-centered-spinner>
+} @else if (projectContextResource.error()) {
+  <app-error-state [error]="projectContextResource.error()!"></app-error-state>
+} @else {
+  @if (projectContextResource.value()!.length === 0) {
+    <div>No context loaded</div>
+  }
+
+  @if (clearContextHandler.isLoading()) {
+    <app-centered-spinner text="Clearing Context"></app-centered-spinner>
+  } @else if (clearContextHandler.error()) {
+    <app-error-state [error]="clearContextHandler.error()!"></app-error-state>
+  }
+
+  @if (reloadContextHandler.isLoading()) {
+    <app-centered-spinner text="Reloading Context"></app-centered-spinner>
+  } @else if (reloadContextHandler.error()) {
+    <app-error-state [error]="reloadContextHandler.error()!"></app-error-state>
+  }
+
+  <app-selectable-tree [data]="context()"></app-selectable-tree>
+
+  <div class="action-buttons-container">
+    <button mat-flat-button [disabled]="reloadContextHandler.isLoading()" (click)="onReloadModelsClick()">Reload Models</button>
+
+    <button mat-flat-button [disabled]="clearContextHandler.isLoading()" (click)="onClearContextButtonClick()">Clear Context</button>
+  </div>
+}

@@ -1,0 +1,10 @@
+<div>
+  @for (parameter of parametersWithErrors(); track parameter.index) {
+    <div class="parameter-item">
+      <app-script-parameter [parameter]="parameter" (parameterChange)="onParameterChange($event)" (delete)="onParameterDelete($event)" />
+      <mat-divider />
+    </div>
+  }
+</div>
+
+<button class="add-parameter-button" mat-button (click)="onAddButtonClick()">Add</button>

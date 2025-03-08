@@ -1,0 +1,35 @@
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Console Output">
+    <div class="output-tab-content">
+      @if (consoleContentResource.isLoading()) {
+        <app-loading-progress-bar title="Loading Console Output..."></app-loading-progress-bar>
+      } @else if (consoleContentResource.error()) {
+        <app-error-state [error]="consoleContentResource.error()!"></app-error-state>
+      } @else {
+        <app-console-output [content]="consoleContentResource.value()!.content" />
+      }
+    </div>
+  </mat-tab>
+  <mat-tab label="Output Errors">
+    <div class="output-tab-content">
+      @if (outputErrorsResource.isLoading()) {
+        <app-loading-progress-bar title="Loading Output Errors..."></app-loading-progress-bar>
+      } @else if (outputErrorsResource.error()) {
+        <app-error-state [error]="outputErrorsResource.error()!"></app-error-state>
+      } @else {
+        <app-output-errors [errors]="outputErrorsResource.value()!.errors" />
+      }
+    </div>
+  </mat-tab>
+  <mat-tab label="File Output">
+    <div class="output-tab-content">
+      @if (outputFilesResource.isLoading()) {
+        <app-loading-progress-bar title="Loading Output Files..."></app-loading-progress-bar>
+      } @else if (outputFilesResource.error()) {
+        <app-error-state [error]="outputFilesResource.error()!"></app-error-state>
+      } @else {
+        <app-file-output [files]="outputFilesResource.value()!.files" />
+      }
+    </div>
+  </mat-tab>
+</mat-tab-group>

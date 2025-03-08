@@ -1,0 +1,5 @@
+﻿@if (fileId()) {
+  <app-selected-script [projectId]="projectId()" [scriptId]="fileId()!" />
+} @else {
+  <app-no-scripts />
+}

@@ -1,0 +1,18 @@
+﻿<h1 mat-dialog-title style="text-align: center">Update script parameters</h1>
+<div mat-dialog-content>
+  <h2>Parameters</h2>
+
+  <app-script-parameters-list [parameters]="parameters()" (parametersChange)="onParametersChange($event)" (hasParameterErrors)="onHasParameterErrors($event)" />
+
+  @if (updateScriptHandler.isLoading()) {
+    <app-loading-progress-bar title="Updating parameters..."></app-loading-progress-bar>
+  }
+
+  @if (updateScriptHandler.error()) {
+    <app-error-state [error]="updateScriptHandler.error()!"></app-error-state>
+  }
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="isUpdateDisabled()" (click)="onUpdateClick()">UPDATE</button>
+  <button mat-button (click)="onCancelClick()">CANCEL</button>
+</div>

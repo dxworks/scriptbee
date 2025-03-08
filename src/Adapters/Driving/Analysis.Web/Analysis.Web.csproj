@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <RootNamespace>ScriptBee.Analysis.Web</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Common\Common.csproj" />
+        <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
+        <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    </ItemGroup>
+
+</Project>

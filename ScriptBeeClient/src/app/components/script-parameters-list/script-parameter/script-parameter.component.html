@@ -1,0 +1,32 @@
+<div class="parameter-row">
+  <div class="parameter-row-fields">
+    <mat-form-field appearance="fill">
+      <mat-label>Parameter Type</mat-label>
+      <mat-select id="parameter-type" [value]="parameter().type" (valueChange)="onParameterTypeChange($event)">
+        @for (parameterType of parameterTypes(); track parameterType) {
+          <mat-option [value]="parameterType">{{ parameterType }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Parameter Name</mat-label>
+      <input
+        id="parameter-name"
+        matInput
+        placeholder="Name"
+        [ngModel]="parameter().name"
+        [errorStateMatcher]="parameterNameErrorMatcher()"
+        (ngModelChange)="onParameterNameChange($event)" />
+      <mat-error>{{ parameter().error }}</mat-error>
+    </mat-form-field>
+
+    <div>
+      <app-script-parameter-value [parameter]="parameter()" (valueChange)="onParameterValueChange($event)" />
+    </div>
+  </div>
+
+  <button mat-icon-button aria-label="Delete Parameter" (click)="onDeleteClick()">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

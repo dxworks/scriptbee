@@ -1,0 +1,26 @@
+<div>
+  <h4>Danger Zone</h4>
+
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Delete Project</mat-card-title>
+      <mat-card-subtitle> Id: {{ project().id }}</mat-card-subtitle>
+      <mat-card-subtitle> Name: {{ project().name }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p>Once project is deleted, all data will be removed</p>
+
+      @if (deleteProjectHandler.isLoading()) {
+        <app-loading-progress-bar title="Deleting project..."></app-loading-progress-bar>
+      }
+
+      @if (deleteProjectHandler.error()) {
+        <app-error-state [error]="deleteProjectHandler.error()!"></app-error-state>
+      }
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button (click)="openDialog()">DELETE</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

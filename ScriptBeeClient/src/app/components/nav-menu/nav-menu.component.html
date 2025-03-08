@@ -1,0 +1,17 @@
+<mat-toolbar>
+  <a routerLink="/" style="margin-top: 12px" class="primary-light-background">
+    <img src="/images/logo_text_mini.png" alt="logo" height="48" width="112" />
+  </a>
+
+  <button mat-button routerLink="/projects">Projects</button>
+
+  <span class="flex-spacer"></span>
+
+  <mat-slide-toggle [checked]="themeService.darkMode()" (toggleChange)="themeService.toggleDarkMode()" labelPosition="before">
+    <mat-icon>bedtime</mat-icon>
+  </mat-slide-toggle>
+
+  @if (authService.authenticated()) {
+    <button mat-stroked-button class="logout-button" (click)="authService.logout()">Logout</button>
+  }
+</mat-toolbar>

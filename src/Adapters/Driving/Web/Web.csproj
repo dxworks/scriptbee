@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <RootNamespace>ScriptBee.Web</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
+        <ProjectReference Include="..\..\..\Common\Common.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Domain\Service.Analysis\Service.Analysis.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Domain\Service.Project\Service.Project.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Analysis\UseCases.Analysis.csproj"/>
+        <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Project\UseCases.Project.csproj"/>
+        <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj"/>
+    </ItemGroup>
+</Project>
