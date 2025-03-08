@@ -1,8 +1,8 @@
 ﻿using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Ports.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 
 namespace ScriptBee.Service.Project.Analysis;
@@ -21,13 +21,12 @@ public class TriggerAnalysisService(
     {
         var instanceInfo = await GetFirstPermanentInstanceOrAllocate(command, cancellationToken);
 
-        // TODO FIXIT: call analysis instance
-        // TODO FIXIT: persist analysis
+        // TODO FIXIT(#30): call analysis instance
 
         return AnalysisInfo.Started(
             new AnalysisId(guidProvider.NewGuid()),
             instanceInfo.ProjectId,
-            new AnalysisMetadata(command.Loaders, command.Linkers),
+            new ScriptId(guidProvider.NewGuid()),
             dateTimeProvider.UtcNow()
         );
     }

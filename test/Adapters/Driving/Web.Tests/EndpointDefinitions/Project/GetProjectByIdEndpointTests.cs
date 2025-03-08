@@ -7,14 +7,14 @@ using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using Xunit.Abstractions;
-using static ScriptBee.Web.Tests.ProblemValidationUtils;
+using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 
 public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
 {
     private const string TestUrl = "/api/projects/id";
-    private readonly TestApiCaller _api = new(TestUrl);
+    private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Fact]
     public async Task ShouldReturnProjectDetails()

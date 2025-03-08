@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ScriptBee.Common.Web.Extensions;
 
-namespace ScriptBee.Common.Web.Extensions;
+namespace ScriptBee.Common.Web.EndpointDefinition;
 
 public static class ExceptionHandlerEndpointDefinition
 {

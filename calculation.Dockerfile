@@ -9,9 +9,10 @@ COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
 
 COPY src/Common src/Common
 
-COPY src/Application/Domain src/Application/Domain
+COPY src/Application/Domain/Model src/Application/Domain/Model
+COPY src/Application/Domain/Service.Analysis src/Application/Domain/Service.Analysis
 
-COPY src/Application/Ports/Driving src/Application/Ports/Driving
+COPY src/Application/Ports/Driving/UseCases.Analysis src/Application/Ports/Driving/UseCases.Analysis
 COPY src/Application/Ports/Driven/Ports.Analysis src/Application/Ports/Driven/Ports.Analysis
 COPY src/Application/Ports/Driven/Ports.Project src/Application/Ports/Driven/Ports.Project
 

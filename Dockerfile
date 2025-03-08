@@ -25,9 +25,10 @@ COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
 # COPY ScriptBee.Marketplace.Client ./ScriptBee.Marketplace.Client
 COPY src/Common src/Common
 
-COPY src/Application/Domain src/Application/Domain
+COPY src/Application/Domain/Model src/Application/Domain/Model
+COPY src/Application/Domain/Service.Project src/Application/Domain/Service.Project
 
-COPY src/Application/Ports/Driving src/Application/Ports/Driving
+COPY src/Application/Ports/Driving/UseCases.Project src/Application/Ports/Driving/UseCases.Project
 COPY src/Application/Ports/Driven/Ports.Analysis src/Application/Ports/Driven/Ports.Analysis
 COPY src/Application/Ports/Driven/Ports.Instance src/Application/Ports/Driven/Ports.Instance
 COPY src/Application/Ports/Driven/Ports.Project src/Application/Ports/Driven/Ports.Project

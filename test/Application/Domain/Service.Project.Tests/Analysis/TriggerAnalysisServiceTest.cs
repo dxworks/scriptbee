@@ -3,7 +3,6 @@ using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Ports.Project.Analysis;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 
@@ -59,8 +58,6 @@ public class TriggerAnalysisServiceTest
         analysisResult.Status.ShouldBe(AnalysisStatus.Started);
         analysisResult.Results.ShouldBeEmpty();
         analysisResult.Errors.ShouldBeEmpty();
-        analysisResult.Metadata.Loaders.ShouldBe(["loader"]);
-        analysisResult.Metadata.Linkers.ShouldBe(["linker"]);
         analysisResult.CreationDate.ShouldBe(creationDate);
         analysisResult.FinishedDate.ShouldBeNull();
     }
@@ -99,8 +96,6 @@ public class TriggerAnalysisServiceTest
         analysisResult.Status.ShouldBe(AnalysisStatus.Started);
         analysisResult.Results.ShouldBeEmpty();
         analysisResult.Errors.ShouldBeEmpty();
-        analysisResult.Metadata.Loaders.ShouldBe(["loader"]);
-        analysisResult.Metadata.Linkers.ShouldBe(["linker"]);
         analysisResult.CreationDate.ShouldBe(creationDate);
         analysisResult.FinishedDate.ShouldBeNull();
 

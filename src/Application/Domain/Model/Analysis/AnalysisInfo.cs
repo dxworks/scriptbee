@@ -1,12 +1,13 @@
 ﻿using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
 
 namespace ScriptBee.Domain.Model.Analysis;
 
 public record AnalysisInfo(
     AnalysisId Id,
     ProjectId ProjectId,
+    ScriptId ScriptId,
     AnalysisStatus Status,
-    AnalysisMetadata Metadata,
     IEnumerable<ResultSummary> Results,
     IEnumerable<AnalysisError> Errors,
     DateTimeOffset CreationDate,
@@ -16,15 +17,15 @@ public record AnalysisInfo(
     public static AnalysisInfo Started(
         AnalysisId analysisId,
         ProjectId projectId,
-        AnalysisMetadata metadata,
+        ScriptId scriptId,
         DateTimeOffset creationDate
     )
     {
         return new AnalysisInfo(
             analysisId,
             projectId,
+            scriptId,
             AnalysisStatus.Started,
-            metadata,
             [],
             [],
             creationDate,

@@ -12,7 +12,7 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
 {
     private const string TestUrl = "/api/projects";
-    private readonly TestApiCaller _api = new(TestUrl);
+    private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Fact]
     public async Task ShouldReturnProjectDetailsList()

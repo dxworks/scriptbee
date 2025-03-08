@@ -3,7 +3,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity.Analysis;
 using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Project.Analysis;
+using ScriptBee.Ports.Analysis;
 
 namespace ScriptBee.Persistence.Mongodb;
 

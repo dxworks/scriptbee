@@ -6,6 +6,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;

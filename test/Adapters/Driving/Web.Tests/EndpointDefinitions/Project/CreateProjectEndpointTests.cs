@@ -7,14 +7,14 @@ using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using Xunit.Abstractions;
-using static ScriptBee.Web.Tests.ProblemValidationUtils;
+using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 
 public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
 {
     private const string TestUrl = "/api/projects";
-    private readonly TestApiCaller _api = new(TestUrl);
+    private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Fact]
     public async Task InvalidRequestBody_ShouldReturnBadRequest()
@@ -71,6 +71,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        response.Headers.Location?.ToString().ShouldBe("/api/projects/id");
         var createProjectResponse = await response.ReadContentAsync<WebCreateProjectResponse>();
         createProjectResponse.Id.ShouldBe("id");
         createProjectResponse.Name.ShouldBe("name");

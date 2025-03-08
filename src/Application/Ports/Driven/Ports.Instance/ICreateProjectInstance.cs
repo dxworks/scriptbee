@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Analysis;
+namespace ScriptBee.Ports.Instance;
 
 public interface ICreateProjectInstance
 {
