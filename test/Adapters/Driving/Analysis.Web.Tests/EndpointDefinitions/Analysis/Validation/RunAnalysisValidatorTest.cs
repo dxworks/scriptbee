@@ -4,16 +4,16 @@ using ScriptBee.Analysis.Web.EndpointDefinitions.Analysis.Validation;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Analysis.Validation;
 
-public class CreateAnalysisValidatorTest
+public class RunAnalysisValidatorTest
 {
-    private readonly CreateAnalysisValidator _createAnalysisValidator = new();
+    private readonly RunAnalysisValidator _runAnalysisValidator = new();
 
     [Fact]
     public async Task GivenValidCreateProject_ThenResultHasNoErrors()
     {
-        var command = new WebCreateAnalysisCommand("project-id", "script-id");
+        var command = new WebRunAnalysisCommand("project-id", "script-id");
 
-        var result = await _createAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -21,9 +21,9 @@ public class CreateAnalysisValidatorTest
     [Fact]
     public async Task GivenEmptyProjectId_ThenResultHasErrors()
     {
-        var command = new WebCreateAnalysisCommand("", "script-id");
+        var command = new WebRunAnalysisCommand("", "script-id");
 
-        var result = await _createAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(command);
 
         result
             .ShouldHaveValidationErrorFor(x => x.ProjectId)
@@ -33,9 +33,9 @@ public class CreateAnalysisValidatorTest
     [Fact]
     public async Task GivenEmptyScriptId_ThenResultHasErrors()
     {
-        var command = new WebCreateAnalysisCommand("project-id", "");
+        var command = new WebRunAnalysisCommand("project-id", "");
 
-        var result = await _createAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(command);
 
         result
             .ShouldHaveValidationErrorFor(x => x.ScriptId)
@@ -45,9 +45,9 @@ public class CreateAnalysisValidatorTest
     [Fact]
     public async Task GivenNullProjectId_ThenResultHasErrors()
     {
-        var command = new WebCreateAnalysisCommand(null!, "script-id");
+        var command = new WebRunAnalysisCommand(null!, "script-id");
 
-        var result = await _createAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(command);
 
         result
             .ShouldHaveValidationErrorFor(x => x.ProjectId)
@@ -57,9 +57,9 @@ public class CreateAnalysisValidatorTest
     [Fact]
     public async Task GivenNullScriptId_ThenResultHasErrors()
     {
-        var command = new WebCreateAnalysisCommand("project-id", null!);
+        var command = new WebRunAnalysisCommand("project-id", null!);
 
-        var result = await _createAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(command);
 
         result
             .ShouldHaveValidationErrorFor(x => x.ScriptId)
@@ -69,9 +69,9 @@ public class CreateAnalysisValidatorTest
     [Fact]
     public async Task GivenInvalidFields_ThenResultHasErrors()
     {
-        var command = new WebCreateAnalysisCommand(null!, null!);
+        var command = new WebRunAnalysisCommand(null!, null!);
 
-        var result = await _createAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(command);
 
         result
             .ShouldHaveValidationErrorFor(x => x.ProjectId)

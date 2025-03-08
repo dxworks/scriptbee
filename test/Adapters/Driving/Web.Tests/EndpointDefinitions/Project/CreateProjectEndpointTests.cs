@@ -71,6 +71,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
+        response.Headers.Location?.ToString().ShouldBe("/api/projects/id");
         var createProjectResponse = await response.ReadContentAsync<WebCreateProjectResponse>();
         createProjectResponse.Id.ShouldBe("id");
         createProjectResponse.Name.ShouldBe("name");

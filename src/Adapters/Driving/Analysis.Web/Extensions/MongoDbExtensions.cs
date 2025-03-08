@@ -1,5 +1,9 @@
 ﻿using MongoDB.Driver;
+using ScriptBee.Persistence.Mongodb;
+using ScriptBee.Persistence.Mongodb.Entity.Analysis;
 using ScriptBee.Persistence.Mongodb.Exceptions;
+using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Ports.Analysis;
 
 namespace ScriptBee.Analysis.Web.Extensions;
 
@@ -35,6 +39,26 @@ public static class MongoDbExtensions
         IMongoDatabase mongoDatabase
     )
     {
-        return services;
+        return services.AddAnalysisAdapters(mongoDatabase);
+    }
+
+    private static IServiceCollection AddAnalysisAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
+    {
+        return services
+            .AddSingleton<IMongoCollection<MongodbAnalysisInfo>>(_ =>
+                mongoDatabase.GetCollection<MongodbAnalysisInfo>("Analysis")
+            )
+            .AddSingleton<
+                IMongoRepository<MongodbAnalysisInfo>,
+                MongoRepository<MongodbAnalysisInfo>
+            >()
+            .AddSingleton<IGetAnalysis, AnalysisPersistenceAdapter>()
+            .AddSingleton<IGetAllAnalyses, AnalysisPersistenceAdapter>()
+            .AddSingleton<ICreateAnalysis, AnalysisPersistenceAdapter>()
+            .AddSingleton<IUpdateAnalysis, AnalysisPersistenceAdapter>()
+            .AddSingleton<IDeleteAnalysis, AnalysisPersistenceAdapter>();
     }
 }
