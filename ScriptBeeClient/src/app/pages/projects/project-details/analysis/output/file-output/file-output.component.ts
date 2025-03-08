@@ -11,7 +11,7 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class FileOutputComponent {
   files = input.required<AnalysisFile[]>();
-  //
+  // TODO FIXIT: update download with the new endpoints
   // constructor(private outputFilesService: OutputFilesService) {
   // }
   //
@@ -28,7 +28,7 @@ export class FileOutputComponent {
   }
 
   //
-  // // todo to be moved to common service
+  // todo to be moved to common service
   // private static downloadFile(fileName: string, data: any) {
   //   const a: any = document.createElement('a');
   //   document.body.appendChild(a);

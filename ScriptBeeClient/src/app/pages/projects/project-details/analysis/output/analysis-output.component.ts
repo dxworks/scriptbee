@@ -1,13 +1,16 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ConsoleOutputComponent } from './console-output/console-output.component';
 import { OutputErrorsComponent } from './output-errors/output-errors.component';
 import { FileOutputComponent } from './file-output/file-output.component';
-import { AnalysisFile, AnalysisRunError } from '../../../../../types/analysis-results';
+import { OutputFilesService } from '../../../../../services/output/output-files.service';
+import { createRxResourceHandler } from '../../../../../utils/resource';
+import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
+import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
 
 @Component({
   selector: 'app-analysis-output',
-  imports: [MatTabsModule, ConsoleOutputComponent, OutputErrorsComponent, FileOutputComponent],
+  imports: [MatTabsModule, ConsoleOutputComponent, OutputErrorsComponent, FileOutputComponent, ErrorStateComponent, LoadingProgressBarComponent],
   templateUrl: './analysis-output.component.html',
   styleUrl: './analysis-output.component.scss',
 })
@@ -15,37 +18,29 @@ export class AnalysisOutputComponent {
   projectId = input.required<string>();
   analysisId = input.required<string>();
 
-  consoleContent = signal('test');
-  outputErrors = signal<AnalysisRunError[]>([
-    {
-      title: 'Error',
-      message: 'Some error on line 1',
-      severity: 'error',
-    },
-    {
-      title: 'Other Error',
-      message: 'Some error on line 1',
-      severity: 'error',
-    },
-  ]);
-  files = signal<AnalysisFile[]>([
-    {
-      id: '1',
-      name: 'file.csv',
-      type: 'file',
-    },
-    {
-      id: '2',
-      name: 'file.csv',
-      type: 'file',
-    },
-    {
-      id: '3',
-      name: 'file.csv',
-      type: 'file',
-    },
-  ]);
+  consoleContentResource = createRxResourceHandler({
+    request: () => ({
+      projectId: this.projectId(),
+      analysisId: this.analysisId(),
+    }),
+    loader: (params) => this.outputFilesService.getConsoleOutput(params.request.projectId, params.request.analysisId),
+  });
 
-  // TODO FIXIT: use the output service and replace hardcoded values
-  // TODO FIXIT: add loading and error handling
+  outputErrorsResource = createRxResourceHandler({
+    request: () => ({
+      projectId: this.projectId(),
+      analysisId: this.analysisId(),
+    }),
+    loader: (params) => this.outputFilesService.getErrorOutputs(params.request.projectId, params.request.analysisId),
+  });
+
+  outputFilesResource = createRxResourceHandler({
+    request: () => ({
+      projectId: this.projectId(),
+      analysisId: this.analysisId(),
+    }),
+    loader: (params) => this.outputFilesService.getFileOutputs(params.request.projectId, params.request.analysisId),
+  });
+
+  constructor(private outputFilesService: OutputFilesService) {}
 }

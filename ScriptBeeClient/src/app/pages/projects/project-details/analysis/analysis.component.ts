@@ -19,8 +19,7 @@ export class AnalysisComponent {
 
   selectedFileId = signal<string | null>(null);
 
-  // TODO FIXIT: handle loading
-  // TODO FIXIT: add the possibility to select the analysis (analysis should have also runIndex to be displayed to the user)
+  // TODO: add the possibility to select the analysis (analysis should have also runIndex to be displayed to the user)
   // TODO FIXIT: select the last analysis by default
 
   constructor(

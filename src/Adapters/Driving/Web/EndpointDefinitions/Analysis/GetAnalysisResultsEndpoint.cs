@@ -5,7 +5,7 @@ using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis;
 
-public class GetAnalysisResults : IEndpointDefinition
+public class GetAnalysisResultsEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
