@@ -9,6 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { ScriptParametersListComponent } from '../../../../../../components/script-parameters-list/script-parameters-list.component';
 import { CreateScriptDialogScriptLanguageComponent } from './create-script-dialog-script-language/create-script-dialog-script-language.component';
+import { apiHandler } from '../../../../../../utils/apiHandler';
+import { ProjectStructureService } from '../../../../../../services/projects/project-structure.service';
+import { ErrorStateComponent } from '../../../../../../components/error-state/error-state.component';
+import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 
 export interface CreateScriptDialogData {
   projectId: string;
@@ -30,6 +34,8 @@ export interface CreateScriptDialogData {
     MatInput,
     ScriptParametersListComponent,
     CreateScriptDialogScriptLanguageComponent,
+    ErrorStateComponent,
+    LoadingProgressBarComponent,
   ],
 })
 export class CreateScriptDialogComponent {
@@ -38,11 +44,20 @@ export class CreateScriptDialogComponent {
   parameters = signal<ScriptParameter[]>([]);
   hasParameterErrors = signal<boolean>(true);
 
-  isOkDisabled = computed(() => !this.scriptPath() || !this.scriptLanguage() || this.hasParameterErrors());
+  isOkDisabled = computed(() => !this.scriptPath() || !this.scriptLanguage() || this.hasParameterErrors() || this.createScriptHandler.isLoading());
+
+  createScriptHandler = apiHandler(
+    (params: { projectId: string; scriptPath: string; scriptLanguage: string; parameters: ScriptParameter[] }) =>
+      this.projectStructureService.createProjectScript(params.projectId, params.scriptPath, params.scriptLanguage, params.parameters),
+    () => {
+      this.dialogRef.close();
+    }
+  );
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData,
-    public dialogRef: MatDialogRef<CreateScriptDialogComponent>
+    public dialogRef: MatDialogRef<CreateScriptDialogComponent>,
+    private projectStructureService: ProjectStructureService
   ) {}
 
   onParametersChange(parameters: ScriptParameter[]) {
@@ -58,16 +73,11 @@ export class CreateScriptDialogComponent {
   }
 
   onOkClick(): void {
-    // TODO FIXIT: call api
-    // this.createScriptStore.createScript({
-    //   projectId: this.data.projectId,
-    //   filePath: this.scriptPath,
-    //   scriptLanguage: this.scriptLanguage,
-    //   parameters: this.parameters.map((parameter) => ({
-    //     name: parameter.name,
-    //     type: parameter.type,
-    //     value: parameter.value,
-    //   })),
-    // });
+    this.createScriptHandler.execute({
+      projectId: this.data.projectId,
+      scriptPath: this.scriptPath(),
+      scriptLanguage: this.scriptLanguage(),
+      parameters: this.parameters(),
+    });
   }
 }

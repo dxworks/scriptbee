@@ -12,3 +12,9 @@ export interface ScriptLanguage {
   name: string;
   extension: string;
 }
+
+export interface CreateScriptRequest {
+  path: string;
+  language: string;
+  parameters: ScriptParameter[];
+}

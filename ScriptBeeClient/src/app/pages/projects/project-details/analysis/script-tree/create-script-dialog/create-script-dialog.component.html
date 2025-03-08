@@ -24,19 +24,13 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <!--    TODO FIXIT: handle loading and error -->
-  <!--    <ng-container *ngIf="createScriptError">-->
-  <!--      <div class="error-message text-alignment" *ngIf="createScriptError.code === 409">A script with this name already exists</div>-->
-  <!--      <div class="error-message text-alignment" *ngIf="createScriptError.code !== 409">An error occurred while creating the script</div>-->
-  <!--    </ng-container>-->
+  @if (createScriptHandler.isLoading()) {
+    <app-loading-progress-bar title="Creating script..."></app-loading-progress-bar>
+  }
 
-  <!--    <ng-container *ngIf="isCreatingScript">-->
-  <!--      <ng-template [ngTemplateOutlet]="loading"></ng-template>-->
-  <!--    </ng-container>-->
-
-  <!--    <ng-template #loading>-->
-  <!--      <app-centered-spinner></app-centered-spinner>-->
-  <!--    </ng-template>-->
+  @if (createScriptHandler.error()) {
+    <app-error-state [error]="createScriptHandler.error()!"></app-error-state>
+  }
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onOkClick()" [disabled]="isOkDisabled()">OK</button>

@@ -98,6 +98,7 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
     {
         await Task.CompletedTask;
 
+        // TODO FIXIT: remove hardcoded value
         return TypedResults.Ok(scriptId);
     }
 }
