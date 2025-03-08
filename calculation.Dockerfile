@@ -2,18 +2,21 @@
 
 WORKDIR /app
 
+COPY Directory.Packages.props Directory.Packages.props
+COPY Directory.Build.props Directory.Build.props
+
 COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
 
-COPY src/Application/Domain/Model src/Application/Domain/Model
-COPY src/Application/Domain/Service src/Application/Domain/Service
+COPY src/Common src/Common
+
+COPY src/Application/Domain src/Application/Domain
+
+COPY src/Application/Ports/Driving src/Application/Ports/Driving
+COPY src/Application/Ports/Driven/Ports.Analysis src/Application/Ports/Driven/Ports.Analysis
 COPY src/Application/Ports/Driven/Ports.Project src/Application/Ports/Driven/Ports.Project
-COPY src/Application/Ports/Driving/UseCases src/Application/Ports/Driving/UseCases
 
 COPY src/Adapters/Driving/Common.Web src/Adapters/Driving/Common.Web
 COPY src/Adapters/Driving/Calculation.Web src/Adapters/Driving/Calculation.Web
-
-COPY Directory.Packages.props Directory.Packages.props
-COPY Directory.Build.props Directory.Build.props
 
 RUN dotnet restore src/Adapters/Driving/Calculation.Web
 
