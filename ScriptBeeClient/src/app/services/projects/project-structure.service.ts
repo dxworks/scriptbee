@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProjectScript, ProjectStructureNode } from '../../types/project';
-import { CreateScriptRequest, ScriptLanguage, ScriptParameter } from '../../types/script-types';
+import { CreateScriptRequest, ScriptLanguage, ScriptParameter, UpdateScriptRequest } from '../../types/script-types';
 
 @Injectable({
   providedIn: 'root',
@@ -32,5 +32,13 @@ export class ProjectStructureService {
       parameters: parameters,
     };
     return this.http.post<ProjectScript>(`/api/projects/${projectId}/scripts`, request);
+  }
+
+  updateProjectScript(projectId: string, scriptLanguage: string | undefined, parameters: ScriptParameter[] | undefined) {
+    const request: Partial<UpdateScriptRequest> = {
+      language: scriptLanguage,
+      parameters: parameters,
+    };
+    return this.http.patch<ProjectScript>(`/api/projects/${projectId}/scripts`, request);
   }
 }

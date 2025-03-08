@@ -6,6 +6,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { ScriptParametersListComponent } from '../../../../../../../components/script-parameters-list/script-parameters-list.component';
+import { ProjectStructureService } from '../../../../../../../services/projects/project-structure.service';
+import { apiHandler } from '../../../../../../../utils/apiHandler';
+import { ErrorStateComponent } from '../../../../../../../components/error-state/error-state.component';
+import { LoadingProgressBarComponent } from '../../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 
 export interface EditParametersDialogData {
   projectId: string;
@@ -25,17 +29,28 @@ export interface EditParametersDialogData {
     MatButtonModule,
     FormsModule,
     ScriptParametersListComponent,
+    ErrorStateComponent,
+    LoadingProgressBarComponent,
   ],
 })
 export class EditParametersDialogComponent {
   parameters = signal<ScriptParameter[]>([]);
   hasParameterErrors = signal<boolean>(true);
 
-  isUpdateDisabled = computed(() => this.hasParameterErrors());
+  isUpdateDisabled = computed(() => this.hasParameterErrors() || this.updateScriptHandler.isLoading());
+
+  updateScriptHandler = apiHandler(
+    (params: { projectId: string; parameters: ScriptParameter[] }) =>
+      this.projectStructureService.updateProjectScript(params.projectId, undefined, params.parameters),
+    () => {
+      this.dialogRef.close();
+    }
+  );
 
   constructor(
     public dialogRef: MatDialogRef<EditParametersDialogData>,
-    @Inject(MAT_DIALOG_DATA) public data: EditParametersDialogData
+    @Inject(MAT_DIALOG_DATA) public data: EditParametersDialogData,
+    private projectStructureService: ProjectStructureService
   ) {}
 
   onParametersChange(parameters: ScriptParameter[]) {
@@ -51,15 +66,9 @@ export class EditParametersDialogComponent {
   }
 
   onUpdateClick() {
-    // TODO FIXIT: call api
-    // this.updateScriptStore.updateScript({
-    //   id: this.data.scriptId,
-    //   projectId: this.data.projectId,
-    //   parameters: this.data.parameters.map((parameter) => ({
-    //     name: parameter.name,
-    //     type: parameter.type,
-    //     value: parameter.value,
-    //   })),
-    // });
+    this.updateScriptHandler.execute({
+      projectId: this.data.projectId,
+      parameters: this.parameters(),
+    });
   }
 }

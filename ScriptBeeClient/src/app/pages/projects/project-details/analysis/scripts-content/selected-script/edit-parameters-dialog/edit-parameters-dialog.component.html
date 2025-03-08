@@ -4,18 +4,13 @@
 
   <app-script-parameters-list [parameters]="parameters()" (parametersChange)="onParametersChange($event)" (hasParameterErrors)="onHasParameterErrors($event)" />
 
-  <!--    TODO FIXIT: handle loading and error -->
-  <!--    <ng-container *ngIf="updateScriptError$ | async">-->
-  <!--      <div class="error-message text-alignment">An error occurred while updating the parameters</div>-->
-  <!--    </ng-container>-->
+  @if (updateScriptHandler.isLoading()) {
+    <app-loading-progress-bar title="Updating parameters..."></app-loading-progress-bar>
+  }
 
-  <!--    <ng-container *ngIf="isUpdatingScript$ | async">-->
-  <!--      <ng-template [ngTemplateOutlet]="loading"></ng-template>-->
-  <!--    </ng-container>-->
-
-  <!--    <ng-template #loading>-->
-  <!--      <app-centered-spinner></app-centered-spinner>-->
-  <!--    </ng-template>-->
+  @if (updateScriptHandler.error()) {
+    <app-error-state [error]="updateScriptHandler.error()!"></app-error-state>
+  }
 </div>
 <div mat-dialog-actions>
   <button mat-button [disabled]="isUpdateDisabled()" (click)="onUpdateClick()">UPDATE</button>

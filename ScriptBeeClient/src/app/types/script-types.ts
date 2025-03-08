@@ -18,3 +18,8 @@ export interface CreateScriptRequest {
   language: string;
   parameters: ScriptParameter[];
 }
+
+export interface UpdateScriptRequest {
+  language: string;
+  parameters: ScriptParameter[];
+}
