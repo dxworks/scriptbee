@@ -5,6 +5,7 @@
 }
 
 export interface TreeNode {
+  // TODO: pass node data
   name: string;
   children?: TreeNode[];
 }

@@ -13,6 +13,10 @@ export class ProjectStructureService {
     return this.http.get<ProjectStructureNode[]>(`/api/projects/${projectId}/structure`);
   }
 
+  deleteProjectStructureNode(projectId: string, id: string) {
+    return this.http.delete(`/api/projects/${projectId}/structure/nodes/${id}`);
+  }
+
   getAvailableScriptTypes(projectId: string) {
     return this.http.get<ScriptLanguage[]>(`/api/projects/${projectId}/structure/available-script-types`);
   }

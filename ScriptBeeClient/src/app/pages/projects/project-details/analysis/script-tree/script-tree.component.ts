@@ -10,6 +10,7 @@ import { ErrorStateComponent } from '../../../../../components/error-state/error
 import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { createRxResourceHandler } from '../../../../../utils/resource';
 import { ProjectStructureService } from '../../../../../services/projects/project-structure.service';
+import { apiHandler } from '../../../../../utils/apiHandler';
 
 @Component({
   selector: 'app-script-tree',
@@ -27,6 +28,13 @@ export class ScriptTreeComponent {
     loader: (params) => this.projectStructureService.getProjectStructure(params.request),
   });
 
+  deleteNodeHandler = apiHandler(
+    (params: { projectId: string; nodeId: string }) => this.projectStructureService.deleteProjectStructureNode(params.projectId, params.nodeId),
+    () => {
+      this.projectStructureResource.reload();
+    }
+  );
+
   constructor(
     private projectStructureService: ProjectStructureService,
     private dialog: MatDialog
@@ -40,8 +48,11 @@ export class ScriptTreeComponent {
   }
 
   onNodeDelete(node: TreeNode) {
-    // TODO FIXIT: implement it
-    console.log('delete node', node);
+    this.deleteNodeHandler.execute({
+      projectId: this.projectId(),
+      // TODO: should be node id from node data
+      nodeId: node.name,
+    });
   }
 
   onNodeClick(node: TreeNode) {
