@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Analysis.Web.EndpointDefinitions;
 using ScriptBee.Analysis.Web.Extensions;
 using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using Serilog;
 
