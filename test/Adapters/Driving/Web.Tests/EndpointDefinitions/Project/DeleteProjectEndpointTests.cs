@@ -4,6 +4,7 @@ using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
 using Xunit.Abstractions;
 
@@ -12,7 +13,7 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
 {
     private const string TestUrl = "/api/projects/id";
-    private readonly TestApiCaller _api = new(TestUrl);
+    private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Fact]
     public async Task ShouldReturnNoContent()

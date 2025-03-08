@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace ScriptBee.Web.Tests;
+namespace ScriptBee.Tests.Common;
 
 public class TestWebApplicationFactory<TStartup>(
     ITestOutputHelper output,

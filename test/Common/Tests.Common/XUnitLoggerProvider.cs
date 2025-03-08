@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace ScriptBee.Web.Tests;
+namespace ScriptBee.Tests.Common;
 
 public class XUnitLoggerProvider(ITestOutputHelper output) : ILoggerProvider
 {

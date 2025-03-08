@@ -2,12 +2,13 @@
 using System.Text;
 using System.Text.Json;
 
-namespace ScriptBee.Web.Tests;
+namespace ScriptBee.Tests.Common;
 
-public class TestApiCaller(string endpoint)
+public class TestApiCaller<TStartup>(string endpoint)
+    where TStartup : class
 {
     public async Task<HttpResponseMessage> PostApi<T>(
-        TestWebApplicationFactory<Program> factory,
+        TestWebApplicationFactory<TStartup> factory,
         T? data = default
     )
     {
@@ -23,7 +24,7 @@ public class TestApiCaller(string endpoint)
         return response;
     }
 
-    public async Task<HttpResponseMessage> DeleteApi(TestWebApplicationFactory<Program> factory)
+    public async Task<HttpResponseMessage> DeleteApi(TestWebApplicationFactory<TStartup> factory)
     {
         using var client = factory.CreateClient();
 
@@ -31,7 +32,7 @@ public class TestApiCaller(string endpoint)
         return response;
     }
 
-    public async Task<HttpResponseMessage> GetApi(TestWebApplicationFactory<Program> factory)
+    public async Task<HttpResponseMessage> GetApi(TestWebApplicationFactory<TStartup> factory)
     {
         using var client = factory.CreateClient();
 
