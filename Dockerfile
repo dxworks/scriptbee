@@ -56,4 +56,4 @@ COPY --from=build_client /src/dist/script-bee-ui /app/wwwroot
 
 #ENV LD_LIBRARY_PATH=/app/runtimes/debian.9-x64/native/
 
-ENTRYPOINT ["dotnet", "ScriptBeeWebApp.dll"]
+ENTRYPOINT ["dotnet", "Web.dll"]
