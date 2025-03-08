@@ -1,11 +1,11 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Project.Analysis;
+namespace ScriptBee.Ports.Analysis;
 
-public interface IGetAllProjectInstances
+public interface IGetAllAnalyses
 {
-    Task<IEnumerable<InstanceInfo>> GetAll(
+    Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
         CancellationToken cancellationToken = default
     );

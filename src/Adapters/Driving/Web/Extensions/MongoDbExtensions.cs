@@ -3,9 +3,8 @@ using ScriptBee.Persistence.Mongodb;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Exceptions;
 using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Analysis;
+using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
-using ScriptBee.Ports.Project.Analysis;
 
 namespace ScriptBee.Web.Extensions;
 

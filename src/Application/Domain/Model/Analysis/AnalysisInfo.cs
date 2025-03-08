@@ -6,7 +6,6 @@ public record AnalysisInfo(
     AnalysisId Id,
     ProjectId ProjectId,
     AnalysisStatus Status,
-    AnalysisMetadata Metadata,
     IEnumerable<ResultSummary> Results,
     IEnumerable<AnalysisError> Errors,
     DateTimeOffset CreationDate,
@@ -16,7 +15,6 @@ public record AnalysisInfo(
     public static AnalysisInfo Started(
         AnalysisId analysisId,
         ProjectId projectId,
-        AnalysisMetadata metadata,
         DateTimeOffset creationDate
     )
     {
@@ -24,7 +22,6 @@ public record AnalysisInfo(
             analysisId,
             projectId,
             AnalysisStatus.Started,
-            metadata,
             [],
             [],
             creationDate,

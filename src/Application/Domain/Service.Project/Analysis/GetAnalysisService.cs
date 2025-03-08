@@ -1,7 +1,7 @@
 ﻿using OneOf;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Project.Analysis;
+using ScriptBee.Ports.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 
 namespace ScriptBee.Service.Project.Analysis;

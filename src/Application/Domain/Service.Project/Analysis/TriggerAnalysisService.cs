@@ -2,7 +2,6 @@
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Ports.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 
 namespace ScriptBee.Service.Project.Analysis;
@@ -27,7 +26,6 @@ public class TriggerAnalysisService(
         return AnalysisInfo.Started(
             new AnalysisId(guidProvider.NewGuid()),
             instanceInfo.ProjectId,
-            new AnalysisMetadata(command.Loaders, command.Linkers),
             dateTimeProvider.UtcNow()
         );
     }

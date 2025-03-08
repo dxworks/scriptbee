@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Project.Analysis;
+namespace ScriptBee.Ports.Analysis;
 
 public interface IDeleteAnalysis
 {

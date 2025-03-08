@@ -10,7 +10,6 @@ public class MongodbAnalysisInfo : IDocument
     public required string Id { get; set; }
     public required string ProjectId { get; set; }
     public required int Status { get; set; }
-    public required MongodbAnalysisMetadata Metadata { get; set; }
     public required IEnumerable<MongodbResultSummary> Results { get; set; }
     public required IEnumerable<MongodbAnalysisError> Errors { get; set; }
     public required DateTimeOffset CreationDate { get; set; }
@@ -22,7 +21,6 @@ public class MongodbAnalysisInfo : IDocument
             new AnalysisId(Id),
             Domain.Model.Project.ProjectId.FromValue(ProjectId),
             (AnalysisStatus)Status,
-            Metadata.ToAnalysisMetadata(),
             Results.Select(r => r.ToResultSummary()),
             Errors.Select(e => e.ToAnalysisError()),
             CreationDate,
@@ -37,7 +35,6 @@ public class MongodbAnalysisInfo : IDocument
             Id = analysisInfo.Id.ToString(),
             ProjectId = analysisInfo.ProjectId.ToString(),
             Status = (int)analysisInfo.Status,
-            Metadata = MongodbAnalysisMetadata.From(analysisInfo.Metadata),
             Results = analysisInfo.Results.Select(MongodbResultSummary.From),
             Errors = analysisInfo.Errors.Select(MongodbAnalysisError.From),
             CreationDate = analysisInfo.CreationDate,

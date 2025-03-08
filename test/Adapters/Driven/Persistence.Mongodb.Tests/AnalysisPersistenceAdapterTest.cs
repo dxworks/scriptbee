@@ -31,7 +31,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.Started,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -48,7 +47,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("b2038fa2-75ef-4bb4-bb7a-9cc37725bf2c"),
                 ProjectId.FromValue("project-id-1"),
                 AnalysisStatus.Started,
-                new AnalysisMetadata([], []),
                 [],
                 [],
                 creationDate,
@@ -82,7 +80,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.Started,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -95,7 +92,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.InProgress,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -116,11 +112,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                         CreationDate = creationDate,
                     },
                 ],
-                Metadata = new MongodbAnalysisMetadata
-                {
-                    Loaders = ["loader"],
-                    Linkers = ["linker"],
-                },
                 CreationDate = creationDate,
                 FinishedDate = creationDate,
             }
@@ -139,7 +130,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("834db275-e497-4f77-abd1-37c3bb3ba6de"),
                 ProjectId.FromValue("all-project-id-1"),
                 AnalysisStatus.Started,
-                new AnalysisMetadata([], []),
                 [],
                 [],
                 creationDate,
@@ -152,7 +142,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("47e981a7-9cd6-46d6-ba11-7f3c65ce38a2"),
                 ProjectId.FromValue("all-project-id-1"),
                 AnalysisStatus.Finished,
-                new AnalysisMetadata(["loader"], ["liker"]),
                 [
                     new ResultSummary(
                         new ResultId("e2c95567-d0f5-48b8-b1b6-ccbf064219ce"),
@@ -174,7 +163,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         var analysisInfo = AnalysisInfo.Started(
             new AnalysisId("15ed8fda-d6c8-49c9-909d-bf01d58b45b2"),
             ProjectId.FromValue("create-analysis-project"),
-            new AnalysisMetadata(["loader"], ["linker"]),
             creationDate
         );
 
@@ -184,7 +172,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             new AnalysisId("15ed8fda-d6c8-49c9-909d-bf01d58b45b2"),
             ProjectId.FromValue("create-analysis-project"),
             AnalysisStatus.Started,
-            new AnalysisMetadata(["loader"], ["liker"]),
             [],
             [],
             creationDate,
@@ -209,7 +196,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.Finished,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -248,7 +234,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.Started,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -261,7 +246,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.Finished,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -285,7 +269,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("bb5687c4-0290-48e0-8d17-ef9d8f7bc5bb"),
                 ProjectId.FromValue("delete-all-by-project-id"),
                 AnalysisStatus.Finished,
-                new AnalysisMetadata([], []),
                 [],
                 [],
                 creationDate,
@@ -306,7 +289,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = (int)AnalysisStatus.Started,
                 Errors = [],
                 Results = [],
-                Metadata = new MongodbAnalysisMetadata { Loaders = [], Linkers = [] },
                 CreationDate = creationDate,
                 FinishedDate = null,
             }
@@ -315,7 +297,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             new AnalysisId("ded96511-1a12-45ad-a866-97497593d122"),
             ProjectId.FromValue("project-id-update"),
             AnalysisStatus.Finished,
-            new AnalysisMetadata([], []),
             [],
             [],
             creationDate,
@@ -338,8 +319,6 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         actual.Status.ShouldBe(expected.Status);
         actual.Errors.ToList().ShouldBe(expected.Errors.ToList());
         actual.Results.ToList().ShouldBe(expected.Results.ToList());
-        actual.Metadata.Loaders.ToList().ShouldBe(actual.Metadata.Loaders.ToList());
-        actual.Metadata.Linkers.ToList().ShouldBe(actual.Metadata.Linkers.ToList());
         actual.CreationDate.ShouldBe(expected.CreationDate);
         actual.FinishedDate.ShouldBe(expected.FinishedDate);
     }

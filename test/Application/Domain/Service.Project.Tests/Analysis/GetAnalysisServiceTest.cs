@@ -2,7 +2,7 @@
 using OneOf;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Project.Analysis;
+using ScriptBee.Ports.Analysis;
 using ScriptBee.Service.Project.Analysis;
 
 namespace ScriptBee.Service.Project.Tests.Analysis;
@@ -26,12 +26,7 @@ public class GetAnalysisServiceTest
         var projectId = ProjectId.FromValue("project-id");
         IEnumerable<AnalysisInfo> expectedAnalysisResults =
         [
-            AnalysisInfo.Started(
-                new AnalysisId(Guid.NewGuid()),
-                projectId,
-                new AnalysisMetadata([], []),
-                DateTimeOffset.Now
-            ),
+            AnalysisInfo.Started(new AnalysisId(Guid.NewGuid()), projectId, DateTimeOffset.Now),
         ];
         _getAllAnalyses.GetAll(projectId).Returns(Task.FromResult(expectedAnalysisResults));
 
@@ -47,7 +42,6 @@ public class GetAnalysisServiceTest
         var expectedAnalysis = AnalysisInfo.Started(
             new AnalysisId(Guid.NewGuid()),
             ProjectId.FromValue("project-id"),
-            new AnalysisMetadata([], []),
             DateTimeOffset.Now
         );
         _getAnalysis

@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 
-namespace ScriptBee.Ports.Project.Analysis;
+namespace ScriptBee.Ports.Analysis;
 
 public interface IUpdateAnalysis
 {
