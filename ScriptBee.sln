@@ -45,6 +45,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Analysis.Tests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Instance", "src\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj", "{6CF369BB-97B9-4001-B44C-50502C3DAF81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Api", "DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj", "{6A447DF8-6601-4747-A722-4D5835FF1626}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Files", "src\Application\Ports\Driven\Ports.Files\Ports.Files.csproj", "{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,5 +143,13 @@ Global
 		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CF369BB-97B9-4001-B44C-50502C3DAF81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A447DF8-6601-4747-A722-4D5835FF1626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A447DF8-6601-4747-A722-4D5835FF1626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A447DF8-6601-4747-A722-4D5835FF1626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A447DF8-6601-4747-A722-4D5835FF1626}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
