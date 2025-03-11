@@ -4,5 +4,5 @@ namespace ScriptBee.Ports.Project.Structure;
 
 public interface ICreateScript
 {
-    public Task Create(Script script, CancellationToken cancellationToken = default);
+    Task Create(Script script, CancellationToken cancellationToken = default);
 }

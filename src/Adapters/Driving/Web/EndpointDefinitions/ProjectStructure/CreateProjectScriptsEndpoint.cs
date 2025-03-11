@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
@@ -37,7 +38,10 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
         CancellationToken cancellationToken = default
     )
     {
-        var result = await useCase.Create(command.Map(), cancellationToken);
+        var result = await useCase.Create(
+            command.Map(ProjectId.FromValue(projectId)),
+            cancellationToken
+        );
 
         return result.Match<CreateResponse>(
             script =>

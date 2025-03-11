@@ -58,7 +58,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     {
         var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
         createScriptUseCase
-            .Create(new CreateScriptCommand("path", "csharp", []), Arg.Any<CancellationToken>())
+            .Create(
+                new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(
                 Task.FromResult<CreateResponse>(
                     new Script(
@@ -171,7 +174,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     {
         var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
         createScriptUseCase
-            .Create(new CreateScriptCommand("path", "csharp", []), Arg.Any<CancellationToken>())
+            .Create(
+                new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(
                 Task.FromResult<CreateResponse>(
                     new ProjectDoesNotExistsError(ProjectId.FromValue("id"))
@@ -203,7 +209,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     {
         var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
         createScriptUseCase
-            .Create(new CreateScriptCommand("path", "csharp", []), Arg.Any<CancellationToken>())
+            .Create(
+                new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(
                 Task.FromResult<CreateResponse>(new ScriptLanguageDoesNotExistsError("csharp"))
             );
@@ -232,7 +241,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     {
         var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
         createScriptUseCase
-            .Create(new CreateScriptCommand("path", "csharp", []), Arg.Any<CancellationToken>())
+            .Create(
+                new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.FromResult<CreateResponse>(new ScriptPathAlreadyExistsError("path")));
 
         var response = await _api.PostApi(

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using DxWorks.ScriptBee.Plugin.Api.Model;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
@@ -10,9 +11,10 @@ public record WebCreateScriptCommand(
     IEnumerable<WebScriptParameter>? Parameters
 )
 {
-    public CreateScriptCommand Map()
+    public CreateScriptCommand Map(ProjectId projectId)
     {
         return new CreateScriptCommand(
+            projectId,
             Path,
             Language,
             (Parameters ?? []).Select(p => new ScriptParameter
