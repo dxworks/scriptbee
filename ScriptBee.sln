@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxWorks.ScriptBee.Plugin.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ports.Files", "src\Application\Ports\Driven\Ports.Files\Ports.Files.csproj", "{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence.File", "src\Adapters\Driven\Persistence.File\Persistence.File.csproj", "{0055EC4A-0833-4093-A06B-B179294F07D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,5 +153,9 @@ Global
 		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29A1A24D-7E73-4230-8BE6-ED680F5D9B20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0055EC4A-0833-4093-A06B-B179294F07D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0055EC4A-0833-4093-A06B-B179294F07D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0055EC4A-0833-4093-A06B-B179294F07D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0055EC4A-0833-4093-A06B-B179294F07D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
