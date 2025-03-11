@@ -1,3 +1,11 @@
-﻿namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
+﻿using ScriptBee.Domain.Model.ProjectStructure;
 
-public record WebScriptLanguage(string Name, string Extension);
+namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
+
+public record WebScriptLanguage(string Name, string Extension)
+{
+    public static WebScriptLanguage Map(ScriptLanguage language)
+    {
+        return new WebScriptLanguage(language.Name, language.Extension);
+    }
+}

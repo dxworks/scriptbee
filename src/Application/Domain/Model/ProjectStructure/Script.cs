@@ -9,6 +9,6 @@ public record Script(
     string Name,
     string FilePath,
     string AbsoluteFilePath,
-    string ScriptLanguage,
+    ScriptLanguage ScriptLanguage,
     IEnumerable<ScriptParameter> Parameters
 );

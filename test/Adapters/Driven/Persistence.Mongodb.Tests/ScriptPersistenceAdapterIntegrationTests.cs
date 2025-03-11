@@ -186,7 +186,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             "script.cs",
             "path",
             "absolute",
-            "csharp",
+            new ScriptLanguage("csharp", ".cs"),
             parameters
         );
     }
@@ -203,7 +203,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             Name = "script.cs",
             FilePath = "path",
             AbsoluteFilePath = "absolute",
-            ScriptLanguage = "csharp",
+            ScriptLanguageName = "csharp",
             Parameters = parameters,
         };
     }
@@ -218,7 +218,7 @@ public static class MongodbScriptAssertionsExtensions
         actual.Name.ShouldBe(expected.Name);
         actual.FilePath.ShouldBe(expected.FilePath);
         actual.AbsoluteFilePath.ShouldBe(expected.AbsoluteFilePath);
-        actual.ScriptLanguage.ShouldBe(expected.ScriptLanguage);
+        actual.ScriptLanguageName.ShouldBe(expected.ScriptLanguageName);
         actual.Parameters.ToList().ShouldBeEquivalentTo(expected.Parameters.ToList());
     }
 }

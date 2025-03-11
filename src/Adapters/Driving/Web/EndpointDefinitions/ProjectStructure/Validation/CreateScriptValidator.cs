@@ -1,3 +1,4 @@
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using FluentValidation;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 
@@ -5,7 +6,13 @@ namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Validation;
 
 public class CreateScriptValidator : AbstractValidator<WebCreateScriptCommand>
 {
-    private static readonly List<string> AllowedTypes = ["string", "integer", "float", "boolean"];
+    private static readonly List<string> AllowedTypes =
+    [
+        ScriptParameter.TypeString,
+        ScriptParameter.TypeInteger,
+        ScriptParameter.TypeFloat,
+        ScriptParameter.TypeBoolean,
+    ];
 
     public CreateScriptValidator()
     {
