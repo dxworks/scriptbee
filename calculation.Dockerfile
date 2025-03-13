@@ -14,7 +14,11 @@ COPY src/Application/Domain/Service.Analysis src/Application/Domain/Service.Anal
 
 COPY src/Application/Ports/Driving/UseCases.Analysis src/Application/Ports/Driving/UseCases.Analysis
 COPY src/Application/Ports/Driven/Ports.Analysis src/Application/Ports/Driven/Ports.Analysis
+COPY src/Application/Ports/Driven/Ports.Files src/Application/Ports/Driven/Ports.Files
 COPY src/Application/Ports/Driven/Ports.Project src/Application/Ports/Driven/Ports.Project
+
+COPY src/Adapters/Driven/Persistence.Mongodb src/Adapters/Driven/Persistence.Mongodb
+COPY src/Adapters/Driven/Persistence.File src/Adapters/Driven/Persistence.File
 
 COPY src/Adapters/Driving/Common.Web src/Adapters/Driving/Common.Web
 COPY src/Adapters/Driving/Calculation.Web src/Adapters/Driving/Calculation.Web
