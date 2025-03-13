@@ -120,10 +120,10 @@ public class CreateScriptServiceTest
                 )
             );
         _createFile
-            .Create(Path.Combine("id", "path"), Arg.Any<CancellationToken>())
+            .Create(Path.Combine("id", "path.lang"), Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
-                    new FileAlreadyExistsError("path")
+                    new FileAlreadyExistsError("path.lang")
                 )
             );
 
@@ -143,7 +143,7 @@ public class CreateScriptServiceTest
             )
         );
 
-        result.ShouldBe(new ScriptPathAlreadyExistsError("path"));
+        result.ShouldBe(new ScriptPathAlreadyExistsError("path.lang"));
     }
 
     [Fact]
@@ -165,10 +165,10 @@ public class CreateScriptServiceTest
                 )
             );
         _createFile
-            .Create(Path.Combine("id", "path"), Arg.Any<CancellationToken>())
+            .Create(Path.Combine("id", "path.lang"), Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
-                    new CreateFileResult("name", "path", "absolute-path")
+                    new CreateFileResult("name", "path.lang", "absolute-path.lang")
                 )
             );
         _guidProvider.NewGuid().Returns(Guid.Parse("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"));
@@ -176,7 +176,7 @@ public class CreateScriptServiceTest
         var result = await _createScriptService.Create(
             new CreateScriptCommand(
                 projectId,
-                "path",
+                "path.lang",
                 "language",
                 [
                     new ScriptParameter
@@ -193,8 +193,71 @@ public class CreateScriptServiceTest
             new ScriptId("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"),
             projectId,
             "name",
-            "path",
-            "absolute-path",
+            "path.lang",
+            "absolute-path.lang",
+            new ScriptLanguage("language", ".lang"),
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = "string",
+                    Value = "value",
+                },
+            ]
+        );
+        MatchScript(result.AsT0, script);
+        await _createScript.Received(1).Create(Arg.Is<Script>(x => MatchScript(x, script)));
+    }
+
+    [Fact]
+    public async Task CreateScriptSuccessfullyWithExtension()
+    {
+        var projectId = ProjectId.FromValue("id");
+        _getProject
+            .GetById(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    new ProjectDetails(projectId, "project", DateTimeOffset.Now)
+                )
+            );
+        _getScriptLanguages
+            .Get("language", Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ScriptLanguage, ScriptLanguageDoesNotExistsError>>(
+                    new ScriptLanguage("language", ".lang")
+                )
+            );
+        _createFile
+            .Create(Path.Combine("id", "path.ext.lang"), Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
+                    new CreateFileResult("name", "path.ext.lang", "absolute-path.ext.lang")
+                )
+            );
+        _guidProvider.NewGuid().Returns(Guid.Parse("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"));
+
+        var result = await _createScriptService.Create(
+            new CreateScriptCommand(
+                projectId,
+                "path.ext",
+                "language",
+                [
+                    new ScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = "string",
+                        Value = "value",
+                    },
+                ]
+            )
+        );
+
+        var script = new Script(
+            new ScriptId("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"),
+            projectId,
+            "name",
+            "path.ext.lang",
+            "absolute-path.ext.lang",
             new ScriptLanguage("language", ".lang"),
             [
                 new ScriptParameter

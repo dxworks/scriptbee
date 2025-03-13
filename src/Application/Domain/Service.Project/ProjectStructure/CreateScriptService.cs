@@ -58,8 +58,10 @@ public class CreateScriptService(
         CancellationToken cancellationToken = default
     )
     {
+        // TODO FIXIT(#35): add sample code to created file
+
         var createFileResult = await createFile.Create(
-            Path.Combine(details.Id.ToString(), command.Path),
+            GetScriptPath(command, details, language.Extension),
             cancellationToken
         );
 
@@ -67,6 +69,19 @@ public class CreateScriptService(
             async result => await Create(command, details, language, result, cancellationToken),
             error => Task.FromResult<CreateResult>(new ScriptPathAlreadyExistsError(error.Path))
         );
+    }
+
+    private static string GetScriptPath(
+        CreateScriptCommand command,
+        ProjectDetails details,
+        string languageExtension
+    )
+    {
+        var path = command.Path.EndsWith(languageExtension)
+            ? command.Path
+            : command.Path + languageExtension;
+
+        return Path.Combine(details.Id.ToString(), path);
     }
 
     private async Task<CreateResult> Create(
