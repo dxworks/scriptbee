@@ -6,6 +6,8 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\Common.csproj" />
         <ProjectReference Include="..\..\Ports\Driven\Ports.Analysis\Ports.Analysis.csproj" />
+        <ProjectReference Include="..\..\Ports\Driven\Ports.Files\Ports.Files.csproj" />
+        <ProjectReference Include="..\..\Ports\Driven\Ports.Project\Ports.Project.csproj" />
         <ProjectReference Include="..\..\Ports\Driving\UseCases.Analysis\UseCases.Analysis.csproj" />
     </ItemGroup>
 </Project>

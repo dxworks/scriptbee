@@ -1,9 +1,12 @@
 ﻿using NSubstitute;
+using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
+using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Analysis;
 using ScriptBee.UseCases.Analysis;
 
@@ -14,6 +17,8 @@ public class RunAnalysisServiceTest
     private readonly IDateTimeProvider _dateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly ICreateAnalysis _createAnalysis = Substitute.For<ICreateAnalysis>();
+    private readonly IGetScript _getScript = Substitute.For<IGetScript>();
+    private readonly ILoadFile _loadFile = Substitute.For<ILoadFile>();
 
     private readonly RunAnalysisService _runAnalysisService;
 
@@ -22,7 +27,9 @@ public class RunAnalysisServiceTest
         _runAnalysisService = new RunAnalysisService(
             _dateTimeProvider,
             _guidProvider,
-            _createAnalysis
+            _createAnalysis,
+            _getScript,
+            _loadFile
         );
     }
 
@@ -34,18 +41,111 @@ public class RunAnalysisServiceTest
         var analysisId = new AnalysisId(Guid.NewGuid());
         var scriptId = new ScriptId(Guid.NewGuid());
         var command = new RunAnalysisCommand(projectId, scriptId);
+        var expectedAnalysisInfo = new AnalysisInfo(
+            analysisId,
+            projectId,
+            scriptId,
+            AnalysisStatus.Started,
+            [],
+            [],
+            creationDate,
+            null
+        );
         _dateTimeProvider.UtcNow().Returns(creationDate);
         _guidProvider.NewGuid().Returns(analysisId.Value);
+        _getScript
+            .Get(scriptId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
+                    new Script(
+                        scriptId,
+                        projectId,
+                        "script",
+                        "path",
+                        "absolute-path",
+                        new ScriptLanguage("language", ".lang"),
+                        []
+                    )
+                )
+            );
+        _createAnalysis
+            .Create(
+                Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(expectedAnalysisInfo);
 
         var analysisResult = await _runAnalysisService.Run(command);
 
-        analysisResult.Id.ShouldBeEquivalentTo(analysisId);
-        analysisResult.ProjectId.ShouldBe(projectId);
-        analysisResult.ScriptId.ShouldBe(scriptId);
-        analysisResult.Status.ShouldBe(AnalysisStatus.Started);
-        analysisResult.Results.ShouldBeEmpty();
-        analysisResult.Errors.ShouldBeEmpty();
-        analysisResult.CreationDate.ShouldBe(creationDate);
-        analysisResult.FinishedDate.ShouldBeNull();
+        analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
+        await _loadFile
+            .Received(1)
+            .GetScriptContent(projectId, "path", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task GivenScriptDoesNotExistsError_thenAnalysisIsFailed()
+    {
+        var date = DateTimeOffset.UtcNow;
+        var projectId = ProjectId.FromValue("project-id");
+        var analysisId = new AnalysisId(Guid.Parse("647b7d62-0c2f-48d5-9aa2-bded959de486"));
+        var scriptId = new ScriptId(Guid.Parse("ec253791-9b1b-4a35-9ccb-6d82720ba461"));
+        var command = new RunAnalysisCommand(projectId, scriptId);
+        var expectedAnalysisInfo = new AnalysisInfo(
+            analysisId,
+            projectId,
+            scriptId,
+            AnalysisStatus.Finished,
+            [],
+            [new AnalysisError($"Script '{scriptId}' does not exist.")],
+            date,
+            date
+        );
+        _dateTimeProvider.UtcNow().Returns(date);
+        _guidProvider.NewGuid().Returns(analysisId.Value);
+        _getScript
+            .Get(scriptId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
+                    new ScriptDoesNotExistsError(scriptId)
+                )
+            );
+        _createAnalysis
+            .Create(
+                Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(expectedAnalysisInfo);
+
+        var analysisResult = await _runAnalysisService.Run(command);
+
+        analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
+    }
+}
+
+public static class AnalysisAssertionsExtensions
+{
+    public static void AssertAnalysisResult(this AnalysisInfo actual, AnalysisInfo expected)
+    {
+        actual.Id.ShouldBeEquivalentTo(expected.Id);
+        actual.ProjectId.ShouldBe(expected.ProjectId);
+        actual.ScriptId.ShouldBe(expected.ScriptId);
+        actual.Status.ShouldBe(expected.Status);
+        actual.Results.ToList().ShouldBe(expected.Results.ToList());
+        actual.Errors.ToList().ShouldBe(expected.Errors.ToList());
+        actual.CreationDate.ShouldBe(expected.CreationDate);
+        actual.FinishedDate.ShouldBe(expected.FinishedDate);
+    }
+
+    public static bool MatchAnalysisResult(this AnalysisInfo actual, AnalysisInfo expected)
+    {
+        return actual.Id.Equals(expected.Id)
+            && actual.ProjectId.Equals(expected.ProjectId)
+            && actual.ScriptId.Equals(expected.ScriptId)
+            && actual.Status.Equals(expected.Status)
+            && actual.Results.SequenceEqual(expected.Results)
+            && actual.Errors.SequenceEqual(expected.Errors)
+            && actual.CreationDate.Equals(expected.CreationDate)
+            && actual.FinishedDate.Equals(expected.FinishedDate);
     }
 }

@@ -32,4 +32,24 @@ public record AnalysisInfo(
             null
         );
     }
+
+    public static AnalysisInfo FailedToStart(
+        AnalysisId analysisId,
+        ProjectId projectId,
+        ScriptId scriptId,
+        DateTimeOffset date,
+        string message
+    )
+    {
+        return new AnalysisInfo(
+            analysisId,
+            projectId,
+            scriptId,
+            AnalysisStatus.Finished,
+            [],
+            [new AnalysisError(message)],
+            date,
+            date
+        );
+    }
 }
