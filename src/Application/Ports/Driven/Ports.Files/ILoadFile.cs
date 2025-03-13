@@ -3,12 +3,11 @@ using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.Ports.Files;
 
-public interface ICreateFile
+public interface ILoadFile
 {
-    Task<OneOf<CreateFileResult, FileAlreadyExistsError>> Create(
+    Task<OneOf<string, FileDoesNotExistsError>> GetScriptContent(
         ProjectId projectId,
         string path,
-        string content,
         CancellationToken cancellationToken = default
     );
 }

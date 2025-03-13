@@ -71,7 +71,8 @@ public static class MongoDbExtensions
     {
         return services
             .AddMongoCollection<MongodbScript>(mongoDatabase, "Scripts")
-            .AddSingleton<ICreateScript, ScriptPersistenceAdapter>();
+            .AddSingleton<ICreateScript, ScriptPersistenceAdapter>()
+            .AddSingleton<IGetScript, ScriptPersistenceAdapter>();
     }
 
     private static IServiceCollection AddMongoCollection<T>(
