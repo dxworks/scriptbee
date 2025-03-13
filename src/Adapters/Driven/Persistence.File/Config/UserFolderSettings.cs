@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Services.Config;
+﻿namespace ScriptBee.Persistence.File.Config;
 
 public class UserFolderSettings
 {

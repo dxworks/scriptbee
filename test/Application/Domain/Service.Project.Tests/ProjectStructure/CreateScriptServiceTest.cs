@@ -120,7 +120,7 @@ public class CreateScriptServiceTest
                 )
             );
         _createFile
-            .Create(Path.Combine("id", "path.lang"), Arg.Any<CancellationToken>())
+            .Create(projectId, "path.lang", "", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
                     new FileAlreadyExistsError("path.lang")
@@ -165,7 +165,7 @@ public class CreateScriptServiceTest
                 )
             );
         _createFile
-            .Create(Path.Combine("id", "path.lang"), Arg.Any<CancellationToken>())
+            .Create(projectId, "path.lang", "", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
                     new CreateFileResult("name", "path.lang", "absolute-path.lang")
@@ -228,7 +228,7 @@ public class CreateScriptServiceTest
                 )
             );
         _createFile
-            .Create(Path.Combine("id", "path.ext.lang"), Arg.Any<CancellationToken>())
+            .Create(projectId, "path.ext.lang", "", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
                     new CreateFileResult("name", "path.ext.lang", "absolute-path.ext.lang")

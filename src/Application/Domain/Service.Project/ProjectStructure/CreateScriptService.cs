@@ -39,21 +39,21 @@ public class CreateScriptService(
 
     private async Task<CreateResult> Create(
         CreateScriptCommand command,
-        ProjectDetails details,
+        ProjectDetails projectDetails,
         CancellationToken cancellationToken = default
     )
     {
         var languageResult = await getScriptLanguages.Get(command.Language, cancellationToken);
 
         return await languageResult.Match<Task<CreateResult>>(
-            async language => await Create(command, details, language, cancellationToken),
+            async language => await Create(command, projectDetails, language, cancellationToken),
             error => Task.FromResult<CreateResult>(error)
         );
     }
 
     private async Task<CreateResult> Create(
         CreateScriptCommand command,
-        ProjectDetails details,
+        ProjectDetails projectDetails,
         ScriptLanguage language,
         CancellationToken cancellationToken = default
     )
@@ -61,32 +61,27 @@ public class CreateScriptService(
         // TODO FIXIT(#35): add sample code to created file
 
         var createFileResult = await createFile.Create(
-            GetScriptPath(command, details, language.Extension),
+            projectDetails.Id,
+            GetScriptPath(command.Path, language.Extension),
+            "",
             cancellationToken
         );
 
         return await createFileResult.Match<Task<CreateResult>>(
-            async result => await Create(command, details, language, result, cancellationToken),
+            async result =>
+                await Create(command, projectDetails, language, result, cancellationToken),
             error => Task.FromResult<CreateResult>(new ScriptPathAlreadyExistsError(error.Path))
         );
     }
 
-    private static string GetScriptPath(
-        CreateScriptCommand command,
-        ProjectDetails details,
-        string languageExtension
-    )
+    private static string GetScriptPath(string path, string languageExtension)
     {
-        var path = command.Path.EndsWith(languageExtension)
-            ? command.Path
-            : command.Path + languageExtension;
-
-        return Path.Combine(details.Id.ToString(), path);
+        return path.EndsWith(languageExtension) ? path : path + languageExtension;
     }
 
     private async Task<CreateResult> Create(
         CreateScriptCommand command,
-        ProjectDetails details,
+        ProjectDetails projectDetails,
         ScriptLanguage language,
         CreateFileResult createFileResult,
         CancellationToken cancellationToken = default
@@ -94,7 +89,7 @@ public class CreateScriptService(
     {
         var script = new Script(
             new ScriptId(guidProvider.NewGuid()),
-            details.Id,
+            projectDetails.Id,
             createFileResult.Name,
             createFileResult.Path,
             createFileResult.AbsolutePath,
