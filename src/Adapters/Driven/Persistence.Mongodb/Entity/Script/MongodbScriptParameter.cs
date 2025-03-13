@@ -17,4 +17,14 @@ public class MongodbScriptParameter
             Value = parameter.Value,
         };
     }
+
+    public ScriptParameter ToScriptParameter()
+    {
+        return new ScriptParameter
+        {
+            Name = Name,
+            Type = Type,
+            Value = Value,
+        };
+    }
 }

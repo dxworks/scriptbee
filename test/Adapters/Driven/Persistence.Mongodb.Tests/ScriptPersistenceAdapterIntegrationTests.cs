@@ -20,6 +20,8 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
         );
     }
 
+    #region Create Script
+
     [Fact]
     public async Task CreateScriptWithoutParameters()
     {
@@ -178,6 +180,174 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
         );
     }
 
+    #endregion
+
+    #region Get Script
+
+    [Fact]
+    public async Task GivenNoExistingScript_Get_ReturnScriptDoesNotExistsError()
+    {
+        const string scriptId = "bccab17e-bfc1-4209-aa12-75cabd307299";
+
+        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+
+        result.AsT1.ShouldBe(new ScriptDoesNotExistsError(new ScriptId(scriptId)));
+    }
+
+    [Fact]
+    public async Task GetScriptWithoutParameters()
+    {
+        const string scriptId = "fd2c1c8c-eb1a-4e6c-824c-b0e23b061c36";
+        await _mongoCollection.InsertOneAsync(CreateMongodbScript(scriptId, []));
+
+        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+
+        result.AsT0.AssertScript(CreateScript(new ScriptId(scriptId), []));
+    }
+
+    [Fact]
+    public async Task GetScriptWithStringParameter()
+    {
+        const string scriptId = "17938834-37f3-4316-a533-26ff079d156e";
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeString,
+                        Value = "value",
+                    },
+                ]
+            )
+        );
+
+        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+
+        result.AsT0.AssertScript(
+            CreateScript(
+                new ScriptId(scriptId),
+                [
+                    new ScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeString,
+                        Value = "value",
+                    },
+                ]
+            )
+        );
+    }
+
+    [Fact]
+    public async Task GetScriptWithBooleanParameter()
+    {
+        const string scriptId = "1ae3ee68-2b4d-4ee2-a1c2-09784b68f1fd";
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeBoolean,
+                        Value = true,
+                    },
+                ]
+            )
+        );
+
+        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+
+        result.AsT0.AssertScript(
+            CreateScript(
+                new ScriptId(scriptId),
+                [
+                    new ScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeBoolean,
+                        Value = true,
+                    },
+                ]
+            )
+        );
+    }
+
+    [Fact]
+    public async Task GetScriptWithIntegerParameter()
+    {
+        const string scriptId = "c7757e1d-54ce-45e0-8728-22dc78dcd578";
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeInteger,
+                        Value = 8,
+                    },
+                ]
+            )
+        );
+
+        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+
+        result.AsT0.AssertScript(
+            CreateScript(
+                new ScriptId(scriptId),
+                [
+                    new ScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeInteger,
+                        Value = 8,
+                    },
+                ]
+            )
+        );
+    }
+
+    [Fact]
+    public async Task GetScriptWithFloatParameter()
+    {
+        const string scriptId = "fcf57f00-a1ba-4813-9d50-53e17894756a";
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeFloat,
+                        Value = 17.9,
+                    },
+                ]
+            )
+        );
+
+        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+
+        result.AsT0.AssertScript(
+            CreateScript(
+                new ScriptId(scriptId),
+                [
+                    new ScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeFloat,
+                        Value = 17.9,
+                    },
+                ]
+            )
+        );
+    }
+
+    #endregion
+
+
     private static Script CreateScript(ScriptId id, IEnumerable<ScriptParameter> parameters)
     {
         return new Script(
@@ -203,13 +373,13 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             Name = "script.cs",
             FilePath = "path",
             AbsoluteFilePath = "absolute",
-            ScriptLanguageName = "csharp",
+            ScriptLanguage = new MongodbScriptLanguage { Name = "csharp", Extension = ".cs" },
             Parameters = parameters,
         };
     }
 }
 
-public static class MongodbScriptAssertionsExtensions
+public static class ScriptAssertionsExtensions
 {
     public static void AssertMongodbScript(this MongodbScript actual, MongodbScript expected)
     {
@@ -218,7 +388,19 @@ public static class MongodbScriptAssertionsExtensions
         actual.Name.ShouldBe(expected.Name);
         actual.FilePath.ShouldBe(expected.FilePath);
         actual.AbsoluteFilePath.ShouldBe(expected.AbsoluteFilePath);
-        actual.ScriptLanguageName.ShouldBe(expected.ScriptLanguageName);
+        actual.ScriptLanguage.Name.ShouldBe(expected.ScriptLanguage.Name);
+        actual.ScriptLanguage.Extension.ShouldBe(expected.ScriptLanguage.Extension);
+        actual.Parameters.ToList().ShouldBeEquivalentTo(expected.Parameters.ToList());
+    }
+
+    public static void AssertScript(this Script actual, Script expected)
+    {
+        actual.Id.ShouldBe(expected.Id);
+        actual.ProjectId.ShouldBe(expected.ProjectId);
+        actual.Name.ShouldBe(expected.Name);
+        actual.FilePath.ShouldBe(expected.FilePath);
+        actual.AbsoluteFilePath.ShouldBe(expected.AbsoluteFilePath);
+        actual.ScriptLanguage.ShouldBe(expected.ScriptLanguage);
         actual.Parameters.ToList().ShouldBeEquivalentTo(expected.Parameters.ToList());
     }
 }
