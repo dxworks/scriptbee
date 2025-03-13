@@ -16,9 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
 
-// var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
-
-// TODO: move service registration in Endpoint Definitions
+var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 
 builder
     .Services.AddConfiguredHealthChecks()
@@ -28,10 +26,10 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
+    .AddFileConfig(userFolderConfigurationSection)
     // .AddPluginServices()
     // .AddScriptBeeMarketplaceClient()
     // .AddFileWatcherServices()
-    // .AddControllerServices(userFolderConfigurationSection)
     .AddSignalR();
 
 builder.Services.AddEndpointDefinitions(

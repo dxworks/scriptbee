@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace ScriptBee.Config;
+﻿namespace ScriptBee.Domain.Model.Config;
 
 public static class ConfigFolders
 {
@@ -15,7 +12,9 @@ public static class ConfigFolders
 
     public const string GeneratedFolder = "generated";
 
-    private static readonly string PathToUserFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+    private static readonly string PathToUserFolder = Environment.GetFolderPath(
+        Environment.SpecialFolder.UserProfile
+    );
 
     public static readonly string PathToRoot = Path.Combine(PathToUserFolder, Root);
 

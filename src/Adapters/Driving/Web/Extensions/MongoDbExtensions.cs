@@ -1,10 +1,12 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Persistence.Mongodb;
 using ScriptBee.Persistence.Mongodb.Entity;
+using ScriptBee.Persistence.Mongodb.Entity.Script;
 using ScriptBee.Persistence.Mongodb.Exceptions;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
+using ScriptBee.Ports.Project.Structure;
 
 namespace ScriptBee.Web.Extensions;
 
@@ -34,7 +36,8 @@ public static class MongoDbExtensions
     {
         return services
             .AddProjectAdapters(mongoDatabase)
-            .AddProjectInstancesAdapters(mongoDatabase);
+            .AddProjectInstancesAdapters(mongoDatabase)
+            .AddScriptAdapters(mongoDatabase);
     }
 
     private static IServiceCollection AddProjectAdapters(
@@ -43,13 +46,7 @@ public static class MongoDbExtensions
     )
     {
         return services
-            .AddSingleton<IMongoCollection<MongodbProjectModel>>(_ =>
-                mongoDatabase.GetCollection<MongodbProjectModel>("Projects")
-            )
-            .AddSingleton<
-                IMongoRepository<MongodbProjectModel>,
-                MongoRepository<MongodbProjectModel>
-            >()
+            .AddMongoCollection<MongodbProjectModel>(mongoDatabase, "Projects")
             .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
             .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
             .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
@@ -62,14 +59,30 @@ public static class MongoDbExtensions
     )
     {
         return services
-            .AddSingleton<IMongoCollection<MongodbProjectInstance>>(_ =>
-                mongoDatabase.GetCollection<MongodbProjectInstance>("Instances")
-            )
-            .AddSingleton<
-                IMongoRepository<MongodbProjectInstance>,
-                MongoRepository<MongodbProjectInstance>
-            >()
+            .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "Instances")
             .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>();
+    }
+
+    private static IServiceCollection AddScriptAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
+    {
+        return services
+            .AddMongoCollection<MongodbScript>(mongoDatabase, "Scripts")
+            .AddSingleton<ICreateScript, ScriptPersistenceAdapter>();
+    }
+
+    private static IServiceCollection AddMongoCollection<T>(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase,
+        string collectionName
+    )
+        where T : IDocument
+    {
+        return services
+            .AddSingleton<IMongoCollection<T>>(_ => mongoDatabase.GetCollection<T>(collectionName))
+            .AddSingleton<IMongoRepository<T>, MongoRepository<T>>();
     }
 }
