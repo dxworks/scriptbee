@@ -10,6 +10,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
+var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 
 builder
     .Services.AddConfiguredHealthChecks()
@@ -18,7 +19,8 @@ builder
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
-    .AddCommonServices();
+    .AddCommonServices()
+    .AddFileConfig(userFolderConfigurationSection);
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),

@@ -15,7 +15,6 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
-
 var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 
 builder

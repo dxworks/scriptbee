@@ -5,7 +5,6 @@ using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.File;
-using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
@@ -26,7 +25,6 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
     {
         services.AddSingleton<ICreateScriptUseCase, CreateScriptService>();
         services.AddSingleton<IGetScriptLanguages, GetScriptLanguagesAdapter>();
-        services.AddSingleton<ICreateFile, CreateFileAdapter>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)

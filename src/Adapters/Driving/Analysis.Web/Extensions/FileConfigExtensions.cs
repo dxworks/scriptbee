@@ -2,7 +2,7 @@
 using ScriptBee.Persistence.File.Config;
 using ScriptBee.Ports.Files;
 
-namespace ScriptBee.Web.Extensions;
+namespace ScriptBee.Analysis.Web.Extensions;
 
 public static class FileConfigExtensions
 {
@@ -14,6 +14,7 @@ public static class FileConfigExtensions
         services.Configure<UserFolderSettings>(userFolderConfigurationSection);
         return services
             .AddSingleton<IConfigFoldersService, ConfigFoldersService>()
-            .AddSingleton<ICreateFile, CreateFileAdapter>();
+            .AddSingleton<ICreateFile, CreateFileAdapter>()
+            .AddSingleton<ILoadFile, LoadFileAdapter>();
     }
 }

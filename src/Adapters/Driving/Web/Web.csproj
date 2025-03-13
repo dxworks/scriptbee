@@ -10,12 +10,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Driven\Persistence.File\Persistence.File.csproj" />
         <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
         <ProjectReference Include="..\..\..\Common\Common.csproj"/>
         <ProjectReference Include="..\..\..\Application\Domain\Service.Analysis\Service.Analysis.csproj"/>
         <ProjectReference Include="..\..\..\Application\Domain\Service.Project\Service.Project.csproj"/>
         <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Project\UseCases.Project.csproj"/>
+        <ProjectReference Include="..\..\Driven\Persistence.File\Persistence.File.csproj" />
         <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj"/>
     </ItemGroup>
 </Project>
