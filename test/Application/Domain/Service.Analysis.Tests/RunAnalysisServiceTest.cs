@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
@@ -6,6 +7,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Analysis;
 using ScriptBee.UseCases.Analysis;
@@ -19,6 +21,9 @@ public class RunAnalysisServiceTest
     private readonly ICreateAnalysis _createAnalysis = Substitute.For<ICreateAnalysis>();
     private readonly IGetScript _getScript = Substitute.For<IGetScript>();
     private readonly ILoadFile _loadFile = Substitute.For<ILoadFile>();
+    private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
+
+    private readonly IScriptRunner _scriptRunner = Substitute.For<IScriptRunner>();
 
     private readonly RunAnalysisService _runAnalysisService;
 
@@ -29,7 +34,8 @@ public class RunAnalysisServiceTest
             _guidProvider,
             _createAnalysis,
             _getScript,
-            _loadFile
+            _loadFile,
+            _pluginRepository
         );
     }
 
@@ -74,6 +80,7 @@ public class RunAnalysisServiceTest
                 Arg.Any<CancellationToken>()
             )
             .Returns(expectedAnalysisInfo);
+        _pluginRepository.GetPlugin(Arg.Any<Func<IScriptRunner, bool>>()).Returns(_scriptRunner);
 
         var analysisResult = await _runAnalysisService.Run(command);
 
@@ -81,6 +88,56 @@ public class RunAnalysisServiceTest
         await _loadFile
             .Received(1)
             .GetScriptContent(projectId, "path", Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task GivenScriptRunnerDoesNotExistsError_thenAnalysisIsFailed()
+    {
+        var date = DateTimeOffset.UtcNow;
+        var projectId = ProjectId.FromValue("project-id");
+        var analysisId = new AnalysisId(Guid.Parse("97c3498a-1a8f-4e01-be79-0cc9ede9f7a8"));
+        var scriptId = new ScriptId(Guid.Parse("38900b32-fca2-4213-bd4b-c71cc1068bb6"));
+        var command = new RunAnalysisCommand(projectId, scriptId);
+        var expectedAnalysisInfo = new AnalysisInfo(
+            analysisId,
+            projectId,
+            scriptId,
+            AnalysisStatus.Finished,
+            [],
+            [new AnalysisError("Runner for language 'language' does not exist.")],
+            date,
+            date
+        );
+        _dateTimeProvider.UtcNow().Returns(date);
+        _guidProvider.NewGuid().Returns(analysisId.Value);
+        _getScript
+            .Get(scriptId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
+                    new Script(
+                        scriptId,
+                        projectId,
+                        "script",
+                        "path",
+                        "absolute-path",
+                        new ScriptLanguage("language", ".lang"),
+                        []
+                    )
+                )
+            );
+        _createAnalysis
+            .Create(
+                Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(expectedAnalysisInfo);
+        _pluginRepository
+            .GetPlugin(Arg.Any<Func<IScriptRunner, bool>>())
+            .Returns((IScriptRunner?)null);
+
+        var analysisResult = await _runAnalysisService.Run(command);
+
+        analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
     }
 
     [Fact]
