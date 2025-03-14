@@ -1,8 +1,12 @@
-﻿using ScriptBee.Common;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using OneOf;
+using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project.Structure;
 using ScriptBee.UseCases.Analysis;
 
@@ -13,7 +17,8 @@ public class RunAnalysisService(
     IGuidProvider guidProvider,
     ICreateAnalysis createAnalysis,
     IGetScript getScript,
-    ILoadFile loadFile
+    ILoadFile loadFile,
+    IPluginRepository pluginRepository
 ) : IRunAnalysisUseCase
 {
     public async Task<AnalysisInfo> Run(
@@ -44,6 +49,30 @@ public class RunAnalysisService(
         CancellationToken cancellationToken = default
     )
     {
+        var scriptRunnerResult = GetScriptRunner(script.ScriptLanguage);
+
+        return await scriptRunnerResult.Match(
+            runner => Run(runner, script, cancellationToken),
+            async error =>
+                await createAnalysis.Create(
+                    AnalysisInfo.FailedToStart(
+                        new AnalysisId(guidProvider.NewGuid()),
+                        script.ProjectId,
+                        script.Id,
+                        dateTimeProvider.UtcNow(),
+                        error.ToString()
+                    ),
+                    cancellationToken
+                )
+        );
+    }
+
+    private async Task<AnalysisInfo> Run(
+        IScriptRunner scriptRunner,
+        Script script,
+        CancellationToken cancellationToken = default
+    )
+    {
         var analysisInfo = await createAnalysis.Create(
             AnalysisInfo.Started(
                 new AnalysisId(guidProvider.NewGuid()),
@@ -58,5 +87,18 @@ public class RunAnalysisService(
         await loadFile.GetScriptContent(script.ProjectId, script.FilePath, cancellationToken);
 
         return analysisInfo;
+    }
+
+    private OneOf<IScriptRunner, ScriptRunnerNotFoundError> GetScriptRunner(
+        ScriptLanguage scriptLanguage
+    )
+    {
+        var scriptRunner = pluginRepository.GetPlugin<IScriptRunner>(runner =>
+            runner.Language == scriptLanguage.Name
+        );
+
+        return scriptRunner is null
+            ? new ScriptRunnerNotFoundError(scriptLanguage)
+            : OneOf<IScriptRunner, ScriptRunnerNotFoundError>.FromT0(scriptRunner);
     }
 }

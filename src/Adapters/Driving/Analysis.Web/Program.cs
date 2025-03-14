@@ -20,7 +20,8 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
-    .AddFileConfig(userFolderConfigurationSection);
+    .AddFileConfig(userFolderConfigurationSection)
+    .AddPluginsConfig();
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),

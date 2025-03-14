@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ScriptBee.Plugin.Manifest;
+﻿namespace ScriptBee.Domain.Model.Plugin.Manifest;
 
 public class PluginManifest
 {

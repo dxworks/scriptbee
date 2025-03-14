@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Plugin.Manifest;
+﻿namespace ScriptBee.Domain.Model.Plugin.Manifest;
 
 public abstract class PluginExtensionPoint
 {
