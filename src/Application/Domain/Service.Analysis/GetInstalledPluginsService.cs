@@ -1,12 +1,14 @@
 ﻿using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 
-public class GetInstalledPluginsService : IGetInstalledPluginsUseCase
+public class GetInstalledPluginsService(IPluginRepository pluginRepository)
+    : IGetInstalledPluginsUseCase
 {
     public Task<IEnumerable<Plugin>> Get(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(pluginRepository.GetLoadedPlugins());
     }
 }
