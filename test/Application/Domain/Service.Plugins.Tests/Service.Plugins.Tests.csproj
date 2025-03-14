@@ -1,9 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Service.Plugins.Tests</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\..\src\Application\Domain\Service.Plugins\Service.Plugins.csproj" />
-    </ItemGroup>
-</Project>

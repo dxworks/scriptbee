@@ -2,7 +2,7 @@
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Service.Plugins.Tests;
+namespace ScriptBee.Persistence.InMemory.Tests;
 
 public class PluginRepositoryTests
 {

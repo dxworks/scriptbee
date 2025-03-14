@@ -57,6 +57,13 @@ public class RunAnalysisService(
         // TODO FIXIT(#20): implement the run of the script
         await loadFile.GetScriptContent(script.ProjectId, script.FilePath, cancellationToken);
 
+        // var scriptRunner = _pluginRepository.GetPlugin<IScriptRunner>(runner => runner.Language == script.ScriptLanguage.Name);
+        //
+        // if (scriptRunner is null)
+        // {
+        //     throw new ScriptRunnerNotFoundException(language);
+        // }
+
         return analysisInfo;
     }
 }
