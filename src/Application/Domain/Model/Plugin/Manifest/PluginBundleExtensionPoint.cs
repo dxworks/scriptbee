@@ -1,3 +1,3 @@
 ﻿namespace ScriptBee.Domain.Model.Plugin.Manifest;
 
-public class PluginBundleExtensionPoint : PluginExtensionPoint { }
+public class PluginBundleExtensionPoint : PluginExtensionPoint;
