@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Common\Common.csproj" />
+        <ProjectReference Include="..\..\Driven\Persistence.InMemory\Persistence.InMemory.csproj" />
         <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
         <ProjectReference Include="..\..\..\Application\Domain\Service.Analysis\Service.Analysis.csproj" />
         <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Analysis\UseCases.Analysis.csproj"/>
