@@ -24,25 +24,12 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(
                 Task.FromResult<IEnumerable<Plugin>>(
                     [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(1, 2, 3),
-                            new PluginManifest
+                        CreatePlugin(
+                            new LoaderPluginExtensionPoint
                             {
-                                ApiVersion = "1.0.0",
-                                Name = "name",
-                                Author = "author",
-                                Description = "description",
-                                ExtensionPoints =
-                                [
-                                    new LoaderPluginExtensionPoint
-                                    {
-                                        EntryPoint = "entry-point",
-                                        Kind = PluginKind.Loader,
-                                        Version = "1.2.3",
-                                    },
-                                ],
+                                EntryPoint = "entry-point",
+                                Kind = PluginKind.Loader,
+                                Version = "1.2.3",
                             }
                         ),
                     ]
@@ -80,25 +67,12 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(
                 Task.FromResult<IEnumerable<Plugin>>(
                     [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(1, 2, 3),
-                            new PluginManifest
+                        CreatePlugin(
+                            new LinkerPluginExtensionPoint
                             {
-                                ApiVersion = "1.0.0",
-                                Name = "name",
-                                Author = "author",
-                                Description = "description",
-                                ExtensionPoints =
-                                [
-                                    new LinkerPluginExtensionPoint
-                                    {
-                                        EntryPoint = "entry-point",
-                                        Kind = PluginKind.Linker,
-                                        Version = "1.2.3",
-                                    },
-                                ],
+                                EntryPoint = "entry-point",
+                                Kind = PluginKind.Linker,
+                                Version = "1.2.3",
                             }
                         ),
                     ]
@@ -136,25 +110,12 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(
                 Task.FromResult<IEnumerable<Plugin>>(
                     [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(1, 2, 3),
-                            new PluginManifest
+                        CreatePlugin(
+                            new HelperFunctionsPluginExtensionPoint
                             {
-                                ApiVersion = "1.0.0",
-                                Name = "name",
-                                Author = "author",
-                                Description = "description",
-                                ExtensionPoints =
-                                [
-                                    new HelperFunctionsPluginExtensionPoint
-                                    {
-                                        EntryPoint = "entry-point",
-                                        Kind = PluginKind.HelperFunctions,
-                                        Version = "1.2.3",
-                                    },
-                                ],
+                                EntryPoint = "entry-point",
+                                Kind = PluginKind.HelperFunctions,
+                                Version = "1.2.3",
                             }
                         ),
                     ]
@@ -192,27 +153,14 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(
                 Task.FromResult<IEnumerable<Plugin>>(
                     [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(1, 2, 3),
-                            new PluginManifest
+                        CreatePlugin(
+                            new ScriptGeneratorPluginExtensionPoint
                             {
-                                ApiVersion = "1.0.0",
-                                Name = "name",
-                                Author = "author",
-                                Description = "description",
-                                ExtensionPoints =
-                                [
-                                    new ScriptGeneratorPluginExtensionPoint
-                                    {
-                                        EntryPoint = "entry-point",
-                                        Kind = PluginKind.ScriptGenerator,
-                                        Version = "1.2.3",
-                                        Extension = ".cs",
-                                        Language = "csharp",
-                                    },
-                                ],
+                                EntryPoint = "entry-point",
+                                Kind = PluginKind.ScriptGenerator,
+                                Version = "1.2.3",
+                                Extension = ".cs",
+                                Language = "csharp",
                             }
                         ),
                     ]
@@ -252,26 +200,13 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(
                 Task.FromResult<IEnumerable<Plugin>>(
                     [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(1, 2, 3),
-                            new PluginManifest
+                        CreatePlugin(
+                            new ScriptRunnerPluginExtensionPoint
                             {
-                                ApiVersion = "1.0.0",
-                                Name = "name",
-                                Author = "author",
-                                Description = "description",
-                                ExtensionPoints =
-                                [
-                                    new ScriptRunnerPluginExtensionPoint
-                                    {
-                                        EntryPoint = "entry-point",
-                                        Kind = PluginKind.ScriptRunner,
-                                        Version = "1.2.3",
-                                        Language = "csharp",
-                                    },
-                                ],
+                                EntryPoint = "entry-point",
+                                Kind = PluginKind.ScriptRunner,
+                                Version = "1.2.3",
+                                Language = "csharp",
                             }
                         ),
                     ]
@@ -310,30 +245,17 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(
                 Task.FromResult<IEnumerable<Plugin>>(
                     [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(1, 2, 3),
-                            new PluginManifest
+                        CreatePlugin(
+                            new UiPluginExtensionPoint
                             {
-                                ApiVersion = "1.0.0",
-                                Name = "name",
-                                Author = "author",
-                                Description = "description",
-                                ExtensionPoints =
-                                [
-                                    new UiPluginExtensionPoint
-                                    {
-                                        EntryPoint = "entry-point",
-                                        Kind = PluginKind.Ui,
-                                        Version = "1.2.3",
-                                        Port = 1234,
-                                        ComponentName = "component",
-                                        ExposedModule = "module",
-                                        RemoteEntry = "remote-entry",
-                                        UiPluginType = "type",
-                                    },
-                                ],
+                                EntryPoint = "entry-point",
+                                Kind = PluginKind.Ui,
+                                Version = "1.2.3",
+                                Port = 1234,
+                                ComponentName = "component",
+                                ExposedModule = "module",
+                                RemoteEntry = "remote-entry",
+                                UiPluginType = "type",
                             }
                         ),
                     ]
@@ -365,6 +287,23 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         extensionPoint.GetProperty("exposedModule").GetString().ShouldBe("module");
         extensionPoint.GetProperty("remoteEntry").GetString().ShouldBe("remote-entry");
         extensionPoint.GetProperty("uiPluginType").GetString().ShouldBe("type");
+    }
+
+    private static Plugin CreatePlugin(PluginExtensionPoint extensionPoint)
+    {
+        return new Plugin(
+            "folder",
+            "id",
+            new Version(1, 2, 3),
+            new PluginManifest
+            {
+                ApiVersion = "1.0.0",
+                Name = "name",
+                Author = "author",
+                Description = "description",
+                ExtensionPoints = [extensionPoint],
+            }
+        );
     }
 
     private static void AssertBasicExtensionPointProperties(
