@@ -6,5 +6,5 @@ public class PluginManifest
     public string Name { get; set; } = "";
     public string? Description { get; set; }
     public string? Author { get; set; }
-    public List<PluginExtensionPoint> ExtensionPoints { get; set; } = new();
+    public List<PluginExtensionPoint> ExtensionPoints { get; set; } = [];
 }

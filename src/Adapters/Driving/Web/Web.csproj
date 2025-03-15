@@ -17,5 +17,6 @@
         <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Project\UseCases.Project.csproj"/>
         <ProjectReference Include="..\..\Driven\Persistence.File\Persistence.File.csproj" />
         <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj"/>
+        <ProjectReference Include="..\..\Driven\Rest\Rest.csproj" />
     </ItemGroup>
 </Project>

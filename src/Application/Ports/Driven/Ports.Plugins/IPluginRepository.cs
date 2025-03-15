@@ -31,4 +31,6 @@ public interface IPluginRepository
         where T : PluginExtensionPoint;
 
     Version? GetInstalledPluginVersion(string pluginId);
+
+    IEnumerable<Plugin> GetLoadedPlugins();
 }

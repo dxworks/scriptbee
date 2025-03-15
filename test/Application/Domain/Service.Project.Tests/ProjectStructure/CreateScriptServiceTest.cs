@@ -2,12 +2,15 @@
 using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project;
 using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Project.ProjectStructure;
+using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.Tests.ProjectStructure;
@@ -23,6 +26,9 @@ public class CreateScriptServiceTest
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly ICreateScript _createScript = Substitute.For<ICreateScript>();
 
+    private readonly IGetCurrentInstanceUseCase _getCurrentInstanceUseCase =
+        Substitute.For<IGetCurrentInstanceUseCase>();
+
     private readonly CreateScriptService _createScriptService;
 
     public CreateScriptServiceTest()
@@ -32,7 +38,8 @@ public class CreateScriptServiceTest
             _getScriptLanguages,
             _createFile,
             _guidProvider,
-            _createScript
+            _createScript,
+            _getCurrentInstanceUseCase
         );
     }
 
@@ -69,6 +76,12 @@ public class CreateScriptServiceTest
     {
         var projectId = ProjectId.FromValue("id");
         var error = new ScriptLanguageDoesNotExistsError("language");
+        var instanceInfo = new InstanceInfo(
+            new InstanceId(Guid.Empty),
+            ProjectId.FromValue("id"),
+            "url",
+            DateTimeOffset.Now
+        );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -76,8 +89,11 @@ public class CreateScriptServiceTest
                     new ProjectDetails(projectId, "project", DateTimeOffset.Now)
                 )
             );
+        _getCurrentInstanceUseCase
+            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(instanceInfo));
         _getScriptLanguages
-            .Get("language", Arg.Any<CancellationToken>())
+            .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ScriptLanguage, ScriptLanguageDoesNotExistsError>>(error)
             );
@@ -105,6 +121,12 @@ public class CreateScriptServiceTest
     public async Task CreateFileAlreadyExists()
     {
         var projectId = ProjectId.FromValue("id");
+        var instanceInfo = new InstanceInfo(
+            new InstanceId(Guid.Empty),
+            ProjectId.FromValue("id"),
+            "url",
+            DateTimeOffset.Now
+        );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -112,8 +134,11 @@ public class CreateScriptServiceTest
                     new ProjectDetails(projectId, "project", DateTimeOffset.Now)
                 )
             );
+        _getCurrentInstanceUseCase
+            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(instanceInfo));
         _getScriptLanguages
-            .Get("language", Arg.Any<CancellationToken>())
+            .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ScriptLanguage, ScriptLanguageDoesNotExistsError>>(
                     new ScriptLanguage("language", ".lang")
@@ -150,6 +175,12 @@ public class CreateScriptServiceTest
     public async Task CreateScriptSuccessfully()
     {
         var projectId = ProjectId.FromValue("id");
+        var instanceInfo = new InstanceInfo(
+            new InstanceId(Guid.Empty),
+            ProjectId.FromValue("id"),
+            "url",
+            DateTimeOffset.Now
+        );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -157,8 +188,11 @@ public class CreateScriptServiceTest
                     new ProjectDetails(projectId, "project", DateTimeOffset.Now)
                 )
             );
+        _getCurrentInstanceUseCase
+            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(instanceInfo));
         _getScriptLanguages
-            .Get("language", Arg.Any<CancellationToken>())
+            .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ScriptLanguage, ScriptLanguageDoesNotExistsError>>(
                     new ScriptLanguage("language", ".lang")
@@ -213,6 +247,12 @@ public class CreateScriptServiceTest
     public async Task CreateScriptSuccessfullyWithExtension()
     {
         var projectId = ProjectId.FromValue("id");
+        var instanceInfo = new InstanceInfo(
+            new InstanceId(Guid.Empty),
+            ProjectId.FromValue("id"),
+            "url",
+            DateTimeOffset.Now
+        );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -220,8 +260,11 @@ public class CreateScriptServiceTest
                     new ProjectDetails(projectId, "project", DateTimeOffset.Now)
                 )
             );
+        _getCurrentInstanceUseCase
+            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(instanceInfo));
         _getScriptLanguages
-            .Get("language", Arg.Any<CancellationToken>())
+            .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ScriptLanguage, ScriptLanguageDoesNotExistsError>>(
                     new ScriptLanguage("language", ".lang")

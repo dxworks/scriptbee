@@ -13,6 +13,7 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
     public void DefineServices(IServiceCollection services)
     {
         services.AddSingleton<IGetProjectInstancesUseCase, GetProjectInstancesService>();
+        services.AddSingleton<IGetCurrentInstanceUseCase, GetCurrentInstanceService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)

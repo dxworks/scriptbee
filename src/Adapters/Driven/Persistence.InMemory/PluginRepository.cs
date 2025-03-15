@@ -84,7 +84,7 @@ public class PluginRepository : IPluginRepository
         return _plugins.TryGetValue(pluginId, out var plugin) ? plugin.Version : null;
     }
 
-    private IEnumerable<Plugin> GetLoadedPlugins()
+    public IEnumerable<Plugin> GetLoadedPlugins()
     {
         return _plugins.Values;
     }
