@@ -320,6 +320,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
 
     private static void AssertPluginProperties(JsonElement plugin)
     {
+        plugin.GetProperty("folderPath").GetString().ShouldBe("folder");
         plugin.GetProperty("id").GetString().ShouldBe("id");
         plugin.GetProperty("version").GetString().ShouldBe("1.2.3");
         plugin.GetProperty("manifest").GetProperty("apiVersion").GetString().ShouldBe("1.0.0");
