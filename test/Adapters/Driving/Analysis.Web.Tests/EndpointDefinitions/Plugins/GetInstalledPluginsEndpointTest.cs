@@ -207,6 +207,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
                                 Kind = PluginKind.ScriptRunner,
                                 Version = "1.2.3",
                                 Language = "csharp",
+                                Extension = ".cs",
                             }
                         ),
                     ]
@@ -234,6 +235,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .Single();
         AssertBasicExtensionPointProperties(extensionPoint, PluginKind.ScriptRunner);
         extensionPoint.GetProperty("language").GetString().ShouldBe("csharp");
+        extensionPoint.GetProperty("extension").GetString().ShouldBe(".cs");
     }
 
     [Fact]

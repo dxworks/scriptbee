@@ -41,6 +41,7 @@ public record WebInstalledPluginManifest(
                     EntryPoint = scriptRunnerPluginExtensionPoint.EntryPoint,
                     Version = scriptRunnerPluginExtensionPoint.Version,
                     Language = scriptRunnerPluginExtensionPoint.Language,
+                    Extension = scriptRunnerPluginExtensionPoint.Extension,
                 },
             UiPluginExtensionPoint uiPluginExtensionPoint => new WebUiPluginExtensionPoint
             {
