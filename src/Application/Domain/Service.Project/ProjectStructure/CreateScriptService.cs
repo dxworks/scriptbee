@@ -3,8 +3,10 @@ using ScriptBee.Common;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project;
 using ScriptBee.Ports.Project.Structure;
+using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.ProjectStructure;
@@ -21,7 +23,8 @@ public class CreateScriptService(
     IGetScriptLanguages getScriptLanguages,
     ICreateFile createFile,
     IGuidProvider guidProvider,
-    ICreateScript createScript
+    ICreateScript createScript,
+    IGetCurrentInstanceUseCase currentInstanceUseCase
 ) : ICreateScriptUseCase
 {
     public async Task<CreateResult> Create(
@@ -43,7 +46,15 @@ public class CreateScriptService(
         CancellationToken cancellationToken = default
     )
     {
-        var languageResult = await getScriptLanguages.Get(command.Language, cancellationToken);
+        var instanceInfo = await currentInstanceUseCase.GetOrAllocate(
+            projectDetails.Id,
+            cancellationToken
+        );
+        var languageResult = await getScriptLanguages.Get(
+            instanceInfo,
+            command.Language,
+            cancellationToken
+        );
 
         return await languageResult.Match<Task<CreateResult>>(
             async language => await Create(command, projectDetails, language, cancellationToken),

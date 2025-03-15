@@ -26,6 +26,7 @@ builder
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
     .AddFileConfig(userFolderConfigurationSection)
+    .AddRestConfig()
     // .AddPluginServices()
     // .AddScriptBeeMarketplaceClient()
     // .AddFileWatcherServices()
