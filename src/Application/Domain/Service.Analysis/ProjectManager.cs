@@ -1,4 +1,5 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Context;
 
@@ -8,7 +9,7 @@ public class ProjectManager(IDateTimeProvider dateTimeProvider) : IProjectManage
 {
     private Project Project { get; set; } = null!;
 
-    public Project CreateProject(string projectId, string projectName)
+    public IProject CreateProject(string projectId, string projectName)
     {
         Project = new Project
         {
@@ -32,7 +33,7 @@ public class ProjectManager(IDateTimeProvider dateTimeProvider) : IProjectManage
         }
     }
 
-    public Project GetProject()
+    public IProject GetProject()
     {
         return Project;
     }

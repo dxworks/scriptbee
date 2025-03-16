@@ -17,12 +17,9 @@ public class ClearContextEndpoint : IEndpointDefinition
         app.MapPost("/api/context/clear", ClearContext);
     }
 
-    private static async Task<NoContent> ClearContext(
-        IClearContextUseCase useCase,
-        CancellationToken cancellationToken = default
-    )
+    private static NoContent ClearContext(IClearContextUseCase useCase)
     {
-        await useCase.Clear(cancellationToken);
+        useCase.Clear();
 
         return TypedResults.NoContent();
     }

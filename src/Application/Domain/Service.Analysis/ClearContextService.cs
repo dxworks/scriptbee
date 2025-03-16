@@ -2,10 +2,12 @@
 
 namespace ScriptBee.Service.Analysis;
 
-public class ClearContextService : IClearContextUseCase
+public class ClearContextService(IProjectManager projectManager) : IClearContextUseCase
 {
-    public Task Clear(CancellationToken cancellationToken = default)
+    public void Clear()
     {
-        throw new NotImplementedException();
+        var project = projectManager.GetProject();
+
+        project.Context.Clear();
     }
 }

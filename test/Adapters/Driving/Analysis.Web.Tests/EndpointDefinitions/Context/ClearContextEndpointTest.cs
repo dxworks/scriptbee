@@ -16,7 +16,6 @@ public class ClearContextEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldClearContext()
     {
         var useCase = Substitute.For<IClearContextUseCase>();
-        useCase.Clear(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
 
         var response = await _api.PostApi<object>(
             new TestWebApplicationFactory<Program>(
@@ -29,5 +28,6 @@ public class ClearContextEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        useCase.Received(1).Clear();
     }
 }

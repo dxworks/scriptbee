@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DxWorks.ScriptBee.Plugin.Api.Model;
+﻿namespace DxWorks.ScriptBee.Plugin.Api.Model;
 
 public interface IContext
 {

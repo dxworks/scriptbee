@@ -2,5 +2,5 @@
 
 public interface IClearContextUseCase
 {
-    Task Clear(CancellationToken cancellationToken = default);
+    void Clear();
 }
