@@ -6,27 +6,27 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using ClearContextResult = OneOf<Unit, InstanceDoesNotExistsError>;
+using LinkContextResult = OneOf<Unit, InstanceDoesNotExistsError>;
 
-public class ClearInstanceContextService(
+public class LinkInstanceContextService(
     IGetProjectInstance getProjectInstance,
-    IClearInstanceContext clearInstanceContext
-) : IClearInstanceContextUseCase
+    ILinkInstanceContext linkInstanceContext
+) : ILinkInstanceContextUseCase
 {
-    public async Task<ClearContextResult> Clear(
-        ClearContextCommand command,
+    public async Task<LinkContextResult> Link(
+        LinkContextCommand command,
         CancellationToken cancellationToken = default
     )
     {
         var result = await getProjectInstance.Get(command.InstanceId, cancellationToken);
 
-        return await result.Match<Task<ClearContextResult>>(
+        return await result.Match<Task<LinkContextResult>>(
             async instanceInfo =>
             {
-                await clearInstanceContext.Clear(instanceInfo, cancellationToken);
+                await linkInstanceContext.Link(instanceInfo, command.LinkerIds, cancellationToken);
                 return new Unit();
             },
-            error => Task.FromResult<ClearContextResult>(error)
+            error => Task.FromResult<LinkContextResult>(error)
         );
     }
 }
