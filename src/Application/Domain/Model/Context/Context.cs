@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DxWorks.ScriptBee.Plugin.Api;
+﻿using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 
-namespace ScriptBee.ProjectContext;
+namespace ScriptBee.Domain.Model.Context;
 
 public class Context : IContext
 {
-    public Dictionary<Tuple<string, string>, Dictionary<string, ScriptBeeModel>> Models { get; set; } = new();
+    public Dictionary<
+        Tuple<string, string>,
+        Dictionary<string, ScriptBeeModel>
+    > Models { get; set; } = new();
     public Dictionary<Tuple<string, string>, Dictionary<string, string>> Tags { get; set; } = new();
 
-    public void SetModel(Tuple<string, string> tuple, Dictionary<string, ScriptBeeModel> objectsDictionary)
+    public void SetModel(
+        Tuple<string, string> tuple,
+        Dictionary<string, ScriptBeeModel> objectsDictionary
+    )
     {
-        if (Models.ContainsKey(tuple))
-        {
-            Models[tuple] = objectsDictionary;
-        }
-        else
-        {
-            Models.Add(tuple, objectsDictionary);
-        }
+        Models[tuple] = objectsDictionary;
     }
 
     public void RemoveLoaderEntries(string sourceName)
