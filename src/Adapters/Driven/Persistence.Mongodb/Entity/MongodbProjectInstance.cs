@@ -1,5 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Persistence.Mongodb.Entity;

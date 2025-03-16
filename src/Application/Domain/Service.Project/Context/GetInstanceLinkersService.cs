@@ -1,5 +1,5 @@
-﻿using ScriptBee.Domain.Model.Analysis;
-using ScriptBee.Domain.Model.Context;
+﻿using ScriptBee.Domain.Model.Context;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Plugins;

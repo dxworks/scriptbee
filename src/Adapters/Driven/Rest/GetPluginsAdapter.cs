@@ -1,5 +1,5 @@
 ﻿using Refit;
-using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Rest.Api;

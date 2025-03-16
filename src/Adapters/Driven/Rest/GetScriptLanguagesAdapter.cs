@@ -1,5 +1,5 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Plugins;

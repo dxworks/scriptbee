@@ -46,9 +46,9 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ShouldReturnCreated()
     {
-        var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
+        var useCase = Substitute.For<ICreateProjectUseCase>();
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        createProjectUseCase
+        useCase
             .CreateProject(
                 new CreateProjectCommand("id", "project name"),
                 Arg.Any<CancellationToken>()
@@ -64,7 +64,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createProjectUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateProjectCommand("id", "project name")
@@ -81,8 +81,8 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ExistingId_ShouldReturnConflict()
     {
-        var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
-        createProjectUseCase
+        var useCase = Substitute.For<ICreateProjectUseCase>();
+        useCase
             .CreateProject(
                 new CreateProjectCommand("id", "project name"),
                 Arg.Any<CancellationToken>()
@@ -98,7 +98,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createProjectUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateProjectCommand("id", "project name")

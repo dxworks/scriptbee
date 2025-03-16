@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Domain.Model.Analysis;
+﻿namespace ScriptBee.Domain.Model.Instance;
 
 public readonly record struct InstanceId(Guid Value)
 {

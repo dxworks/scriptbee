@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+﻿using ScriptBee.Domain.Model.Instance;
 
 namespace ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
 

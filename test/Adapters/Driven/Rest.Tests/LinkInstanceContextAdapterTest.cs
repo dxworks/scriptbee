@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+﻿using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;

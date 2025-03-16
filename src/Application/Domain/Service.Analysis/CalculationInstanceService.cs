@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+﻿using ScriptBee.Domain.Model.Instance;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
