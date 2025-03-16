@@ -6,18 +6,27 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using LinkResult = OneOf<Unit, InstanceDoesNotExistsError>;
+using LinkContextResult = OneOf<Unit, InstanceDoesNotExistsError>;
 
 public class LinkInstanceContextService(
     IGetProjectInstance getProjectInstance,
-    IClearInstanceContext clearInstanceContext
+    ILinkInstanceContext linkInstanceContext
 ) : ILinkInstanceContextUseCase
 {
-    public Task<LinkResult> Link(
+    public async Task<LinkContextResult> Link(
         LinkContextCommand command,
         CancellationToken cancellationToken = default
     )
     {
-        throw new NotImplementedException();
+        var result = await getProjectInstance.Get(command.InstanceId, cancellationToken);
+
+        return await result.Match<Task<LinkContextResult>>(
+            async instanceInfo =>
+            {
+                await linkInstanceContext.Link(instanceInfo, command.LinkerIds, cancellationToken);
+                return new Unit();
+            },
+            error => Task.FromResult<LinkContextResult>(error)
+        );
     }
 }

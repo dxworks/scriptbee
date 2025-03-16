@@ -10,30 +10,31 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
-public class ClearInstanceContextServiceTest
+public class LinkInstanceContextServiceTest
 {
     private readonly IGetProjectInstance _getProjectInstance =
         Substitute.For<IGetProjectInstance>();
 
-    private readonly IClearInstanceContext _clearInstanceContext =
-        Substitute.For<IClearInstanceContext>();
+    private readonly ILinkInstanceContext _linkInstanceContext =
+        Substitute.For<ILinkInstanceContext>();
 
-    private readonly ClearInstanceContextService _clearInstanceContextService;
+    private readonly LinkInstanceContextService _linkInstanceContextService;
 
-    public ClearInstanceContextServiceTest()
+    public LinkInstanceContextServiceTest()
     {
-        _clearInstanceContextService = new ClearInstanceContextService(
+        _linkInstanceContextService = new LinkInstanceContextService(
             _getProjectInstance,
-            _clearInstanceContext
+            _linkInstanceContext
         );
     }
 
     [Fact]
-    public async Task GivenInstance_ExpectContextToBeCleared()
+    public async Task GivenInstance_ExpectContextToBeLinked()
     {
         var projectId = ProjectId.FromValue("project-id");
-        var instanceId = new InstanceId("2e179101-9195-4bf0-8e06-e171912df595");
-        var command = new ClearContextCommand(projectId, instanceId);
+        var instanceId = new InstanceId("3cf3006c-234f-4d7b-951d-b17b5226020e");
+        List<string> linkerIds = ["linker-id"];
+        var command = new LinkContextCommand(projectId, instanceId, linkerIds);
         var instanceInfo = new InstanceInfo(
             new InstanceId(Guid.NewGuid()),
             projectId,
@@ -46,18 +47,20 @@ public class ClearInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        var result = await _clearInstanceContextService.Clear(command);
+        var result = await _linkInstanceContextService.Link(command);
 
         result.AsT0.ShouldBe(new Unit());
-        await _clearInstanceContext.Received(1).Clear(instanceInfo, Arg.Any<CancellationToken>());
+        await _linkInstanceContext
+            .Received(1)
+            .Link(instanceInfo, linkerIds, Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task GivenNoInstanceForInstanceId_ExpectInstanceDoesNotExistsError()
     {
         var projectId = ProjectId.FromValue("project-id");
-        var instanceId = new InstanceId("2e179101-9195-4bf0-8e06-e171912df595");
-        var command = new ClearContextCommand(projectId, instanceId);
+        var instanceId = new InstanceId("3cf3006c-234f-4d7b-951d-b17b5226020e");
+        var command = new LinkContextCommand(projectId, instanceId, ["linker-id"]);
         var instanceDoesNotExistsError = new InstanceDoesNotExistsError(instanceId);
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())
@@ -67,7 +70,7 @@ public class ClearInstanceContextServiceTest
                 )
             );
 
-        var result = await _clearInstanceContextService.Clear(command);
+        var result = await _linkInstanceContextService.Link(command);
 
         result.AsT1.ShouldBe(instanceDoesNotExistsError);
     }
