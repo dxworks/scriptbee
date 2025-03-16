@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj" />
         <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
     </ItemGroup>
 
