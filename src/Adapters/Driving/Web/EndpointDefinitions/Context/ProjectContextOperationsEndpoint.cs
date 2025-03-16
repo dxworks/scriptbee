@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Project;
+using ScriptBee.Service.Project.Context;
+using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
 
@@ -8,7 +13,7 @@ public class ProjectContextOperationsEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        // TODO FIXIT: update dependencies
+        services.AddSingleton<IClearInstanceContextUseCase, ClearInstanceContextService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
@@ -20,16 +25,30 @@ public class ProjectContextOperationsEndpoint : IEndpointDefinition
         );
     }
 
-    private static async Task<NoContent> ClearContext(
+    private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ClearContext(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string instanceId
+        [FromRoute] string instanceId,
+        IClearInstanceContextUseCase useCase,
+        CancellationToken cancellationToken
     )
     {
-        await Task.CompletedTask;
+        var command = new ClearContextCommand(
+            ProjectId.FromValue(projectId),
+            new InstanceId(instanceId)
+        );
+        var result = await useCase.Clear(command, cancellationToken);
 
-        // TODO FIXIT: implement
-
-        return TypedResults.NoContent();
+        return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
+            _ => TypedResults.NoContent(),
+            error =>
+                TypedResults.NotFound(
+                    context.ToProblemDetails(
+                        "Instance Not Found",
+                        $"An instance with id '{error.InstanceId}' is not allocated."
+                    )
+                )
+        );
     }
 
     private static async Task<NoContent> ReloadContext(
@@ -39,7 +58,7 @@ public class ProjectContextOperationsEndpoint : IEndpointDefinition
     {
         await Task.CompletedTask;
 
-        // TODO FIXIT: implement
+        // TODO FIXIT(#47): implement
 
         return TypedResults.NoContent();
     }
