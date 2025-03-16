@@ -4,11 +4,11 @@ namespace ScriptBee.Rest.Contracts;
 
 public class RestInstalledPluginManifest
 {
-    public string ApiVersion { get; set; }
-    public string Name { get; set; }
+    public required string ApiVersion { get; set; }
+    public required string Name { get; set; }
     public string? Description { get; set; }
     public string? Author { get; set; }
-    public List<RestPluginExtensionPoint> ExtensionPoints { get; set; } = [];
+    public required List<RestPluginExtensionPoint> ExtensionPoints { get; set; } = [];
 
     public PluginManifest Map()
     {
