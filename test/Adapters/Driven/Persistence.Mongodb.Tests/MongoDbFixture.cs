@@ -9,7 +9,7 @@ public class MongoDbFixture : IAsyncLifetime
 {
     private readonly MongoDbContainer _container;
 
-    private IMongoDatabase Database { get; set; } = null!;
+    public IMongoDatabase Database { get; set; } = null!;
 
     public IMongoCollection<T> GetCollection<T>(string name) => Database.GetCollection<T>(name);
 
