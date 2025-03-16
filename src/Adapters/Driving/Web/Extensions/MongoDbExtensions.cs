@@ -61,7 +61,8 @@ public static class MongoDbExtensions
         return services
             .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "Instances")
             .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
-            .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>();
+            .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>()
+            .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
     }
 
     private static IServiceCollection AddScriptAdapters(

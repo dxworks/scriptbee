@@ -1,4 +1,6 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+﻿using OneOf;
+using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
@@ -8,13 +10,14 @@ namespace ScriptBee.Persistence.Mongodb;
 
 public class ProjectInstancesPersistenceAdapter(
     IMongoRepository<MongodbProjectInstance> mongoRepository
-) : ICreateProjectInstance, IGetAllProjectInstances
+) : ICreateProjectInstance, IGetAllProjectInstances, IGetProjectInstance
 {
     public async Task<InstanceInfo> Create(
         ProjectId projectId,
         CancellationToken cancellationToken = default
     )
     {
+        // TODO FIXIT(#18, #45): implement this without hardcoded values
         var calculationInstanceInfo = new InstanceInfo(
             new InstanceId("test"),
             projectId,
@@ -39,5 +42,20 @@ public class ProjectInstancesPersistenceAdapter(
         );
 
         return projectInstances.Select(instance => instance.ToCalculationInstanceInfo());
+    }
+
+    public async Task<OneOf<InstanceInfo, InstanceDoesNotExistsError>> Get(
+        InstanceId id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var instance = await mongoRepository.GetDocument(id.ToString(), cancellationToken);
+
+        if (instance is null)
+        {
+            return new InstanceDoesNotExistsError(id);
+        }
+
+        return instance.ToCalculationInstanceInfo();
     }
 }

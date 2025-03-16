@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
@@ -75,5 +76,47 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                     ),
                 }
             );
+    }
+
+    [Fact]
+    public async Task GetById()
+    {
+        var creationDate = DateTimeOffset.UtcNow;
+        await _mongoCollection.InsertOneAsync(
+            new MongodbProjectInstance
+            {
+                Id = "e01cd721-d9ae-4bb1-8ff6-c8c3b89c6dc7",
+                ProjectId = "project-id",
+                Url = "http://test:80",
+                CreationDate = creationDate,
+            }
+        );
+
+        var instanceInfo = await _adapter.Get(
+            new InstanceId("e01cd721-d9ae-4bb1-8ff6-c8c3b89c6dc7"),
+            CancellationToken.None
+        );
+
+        instanceInfo.ShouldBe(
+            new InstanceInfo(
+                new InstanceId("e01cd721-d9ae-4bb1-8ff6-c8c3b89c6dc7"),
+                ProjectId.FromValue("project-id"),
+                "http://test:80",
+                creationDate
+            )
+        );
+    }
+
+    [Fact]
+    public async Task GivenNoInstanceForId_GetById_ShouldReturnInstanceDoesNotExistsError()
+    {
+        var instanceInfo = await _adapter.Get(
+            new InstanceId("347c2d32-e639-4a87-ad56-1fb737485e41"),
+            CancellationToken.None
+        );
+
+        instanceInfo.ShouldBe(
+            new InstanceDoesNotExistsError(new InstanceId("347c2d32-e639-4a87-ad56-1fb737485e41"))
+        );
     }
 }
