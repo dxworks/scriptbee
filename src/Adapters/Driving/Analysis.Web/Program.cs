@@ -21,7 +21,8 @@ builder
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
     .AddFileConfig(userFolderConfigurationSection)
-    .AddPluginsConfig();
+    .AddPluginsConfig()
+    .AddProjectContextConfig();
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),
