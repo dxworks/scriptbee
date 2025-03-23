@@ -22,7 +22,8 @@ builder
     .AddCommonServices()
     .AddFileConfig(userFolderConfigurationSection)
     .AddPluginsConfig()
-    .AddProjectContextConfig();
+    .AddProjectContextConfig()
+    .AddRunScriptServices();
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),
