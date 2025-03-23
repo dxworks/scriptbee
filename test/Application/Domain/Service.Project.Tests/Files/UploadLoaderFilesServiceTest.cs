@@ -83,10 +83,10 @@ public class UploadLoaderFilesServiceTest
         await _fileModelService
             .Received(1)
             .DeleteFilesAsync(
-                Arg.Is<List<string>>(list =>
+                Arg.Is<List<FileId>>(list =>
                     list.Count == 2
-                    && list.Contains("a6037f8e-575a-488b-91a8-3e5b0ddff9e1")
-                    && list.Contains("38f4e81d-6039-4222-a8aa-af54fc6af648")
+                    && list.Contains(new FileId("a6037f8e-575a-488b-91a8-3e5b0ddff9e1"))
+                    && list.Contains(new FileId("38f4e81d-6039-4222-a8aa-af54fc6af648"))
                 ),
                 Arg.Any<CancellationToken>()
             );

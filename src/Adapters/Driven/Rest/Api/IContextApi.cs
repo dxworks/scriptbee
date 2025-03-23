@@ -10,4 +10,7 @@ public interface IContextApi
 
     [Post("/api/context/link")]
     Task Link([Body] RestContextLink request, CancellationToken cancellationToken);
+
+    [Post("/api/context/load")]
+    Task Load([Body] RestContextLoad request, CancellationToken cancellationToken);
 }

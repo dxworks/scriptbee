@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Ports.Files;
 
 namespace ScriptBee.Persistence.Mongodb;
@@ -27,22 +28,19 @@ public class FileModelService(IMongoDatabase mongoDatabase) : IFileModelService
     }
 
     public async Task<Stream> GetFileAsync(
-        string fileName,
+        FileId fileId,
         CancellationToken cancellationToken = default
     )
     {
         return await _bucket.OpenDownloadStreamByNameAsync(
-            fileName,
+            fileId.ToString(),
             cancellationToken: cancellationToken
         );
     }
 
-    public async Task DeleteFileAsync(
-        string fileName,
-        CancellationToken cancellationToken = default
-    )
+    public async Task DeleteFileAsync(FileId fileId, CancellationToken cancellationToken = default)
     {
-        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileName);
+        var filter = Builders<GridFSFileInfo>.Filter.Eq("filename", fileId.ToString());
         var cursor = await _bucket.FindAsync(filter, cancellationToken: cancellationToken);
         var fileInfo = cursor.FirstOrDefault(cancellationToken);
         if (fileInfo != null)
@@ -52,13 +50,11 @@ public class FileModelService(IMongoDatabase mongoDatabase) : IFileModelService
     }
 
     public async Task DeleteFilesAsync(
-        IEnumerable<string> fileNames,
+        IEnumerable<FileId> fileIds,
         CancellationToken cancellationToken = default
     )
     {
-        var tasks = fileNames
-            .Select(fileName => DeleteFileAsync(fileName, cancellationToken))
-            .ToList();
+        var tasks = fileIds.Select(fileId => DeleteFileAsync(fileId, cancellationToken)).ToList();
 
         await Task.WhenAll(tasks);
     }

@@ -13,6 +13,7 @@ public static class RestConfigExtensions
             .AddSingleton<IGetPlugins, GetPluginsAdapter>()
             .AddSingleton<IGetScriptLanguages, GetScriptLanguagesAdapter>()
             .AddSingleton<IClearInstanceContext, ClearInstanceContextAdapter>()
-            .AddSingleton<ILinkInstanceContext, LinkInstanceContextAdapter>();
+            .AddSingleton<ILinkInstanceContext, LinkInstanceContextAdapter>()
+            .AddSingleton<ILoadInstanceContext, LoadInstanceContextAdapter>();
     }
 }

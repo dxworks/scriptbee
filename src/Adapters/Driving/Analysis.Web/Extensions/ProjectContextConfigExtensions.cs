@@ -6,6 +6,8 @@ public static class ProjectContextConfigExtensions
 {
     public static IServiceCollection AddProjectContextConfig(this IServiceCollection services)
     {
-        return services.AddSingleton<IProjectManager, ProjectManager>();
+        return services
+            .AddSingleton<IProjectManager, ProjectManager>()
+            .AddSingleton<ILoadModelFilesService, LoadModelFilesService>();
     }
 }
