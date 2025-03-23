@@ -114,6 +114,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                     new MongodbResultSummary
                     {
                         Id = "e2c95567-d0f5-48b8-b1b6-ccbf064219ce",
+                        Name = "name",
                         Type = "file",
                         CreationDate = creationDate,
                     },
@@ -153,6 +154,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 [
                     new ResultSummary(
                         new ResultId("e2c95567-d0f5-48b8-b1b6-ccbf064219ce"),
+                        "name",
                         "file",
                         creationDate
                     ),

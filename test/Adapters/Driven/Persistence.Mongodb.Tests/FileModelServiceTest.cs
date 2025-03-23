@@ -12,10 +12,10 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     [Fact]
     public async Task UploadFileAsync_ShouldUploadFile()
     {
-        const string fileName = "test.txt";
+        const string fileName = "2af40c6f-4a4f-4a3f-892b-5e44a3ebd8dc";
 
         await _sut.UploadFileAsync(
-            fileName,
+            new FileId(fileName),
             new MemoryStream("test content"u8.ToArray()),
             CancellationToken.None
         );
@@ -29,10 +29,10 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     [Fact]
     public void UploadFile_ShouldUploadFileSynchronously()
     {
-        const string fileName = "testSync.txt";
+        const string fileName = "2af40c6f-4a4f-4a3f-892b-5e44a3ebd8dc";
         var stream = new MemoryStream("sync test content"u8.ToArray());
 
-        _sut.UploadFile(fileName, stream);
+        _sut.UploadFile(new FileId(fileName), stream);
 
         var downloadedStream = _bucket.OpenDownloadStreamByName(fileName);
         using var reader = new StreamReader(downloadedStream);
