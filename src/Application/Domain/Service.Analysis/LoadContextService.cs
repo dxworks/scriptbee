@@ -1,17 +1,18 @@
 using ScriptBee.Domain.Model.File;
-using ScriptBee.Ports.Plugins;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 
-public class LoadContextService(IProjectManager projectManager, IPluginRepository pluginRepository)
-    : ILoadContextUseCase
+public class LoadContextService(ILoadModelFilesService loadModelFilesService) : ILoadContextUseCase
 {
-    public Task Load(
+    public async Task Load(
         IDictionary<string, IEnumerable<FileId>> filesToLoad,
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        await loadModelFilesService.LoadModelFiles(filesToLoad, cancellationToken);
+
+        // TODO FIXIT(#54): generate model classes
+        // await projectStructureService.GenerateModelClasses(loadModels.ProjectId, cancellationToken);
     }
 }
