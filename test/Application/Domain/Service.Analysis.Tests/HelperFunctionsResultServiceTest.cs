@@ -9,21 +9,18 @@ namespace ScriptBee.Analysis.Service.Tests;
 
 public class HelperFunctionsResultServiceTest
 {
-    private readonly HelperFunctionsSettings _helperFunctionsSettings;
-    private readonly IResultCollector _resultCollector;
-    private readonly IFileModelService _fileModelService;
-    private readonly IGuidProvider _guidProvider;
+    private readonly HelperFunctionsSettings _helperFunctionsSettings = new(
+        ProjectId.FromValue("project-id"),
+        new AnalysisId("37e8f626-48ad-44a2-8558-5c301c565d20")
+    );
+
+    private readonly IResultCollector _resultCollector = Substitute.For<IResultCollector>();
+    private readonly IFileModelService _fileModelService = Substitute.For<IFileModelService>();
+    private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly HelperFunctionsResultService _helperFunctionsResultService;
 
     public HelperFunctionsResultServiceTest()
     {
-        _helperFunctionsSettings = new HelperFunctionsSettings(
-            ProjectId.FromValue("project-id"),
-            new AnalysisId("37e8f626-48ad-44a2-8558-5c301c565d20")
-        );
-        _resultCollector = Substitute.For<IResultCollector>();
-        _fileModelService = Substitute.For<IFileModelService>();
-        _guidProvider = Substitute.For<IGuidProvider>();
         _helperFunctionsResultService = new HelperFunctionsResultService(
             _helperFunctionsSettings,
             _resultCollector,
