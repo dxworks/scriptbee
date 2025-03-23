@@ -7,7 +7,6 @@ using ScriptBee.Ports.Files;
 namespace ScriptBee.Service.Analysis;
 
 public class HelperFunctionsResultService(
-    HelperFunctionsSettings helperFunctionsSettings,
     IResultCollector resultCollector,
     IFileModelService fileModelService,
     IGuidProvider guidProvider
@@ -35,7 +34,7 @@ public class HelperFunctionsResultService(
     {
         var resultId = new ResultId(guidProvider.NewGuid());
 
-        resultCollector.Add(resultId, helperFunctionsSettings, fileName, type);
+        resultCollector.Add(resultId, fileName, type);
 
         await fileModelService.UploadFileAsync(resultId.ToFileId(), content, cancellationToken);
     }
@@ -52,7 +51,7 @@ public class HelperFunctionsResultService(
     {
         var resultId = new ResultId(guidProvider.NewGuid());
 
-        resultCollector.Add(resultId, helperFunctionsSettings, fileName, type);
+        resultCollector.Add(resultId, fileName, type);
 
         fileModelService.UploadFile(resultId.ToFileId(), content);
     }

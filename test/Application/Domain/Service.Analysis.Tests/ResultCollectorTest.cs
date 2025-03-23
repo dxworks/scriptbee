@@ -1,7 +1,6 @@
 using NSubstitute;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
-using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;
@@ -19,10 +18,6 @@ public class ResultCollectorTest
     [Fact]
     public void Add_AddsResultSummaryToList()
     {
-        var settings = new HelperFunctionsSettings(
-            ProjectId.FromValue("project-id"),
-            new AnalysisId()
-        );
         var resultId = new ResultId(Guid.NewGuid());
         const string outputFileName = "test.txt";
         const string type = "type";
@@ -30,7 +25,7 @@ public class ResultCollectorTest
 
         _dateTimeProvider.UtcNow().Returns(utcNow);
 
-        _resultCollector.Add(resultId, settings, outputFileName, type);
+        _resultCollector.Add(resultId, outputFileName, type);
         var results = _resultCollector.GetResults();
 
         Assert.Single(results);
@@ -43,10 +38,6 @@ public class ResultCollectorTest
     [Fact]
     public void GetResults_ReturnsListOfResultSummaries()
     {
-        var settings = new HelperFunctionsSettings(
-            ProjectId.FromValue("project-id"),
-            new AnalysisId()
-        );
         var resultId1 = new ResultId(Guid.NewGuid());
         const string type1 = "type-1";
         var utcNow1 = DateTime.UtcNow;
@@ -55,8 +46,8 @@ public class ResultCollectorTest
         var utcNow2 = DateTime.UtcNow.AddMinutes(1);
         _dateTimeProvider.UtcNow().Returns(utcNow1, utcNow2);
 
-        _resultCollector.Add(resultId1, settings, "file1.txt", type1);
-        _resultCollector.Add(resultId2, settings, "file2.json", type2);
+        _resultCollector.Add(resultId1, "file1.txt", type1);
+        _resultCollector.Add(resultId2, "file2.json", type2);
 
         var results = _resultCollector.GetResults();
 

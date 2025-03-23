@@ -1,4 +1,5 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
+﻿using System.Threading.Channels;
+using DxWorks.ScriptBee.Plugin.Api;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
@@ -6,7 +7,6 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
-using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Analysis;
@@ -20,8 +20,10 @@ public class RunAnalysisServiceTest
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly ICreateAnalysis _createAnalysis = Substitute.For<ICreateAnalysis>();
     private readonly IGetScript _getScript = Substitute.For<IGetScript>();
-    private readonly ILoadFile _loadFile = Substitute.For<ILoadFile>();
     private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
+
+    private readonly Channel<RunScriptRequest> _runScriptChannel =
+        Channel.CreateUnbounded<RunScriptRequest>();
 
     private readonly IScriptRunner _scriptRunner = Substitute.For<IScriptRunner>();
 
@@ -34,8 +36,8 @@ public class RunAnalysisServiceTest
             _guidProvider,
             _createAnalysis,
             _getScript,
-            _loadFile,
-            _pluginRepository
+            _pluginRepository,
+            _runScriptChannel
         );
     }
 
@@ -51,29 +53,27 @@ public class RunAnalysisServiceTest
             analysisId,
             projectId,
             scriptId,
+            null,
             AnalysisStatus.Started,
             [],
             [],
             creationDate,
             null
         );
+        var script = new Script(
+            scriptId,
+            projectId,
+            "script",
+            "path",
+            "absolute-path",
+            new ScriptLanguage("language", ".lang"),
+            []
+        );
         _dateTimeProvider.UtcNow().Returns(creationDate);
         _guidProvider.NewGuid().Returns(analysisId.Value);
         _getScript
             .Get(scriptId, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
-                    new Script(
-                        scriptId,
-                        projectId,
-                        "script",
-                        "path",
-                        "absolute-path",
-                        new ScriptLanguage("language", ".lang"),
-                        []
-                    )
-                )
-            );
+            .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(script));
         _createAnalysis
             .Create(
                 Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
@@ -85,9 +85,11 @@ public class RunAnalysisServiceTest
         var analysisResult = await _runAnalysisService.Run(command);
 
         analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
-        await _loadFile
-            .Received(1)
-            .GetScriptContent(projectId, "path", Arg.Any<CancellationToken>());
+        var runScriptRequest = await _runScriptChannel.Reader.ReadAsync();
+
+        runScriptRequest.AnalysisInfo.ShouldBe(expectedAnalysisInfo);
+        runScriptRequest.ScriptRunner.ShouldBe(_scriptRunner);
+        runScriptRequest.Script.ShouldBe(script);
     }
 
     [Fact]
@@ -102,6 +104,7 @@ public class RunAnalysisServiceTest
             analysisId,
             projectId,
             scriptId,
+            null,
             AnalysisStatus.Finished,
             [],
             [new AnalysisError("Runner for language 'language' does not exist.")],
@@ -152,6 +155,7 @@ public class RunAnalysisServiceTest
             analysisId,
             projectId,
             scriptId,
+            null,
             AnalysisStatus.Finished,
             [],
             [new AnalysisError($"Script '{scriptId}' does not exist.")],

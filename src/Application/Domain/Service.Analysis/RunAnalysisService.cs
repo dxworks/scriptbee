@@ -1,11 +1,11 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
+﻿using System.Threading.Channels;
+using DxWorks.ScriptBee.Plugin.Api;
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
-using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project.Structure;
 using ScriptBee.UseCases.Analysis;
@@ -17,8 +17,8 @@ public class RunAnalysisService(
     IGuidProvider guidProvider,
     ICreateAnalysis createAnalysis,
     IGetScript getScript,
-    ILoadFile loadFile,
-    IPluginRepository pluginRepository
+    IPluginRepository pluginRepository,
+    Channel<RunScriptRequest> runScriptChannel
 ) : IRunAnalysisUseCase
 {
     public async Task<AnalysisInfo> Run(
@@ -83,8 +83,10 @@ public class RunAnalysisService(
             cancellationToken
         );
 
-        // TODO FIXIT(#20): implement the run of the script
-        await loadFile.GetScriptContent(script.ProjectId, script.FilePath, cancellationToken);
+        await runScriptChannel.Writer.WriteAsync(
+            new RunScriptRequest(scriptRunner, script, analysisInfo),
+            cancellationToken
+        );
 
         return analysisInfo;
     }
