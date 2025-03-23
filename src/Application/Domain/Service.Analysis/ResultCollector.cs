@@ -9,20 +9,13 @@ public class ResultCollector(IDateTimeProvider dateTimeProvider) : IResultCollec
 
     public void Add(
         ResultId id,
+        // TODO FIXIT(#20): remove settings if not needed
         HelperFunctionsSettings settings,
         string outputFileName,
         string type
     )
     {
-        _results.Add(
-            new ResultSummary(
-                id,
-                settings.ProjectId,
-                settings.AnalysisId,
-                type,
-                dateTimeProvider.UtcNow()
-            )
-        );
+        _results.Add(new ResultSummary(id, outputFileName, type, dateTimeProvider.UtcNow()));
     }
 
     public List<ResultSummary> GetResults()

@@ -35,9 +35,8 @@ public class ResultCollectorTest
 
         Assert.Single(results);
         Assert.Equal(resultId, results[0].Id);
-        Assert.Equal(settings.ProjectId, results[0].ProjectId);
-        Assert.Equal(settings.AnalysisId, results[0].AnalysisId);
         Assert.Equal(type, results[0].Type);
+        Assert.Equal(outputFileName, results[0].Name);
         Assert.Equal(utcNow, results[0].CreationDate);
     }
 
@@ -64,6 +63,8 @@ public class ResultCollectorTest
         Assert.Equal(2, results.Count);
         Assert.Equal(resultId1, results[0].Id);
         Assert.Equal(resultId2, results[1].Id);
+        Assert.Equal("file1.txt", results[0].Name);
+        Assert.Equal("file2.json", results[1].Name);
         Assert.Equal(utcNow1, results[0].CreationDate);
         Assert.Equal(utcNow2, results[1].CreationDate);
     }

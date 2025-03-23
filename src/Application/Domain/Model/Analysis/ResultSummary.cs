@@ -1,11 +1,3 @@
-﻿using ScriptBee.Domain.Model.Project;
+﻿namespace ScriptBee.Domain.Model.Analysis;
 
-namespace ScriptBee.Domain.Model.Analysis;
-
-public record ResultSummary(
-    ResultId Id,
-    ProjectId ProjectId,
-    AnalysisId AnalysisId,
-    string Type,
-    DateTimeOffset CreationDate
-);
+public record ResultSummary(ResultId Id, string Name, string Type, DateTimeOffset CreationDate);
