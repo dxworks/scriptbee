@@ -9,28 +9,28 @@ using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
 
-public class GetLinkersEndpoint : IEndpointDefinition
+public class GetLoadersEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        services.AddSingleton<IGetInstanceLinkersUseCase, GetInstanceLinkersService>();
+        services.AddSingleton<IGetInstanceLoadersUseCase, GetInstanceLoadersService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/linkers", GetInstanceLinkers);
+        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/loaders", GetInstanceLoaders);
     }
 
-    private static async Task<Ok<IEnumerable<WebLinker>>> GetInstanceLinkers(
+    private static async Task<Ok<IEnumerable<WebLoader>>> GetInstanceLoaders(
         [FromRoute] string projectId,
         [FromRoute] string instanceId,
-        IGetInstanceLinkersUseCase useCase,
+        IGetInstanceLoadersUseCase useCase,
         CancellationToken cancellationToken = default
     )
     {
-        var query = new GetLinkersQuery(ProjectId.FromValue(projectId), new InstanceId(instanceId));
+        var query = new GetLoadersQuery(ProjectId.FromValue(projectId), new InstanceId(instanceId));
         var linkers = await useCase.Get(query, cancellationToken);
 
-        return TypedResults.Ok(linkers.Select(WebLinker.Map));
+        return TypedResults.Ok(linkers.Select(WebLoader.Map));
     }
 }
