@@ -5,12 +5,12 @@ namespace ScriptBee.Ports.Files;
 public interface IFileModelService
 {
     public Task UploadFileAsync(
-        string fileName,
+        FileId fileId,
         Stream fileStream,
         CancellationToken cancellationToken = default
     );
 
-    public void UploadFile(string fileName, Stream fileStream);
+    public void UploadFile(FileId fileId, Stream fileStream);
 
     public Task<Stream> GetFileAsync(FileId fileId, CancellationToken cancellationToken = default);
 

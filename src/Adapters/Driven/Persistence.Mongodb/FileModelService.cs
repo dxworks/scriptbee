@@ -10,21 +10,21 @@ public class FileModelService(IMongoDatabase mongoDatabase) : IFileModelService
     private readonly GridFSBucket _bucket = new(mongoDatabase);
 
     public async Task UploadFileAsync(
-        string fileName,
+        FileId fileId,
         Stream fileStream,
         CancellationToken cancellationToken = default
     )
     {
         await _bucket.UploadFromStreamAsync(
-            fileName,
+            fileId.ToString(),
             fileStream,
             cancellationToken: cancellationToken
         );
     }
 
-    public void UploadFile(string fileName, Stream fileStream)
+    public void UploadFile(FileId fileId, Stream fileStream)
     {
-        _bucket.UploadFromStream(fileName, fileStream);
+        _bucket.UploadFromStream(fileId.ToString(), fileStream);
     }
 
     public async Task<Stream> GetFileAsync(
