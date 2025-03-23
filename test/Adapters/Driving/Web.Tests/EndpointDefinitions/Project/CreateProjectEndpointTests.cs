@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
@@ -55,7 +56,12 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
             )
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
-                    new ProjectDetails(ProjectId.Create("id"), "name", creationDate)
+                    new ProjectDetails(
+                        ProjectId.Create("id"),
+                        "name",
+                        creationDate,
+                        new Dictionary<string, List<FileData>>()
+                    )
                 )
             );
 

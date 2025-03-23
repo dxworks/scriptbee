@@ -12,7 +12,7 @@ namespace ScriptBee.Persistence.Mongodb;
 public class ProjectPersistenceAdapter(
     IMongoRepository<MongodbProjectModel> mongoRepository,
     ILogger<ProjectPersistenceAdapter> logger
-) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject
+) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject, IUpdateProject
 {
     public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(
         ProjectDetails projectDetails,
@@ -61,5 +61,18 @@ public class ProjectPersistenceAdapter(
         }
 
         return projectModel.ToProjectDetails();
+    }
+
+    public async Task<ProjectDetails> Update(
+        ProjectDetails projectDetails,
+        CancellationToken cancellationToken = default
+    )
+    {
+        await mongoRepository.UpdateDocument(
+            MongodbProjectModel.From(projectDetails),
+            cancellationToken
+        );
+
+        return projectDetails;
     }
 }

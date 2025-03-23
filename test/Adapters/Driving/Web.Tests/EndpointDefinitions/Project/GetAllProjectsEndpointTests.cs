@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
@@ -21,7 +22,12 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
         var creationDate = DateTimeOffset.Parse("2024-02-08");
         IEnumerable<ProjectDetails> projectDetailsList = new List<ProjectDetails>
         {
-            new(ProjectId.Create("id"), "name", creationDate),
+            new(
+                ProjectId.Create("id"),
+                "name",
+                creationDate,
+                new Dictionary<string, List<FileData>>()
+            ),
         };
         getProjectsUseCase
             .GetAllProjects(Arg.Any<CancellationToken>())

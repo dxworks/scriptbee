@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using ScriptBee.Common;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project;
@@ -17,7 +18,8 @@ public class CreateProjectService(ICreateProject createProject, IDateTimeProvide
         var projectDetails = new ProjectDetails(
             ProjectId.Create(command.Id),
             command.Name,
-            dateTimeProvider.UtcNow()
+            dateTimeProvider.UtcNow(),
+            new Dictionary<string, List<FileData>>()
         );
 
         var result = await createProject.Create(projectDetails, cancellationToken);

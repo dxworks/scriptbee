@@ -55,7 +55,8 @@ public static class MongoDbExtensions
             .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
             .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
             .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
-            .AddSingleton<IGetProject, ProjectPersistenceAdapter>();
+            .AddSingleton<IGetProject, ProjectPersistenceAdapter>()
+            .AddSingleton<IUpdateProject, ProjectPersistenceAdapter>();
     }
 
     private static IServiceCollection AddProjectInstancesAdapters(

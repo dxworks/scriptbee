@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
@@ -27,7 +28,12 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task CreateNewProject()
     {
-        var project = new ProjectDetails(ProjectId.Create("id"), "name", DateTimeOffset.UtcNow);
+        var project = new ProjectDetails(
+            ProjectId.Create("id"),
+            "name",
+            DateTimeOffset.UtcNow,
+            new Dictionary<string, List<FileData>>()
+        );
 
         var result = await _adapter.Create(project, CancellationToken.None);
 
@@ -42,7 +48,12 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     public async Task GivenIdAlreadyExists_CreateProject_ExpectProjectAlreadyExistsError()
     {
         var projectId = ProjectId.Create("existing-id");
-        var project = new ProjectDetails(projectId, "name", DateTimeOffset.UtcNow);
+        var project = new ProjectDetails(
+            projectId,
+            "name",
+            DateTimeOffset.UtcNow,
+            new Dictionary<string, List<FileData>>()
+        );
         await _mongoCollection.InsertOneAsync(
             new MongodbProjectModel { Id = "existing-id", Name = "existing" }
         );
@@ -108,6 +119,13 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                 Id = "get-project-by-id",
                 Name = "get-project-by-id",
                 CreationDate = creationDate,
+                SavedFiles =
+                {
+                    {
+                        "loader-id",
+                        [new MongodbFileData("957969a8-c66e-498d-b00f-7e58ded36b80", "file")]
+                    },
+                },
             }
         );
 
@@ -119,6 +137,11 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         result.AsT0.Id.ShouldBe(ProjectId.FromValue("get-project-by-id"));
         result.AsT0.Name.ShouldBe("get-project-by-id");
         result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        var keyValuePair = result.AsT0.SavedFiles.Single();
+        keyValuePair.Key.ShouldBe("loader-id");
+        keyValuePair
+            .Value.Single()
+            .ShouldBe(new FileData(new FileId("957969a8-c66e-498d-b00f-7e58ded36b80"), "file"));
     }
 
     [Fact]
@@ -132,5 +155,47 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         result.ShouldBe(
             new ProjectDoesNotExistsError(ProjectId.FromValue("get-project-by-not-existing-id"))
         );
+    }
+
+    [Fact]
+    public async Task UpdateProject()
+    {
+        var creationDate = DateTimeOffset.UtcNow;
+        await _mongoCollection.InsertOneAsync(
+            new MongodbProjectModel
+            {
+                Id = "update-project-id",
+                Name = "update-projects-id",
+                CreationDate = creationDate,
+            }
+        );
+        var projectId = ProjectId.FromValue("update-project-id");
+        var project = new ProjectDetails(
+            projectId,
+            "updated-name",
+            DateTimeOffset.Parse("2024-02-08"),
+            new Dictionary<string, List<FileData>>
+            {
+                {
+                    "loader-id",
+                    [new FileData(new FileId("7609bb17-e623-454b-a441-0102fa64daf6"), "file")]
+                },
+            }
+        );
+
+        var updateProject = await _adapter.Update(project, CancellationToken.None);
+
+        updateProject.ShouldBe(project);
+        var updatedMongoProject = await _mongoCollection
+            .Find(p => p.Id == "update-project-id")
+            .FirstOrDefaultAsync();
+        updatedMongoProject.Id.ShouldBe(projectId.Value);
+        updatedMongoProject.Name.ShouldBe("updated-name");
+        updatedMongoProject.CreationDate.ShouldBe(DateTimeOffset.Parse("2024-02-08"));
+        var keyValuePair = updatedMongoProject.SavedFiles.Single();
+        keyValuePair.Key.ShouldBe("loader-id");
+        keyValuePair
+            .Value.Single()
+            .ShouldBe(new MongodbFileData("7609bb17-e623-454b-a441-0102fa64daf6", "file"));
     }
 }

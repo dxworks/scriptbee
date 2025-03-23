@@ -2,6 +2,7 @@
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project;
@@ -26,10 +27,16 @@ public class CreateProjectServiceTests
         var expectedProjectDetails = new ProjectDetails(
             ProjectId.Create("id"),
             "name",
-            creationDate
+            creationDate,
+            new Dictionary<string, List<FileData>>()
         );
         _createProject
-            .Create(expectedProjectDetails)
+            .Create(
+                Arg.Is<ProjectDetails>(details =>
+                    MatchProjectDetails(details, expectedProjectDetails)
+                ),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(new Unit()));
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
@@ -37,8 +44,15 @@ public class CreateProjectServiceTests
             new CreateProjectCommand("id", "name")
         );
 
-        projectDetails.ShouldBe(expectedProjectDetails);
-        await _createProject.Received(1).Create(expectedProjectDetails);
+        MatchProjectDetails(projectDetails.AsT0, expectedProjectDetails).ShouldBe(true);
+        await _createProject
+            .Received(1)
+            .Create(
+                Arg.Is<ProjectDetails>(details =>
+                    MatchProjectDetails(details, expectedProjectDetails)
+                ),
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -46,10 +60,20 @@ public class CreateProjectServiceTests
     {
         var projectId = ProjectId.Create("id");
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        var expectedProjectDetails = new ProjectDetails(projectId, "name", creationDate);
+        var expectedProjectDetails = new ProjectDetails(
+            projectId,
+            "name",
+            creationDate,
+            new Dictionary<string, List<FileData>>()
+        );
         var error = new ProjectIdAlreadyInUseError(projectId);
         _createProject
-            .Create(expectedProjectDetails)
+            .Create(
+                Arg.Is<ProjectDetails>(details =>
+                    MatchProjectDetails(details, expectedProjectDetails)
+                ),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(error));
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
@@ -58,6 +82,24 @@ public class CreateProjectServiceTests
         );
 
         projectDetails.ShouldBe(error);
-        await _createProject.Received(1).Create(expectedProjectDetails);
+        await _createProject
+            .Received(1)
+            .Create(
+                Arg.Is<ProjectDetails>(details =>
+                    MatchProjectDetails(details, expectedProjectDetails)
+                ),
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    private static bool MatchProjectDetails(
+        ProjectDetails details,
+        ProjectDetails expectedProjectDetails
+    )
+    {
+        return details.Id.Equals(expectedProjectDetails.Id)
+            && details.Name.Equals(expectedProjectDetails.Name)
+            && details.CreationDate.Equals(expectedProjectDetails.CreationDate)
+            && details.SavedFiles.Count == expectedProjectDetails.SavedFiles.Count;
     }
 }
