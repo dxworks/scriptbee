@@ -4,7 +4,7 @@ public class Run
 {
     public int Index { get; set; }
 
-    public Dictionary<string, List<FileData>> LoadedFiles { get; set; } = new();
+    public Dictionary<string, List<MongodbFileData>> LoadedFiles { get; set; } = new();
     public string Linker { get; set; } = "";
     public string ScriptPath { get; set; } = "";
     public Guid ScriptId { get; set; }

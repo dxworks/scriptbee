@@ -39,4 +39,28 @@ public class TestApiCaller<TStartup>(string endpoint)
         var response = await client.GetAsync(endpoint);
         return response;
     }
+
+    public async Task<HttpResponseMessage> PutApiFormWithFile(
+        TestWebApplicationFactory<TStartup> factory,
+        Dictionary<string, string> formData,
+        Dictionary<string, byte[]> files
+    )
+    {
+        using var client = factory.CreateClient();
+
+        using var multipartContent = new MultipartFormDataContent();
+
+        foreach (var kvp in formData)
+        {
+            multipartContent.Add(new StringContent(kvp.Value), kvp.Key);
+        }
+
+        foreach (var file in files)
+        {
+            multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
+        }
+
+        var response = await client.PutAsync(endpoint, multipartContent);
+        return response;
+    }
 }

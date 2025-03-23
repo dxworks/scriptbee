@@ -11,8 +11,8 @@ public class MongodbProjectModel : IDocument
     public required string Name { get; init; }
     public DateTimeOffset CreationDate { get; init; }
 
-    public Dictionary<string, List<FileData>> SavedFiles { get; set; } = new();
-    public Dictionary<string, List<FileData>> LoadedFiles { get; set; } = new();
+    public Dictionary<string, List<MongodbFileData>> SavedFiles { get; set; } = new();
+    public Dictionary<string, List<MongodbFileData>> LoadedFiles { get; set; } = new();
 
     public string? Linker { get; set; }
     public Run? LastRun { get; set; }

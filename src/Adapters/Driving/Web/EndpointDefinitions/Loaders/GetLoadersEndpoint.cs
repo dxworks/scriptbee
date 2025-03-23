@@ -4,6 +4,7 @@ using ScriptBee.Web.EndpointDefinitions.Loaders.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Loaders;
 
+// TODO FIXIT(#38): relocate in Context folder
 public class GetLoadersEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
