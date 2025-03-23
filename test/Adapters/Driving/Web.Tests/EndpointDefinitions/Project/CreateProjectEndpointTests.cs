@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
@@ -46,16 +47,21 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ShouldReturnCreated()
     {
-        var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
+        var useCase = Substitute.For<ICreateProjectUseCase>();
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        createProjectUseCase
+        useCase
             .CreateProject(
                 new CreateProjectCommand("id", "project name"),
                 Arg.Any<CancellationToken>()
             )
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(
-                    new ProjectDetails(ProjectId.Create("id"), "name", creationDate)
+                    new ProjectDetails(
+                        ProjectId.Create("id"),
+                        "name",
+                        creationDate,
+                        new Dictionary<string, List<FileData>>()
+                    )
                 )
             );
 
@@ -64,7 +70,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createProjectUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateProjectCommand("id", "project name")
@@ -81,8 +87,8 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ExistingId_ShouldReturnConflict()
     {
-        var createProjectUseCase = Substitute.For<ICreateProjectUseCase>();
-        createProjectUseCase
+        var useCase = Substitute.For<ICreateProjectUseCase>();
+        useCase
             .CreateProject(
                 new CreateProjectCommand("id", "project name"),
                 Arg.Any<CancellationToken>()
@@ -98,7 +104,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createProjectUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateProjectCommand("id", "project name")

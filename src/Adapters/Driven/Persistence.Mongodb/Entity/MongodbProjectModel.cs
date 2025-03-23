@@ -11,15 +11,20 @@ public class MongodbProjectModel : IDocument
     public required string Name { get; init; }
     public DateTimeOffset CreationDate { get; init; }
 
-    public Dictionary<string, List<FileData>> SavedFiles { get; set; } = new();
-    public Dictionary<string, List<FileData>> LoadedFiles { get; set; } = new();
+    public Dictionary<string, List<MongodbFileData>> SavedFiles { get; set; } = new();
+    public Dictionary<string, List<MongodbFileData>> LoadedFiles { get; set; } = new();
 
     public string? Linker { get; set; }
     public Run? LastRun { get; set; }
 
     public ProjectDetails ToProjectDetails()
     {
-        return new ProjectDetails(ProjectId.FromValue(Id), Name, CreationDate);
+        return new ProjectDetails(
+            ProjectId.FromValue(Id),
+            Name,
+            CreationDate,
+            SavedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList())
+        );
     }
 
     public static MongodbProjectModel From(ProjectDetails projectDetails)
@@ -29,6 +34,10 @@ public class MongodbProjectModel : IDocument
             Id = projectDetails.Id.Value,
             Name = projectDetails.Name,
             CreationDate = projectDetails.CreationDate,
+            SavedFiles = projectDetails.SavedFiles.ToDictionary(
+                x => x.Key,
+                x => x.Value.Select(MongodbFileData.From).ToList()
+            ),
         };
     }
 }

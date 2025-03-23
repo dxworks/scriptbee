@@ -1,5 +1,6 @@
 ﻿using NSubstitute;
 using OneOf;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project;
@@ -23,7 +24,8 @@ public class GetProjectsServiceTests
         var expectedProjectDetails = new ProjectDetails(
             ProjectId.Create("id"),
             "name",
-            DateTimeOffset.Parse("2024-02-08")
+            DateTimeOffset.Parse("2024-02-08"),
+            new Dictionary<string, List<FileData>>()
         );
         IEnumerable<ProjectDetails> projectDetails = new List<ProjectDetails>
         {
@@ -46,7 +48,8 @@ public class GetProjectsServiceTests
         var expectedProjectDetails = new ProjectDetails(
             projectId,
             "name",
-            DateTimeOffset.Parse("2024-02-08")
+            DateTimeOffset.Parse("2024-02-08"),
+            new Dictionary<string, List<FileData>>()
         );
         _getProject
             .GetById(projectId)

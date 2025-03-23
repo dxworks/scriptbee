@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
@@ -27,7 +28,12 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
             .GetProject(query, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(projectId, "name", creationDate)
+                    new ProjectDetails(
+                        projectId,
+                        "name",
+                        creationDate,
+                        new Dictionary<string, List<FileData>>()
+                    )
                 )
             );
 

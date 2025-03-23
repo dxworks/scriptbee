@@ -3,6 +3,7 @@ using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Ports.Instance;
 
 namespace ScriptBee.Analysis.Instance.Docker;

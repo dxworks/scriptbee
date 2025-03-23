@@ -4,6 +4,7 @@ using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Entity.Script;
 using ScriptBee.Persistence.Mongodb.Exceptions;
 using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Ports.Project.Structure;
@@ -26,7 +27,11 @@ public static class MongoDbExtensions
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        return services.AddSingleton<IMongoClient>(mongoClient).AddAdapters(mongoDatabase);
+        return services
+            .AddSingleton<IMongoClient>(mongoClient)
+            .AddAdapters(mongoDatabase)
+            .AddSingleton(mongoDatabase)
+            .AddSingleton<IFileModelService, FileModelService>();
     }
 
     private static IServiceCollection AddAdapters(
@@ -50,7 +55,8 @@ public static class MongoDbExtensions
             .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
             .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
             .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
-            .AddSingleton<IGetProject, ProjectPersistenceAdapter>();
+            .AddSingleton<IGetProject, ProjectPersistenceAdapter>()
+            .AddSingleton<IUpdateProject, ProjectPersistenceAdapter>();
     }
 
     private static IServiceCollection AddProjectInstancesAdapters(
