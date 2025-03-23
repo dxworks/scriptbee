@@ -55,10 +55,10 @@ public class UploadLoaderFilesService(
         CancellationToken cancellationToken
     )
     {
-        var filesToDelete = new List<string>();
+        var filesToDelete = new List<FileId>();
         if (projectDetails.SavedFiles.TryGetValue(loaderId, out var previousSavedFilesData))
         {
-            filesToDelete.AddRange(previousSavedFilesData.Select(data => data.Id.ToString()));
+            filesToDelete.AddRange(previousSavedFilesData.Select(data => data.Id));
         }
 
         await fileModelService.DeleteFilesAsync(filesToDelete, cancellationToken);

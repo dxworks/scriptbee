@@ -1,4 +1,6 @@
-﻿namespace ScriptBee.Ports.Files;
+﻿using ScriptBee.Domain.Model.File;
+
+namespace ScriptBee.Ports.Files;
 
 public interface IFileModelService
 {
@@ -10,15 +12,12 @@ public interface IFileModelService
 
     public void UploadFile(string fileName, Stream fileStream);
 
-    public Task<Stream> GetFileAsync(
-        string fileName,
-        CancellationToken cancellationToken = default
-    );
+    public Task<Stream> GetFileAsync(FileId fileId, CancellationToken cancellationToken = default);
 
-    public Task DeleteFileAsync(string fileName, CancellationToken cancellationToken = default);
+    public Task DeleteFileAsync(FileId fileId, CancellationToken cancellationToken = default);
 
     public Task DeleteFilesAsync(
-        IEnumerable<string> fileNames,
+        IEnumerable<FileId> fileIds,
         CancellationToken cancellationToken = default
     );
 }
