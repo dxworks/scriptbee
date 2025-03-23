@@ -96,4 +96,12 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
             );
         }
     }
+
+    [Fact]
+    public async Task DeleteFilesAsync_WhenEmptyListIsPassed_ShouldNotThrowError()
+    {
+        var exception = await Record.ExceptionAsync(async () => await _sut.DeleteFilesAsync([]));
+
+        exception.ShouldBeNull();
+    }
 }
