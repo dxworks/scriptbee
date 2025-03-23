@@ -1,7 +1,6 @@
 using NSubstitute;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
-using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Files;
 using ScriptBee.Service.Analysis;
 
@@ -9,11 +8,6 @@ namespace ScriptBee.Analysis.Service.Tests;
 
 public class HelperFunctionsResultServiceTest
 {
-    private readonly HelperFunctionsSettings _helperFunctionsSettings = new(
-        ProjectId.FromValue("project-id"),
-        new AnalysisId("37e8f626-48ad-44a2-8558-5c301c565d20")
-    );
-
     private readonly IResultCollector _resultCollector = Substitute.For<IResultCollector>();
     private readonly IFileModelService _fileModelService = Substitute.For<IFileModelService>();
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
@@ -22,7 +16,6 @@ public class HelperFunctionsResultServiceTest
     public HelperFunctionsResultServiceTest()
     {
         _helperFunctionsResultService = new HelperFunctionsResultService(
-            _helperFunctionsSettings,
             _resultCollector,
             _fileModelService,
             _guidProvider
@@ -43,7 +36,7 @@ public class HelperFunctionsResultServiceTest
         await _fileModelService
             .Received()
             .UploadFileAsync(resultId.ToFileId(), Arg.Any<Stream>(), Arg.Any<CancellationToken>());
-        _resultCollector.Received().Add(resultId, _helperFunctionsSettings, fileName, type);
+        _resultCollector.Received().Add(resultId, fileName, type);
     }
 
     [Fact]
@@ -60,7 +53,7 @@ public class HelperFunctionsResultServiceTest
         await _fileModelService
             .Received()
             .UploadFileAsync(resultId.ToFileId(), content, Arg.Any<CancellationToken>());
-        _resultCollector.Received().Add(resultId, _helperFunctionsSettings, fileName, type);
+        _resultCollector.Received().Add(resultId, fileName, type);
     }
 
     [Fact]
@@ -75,7 +68,7 @@ public class HelperFunctionsResultServiceTest
         _helperFunctionsResultService.UploadResult(fileName, type, content);
 
         _fileModelService.Received().UploadFile(resultId.ToFileId(), Arg.Any<Stream>());
-        _resultCollector.Received().Add(resultId, _helperFunctionsSettings, fileName, type);
+        _resultCollector.Received().Add(resultId, fileName, type);
     }
 
     [Fact]
@@ -90,6 +83,6 @@ public class HelperFunctionsResultServiceTest
         _helperFunctionsResultService.UploadResult(fileName, type, content);
 
         _fileModelService.Received().UploadFile(resultId.ToFileId(), content);
-        _resultCollector.Received().Add(resultId, _helperFunctionsSettings, fileName, type);
+        _resultCollector.Received().Add(resultId, fileName, type);
     }
 }

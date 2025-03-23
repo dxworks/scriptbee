@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Entity.Analysis;
@@ -30,6 +31,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "b2038fa2-75ef-4bb4-bb7a-9cc37725bf2c",
                 ProjectId = "project-id-1",
                 ScriptId = "ffb278f2-4390-4f70-81ba-c51869f26385",
+                ScriptFileId = "4d997302-09cf-43a2-8696-72e5d29cebe0",
                 Status = AnalysisStatus.Started.Value,
                 Errors = [],
                 Results = [],
@@ -49,6 +51,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("b2038fa2-75ef-4bb4-bb7a-9cc37725bf2c"),
                 ProjectId.FromValue("project-id-1"),
                 new ScriptId("ffb278f2-4390-4f70-81ba-c51869f26385"),
+                new FileId("4d997302-09cf-43a2-8696-72e5d29cebe0"),
                 AnalysisStatus.Started,
                 [],
                 [],
@@ -81,6 +84,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "834db275-e497-4f77-abd1-37c3bb3ba6de",
                 ProjectId = "all-project-id-1",
                 ScriptId = "e22be395-a668-4a26-81e7-67682afb1320",
+                ScriptFileId = "f3444890-4d32-481c-83c9-1fb972b79040",
                 Status = AnalysisStatus.Started.Value,
                 Errors = [],
                 Results = [],
@@ -94,6 +98,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "dce4de3e-ea47-4722-9742-9280ea18d38f",
                 ProjectId = "all-project-id-2",
                 ScriptId = "6c83d4b9-90a3-4800-baf1-dc23e01d915c",
+                ScriptFileId = null,
                 Status = AnalysisStatus.Running.Value,
                 Errors = [],
                 Results = [],
@@ -107,6 +112,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "47e981a7-9cd6-46d6-ba11-7f3c65ce38a2",
                 ProjectId = "all-project-id-1",
                 ScriptId = "f0c3287c-407c-4fda-9ac0-97e75be80c40",
+                ScriptFileId = null,
                 Status = AnalysisStatus.Finished.Value,
                 Errors = [new MongodbAnalysisError { Message = "message" }],
                 Results =
@@ -137,6 +143,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("834db275-e497-4f77-abd1-37c3bb3ba6de"),
                 ProjectId.FromValue("all-project-id-1"),
                 new ScriptId("e22be395-a668-4a26-81e7-67682afb1320"),
+                new FileId("f3444890-4d32-481c-83c9-1fb972b79040"),
                 AnalysisStatus.Started,
                 [],
                 [],
@@ -150,6 +157,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("47e981a7-9cd6-46d6-ba11-7f3c65ce38a2"),
                 ProjectId.FromValue("all-project-id-1"),
                 new ScriptId("f0c3287c-407c-4fda-9ac0-97e75be80c40"),
+                null,
                 AnalysisStatus.Finished,
                 [
                     new ResultSummary(
@@ -183,6 +191,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             new AnalysisId("15ed8fda-d6c8-49c9-909d-bf01d58b45b2"),
             ProjectId.FromValue("create-analysis-project"),
             new ScriptId("f0078cb2-1ca2-48bf-be61-99b49b913d1a"),
+            null,
             AnalysisStatus.Started,
             [],
             [],
@@ -206,6 +215,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "5ab73da4-aebc-442a-afb2-639a1a7eca32",
                 ProjectId = "delete-by-id",
                 ScriptId = "e88a2f54-5c71-4f2d-8678-ed58ead7a413",
+                ScriptFileId = null,
                 Status = AnalysisStatus.Finished.Value,
                 Errors = [],
                 Results = [],
@@ -245,6 +255,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "7c1c4a38-77fa-48b9-b37c-3dfa79177bb9",
                 ProjectId = "delete-all-by-project-id-to-delete",
                 ScriptId = "0620b123-b467-4833-93b0-238a78d98cf1",
+                ScriptFileId = null,
                 Status = AnalysisStatus.Started.Value,
                 Errors = [],
                 Results = [],
@@ -258,6 +269,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "bb5687c4-0290-48e0-8d17-ef9d8f7bc5bb",
                 ProjectId = "delete-all-by-project-id",
                 ScriptId = "18a1b4f5-9d1e-4528-be97-0bce53981716",
+                ScriptFileId = null,
                 Status = AnalysisStatus.Finished.Value,
                 Errors = [],
                 Results = [],
@@ -284,6 +296,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 new AnalysisId("bb5687c4-0290-48e0-8d17-ef9d8f7bc5bb"),
                 ProjectId.FromValue("delete-all-by-project-id"),
                 new ScriptId("18a1b4f5-9d1e-4528-be97-0bce53981716"),
+                null,
                 AnalysisStatus.Finished,
                 [],
                 [],
@@ -303,6 +316,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Id = "ded96511-1a12-45ad-a866-97497593d122",
                 ProjectId = "project-id-update",
                 ScriptId = "3e66bea9-648f-4154-acf8-d717b3ff1353",
+                ScriptFileId = null,
                 Status = AnalysisStatus.Started.Value,
                 Errors = [],
                 Results = [],
@@ -314,6 +328,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             new AnalysisId("ded96511-1a12-45ad-a866-97497593d122"),
             ProjectId.FromValue("project-id-update"),
             new ScriptId("3e66bea9-648f-4154-acf8-d717b3ff1353"),
+            new FileId("b939f50d-c870-4a9b-a09f-6302d1a67b96"),
             AnalysisStatus.Finished,
             [],
             [],

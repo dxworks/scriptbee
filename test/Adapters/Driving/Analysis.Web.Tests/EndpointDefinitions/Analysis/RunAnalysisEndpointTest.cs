@@ -63,6 +63,7 @@ public class RunAnalysisEndpointTest(ITestOutputHelper outputHelper)
                         new AnalysisId("3bb081e8-e453-42a1-a506-5f82bc28f0ae"),
                         ProjectId.FromValue("project-id"),
                         new ScriptId("e22be395-a668-4a26-81e7-67682afb1320"),
+                        null,
                         AnalysisStatus.Started,
                         [],
                         [],
