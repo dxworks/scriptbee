@@ -25,7 +25,9 @@ public class GetProjectsServiceTests
             ProjectId.Create("id"),
             "name",
             DateTimeOffset.Parse("2024-02-08"),
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         IEnumerable<ProjectDetails> projectDetails = new List<ProjectDetails>
         {
@@ -49,7 +51,9 @@ public class GetProjectsServiceTests
             projectId,
             "name",
             DateTimeOffset.Parse("2024-02-08"),
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         _getProject
             .GetById(projectId)

@@ -91,7 +91,9 @@ public class CreateScriptServiceTest
                         projectId,
                         "project",
                         DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>()
+                        new Dictionary<string, List<FileData>>(),
+                        new Dictionary<string, List<FileData>>(),
+                        []
                     )
                 )
             );
@@ -141,7 +143,9 @@ public class CreateScriptServiceTest
                         projectId,
                         "project",
                         DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>()
+                        new Dictionary<string, List<FileData>>(),
+                        new Dictionary<string, List<FileData>>(),
+                        []
                     )
                 )
             );
@@ -200,7 +204,9 @@ public class CreateScriptServiceTest
                         projectId,
                         "project",
                         DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>()
+                        new Dictionary<string, List<FileData>>(),
+                        new Dictionary<string, List<FileData>>(),
+                        []
                     )
                 )
             );
@@ -277,7 +283,9 @@ public class CreateScriptServiceTest
                         projectId,
                         "project",
                         DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>()
+                        new Dictionary<string, List<FileData>>(),
+                        new Dictionary<string, List<FileData>>(),
+                        []
                     )
                 )
             );

@@ -58,7 +58,7 @@ public class ReloadInstanceContextServiceTest
                     [new FileData(new FileId("38aaba34-6716-45ee-bb99-89450857516c"), "file.json")]
                 },
             },
-            ["liner"]
+            ["linker"]
         );
         var instanceInfo = new InstanceInfo(
             new InstanceId(Guid.NewGuid()),
@@ -85,18 +85,21 @@ public class ReloadInstanceContextServiceTest
             .Received(1)
             .Load(
                 instanceInfo,
-                new Dictionary<string, IEnumerable<FileId>>
-                {
-                    {
-                        "loader",
-                        new List<FileId> { new("38aaba34-6716-45ee-bb99-89450857516c") }
-                    },
-                },
+                Arg.Is<IDictionary<string, IEnumerable<FileId>>>(filesToLoad =>
+                    filesToLoad.Count == 1
+                    && filesToLoad["loader"]
+                        .Single()
+                        .Equals(new FileId("38aaba34-6716-45ee-bb99-89450857516c"))
+                ),
                 Arg.Any<CancellationToken>()
             );
         await _linkInstanceContext
             .Received(1)
-            .Link(instanceInfo, ["linker"], Arg.Any<CancellationToken>());
+            .Link(
+                instanceInfo,
+                Arg.Is<IEnumerable<string>>(x => x.Single().Equals("linker")),
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]

@@ -70,7 +70,9 @@ public class UploadLoaderFilesServiceTest
                     "other",
                     [new FileData(new FileId("0ecf0f1a-d66c-4a92-81c9-954f1d50b78b"), "file-3")]
                 },
-            }
+            },
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -105,7 +107,9 @@ public class UploadLoaderFilesServiceTest
             projectId,
             "name",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -138,7 +142,9 @@ public class UploadLoaderFilesServiceTest
             projectId,
             "name",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -206,7 +212,9 @@ public class UploadLoaderFilesServiceTest
                     "other",
                     [new FileData(new FileId("8c88af6c-4d9b-4d56-9532-6478cd38ce0c"), "other-file")]
                 },
-            }
+            },
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         var updatedProjectDetails = projectDetails with
         {

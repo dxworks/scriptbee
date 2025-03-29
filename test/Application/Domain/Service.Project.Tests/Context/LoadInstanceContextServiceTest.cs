@@ -52,7 +52,9 @@ public class LoadInstanceContextServiceTest
                     "other",
                     [new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "file")]
                 },
-            }
+            },
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         var instanceInfo = new InstanceInfo(
             new InstanceId(Guid.NewGuid()),
@@ -118,7 +120,9 @@ public class LoadInstanceContextServiceTest
             projectId,
             "name",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         var instanceDoesNotExistsError = new InstanceDoesNotExistsError(instanceId);
         _getProject

@@ -28,7 +28,9 @@ public class CreateProjectServiceTests
             ProjectId.Create("id"),
             "name",
             creationDate,
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         _createProject
             .Create(
@@ -64,7 +66,9 @@ public class CreateProjectServiceTests
             projectId,
             "name",
             creationDate,
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
         var error = new ProjectIdAlreadyInUseError(projectId);
         _createProject

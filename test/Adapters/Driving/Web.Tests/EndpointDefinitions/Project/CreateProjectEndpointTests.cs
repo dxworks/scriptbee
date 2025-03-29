@@ -60,7 +60,9 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
                         ProjectId.Create("id"),
                         "name",
                         creationDate,
-                        new Dictionary<string, List<FileData>>()
+                        new Dictionary<string, List<FileData>>(),
+                        new Dictionary<string, List<FileData>>(),
+                        []
                     )
                 )
             );
