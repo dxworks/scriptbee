@@ -1,3 +1,13 @@
-﻿namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
+﻿using ScriptBee.Domain.Model.Analysis;
 
-public record WebGetAnalysisResultRunErrors(IEnumerable<WebAnalysisResultRunError> Errors);
+namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
+
+public record WebGetAnalysisResultRunErrors(IEnumerable<WebAnalysisResultRunError> Errors)
+{
+    public static WebGetAnalysisResultRunErrors Map(IEnumerable<AnalysisErrorResult> errorResults)
+    {
+        return new WebGetAnalysisResultRunErrors(
+            errorResults.Select(WebAnalysisResultRunError.Map)
+        );
+    }
+}

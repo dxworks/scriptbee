@@ -1,12 +1,4 @@
-﻿using MongoDB.Driver;
-using ScriptBee.Persistence.Mongodb;
-using ScriptBee.Persistence.Mongodb.Entity.Analysis;
-using ScriptBee.Persistence.Mongodb.Entity.Script;
-using ScriptBee.Persistence.Mongodb.Exceptions;
-using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Analysis;
-using ScriptBee.Ports.Files;
-using ScriptBee.Ports.Project.Structure;
+﻿using static ScriptBee.Persistence.Mongodb.Extensions.MongoDbExtensions;
 
 namespace ScriptBee.Analysis.Web.Extensions;
 
@@ -17,64 +9,8 @@ public static class MongoDbExtensions
         string? connectionString
     )
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new InvalidMongoConfigurationException();
-        }
+        var mongoDatabase = services.AddMongodbDatabase(connectionString);
 
-        var mongoUrl = new MongoUrl(connectionString);
-        var mongoClient = new MongoClient(mongoUrl);
-        var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
-
-        return services
-            .AddSingleton<IMongoClient>(mongoClient)
-            .AddAdapters(mongoDatabase)
-            .AddSingleton(mongoDatabase)
-            .AddSingleton<IFileModelService, FileModelService>();
-    }
-
-    private static IServiceCollection AddAdapters(
-        this IServiceCollection services,
-        IMongoDatabase mongoDatabase
-    )
-    {
         return services.AddAnalysisAdapters(mongoDatabase).AddScriptAdapters(mongoDatabase);
-    }
-
-    private static IServiceCollection AddAnalysisAdapters(
-        this IServiceCollection services,
-        IMongoDatabase mongoDatabase
-    )
-    {
-        return services
-            .AddMongoCollection<MongodbAnalysisInfo>(mongoDatabase, "Analysis")
-            .AddSingleton<IGetAnalysis, AnalysisPersistenceAdapter>()
-            .AddSingleton<IGetAllAnalyses, AnalysisPersistenceAdapter>()
-            .AddSingleton<ICreateAnalysis, AnalysisPersistenceAdapter>()
-            .AddSingleton<IUpdateAnalysis, AnalysisPersistenceAdapter>()
-            .AddSingleton<IDeleteAnalysis, AnalysisPersistenceAdapter>();
-    }
-
-    private static IServiceCollection AddScriptAdapters(
-        this IServiceCollection services,
-        IMongoDatabase mongoDatabase
-    )
-    {
-        return services
-            .AddMongoCollection<MongodbScript>(mongoDatabase, "Scripts")
-            .AddSingleton<ICreateScript, ScriptPersistenceAdapter>()
-            .AddSingleton<IGetScript, ScriptPersistenceAdapter>();
-    }
-
-    private static IServiceCollection AddMongoCollection<T>(
-        this IServiceCollection services,
-        IMongoDatabase mongoDatabase,
-        string collectionName
-    )
-        where T : IDocument
-    {
-        return services
-            .AddSingleton<IMongoCollection<T>>(_ => mongoDatabase.GetCollection<T>(collectionName))
-            .AddSingleton<IMongoRepository<T>, MongoRepository<T>>();
     }
 }

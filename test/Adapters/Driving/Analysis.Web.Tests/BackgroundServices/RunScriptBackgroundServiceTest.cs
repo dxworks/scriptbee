@@ -19,10 +19,16 @@ public class RunScriptBackgroundServiceTest
         var runScriptChannel = Channel.CreateUnbounded<RunScriptRequest>();
         var runScriptService = Substitute.For<IRunScriptService>();
         var backgroundService = new RunScriptBackgroundService(runScriptChannel, runScriptService);
-        var request1 = new RunScriptRequest(_scriptRunner, CreateScript(),
-            CreateAnalysisInfo("b4e4954c-dd83-4cc8-bc52-bd52a6eed515"));
-        var request2 = new RunScriptRequest(_scriptRunner, CreateScript(),
-            CreateAnalysisInfo("5ba00f63-1b3b-48a2-8abf-73489ddb3bec"));
+        var request1 = new RunScriptRequest(
+            _scriptRunner,
+            CreateScript(),
+            CreateAnalysisInfo("b4e4954c-dd83-4cc8-bc52-bd52a6eed515")
+        );
+        var request2 = new RunScriptRequest(
+            _scriptRunner,
+            CreateScript(),
+            CreateAnalysisInfo("5ba00f63-1b3b-48a2-8abf-73489ddb3bec")
+        );
         await runScriptChannel.Writer.WriteAsync(request1);
         await runScriptChannel.Writer.WriteAsync(request2);
         runScriptChannel.Writer.Complete();
@@ -34,7 +40,6 @@ public class RunScriptBackgroundServiceTest
         await runScriptService.Received(1).RunAsync(request2, Arg.Any<CancellationToken>());
     }
 
-
     private static Script CreateScript()
     {
         return new Script(
@@ -44,8 +49,7 @@ public class RunScriptBackgroundServiceTest
             "filePath",
             "absolute-path",
             new ScriptLanguage("language", ".lang"),
-            [
-            ]
+            []
         );
     }
 
