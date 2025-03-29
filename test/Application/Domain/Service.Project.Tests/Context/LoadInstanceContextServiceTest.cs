@@ -21,6 +21,8 @@ public class LoadInstanceContextServiceTest
     private readonly ILoadInstanceContext _loadInstanceContext =
         Substitute.For<ILoadInstanceContext>();
 
+    private readonly IUpdateProject _updateProject = Substitute.For<IUpdateProject>();
+
     private readonly LoadInstanceContextService _loadInstanceContextService;
 
     public LoadInstanceContextServiceTest()
@@ -28,7 +30,8 @@ public class LoadInstanceContextServiceTest
         _loadInstanceContextService = new LoadInstanceContextService(
             _getProject,
             _getProjectInstance,
-            _loadInstanceContext
+            _loadInstanceContext,
+            _updateProject
         );
     }
 
@@ -85,6 +88,81 @@ public class LoadInstanceContextServiceTest
                     && filesToLoad["loader-id"]
                         .Single()
                         .Equals(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"))
+                ),
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    [Fact]
+    public async Task GivenInstanceAndProject_ExpectProjectLoadedFilesToBeUpdated()
+    {
+        var projectId = ProjectId.FromValue("project-id");
+        var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
+        var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
+        var projectDetails = new ProjectDetails(
+            projectId,
+            "name",
+            DateTimeOffset.UtcNow,
+            new Dictionary<string, List<FileData>>
+            {
+                {
+                    "loader-id",
+                    [new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file")]
+                },
+                {
+                    "other",
+                    [new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "file")]
+                },
+            },
+            new Dictionary<string, List<FileData>>
+            {
+                {
+                    "loader-id",
+                    [new FileData(new FileId("e3138be2-1b24-4813-9785-e8dbce7043ad"), "file")]
+                },
+                {
+                    "existing",
+                    [new FileData(new FileId("6c4e9f85-499a-455e-b5d6-ce7134a57650"), "file")]
+                },
+            },
+            []
+        );
+        var instanceInfo = new InstanceInfo(
+            new InstanceId(Guid.NewGuid()),
+            projectId,
+            "http://instance",
+            DateTimeOffset.Now
+        );
+        _getProject
+            .GetById(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
+            );
+        _getProjectInstance
+            .Get(instanceId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
+            );
+
+        await _loadInstanceContextService.Load(command);
+
+        await _updateProject
+            .Received(1)
+            .Update(
+                Arg.Is<ProjectDetails>(details =>
+                    details.LoadedFiles.Count == 2
+                    && details
+                        .LoadedFiles["loader-id"]
+                        .Single()
+                        .Equals(
+                            new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file")
+                        )
+                    && details
+                        .LoadedFiles["existing"]
+                        .Single()
+                        .Equals(
+                            new FileData(new FileId("6c4e9f85-499a-455e-b5d6-ce7134a57650"), "file")
+                        )
                 ),
                 Arg.Any<CancellationToken>()
             );

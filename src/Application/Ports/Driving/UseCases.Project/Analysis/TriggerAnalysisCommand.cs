@@ -1,12 +1,7 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+﻿using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
 
 namespace ScriptBee.UseCases.Project.Analysis;
 
-// TODO FIXIT: add scripts
-public record TriggerAnalysisCommand(
-    ProjectId ProjectId,
-    AnalysisInstanceImage Image,
-    List<string> Loaders,
-    List<string> Linkers
-);
+public record TriggerAnalysisCommand(ProjectId ProjectId, InstanceId InstanceId, ScriptId ScriptId);

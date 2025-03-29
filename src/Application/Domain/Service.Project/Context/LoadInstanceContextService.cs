@@ -14,7 +14,8 @@ using LoadContextResult = OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNot
 public class LoadInstanceContextService(
     IGetProject getProject,
     IGetProjectInstance getProjectInstance,
-    ILoadInstanceContext loadInstanceContext
+    ILoadInstanceContext loadInstanceContext,
+    IUpdateProject updateProject
 ) : ILoadInstanceContextUseCase
 {
     public async Task<LoadContextResult> Load(
@@ -56,28 +57,58 @@ public class LoadInstanceContextService(
         CancellationToken cancellationToken
     )
     {
+        var filesToLoad = GetFilesToLoad(projectDetails.SavedFiles, loaderIds.ToHashSet());
         await loadInstanceContext.Load(
             instanceInfo,
-            GetFilesToLoad(projectDetails.SavedFiles, loaderIds.ToHashSet()),
+            GetLoadedFileIds(filesToLoad),
+            cancellationToken
+        );
+        await updateProject.Update(
+            GetUpdateProjectDetailsWithLoadedFiles(projectDetails, filesToLoad),
             cancellationToken
         );
     }
 
-    private static Dictionary<string, IEnumerable<FileId>> GetFilesToLoad(
+    private static Dictionary<string, List<FileData>> GetFilesToLoad(
         IDictionary<string, List<FileData>> savedFiles,
         HashSet<string> loaderIds
     )
     {
-        var filesToLoad = new Dictionary<string, IEnumerable<FileId>>();
+        var filesToLoad = new Dictionary<string, List<FileData>>();
 
         foreach (var keyValuePair in savedFiles)
         {
             if (loaderIds.Contains(keyValuePair.Key))
             {
-                filesToLoad[keyValuePair.Key] = keyValuePair.Value.Select(data => data.Id);
+                filesToLoad[keyValuePair.Key] = keyValuePair.Value;
             }
         }
 
         return filesToLoad;
+    }
+
+    private static Dictionary<string, IEnumerable<FileId>> GetLoadedFileIds(
+        Dictionary<string, List<FileData>> loadedFiles
+    )
+    {
+        return loadedFiles.ToDictionary(x => x.Key, x => x.Value.Select(f => f.Id));
+    }
+
+    private static ProjectDetails GetUpdateProjectDetailsWithLoadedFiles(
+        ProjectDetails projectDetails,
+        Dictionary<string, List<FileData>> filesToLoad
+    )
+    {
+        var updatedLoadedFiles = new Dictionary<string, List<FileData>>(projectDetails.LoadedFiles);
+
+        foreach (var (loaderId, loadedFiles) in filesToLoad)
+        {
+            updatedLoadedFiles[loaderId] = loadedFiles;
+        }
+
+        return projectDetails with
+        {
+            LoadedFiles = updatedLoadedFiles,
+        };
     }
 }
