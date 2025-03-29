@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
@@ -13,10 +12,10 @@ using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Context;
 
-public class ProjectContextOperationsEndpointTest(ITestOutputHelper outputHelper)
+public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
 {
     private const string TestUrl =
-        "/api/projects/project-id/instances/b6a9a670-481a-4c0c-a563-fece9008c3c6/context/clear";
+        "/api/projects/project-id/instances/b6a9a670-481a-4c0c-a563-fece9008c3c6/context/reload";
 
     private readonly TestApiCaller<Program> _api = new(TestUrl);
 
