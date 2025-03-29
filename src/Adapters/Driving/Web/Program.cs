@@ -27,6 +27,7 @@ builder
     .AddCommonServices()
     .AddFileConfig(userFolderConfigurationSection)
     .AddRestConfig()
+    .AddAnalysisConfig(builder.Configuration)
     // .AddPluginServices()
     // .AddScriptBeeMarketplaceClient()
     // .AddFileWatcherServices()

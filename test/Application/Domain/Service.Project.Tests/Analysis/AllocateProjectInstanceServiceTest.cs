@@ -21,6 +21,9 @@ public class AllocateProjectInstanceServiceTest
     private readonly ICreateProjectInstance _createProjectInstance =
         Substitute.For<ICreateProjectInstance>();
 
+    private readonly IInstanceTemplateProvider _instanceTemplateProvider =
+        Substitute.For<IInstanceTemplateProvider>();
+
     private readonly AllocateProjectInstanceService _allocateProjectInstanceService;
 
     public AllocateProjectInstanceServiceTest()
@@ -30,7 +33,8 @@ public class AllocateProjectInstanceServiceTest
             _allocateInstance,
             _guidProvider,
             _dateTimeProvider,
-            _createProjectInstance
+            _createProjectInstance,
+            _instanceTemplateProvider
         );
     }
 
@@ -63,6 +67,7 @@ public class AllocateProjectInstanceServiceTest
             "http://instance-url",
             createdDate
         );
+        var analysisInstanceImage = new AnalysisInstanceImage("scriptbee/analysis:latest");
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -71,13 +76,11 @@ public class AllocateProjectInstanceServiceTest
                 )
             );
         _allocateInstance
-            .Allocate(
-                new AnalysisInstanceImage("scriptbee/analysis:latest"),
-                Arg.Any<CancellationToken>()
-            )
+            .Allocate(analysisInstanceImage, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult("http://instance-url"));
         _guidProvider.NewGuid().Returns(instanceId);
         _dateTimeProvider.UtcNow().Returns(createdDate);
+        _instanceTemplateProvider.GetTemplate().Returns(analysisInstanceImage);
         _createProjectInstance
             .Create(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(instanceInfo));

@@ -42,7 +42,12 @@ public class TestWebApplicationFactory<TStartup>(
 
     private static void ConfigureConfigurations(IWebHostBuilder builder)
     {
-        var configurationValues = new Dictionary<string, string?>();
+        var configurationValues = new Dictionary<string, string?>
+        {
+            { "ScriptBee:Calculation:Driver", "Docker" },
+            { "ScriptBee:Calculation:Image", "test-image" },
+            { "ScriptBee:Calculation:Docker:DockerSocket", "unix:///var/run/docker.sock" },
+        };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationValues)
             .Build();

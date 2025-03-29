@@ -1,6 +1,5 @@
 using OneOf;
 using ScriptBee.Common;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
@@ -16,7 +15,8 @@ public class AllocateProjectInstanceService(
     IAllocateInstance allocateInstance,
     IGuidProvider guidProvider,
     IDateTimeProvider dateTimeProvider,
-    ICreateProjectInstance createProjectInstance
+    ICreateProjectInstance createProjectInstance,
+    IInstanceTemplateProvider instanceTemplateProvider
 ) : IAllocateProjectInstanceUseCase
 {
     public async Task<AllocateResult> Allocate(
@@ -39,7 +39,7 @@ public class AllocateProjectInstanceService(
     {
         // TODO FIXIT(#63): make image configurable
         var instanceUrl = await allocateInstance.Allocate(
-            new AnalysisInstanceImage("scriptbee/analysis:latest"),
+            instanceTemplateProvider.GetTemplate(),
             cancellationToken
         );
 
