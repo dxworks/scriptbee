@@ -15,18 +15,18 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.Context;
 public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
 {
     private const string TestUrl =
-        "/api/projects/project-id/instances/b6a9a670-481a-4c0c-a563-fece9008c3c6/context/reload";
+        "/api/projects/project-id/instances/ba16d778-4e65-46d3-ac49-b851f5d01434/context/reload";
 
     private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Fact]
-    public async Task ContexClearSuccessful_ShouldReturnNoContent()
+    public async Task ContexReloadSuccessful_ShouldReturnNoContent()
     {
         var projectId = ProjectId.FromValue("project-id");
-        var instanceId = new InstanceId("b6a9a670-481a-4c0c-a563-fece9008c3c6");
-        var useCase = Substitute.For<IClearInstanceContextUseCase>();
+        var instanceId = new InstanceId("ba16d778-4e65-46d3-ac49-b851f5d01434");
+        var useCase = Substitute.For<IReloadInstanceContextUseCase>();
         useCase
-            .Clear(new ClearContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
+            .Reload(new ReloadContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(new Unit()));
 
         var response = await _api.PostApi<object>(
@@ -46,10 +46,10 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
     public async Task InstanceNotExists_ShouldReturnNotFound()
     {
         var projectId = ProjectId.FromValue("project-id");
-        var instanceId = new InstanceId("b6a9a670-481a-4c0c-a563-fece9008c3c6");
-        var useCase = Substitute.For<IClearInstanceContextUseCase>();
+        var instanceId = new InstanceId("ba16d778-4e65-46d3-ac49-b851f5d01434");
+        var useCase = Substitute.For<IReloadInstanceContextUseCase>();
         useCase
-            .Clear(new ClearContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
+            .Reload(new ReloadContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(
                     new InstanceDoesNotExistsError(instanceId)
@@ -71,7 +71,7 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
             response.Content,
             TestUrl,
             "Instance Not Found",
-            "An instance with id 'b6a9a670-481a-4c0c-a563-fece9008c3c6' is not allocated."
+            "An instance with id 'ba16d778-4e65-46d3-ac49-b851f5d01434' is not allocated."
         );
     }
 }
