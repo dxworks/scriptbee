@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Project;
+using ScriptBee.Service.Project.Analysis;
+using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis;
@@ -9,7 +14,7 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        // TODO FIXIT: update dependencies
+        services.AddSingleton<IGetAnalysisResultsUseCase, GetAnalysisResultsService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
@@ -29,15 +34,28 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
         // TODO FIXIT: add endpoints for download result, download all files, download all results(console,output-errors,files)
     }
 
-    private static async Task<Ok<WebGetAnalysisResultConsole>> GetConsoleAnalysisResult(
+    private static async Task<
+        Results<Ok<WebGetAnalysisResultConsole>, NotFound<ProblemDetails>>
+    > GetConsoleAnalysisResult(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string analysisId
+        [FromRoute] string analysisId,
+        IGetAnalysisResultsUseCase useCase,
+        CancellationToken cancellationToken = default
     )
     {
         await Task.CompletedTask;
 
-        // TODO FIXIT: remove hardcoded value
-        return TypedResults.Ok(new WebGetAnalysisResultConsole("test console output"));
+        return result.Match<Results<Ok<WebGetAnalysisResultConsole>, NotFound<ProblemDetails>>>(
+            content => TypedResults.Ok(new WebGetAnalysisResultConsole(content)),
+            error =>
+                TypedResults.NotFound(
+                    context.ToProblemDetails(
+                        "Analysis Not Found",
+                        $"An analysis with the ID '{error.Id.Value}' does not exists."
+                    )
+                )
+        );
     }
 
     private static async Task<Ok<WebGetAnalysisResultRunErrors>> GetErrorsAnalysisResult(

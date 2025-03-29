@@ -22,9 +22,9 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
     {
         var projectId = ProjectId.FromValue("id");
         var query = new GetProjectQuery(projectId);
-        var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
+        var useCase = Substitute.For<IGetProjectsUseCase>();
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        getProjectsUseCase
+        useCase
             .GetProject(query, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
@@ -42,7 +42,7 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(getProjectsUseCase);
+                    services.AddSingleton(useCase);
                 }
             )
         );
@@ -57,8 +57,8 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
     {
         var projectId = ProjectId.FromValue("id");
         var query = new GetProjectQuery(projectId);
-        var getProjectsUseCase = Substitute.For<IGetProjectsUseCase>();
-        getProjectsUseCase
+        var useCase = Substitute.For<IGetProjectsUseCase>();
+        useCase
             .GetProject(query, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
@@ -71,7 +71,7 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(getProjectsUseCase);
+                    services.AddSingleton(useCase);
                 }
             )
         );
