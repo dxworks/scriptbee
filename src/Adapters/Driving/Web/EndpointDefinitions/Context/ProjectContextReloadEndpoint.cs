@@ -43,6 +43,13 @@ public class ProjectContextReloadEndpoint : IEndpointDefinition
             error =>
                 TypedResults.NotFound(
                     context.ToProblemDetails(
+                        "Project Not Found",
+                        $"A project with the ID '{error.Id.Value}' does not exists."
+                    )
+                ),
+            error =>
+                TypedResults.NotFound(
+                    context.ToProblemDetails(
                         "Instance Not Found",
                         $"An instance with id '{error.InstanceId}' is not allocated."
                     )

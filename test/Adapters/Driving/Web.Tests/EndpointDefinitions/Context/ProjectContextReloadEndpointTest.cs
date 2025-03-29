@@ -27,7 +27,11 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IReloadInstanceContextUseCase>();
         useCase
             .Reload(new ReloadContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(new Unit()));
+            .Returns(
+                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
+                    new Unit()
+                )
+            );
 
         var response = await _api.PostApi<object>(
             new TestWebApplicationFactory<Program>(
@@ -43,6 +47,39 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
     }
 
     [Fact]
+    public async Task ProjectNotExists_ShouldReturnNotFound()
+    {
+        var projectId = ProjectId.FromValue("project-id");
+        var instanceId = new InstanceId("ba16d778-4e65-46d3-ac49-b851f5d01434");
+        var useCase = Substitute.For<IReloadInstanceContextUseCase>();
+        useCase
+            .Reload(new ReloadContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
+                    new ProjectDoesNotExistsError(projectId)
+                )
+            );
+
+        var response = await _api.PostApi<object>(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        await AssertNotFoundProblem(
+            response.Content,
+            TestUrl,
+            "Project Not Found",
+            "A project with the ID 'project-id' does not exists."
+        );
+    }
+
+    [Fact]
     public async Task InstanceNotExists_ShouldReturnNotFound()
     {
         var projectId = ProjectId.FromValue("project-id");
@@ -51,7 +88,7 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Reload(new ReloadContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(
+                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
                     new InstanceDoesNotExistsError(instanceId)
                 )
             );
