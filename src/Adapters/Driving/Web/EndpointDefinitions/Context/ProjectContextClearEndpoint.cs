@@ -9,7 +9,7 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
 
-public class ProjectContextOperationsEndpoint : IEndpointDefinition
+public class ProjectContextClearEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
@@ -19,10 +19,6 @@ public class ProjectContextOperationsEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/clear", ClearContext);
-        app.MapPost(
-            "/api/projects/{projectId}/instances/{instanceId}/context/reload",
-            ReloadContext
-        );
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ClearContext(
@@ -49,17 +45,5 @@ public class ProjectContextOperationsEndpoint : IEndpointDefinition
                     )
                 )
         );
-    }
-
-    private static async Task<NoContent> ReloadContext(
-        [FromRoute] string projectId,
-        [FromRoute] string instanceId
-    )
-    {
-        await Task.CompletedTask;
-
-        // TODO FIXIT(#47): implement
-
-        return TypedResults.NoContent();
     }
 }

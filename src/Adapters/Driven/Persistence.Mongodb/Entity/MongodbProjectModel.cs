@@ -14,8 +14,7 @@ public class MongodbProjectModel : IDocument
     public Dictionary<string, List<MongodbFileData>> SavedFiles { get; set; } = new();
     public Dictionary<string, List<MongodbFileData>> LoadedFiles { get; set; } = new();
 
-    public string? Linker { get; set; }
-    public Run? LastRun { get; set; }
+    public IEnumerable<string> Linkers { get; set; } = [];
 
     public ProjectDetails ToProjectDetails()
     {
@@ -23,7 +22,9 @@ public class MongodbProjectModel : IDocument
             ProjectId.FromValue(Id),
             Name,
             CreationDate,
-            SavedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList())
+            SavedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
+            LoadedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
+            Linkers.ToList()
         );
     }
 
@@ -38,6 +39,11 @@ public class MongodbProjectModel : IDocument
                 x => x.Key,
                 x => x.Value.Select(MongodbFileData.From).ToList()
             ),
+            LoadedFiles = projectDetails.LoadedFiles.ToDictionary(
+                x => x.Key,
+                x => x.Value.Select(MongodbFileData.From).ToList()
+            ),
+            Linkers = projectDetails.Linkers,
         };
     }
 }

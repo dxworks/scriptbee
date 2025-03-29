@@ -32,7 +32,9 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
                         projectId,
                         "name",
                         creationDate,
-                        new Dictionary<string, List<FileData>>()
+                        new Dictionary<string, List<FileData>>(),
+                        new Dictionary<string, List<FileData>>(),
+                        []
                     )
                 )
             );

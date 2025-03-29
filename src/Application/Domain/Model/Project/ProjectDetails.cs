@@ -6,5 +6,7 @@ public record ProjectDetails(
     ProjectId Id,
     string Name,
     DateTimeOffset CreationDate,
-    IDictionary<string, List<FileData>> SavedFiles
+    IDictionary<string, List<FileData>> SavedFiles,
+    IDictionary<string, List<FileData>> LoadedFiles,
+    IEnumerable<string> Linkers
 );

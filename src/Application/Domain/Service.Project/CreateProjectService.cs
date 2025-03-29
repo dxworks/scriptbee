@@ -19,7 +19,9 @@ public class CreateProjectService(ICreateProject createProject, IDateTimeProvide
             ProjectId.Create(command.Id),
             command.Name,
             dateTimeProvider.UtcNow(),
-            new Dictionary<string, List<FileData>>()
+            new Dictionary<string, List<FileData>>(),
+            new Dictionary<string, List<FileData>>(),
+            []
         );
 
         var result = await createProject.Create(projectDetails, cancellationToken);
