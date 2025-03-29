@@ -44,7 +44,11 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
         CancellationToken cancellationToken = default
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.GetConsoleResult(
+            ProjectId.FromValue(projectId),
+            new AnalysisId(analysisId),
+            cancellationToken
+        );
 
         return result.Match<Results<Ok<WebGetAnalysisResultConsole>, NotFound<ProblemDetails>>>(
             content => TypedResults.Ok(new WebGetAnalysisResultConsole(content)),
@@ -58,24 +62,40 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
         );
     }
 
-    private static async Task<Ok<WebGetAnalysisResultRunErrors>> GetErrorsAnalysisResult(
+    private static async Task<
+        Results<Ok<WebGetAnalysisResultRunErrors>, NotFound<ProblemDetails>>
+    > GetErrorsAnalysisResult(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string analysisId
+        [FromRoute] string analysisId,
+        IGetAnalysisResultsUseCase useCase,
+        CancellationToken cancellationToken = default
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.GetErrorResults(
+            ProjectId.FromValue(projectId),
+            new AnalysisId(analysisId),
+            cancellationToken
+        );
 
-        // TODO FIXIT: remove hardcoded value
-        return TypedResults.Ok(
-            new WebGetAnalysisResultRunErrors(
-                [new WebAnalysisResultRunError("Error", "There was an error", "Critical")]
-            )
+        return result.Match<Results<Ok<WebGetAnalysisResultRunErrors>, NotFound<ProblemDetails>>>(
+            results => TypedResults.Ok(WebGetAnalysisResultRunErrors.Map(results)),
+            error =>
+                TypedResults.NotFound(
+                    context.ToProblemDetails(
+                        "Analysis Not Found",
+                        $"An analysis with the ID '{error.Id.Value}' does not exists."
+                    )
+                )
         );
     }
 
     private static async Task<Ok<WebGetAnalysisResultFileList>> GetFilesAnalysisResult(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string analysisId
+        [FromRoute] string analysisId,
+        IGetAnalysisResultsUseCase useCase,
+        CancellationToken cancellationToken = default
     )
     {
         await Task.CompletedTask;
