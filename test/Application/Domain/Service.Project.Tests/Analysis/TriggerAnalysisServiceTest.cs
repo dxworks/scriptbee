@@ -27,37 +27,13 @@ public class TriggerAnalysisServiceTest
     public TriggerAnalysisServiceTest()
     {
         _triggerAnalysisService = new TriggerAnalysisService(
-            _getProject,
             _getProjectInstance,
             _triggerInstanceAnalysis
         );
     }
 
     [Fact]
-    public async Task GivenProjectDoesNotExists_ThenReturnProjectDoesNotExistsError()
-    {
-        var projectId = ProjectId.FromValue("project-id");
-        var instanceId = new InstanceId(Guid.NewGuid());
-        var command = new TriggerAnalysisCommand(
-            projectId,
-            instanceId,
-            new ScriptId(Guid.NewGuid())
-        );
-        _getProject
-            .GetById(projectId, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDoesNotExistsError(projectId)
-                )
-            );
-
-        var analysisResult = await _triggerAnalysisService.Trigger(command);
-
-        analysisResult.AsT1.ShouldBe(new ProjectDoesNotExistsError(projectId));
-    }
-
-    [Fact]
-    public async Task GivenNoAllocatedInstance_ThenReturnInstanceDoesNotExistsError()
+    public async Task GivenNoInstance_ThenReturnInstanceDoesNotExistsError()
     {
         var creationDate = DateTimeOffset.UtcNow;
         var projectId = ProjectId.FromValue("project-id");
@@ -91,11 +67,11 @@ public class TriggerAnalysisServiceTest
 
         var analysisResult = await _triggerAnalysisService.Trigger(command);
 
-        analysisResult.AsT2.ShouldBe(new InstanceDoesNotExistsError(instanceId));
+        analysisResult.AsT1.ShouldBe(new InstanceDoesNotExistsError(instanceId));
     }
 
     [Fact]
-    public async Task GivenAllocatedInstance_ThenTriggerSuccessful()
+    public async Task GivenInstance_ThenTriggerSuccessful()
     {
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId(Guid.NewGuid());
