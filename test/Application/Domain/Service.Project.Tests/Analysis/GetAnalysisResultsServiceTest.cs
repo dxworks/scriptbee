@@ -113,6 +113,45 @@ public class GetAnalysisResultsServiceTest
     }
 
     [Fact]
+    public async Task GivenAnalysis_WhenGetErrorResults_ThenErrorResults()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var analysisId = new AnalysisId(Guid.NewGuid());
+        var resultId = new ResultId(Guid.NewGuid());
+        var analysisInfo = CreateAnalysisInfo(
+            analysisId,
+            projectId,
+            [
+                new ResultSummary(
+                    resultId,
+                    "run error",
+                    RunResultDefaultTypes.RunError,
+                    DateTimeOffset.UtcNow
+                ),
+            ],
+            [new AnalysisError("analysis error")]
+        );
+        _getAnalysis
+            .GetById(analysisId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(analysisInfo)
+            );
+        _fileModelService
+            .GetFileAsync(resultId.ToFileId(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Stream>(new MemoryStream("error message"u8.ToArray())));
+
+        var result = await _getAnalysisResultsService.GetErrorResults(projectId, analysisId);
+
+        result.AsT0.ShouldBe(
+            new List<AnalysisErrorResult>
+            {
+                new("Analysis Error", "analysis error", AnalysisErrorResult.Major),
+                new("run error", "error message", AnalysisErrorResult.Minor),
+            }
+        );
+    }
+
+    [Fact]
     public async Task GivenNoAnalysis_WhenGetFileResults_ThenReturnAnalysisDoesNotExistsError()
     {
         var projectId = ProjectId.FromValue("id");

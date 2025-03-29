@@ -9,6 +9,7 @@ using ScriptBee.UseCases.Project.Analysis;
 namespace ScriptBee.Service.Project.Analysis;
 
 using GetConsoleResultType = OneOf<string, AnalysisDoesNotExistsError>;
+using GetErrorResultType = OneOf<IEnumerable<AnalysisErrorResult>, AnalysisDoesNotExistsError>;
 
 public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelService fileModelService)
     : IGetAnalysisResultsUseCase
@@ -27,9 +28,7 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
         );
     }
 
-    public async Task<
-        OneOf<IEnumerable<AnalysisErrorResult>, AnalysisDoesNotExistsError>
-    > GetErrorResults(
+    public async Task<GetErrorResultType> GetErrorResults(
         ProjectId projectId,
         AnalysisId analysisId,
         CancellationToken cancellationToken = default
@@ -37,7 +36,10 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
     {
         var result = await getAnalysis.GetById(analysisId, cancellationToken);
 
-        return result.Match(analysisInfo => throw new NotImplementedException(), error => error);
+        return await result.Match<Task<GetErrorResultType>>(
+            async analysisInfo => await GetErrorResults(analysisInfo, cancellationToken),
+            error => Task.FromResult<GetErrorResultType>(error)
+        );
     }
 
     public async Task<
@@ -74,5 +76,46 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
         using var reader = new StreamReader(fileStream);
 
         return await reader.ReadToEndAsync(cancellationToken);
+    }
+
+    private async Task<GetErrorResultType> GetErrorResults(
+        AnalysisInfo analysisInfo,
+        CancellationToken cancellationToken
+    )
+    {
+        var errorResults = analysisInfo
+            .Results.Where(r => r.Type == RunResultDefaultTypes.RunError)
+            .ToList();
+
+        var analysisResults = new List<AnalysisErrorResult>(
+            GetAnalysisErrorResultsFromAnalysisErrors(analysisInfo.Errors)
+        );
+
+        foreach (var resultSummary in errorResults)
+        {
+            var fileStream = await fileModelService.GetFileAsync(
+                resultSummary.Id.ToFileId(),
+                cancellationToken
+            );
+            using var reader = new StreamReader(fileStream);
+
+            var message = await reader.ReadToEndAsync(cancellationToken);
+            analysisResults.Add(
+                new AnalysisErrorResult(resultSummary.Name, message, AnalysisErrorResult.Minor)
+            );
+        }
+
+        return analysisResults;
+    }
+
+    private static IEnumerable<AnalysisErrorResult> GetAnalysisErrorResultsFromAnalysisErrors(
+        IEnumerable<AnalysisError> analysisInfoErrors
+    )
+    {
+        return analysisInfoErrors.Select(x => new AnalysisErrorResult(
+            "Analysis Error",
+            x.Message,
+            AnalysisErrorResult.Major
+        ));
     }
 }
