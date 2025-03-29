@@ -31,7 +31,6 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
             "/api/projects/{projectId}/analyses/{analysisId}/results/files",
             GetFilesAnalysisResult
         );
-        // TODO FIXIT: add endpoints for download result, download all files, download all results(console,output-errors,files)
     }
 
     private static async Task<
