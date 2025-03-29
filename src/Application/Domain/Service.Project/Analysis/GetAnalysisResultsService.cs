@@ -51,7 +51,7 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
     {
         var result = await getAnalysis.GetById(analysisId, cancellationToken);
 
-        return result.Match(analysisInfo => GetFileResults(analysisInfo), error => error);
+        return result.Match(GetFileResults, error => error);
     }
 
     private async Task<GetConsoleResultType> GetConsoleContent(

@@ -1,9 +1,11 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Persistence.Mongodb;
 using ScriptBee.Persistence.Mongodb.Entity;
+using ScriptBee.Persistence.Mongodb.Entity.Analysis;
 using ScriptBee.Persistence.Mongodb.Entity.Script;
 using ScriptBee.Persistence.Mongodb.Exceptions;
 using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
@@ -42,7 +44,8 @@ public static class MongoDbExtensions
         return services
             .AddProjectAdapters(mongoDatabase)
             .AddProjectInstancesAdapters(mongoDatabase)
-            .AddScriptAdapters(mongoDatabase);
+            .AddScriptAdapters(mongoDatabase)
+            .AddAnalysisAdapters(mongoDatabase);
     }
 
     private static IServiceCollection AddProjectAdapters(
@@ -69,6 +72,20 @@ public static class MongoDbExtensions
             .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
+    }
+
+    private static IServiceCollection AddAnalysisAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
+    {
+        return services
+            .AddMongoCollection<MongodbAnalysisInfo>(mongoDatabase, "Analysis")
+            .AddSingleton<IGetAnalysis, AnalysisPersistenceAdapter>()
+            .AddSingleton<IGetAllAnalyses, AnalysisPersistenceAdapter>()
+            .AddSingleton<ICreateAnalysis, AnalysisPersistenceAdapter>()
+            .AddSingleton<IUpdateAnalysis, AnalysisPersistenceAdapter>()
+            .AddSingleton<IDeleteAnalysis, AnalysisPersistenceAdapter>();
     }
 
     private static IServiceCollection AddScriptAdapters(
