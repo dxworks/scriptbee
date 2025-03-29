@@ -7,6 +7,7 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
 using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
@@ -43,12 +44,7 @@ public class LinkInstanceContextServiceTest
         List<string> linkerIds = ["linker-id"];
         var command = new LinkContextCommand(projectId, instanceId, linkerIds);
         var projectDetails = BasicProjectDetails(ProjectId.Create("id"));
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -82,12 +78,7 @@ public class LinkInstanceContextServiceTest
         List<string> linkerIds = ["linker-id"];
         var command = new LinkContextCommand(projectId, instanceId, linkerIds);
         var projectDetails = BasicProjectDetails(ProjectId.Create("id"));
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(

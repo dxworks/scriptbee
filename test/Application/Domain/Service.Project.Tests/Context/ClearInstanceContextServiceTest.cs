@@ -1,12 +1,12 @@
 ﻿using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
@@ -34,12 +34,7 @@ public class ClearInstanceContextServiceTest
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("2e179101-9195-4bf0-8e06-e171912df595");
         var command = new ClearContextCommand(projectId, instanceId);
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())
             .Returns(

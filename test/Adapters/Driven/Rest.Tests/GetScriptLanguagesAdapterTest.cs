@@ -1,10 +1,10 @@
 ﻿using NSubstitute;
-using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Plugins;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
 
 namespace ScriptBee.Rest.Tests;
 
@@ -22,12 +22,7 @@ public class GetScriptLanguagesAdapterTest
     [Fact]
     public async Task GetScriptLanguage()
     {
-        var instanceInfo = new InstanceInfo(
-            new InstanceId("147542d3-95dc-4be9-bcd1-10f718af6d27"),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(ProjectId.FromValue("id"));
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
@@ -61,12 +56,7 @@ public class GetScriptLanguagesAdapterTest
     [Fact]
     public async Task GivenNoScriptRunnerExtensions_GetScriptLanguageDoesNotExistsError()
     {
-        var instanceInfo = new InstanceInfo(
-            new InstanceId("147542d3-95dc-4be9-bcd1-10f718af6d27"),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(ProjectId.FromValue("id"));
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
@@ -93,12 +83,7 @@ public class GetScriptLanguagesAdapterTest
     [Fact]
     public async Task GivenNoScriptRunnerForThatLanguage_GetScriptLanguageDoesNotExistsError()
     {
-        var instanceInfo = new InstanceInfo(
-            new InstanceId("147542d3-95dc-4be9-bcd1-10f718af6d27"),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(ProjectId.FromValue("id"));
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(

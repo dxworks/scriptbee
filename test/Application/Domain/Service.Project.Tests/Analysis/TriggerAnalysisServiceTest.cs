@@ -8,6 +8,7 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
 using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Analysis;
@@ -70,12 +71,7 @@ public class TriggerAnalysisServiceTest
         var scriptId = new ScriptId(Guid.NewGuid());
         var command = new TriggerAnalysisCommand(projectId, instanceId, scriptId);
         var analysisId = new AnalysisId(Guid.NewGuid());
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         var analysisInfo = new AnalysisInfo(
             analysisId,
             projectId,

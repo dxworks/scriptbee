@@ -1,6 +1,5 @@
 ﻿using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin;
@@ -10,6 +9,7 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
@@ -55,12 +55,7 @@ public class GetInstanceLinkersServiceTest
         var projectId = ProjectId.FromValue("id");
         var instanceId = new InstanceId("db0ad7b2-440d-4c02-a935-0871e8197b83");
         var query = new GetLinkersQuery(projectId, instanceId);
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())
             .Returns(
