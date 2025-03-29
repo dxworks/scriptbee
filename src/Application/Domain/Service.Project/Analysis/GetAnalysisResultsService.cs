@@ -26,4 +26,13 @@ public class GetAnalysisResultsService : IGetAnalysisResultsUseCase
     {
         throw new NotImplementedException();
     }
+
+    public Task<OneOf<IEnumerable<AnalysisFileResult>, AnalysisDoesNotExistsError>> GetFileResults(
+        ProjectId projectId,
+        AnalysisId analysisId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -90,7 +90,9 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
         );
     }
 
-    private static async Task<Ok<WebGetAnalysisResultFileList>> GetFilesAnalysisResult(
+    private static async Task<
+        Results<Ok<WebGetAnalysisResultFileList>, NotFound<ProblemDetails>>
+    > GetFilesAnalysisResult(
         HttpContext context,
         [FromRoute] string projectId,
         [FromRoute] string analysisId,
@@ -98,14 +100,21 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
         CancellationToken cancellationToken = default
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.GetFileResults(
+            ProjectId.FromValue(projectId),
+            new AnalysisId(analysisId),
+            cancellationToken
+        );
 
-        // TODO FIXIT: remove hardcoded value
-
-        return TypedResults.Ok(
-            new WebGetAnalysisResultFileList(
-                [new WebGetAnalysisResultFile("file-id", "File.csv", "file")]
-            )
+        return result.Match<Results<Ok<WebGetAnalysisResultFileList>, NotFound<ProblemDetails>>>(
+            files => TypedResults.Ok(WebGetAnalysisResultFileList.Map(files)),
+            error =>
+                TypedResults.NotFound(
+                    context.ToProblemDetails(
+                        "Analysis Not Found",
+                        $"An analysis with the ID '{error.Id.Value}' does not exists."
+                    )
+                )
         );
     }
 }

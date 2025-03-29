@@ -17,4 +17,10 @@ public interface IGetAnalysisResultsUseCase
         AnalysisId analysisId,
         CancellationToken cancellationToken = default
     );
+
+    Task<OneOf<IEnumerable<AnalysisFileResult>, AnalysisDoesNotExistsError>> GetFileResults(
+        ProjectId projectId,
+        AnalysisId analysisId,
+        CancellationToken cancellationToken = default
+    );
 }
