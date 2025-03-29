@@ -61,7 +61,11 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
                 ),
                 Arg.Any<CancellationToken>()
             )
-            .Returns(Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(new Unit()));
+            .Returns(
+                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
+                    new Unit()
+                )
+            );
 
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
@@ -78,6 +82,39 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
     }
 
     [Fact]
+    public async Task ProjectNotExists_ShouldReturnNotFound()
+    {
+        var projectId = ProjectId.FromValue("project-id");
+        var useCase = Substitute.For<ILinkInstanceContextUseCase>();
+        useCase
+            .Link(Arg.Any<LinkContextCommand>(), Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
+                    new ProjectDoesNotExistsError(projectId)
+                )
+            );
+
+        var response = await _api.PostApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            ),
+            new WebLinkContextCommand(["linker-id"])
+        );
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        await AssertNotFoundProblem(
+            response.Content,
+            TestUrl,
+            "Project Not Found",
+            "A project with the ID 'project-id' does not exists."
+        );
+    }
+
+    [Fact]
     public async Task InstanceNotExists_ShouldReturnNotFound()
     {
         var instanceId = new InstanceId("8be03260-c9e4-4597-94b3-c97ba047724e");
@@ -85,7 +122,7 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Link(Arg.Any<LinkContextCommand>(), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(
+                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
                     new InstanceDoesNotExistsError(instanceId)
                 )
             );
