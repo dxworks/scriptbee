@@ -2,7 +2,6 @@
 using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
-using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -13,6 +12,7 @@ using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.ProjectStructure;
 
@@ -87,14 +87,7 @@ public class CreateScriptServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase
@@ -139,14 +132,7 @@ public class CreateScriptServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase
@@ -200,14 +186,7 @@ public class CreateScriptServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase
@@ -279,14 +258,7 @@ public class CreateScriptServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase

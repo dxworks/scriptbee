@@ -1,13 +1,13 @@
 ﻿using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model;
-using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
@@ -42,14 +42,7 @@ public class LinkInstanceContextServiceTest
         var instanceId = new InstanceId("3cf3006c-234f-4d7b-951d-b17b5226020e");
         List<string> linkerIds = ["linker-id"];
         var command = new LinkContextCommand(projectId, instanceId, linkerIds);
-        var projectDetails = new ProjectDetails(
-            ProjectId.Create("id"),
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var projectDetails = BasicProjectDetails(ProjectId.Create("id"));
         var instanceInfo = new InstanceInfo(
             new InstanceId(Guid.NewGuid()),
             projectId,
@@ -88,14 +81,7 @@ public class LinkInstanceContextServiceTest
         var instanceId = new InstanceId("3cf3006c-234f-4d7b-951d-b17b5226020e");
         List<string> linkerIds = ["linker-id"];
         var command = new LinkContextCommand(projectId, instanceId, linkerIds);
-        var projectDetails = new ProjectDetails(
-            ProjectId.Create("id"),
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var projectDetails = BasicProjectDetails(ProjectId.Create("id"));
         var instanceInfo = new InstanceInfo(
             new InstanceId(Guid.NewGuid()),
             projectId,
@@ -154,14 +140,7 @@ public class LinkInstanceContextServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        ProjectId.Create("id"),
-                        "name",
-                        DateTimeOffset.UtcNow,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(ProjectId.Create("id"))
                 )
             );
         _getProjectInstance

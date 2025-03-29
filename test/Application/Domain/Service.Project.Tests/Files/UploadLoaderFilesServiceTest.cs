@@ -7,6 +7,7 @@ using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Files;
 using ScriptBee.UseCases.Project.Files;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Files;
 
@@ -53,10 +54,8 @@ public class UploadLoaderFilesServiceTest
     {
         var projectId = ProjectId.FromValue("project-id");
         var command = new UploadLoaderFilesCommand(projectId, "loader-id", []);
-        var projectDetails = new ProjectDetails(
+        var projectDetails = ProjectDetailsWithSavedFiles(
             projectId,
-            "name",
-            DateTimeOffset.UtcNow,
             new Dictionary<string, List<FileData>>
             {
                 {
@@ -70,9 +69,7 @@ public class UploadLoaderFilesServiceTest
                     "other",
                     [new FileData(new FileId("0ecf0f1a-d66c-4a92-81c9-954f1d50b78b"), "file-3")]
                 },
-            },
-            new Dictionary<string, List<FileData>>(),
-            []
+            }
         );
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -103,14 +100,7 @@ public class UploadLoaderFilesServiceTest
             "loader-id",
             [new UploadFileInformation("file-name", 0, new MemoryStream())]
         );
-        var projectDetails = new ProjectDetails(
-            projectId,
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var projectDetails = BasicProjectDetails(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -138,14 +128,7 @@ public class UploadLoaderFilesServiceTest
                 new UploadFileInformation("file-name-3", 5, new MemoryStream()),
             ]
         );
-        var projectDetails = new ProjectDetails(
-            projectId,
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var projectDetails = BasicProjectDetails(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -193,10 +176,8 @@ public class UploadLoaderFilesServiceTest
             "loader-id",
             [new UploadFileInformation("file", 2, new MemoryStream())]
         );
-        var projectDetails = new ProjectDetails(
+        var projectDetails = ProjectDetailsWithSavedFiles(
             projectId,
-            "name",
-            DateTimeOffset.UtcNow,
             new Dictionary<string, List<FileData>>
             {
                 {
@@ -212,9 +193,7 @@ public class UploadLoaderFilesServiceTest
                     "other",
                     [new FileData(new FileId("8c88af6c-4d9b-4d56-9532-6478cd38ce0c"), "other-file")]
                 },
-            },
-            new Dictionary<string, List<FileData>>(),
-            []
+            }
         );
         var updatedProjectDetails = projectDetails with
         {
