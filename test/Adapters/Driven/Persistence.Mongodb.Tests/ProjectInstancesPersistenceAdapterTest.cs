@@ -1,9 +1,9 @@
 ﻿using MongoDB.Driver;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
 
@@ -18,6 +18,23 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
         _adapter = new ProjectInstancesPersistenceAdapter(
             new MongoRepository<MongodbProjectInstance>(_mongoCollection)
         );
+    }
+
+    [Fact]
+    public async Task CreateNewInstance()
+    {
+        var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(ProjectId.Create("id"));
+
+        var result = await _adapter.Create(instanceInfo, CancellationToken.None);
+
+        result.ShouldBe(instanceInfo);
+        var createInstance = await _mongoCollection
+            .Find(p => p.Id == instanceInfo.Id.ToString())
+            .FirstOrDefaultAsync();
+        createInstance.Id.ShouldBe(instanceInfo.Id.ToString());
+        createInstance.ProjectId.ShouldBe("id");
+        createInstance.Url.ShouldBe("http://instance");
+        createInstance.CreationDate.ShouldBe(instanceInfo.CreationDate);
     }
 
     [Fact]

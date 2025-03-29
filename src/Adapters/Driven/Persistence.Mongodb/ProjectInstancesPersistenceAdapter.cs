@@ -12,22 +12,15 @@ public class ProjectInstancesPersistenceAdapter(
 ) : ICreateProjectInstance, IGetAllProjectInstances, IGetProjectInstance
 {
     public async Task<InstanceInfo> Create(
-        ProjectId projectId,
+        InstanceInfo instanceInfo,
         CancellationToken cancellationToken = default
     )
     {
-        // TODO FIXIT(#63, #45): implement this without hardcoded values
-        var calculationInstanceInfo = new InstanceInfo(
-            new InstanceId("test"),
-            projectId,
-            "http://localhost:5002",
-            DateTimeOffset.UtcNow
-        );
-        var projectInstance = MongodbProjectInstance.From(calculationInstanceInfo);
+        var projectInstance = MongodbProjectInstance.From(instanceInfo);
 
         await mongoRepository.CreateDocument(projectInstance, cancellationToken);
 
-        return calculationInstanceInfo;
+        return instanceInfo;
     }
 
     public async Task<IEnumerable<InstanceInfo>> GetAll(
