@@ -169,6 +169,38 @@ public class GetAnalysisResultsServiceTest
         result.AsT1.ShouldBe(new AnalysisDoesNotExistsError(analysisId));
     }
 
+    [Fact]
+    public async Task GivenAnalysis_WhenGetFileResults_ThenFileResults()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var analysisId = new AnalysisId(Guid.NewGuid());
+        var resultId = new ResultId(Guid.NewGuid());
+        var analysisInfo = CreateAnalysisInfo(
+            analysisId,
+            projectId,
+            [
+                new ResultSummary(
+                    resultId,
+                    "File.txt",
+                    RunResultDefaultTypes.FileType,
+                    DateTimeOffset.UtcNow
+                ),
+            ],
+            [new AnalysisError("analysis error")]
+        );
+        _getAnalysis
+            .GetById(analysisId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(analysisInfo)
+            );
+
+        var result = await _getAnalysisResultsService.GetFileResults(projectId, analysisId);
+
+        result.AsT0.ShouldBe(
+            new List<AnalysisFileResult> { new(resultId.ToFileId(), "File.txt", "file") }
+        );
+    }
+
     private static AnalysisInfo CreateAnalysisInfo(
         AnalysisId analysisId,
         ProjectId projectId,

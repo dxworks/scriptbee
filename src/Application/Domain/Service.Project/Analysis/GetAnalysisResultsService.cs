@@ -10,6 +10,7 @@ namespace ScriptBee.Service.Project.Analysis;
 
 using GetConsoleResultType = OneOf<string, AnalysisDoesNotExistsError>;
 using GetErrorResultType = OneOf<IEnumerable<AnalysisErrorResult>, AnalysisDoesNotExistsError>;
+using GetFileResultType = OneOf<IEnumerable<AnalysisFileResult>, AnalysisDoesNotExistsError>;
 
 public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelService fileModelService)
     : IGetAnalysisResultsUseCase
@@ -42,9 +43,7 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
         );
     }
 
-    public async Task<
-        OneOf<IEnumerable<AnalysisFileResult>, AnalysisDoesNotExistsError>
-    > GetFileResults(
+    public async Task<GetFileResultType> GetFileResults(
         ProjectId projectId,
         AnalysisId analysisId,
         CancellationToken cancellationToken = default
@@ -52,7 +51,7 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
     {
         var result = await getAnalysis.GetById(analysisId, cancellationToken);
 
-        return result.Match(analysisInfo => throw new NotImplementedException(), error => error);
+        return result.Match(analysisInfo => GetFileResults(analysisInfo), error => error);
     }
 
     private async Task<GetConsoleResultType> GetConsoleContent(
@@ -106,6 +105,14 @@ public class GetAnalysisResultsService(IGetAnalysis getAnalysis, IFileModelServi
         }
 
         return analysisResults;
+    }
+
+    private static GetFileResultType GetFileResults(AnalysisInfo analysisInfo)
+    {
+        var analysisFileResults = analysisInfo
+            .Results.Where(r => r.Type == RunResultDefaultTypes.FileType)
+            .Select(r => new AnalysisFileResult(r.Id.ToFileId(), r.Name, "file"));
+        return GetFileResultType.FromT0(analysisFileResults);
     }
 
     private static IEnumerable<AnalysisErrorResult> GetAnalysisErrorResultsFromAnalysisErrors(
