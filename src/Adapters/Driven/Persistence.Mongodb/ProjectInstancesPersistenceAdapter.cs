@@ -11,7 +11,6 @@ public class ProjectInstancesPersistenceAdapter(
     IMongoRepository<MongodbProjectInstance> mongoRepository
 ) : ICreateProjectInstance, IGetAllProjectInstances, IGetProjectInstance
 {
-    // TODO FIXIT(#63): add missing tests
     public async Task<InstanceInfo> Create(
         InstanceInfo instanceInfo,
         CancellationToken cancellationToken = default
