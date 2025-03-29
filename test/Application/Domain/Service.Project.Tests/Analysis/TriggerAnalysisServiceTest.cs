@@ -1,7 +1,6 @@
 ﻿using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Analysis;
-using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -9,6 +8,8 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Analysis;
 
@@ -35,7 +36,6 @@ public class TriggerAnalysisServiceTest
     [Fact]
     public async Task GivenNoInstance_ThenReturnInstanceDoesNotExistsError()
     {
-        var creationDate = DateTimeOffset.UtcNow;
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId(Guid.NewGuid());
         var command = new TriggerAnalysisCommand(
@@ -47,14 +47,7 @@ public class TriggerAnalysisServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "name",
-                        creationDate,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getProjectInstance
@@ -78,12 +71,7 @@ public class TriggerAnalysisServiceTest
         var scriptId = new ScriptId(Guid.NewGuid());
         var command = new TriggerAnalysisCommand(projectId, instanceId, scriptId);
         var analysisId = new AnalysisId(Guid.NewGuid());
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         var analysisInfo = new AnalysisInfo(
             analysisId,
             projectId,
@@ -99,14 +87,7 @@ public class TriggerAnalysisServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "name",
-                        DateTimeOffset.UtcNow,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getProjectInstance

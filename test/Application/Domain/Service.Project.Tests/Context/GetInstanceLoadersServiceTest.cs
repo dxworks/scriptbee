@@ -9,6 +9,7 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
@@ -54,12 +55,7 @@ public class GetInstanceLoadersServiceTest
         var projectId = ProjectId.FromValue("id");
         var instanceId = new InstanceId("4e125fff-589f-471a-91e6-3804b6ed701a");
         var query = new GetLoadersQuery(projectId, instanceId);
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())
             .Returns(

@@ -2,8 +2,6 @@
 using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
-using ScriptBee.Domain.Model.File;
-using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Files;
@@ -13,6 +11,8 @@ using ScriptBee.Ports.Project.Structure;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.ProjectStructure;
 
@@ -77,24 +77,12 @@ public class CreateScriptServiceTest
     {
         var projectId = ProjectId.FromValue("id");
         var error = new ScriptLanguageDoesNotExistsError("language");
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.Empty),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase
@@ -129,24 +117,12 @@ public class CreateScriptServiceTest
     public async Task CreateFileAlreadyExists()
     {
         var projectId = ProjectId.FromValue("id");
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.Empty),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase
@@ -190,24 +166,12 @@ public class CreateScriptServiceTest
     public async Task CreateScriptSuccessfully()
     {
         var projectId = ProjectId.FromValue("id");
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.Empty),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase
@@ -269,24 +233,12 @@ public class CreateScriptServiceTest
     public async Task CreateScriptSuccessfullyWithExtension()
     {
         var projectId = ProjectId.FromValue("id");
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.Empty),
-            ProjectId.FromValue("id"),
-            "url",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "project",
-                        DateTimeOffset.Now,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getCurrentInstanceUseCase

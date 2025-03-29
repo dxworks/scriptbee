@@ -8,6 +8,8 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
@@ -41,10 +43,8 @@ public class LoadInstanceContextServiceTest
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
         var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
-        var projectDetails = new ProjectDetails(
+        var projectDetails = ProjectDetailsWithSavedFiles(
             projectId,
-            "name",
-            DateTimeOffset.UtcNow,
             new Dictionary<string, List<FileData>>
             {
                 {
@@ -55,16 +55,9 @@ public class LoadInstanceContextServiceTest
                     "other",
                     [new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "file")]
                 },
-            },
-            new Dictionary<string, List<FileData>>(),
-            []
+            }
         );
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -127,12 +120,7 @@ public class LoadInstanceContextServiceTest
             },
             []
         );
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -194,14 +182,7 @@ public class LoadInstanceContextServiceTest
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
         var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
-        var projectDetails = new ProjectDetails(
-            projectId,
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var projectDetails = BasicProjectDetails(projectId);
         var instanceDoesNotExistsError = new InstanceDoesNotExistsError(instanceId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())

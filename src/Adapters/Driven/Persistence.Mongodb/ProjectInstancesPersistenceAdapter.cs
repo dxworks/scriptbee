@@ -1,5 +1,4 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
@@ -17,7 +16,7 @@ public class ProjectInstancesPersistenceAdapter(
         CancellationToken cancellationToken = default
     )
     {
-        // TODO FIXIT(#18, #45): implement this without hardcoded values
+        // TODO FIXIT(#63, #45): implement this without hardcoded values
         var calculationInstanceInfo = new InstanceInfo(
             new InstanceId("test"),
             projectId,

@@ -1,9 +1,9 @@
 ﻿using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests;
 
@@ -21,14 +21,7 @@ public class GetProjectsServiceTests
     [Fact]
     public async Task GetAllProjects()
     {
-        var expectedProjectDetails = new ProjectDetails(
-            ProjectId.Create("id"),
-            "name",
-            DateTimeOffset.Parse("2024-02-08"),
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var expectedProjectDetails = BasicProjectDetails(ProjectId.Create("id"));
         IEnumerable<ProjectDetails> projectDetails = new List<ProjectDetails>
         {
             expectedProjectDetails,
@@ -47,14 +40,7 @@ public class GetProjectsServiceTests
     {
         var projectId = ProjectId.Create("id");
         var query = new GetProjectQuery(projectId);
-        var expectedProjectDetails = new ProjectDetails(
-            projectId,
-            "name",
-            DateTimeOffset.Parse("2024-02-08"),
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var expectedProjectDetails = BasicProjectDetails(projectId);
         _getProject
             .GetById(projectId)
             .Returns(

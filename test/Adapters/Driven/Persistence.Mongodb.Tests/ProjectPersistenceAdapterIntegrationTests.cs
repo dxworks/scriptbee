@@ -5,6 +5,7 @@ using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
 using Xunit.Abstractions;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
 
@@ -28,21 +29,14 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task CreateNewProject()
     {
-        var project = new ProjectDetails(
-            ProjectId.Create("id"),
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var project = BasicProjectDetails(ProjectId.Create("id"));
 
         var result = await _adapter.Create(project, CancellationToken.None);
 
         result.IsT0.ShouldBeTrue();
         var savedProject = await _mongoCollection.Find(p => p.Id == "id").FirstOrDefaultAsync();
         savedProject.Id.ShouldBe("id");
-        savedProject.Name.ShouldBe("name");
+        savedProject.Name.ShouldBe("project");
         savedProject.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
     }
 
@@ -50,14 +44,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     public async Task GivenIdAlreadyExists_CreateProject_ExpectProjectAlreadyExistsError()
     {
         var projectId = ProjectId.Create("existing-id");
-        var project = new ProjectDetails(
-            projectId,
-            "name",
-            DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var project = BasicProjectDetails(projectId);
         await _mongoCollection.InsertOneAsync(
             new MongodbProjectModel { Id = "existing-id", Name = "existing" }
         );

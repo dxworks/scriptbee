@@ -2,10 +2,10 @@
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model;
-using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests;
 
@@ -24,14 +24,7 @@ public class CreateProjectServiceTests
     public async Task CreateProjectSuccessfully()
     {
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        var expectedProjectDetails = new ProjectDetails(
-            ProjectId.Create("id"),
-            "name",
-            creationDate,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var expectedProjectDetails = BasicProjectDetails(ProjectId.Create("id"), creationDate);
         _createProject
             .Create(
                 Arg.Is<ProjectDetails>(details =>
@@ -43,7 +36,7 @@ public class CreateProjectServiceTests
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
-            new CreateProjectCommand("id", "name")
+            new CreateProjectCommand("id", "project")
         );
 
         MatchProjectDetails(projectDetails.AsT0, expectedProjectDetails).ShouldBe(true);
@@ -62,14 +55,7 @@ public class CreateProjectServiceTests
     {
         var projectId = ProjectId.Create("id");
         var creationDate = DateTimeOffset.Parse("2024-02-08");
-        var expectedProjectDetails = new ProjectDetails(
-            projectId,
-            "name",
-            creationDate,
-            new Dictionary<string, List<FileData>>(),
-            new Dictionary<string, List<FileData>>(),
-            []
-        );
+        var expectedProjectDetails = BasicProjectDetails(projectId, creationDate);
         var error = new ProjectIdAlreadyInUseError(projectId);
         _createProject
             .Create(
@@ -82,7 +68,7 @@ public class CreateProjectServiceTests
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
-            new CreateProjectCommand("id", "name")
+            new CreateProjectCommand("id", "project")
         );
 
         projectDetails.ShouldBe(error);

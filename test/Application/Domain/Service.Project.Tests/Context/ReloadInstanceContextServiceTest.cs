@@ -8,6 +8,8 @@ using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using static ScriptBee.Tests.Common.InstanceInfoFixture;
+using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Project.Tests.Context;
 
@@ -60,12 +62,7 @@ public class ReloadInstanceContextServiceTest
             },
             ["linker"]
         );
-        var instanceInfo = new InstanceInfo(
-            new InstanceId(Guid.NewGuid()),
-            projectId,
-            "http://instance",
-            DateTimeOffset.Now
-        );
+        var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -133,14 +130,7 @@ public class ReloadInstanceContextServiceTest
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDetails(
-                        projectId,
-                        "name",
-                        DateTimeOffset.UtcNow,
-                        new Dictionary<string, List<FileData>>(),
-                        new Dictionary<string, List<FileData>>(),
-                        []
-                    )
+                    BasicProjectDetails(projectId)
                 )
             );
         _getProjectInstance
