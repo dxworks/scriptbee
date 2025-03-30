@@ -58,4 +58,17 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static Conflict<ProblemDetails> ToProblem(
+        this ProjectIdAlreadyInUseError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.Conflict(
+            context.ToProblemDetails(
+                "Project ID Already In Use",
+                $"A project with the ID '{error.Id}' already exists. Use a unique Project ID or update the existing project."
+            )
+        );
+    }
 }

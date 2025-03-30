@@ -106,12 +106,6 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
             new WebCreateProjectCommand("id", "project name")
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
-        await AssertConflictProblem(
-            response.Content,
-            TestUrl,
-            "Project ID Already In Use",
-            "A project with the ID 'id' already exists. Use a unique Project ID or update the existing project."
-        );
+        await AssertProjectIdExistsConflictProblem(response, TestUrl, "id");
     }
 }

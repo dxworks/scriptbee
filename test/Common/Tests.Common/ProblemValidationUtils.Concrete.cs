@@ -63,4 +63,19 @@ public static partial class ProblemValidationUtils
             $"An analysis result with the ID '{resultId}' does not exists."
         );
     }
+
+    public static async Task AssertProjectIdExistsConflictProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string projectId
+    )
+    {
+        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+        await AssertConflictProblem(
+            response.Content,
+            testUrl,
+            "Project ID Already In Use",
+            $"A project with the ID '{projectId}' already exists. Use a unique Project ID or update the existing project."
+        );
+    }
 }
