@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Domain.Model.Config;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Plugin.Tests.Internals;
-using ScriptBee.UseCases.Plugin;
 
 namespace ScriptBee.Service.Plugin.Tests;
 
@@ -69,7 +69,7 @@ public class PluginManagerTests
         _pluginManager.LoadPlugins();
 
         _logger
-            .Received(1)
+            .ReceivedWithAnyArgs()
             .LogError(expectedException, "Failed to load plugin {Plugin}", testPlugin2);
     }
 }

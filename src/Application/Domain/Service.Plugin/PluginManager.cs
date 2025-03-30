@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Config;
+using ScriptBee.Ports.Plugins;
 using ScriptBee.UseCases.Plugin;
 
 namespace ScriptBee.Service.Plugin;
