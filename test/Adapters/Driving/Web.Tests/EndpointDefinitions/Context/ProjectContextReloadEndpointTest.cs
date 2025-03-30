@@ -100,11 +100,10 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertInstanceNotFoundProblem(
+            response,
             TestUrl,
-            "Instance Not Found",
-            "An instance with id 'ba16d778-4e65-46d3-ac49-b851f5d01434' is not allocated."
+            "ba16d778-4e65-46d3-ac49-b851f5d01434"
         );
     }
 }

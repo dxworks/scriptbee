@@ -15,4 +15,18 @@ public static partial class ProblemValidationUtils
             $"A project with the ID '{projectId}' does not exists."
         );
     }
+
+    public static async Task AssertInstanceNotFoundProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string instanceId
+    )
+    {
+        await AssertNotFoundProblem(
+            response.Content,
+            testUrl,
+            "Instance Not Found",
+            $"An instance with id '{instanceId}' is not allocated."
+        );
+    }
 }

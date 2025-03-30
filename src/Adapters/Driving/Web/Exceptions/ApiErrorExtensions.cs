@@ -19,4 +19,17 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static NotFound<ProblemDetails> ToProblem(
+        this InstanceDoesNotExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
+            context.ToProblemDetails(
+                "Instance Not Found",
+                $"An instance with id '{error.InstanceId}' is not allocated."
+            )
+        );
+    }
 }
