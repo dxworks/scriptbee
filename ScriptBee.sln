@@ -71,6 +71,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Plugin.Tests", "tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Plugin", "src\Application\Domain\Service.Plugin\Service.Plugin.csproj", "{23230FA8-50CC-4883-ABC3-8BA66BC92023}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Client", "src\Adapters\Driven\Marketplace.Client\Marketplace.Client.csproj", "{D8626754-E493-456D-A809-9AA76677E8F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketplace.Client.Tests", "test\Adapters\Driven\Marketplace.Client.Tests\Marketplace.Client.Tests.csproj", "{6B16EF85-94DA-427B-ADAA-55565AC89287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -217,5 +221,13 @@ Global
 		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8626754-E493-456D-A809-9AA76677E8F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8626754-E493-456D-A809-9AA76677E8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8626754-E493-456D-A809-9AA76677E8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8626754-E493-456D-A809-9AA76677E8F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B16EF85-94DA-427B-ADAA-55565AC89287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B16EF85-94DA-427B-ADAA-55565AC89287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B16EF85-94DA-427B-ADAA-55565AC89287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B16EF85-94DA-427B-ADAA-55565AC89287}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

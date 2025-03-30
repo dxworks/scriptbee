@@ -4,35 +4,26 @@ using ScriptBee.Marketplace.Client.Data;
 
 namespace ScriptBee.Marketplace.Client.Services;
 
-public sealed class MarketPluginFetcher : IMarketPluginFetcher
+public sealed class MarketPluginFetcher(IScriptBeeClient hubClient) : IMarketPluginFetcher
 {
-    private readonly IScriptBeeClient _hubClient;
-
-
-    public MarketPluginFetcher(IScriptBeeClient hubClient)
-    {
-        _hubClient = hubClient;
-    }
-
     public async Task UpdateRepositoryAsync(CancellationToken cancellationToken = default)
     {
-        await _hubClient.UpdateRepositoryAsync(cancellationToken);
+        await hubClient.UpdateRepositoryAsync(cancellationToken);
     }
 
     public IEnumerable<MarketPlaceProject> GetProjectsAsync()
     {
-        return _hubClient.GetScriptBeeProjects()
-            .Select(ConvertToPlugin);
+        return hubClient.GetScriptBeeProjects().Select(ConvertToPlugin);
     }
 
     private static MarketPlaceProject ConvertToPlugin(ScriptBeeProject project)
     {
-        var projectType = project.Type == ScriptBeeProjectTypes.Bundle
-            ? MarketPlaceProjectType.Bundle
-            : MarketPlaceProjectType.Plugin;
+        var projectType =
+            project.Type == ScriptBeeProjectTypes.Bundle
+                ? MarketPlaceProjectType.Bundle
+                : MarketPlaceProjectType.Plugin;
 
-        return new MarketPlaceProject
-        (
+        return new MarketPlaceProject(
             project.Id,
             project.Name,
             projectType,
@@ -44,11 +35,6 @@ public sealed class MarketPluginFetcher : IMarketPluginFetcher
 
     private static PluginVersion ConvertToPluginVersion(ScriptBeeProjectVersion version)
     {
-        return new PluginVersion
-        (
-            version.DownloadUrl,
-            version.Version,
-            version.Manifest
-        );
+        return new PluginVersion(version.DownloadUrl, version.Version, version.Manifest);
     }
 }
