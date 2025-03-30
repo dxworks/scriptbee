@@ -29,4 +29,18 @@ public static partial class ProblemValidationUtils
             $"An instance with id '{instanceId}' is not allocated."
         );
     }
+
+    public static async Task AssertAnalysisNotFoundProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string analysisId
+    )
+    {
+        await AssertNotFoundProblem(
+            response.Content,
+            testUrl,
+            "Analysis Not Found",
+            $"An analysis with the ID '{analysisId}' does not exists."
+        );
+    }
 }

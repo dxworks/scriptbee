@@ -7,6 +7,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis;
 
@@ -58,13 +59,7 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
                     MediaTypeNames.Application.Octet,
                     namedStream.Name
                 ),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Analysis Not Found",
-                        $"An analysis with the ID '{error.Id.Value}' does not exists."
-                    )
-                ),
+            error => error.ToProblem(context),
             error =>
                 TypedResults.NotFound(
                     context.ToProblemDetails(
@@ -96,13 +91,7 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
                     MediaTypeNames.Application.Octet,
                     namedStream.Name
                 ),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Analysis Not Found",
-                        $"An analysis with the ID '{error.Id.Value}' does not exists."
-                    )
-                )
+            error => error.ToProblem(context)
         );
     }
 }

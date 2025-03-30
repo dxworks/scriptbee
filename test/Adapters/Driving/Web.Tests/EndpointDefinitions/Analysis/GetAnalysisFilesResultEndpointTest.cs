@@ -86,11 +86,10 @@ public class GetAnalysisFilesResultEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertAnalysisNotFoundProblem(
+            response,
             TestUrl,
-            "Analysis Not Found",
-            "An analysis with the ID 'd9fc0cda-b40f-4ed1-8b69-f91f51682e30' does not exists."
+            "d9fc0cda-b40f-4ed1-8b69-f91f51682e30"
         );
     }
 }

@@ -88,11 +88,10 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertAnalysisNotFoundProblem(
+            response,
             TestUrl,
-            "Analysis Not Found",
-            "An analysis with the ID '23d3df9f-786f-4b8d-b8ce-56df0e7e9e42' does not exists."
+            "23d3df9f-786f-4b8d-b8ce-56df0e7e9e42"
         );
     }
 

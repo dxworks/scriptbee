@@ -78,11 +78,10 @@ public class DownloadAllZipAnalysisFileResultsEndpointTest(ITestOutputHelper out
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertAnalysisNotFoundProblem(
+            response,
             TestUrl,
-            "Analysis Not Found",
-            "An analysis with the ID '8c524992-b690-40e5-b1c8-00de0f78d1f9' does not exists."
+            "8c524992-b690-40e5-b1c8-00de0f78d1f9"
         );
     }
 }

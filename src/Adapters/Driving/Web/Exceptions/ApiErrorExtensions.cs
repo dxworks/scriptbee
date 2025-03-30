@@ -32,4 +32,17 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static NotFound<ProblemDetails> ToProblem(
+        this AnalysisDoesNotExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
+            context.ToProblemDetails(
+                "Analysis Not Found",
+                $"An analysis with the ID '{error.Id}' does not exists."
+            )
+        );
+    }
 }
