@@ -1,4 +1,5 @@
-﻿using Docker.DotNet;
+﻿using System.Net;
+using Docker.DotNet;
 using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,21 +16,20 @@ public class CalculationInstanceDockerAdapter(
 ) : IAllocateInstance, IDeallocateInstance
 {
     public async Task<string> Allocate(
+        InstanceId instanceId,
         AnalysisInstanceImage image,
         CancellationToken cancellationToken = default
     )
     {
         var calculationDockerConfig = config.Value;
-        using var client = new DockerClientConfiguration(
-            new Uri(calculationDockerConfig.DockerSocket)
-        ).CreateClient();
+        using var client = CreateDockerClient(calculationDockerConfig);
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Name = "scriptbee-calculation",
+                Name = $"scriptbee-calculation-{instanceId}",
                 Image = image.ImageName,
                 HostConfig = new HostConfig { NetworkMode = calculationDockerConfig.Network },
             },
@@ -54,9 +54,74 @@ public class CalculationInstanceDockerAdapter(
         );
     }
 
-    public Task Deallocate(InstanceInfo calculationInstanceInfo)
+    private static DockerClient CreateDockerClient(CalculationDockerConfig calculationDockerConfig)
     {
-        throw new NotImplementedException();
+        return new DockerClientConfiguration(
+            new Uri(calculationDockerConfig.DockerSocket)
+        ).CreateClient();
+    }
+
+    public async Task Deallocate(InstanceInfo calculationInstanceInfo)
+    {
+        var containerName = $"scriptbee-calculation-{calculationInstanceInfo.Id}";
+        logger.LogInformation("Attempting to deallocate container: {Name}", containerName);
+
+        var calculationDockerConfig = config.Value;
+        using var client = CreateDockerClient(calculationDockerConfig);
+
+        IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
+            new ContainersListParameters
+            {
+                All = true,
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "name",
+                        new Dictionary<string, bool> { { containerName, true } }
+                    },
+                },
+            }
+        );
+
+        var container = containers.FirstOrDefault();
+        if (container != null)
+        {
+            try
+            {
+                logger.LogInformation(
+                    "Stopping container: {Id} - {Name}",
+                    container.ID,
+                    containerName
+                );
+                await client.Containers.StopContainerAsync(
+                    container.ID,
+                    new ContainerStopParameters()
+                );
+
+                logger.LogInformation(
+                    "Removing container: {Id} - {Name}",
+                    container.ID,
+                    containerName
+                );
+                await client.Containers.RemoveContainerAsync(
+                    container.ID,
+                    new ContainerRemoveParameters { Force = true }
+                );
+
+                logger.LogInformation("Container deallocated successfully: {Name}", containerName);
+            }
+            catch (DockerApiException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                logger.LogWarning("Container not found during deallocation: {Name}", containerName);
+            }
+        }
+        else
+        {
+            logger.LogWarning(
+                "No container found with name: {Name} for deallocation",
+                containerName
+            );
+        }
     }
 
     private static async Task<string> GetContainerUrl(

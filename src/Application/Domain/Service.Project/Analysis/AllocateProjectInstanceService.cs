@@ -37,14 +37,16 @@ public class AllocateProjectInstanceService(
         CancellationToken cancellationToken
     )
     {
-        // TODO FIXIT(#63): make image configurable
+        var instanceId = new InstanceId(guidProvider.NewGuid());
+
         var instanceUrl = await allocateInstance.Allocate(
+            instanceId,
             instanceTemplateProvider.GetTemplate(),
             cancellationToken
         );
 
         var instanceInfo = new InstanceInfo(
-            new InstanceId(guidProvider.NewGuid()),
+            instanceId,
             projectId,
             instanceUrl,
             dateTimeProvider.UtcNow()

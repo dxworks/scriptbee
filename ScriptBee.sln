@@ -63,6 +63,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest", "src\Adapters\Driven
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest.Tests", "test\Adapters\Driven\Rest.Tests\Rest.Tests.csproj", "{EEEB3787-F5DE-46C4-80DD-8DE39BDB3AB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Instance.Docker.Tests", "test\Adapters\Driven\Analysis.Instance.Docker.Tests\Analysis.Instance.Docker.Tests.csproj", "{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,5 +195,9 @@ Global
 		{EEEB3787-F5DE-46C4-80DD-8DE39BDB3AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEEB3787-F5DE-46C4-80DD-8DE39BDB3AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEEB3787-F5DE-46C4-80DD-8DE39BDB3AB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
