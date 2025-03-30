@@ -105,7 +105,6 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
             new WebLoadContextCommand(["loader-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
@@ -133,7 +132,6 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
             new WebLoadContextCommand(["loader-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertInstanceNotFoundProblem(
             response,
             TestUrl,

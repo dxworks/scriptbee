@@ -106,7 +106,6 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             new WebLinkContextCommand(["linker-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
@@ -134,7 +133,6 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             new WebLinkContextCommand(["linker-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertInstanceNotFoundProblem(
             response,
             TestUrl,

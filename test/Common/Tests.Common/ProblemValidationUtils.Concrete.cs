@@ -1,4 +1,6 @@
-﻿namespace ScriptBee.Tests.Common;
+﻿using System.Net;
+
+namespace ScriptBee.Tests.Common;
 
 public static partial class ProblemValidationUtils
 {
@@ -8,6 +10,7 @@ public static partial class ProblemValidationUtils
         string projectId = "project-id"
     )
     {
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertNotFoundProblem(
             response.Content,
             testUrl,
@@ -22,6 +25,7 @@ public static partial class ProblemValidationUtils
         string instanceId
     )
     {
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertNotFoundProblem(
             response.Content,
             testUrl,
@@ -36,6 +40,7 @@ public static partial class ProblemValidationUtils
         string analysisId
     )
     {
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertNotFoundProblem(
             response.Content,
             testUrl,

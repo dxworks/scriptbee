@@ -71,7 +71,6 @@ public class AddProjectInstanceEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertProjectNotFoundProblem(response, TestUrl);
     }
 }

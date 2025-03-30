@@ -71,7 +71,6 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
@@ -99,7 +98,6 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertInstanceNotFoundProblem(
             response,
             TestUrl,

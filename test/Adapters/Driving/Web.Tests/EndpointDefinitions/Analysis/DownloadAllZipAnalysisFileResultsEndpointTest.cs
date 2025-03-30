@@ -77,7 +77,6 @@ public class DownloadAllZipAnalysisFileResultsEndpointTest(ITestOutputHelper out
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertAnalysisNotFoundProblem(
             response,
             TestUrl,

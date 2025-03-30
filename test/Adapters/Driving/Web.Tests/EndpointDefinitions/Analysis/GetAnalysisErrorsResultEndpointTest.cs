@@ -75,7 +75,6 @@ public class GetAnalysisErrorsResultEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertAnalysisNotFoundProblem(
             response,
             TestUrl,

@@ -67,7 +67,6 @@ public class ProjectContextClearEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertInstanceNotFoundProblem(
             response,
             TestUrl,

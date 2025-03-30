@@ -196,7 +196,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertProjectNotFoundProblem(response, TestUrl, "id");
     }
 

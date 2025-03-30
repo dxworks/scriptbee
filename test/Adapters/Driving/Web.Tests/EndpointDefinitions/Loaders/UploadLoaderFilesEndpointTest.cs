@@ -104,7 +104,6 @@ public class UploadLoaderFilesEndpointTest(ITestOutputHelper outputHelper)
             new Dictionary<string, byte[]> { { "file-1", "test-content"u8.ToArray() } }
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         await AssertProjectNotFoundProblem(response, TestUrl);
     }
 }
