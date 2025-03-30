@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ScriptBee.Plugin.Installer;
+﻿namespace ScriptBee.Ports.Plugins.Installer;
 
 public interface IBundlePluginUninstaller
 {

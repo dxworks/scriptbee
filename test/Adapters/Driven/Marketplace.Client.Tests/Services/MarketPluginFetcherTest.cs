@@ -2,7 +2,6 @@ using DxWorks.Hub.Sdk.Clients;
 using DxWorks.Hub.Sdk.Project;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Marketplace.Client.Services;
 
 namespace ScriptBee.Marketplace.Client.Tests.Services;
 
@@ -91,7 +90,7 @@ public class MarketPluginFetcherTest
         result.Count.ShouldBe(2);
         var pluginProject = result.First(p => p.Id == "project1");
         pluginProject.Name.ShouldBe("Test Plugin");
-        pluginProject.Type.ShouldBe(MarketPlaceProjectType.Plugin);
+        pluginProject.Type.ShouldBe(MarketPlacePluginType.Plugin);
         pluginProject.Description.ShouldBe("A test plugin description.");
         pluginProject.Authors.ShouldContain("John Doe");
         var pluginVersion = pluginProject.Versions.Single();
@@ -101,7 +100,7 @@ public class MarketPluginFetcherTest
 
         var bundleProject = result.First(p => p.Id == "bundle1");
         bundleProject.Name.ShouldBe("Test Bundle");
-        bundleProject.Type.ShouldBe(MarketPlaceProjectType.Bundle);
+        bundleProject.Type.ShouldBe(MarketPlacePluginType.Bundle);
         bundleProject.Description.ShouldBe("A test bundle description.");
         bundleProject.Authors.ShouldContain("Jane Doe");
         var version = bundleProject.Versions.Single();

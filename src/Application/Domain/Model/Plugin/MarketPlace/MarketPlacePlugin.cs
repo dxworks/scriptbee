@@ -1,9 +1,9 @@
-﻿namespace ScriptBee.Domain.Model.Plugin;
+﻿namespace ScriptBee.Domain.Model.Plugin.MarketPlace;
 
 public record MarketPlacePlugin(
     string Id,
     string Name,
-    MarketPlaceProjectType Type,
+    MarketPlacePluginType Type,
     string Description,
     List<string> Authors,
     List<PluginVersion> Versions

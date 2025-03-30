@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Marketplace.Client;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;
 using Serilog;
@@ -23,8 +24,7 @@ builder
     .AddFileConfig(userFolderConfigurationSection)
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
-    // .AddPluginServices()
-    // .AddScriptBeeMarketplaceClient()
+    .AddScriptBeeMarketplaceClient()
     // .AddFileWatcherServices()
     .AddSignalR();
 

@@ -11,6 +11,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Driven\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
+        <ProjectReference Include="..\..\Driven\Marketplace.Client\Marketplace.Client.csproj" />
         <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
         <ProjectReference Include="..\..\..\Common\Common.csproj"/>
         <ProjectReference Include="..\..\..\Application\Domain\Service.Analysis\Service.Analysis.csproj"/>

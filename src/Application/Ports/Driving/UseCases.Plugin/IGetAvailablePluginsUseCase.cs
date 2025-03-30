@@ -1,10 +1,10 @@
-using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Domain.Model.Plugin.MarketPlace;
 
 namespace ScriptBee.UseCases.Plugin;
 
 public interface IGetAvailablePluginsUseCase
 {
-    Task<IEnumerable<MarketPlacePlugin>> GetMarketPlugins(
+    Task<IEnumerable<MarketPlacePluginEntry>> GetMarketPlugins(
         CancellationToken cancellationToken = default
     );
 }

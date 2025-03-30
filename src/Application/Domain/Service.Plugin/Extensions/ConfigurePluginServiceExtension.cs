@@ -10,6 +10,9 @@ public static class ConfigurePluginServiceExtension
         return services
             .AddSingleton<IDllLoader, DllLoader>()
             .AddSingleton<IPluginLoader, PluginLoader>()
-            .AddSingleton<IManagePluginsUseCase, PluginManager>();
+            .AddSingleton<IManagePluginsUseCase, PluginManager>()
+            .AddSingleton<IGetAvailablePluginsUseCase, GetAvailablePluginsService>()
+            .AddSingleton<IInstallPluginUseCase, InstallPluginService>()
+            .AddSingleton<IUninstallPluginUseCase, UninstallPluginService>();
     }
 }

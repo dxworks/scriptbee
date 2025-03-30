@@ -1,6 +1,6 @@
 ﻿using DxWorks.Hub.Sdk;
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Marketplace.Client.Services;
+using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Marketplace.Client;
 

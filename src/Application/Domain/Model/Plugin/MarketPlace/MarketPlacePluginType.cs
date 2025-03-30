@@ -1,6 +1,6 @@
 namespace ScriptBee.Domain.Model.Plugin;
 
-public enum MarketPlaceProjectType
+public enum MarketPlacePluginType
 {
     Plugin,
     Bundle,
