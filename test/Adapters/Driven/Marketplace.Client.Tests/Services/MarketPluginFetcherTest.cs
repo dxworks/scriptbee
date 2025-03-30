@@ -1,7 +1,7 @@
 using DxWorks.Hub.Sdk.Clients;
 using DxWorks.Hub.Sdk.Project;
 using NSubstitute;
-using ScriptBee.Marketplace.Client.Data;
+using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Marketplace.Client.Services;
 
 namespace ScriptBee.Marketplace.Client.Tests.Services;

@@ -1,6 +1,6 @@
 ﻿using DxWorks.Hub.Sdk.Clients;
 using DxWorks.Hub.Sdk.Project;
-using ScriptBee.Marketplace.Client.Data;
+using ScriptBee.Domain.Model.Plugin;
 
 namespace ScriptBee.Marketplace.Client.Services;
 
@@ -11,19 +11,19 @@ public sealed class MarketPluginFetcher(IScriptBeeClient hubClient) : IMarketPlu
         await hubClient.UpdateRepositoryAsync(cancellationToken);
     }
 
-    public IEnumerable<MarketPlaceProject> GetProjectsAsync()
+    public IEnumerable<MarketPlacePlugin> GetProjectsAsync()
     {
         return hubClient.GetScriptBeeProjects().Select(ConvertToPlugin);
     }
 
-    private static MarketPlaceProject ConvertToPlugin(ScriptBeeProject project)
+    private static MarketPlacePlugin ConvertToPlugin(ScriptBeeProject project)
     {
         var projectType =
             project.Type == ScriptBeeProjectTypes.Bundle
                 ? MarketPlaceProjectType.Bundle
                 : MarketPlaceProjectType.Plugin;
 
-        return new MarketPlaceProject(
+        return new MarketPlacePlugin(
             project.Id,
             project.Name,
             projectType,

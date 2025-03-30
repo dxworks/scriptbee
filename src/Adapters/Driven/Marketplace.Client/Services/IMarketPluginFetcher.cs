@@ -1,4 +1,4 @@
-using ScriptBee.Marketplace.Client.Data;
+using ScriptBee.Domain.Model.Plugin;
 
 namespace ScriptBee.Marketplace.Client.Services;
 
@@ -6,5 +6,5 @@ public interface IMarketPluginFetcher
 {
     Task UpdateRepositoryAsync(CancellationToken cancellationToken = default);
 
-    IEnumerable<MarketPlaceProject> GetProjectsAsync();
+    IEnumerable<MarketPlacePlugin> GetProjectsAsync();
 }
