@@ -52,11 +52,7 @@ public class BundlePluginInstallerTests
             .Install("url", "pluginId", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "pluginId",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("pluginId", "1.0.0");
 
         Assert.Equal("plugin_folder", pluginFolders.Single());
     }
@@ -73,7 +69,7 @@ public class BundlePluginInstallerTests
             .Throws(new Exception());
 
         await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("pluginId", "1.0.0", Arg.Any<CancellationToken>())
+            () => _bundlePluginInstaller.Install("pluginId", "1.0.0")
         );
 
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
@@ -99,7 +95,7 @@ public class BundlePluginInstallerTests
             .Throws(new Exception());
 
         await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("pluginId", "1.0.0", Arg.Any<CancellationToken>())
+            () => _bundlePluginInstaller.Install("pluginId", "1.0.0")
         );
 
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
@@ -113,11 +109,7 @@ public class BundlePluginInstallerTests
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "1.0.0") });
         _pluginFetcher.GetPluginUrl("pluginName", "1.0.0").Returns("url");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "pluginName",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("pluginName", "1.0.0");
 
         Assert.Empty(pluginFolders);
         await _simplePluginInstaller
@@ -139,11 +131,7 @@ public class BundlePluginInstallerTests
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "10.0.0") });
         _pluginFetcher.GetPluginUrl("pluginName", "1.0.0").Returns("url");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "pluginName",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("pluginName", "1.0.0");
 
         Assert.Empty(pluginFolders);
         await _simplePluginInstaller
@@ -176,11 +164,7 @@ public class BundlePluginInstallerTests
             .Install("url", "pluginName", "14.3.1", Arg.Any<CancellationToken>())
             .Returns("plugin_folder");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "pluginName",
-            "14.3.1",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("pluginName", "14.3.1");
 
         Assert.Equal("plugin_folder", pluginFolders.Single());
         for (var i = 1; i <= 5; i++)
@@ -242,11 +226,7 @@ public class BundlePluginInstallerTests
             .Returns("bundle_folder");
         _pluginReader.ReadPlugin("bundle_folder").Returns((Domain.Model.Plugin.Plugin?)null);
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "bundle",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("bundle", "1.0.0");
 
         Assert.Equal("bundle_folder", pluginFolders.Single());
     }
@@ -269,11 +249,7 @@ public class BundlePluginInstallerTests
             );
         SetupBundlePlugins("bundle", "1.0.0", 1);
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "bundle",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("bundle", "1.0.0");
 
         Assert.Equal(2, pluginFolders.Count);
         Assert.Equal("bundle_folder", pluginFolders[0]);
@@ -303,11 +279,7 @@ public class BundlePluginInstallerTests
             new TestBundlePlugin(PluginKind.Linker, "linker", "1.0.0")
         );
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "bundle",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("bundle", "1.0.0");
 
         Assert.Equal(5, pluginFolders.Count);
         Assert.Equal("bundle_folder", pluginFolders[0]);
@@ -357,11 +329,7 @@ public class BundlePluginInstallerTests
             .ReadPlugin("plugin_folder2")
             .Returns(CreatePlugin("pluginId2", "1.0.0", "plugin_folder2"));
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
-            "bundle",
-            "1.0.0",
-            Arg.Any<CancellationToken>()
-        );
+        var pluginFolders = await _bundlePluginInstaller.Install("bundle", "1.0.0");
 
         Assert.Equal(3, pluginFolders.Count);
         Assert.Equal("bundle_folder", pluginFolders[0]);
@@ -392,7 +360,7 @@ public class BundlePluginInstallerTests
             new TestBundlePlugin(PluginKind.Linker, "linker", "1.0.0")
         );
 
-        await _bundlePluginInstaller.Install("bundle", "4.0.0", Arg.Any<CancellationToken>());
+        await _bundlePluginInstaller.Install("bundle", "4.0.0");
 
         _pluginUninstaller.Received(1).Uninstall("path");
         _pluginUninstaller.Received(1).Uninstall("old_plugin_folder1");
@@ -420,7 +388,7 @@ public class BundlePluginInstallerTests
             );
 
         await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("bundle", "1.0.0", Arg.Any<CancellationToken>())
+            () => _bundlePluginInstaller.Install("bundle", "1.0.0")
         );
 
         _pluginUninstaller.Received(1).ForceUninstall("bundle_folder");
@@ -457,14 +425,13 @@ public class BundlePluginInstallerTests
             );
 
         await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("bundle", "1.0.0", Arg.Any<CancellationToken>())
+            () => _bundlePluginInstaller.Install("bundle", "1.0.0")
         );
 
         _pluginFetcher.Received(1).GetPluginUrl("pluginId2", "2.0.0");
         await _simplePluginInstaller
             .Received(0)
             .Install(Arg.Any<string>(), "pluginId2", "2.0.0", Arg.Any<CancellationToken>());
-
         await _simplePluginInstaller
             .Received(Quantity.Within(1, 3))
             .Install(Arg.Any<string>(), Arg.Any<string>(), "1.0.0", Arg.Any<CancellationToken>());
