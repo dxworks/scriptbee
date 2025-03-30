@@ -6,7 +6,6 @@ public static class ConfigurePluginServiceExtension
 {
     public static IServiceCollection AddPluginServices(this IServiceCollection services)
     {
-        return services
-            .AddSingleton<IDllLoader, DllLoader>();
+        return services.AddSingleton<IDllLoader, DllLoader>();
     }
 }

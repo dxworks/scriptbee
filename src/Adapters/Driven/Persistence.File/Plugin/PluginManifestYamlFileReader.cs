@@ -1,10 +1,10 @@
 using ScriptBee.Domain.Model.Plugin.Manifest;
-using ScriptBee.Persistence.File.Yaml;
+using ScriptBee.Persistence.File.Plugin.Yaml;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using YamlDotNet.Serialization.NodeDeserializers;
 
-namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Persistence.File.Plugin;
 
 public class PluginManifestYamlFileReader(IPluginDiscriminatorHolder pluginDiscriminatorHolder)
     : IPluginManifestYamlFileReader

@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Persistence.File.Plugin;
 
 // todo make it more extensible
 public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder

@@ -11,7 +11,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Content Include="Manifest\**\TestData\**">
+        <Content Include="Plugin\**\TestData\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

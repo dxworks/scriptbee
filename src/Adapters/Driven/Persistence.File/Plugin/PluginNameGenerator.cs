@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Persistence.File;
+﻿namespace ScriptBee.Persistence.File.Plugin;
 
 public static class PluginNameGenerator
 {

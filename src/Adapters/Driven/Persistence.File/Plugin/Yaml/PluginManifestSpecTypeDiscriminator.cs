@@ -2,7 +2,7 @@
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace ScriptBee.Persistence.File.Yaml;
+namespace ScriptBee.Persistence.File.Plugin.Yaml;
 
 public class PluginManifestSpecTypeDiscriminator(
     INamingConvention namingConvention,

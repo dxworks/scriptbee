@@ -1,7 +1,7 @@
 ﻿using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace ScriptBee.Persistence.File.Yaml;
+namespace ScriptBee.Persistence.File.Plugin.Yaml;
 
 public static class ParserExtensions
 {

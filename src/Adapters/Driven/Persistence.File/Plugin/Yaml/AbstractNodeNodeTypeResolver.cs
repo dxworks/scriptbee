@@ -3,7 +3,7 @@ using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NodeDeserializers;
 
-namespace ScriptBee.Persistence.File.Yaml;
+namespace ScriptBee.Persistence.File.Plugin.Yaml;
 
 public class AbstractNodeNodeTypeResolver : INodeDeserializer
 {
