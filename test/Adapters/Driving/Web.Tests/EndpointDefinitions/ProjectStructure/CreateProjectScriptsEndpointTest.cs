@@ -253,13 +253,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
-        await AssertConflictProblem(
-            response.Content,
-            TestUrl,
-            "Script Path Already Exists",
-            "A script at that path already exists."
-        );
+        await AssertScriptPathExistsConflictProblem(response, TestUrl);
     }
 
     private static bool MatchCreateScriptCommand(

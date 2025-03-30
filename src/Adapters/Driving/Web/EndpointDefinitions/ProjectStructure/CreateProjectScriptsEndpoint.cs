@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.ProjectStructure;
@@ -61,13 +60,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
                         },
                     }
                 ),
-            _ =>
-                TypedResults.Conflict(
-                    context.ToProblemDetails(
-                        "Script Path Already Exists",
-                        "A script at that path already exists."
-                    )
-                )
+            error => error.ToProblem(context)
         );
     }
 }

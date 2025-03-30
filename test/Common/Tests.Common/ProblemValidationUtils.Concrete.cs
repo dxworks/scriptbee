@@ -78,4 +78,18 @@ public static partial class ProblemValidationUtils
             $"A project with the ID '{projectId}' already exists. Use a unique Project ID or update the existing project."
         );
     }
+
+    public static async Task AssertScriptPathExistsConflictProblem(
+        HttpResponseMessage response,
+        string testUrl
+    )
+    {
+        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
+        await AssertConflictProblem(
+            response.Content,
+            testUrl,
+            "Script Path Already Exists",
+            "A script at that path already exists."
+        );
+    }
 }

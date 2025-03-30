@@ -71,4 +71,17 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static Conflict<ProblemDetails> ToProblem(
+        this ScriptPathAlreadyExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.Conflict(
+            context.ToProblemDetails(
+                "Script Path Already Exists",
+                "A script at that path already exists."
+            )
+        );
+    }
 }
