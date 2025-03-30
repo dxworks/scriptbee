@@ -54,7 +54,7 @@ public class UploadLoaderFilesEndpoint : IEndpointDefinition
                 TypedResults.Ok(
                     new WebUploadLoaderFilesResponse(loaderId, fileData.Select(f => f.Name))
                 ),
-            error =>error.ToProblem(context)
+            error => error.ToProblem(context)
         );
     }
 }

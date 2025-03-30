@@ -59,7 +59,7 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
                     namedStream.Name
                 ),
             error => error.ToProblem(context),
-            error =>error.ToProblem(context)
+            error => error.ToProblem(context)
         );
     }
 

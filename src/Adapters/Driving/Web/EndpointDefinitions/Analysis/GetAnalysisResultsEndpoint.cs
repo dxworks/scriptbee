@@ -51,7 +51,7 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
 
         return result.Match<Results<Ok<WebGetAnalysisResultConsole>, NotFound<ProblemDetails>>>(
             content => TypedResults.Ok(new WebGetAnalysisResultConsole(content)),
-            error =>error.ToProblem(context)
+            error => error.ToProblem(context)
         );
     }
 
@@ -95,7 +95,7 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
 
         return result.Match<Results<Ok<WebGetAnalysisResultFileList>, NotFound<ProblemDetails>>>(
             files => TypedResults.Ok(WebGetAnalysisResultFileList.Map(files)),
-            error =>error.ToProblem(context)
+            error => error.ToProblem(context)
         );
     }
 }

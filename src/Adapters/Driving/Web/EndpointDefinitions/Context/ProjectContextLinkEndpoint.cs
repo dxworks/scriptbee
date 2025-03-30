@@ -43,7 +43,7 @@ public class ProjectContextLinkEndpoint : IEndpointDefinition
         return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
             _ => TypedResults.NoContent(),
             error => error.ToProblem(context),
-            error =>error.ToProblem(context)
+            error => error.ToProblem(context)
         );
     }
 }
