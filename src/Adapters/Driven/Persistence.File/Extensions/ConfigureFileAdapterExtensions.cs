@@ -2,10 +2,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.Persistence.File.Config;
 using ScriptBee.Persistence.File.Plugin;
-using ScriptBee.Persistence.File.Plugin.Installer;
 using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Plugins;
-using ScriptBee.Ports.Plugins.Installer;
 
 namespace ScriptBee.Persistence.File.Extensions;
 
@@ -24,9 +22,6 @@ public static class ConfigureFileAdapterExtensions
             .AddSingleton<IFileService, FileService>()
             .AddSingleton<IPluginDiscriminatorHolder, PluginDiscriminatorHolder>()
             .AddSingleton<IPluginManifestYamlFileReader, PluginManifestYamlFileReader>()
-            .AddSingleton<IPluginReader, PluginReader>()
-            .AddSingleton<IBundlePluginInstaller, BundlePluginInstaller>()
-            .AddSingleton<IBundlePluginUninstaller, BundlePluginUninstaller>()
-            .AddSingleton<IZipFileService, ZipFileService>();
+            .AddSingleton<IPluginReader, PluginReader>();
     }
 }
