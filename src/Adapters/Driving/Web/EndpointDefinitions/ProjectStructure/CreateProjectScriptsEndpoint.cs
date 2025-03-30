@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure;
 
@@ -49,30 +49,9 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
                     $"/api/projects/{projectId}/scripts/{script.Id}",
                     WebScriptData.Map(script)
                 ),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Project Not Found",
-                        $"A project with the ID '{error.Id.Value}' does not exists."
-                    )
-                ),
-            error =>
-                TypedResults.ValidationProblem(
-                    new Dictionary<string, string[]>
-                    {
-                        {
-                            nameof(WebCreateScriptCommand.Language),
-                            [$"'{error.Language}' language does not exists."]
-                        },
-                    }
-                ),
-            _ =>
-                TypedResults.Conflict(
-                    context.ToProblemDetails(
-                        "Script Path Already Exists",
-                        "A script at that path already exists."
-                    )
-                )
+            error => error.ToProblem(context),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context)
         );
     }
 }

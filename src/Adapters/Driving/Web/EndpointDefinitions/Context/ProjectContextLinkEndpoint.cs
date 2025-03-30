@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
 using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
 
@@ -42,20 +42,8 @@ public class ProjectContextLinkEndpoint : IEndpointDefinition
 
         return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
             _ => TypedResults.NoContent(),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Project Not Found",
-                        $"A project with the ID '{error.Id.Value}' does not exists."
-                    )
-                ),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Instance Not Found",
-                        $"An instance with id '{error.InstanceId}' is not allocated."
-                    )
-                )
+            error => error.ToProblem(context),
+            error =>error.ToProblem(context)
         );
     }
 }

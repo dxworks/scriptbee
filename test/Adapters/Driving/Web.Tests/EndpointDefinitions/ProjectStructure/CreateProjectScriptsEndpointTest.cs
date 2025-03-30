@@ -196,13 +196,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
-            TestUrl,
-            "Project Not Found",
-            "A project with the ID 'id' does not exists."
-        );
+        await AssertProjectNotFoundProblem(response, TestUrl, "id");
     }
 
     [Fact]
@@ -229,12 +223,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        await AssertValidationProblem(
-            response.Content,
-            TestUrl,
-            new { Language = new List<string> { "'csharp' language does not exists." } }
-        );
+        await AssertLanguageDoesNotExistsBadRequestProblem(response, TestUrl, "csharp");
     }
 
     [Fact]
@@ -259,13 +248,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
-        await AssertConflictProblem(
-            response.Content,
-            TestUrl,
-            "Script Path Already Exists",
-            "A script at that path already exists."
-        );
+        await AssertScriptPathExistsConflictProblem(response, TestUrl);
     }
 
     private static bool MatchCreateScriptCommand(

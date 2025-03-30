@@ -105,13 +105,7 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
             new WebLoadContextCommand(["loader-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
-            TestUrl,
-            "Project Not Found",
-            $"A project with the ID 'project-id' does not exists."
-        );
+        await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
     [Fact]
@@ -138,12 +132,10 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
             new WebLoadContextCommand(["loader-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertInstanceNotFoundProblem(
+            response,
             TestUrl,
-            "Instance Not Found",
-            "An instance with id '60db5e7e-38ec-4fc3-b810-71eebbc206bd' is not allocated."
+            "60db5e7e-38ec-4fc3-b810-71eebbc206bd"
         );
     }
 

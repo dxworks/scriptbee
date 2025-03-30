@@ -67,12 +67,10 @@ public class ProjectContextClearEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertInstanceNotFoundProblem(
+            response,
             TestUrl,
-            "Instance Not Found",
-            "An instance with id 'b6a9a670-481a-4c0c-a563-fece9008c3c6' is not allocated."
+            "b6a9a670-481a-4c0c-a563-fece9008c3c6"
         );
     }
 }

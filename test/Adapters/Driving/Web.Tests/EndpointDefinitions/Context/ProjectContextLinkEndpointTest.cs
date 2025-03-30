@@ -106,13 +106,7 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             new WebLinkContextCommand(["linker-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
-            TestUrl,
-            "Project Not Found",
-            "A project with the ID 'project-id' does not exists."
-        );
+        await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
     [Fact]
@@ -139,12 +133,10 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             new WebLinkContextCommand(["linker-id"])
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertInstanceNotFoundProblem(
+            response,
             TestUrl,
-            "Instance Not Found",
-            "An instance with id '8be03260-c9e4-4597-94b3-c97ba047724e' is not allocated."
+            "8be03260-c9e4-4597-94b3-c97ba047724e"
         );
     }
 

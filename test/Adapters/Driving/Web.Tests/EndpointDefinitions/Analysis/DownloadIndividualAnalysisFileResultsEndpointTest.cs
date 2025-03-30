@@ -87,12 +87,10 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertAnalysisNotFoundProblem(
+            response,
             TestUrl,
-            "Analysis Not Found",
-            "An analysis with the ID '23d3df9f-786f-4b8d-b8ce-56df0e7e9e42' does not exists."
+            "23d3df9f-786f-4b8d-b8ce-56df0e7e9e42"
         );
     }
 
@@ -125,12 +123,10 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertAnalysisResultNotFoundProblem(
+            response,
             TestUrl,
-            "Result Not Found",
-            "An analysis result with the ID '546d286b-d0e5-49d9-a94a-6043e9ca1da8' does not exists."
+            "546d286b-d0e5-49d9-a94a-6043e9ca1da8"
         );
     }
 }

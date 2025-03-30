@@ -71,13 +71,7 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
-            TestUrl,
-            "Project Not Found",
-            "A project with the ID 'project-id' does not exists."
-        );
+        await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
     [Fact]
@@ -104,12 +98,10 @@ public class ProjectContextReloadEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertInstanceNotFoundProblem(
+            response,
             TestUrl,
-            "Instance Not Found",
-            "An instance with id 'ba16d778-4e65-46d3-ac49-b851f5d01434' is not allocated."
+            "ba16d778-4e65-46d3-ac49-b851f5d01434"
         );
     }
 }

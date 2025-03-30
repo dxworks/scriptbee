@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ScriptBee.Tests.Common;
 
-public static class ProblemValidationUtils
+public static partial class ProblemValidationUtils
 {
     public static async Task AssertEmptyRequestBodyProblem(HttpContent responseContent, string url)
     {

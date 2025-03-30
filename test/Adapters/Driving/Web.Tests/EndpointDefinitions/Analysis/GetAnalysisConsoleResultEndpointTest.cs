@@ -69,12 +69,10 @@ public class GetAnalysisConsoleResultEndpointTest(ITestOutputHelper outputHelper
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
+        await AssertAnalysisNotFoundProblem(
+            response,
             TestUrl,
-            "Analysis Not Found",
-            "An analysis with the ID '7e0eda67-c958-4097-903a-08917cbf987e' does not exists."
+            "7e0eda67-c958-4097-903a-08917cbf987e"
         );
     }
 }

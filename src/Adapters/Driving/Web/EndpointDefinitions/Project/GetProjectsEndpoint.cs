@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project;
 using ScriptBee.UseCases.Project;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Project;
 
@@ -46,13 +46,7 @@ public class GetProjectsEndpoint : IEndpointDefinition
 
         return result.Match<Results<Ok<WebGetProjectDetailsResponse>, NotFound<ProblemDetails>>>(
             projectDetails => TypedResults.Ok(WebGetProjectDetailsResponse.Map(projectDetails)),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Project Not Found",
-                        $"A project with the ID '{error.Id.Value}' does not exists."
-                    )
-                )
+            error => error.ToProblem(context)
         );
     }
 }

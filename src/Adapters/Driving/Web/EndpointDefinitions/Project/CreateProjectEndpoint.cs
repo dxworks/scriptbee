@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Service.Project;
 using ScriptBee.UseCases.Project;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Project;
 
@@ -39,13 +39,7 @@ public class CreateProjectEndpoint : IEndpointDefinition
                 var response = WebCreateProjectResponse.Map(projectDetails);
                 return TypedResults.Created($"/api/projects/{response.Id}", response);
             },
-            error =>
-                TypedResults.Conflict(
-                    context.ToProblemDetails(
-                        "Project ID Already In Use",
-                        $"A project with the ID '{error.Id.Value}' already exists. Use a unique Project ID or update the existing project."
-                    )
-                )
+            error => error.ToProblem(context)
         );
     }
 }
