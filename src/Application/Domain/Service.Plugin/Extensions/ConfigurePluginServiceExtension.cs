@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ScriptBee.UseCases.Plugin;
 
 namespace ScriptBee.Service.Plugin.Extensions;
 
@@ -8,6 +9,7 @@ public static class ConfigurePluginServiceExtension
     {
         return services
             .AddSingleton<IDllLoader, DllLoader>()
-            .AddSingleton<IPluginLoader, PluginLoader>();
+            .AddSingleton<IPluginLoader, PluginLoader>()
+            .AddSingleton<IManagePluginsUseCase, PluginManager>();
     }
 }

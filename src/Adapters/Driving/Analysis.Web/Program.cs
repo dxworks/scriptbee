@@ -5,6 +5,7 @@ using ScriptBee.Analysis.Web.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Persistence.File.Extensions;
 using ScriptBee.UseCases.Plugin;
 using Serilog;
 
@@ -21,7 +22,7 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
-    .AddFileConfig(userFolderConfigurationSection)
+    .AddFileAdapters(userFolderConfigurationSection)
     .AddPluginsConfig()
     .AddProjectContextConfig()
     .AddRunScriptServices();
