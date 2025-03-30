@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace ScriptBee.Plugin;
+namespace ScriptBee.Service.Plugin;
 
 public class DllLoader : IDllLoader
 {
-    public IEnumerable<(Type @interface, Type concrete)> LoadDllTypes(string fullPathToDll,
-        ISet<Type> acceptedPluginTypes)
+    public IEnumerable<(Type @interface, Type concrete)> LoadDllTypes(
+        string fullPathToDll,
+        ISet<Type> acceptedPluginTypes
+    )
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
@@ -34,6 +33,8 @@ public class DllLoader : IDllLoader
 
     private static Assembly CurrentDomainOnAssemblyResolve(object? sender, ResolveEventArgs args)
     {
-        return ((AppDomain)sender).GetAssemblies().FirstOrDefault(assembly => assembly.FullName == args.Name);
+        return ((AppDomain)sender)
+            .GetAssemblies()
+            .FirstOrDefault(assembly => assembly.FullName == args.Name);
     }
 }
