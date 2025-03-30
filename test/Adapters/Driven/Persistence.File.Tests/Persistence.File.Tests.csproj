@@ -9,4 +9,10 @@
         <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Persistence.File\Persistence.File.csproj" />
         <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <Content Include="Plugin\**\TestData\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 </Project>

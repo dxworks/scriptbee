@@ -65,6 +65,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rest.Tests", "test\Adapters
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analysis.Instance.Docker.Tests", "test\Adapters\Driven\Analysis.Instance.Docker.Tests\Analysis.Instance.Docker.Tests.csproj", "{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UseCases.Plugin", "src\Application\Ports\Driving\UseCases.Plugin\UseCases.Plugin.csproj", "{69DC6781-AD7D-4D98-BAC6-FE1332C1C8CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Plugin.Tests", "test\Application\Domain\Service.Plugin.Tests\Service.Plugin.Tests.csproj", "{77157A0A-4C28-46E1-B970-39B11F8C8DF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Plugin", "src\Application\Domain\Service.Plugin\Service.Plugin.csproj", "{23230FA8-50CC-4883-ABC3-8BA66BC92023}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,5 +205,17 @@ Global
 		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C28E26D4-8B3A-4A6C-934F-8D9E4F391158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69DC6781-AD7D-4D98-BAC6-FE1332C1C8CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69DC6781-AD7D-4D98-BAC6-FE1332C1C8CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69DC6781-AD7D-4D98-BAC6-FE1332C1C8CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69DC6781-AD7D-4D98-BAC6-FE1332C1C8CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77157A0A-4C28-46E1-B970-39B11F8C8DF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77157A0A-4C28-46E1-B970-39B11F8C8DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77157A0A-4C28-46E1-B970-39B11F8C8DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77157A0A-4C28-46E1-B970-39B11F8C8DF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23230FA8-50CC-4883-ABC3-8BA66BC92023}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

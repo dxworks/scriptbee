@@ -1,9 +1,4 @@
-﻿// TODO: uncomment and implement when functionality is refactored
-// using ScriptBee.Marketplace.Client;
-// using ScriptBee.Plugin;
-// using ScriptBeeWebApp.Hubs;
-
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
@@ -77,11 +72,6 @@ app.UseEndpoints(_ => { });
 // app.MapHub<FileWatcherHub>("/api/fileWatcherHub");
 
 app.UseEndpointDefinitions();
-
-// var pluginManager = app.Services.GetRequiredService<PluginManager>();
-
-// todo move to task
-// pluginManager.LoadPlugins();
 
 app.Run();
 

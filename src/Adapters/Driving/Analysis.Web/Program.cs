@@ -5,6 +5,8 @@ using ScriptBee.Analysis.Web.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Persistence.File.Extensions;
+using ScriptBee.UseCases.Plugin;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +22,7 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
-    .AddFileConfig(userFolderConfigurationSection)
+    .AddFileAdapters(userFolderConfigurationSection)
     .AddPluginsConfig()
     .AddProjectContextConfig()
     .AddRunScriptServices();
@@ -57,6 +59,10 @@ app.UseExceptionEndpoint();
 app.UseEndpoints(_ => { });
 
 app.UseEndpointDefinitions();
+
+var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
+
+pluginManager.LoadPlugins();
 
 app.Run();
 
