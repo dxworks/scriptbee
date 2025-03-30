@@ -2,7 +2,7 @@
 using NSubstitute;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Ports.Plugins;
-using ScriptBee.Service.Plugin.Tests.Internals;
+using ScriptBee.Tests.Common.Plugin;
 
 namespace ScriptBee.Service.Plugin.Tests;
 

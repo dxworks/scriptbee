@@ -1,6 +1,6 @@
 ﻿using DxWorks.Hub.Sdk;
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Marketplace.Client.Services;
+using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Marketplace.Client;
 
@@ -11,9 +11,9 @@ public static class ScriptBeeMarketplaceClientExtensions
         Action<DxWorksHubSdkOptions>? configureOptionsAction = null
     )
     {
-        services.AddDxWorksHubSdk(configureOptionsAction);
-        services.AddSingleton<IMarketPluginFetcher, MarketPluginFetcher>();
-
-        return services;
+        return services
+            .AddDxWorksHubSdk(configureOptionsAction)
+            .AddSingleton<IMarketPluginFetcher, MarketPluginFetcher>()
+            .AddSingleton<IPluginUrlFetcher, PluginUrlFetcher>();
     }
 }
