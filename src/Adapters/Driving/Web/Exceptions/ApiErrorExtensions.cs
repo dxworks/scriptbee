@@ -103,12 +103,25 @@ public static class ApiErrorExtensions
         );
     }
 
-    public static BadRequest<ProblemDetails> ToProblem(
+    public static BadRequest<ProblemDetails> ToBadRequestProblem(
         this NoInstanceAllocatedForProjectError error,
         HttpContext context
     )
     {
         return TypedResults.BadRequest(
+            context.ToProblemDetails(
+                "No Instance Allocated For Project",
+                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+            )
+        );
+    }
+
+    public static NotFound<ProblemDetails> ToNotFoundProblem(
+        this NoInstanceAllocatedForProjectError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
             context.ToProblemDetails(
                 "No Instance Allocated For Project",
                 $"There is no instance allocated for project with the ID '{error.ProjectId}'"

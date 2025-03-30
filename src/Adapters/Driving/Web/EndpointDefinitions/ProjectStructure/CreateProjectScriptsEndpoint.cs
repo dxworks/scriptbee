@@ -51,7 +51,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
                     WebScriptData.Map(script)
                 ),
             error => error.ToProblem(context),
-            error => error.ToProblem(context),
+            error => error.ToBadRequestProblem(context),
             error => error.ToProblem(context),
             error => error.ToProblem(context)
         );

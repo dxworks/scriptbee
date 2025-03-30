@@ -227,7 +227,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        await AssertNoInstanceAllocatedForProjectProblem(response, TestUrl, "id");
+        await AssertNoInstanceAllocatedForProjectBadRequestProblem(response, TestUrl, "id");
     }
 
     [Fact]
