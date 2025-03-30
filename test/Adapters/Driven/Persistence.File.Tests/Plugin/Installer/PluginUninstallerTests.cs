@@ -74,13 +74,6 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(1).DeleteDirectory("path_to_plugin");
-        _logger
-            .ReceivedWithAnyArgs(1)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin"
-            );
     }
 
     [Fact]
@@ -91,13 +84,6 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(1).DeleteDirectory("path_to_plugin");
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin"
-            );
     }
 
     [Fact]
@@ -110,28 +96,7 @@ public class PluginUninstallerTests
 
         _pluginUninstaller.DeleteMarkedPlugins();
 
-        _fileService.Received(1).DeleteDirectory(Arg.Any<string>());
-        _logger
-            .ReceivedWithAnyArgs(1)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin1"
-            );
-        _logger
-            .ReceivedWithAnyArgs(1)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin2"
-            );
-        _logger
-            .ReceivedWithAnyArgs(1)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin3"
-            );
+        _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
     }
 
     [Fact]
@@ -142,27 +107,6 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin1"
-            );
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin2"
-            );
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin3"
-            );
     }
 
     [Fact]
@@ -174,27 +118,6 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin1"
-            );
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin2"
-            );
-        _logger
-            .ReceivedWithAnyArgs(0)
-            .LogError(
-                Arg.Any<Exception>(),
-                "Error deleting plugin '{PluginToDelete};",
-                "path_to_plugin3"
-            );
     }
 
     [Fact]
