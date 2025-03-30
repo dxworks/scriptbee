@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ScriptBee.Services;
+﻿namespace ScriptBee.Persistence.File.Plugin.Installer;
 
 public interface IZipFileService
 {

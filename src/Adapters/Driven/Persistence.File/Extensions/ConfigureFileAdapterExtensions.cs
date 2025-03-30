@@ -26,6 +26,7 @@ public static class ConfigureFileAdapterExtensions
             .AddSingleton<IPluginManifestYamlFileReader, PluginManifestYamlFileReader>()
             .AddSingleton<IPluginReader, PluginReader>()
             .AddSingleton<IBundlePluginInstaller, BundlePluginInstaller>()
-            .AddSingleton<IBundlePluginUninstaller, BundlePluginUninstaller>();
+            .AddSingleton<IBundlePluginUninstaller, BundlePluginUninstaller>()
+            .AddSingleton<IZipFileService, ZipFileService>();
     }
 }

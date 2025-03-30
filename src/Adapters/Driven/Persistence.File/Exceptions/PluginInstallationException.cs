@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace ScriptBee.Marketplace.Client.Exceptions;
+namespace ScriptBee.Persistence.File.Exceptions;
 
 [Serializable]
 public class PluginInstallationException : Exception

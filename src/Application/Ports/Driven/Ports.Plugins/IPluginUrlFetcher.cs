@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Plugin;
+﻿namespace ScriptBee.Ports.Plugins;
 
 public interface IPluginUrlFetcher
 {

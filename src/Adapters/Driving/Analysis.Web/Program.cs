@@ -22,6 +22,7 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
+    .AddDownloadService()
     .AddFileAdapters(userFolderConfigurationSection)
     .AddPluginsConfig()
     .AddProjectContextConfig()
