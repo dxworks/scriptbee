@@ -3,7 +3,7 @@
 public enum MarketPlaceProjectType
 {
     Plugin,
-    Bundle
+    Bundle,
 }
 
 public record MarketPlaceProject(

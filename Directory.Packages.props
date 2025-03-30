@@ -6,6 +6,7 @@
         <PackageVersion Include="AspNetCore.HealthChecks.MongoDb" Version="9.0.0"/>
         <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0"/>
         <PackageVersion Include="Docker.DotNet" Version="3.125.15"/>
+        <PackageVersion Include="DxWorks.Hub.Sdk" Version="1.0.3"/>
         <PackageVersion Include="FluentValidation" Version="11.11.0"/>
         <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0"/>
         <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.1"/>
