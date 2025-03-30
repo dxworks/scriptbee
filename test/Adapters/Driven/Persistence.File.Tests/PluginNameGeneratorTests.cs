@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Service.Plugin.Tests;
+﻿namespace ScriptBee.Persistence.File.Tests;
 
 public class PluginNameGeneratorTests
 {
