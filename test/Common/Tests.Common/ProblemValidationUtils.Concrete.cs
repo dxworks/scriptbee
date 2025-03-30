@@ -48,4 +48,19 @@ public static partial class ProblemValidationUtils
             $"An analysis with the ID '{analysisId}' does not exists."
         );
     }
+
+    public static async Task AssertAnalysisResultNotFoundProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string resultId
+    )
+    {
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        await AssertNotFoundProblem(
+            response.Content,
+            testUrl,
+            "Result Not Found",
+            $"An analysis result with the ID '{resultId}' does not exists."
+        );
+    }
 }

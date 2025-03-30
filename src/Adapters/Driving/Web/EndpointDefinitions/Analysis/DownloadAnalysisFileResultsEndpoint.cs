@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Analysis;
@@ -60,13 +59,7 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
                     namedStream.Name
                 ),
             error => error.ToProblem(context),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Result Not Found",
-                        $"An analysis result with the ID '{error.Id.Value}' does not exists."
-                    )
-                )
+            error =>error.ToProblem(context)
         );
     }
 
