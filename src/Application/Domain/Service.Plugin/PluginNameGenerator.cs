@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ScriptBee.Plugin;
+﻿namespace ScriptBee.Service.Plugin;
 
 public static class PluginNameGenerator
 {

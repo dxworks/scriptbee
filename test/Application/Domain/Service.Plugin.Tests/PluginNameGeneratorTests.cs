@@ -1,8 +1,4 @@
-﻿using System;
-using ScriptBee.Plugin;
-using Xunit;
-
-namespace ScriptBee.Tests.Plugin;
+﻿namespace ScriptBee.Service.Plugin.Tests;
 
 public class PluginNameGeneratorTests
 {
@@ -31,7 +27,9 @@ public class PluginNameGeneratorTests
     [InlineData("  @1.0.0")]
     [InlineData("\t@\t")]
     [InlineData("\t@4.2.0.1")]
-    public void GivenInvalidFolderNane_WhenGetPluginNameAndVersion_ThenNullIsReturned(string folderName)
+    public void GivenInvalidFolderNane_WhenGetPluginNameAndVersion_ThenNullIsReturned(
+        string folderName
+    )
     {
         var (id, version) = PluginNameGenerator.GetPluginNameAndVersion(folderName);
 
@@ -49,8 +47,7 @@ public class PluginNameGeneratorTests
     }
 
     [Fact]
-    public void
-        GivenFolderNameWithDelimiterAtTheBeginningInPluginId_WhenGetPluginNameAndVersion_ThenPluginNameAndVersionAreReturned()
+    public void GivenFolderNameWithDelimiterAtTheBeginningInPluginId_WhenGetPluginNameAndVersion_ThenPluginNameAndVersionAreReturned()
     {
         var (id, version) = PluginNameGenerator.GetPluginNameAndVersion("@plugin/plugin@1.0.5");
 
@@ -59,8 +56,7 @@ public class PluginNameGeneratorTests
     }
 
     [Fact]
-    public void
-        GivenFolderNameWithDelimiterInTheMiddleOfPluginId_WhenGetPluginNameAndVersion_ThenPluginNameAndVersionAreReturned()
+    public void GivenFolderNameWithDelimiterInTheMiddleOfPluginId_WhenGetPluginNameAndVersion_ThenPluginNameAndVersionAreReturned()
     {
         var (id, version) = PluginNameGenerator.GetPluginNameAndVersion("plugin@1.2.2@1.0.5");
 
