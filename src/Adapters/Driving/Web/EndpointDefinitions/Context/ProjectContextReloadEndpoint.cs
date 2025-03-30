@@ -6,6 +6,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
 
@@ -40,13 +41,7 @@ public class ProjectContextReloadEndpoint : IEndpointDefinition
 
         return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
             _ => TypedResults.NoContent(),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Project Not Found",
-                        $"A project with the ID '{error.Id.Value}' does not exists."
-                    )
-                ),
+            error => error.ToProblem(context),
             error =>
                 TypedResults.NotFound(
                     context.ToProblemDetails(

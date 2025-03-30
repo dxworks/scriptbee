@@ -107,12 +107,7 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
-            TestUrl,
-            "Project Not Found",
-            "A project with the ID 'project-id' does not exists."
-        );
+        await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
     [Fact]

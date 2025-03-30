@@ -73,11 +73,6 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
-        await AssertNotFoundProblem(
-            response.Content,
-            TestUrl,
-            "Project Not Found",
-            "A project with the ID 'id' does not exists."
-        );
+        await AssertProjectNotFoundProblem(response, TestUrl, "id");
     }
 }

@@ -7,6 +7,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure;
 
@@ -49,13 +50,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
                     $"/api/projects/{projectId}/scripts/{script.Id}",
                     WebScriptData.Map(script)
                 ),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Project Not Found",
-                        $"A project with the ID '{error.Id.Value}' does not exists."
-                    )
-                ),
+            error => error.ToProblem(context),
             error =>
                 TypedResults.ValidationProblem(
                     new Dictionary<string, string[]>

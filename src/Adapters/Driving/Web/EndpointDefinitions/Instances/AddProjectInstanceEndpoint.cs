@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Instances;
 
@@ -39,13 +39,7 @@ public class AddProjectInstanceEndpoint : IEndpointDefinition
                     $"/api/projects/{projectId}/instances/{instanceInfo.Id}",
                     WebProjectInstance.Map(instanceInfo)
                 ),
-            error =>
-                TypedResults.NotFound(
-                    context.ToProblemDetails(
-                        "Project Not Found",
-                        $"A project with the ID '{error.Id.Value}' does not exists."
-                    )
-                )
+            error => error.ToProblem(context)
         );
     }
 }
