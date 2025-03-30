@@ -1,5 +1,6 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api.Model;
 using MongoDB.Driver;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Entity.Script;

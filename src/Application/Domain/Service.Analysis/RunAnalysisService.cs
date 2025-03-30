@@ -3,7 +3,7 @@ using DxWorks.ScriptBee.Plugin.Api;
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
-using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Plugins;

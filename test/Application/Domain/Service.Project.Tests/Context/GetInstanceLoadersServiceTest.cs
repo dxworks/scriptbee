@@ -1,6 +1,7 @@
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Context;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;

@@ -1,4 +1,5 @@
 ﻿using OneOf;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.ProjectStructure;

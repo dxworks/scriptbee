@@ -2,6 +2,7 @@
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project;
