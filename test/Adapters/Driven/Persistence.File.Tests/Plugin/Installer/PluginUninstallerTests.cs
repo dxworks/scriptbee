@@ -11,8 +11,9 @@ public class PluginUninstallerTests
 
     private readonly IFileService _fileService = Substitute.For<IFileService>();
 
-    private readonly ILogger<PluginUninstaller> _logger =
-        Substitute.For<ILogger<PluginUninstaller>>();
+    private readonly ILogger<PluginUninstaller> _logger = Substitute.For<
+        ILogger<PluginUninstaller>
+    >();
 
     private readonly PluginUninstaller _pluginUninstaller;
 
@@ -32,7 +33,8 @@ public class PluginUninstallerTests
     [Fact]
     public void GivenPath_WhenUninstall_ThenPathIsMarkedForDelete()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, MarkedForDeleteFile)
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, MarkedForDeleteFile)
             .Returns("delete_path");
 
         _pluginUninstaller.Uninstall("path_to_plugin");
@@ -43,7 +45,8 @@ public class PluginUninstallerTests
     [Fact]
     public void GivenNoDeleteFile_WhenDeleteMarkedPlugins_ThenNoPluginsAreDeleted()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, MarkedForDeleteFile)
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, MarkedForDeleteFile)
             .Returns("delete_path");
         _fileService.FileExists("delete_path").Returns(false);
 
@@ -63,8 +66,7 @@ public class PluginUninstallerTests
     }
 
     [Fact]
-    public void
-        GivenOnePluginAndThrowsExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenFolderWithProblemIsNotDeleted()
+    public void GivenOnePluginAndThrowsExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenFolderWithProblemIsNotDeleted()
     {
         SetupPluginsToDelete(["path_to_plugin"]);
         _fileService.When(x => x.DeleteDirectory("path_to_plugin")).Throws(new Exception());
@@ -72,8 +74,13 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(1).DeleteDirectory("path_to_plugin");
-        _logger.ReceivedWithAnyArgs(1).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin");
+        _logger
+            .ReceivedWithAnyArgs(1)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin"
+            );
     }
 
     [Fact]
@@ -84,13 +91,17 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(1).DeleteDirectory("path_to_plugin");
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin");
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin"
+            );
     }
 
     [Fact]
-    public void
-        GivenMultiplePluginsAndAllThrowExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenNoFolderIsDeleted()
+    public void GivenMultiplePluginsAndAllThrowExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenNoFolderIsDeleted()
     {
         SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
         _fileService.When(x => x.DeleteDirectory("path_to_plugin1")).Throws(new Exception());
@@ -100,34 +111,62 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(1).DeleteDirectory(Arg.Any<string>());
-        _logger.ReceivedWithAnyArgs(1).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin1");
-        _logger.ReceivedWithAnyArgs(1).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin2");
-        _logger.ReceivedWithAnyArgs(1).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin3");
+        _logger
+            .ReceivedWithAnyArgs(1)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin1"
+            );
+        _logger
+            .ReceivedWithAnyArgs(1)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin2"
+            );
+        _logger
+            .ReceivedWithAnyArgs(1)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin3"
+            );
     }
 
     [Fact]
-    public void
-        GivenMultiplePluginsAndNoThrowExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenAllFoldersAreDeleted()
+    public void GivenMultiplePluginsAndNoThrowExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenAllFoldersAreDeleted()
     {
         SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
 
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin1");
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin2");
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin3");
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin1"
+            );
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin2"
+            );
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin3"
+            );
     }
 
     [Fact]
-    public void
-        GivenMultiplePluginsAndSomeExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenFolderWithProblemIsNotDeleted()
+    public void GivenMultiplePluginsAndSomeExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenFolderWithProblemIsNotDeleted()
     {
         SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
         _fileService.When(x => x.DeleteDirectory("path_to_plugin2")).Throws(new Exception());
@@ -135,12 +174,27 @@ public class PluginUninstallerTests
         _pluginUninstaller.DeleteMarkedPlugins();
 
         _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin1");
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin2");
-        _logger.ReceivedWithAnyArgs(0).LogError(Arg.Any<Exception>(),
-            "Error deleting plugin '{PluginToDelete};", "path_to_plugin3");
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin1"
+            );
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin2"
+            );
+        _logger
+            .ReceivedWithAnyArgs(0)
+            .LogError(
+                Arg.Any<Exception>(),
+                "Error deleting plugin '{PluginToDelete};",
+                "path_to_plugin3"
+            );
     }
 
     [Fact]
@@ -154,8 +208,7 @@ public class PluginUninstallerTests
     }
 
     [Fact]
-    public void
-        GivenMultiplePluginsWithNoError_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsDeleted()
+    public void GivenMultiplePluginsWithNoError_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsDeleted()
     {
         SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
 
@@ -165,8 +218,7 @@ public class PluginUninstallerTests
     }
 
     [Fact]
-    public void
-        GivenMultiplePluginsWithSomeError_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsNotDeleted()
+    public void GivenMultiplePluginsWithSomeError_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsNotDeleted()
     {
         SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
         _fileService.When(x => x.DeleteDirectory("path_to_plugin2")).Throws(new Exception());
@@ -178,7 +230,8 @@ public class PluginUninstallerTests
 
     private void SetupPluginsToDelete(IEnumerable<string> pluginPaths)
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, MarkedForDeleteFile)
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, MarkedForDeleteFile)
             .Returns("delete_path");
         _fileService.FileExists("delete_path").Returns(true);
         _fileService.ReadAllLines("delete_path").Returns(pluginPaths);

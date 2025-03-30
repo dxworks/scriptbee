@@ -2,5 +2,9 @@
 
 public interface IZipFileService
 {
-    Task UnzipFileAsync(string zipFilePath, string destinationPath, CancellationToken cancellationToken = default);
+    Task UnzipFileAsync(
+        string zipFilePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default
+    );
 }

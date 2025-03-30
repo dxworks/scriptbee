@@ -14,21 +14,27 @@ public class BundlePluginUninstallerTests
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
     private readonly IPluginUninstaller _pluginUninstaller = Substitute.For<IPluginUninstaller>();
 
-    private readonly ILogger<BundlePluginUninstaller> _logger =
-        Substitute.For<ILogger<BundlePluginUninstaller>>();
+    private readonly ILogger<BundlePluginUninstaller> _logger = Substitute.For<
+        ILogger<BundlePluginUninstaller>
+    >();
 
     private readonly BundlePluginUninstaller _bundlePluginUninstaller;
 
     public BundlePluginUninstallerTests()
     {
-        _bundlePluginUninstaller =
-            new BundlePluginUninstaller(_fileService, _pluginReader, _pluginUninstaller, _logger);
+        _bundlePluginUninstaller = new BundlePluginUninstaller(
+            _fileService,
+            _pluginReader,
+            _pluginUninstaller,
+            _logger
+        );
     }
 
     [Fact]
     public void GivenSimplePlugin_WhenUninstall_ThenPluginIsUninstalled()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "plugin@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "plugin@1.0.0")
             .Returns("plugin_path");
 
         var versions = _bundlePluginUninstaller.Uninstall("plugin", "1.0.0");
@@ -42,7 +48,8 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenPluginWithNoManifest_WhenUninstall_ThenPluginFolderIsDeleted()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "plugin@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "plugin@1.0.0")
             .Returns("plugin_path");
         _pluginReader.ReadPlugin("plugin_path").Returns((Domain.Model.Plugin.Plugin?)null);
 
@@ -57,13 +64,21 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenBundleWithOnePlugin_WhenUninstall_ThenPluginIsUninstalled()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
             .Returns("bundle_path");
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "pluginId@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId@1.0.0")
             .Returns("plugin_path");
-        _pluginReader.ReadPlugin("bundle_path")
-            .Returns(CreateBundlePlugin("bundle", "1.0.0",
-                new TestBundlePlugin(PluginKind.Plugin, "pluginId", "1.0.0")));
+        _pluginReader
+            .ReadPlugin("bundle_path")
+            .Returns(
+                CreateBundlePlugin(
+                    "bundle",
+                    "1.0.0",
+                    new TestBundlePlugin(PluginKind.Plugin, "pluginId", "1.0.0")
+                )
+            );
 
         var versions = _bundlePluginUninstaller.Uninstall("bundle", "1.0.0");
 
@@ -79,19 +94,29 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenBundleWithMultiplePlugins_WhenUninstall_ThenPluginsAreUninstalled()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
             .Returns("bundle_path");
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "pluginId1@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId1@1.0.0")
             .Returns("plugin_path1");
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "pluginId2@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId2@1.0.0")
             .Returns("plugin_path2");
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "pluginId3@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId3@1.0.0")
             .Returns("plugin_path3");
-        _pluginReader.ReadPlugin("bundle_path")
-            .Returns(CreateBundlePlugin("bundle", "1.0.0",
-                new TestBundlePlugin(PluginKind.Plugin, "pluginId1", "1.0.0"),
-                new TestBundlePlugin(PluginKind.Plugin, "pluginId2", "1.0.0"),
-                new TestBundlePlugin(PluginKind.Plugin, "pluginId3", "1.0.0")));
+        _pluginReader
+            .ReadPlugin("bundle_path")
+            .Returns(
+                CreateBundlePlugin(
+                    "bundle",
+                    "1.0.0",
+                    new TestBundlePlugin(PluginKind.Plugin, "pluginId1", "1.0.0"),
+                    new TestBundlePlugin(PluginKind.Plugin, "pluginId2", "1.0.0"),
+                    new TestBundlePlugin(PluginKind.Plugin, "pluginId3", "1.0.0")
+                )
+            );
 
         var versions = _bundlePluginUninstaller.Uninstall("bundle", "1.0.0");
 
@@ -113,18 +138,33 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenBundleOfBundles_WhenUninstall_ThenPluginsAreUninstalled()
     {
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
             .Returns("bundle_path");
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "pluginId1@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId1@1.0.0")
             .Returns("plugin_path1");
-        _fileService.CombinePaths(ConfigFolders.PathToPlugins, "pluginId2@1.0.0")
+        _fileService
+            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId2@1.0.0")
             .Returns("plugin_path2");
-        _pluginReader.ReadPlugin("bundle_path")
-            .Returns(CreateBundlePlugin("bundle", "1.0.0",
-                new TestBundlePlugin(PluginKind.Plugin, "pluginId1", "1.0.0")));
-        _pluginReader.ReadPlugin("plugin_path1")
-            .Returns(CreateBundlePlugin("pluginId1", "1.0.0",
-                new TestBundlePlugin(PluginKind.Plugin, "pluginId2", "1.0.0")));
+        _pluginReader
+            .ReadPlugin("bundle_path")
+            .Returns(
+                CreateBundlePlugin(
+                    "bundle",
+                    "1.0.0",
+                    new TestBundlePlugin(PluginKind.Plugin, "pluginId1", "1.0.0")
+                )
+            );
+        _pluginReader
+            .ReadPlugin("plugin_path1")
+            .Returns(
+                CreateBundlePlugin(
+                    "pluginId1",
+                    "1.0.0",
+                    new TestBundlePlugin(PluginKind.Plugin, "pluginId2", "1.0.0")
+                )
+            );
 
         var versions = _bundlePluginUninstaller.Uninstall("bundle", "1.0.0");
 

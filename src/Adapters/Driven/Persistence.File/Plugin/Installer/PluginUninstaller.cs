@@ -3,7 +3,8 @@ using ScriptBee.Domain.Model.Config;
 
 namespace ScriptBee.Persistence.File.Plugin.Installer;
 
-public class PluginUninstaller(IFileService fileService, ILogger<PluginUninstaller> logger) : IPluginUninstaller
+public class PluginUninstaller(IFileService fileService, ILogger<PluginUninstaller> logger)
+    : IPluginUninstaller
 {
     private const string DeletePluginFolderFileName = "__delete.txt";
 

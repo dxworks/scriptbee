@@ -8,8 +8,8 @@ public class SimplePluginInstaller(
     IFileService fileService,
     IZipFileService zipFileService,
     IDownloadService downloadService,
-    ILogger<SimplePluginInstaller> logger)
-    : ISimplePluginInstaller
+    ILogger<SimplePluginInstaller> logger
+) : ISimplePluginInstaller
 {
     public async Task<string> Install(
         string url,
@@ -39,7 +39,12 @@ public class SimplePluginInstaller(
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error while downloading plugin {Name} {Version}", pluginId, version);
+            logger.LogError(
+                e,
+                "Error while downloading plugin {Name} {Version}",
+                pluginId,
+                version
+            );
 
             fileService.DeleteDirectory(pluginPath);
 
