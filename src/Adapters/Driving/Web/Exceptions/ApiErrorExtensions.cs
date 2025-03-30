@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 
 namespace ScriptBee.Web.Exceptions;
 
@@ -69,6 +70,22 @@ public static class ApiErrorExtensions
                 "Project ID Already In Use",
                 $"A project with the ID '{error.Id}' already exists. Use a unique Project ID or update the existing project."
             )
+        );
+    }
+
+    public static ValidationProblem ToProblem(
+        this ScriptLanguageDoesNotExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.ValidationProblem(
+            new Dictionary<string, string[]>
+            {
+                {
+                    nameof(WebCreateScriptCommand.Language),
+                    [$"'{error.Language}' language does not exists."]
+                },
+            }
         );
     }
 

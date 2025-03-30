@@ -79,6 +79,20 @@ public static partial class ProblemValidationUtils
         );
     }
 
+    public static async Task AssertLanguageDoesNotExistsBadRequestProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string language
+    )
+    {
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        await AssertValidationProblem(
+            response.Content,
+            testUrl,
+            new { Language = new List<string> { $"'{language}' language does not exists." } }
+        );
+    }
+
     public static async Task AssertScriptPathExistsConflictProblem(
         HttpResponseMessage response,
         string testUrl

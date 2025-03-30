@@ -223,12 +223,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-        await AssertValidationProblem(
-            response.Content,
-            TestUrl,
-            new { Language = new List<string> { "'csharp' language does not exists." } }
-        );
+        await AssertLanguageDoesNotExistsBadRequestProblem(response, TestUrl, "csharp");
     }
 
     [Fact]

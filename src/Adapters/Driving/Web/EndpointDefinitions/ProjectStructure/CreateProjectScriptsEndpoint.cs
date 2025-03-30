@@ -50,16 +50,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
                     WebScriptData.Map(script)
                 ),
             error => error.ToProblem(context),
-            error =>
-                TypedResults.ValidationProblem(
-                    new Dictionary<string, string[]>
-                    {
-                        {
-                            nameof(WebCreateScriptCommand.Language),
-                            [$"'{error.Language}' language does not exists."]
-                        },
-                    }
-                ),
+            error => error.ToProblem(context),
             error => error.ToProblem(context)
         );
     }
