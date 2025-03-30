@@ -1,32 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using YamlDotNet.Core;
+﻿using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NodeDeserializers;
 
-namespace ScriptBee.FileManagement.Yaml;
+namespace ScriptBee.Persistence.File.Yaml;
 
 public class AbstractNodeNodeTypeResolver : INodeDeserializer
 {
     private readonly INodeDeserializer _original;
     private readonly ITypeDiscriminator[] _typeDiscriminators;
 
-    public AbstractNodeNodeTypeResolver(INodeDeserializer original, params ITypeDiscriminator[] discriminators)
+    public AbstractNodeNodeTypeResolver(
+        INodeDeserializer original,
+        params ITypeDiscriminator[] discriminators
+    )
     {
         if (original is not ObjectNodeDeserializer)
         {
             throw new ArgumentException(
-                $"{nameof(AbstractNodeNodeTypeResolver)} requires the original resolver to be a {nameof(ObjectNodeDeserializer)}");
+                $"{nameof(AbstractNodeNodeTypeResolver)} requires the original resolver to be a {nameof(ObjectNodeDeserializer)}"
+            );
         }
 
         _original = original;
         _typeDiscriminators = discriminators;
     }
 
-    public bool Deserialize(IParser reader, Type expectedType, Func<IParser, Type, object?> nestedObjectDeserializer,
-        out object? value)
+    public bool Deserialize(
+        IParser reader,
+        Type expectedType,
+        Func<IParser, Type, object?> nestedObjectDeserializer,
+        out object? value,
+        ObjectDeserializer rootDeserializer
+    )
     {
         // we're essentially "in front of" the normal ObjectNodeDeserializer.
         // We could let it check if the current event is a mapping, but we also need to know.
@@ -41,7 +47,13 @@ public class AbstractNodeNodeTypeResolver : INodeDeserializer
         if (!supportedTypes.Any())
         {
             // no? then not a node/type we want to deal with
-            return _original.Deserialize(reader, expectedType, nestedObjectDeserializer, out value);
+            return _original.Deserialize(
+                reader,
+                expectedType,
+                nestedObjectDeserializer,
+                out value,
+                rootDeserializer
+            );
         }
 
         // now buffer all the nodes in this mapping.
@@ -61,16 +73,30 @@ public class AbstractNodeNodeTypeResolver : INodeDeserializer
         }
         catch (Exception exception)
         {
-            throw new YamlException(start, reader.Current.End, "Failed when resolving abstract type", exception);
+            throw new YamlException(
+                start,
+                reader.Current.End,
+                "Failed when resolving abstract type",
+                exception
+            );
         }
 
         // now continue by re-emitting parsing events
         buffer.Reset();
-        return _original.Deserialize(buffer, actualType, nestedObjectDeserializer, out value);
+        return _original.Deserialize(
+            buffer,
+            actualType,
+            nestedObjectDeserializer,
+            out value,
+            rootDeserializer
+        );
     }
 
-    private static Type CheckWithDiscriminators(Type expectedType, IEnumerable<ITypeDiscriminator> supportedTypes,
-        ParsingEventBuffer buffer)
+    private static Type CheckWithDiscriminators(
+        Type expectedType,
+        IEnumerable<ITypeDiscriminator> supportedTypes,
+        ParsingEventBuffer buffer
+    )
     {
         foreach (var discriminator in supportedTypes)
         {
@@ -83,7 +109,8 @@ public class AbstractNodeNodeTypeResolver : INodeDeserializer
         }
 
         throw new Exception(
-            $"None of the registered type discriminators could supply a child class for {expectedType}");
+            $"None of the registered type discriminators could supply a child class for {expectedType}"
+        );
     }
 
     private static LinkedList<ParsingEvent> ReadNestedMapping(IParser reader)
@@ -106,19 +133,22 @@ public class AbstractNodeNodeTypeResolver : INodeDeserializer
         if (candidateType is null)
         {
             throw new NullReferenceException(
-                $"The type resolver for AbstractNodeNodeTypeResolver returned null. It must return a valid sub-type of {baseType}.");
+                $"The type resolver for AbstractNodeNodeTypeResolver returned null. It must return a valid sub-type of {baseType}."
+            );
         }
 
         if (candidateType == baseType)
         {
             throw new InvalidOperationException(
-                $"The type resolver for AbstractNodeNodeTypeResolver returned the abstract type. It must return a valid sub-type of {baseType}.");
+                $"The type resolver for AbstractNodeNodeTypeResolver returned the abstract type. It must return a valid sub-type of {baseType}."
+            );
         }
 
         if (!baseType.IsAssignableFrom(candidateType))
         {
             throw new InvalidOperationException(
-                $"The type resolver for AbstractNodeNodeTypeResolver returned a type ({candidateType}) that is not a valid sub type of {baseType}");
+                $"The type resolver for AbstractNodeNodeTypeResolver returned a type ({candidateType}) that is not a valid sub type of {baseType}"
+            );
         }
     }
 }

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using ScriptBee.Plugin.Manifest;
+﻿using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.FileManagement;
+namespace ScriptBee.Persistence.File;
 
 // todo make it more extensible
 public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
@@ -17,7 +15,7 @@ public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
             { PluginKind.HelperFunctions, typeof(HelperFunctionsPluginExtensionPoint) },
             { PluginKind.Loader, typeof(LoaderPluginExtensionPoint) },
             { PluginKind.Linker, typeof(LinkerPluginExtensionPoint) },
-            { PluginKind.Ui, typeof(UiPluginExtensionPoint) }
+            { PluginKind.Ui, typeof(UiPluginExtensionPoint) },
         };
     }
 }

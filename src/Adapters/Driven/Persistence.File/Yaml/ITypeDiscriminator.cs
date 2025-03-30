@@ -1,6 +1,4 @@
-using System;
-
-namespace ScriptBee.FileManagement.Yaml;
+namespace ScriptBee.Persistence.File.Yaml;
 
 public interface ITypeDiscriminator
 {

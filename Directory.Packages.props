@@ -29,6 +29,7 @@
         <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0"/>
         <PackageVersion Include="Westwind.Utilities" Version="5.1.6.2"/>
         <PackageVersion Include="WireMock.Net" Version="1.7.4"/>
+        <PackageVersion Include="YamlDotNet" Version="16.3.0"/>
     </ItemGroup>
     <ItemGroup Condition="'$(ProjectName.ToLower().Contains(`test`))' == 'true'">
         <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.1"/>

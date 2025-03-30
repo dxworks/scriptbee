@@ -1,13 +1,16 @@
-﻿using System;
-using YamlDotNet.Core;
+﻿using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace ScriptBee.FileManagement.Yaml;
+namespace ScriptBee.Persistence.File.Yaml;
 
 public static class ParserExtensions
 {
-    public static bool TryFindMappingEntry(this ParsingEventBuffer parser, Func<Scalar, bool> selector, out Scalar? key,
-        out ParsingEvent? value)
+    public static bool TryFindMappingEntry(
+        this ParsingEventBuffer parser,
+        Func<Scalar, bool> selector,
+        out Scalar? key,
+        out ParsingEvent? value
+    )
     {
         parser.Consume<MappingStart>();
         do
@@ -36,7 +39,8 @@ public static class ParserExtensions
                     parser.SkipThisAndNestedEvents();
 
                     break;
-                case MappingStart or SequenceStart:
+                case MappingStart
+                or SequenceStart:
                     parser.SkipThisAndNestedEvents();
                     break;
                 default:

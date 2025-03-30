@@ -1,18 +1,12 @@
-﻿using System.Linq;
-using ScriptBee.FileManagement;
-using ScriptBee.Plugin.Manifest;
-using Xunit;
+﻿using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Tests.Plugin.Manifest;
+namespace ScriptBee.Persistence.File.Tests.Manifest;
 
 public class PluginManifestYamlParsingTests
 {
-    private readonly PluginManifestYamlFileReader _yamlFileReader;
-
-    public PluginManifestYamlParsingTests()
-    {
-        _yamlFileReader = new PluginManifestYamlFileReader(new PluginDiscriminatorHolder());
-    }
+    private readonly PluginManifestYamlFileReader _yamlFileReader = new(
+        new PluginDiscriminatorHolder()
+    );
 
     [Theory]
     [FilePath("TestData/ScriptGeneratorPluginManifest.yaml")]
@@ -25,7 +19,8 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
 
-        var extensionPoint = (ScriptGeneratorPluginExtensionPoint)pluginManifest.ExtensionPoints.Single();
+        var extensionPoint = (ScriptGeneratorPluginExtensionPoint)
+            pluginManifest.ExtensionPoints.Single();
 
         Assert.Equal("ScriptGenerator", extensionPoint.Kind);
         Assert.Equal("Plugin.dll", extensionPoint.EntryPoint);
@@ -45,7 +40,8 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
 
-        var extensionPoint = (ScriptRunnerPluginExtensionPoint)pluginManifest.ExtensionPoints.Single();
+        var extensionPoint = (ScriptRunnerPluginExtensionPoint)
+            pluginManifest.ExtensionPoints.Single();
 
         Assert.Equal("ScriptRunner", extensionPoint.Kind);
         Assert.Equal("Plugin.dll", extensionPoint.EntryPoint);
@@ -64,7 +60,8 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("ScriptBee", pluginManifest.Author);
         Assert.Equal("Description", pluginManifest.Description);
 
-        var extensionPoint = (HelperFunctionsPluginExtensionPoint)pluginManifest.ExtensionPoints.Single();
+        var extensionPoint = (HelperFunctionsPluginExtensionPoint)
+            pluginManifest.ExtensionPoints.Single();
 
         Assert.Equal("HelperFunctions", extensionPoint.Kind);
         Assert.Equal("Plugin.dll", extensionPoint.EntryPoint);
