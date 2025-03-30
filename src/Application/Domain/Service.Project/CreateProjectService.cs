@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using ScriptBee.Common;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
