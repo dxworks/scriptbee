@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Service.Plugin.Tests.Internals;
+namespace ScriptBee.Tests.Common.Plugin;
 
 public record TestPlugin(string Id, Version Version, string FolderPath = "path")
     : Domain.Model.Plugin.Plugin(
