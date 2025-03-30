@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using ScriptBee.Ports.Plugins;
 
-namespace ScriptBee.Plugin;
+namespace ScriptBee.Persistence.InMemory;
 
 public class PluginRegistrationService : IPluginRegistrationService
 {

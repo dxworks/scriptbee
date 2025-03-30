@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ScriptBee.Plugin;
+﻿namespace ScriptBee.Ports.Plugins;
 
 public interface IPluginRegistrationService
 {
