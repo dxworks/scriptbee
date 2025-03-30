@@ -13,6 +13,7 @@ namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure;
 using CreateResponse = Results<
     Created<WebScriptData>,
     NotFound<ProblemDetails>,
+    BadRequest<ProblemDetails>,
     ValidationProblem,
     Conflict<ProblemDetails>
 >;
@@ -49,6 +50,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
                     $"/api/projects/{projectId}/scripts/{script.Id}",
                     WebScriptData.Map(script)
                 ),
+            error => error.ToProblem(context),
             error => error.ToProblem(context),
             error => error.ToProblem(context),
             error => error.ToProblem(context)

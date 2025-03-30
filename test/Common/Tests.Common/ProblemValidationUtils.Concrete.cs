@@ -106,4 +106,19 @@ public static partial class ProblemValidationUtils
             "A script at that path already exists."
         );
     }
+
+    public static async Task AssertNoInstanceAllocatedForProjectProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string projectId
+    )
+    {
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        await AssertBadRequestProblem(
+            response.Content,
+            testUrl,
+            "No Instance Allocated For Project",
+            $"There is no instance allocated for project with the ID '{projectId}'"
+        );
+    }
 }

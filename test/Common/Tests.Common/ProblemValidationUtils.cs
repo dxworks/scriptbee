@@ -34,7 +34,7 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
-    public static async Task AssertConflictProblem(
+    private static async Task AssertConflictProblem(
         HttpContent responseContent,
         string url,
         string title,
@@ -51,7 +51,7 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
-    public static async Task AssertNotFoundProblem(
+    private static async Task AssertNotFoundProblem(
         HttpContent responseContent,
         string url,
         string title,
@@ -66,6 +66,18 @@ public static partial class ProblemValidationUtils
         problemDetails.Detail.ShouldBe(detail);
         problemDetails.Instance.ShouldBe(url);
         AssertDynamicProblemExtensionsNotNull(problemDetails);
+    }
+
+    private static async Task AssertBadRequestProblem(
+        HttpContent responseContent,
+        string url,
+        string title,
+        string detail
+    )
+    {
+        var problemDetails = (await responseContent.ReadFromJsonAsync<ProblemDetails>())!;
+
+        AssertBadRequest(url, problemDetails, title, detail);
     }
 
     private static void AssertBadRequest(

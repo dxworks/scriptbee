@@ -2,7 +2,9 @@
 using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Files;
@@ -74,6 +76,45 @@ public class CreateScriptServiceTest
     }
 
     [Fact]
+    public async Task NoInstanceAllocatedForProjectError()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var error = new NoInstanceAllocatedForProjectError(projectId);
+        _getProject
+            .GetById(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    BasicProjectDetails(projectId)
+                )
+            );
+        _getCurrentInstanceUseCase
+            .GetCurrentInstance(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<InstanceInfo, NoInstanceAllocatedForProjectError>>(
+                    new NoInstanceAllocatedForProjectError(projectId)
+                )
+            );
+
+        var result = await _createScriptService.Create(
+            new CreateScriptCommand(
+                projectId,
+                "path",
+                "language",
+                [
+                    new ScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = "string",
+                        Value = "value",
+                    },
+                ]
+            )
+        );
+
+        result.ShouldBe(error);
+    }
+
+    [Fact]
     public async Task ScriptLanguageDoesNotExists()
     {
         var projectId = ProjectId.FromValue("id");
@@ -87,8 +128,12 @@ public class CreateScriptServiceTest
                 )
             );
         _getCurrentInstanceUseCase
-            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(instanceInfo));
+            .GetCurrentInstance(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<InstanceInfo, NoInstanceAllocatedForProjectError>>(
+                    instanceInfo
+                )
+            );
         _getScriptLanguages
             .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
@@ -127,8 +172,12 @@ public class CreateScriptServiceTest
                 )
             );
         _getCurrentInstanceUseCase
-            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(instanceInfo));
+            .GetCurrentInstance(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<InstanceInfo, NoInstanceAllocatedForProjectError>>(
+                    instanceInfo
+                )
+            );
         _getScriptLanguages
             .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
@@ -176,8 +225,12 @@ public class CreateScriptServiceTest
                 )
             );
         _getCurrentInstanceUseCase
-            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(instanceInfo));
+            .GetCurrentInstance(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<InstanceInfo, NoInstanceAllocatedForProjectError>>(
+                    instanceInfo
+                )
+            );
         _getScriptLanguages
             .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(
@@ -243,8 +296,12 @@ public class CreateScriptServiceTest
                 )
             );
         _getCurrentInstanceUseCase
-            .GetOrAllocate(projectId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(instanceInfo));
+            .GetCurrentInstance(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<InstanceInfo, NoInstanceAllocatedForProjectError>>(
+                    instanceInfo
+                )
+            );
         _getScriptLanguages
             .Get(instanceInfo, "language", Arg.Any<CancellationToken>())
             .Returns(

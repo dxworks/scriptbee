@@ -4,6 +4,7 @@ using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -18,6 +19,7 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;
 using CreateResponse = OneOf<
     Script,
     ProjectDoesNotExistsError,
+    NoInstanceAllocatedForProjectError,
     ScriptLanguageDoesNotExistsError,
     ScriptPathAlreadyExistsError
 >;
@@ -108,8 +110,8 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     [InlineData("boolean", true)]
     public async Task ShouldReturnCreated_WhenParametersArePassed(string type, object value)
     {
-        var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
-        createScriptUseCase
+        var useCase = Substitute.For<ICreateScriptUseCase>();
+        useCase
             .Create(
                 Arg.Is<CreateScriptCommand>(command =>
                     MatchCreateScriptCommand(command, type, value)
@@ -142,7 +144,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createScriptUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateScriptCommand(
@@ -173,8 +175,8 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ProjectNotExists_ShouldReturnNotFound()
     {
-        var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
-        createScriptUseCase
+        var useCase = Substitute.For<ICreateScriptUseCase>();
+        useCase
             .Create(
                 new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
                 Arg.Any<CancellationToken>()
@@ -190,7 +192,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createScriptUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateScriptCommand("path", "csharp", null)
@@ -200,10 +202,39 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     }
 
     [Fact]
+    public async Task NoInstanceAllocatedForProject_ShouldReturnBadRequest()
+    {
+        var useCase = Substitute.For<ICreateScriptUseCase>();
+        useCase
+            .Create(
+                new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<CreateResponse>(
+                    new NoInstanceAllocatedForProjectError(ProjectId.FromValue("id"))
+                )
+            );
+
+        var response = await _api.PostApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            ),
+            new WebCreateScriptCommand("path", "csharp", null)
+        );
+
+        await AssertNoInstanceAllocatedForProjectProblem(response, TestUrl, "id");
+    }
+
+    [Fact]
     public async Task ScriptLanguageNotExists_ShouldReturnBadRequest()
     {
-        var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
-        createScriptUseCase
+        var useCase = Substitute.For<ICreateScriptUseCase>();
+        useCase
             .Create(
                 new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
                 Arg.Any<CancellationToken>()
@@ -217,7 +248,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createScriptUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateScriptCommand("path", "csharp", null)
@@ -229,8 +260,8 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ExistingPath_ShouldReturnConflict()
     {
-        var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
-        createScriptUseCase
+        var useCase = Substitute.For<ICreateScriptUseCase>();
+        useCase
             .Create(
                 new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
                 Arg.Any<CancellationToken>()
@@ -242,7 +273,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createScriptUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateScriptCommand("path", "csharp", null)
