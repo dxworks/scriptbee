@@ -76,7 +76,11 @@ public class AllocateProjectInstanceServiceTest
                 )
             );
         _allocateInstance
-            .Allocate(analysisInstanceImage, Arg.Any<CancellationToken>())
+            .Allocate(
+                new InstanceId(instanceId),
+                analysisInstanceImage,
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.FromResult("http://instance-url"));
         _guidProvider.NewGuid().Returns(instanceId);
         _dateTimeProvider.UtcNow().Returns(createdDate);

@@ -15,6 +15,7 @@ public class CalculationInstanceDockerAdapter(
 ) : IAllocateInstance, IDeallocateInstance
 {
     public async Task<string> Allocate(
+        InstanceId instanceId,
         AnalysisInstanceImage image,
         CancellationToken cancellationToken = default
     )
@@ -29,7 +30,7 @@ public class CalculationInstanceDockerAdapter(
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Name = "scriptbee-calculation",
+                Name = $"scriptbee-calculation-{instanceId}",
                 Image = image.ImageName,
                 HostConfig = new HostConfig { NetworkMode = calculationDockerConfig.Network },
             },
