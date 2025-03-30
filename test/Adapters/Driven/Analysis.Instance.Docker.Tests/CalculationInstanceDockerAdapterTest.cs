@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using ScriptBee.Analysis.Instance.Docker.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using Xunit.Abstractions;
 
@@ -93,5 +94,63 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         containers.ShouldHaveSingleItem();
         containers.First().Names.ShouldContain($"/scriptbee-calculation-{instanceId}");
         containers.First().NetworkSettings.Networks.ShouldContainKey(DockerFixture.TestNetworkName);
+    }
+
+    [Fact]
+    public async Task Deallocate_ShouldStopAndRemoveExistingContainer()
+    {
+        // Arrange
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var instanceImage = new AnalysisInstanceImage(DockerFixture.TestImageName);
+        var containerName = $"scriptbee-calculation-{instanceId}";
+
+        var instanceUrl = await _calculationInstanceDockerAdapter.Allocate(
+            instanceId,
+            instanceImage
+        );
+        instanceUrl.ShouldStartWith("http://");
+        var instanceInfo = new InstanceInfo(
+            instanceId,
+            ProjectId.FromValue("project-id"),
+            instanceUrl,
+            DateTimeOffset.UtcNow
+        );
+
+        // Act
+        await _calculationInstanceDockerAdapter.Deallocate(instanceInfo);
+
+        // Assert
+        var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
+            new ContainersListParameters
+            {
+                All = true,
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "name",
+                        new Dictionary<string, bool> { { containerName, true } }
+                    },
+                },
+            }
+        );
+        containers.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task Deallocate_ShouldNotThrowException_IfContainerNotFound()
+    {
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var instanceInfo = new InstanceInfo(
+            instanceId,
+            ProjectId.FromValue("project-id"),
+            "http://fakeurl",
+            DateTimeOffset.UtcNow
+        );
+
+        var exception = await Record.ExceptionAsync(
+            () => _calculationInstanceDockerAdapter.Deallocate(instanceInfo)
+        );
+
+        exception.ShouldBeNull();
     }
 }
