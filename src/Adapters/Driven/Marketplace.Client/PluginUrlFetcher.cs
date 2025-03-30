@@ -1,25 +1,18 @@
-﻿using ScriptBee.Marketplace.Client.Services;
-using ScriptBee.Plugin;
-using ScriptBeeWebApp.Data.Exceptions;
+﻿using ScriptBee.Marketplace.Client.Exceptions;
+using ScriptBee.Ports.Plugins;
 
-namespace ScriptBeeWebApp.Services;
+namespace ScriptBee.Marketplace.Client;
 
-public class PluginUrlFetcher : IPluginUrlFetcher
+public class PluginUrlFetcher(IMarketPluginFetcher marketPluginFetcher) : IPluginUrlFetcher
 {
-    private readonly IMarketPluginFetcher _marketPluginFetcher;
-
-    public PluginUrlFetcher(IMarketPluginFetcher marketPluginFetcher)
-    {
-        _marketPluginFetcher = marketPluginFetcher;
-    }
-
     public string GetPluginUrl(string pluginId, string version)
     {
-        var plugins = _marketPluginFetcher.GetProjectsAsync();
+        var plugins = marketPluginFetcher.GetProjectsAsync();
 
         var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
         if (plugin is null)
         {
+            // TODO FIXIT(#51): convert to error instead of exception
             throw new PluginNotFoundException(pluginId);
         }
 
@@ -28,6 +21,7 @@ public class PluginUrlFetcher : IPluginUrlFetcher
 
         if (pluginVersion is null)
         {
+            // TODO FIXIT(#51): convert to error instead of exception
             throw new PluginVersionNotFoundException($"{pluginId} {version}");
         }
 
