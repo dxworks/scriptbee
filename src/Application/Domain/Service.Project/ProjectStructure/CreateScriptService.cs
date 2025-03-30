@@ -1,6 +1,8 @@
 ﻿using OneOf;
 using ScriptBee.Common;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Files;
@@ -15,6 +17,7 @@ namespace ScriptBee.Service.Project.ProjectStructure;
 using CreateResult = OneOf<
     Script,
     ProjectDoesNotExistsError,
+    NoInstanceAllocatedForProjectError,
     ScriptLanguageDoesNotExistsError,
     ScriptPathAlreadyExistsError
 >;
@@ -47,10 +50,25 @@ public class CreateScriptService(
         CancellationToken cancellationToken = default
     )
     {
-        var instanceInfo = await currentInstanceUseCase.GetOrAllocate(
+        var result = await currentInstanceUseCase.GetCurrentInstance(
             projectDetails.Id,
             cancellationToken
         );
+
+        return await result.Match<Task<CreateResult>>(
+            async instanceInfo =>
+                await Create(command, instanceInfo, projectDetails, cancellationToken),
+            error => Task.FromResult<CreateResult>(error)
+        );
+    }
+
+    private async Task<CreateResult> Create(
+        CreateScriptCommand command,
+        InstanceInfo instanceInfo,
+        ProjectDetails projectDetails,
+        CancellationToken cancellationToken = default
+    )
+    {
         var languageResult = await getScriptLanguages.Get(
             instanceInfo,
             command.Language,

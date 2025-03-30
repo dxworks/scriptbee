@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 
@@ -98,6 +99,32 @@ public static class ApiErrorExtensions
             context.ToProblemDetails(
                 "Script Path Already Exists",
                 "A script at that path already exists."
+            )
+        );
+    }
+
+    public static BadRequest<ProblemDetails> ToBadRequestProblem(
+        this NoInstanceAllocatedForProjectError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.BadRequest(
+            context.ToProblemDetails(
+                "No Instance Allocated For Project",
+                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+            )
+        );
+    }
+
+    public static NotFound<ProblemDetails> ToNotFoundProblem(
+        this NoInstanceAllocatedForProjectError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
+            context.ToProblemDetails(
+                "No Instance Allocated For Project",
+                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
             )
         );
     }
