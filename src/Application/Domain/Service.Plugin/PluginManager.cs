@@ -8,7 +8,7 @@ public class PluginManager(
     IPluginReader pluginReader,
     IPluginLoader pluginLoader,
     ILogger<PluginManager> logger
-)
+) : IManagePluginsUseCase
 {
     public void LoadPlugins()
     {
