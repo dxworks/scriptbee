@@ -12,34 +12,36 @@
       <app-error-state [error]="currentInstanceInfoResource.error()!"></app-error-state>
     } @else {
       <mat-card class="project-details-card" appearance="outlined">
-        <app-upload-models [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id"></app-upload-models>
+        <app-instance-info [instanceInfo]="currentInstanceInfoResource.value()!" />
 
-        <mat-divider></mat-divider>
+        <app-upload-models [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id" />
 
-        <app-load-models [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id"></app-load-models>
+        <mat-divider />
 
-        <mat-divider></mat-divider>
+        <app-load-models [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id" />
 
-        <app-link-models [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id"></app-link-models>
+        <mat-divider />
 
-        <mat-divider></mat-divider>
+        <app-link-models [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id" />
+
+        <mat-divider />
 
         @if (currentInstanceInfoResource.isLoading()) {
-          <app-centered-spinner text="Loading Info"></app-centered-spinner>
+          <app-centered-spinner text="Loading Info" />
         } @else if (currentInstanceInfoResource.error()) {
-          <app-error-state [error]="currentInstanceInfoResource.error()!"></app-error-state>
+          <app-error-state [error]="currentInstanceInfoResource.error()!" />
         } @else {
-          <app-currently-loaded-models [instanceInfo]="currentInstanceInfoResource.value()!"></app-currently-loaded-models>
+          <app-currently-loaded-models [instanceInfo]="currentInstanceInfoResource.value()!" />
         }
 
-        <mat-divider></mat-divider>
+        <mat-divider />
 
         @if (currentInstanceInfoResource.isLoading()) {
-          <app-centered-spinner text="Loading Info"></app-centered-spinner>
+          <app-centered-spinner text="Loading Info" />
         } @else if (currentInstanceInfoResource.error()) {
-          <app-error-state [error]="currentInstanceInfoResource.error()!"></app-error-state>
+          <app-error-state [error]="currentInstanceInfoResource.error()!" />
         } @else {
-          <app-project-context [projectId]="projectId()!" [instanceInfo]="currentInstanceInfoResource.value()!"></app-project-context>
+          <app-project-context [projectId]="projectId()!" [instanceInfo]="currentInstanceInfoResource.value()!" />
         }
       </mat-card>
     }
