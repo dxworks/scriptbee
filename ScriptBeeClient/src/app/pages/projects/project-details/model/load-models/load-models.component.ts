@@ -17,7 +17,7 @@ export class LoadModelsComponent {
   projectId = input.required<string>();
   instanceId = input.required<string>();
 
-  savedFiles = signal<TreeNode[]>([{ name: 'loader', children: [{ name: 'file' }] }]);
+  savedFiles = signal<TreeNode[]>([]);
   checkedFiles = signal<TreeNodeWithParent[]>([]);
 
   loadModelsHandler = apiHandler((params: { projectId: string; instanceId: string; checkedFiles: TreeNode[] }) =>
