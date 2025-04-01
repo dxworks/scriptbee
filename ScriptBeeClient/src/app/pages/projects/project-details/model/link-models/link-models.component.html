@@ -8,7 +8,7 @@
   <mat-form-field class="select-linker" appearance="fill">
     <mat-label>Linker</mat-label>
     <mat-select [value]="selectedLinkerId()" (valueChange)="selectedLinkerId.set($event)">
-      @for (loader of getLinkersResource.value()!; track loader.id) {
+      @for (loader of [{ id: 'id', name: 'linker' }]!; track loader.id) {
         <mat-option [value]="loader.id">
           {{ loader.name }}
         </mat-option>
