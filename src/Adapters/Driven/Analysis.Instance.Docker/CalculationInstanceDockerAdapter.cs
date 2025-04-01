@@ -12,7 +12,8 @@ namespace ScriptBee.Analysis.Instance.Docker;
 
 public class CalculationInstanceDockerAdapter(
     IOptions<CalculationDockerConfig> config,
-    ILogger<CalculationInstanceDockerAdapter> logger
+    ILogger<CalculationInstanceDockerAdapter> logger,
+    IFreePortProvider freePortProvider
 ) : IAllocateInstance, IDeallocateInstance
 {
     public async Task<string> Allocate(
@@ -49,7 +50,7 @@ public class CalculationInstanceDockerAdapter(
             client,
             response.ID,
             calculationDockerConfig.Network,
-            calculationDockerConfig.Port,
+            freePortProvider.GetFreeTcpPort(),
             cancellationToken
         );
     }
@@ -127,7 +128,7 @@ public class CalculationInstanceDockerAdapter(
     private static async Task<string> GetContainerUrl(
         DockerClient client,
         string containerId,
-        string networkName,
+        string? networkName,
         int port,
         CancellationToken cancellationToken
     )
@@ -136,6 +137,11 @@ public class CalculationInstanceDockerAdapter(
             containerId,
             cancellationToken
         );
+
+        if (networkName == null)
+        {
+            return $"http://localhost:{port}";
+        }
 
         return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
             ? $"http://{network.IPAddress}:{port}"

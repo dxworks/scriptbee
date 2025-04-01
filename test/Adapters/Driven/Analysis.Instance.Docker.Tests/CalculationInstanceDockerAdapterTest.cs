@@ -1,6 +1,7 @@
 using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NSubstitute;
 using ScriptBee.Analysis.Instance.Docker.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
@@ -12,10 +13,11 @@ namespace ScriptBee.Analysis.Instance.Docker.Tests;
 
 public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 {
-    private readonly IOptions<CalculationDockerConfig> _config;
+    private readonly IFreePortProvider _freePortProvider = Substitute.For<IFreePortProvider>();
     private readonly DockerFixture _dockerFixture;
 
     private readonly CalculationInstanceDockerAdapter _calculationInstanceDockerAdapter;
+    private const int TestPort = 8080;
 
     public CalculationInstanceDockerAdapterTest(
         DockerFixture dockerFixture,
@@ -23,21 +25,25 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     )
     {
         _dockerFixture = dockerFixture;
-        _config = Options.Create(
+        var config = Options.Create(
             new CalculationDockerConfig
             {
                 DockerSocket = dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
                 Network = DockerFixture.TestNetworkName,
-                Port = 8080,
             }
         );
+        _freePortProvider.GetFreeTcpPort().Returns(TestPort);
 
         var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddProvider(new XUnitLoggerProvider(outputHelper))
         );
         var logger = loggerFactory.CreateLogger<CalculationInstanceDockerAdapter>();
 
-        _calculationInstanceDockerAdapter = new CalculationInstanceDockerAdapter(_config, logger);
+        _calculationInstanceDockerAdapter = new CalculationInstanceDockerAdapter(
+            config,
+            logger,
+            _freePortProvider
+        );
     }
 
     [Fact]
@@ -49,7 +55,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         var containerUrl = await _calculationInstanceDockerAdapter.Allocate(instanceId, image);
 
         containerUrl.ShouldStartWith("http://");
-        containerUrl.ShouldContain($":{_config.Value.Port}");
+        containerUrl.ShouldContain($":{TestPort}");
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters { All = true }
         );
@@ -63,7 +69,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             .NetworkSettings.Networks[DockerFixture.TestNetworkName]
             .IPAddress.ShouldNotBeNullOrEmpty();
         containerUrl.ShouldBe(
-            $"http://{ourContainer.NetworkSettings.Networks[DockerFixture.TestNetworkName].IPAddress}:{_config.Value.Port}"
+            $"http://{ourContainer.NetworkSettings.Networks[DockerFixture.TestNetworkName].IPAddress}:{TestPort}"
         );
     }
 
