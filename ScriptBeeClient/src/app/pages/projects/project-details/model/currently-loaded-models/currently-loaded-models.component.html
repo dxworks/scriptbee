@@ -2,7 +2,8 @@
 
 <div class="currently-loaded-models-content">
   <span>Used Linkers: </span>
-  @for (linker of instanceInfo().linkers; track linker) {
+  <!-- TODO FIXIT(#70): populate from api-->
+  @for (linker of []; track linker) {
     {{ linker }}
   }
   <div>

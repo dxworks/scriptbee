@@ -3,6 +3,14 @@
   There is no analysis instance allocated for the project. Having an instance is required for running analysis
   <br />
   <p>Do you want to allocate it now ?</p>
+
+  @if (allocateInstanceHandler.isLoading()) {
+    <app-loading-progress-bar title="Allocating instance..."></app-loading-progress-bar>
+  }
+
+  @if (allocateInstanceHandler.error()) {
+    <app-error-state [error]="allocateInstanceHandler.error()!"></app-error-state>
+  }
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onAllocateClick()">ALLOCATE</button>

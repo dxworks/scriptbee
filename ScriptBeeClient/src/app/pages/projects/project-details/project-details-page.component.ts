@@ -64,13 +64,13 @@ export class ProjectDetailsPage {
     route.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: (paramMap) => {
         const projectId = paramMap.get('id');
-        console.log(projectId);
         if (projectId) {
           this.instanceService.getCurrentInstance(projectId).subscribe({
             error: (errorResponse: HttpErrorResponse) => {
               if (isNoInstanceAllocatedForProjectError(errorResponse)) {
                 this.dialog.open(InstanceNotAllocatedDialog, {
                   disableClose: true,
+                  data: { projectId },
                 });
               }
             },
