@@ -1,0 +1,10 @@
+<h1 mat-dialog-title style="text-align: center">Instance not allocated</h1>
+<div mat-dialog-content>
+  There is no analysis instance allocated for the project. Having an instance is required for running analysis
+  <br />
+  <p>Do you want to allocate it now ?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onAllocateClick()">ALLOCATE</button>
+  <button mat-button (click)="onCloseClick()">CLOSE</button>
+</div>
