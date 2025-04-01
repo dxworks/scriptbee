@@ -13,8 +13,8 @@ export class LoaderService {
 
   constructor(private http: HttpClient) {}
 
-  getAllLoaders() {
-    return this.http.get<Loader[]>(this.loadersAPIUrl);
+  getAllLoaders(projectId: string, instanceId: string) {
+    return this.http.get<Loader[]>(`/api/projects/${projectId}/instances/${instanceId}/loaders`);
   }
 
   loadModels(projectId: string, checkedFiles: TreeNode[]) {
