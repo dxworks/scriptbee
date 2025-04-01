@@ -27,12 +27,30 @@ public class CalculationInstanceDockerAdapter(
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
+        var hostPort = freePortProvider.GetFreeTcpPort();
+
+        var portBindings = new Dictionary<string, IList<PortBinding>>
+        {
+            {
+                $"{calculationDockerConfig.Port}/tcp",
+                new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
+            },
+        };
+
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
                 Name = $"scriptbee-calculation-{instanceId}",
                 Image = image.ImageName,
-                HostConfig = new HostConfig { NetworkMode = calculationDockerConfig.Network },
+                HostConfig = new HostConfig
+                {
+                    NetworkMode = calculationDockerConfig.Network,
+                    PortBindings = portBindings,
+                },
+                ExposedPorts = new Dictionary<string, EmptyStruct>
+                {
+                    { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
+                },
             },
             cancellationToken
         );
@@ -50,7 +68,7 @@ public class CalculationInstanceDockerAdapter(
             client,
             response.ID,
             calculationDockerConfig.Network,
-            freePortProvider.GetFreeTcpPort(),
+            hostPort,
             cancellationToken
         );
     }

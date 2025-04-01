@@ -17,7 +17,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     private readonly DockerFixture _dockerFixture;
 
     private readonly CalculationInstanceDockerAdapter _calculationInstanceDockerAdapter;
-    private const int TestPort = 8080;
+    private readonly int _testPort;
 
     public CalculationInstanceDockerAdapterTest(
         DockerFixture dockerFixture,
@@ -32,7 +32,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
                 Network = DockerFixture.TestNetworkName,
             }
         );
-        _freePortProvider.GetFreeTcpPort().Returns(TestPort);
+        _testPort = new FreePortProvider().GetFreeTcpPort();
+        _freePortProvider.GetFreeTcpPort().Returns(_testPort);
 
         var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddProvider(new XUnitLoggerProvider(outputHelper))
@@ -55,7 +56,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         var containerUrl = await _calculationInstanceDockerAdapter.Allocate(instanceId, image);
 
         containerUrl.ShouldStartWith("http://");
-        containerUrl.ShouldContain($":{TestPort}");
+        containerUrl.ShouldContain($":{_testPort}");
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters { All = true }
         );
@@ -69,7 +70,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             .NetworkSettings.Networks[DockerFixture.TestNetworkName]
             .IPAddress.ShouldNotBeNullOrEmpty();
         containerUrl.ShouldBe(
-            $"http://{ourContainer.NetworkSettings.Networks[DockerFixture.TestNetworkName].IPAddress}:{TestPort}"
+            $"http://{ourContainer.NetworkSettings.Networks[DockerFixture.TestNetworkName].IPAddress}:{_testPort}"
         );
     }
 
