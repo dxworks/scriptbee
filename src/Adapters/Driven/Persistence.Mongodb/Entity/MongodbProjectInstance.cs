@@ -4,6 +4,7 @@ using ScriptBee.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Persistence.Mongodb.Entity;
 
+[BsonIgnoreExtraElements]
 public class MongodbProjectInstance : IDocument
 {
     [BsonId]

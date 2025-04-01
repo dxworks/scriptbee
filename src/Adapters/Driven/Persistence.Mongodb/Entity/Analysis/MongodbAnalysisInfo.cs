@@ -6,6 +6,7 @@ using ScriptBee.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Persistence.Mongodb.Entity.Analysis;
 
+[BsonIgnoreExtraElements]
 public class MongodbAnalysisInfo : IDocument
 {
     [BsonId]
