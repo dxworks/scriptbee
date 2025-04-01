@@ -15,15 +15,14 @@ import { LoaderService } from '../../../../../services/loaders/loader.service';
 })
 export class LoadModelsComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
 
-  savedFiles = signal<TreeNode[]>([]);
+  savedFiles = signal<TreeNode[]>([{ name: 'loader', children: [{ name: 'file' }] }]);
   checkedFiles = signal<TreeNodeWithParent[]>([]);
 
-  loadModelsHandler = apiHandler(
-    (params: { projectId: string; checkedFiles: TreeNode[] }) => this.loaderService.loadModels(params.projectId, params.checkedFiles),
-    (data) => {
-      console.log(data);
-    }
+  loadModelsHandler = apiHandler((params: { projectId: string; instanceId: string; checkedFiles: TreeNode[] }) =>
+    // TODO FIXIT(#14): update with the list of loaders
+    this.loaderService.loadModels(params.projectId, params.instanceId, params.checkedFiles)
   );
 
   constructor(private loaderService: LoaderService) {}
@@ -35,6 +34,7 @@ export class LoadModelsComponent {
   onLoadFilesClick() {
     this.loadModelsHandler.execute({
       projectId: this.projectId(),
+      instanceId: this.instanceId(),
       checkedFiles: this.checkedFiles(),
     });
   }
