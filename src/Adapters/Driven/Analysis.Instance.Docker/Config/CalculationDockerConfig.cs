@@ -4,7 +4,7 @@ public class CalculationDockerConfig
 {
     public required string DockerSocket { get; init; }
 
-    public required int Port { get; init; }
+    public int Port { get; init; } = 8080;
 
-    public required string Network { get; init; }
+    public string? Network { get; init; }
 }

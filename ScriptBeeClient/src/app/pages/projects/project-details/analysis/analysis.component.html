@@ -13,7 +13,11 @@
     </as-split-area>
 
     <as-split-area size="35">
-      <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
+      @if (analysisId()) {
+        <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
+      } @else {
+        <div>There are no results since no analysis was run yet</div>
+      }
     </as-split-area>
   </as-split>
 </div>

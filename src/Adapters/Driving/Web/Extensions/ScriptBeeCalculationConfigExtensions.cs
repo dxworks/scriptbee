@@ -1,5 +1,4 @@
-using ScriptBee.Analysis.Instance.Docker;
-using ScriptBee.Analysis.Instance.Docker.Config;
+using ScriptBee.Analysis.Instance.Docker.Extensions;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Web.Config;
@@ -30,12 +29,6 @@ public static class ScriptBeeCalculationConfigExtensions
             )
         );
 
-        services
-            .AddOptions<CalculationDockerConfig>()
-            .BindConfiguration("ScriptBee:Calculation:Docker");
-
-        return services
-            .AddSingleton<IAllocateInstance, CalculationInstanceDockerAdapter>()
-            .AddSingleton<IDeallocateInstance, CalculationInstanceDockerAdapter>();
+        return services.AddDockerInstanceAdapter("ScriptBee:Calculation:Docker");
     }
 }

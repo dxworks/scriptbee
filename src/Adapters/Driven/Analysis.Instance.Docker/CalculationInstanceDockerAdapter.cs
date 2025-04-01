@@ -12,7 +12,8 @@ namespace ScriptBee.Analysis.Instance.Docker;
 
 public class CalculationInstanceDockerAdapter(
     IOptions<CalculationDockerConfig> config,
-    ILogger<CalculationInstanceDockerAdapter> logger
+    ILogger<CalculationInstanceDockerAdapter> logger,
+    IFreePortProvider freePortProvider
 ) : IAllocateInstance, IDeallocateInstance
 {
     public async Task<string> Allocate(
@@ -26,12 +27,30 @@ public class CalculationInstanceDockerAdapter(
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
+        var hostPort = freePortProvider.GetFreeTcpPort();
+
+        var portBindings = new Dictionary<string, IList<PortBinding>>
+        {
+            {
+                $"{calculationDockerConfig.Port}/tcp",
+                new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
+            },
+        };
+
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
                 Name = $"scriptbee-calculation-{instanceId}",
                 Image = image.ImageName,
-                HostConfig = new HostConfig { NetworkMode = calculationDockerConfig.Network },
+                HostConfig = new HostConfig
+                {
+                    NetworkMode = calculationDockerConfig.Network,
+                    PortBindings = portBindings,
+                },
+                ExposedPorts = new Dictionary<string, EmptyStruct>
+                {
+                    { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
+                },
             },
             cancellationToken
         );
@@ -49,7 +68,7 @@ public class CalculationInstanceDockerAdapter(
             client,
             response.ID,
             calculationDockerConfig.Network,
-            calculationDockerConfig.Port,
+            hostPort,
             cancellationToken
         );
     }
@@ -127,7 +146,7 @@ public class CalculationInstanceDockerAdapter(
     private static async Task<string> GetContainerUrl(
         DockerClient client,
         string containerId,
-        string networkName,
+        string? networkName,
         int port,
         CancellationToken cancellationToken
     )
@@ -136,6 +155,11 @@ public class CalculationInstanceDockerAdapter(
             containerId,
             cancellationToken
         );
+
+        if (networkName == null)
+        {
+            return $"http://localhost:{port}";
+        }
 
         return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
             ? $"http://{network.IPAddress}:{port}"

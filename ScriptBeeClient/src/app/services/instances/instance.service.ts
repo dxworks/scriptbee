@@ -12,4 +12,8 @@ export class InstanceService {
   getCurrentInstance(projectId: string): Observable<InstanceInfo> {
     return this.http.get<InstanceInfo>(`/api/projects/${projectId}/instances/current`);
   }
+
+  allocateInstance(projectId: string): Observable<InstanceInfo> {
+    return this.http.post<InstanceInfo>(`/api/projects/${projectId}/instances`, null);
+  }
 }

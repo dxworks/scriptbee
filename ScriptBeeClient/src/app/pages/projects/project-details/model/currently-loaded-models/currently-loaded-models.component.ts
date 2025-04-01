@@ -13,7 +13,8 @@ export class CurrentlyLoadedModelsComponent {
   instanceInfo = input.required<InstanceInfo>();
 
   loadedFiles = computed<TreeNode[]>(() => {
-    return convertToTreeNodes(this.instanceInfo().loadedModels);
+    // TODO FIXIT(#70): populate from api
+    return convertToTreeNodes({});
   });
 }
 

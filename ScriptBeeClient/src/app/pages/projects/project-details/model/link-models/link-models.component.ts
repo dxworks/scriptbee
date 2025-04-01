@@ -17,18 +17,20 @@ import { apiHandler } from '../../../../../utils/apiHandler';
 })
 export class LinkModelsComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
 
   selectedLinkerId = signal<string | undefined>(undefined);
 
   getLinkersResource = createRxResourceHandler({
-    loader: () => this.linkerService.getAllLinkers(),
+    request: () => ({
+      projectId: this.projectId(),
+      instanceId: this.instanceId(),
+    }),
+    loader: (params) => this.linkerService.getAllLinkers(params.request.projectId, params.request.instanceId),
   });
 
-  linkModelsHandler = apiHandler(
-    (params: { projectId: string; linkerId: string }) => this.linkerService.linkModels(params.projectId, params.linkerId),
-    (data) => {
-      console.log(data);
-    }
+  linkModelsHandler = apiHandler((params: { projectId: string; instanceId: string; linkerId: string }) =>
+    this.linkerService.linkModels(params.projectId, params.instanceId, params.linkerId)
   );
 
   constructor(private linkerService: LinkerService) {}
@@ -39,6 +41,6 @@ export class LinkModelsComponent {
       return;
     }
 
-    this.linkModelsHandler.execute({ projectId: this.projectId(), linkerId: linkerId });
+    this.linkModelsHandler.execute({ projectId: this.projectId(), instanceId: this.instanceId(), linkerId: linkerId });
   }
 }

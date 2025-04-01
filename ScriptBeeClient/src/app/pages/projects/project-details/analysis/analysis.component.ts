@@ -6,6 +6,7 @@ import { AnalysisOutputComponent } from './output/analysis-output.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TreeNode } from '../../../../types/tree-node';
+import { InstanceService } from '../../../../services/instances/instance.service';
 
 @Component({
   selector: 'app-analysis',
@@ -16,6 +17,7 @@ import { TreeNode } from '../../../../types/tree-node';
 export class AnalysisComponent {
   projectId = signal<string | undefined>(undefined);
   analysisId = signal<string | undefined>(undefined);
+  instanceId = signal<string | undefined>(undefined);
 
   selectedFileId = signal<string | null>(null);
 
@@ -24,7 +26,8 @@ export class AnalysisComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private instanceService: InstanceService
   ) {
     route.queryParamMap.subscribe((params) => {
       this.selectedFileId.set(params.get('fileId'));
@@ -32,7 +35,16 @@ export class AnalysisComponent {
 
     route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: (paramMap) => {
-        this.projectId.set(paramMap.get('id') ?? undefined);
+        const id = paramMap.get('id');
+        this.projectId.set(id ?? undefined);
+
+        if (id) {
+          this.instanceService.getCurrentInstance(id).subscribe({
+            next: (instanceInfo) => {
+              this.instanceId.set(instanceInfo.id);
+            },
+          });
+        }
       },
     });
   }

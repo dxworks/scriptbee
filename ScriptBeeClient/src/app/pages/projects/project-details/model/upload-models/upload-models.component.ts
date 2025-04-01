@@ -29,15 +29,20 @@ import { UploadService } from '../../../../../services/upload/upload.service';
 })
 export class UploadModelsComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
 
   selectedLoaderId = signal<string | undefined>(undefined);
 
   getLoadersResource = createRxResourceHandler({
-    loader: () => this.loaderService.getAllLoaders(),
+    request: () => ({
+      projectId: this.projectId(),
+      instanceId: this.instanceId(),
+    }),
+    loader: (params) => this.loaderService.getAllLoaders(params.request.projectId, params.request.instanceId),
   });
 
   uploadModelsHandler = apiHandler(
-    (params: { loaderId: string; projectId: string; files: File[] }) => this.uploadService.uploadModels(params.loaderId, params.projectId, params.files),
+    (params: { loaderId: string; projectId: string; files: File[] }) => this.uploadService.uploadModels(params.projectId, params.loaderId, params.files),
     (data) => {
       console.log(data);
     }

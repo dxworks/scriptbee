@@ -14,6 +14,7 @@ import { ProjectContextComponent } from './project-context/project-context.compo
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { InstanceService } from '../../../../services/instances/instance.service';
 import { CenteredSpinnerComponent } from '../../../../components/centered-spinner/centered-spinner.component';
+import { InstanceInfoComponent } from './instance-info/instance-info.component';
 
 @Component({
   selector: 'app-project-model-page',
@@ -30,6 +31,7 @@ import { CenteredSpinnerComponent } from '../../../../components/centered-spinne
     ProjectContextComponent,
     LoadingProgressBarComponent,
     CenteredSpinnerComponent,
+    InstanceInfoComponent,
   ],
 })
 export class ProjectModelPage {

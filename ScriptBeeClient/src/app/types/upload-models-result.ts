@@ -1,4 +1,4 @@
 export interface UploadModelsResult {
-  loaderName: string;
-  files: string[];
+  loaderId: string;
+  fileNames: string[];
 }

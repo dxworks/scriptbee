@@ -6,16 +6,12 @@ import { UploadModelsResult } from '../../types/upload-models-result';
   providedIn: 'root',
 })
 export class UploadService {
-  private uploadFilesUrl = '/api/uploadmodel/fromfile';
-
   constructor(private http: HttpClient) {}
 
-  uploadModels(loaderId: string, projectId: string, files: File[]) {
+  uploadModels(projectId: string, loaderId: string, files: File[]) {
     const formData = new FormData();
-    formData.append('loaderId', loaderId);
     files.forEach((file) => formData.append('files', file));
-    formData.append('projectId', projectId);
 
-    return this.http.post<UploadModelsResult>(this.uploadFilesUrl, formData);
+    return this.http.put<UploadModelsResult>(`/api/projects/${projectId}/loaders/${loaderId}/files`, formData);
   }
 }

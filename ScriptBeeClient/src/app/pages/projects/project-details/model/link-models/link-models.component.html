@@ -8,7 +8,7 @@
   <mat-form-field class="select-linker" appearance="fill">
     <mat-label>Linker</mat-label>
     <mat-select [value]="selectedLinkerId()" (valueChange)="selectedLinkerId.set($event)">
-      @for (loader of getLinkersResource.value()!; track loader.id) {
+      @for (loader of [{ id: 'id', name: 'linker' }]!; track loader.id) {
         <mat-option [value]="loader.id">
           {{ loader.name }}
         </mat-option>
@@ -27,6 +27,6 @@
   <button class="link-button" mat-flat-button [disabled]="!selectedLinkerId() || linkModelsHandler.isLoading()" (click)="onLinkButtonClick()">Link</button>
 
   @if (!selectedLinkerId()) {
-    <div class="warning">A loader must be selected in order to upload models</div>
+    <div class="warning">A linker must be selected</div>
   }
 </div>
