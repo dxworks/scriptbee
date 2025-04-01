@@ -27,6 +27,6 @@
   <button class="link-button" mat-flat-button [disabled]="!selectedLinkerId() || linkModelsHandler.isLoading()" (click)="onLinkButtonClick()">Link</button>
 
   @if (!selectedLinkerId()) {
-    <div class="warning">A loader must be selected in order to upload models</div>
+    <div class="warning">A linker must be selected</div>
   }
 </div>

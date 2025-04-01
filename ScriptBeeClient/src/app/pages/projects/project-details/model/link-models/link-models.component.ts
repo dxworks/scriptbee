@@ -17,11 +17,16 @@ import { apiHandler } from '../../../../../utils/apiHandler';
 })
 export class LinkModelsComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
 
   selectedLinkerId = signal<string | undefined>(undefined);
 
   getLinkersResource = createRxResourceHandler({
-    loader: () => this.linkerService.getAllLinkers(),
+    request: () => ({
+      projectId: this.projectId(),
+      instanceId: this.instanceId(),
+    }),
+    loader: (params) => this.linkerService.getAllLinkers(params.request.projectId, params.request.instanceId),
   });
 
   linkModelsHandler = apiHandler(

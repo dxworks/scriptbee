@@ -17,7 +17,7 @@ export class LinkerService {
     });
   }
 
-  getAllLinkers() {
-    return this.http.get<Linker[]>(this.linkersAPIUrl);
+  getAllLinkers(projectId: string, instanceId: string) {
+    return this.http.get<Linker[]>(`/api/projects/${projectId}/instances/${instanceId}/loaders`);
   }
 }
