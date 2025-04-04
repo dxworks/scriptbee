@@ -5,6 +5,9 @@ namespace ScriptBee.Rest.Api;
 
 public interface IContextApi
 {
+    [Get("/api/context")]
+    Task<IEnumerable<RestContextSlice>> Get(CancellationToken cancellationToken);
+
     [Post("/api/context/clear")]
     Task Clear(CancellationToken cancellationToken);
 
