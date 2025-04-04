@@ -30,7 +30,7 @@ public class GetInstanceContextServiceTest
     }
 
     [Fact]
-    public async Task GivenInstance_ExpectContextToBeCleared()
+    public async Task GivenInstance_ExpectContextSlices()
     {
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("6143ee26-8150-43b4-b1c3-e57da86061b8");
