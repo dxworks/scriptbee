@@ -1,7 +1,6 @@
 ﻿import { Component, computed, input } from '@angular/core';
 import { TreeNode } from '../../../../../types/tree-node';
 import { SelectableTreeComponent } from '../../../../../components/selectable-tree/selectable-tree.component';
-import { InstanceInfo } from '../../../../../types/instance';
 
 @Component({
   selector: 'app-currently-loaded-models',
@@ -10,10 +9,10 @@ import { InstanceInfo } from '../../../../../types/instance';
   imports: [SelectableTreeComponent],
 })
 export class CurrentlyLoadedModelsComponent {
-  instanceInfo = input.required<InstanceInfo>();
+  instanceId = input.required<string>();
 
   loadedFiles = computed<TreeNode[]>(() => {
-    // TODO FIXIT(#70): populate from api
+    // TODO FIXIT(#61): populate from api
     return convertToTreeNodes({});
   });
 }
