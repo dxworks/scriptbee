@@ -1,5 +1,4 @@
 ﻿import { Component, computed, input } from '@angular/core';
-import { InstanceInfo } from '../../../../../types/instance';
 import { createRxResourceHandler } from '../../../../../utils/resource';
 import { ProjectContextService } from '../../../../../services/projects/project-context.service';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
@@ -18,39 +17,35 @@ import { ProjectContext } from '../../../../../types/returned-context-slice';
 })
 export class ProjectContextComponent {
   projectId = input.required<string>();
-  instanceInfo = input.required<InstanceInfo>();
+  instanceId = input.required<string>();
 
   context = computed<TreeNode[]>(() => {
     return convertToTreeNodes(this.projectContextResource.value() ?? []);
   });
 
   projectContextResource = createRxResourceHandler({
-    request: () => ({ projectId: this.projectId(), instanceInfo: this.instanceInfo() }),
-    loader: (params) => this.projectContextService.getProjectContext(params.request.projectId, params.request.instanceInfo.id),
+    request: () => ({ projectId: this.projectId(), instanceId: this.instanceId() }),
+    loader: (params) => this.projectContextService.getProjectContext(params.request.projectId, params.request.instanceId),
   });
 
   clearContextHandler = apiHandler(
     (params: { projectId: string; instanceId: string }) => this.projectContextService.clearContext(params.projectId, params.instanceId),
-    (data) => {
-      console.log(data);
-    }
+    () => this.projectContextResource.reload()
   );
 
   reloadContextHandler = apiHandler(
     (params: { projectId: string; instanceId: string }) => this.projectContextService.reloadContext(params.projectId, params.instanceId),
-    (data) => {
-      console.log(data);
-    }
+    () => this.projectContextResource.reload()
   );
 
   constructor(private projectContextService: ProjectContextService) {}
 
   onReloadModelsClick() {
-    this.reloadContextHandler.execute({ projectId: this.projectId(), instanceId: this.instanceInfo().id });
+    this.reloadContextHandler.execute({ projectId: this.projectId(), instanceId: this.instanceId() });
   }
 
   onClearContextButtonClick() {
-    this.clearContextHandler.execute({ projectId: this.projectId(), instanceId: this.instanceInfo().id });
+    this.clearContextHandler.execute({ projectId: this.projectId(), instanceId: this.instanceId() });
   }
 }
 

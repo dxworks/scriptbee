@@ -10,7 +10,7 @@ import { InstanceInfo } from '../../../../../types/instance';
   imports: [SelectableTreeComponent],
 })
 export class CurrentlyLoadedModelsComponent {
-  instanceInfo = input.required<InstanceInfo>();
+  instanceId = input.required<string>();
 
   loadedFiles = computed<TreeNode[]>(() => {
     // TODO FIXIT(#70): populate from api

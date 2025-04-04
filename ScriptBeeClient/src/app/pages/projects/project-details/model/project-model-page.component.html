@@ -31,7 +31,7 @@
         } @else if (currentInstanceInfoResource.error()) {
           <app-error-state [error]="currentInstanceInfoResource.error()!" />
         } @else {
-          <app-currently-loaded-models [instanceInfo]="currentInstanceInfoResource.value()!" />
+          <app-currently-loaded-models [instanceId]="currentInstanceInfoResource.value()!.id" />
         }
 
         <mat-divider />
@@ -41,7 +41,7 @@
         } @else if (currentInstanceInfoResource.error()) {
           <app-error-state [error]="currentInstanceInfoResource.error()!" />
         } @else {
-          <app-project-context [projectId]="projectId()!" [instanceInfo]="currentInstanceInfoResource.value()!" />
+          <app-project-context [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id" />
         }
       </mat-card>
     }
