@@ -13,7 +13,10 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("id", "name");
 
-        var result = await _createProjectValidator.TestValidateAsync(createProject);
+        var result = await _createProjectValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -23,7 +26,10 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("", "name");
 
-        var result = await _createProjectValidator.TestValidateAsync(createProject);
+        var result = await _createProjectValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldHaveValidationErrorFor(x => x.Id).WithErrorMessage("'Id' must not be empty.");
     }
@@ -33,7 +39,10 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand(null!, "name");
 
-        var result = await _createProjectValidator.TestValidateAsync(createProject);
+        var result = await _createProjectValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldHaveValidationErrorFor(x => x.Id).WithErrorMessage("'Id' must not be empty.");
     }
@@ -43,7 +52,10 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("id", "");
 
-        var result = await _createProjectValidator.TestValidateAsync(createProject);
+        var result = await _createProjectValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
@@ -55,7 +67,10 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("id", null!);
 
-        var result = await _createProjectValidator.TestValidateAsync(createProject);
+        var result = await _createProjectValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Name)
@@ -67,7 +82,10 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand(null!, null!);
 
-        var result = await _createProjectValidator.TestValidateAsync(createProject);
+        var result = await _createProjectValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Name)

@@ -24,7 +24,7 @@ public class MongoDbFixture : IAsyncLifetime
             .Build();
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();
 
@@ -32,7 +32,7 @@ public class MongoDbFixture : IAsyncLifetime
         Database = client.GetDatabase("TestDatabase");
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await _container.StopAsync();
     }

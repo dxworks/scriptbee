@@ -27,9 +27,13 @@ public class GetProjectsServiceTests
         {
             expectedProjectDetails,
         };
-        _getAllProjects.GetAll().Returns(Task.FromResult(projectDetails));
+        _getAllProjects
+            .GetAll(TestContext.Current.CancellationToken)
+            .Returns(Task.FromResult(projectDetails));
 
-        var projectDetailsList = await _getProjectsService.GetAllProjects();
+        var projectDetailsList = await _getProjectsService.GetAllProjects(
+            TestContext.Current.CancellationToken
+        );
 
         projectDetailsList.ShouldBeEquivalentTo(
             new List<ProjectDetails> { expectedProjectDetails }
@@ -43,14 +47,17 @@ public class GetProjectsServiceTests
         var query = new GetProjectQuery(projectId);
         var expectedProjectDetails = BasicProjectDetails(projectId);
         _getProject
-            .GetById(projectId)
+            .GetById(projectId, TestContext.Current.CancellationToken)
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
                     expectedProjectDetails
                 )
             );
 
-        var projectDetails = await _getProjectsService.GetProject(query);
+        var projectDetails = await _getProjectsService.GetProject(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         projectDetails.ShouldBe(expectedProjectDetails);
     }
@@ -62,12 +69,15 @@ public class GetProjectsServiceTests
         var query = new GetProjectQuery(projectId);
         var expectedError = new ProjectDoesNotExistsError(projectId);
         _getProject
-            .GetById(projectId)
+            .GetById(projectId, TestContext.Current.CancellationToken)
             .Returns(
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(expectedError)
             );
 
-        var error = await _getProjectsService.GetProject(query);
+        var error = await _getProjectsService.GetProject(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         error.ShouldBe(expectedError);
     }

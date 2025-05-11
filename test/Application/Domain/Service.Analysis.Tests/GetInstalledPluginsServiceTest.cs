@@ -26,7 +26,7 @@ public class GetInstalledPluginsServiceTest
         ];
         _pluginRepository.GetLoadedPlugins().Returns(expectedPlugins);
 
-        var plugins = await _getInstalledPluginsService.Get();
+        var plugins = await _getInstalledPluginsService.Get(TestContext.Current.CancellationToken);
 
         plugins.ToList().ShouldBeEquivalentTo(expectedPlugins);
     }

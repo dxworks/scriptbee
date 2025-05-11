@@ -5,7 +5,6 @@ using ScriptBee.Analysis.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Analysis;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Context;

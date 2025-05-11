@@ -54,7 +54,11 @@ public class InstallPluginServiceTest
         _pluginReader.ReadPlugin("path1").Returns(plugin1);
         _pluginReader.ReadPlugin("path2").Returns(plugin2);
 
-        await _installPluginService.InstallPlugin(pluginId, version);
+        await _installPluginService.InstallPlugin(
+            pluginId,
+            version,
+            TestContext.Current.CancellationToken
+        );
 
         _pluginReader.Received(1).ReadPlugin("path1");
         _pluginReader.Received(1).ReadPlugin("path2");
@@ -80,7 +84,11 @@ public class InstallPluginServiceTest
         _pluginReader.ReadPlugin("path1").Returns((Domain.Model.Plugin.Plugin?)null);
         _pluginReader.ReadPlugin("path2").Returns(plugin2);
 
-        await _installPluginService.InstallPlugin(pluginId, version);
+        await _installPluginService.InstallPlugin(
+            pluginId,
+            version,
+            TestContext.Current.CancellationToken
+        );
 
         _logger
             .Received(1)
@@ -100,7 +108,11 @@ public class InstallPluginServiceTest
             .Returns(installPaths);
         _pluginReader.ReadPlugin("path1").Returns((Domain.Model.Plugin.Plugin?)null);
 
-        await _installPluginService.InstallPlugin(pluginId, version);
+        await _installPluginService.InstallPlugin(
+            pluginId,
+            version,
+            TestContext.Current.CancellationToken
+        );
 
         _pluginLoader.DidNotReceive().Load(Arg.Any<Domain.Model.Plugin.Plugin>());
     }
@@ -112,7 +124,11 @@ public class InstallPluginServiceTest
         const string version = "1.0.0";
         _bundlePluginInstaller.Install(pluginId, version, Arg.Any<CancellationToken>()).Returns([]);
 
-        await _installPluginService.InstallPlugin(pluginId, version);
+        await _installPluginService.InstallPlugin(
+            pluginId,
+            version,
+            TestContext.Current.CancellationToken
+        );
 
         _pluginReader.DidNotReceive().ReadPlugin(Arg.Any<string>());
         _pluginLoader.DidNotReceive().Load(Arg.Any<Domain.Model.Plugin.Plugin>());

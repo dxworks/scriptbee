@@ -49,7 +49,11 @@ public class GetScriptLanguagesAdapterTest
                 )
             );
 
-        var result = await _getScriptLanguagesAdapter.Get(instanceInfo, "language");
+        var result = await _getScriptLanguagesAdapter.Get(
+            instanceInfo,
+            "language",
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(new ScriptLanguage("language", ".lang"));
     }
@@ -76,7 +80,11 @@ public class GetScriptLanguagesAdapterTest
                 )
             );
 
-        var result = await _getScriptLanguagesAdapter.Get(instanceInfo, "language");
+        var result = await _getScriptLanguagesAdapter.Get(
+            instanceInfo,
+            "language",
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new ScriptLanguageDoesNotExistsError("language"));
     }
@@ -110,7 +118,11 @@ public class GetScriptLanguagesAdapterTest
                 )
             );
 
-        var result = await _getScriptLanguagesAdapter.Get(instanceInfo, "language");
+        var result = await _getScriptLanguagesAdapter.Get(
+            instanceInfo,
+            "language",
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new ScriptLanguageDoesNotExistsError("language"));
     }

@@ -51,7 +51,10 @@ public class AllocateProjectInstanceServiceTest
                 )
             );
 
-        var result = await _allocateProjectInstanceService.Allocate(projectId);
+        var result = await _allocateProjectInstanceService.Allocate(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new ProjectDoesNotExistsError(projectId));
     }
@@ -90,7 +93,10 @@ public class AllocateProjectInstanceServiceTest
             .Create(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(instanceInfo));
 
-        var result = await _allocateProjectInstanceService.Allocate(projectId);
+        var result = await _allocateProjectInstanceService.Allocate(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(instanceInfo);
     }

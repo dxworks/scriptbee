@@ -42,7 +42,10 @@ public class ClearInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        var result = await _clearInstanceContextService.Clear(command);
+        var result = await _clearInstanceContextService.Clear(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(new Unit());
         await _clearInstanceContext.Received(1).Clear(instanceInfo, Arg.Any<CancellationToken>());
@@ -63,7 +66,10 @@ public class ClearInstanceContextServiceTest
                 )
             );
 
-        var result = await _clearInstanceContextService.Clear(command);
+        var result = await _clearInstanceContextService.Clear(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(instanceDoesNotExistsError);
     }

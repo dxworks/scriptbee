@@ -28,7 +28,10 @@ public class GetCurrentInstanceServiceTest
             .GetAll(projectId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IEnumerable<InstanceInfo>>(new List<InstanceInfo>()));
 
-        var result = await _getCurrentInstanceService.GetCurrentInstance(projectId);
+        var result = await _getCurrentInstanceService.GetCurrentInstance(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new NoInstanceAllocatedForProjectError(projectId));
     }
@@ -50,7 +53,10 @@ public class GetCurrentInstanceServiceTest
                 )
             );
 
-        var result = await _getCurrentInstanceService.GetCurrentInstance(projectId);
+        var result = await _getCurrentInstanceService.GetCurrentInstance(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(instanceInfo1);
     }

@@ -75,7 +75,10 @@ public class ReloadInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        var result = await _reloadInstanceContextService.Reload(command);
+        var result = await _reloadInstanceContextService.Reload(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(new Unit());
         await _clearInstanceContext.Received(1).Clear(instanceInfo, Arg.Any<CancellationToken>());
@@ -115,7 +118,10 @@ public class ReloadInstanceContextServiceTest
                 )
             );
 
-        var result = await _reloadInstanceContextService.Reload(command);
+        var result = await _reloadInstanceContextService.Reload(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(projectDoesNotExistsError);
     }
@@ -142,7 +148,10 @@ public class ReloadInstanceContextServiceTest
                 )
             );
 
-        var result = await _reloadInstanceContextService.Reload(command);
+        var result = await _reloadInstanceContextService.Reload(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT2.ShouldBe(instanceDoesNotExistsError);
     }

@@ -11,14 +11,14 @@ public class DockerFixture : IAsyncLifetime
 
     public readonly DockerClient DockerClient = new DockerClientConfiguration().CreateClient();
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await EnsureNetworkExists();
 
         await PullTestImageIfNotExists();
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         var containers = await DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters

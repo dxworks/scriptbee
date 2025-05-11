@@ -31,7 +31,12 @@ public class SimplePluginInstallerTests
     [Fact]
     public async Task GivenUrl_WhenInstall_ThenPluginsFolderPathIsCreated()
     {
-        await _simplePluginInstaller.Install("url", "pluginName", "1.0.0");
+        await _simplePluginInstaller.Install(
+            "url",
+            "pluginName",
+            "1.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         _fileService.Received(1).CreateFolder(ConfigFolders.PathToPlugins);
     }
@@ -54,7 +59,13 @@ public class SimplePluginInstallerTests
         _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(true);
 
         var pluginInstallationException = await Assert.ThrowsAsync<PluginInstallationException>(
-            () => _simplePluginInstaller.Install("url", "pluginName", "1.0.0")
+            () =>
+                _simplePluginInstaller.Install(
+                    "url",
+                    "pluginName",
+                    "1.0.0",
+                    TestContext.Current.CancellationToken
+                )
         );
 
         Assert.Equal(
@@ -83,7 +94,13 @@ public class SimplePluginInstallerTests
         _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(false);
 
         var pluginInstallationException = await Assert.ThrowsAsync<PluginInstallationException>(
-            () => _simplePluginInstaller.Install("url", "pluginName", "1.0.0")
+            () =>
+                _simplePluginInstaller.Install(
+                    "url",
+                    "pluginName",
+                    "1.0.0",
+                    TestContext.Current.CancellationToken
+                )
         );
 
         Assert.Equal(
@@ -108,7 +125,13 @@ public class SimplePluginInstallerTests
         _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(true);
 
         var pluginInstallationException = await Assert.ThrowsAsync<PluginInstallationException>(
-            () => _simplePluginInstaller.Install("url", "pluginName", "1.0.0")
+            () =>
+                _simplePluginInstaller.Install(
+                    "url",
+                    "pluginName",
+                    "1.0.0",
+                    TestContext.Current.CancellationToken
+                )
         );
 
         Assert.Equal(
@@ -129,7 +152,12 @@ public class SimplePluginInstallerTests
             .CombinePaths(ConfigFolders.PathToPlugins, "pluginName@1.0.0")
             .Returns("path/pluginName@1.0.0");
 
-        await _simplePluginInstaller.Install("url", "pluginName", "1.0.0");
+        await _simplePluginInstaller.Install(
+            "url",
+            "pluginName",
+            "1.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         await _downloadService
             .Received(1)
@@ -153,7 +181,13 @@ public class SimplePluginInstallerTests
         _fileService.DirectoryExists("path/pluginName@1.0.0").Returns(true);
 
         var pluginVersionExistsException = await Assert.ThrowsAsync<PluginVersionExistsException>(
-            () => _simplePluginInstaller.Install("url", "pluginName", "1.0.0")
+            () =>
+                _simplePluginInstaller.Install(
+                    "url",
+                    "pluginName",
+                    "1.0.0",
+                    TestContext.Current.CancellationToken
+                )
         );
 
         Assert.Equal(
@@ -175,7 +209,8 @@ public class SimplePluginInstallerTests
         var installedPluginPath = await _simplePluginInstaller.Install(
             "url",
             "pluginName",
-            "1.0.0"
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
         Assert.Equal("path/pluginName@1.0.0", installedPluginPath);

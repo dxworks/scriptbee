@@ -45,7 +45,10 @@ public class UploadLoaderFilesServiceTest
                 )
             );
 
-        var result = await _uploadLoaderFilesService.Upload(command);
+        var result = await _uploadLoaderFilesService.Upload(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(projectDoesNotExistsError);
     }
@@ -78,7 +81,7 @@ public class UploadLoaderFilesServiceTest
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
             );
 
-        await _uploadLoaderFilesService.Upload(command);
+        await _uploadLoaderFilesService.Upload(command, TestContext.Current.CancellationToken);
 
         await _fileModelService
             .Received(1)
@@ -108,7 +111,10 @@ public class UploadLoaderFilesServiceTest
                 Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
             );
 
-        var result = await _uploadLoaderFilesService.Upload(command);
+        var result = await _uploadLoaderFilesService.Upload(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBeEmpty();
         await _fileModelService
@@ -142,7 +148,10 @@ public class UploadLoaderFilesServiceTest
                 Guid.Parse("9e0ac246-fb26-461f-b77f-2c4fa64348b0")
             );
 
-        var result = await _uploadLoaderFilesService.Upload(command);
+        var result = await _uploadLoaderFilesService.Upload(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result
             .AsT0.ToList()
@@ -217,7 +226,7 @@ public class UploadLoaderFilesServiceTest
             );
         _guidProvider.NewGuid().Returns(Guid.Parse("8b772016-480a-4dcf-868a-02804a7be0ff"));
 
-        await _uploadLoaderFilesService.Upload(command);
+        await _uploadLoaderFilesService.Upload(command, TestContext.Current.CancellationToken);
 
         await _updateProject
             .Received(1)

@@ -8,7 +8,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.Files;
 using ScriptBee.Web.EndpointDefinitions.Loaders.Contracts;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Loaders;

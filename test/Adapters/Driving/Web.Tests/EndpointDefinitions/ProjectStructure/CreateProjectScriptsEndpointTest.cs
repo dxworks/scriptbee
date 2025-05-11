@@ -11,7 +11,6 @@ using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;

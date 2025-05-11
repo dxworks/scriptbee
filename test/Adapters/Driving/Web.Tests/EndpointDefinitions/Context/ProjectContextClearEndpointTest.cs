@@ -8,7 +8,6 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.Context;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Context;

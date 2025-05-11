@@ -36,9 +36,17 @@ public sealed class LoadFileAdapterTest : IDisposable
         _configFoldersService
             .GetPathToSrcFolder(projectId, pathToFileTxt)
             .Returns(pathToFileInSrcFolder);
-        await System.IO.File.WriteAllTextAsync(pathToFileInSrcFolder, "content");
+        await System.IO.File.WriteAllTextAsync(
+            pathToFileInSrcFolder,
+            "content",
+            TestContext.Current.CancellationToken
+        );
 
-        var result = await _loadFileAdapter.GetScriptContent(projectId, pathToFileTxt);
+        var result = await _loadFileAdapter.GetScriptContent(
+            projectId,
+            pathToFileTxt,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe("content");
     }
@@ -53,7 +61,11 @@ public sealed class LoadFileAdapterTest : IDisposable
             .GetPathToSrcFolder(projectId, pathToFileTxt)
             .Returns(pathToFileInSrcFolder);
 
-        var result = await _loadFileAdapter.GetScriptContent(projectId, pathToFileTxt);
+        var result = await _loadFileAdapter.GetScriptContent(
+            projectId,
+            pathToFileTxt,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new FileDoesNotExistsError(pathToFileTxt));
     }
