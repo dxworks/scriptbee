@@ -32,10 +32,13 @@ public class GetProjectInstancesServiceTest
             ),
         ];
         _getAllProjectInstances
-            .GetAll(projectId)
+            .GetAll(projectId, TestContext.Current.CancellationToken)
             .Returns(Task.FromResult(expectedCalculationInstanceInfos));
 
-        var instanceInfos = await _getProjectInstancesService.GetAllInstances(projectId);
+        var instanceInfos = await _getProjectInstancesService.GetAllInstances(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
 
         instanceInfos.ShouldBeEquivalentTo(expectedCalculationInstanceInfos);
     }

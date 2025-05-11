@@ -46,7 +46,8 @@ public sealed class GetInstanceContextAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var slice = contextSlices.ToList().Single();

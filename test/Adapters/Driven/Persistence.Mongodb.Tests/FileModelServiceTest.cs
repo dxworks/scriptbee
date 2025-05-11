@@ -20,9 +20,12 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
             CancellationToken.None
         );
 
-        var downloadedStream = await _bucket.OpenDownloadStreamByNameAsync(fileName);
+        var downloadedStream = await _bucket.OpenDownloadStreamByNameAsync(
+            fileName,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
         using var reader = new StreamReader(downloadedStream);
-        var content = await reader.ReadToEndAsync();
+        var content = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
         content.ShouldBe("test content");
     }
 
@@ -34,7 +37,10 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
 
         _sut.UploadFile(new FileId(fileName), stream);
 
-        var downloadedStream = _bucket.OpenDownloadStreamByName(fileName);
+        var downloadedStream = _bucket.OpenDownloadStreamByName(
+            fileName,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
         using var reader = new StreamReader(downloadedStream);
         var content = reader.ReadToEnd();
         content.ShouldBe("sync test content");
@@ -45,14 +51,19 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     {
         const string fileName = "ef90fb36-b635-405d-83c3-36c6aa3abc50";
         var uploadStream = new MemoryStream("download test content"u8.ToArray());
-        await _bucket.UploadFromStreamAsync(fileName, uploadStream);
+        await _bucket.UploadFromStreamAsync(
+            fileName,
+            uploadStream,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         var downloadedStream = await _sut.GetFileAsync(
-            new FileId("ef90fb36-b635-405d-83c3-36c6aa3abc50")
+            new FileId("ef90fb36-b635-405d-83c3-36c6aa3abc50"),
+            TestContext.Current.CancellationToken
         );
 
         using var reader = new StreamReader(downloadedStream);
-        var content = await reader.ReadToEndAsync();
+        var content = await reader.ReadToEndAsync(TestContext.Current.CancellationToken);
         content.ShouldBe("download test content");
     }
 
@@ -61,12 +72,22 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     {
         const string fileName = "d8606c7f-9ad0-4751-93c7-b8ece3b3e0fc";
         var uploadStream = new MemoryStream("delete test content"u8.ToArray());
-        await _bucket.UploadFromStreamAsync(fileName, uploadStream);
+        await _bucket.UploadFromStreamAsync(
+            fileName,
+            uploadStream,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
-        await _sut.DeleteFileAsync(new FileId("d8606c7f-9ad0-4751-93c7-b8ece3b3e0fc"));
+        await _sut.DeleteFileAsync(
+            new FileId("d8606c7f-9ad0-4751-93c7-b8ece3b3e0fc"),
+            TestContext.Current.CancellationToken
+        );
 
         await Assert.ThrowsAsync<GridFSFileNotFoundException>(() =>
-            _bucket.OpenDownloadStreamByNameAsync(fileName)
+            _bucket.OpenDownloadStreamByNameAsync(
+                fileName,
+                cancellationToken: TestContext.Current.CancellationToken
+            )
         );
     }
 
@@ -74,7 +95,10 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     public async Task DeleteFileAsync_ShouldNotThrow_WhenFileNotFound()
     {
         var exception = await Record.ExceptionAsync(async () =>
-            await _sut.DeleteFileAsync(new FileId("bda201ca-27ef-4790-b8e5-cb383dfdd242"))
+            await _sut.DeleteFileAsync(
+                new FileId("bda201ca-27ef-4790-b8e5-cb383dfdd242"),
+                TestContext.Current.CancellationToken
+            )
         );
 
         exception.ShouldBeNull();
@@ -93,15 +117,22 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
             var uploadStream = new MemoryStream(
                 Encoding.UTF8.GetBytes($"delete {fileName} content")
             );
-            await _bucket.UploadFromStreamAsync(fileName.ToString(), uploadStream);
+            await _bucket.UploadFromStreamAsync(
+                fileName.ToString(),
+                uploadStream,
+                cancellationToken: TestContext.Current.CancellationToken
+            );
         }
 
-        await _sut.DeleteFilesAsync(fileIds);
+        await _sut.DeleteFilesAsync(fileIds, TestContext.Current.CancellationToken);
 
         foreach (var fileId in fileIds)
         {
             await Assert.ThrowsAsync<GridFSFileNotFoundException>(() =>
-                _bucket.OpenDownloadStreamByNameAsync(fileId.ToString())
+                _bucket.OpenDownloadStreamByNameAsync(
+                    fileId.ToString(),
+                    cancellationToken: TestContext.Current.CancellationToken
+                )
             );
         }
     }
@@ -109,7 +140,9 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     [Fact]
     public async Task DeleteFilesAsync_WhenEmptyListIsPassed_ShouldNotThrowError()
     {
-        var exception = await Record.ExceptionAsync(async () => await _sut.DeleteFilesAsync([]));
+        var exception = await Record.ExceptionAsync(async () =>
+            await _sut.DeleteFilesAsync([], TestContext.Current.CancellationToken)
+        );
 
         exception.ShouldBeNull();
     }

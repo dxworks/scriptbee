@@ -40,12 +40,22 @@ public sealed class CreateFileAdapterTest : IDisposable
             .GetPathToUserFolder(pathToFileInSrcFolder)
             .Returns("path/to/user/folder/file.txt");
 
-        var result = await _createFileAdapter.Create(projectId, pathToFileTxt, "content");
+        var result = await _createFileAdapter.Create(
+            projectId,
+            pathToFileTxt,
+            "content",
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(
             new CreateFileResult("file.txt", pathToFileTxt, "path/to/user/folder/file.txt")
         );
-        (await System.IO.File.ReadAllTextAsync(pathToFileInSrcFolder)).ShouldBe("content");
+        (
+            await System.IO.File.ReadAllTextAsync(
+                pathToFileInSrcFolder,
+                TestContext.Current.CancellationToken
+            )
+        ).ShouldBe("content");
     }
 
     [Fact]
@@ -57,9 +67,18 @@ public sealed class CreateFileAdapterTest : IDisposable
         _configFoldersService
             .GetPathToSrcFolder(projectId, pathToFileTxt)
             .Returns(pathToFileInSrcFolder);
-        await System.IO.File.WriteAllTextAsync(pathToFileInSrcFolder, "test");
+        await System.IO.File.WriteAllTextAsync(
+            pathToFileInSrcFolder,
+            "test",
+            TestContext.Current.CancellationToken
+        );
 
-        var result = await _createFileAdapter.Create(projectId, pathToFileTxt, "content");
+        var result = await _createFileAdapter.Create(
+            projectId,
+            pathToFileTxt,
+            "content",
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new FileAlreadyExistsError(pathToFileTxt));
     }

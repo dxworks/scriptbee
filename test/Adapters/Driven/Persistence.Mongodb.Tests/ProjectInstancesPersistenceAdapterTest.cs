@@ -31,7 +31,7 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
         result.ShouldBe(instanceInfo);
         var createInstance = await _mongoCollection
             .Find(p => p.Id == instanceInfo.Id.ToString())
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         createInstance.Id.ShouldBe(instanceInfo.Id.ToString());
         createInstance.ProjectId.ShouldBe("id");
         createInstance.Url.ShouldBe("http://instance");
@@ -49,7 +49,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 ProjectId = "all-project-id-1",
                 Url = "http://test:80",
                 CreationDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         await _mongoCollection.InsertOneAsync(
             new MongodbProjectInstance
@@ -58,7 +59,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 ProjectId = "all-project-id-2",
                 Url = "http://test:80",
                 CreationDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         await _mongoCollection.InsertOneAsync(
             new MongodbProjectInstance
@@ -67,7 +69,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 ProjectId = "all-project-id-1",
                 Url = "http://test:80",
                 CreationDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var instanceInfos = await _adapter.GetAll(
@@ -107,7 +110,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 ProjectId = "project-id",
                 Url = "http://test:80",
                 CreationDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var instanceInfo = await _adapter.Get(

@@ -8,7 +8,6 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.Analysis;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Analysis;
@@ -54,7 +53,9 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
             .Content.Headers.GetValues("Content-Disposition")
             .Single()
             .ShouldContain("attachment; filename=file.csv");
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(
+            TestContext.Current.CancellationToken
+        );
         content.ShouldBe("content");
     }
 

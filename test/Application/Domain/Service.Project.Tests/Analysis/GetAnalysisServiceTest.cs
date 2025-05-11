@@ -35,9 +35,14 @@ public class GetAnalysisServiceTest
                 DateTimeOffset.Now
             ),
         ];
-        _getAllAnalyses.GetAll(projectId).Returns(Task.FromResult(expectedAnalysisResults));
+        _getAllAnalyses
+            .GetAll(projectId, TestContext.Current.CancellationToken)
+            .Returns(Task.FromResult(expectedAnalysisResults));
 
-        var analysisResults = await _getAnalysisService.GetAll(projectId);
+        var analysisResults = await _getAnalysisService.GetAll(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResults.ShouldBeEquivalentTo(expectedAnalysisResults);
     }
@@ -53,12 +58,15 @@ public class GetAnalysisServiceTest
             DateTimeOffset.Now
         );
         _getAnalysis
-            .GetById(analysisId)
+            .GetById(analysisId, TestContext.Current.CancellationToken)
             .Returns(
                 Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(expectedAnalysis)
             );
 
-        var analysisResult = await _getAnalysisService.GetById(analysisId);
+        var analysisResult = await _getAnalysisService.GetById(
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.ShouldBe(expectedAnalysis);
     }
@@ -69,12 +77,15 @@ public class GetAnalysisServiceTest
         var analysisId = new AnalysisId(Guid.NewGuid());
         var expectedError = new AnalysisDoesNotExistsError(analysisId);
         _getAnalysis
-            .GetById(analysisId)
+            .GetById(analysisId, TestContext.Current.CancellationToken)
             .Returns(
                 Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(expectedError)
             );
 
-        var analysisResult = await _getAnalysisService.GetById(analysisId);
+        var analysisResult = await _getAnalysisService.GetById(
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.ShouldBe(expectedError);
     }

@@ -73,7 +73,10 @@ public class LoadModelFilesServiceTest
             .Returns(loadedModels);
 
         // Act
-        await _loadModelFilesService.LoadModelFiles(loadedFiles);
+        await _loadModelFilesService.LoadModelFiles(
+            loadedFiles,
+            TestContext.Current.CancellationToken
+        );
 
         // Assert
         await modelLoader
@@ -99,7 +102,10 @@ public class LoadModelFilesServiceTest
             .Returns((IModelLoader?)null);
 
         // Act
-        await _loadModelFilesService.LoadModelFiles(loadedFiles);
+        await _loadModelFilesService.LoadModelFiles(
+            loadedFiles,
+            TestContext.Current.CancellationToken
+        );
 
         // Assert
         _projectManager
@@ -148,7 +154,10 @@ public class LoadModelFilesServiceTest
             .Returns(loadedModels);
 
         // Act
-        await _loadModelFilesService.LoadModelFiles(loadedFiles);
+        await _loadModelFilesService.LoadModelFiles(
+            loadedFiles,
+            TestContext.Current.CancellationToken
+        );
 
         // Assert
         _projectManager.Received().AddToGivenProject(loadedModels, loaderName);

@@ -6,7 +6,6 @@ using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Analysis;
-using Xunit.Abstractions;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Plugins;
 

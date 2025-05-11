@@ -57,7 +57,10 @@ public class LinkInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        var result = await _linkInstanceContextService.Link(command);
+        var result = await _linkInstanceContextService.Link(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(new Unit());
         await _linkInstanceContext
@@ -91,7 +94,7 @@ public class LinkInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        await _linkInstanceContextService.Link(command);
+        await _linkInstanceContextService.Link(command, TestContext.Current.CancellationToken);
 
         await _updateProject
             .Received(1)
@@ -116,7 +119,10 @@ public class LinkInstanceContextServiceTest
                 )
             );
 
-        var result = await _linkInstanceContextService.Link(command);
+        var result = await _linkInstanceContextService.Link(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(projectDoesNotExistsError);
     }
@@ -143,7 +149,10 @@ public class LinkInstanceContextServiceTest
                 )
             );
 
-        var result = await _linkInstanceContextService.Link(command);
+        var result = await _linkInstanceContextService.Link(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT2.ShouldBe(instanceDoesNotExistsError);
     }

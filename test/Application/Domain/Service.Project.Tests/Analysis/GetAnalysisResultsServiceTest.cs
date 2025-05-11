@@ -37,7 +37,11 @@ public class GetAnalysisResultsServiceTest
                 )
             );
 
-        var result = await _getAnalysisResultsService.GetConsoleResult(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetConsoleResult(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new AnalysisDoesNotExistsError(analysisId));
     }
@@ -70,7 +74,11 @@ public class GetAnalysisResultsServiceTest
             .GetFileAsync(resultId.ToFileId(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Stream>(new MemoryStream("console content"u8.ToArray())));
 
-        var result = await _getAnalysisResultsService.GetConsoleResult(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetConsoleResult(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe("console content");
     }
@@ -87,7 +95,11 @@ public class GetAnalysisResultsServiceTest
                 Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(analysisInfo)
             );
 
-        var result = await _getAnalysisResultsService.GetConsoleResult(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetConsoleResult(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe("");
         await _fileModelService
@@ -108,7 +120,11 @@ public class GetAnalysisResultsServiceTest
                 )
             );
 
-        var result = await _getAnalysisResultsService.GetErrorResults(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetErrorResults(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new AnalysisDoesNotExistsError(analysisId));
     }
@@ -141,7 +157,11 @@ public class GetAnalysisResultsServiceTest
             .GetFileAsync(resultId.ToFileId(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Stream>(new MemoryStream("error message"u8.ToArray())));
 
-        var result = await _getAnalysisResultsService.GetErrorResults(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetErrorResults(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(
             new List<AnalysisErrorResult>
@@ -165,7 +185,11 @@ public class GetAnalysisResultsServiceTest
                 )
             );
 
-        var result = await _getAnalysisResultsService.GetFileResults(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetFileResults(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new AnalysisDoesNotExistsError(analysisId));
     }
@@ -195,7 +219,11 @@ public class GetAnalysisResultsServiceTest
                 Task.FromResult<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>>(analysisInfo)
             );
 
-        var result = await _getAnalysisResultsService.GetFileResults(projectId, analysisId);
+        var result = await _getAnalysisResultsService.GetFileResults(
+            projectId,
+            analysisId,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(
             new List<AnalysisFileResult> { new(resultId.ToFileId(), "File.txt", "file") }

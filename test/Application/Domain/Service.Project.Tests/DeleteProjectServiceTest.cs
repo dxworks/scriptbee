@@ -19,10 +19,15 @@ public class DeleteProjectServiceTest
     public async Task DeleteProjectSuccessfully()
     {
         var projectId = ProjectId.Create("id");
-        _deleteProject.Delete(projectId).Returns(Task.CompletedTask);
+        _deleteProject
+            .Delete(projectId, TestContext.Current.CancellationToken)
+            .Returns(Task.CompletedTask);
 
-        await _deleteProjectService.DeleteProject(new DeleteProjectCommand(projectId));
+        await _deleteProjectService.DeleteProject(
+            new DeleteProjectCommand(projectId),
+            TestContext.Current.CancellationToken
+        );
 
-        await _deleteProject.Received(1).Delete(projectId);
+        await _deleteProject.Received(1).Delete(projectId, TestContext.Current.CancellationToken);
     }
 }

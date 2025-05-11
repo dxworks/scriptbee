@@ -45,7 +45,10 @@ public class GetInstanceLinkersServiceTest
                 )
             );
 
-        var linkers = await _getInstanceLinkersService.Get(query);
+        var linkers = await _getInstanceLinkersService.Get(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         linkers.ShouldBeEmpty();
     }
@@ -105,7 +108,10 @@ public class GetInstanceLinkersServiceTest
                 )
             );
 
-        var linkers = await _getInstanceLinkersService.Get(query);
+        var linkers = await _getInstanceLinkersService.Get(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         linkers
             .ToList()

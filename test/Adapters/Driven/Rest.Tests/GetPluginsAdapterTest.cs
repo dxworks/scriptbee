@@ -38,7 +38,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();
@@ -70,7 +71,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();
@@ -102,7 +104,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();
@@ -136,7 +139,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();
@@ -172,7 +176,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();
@@ -211,7 +216,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();
@@ -248,7 +254,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var plugin = response.Single();

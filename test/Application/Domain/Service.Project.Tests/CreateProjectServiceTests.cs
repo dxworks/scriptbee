@@ -37,7 +37,8 @@ public class CreateProjectServiceTests
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
-            new CreateProjectCommand("id", "project")
+            new CreateProjectCommand("id", "project"),
+            TestContext.Current.CancellationToken
         );
 
         MatchProjectDetails(projectDetails.AsT0, expectedProjectDetails).ShouldBe(true);
@@ -69,7 +70,8 @@ public class CreateProjectServiceTests
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
-            new CreateProjectCommand("id", "project")
+            new CreateProjectCommand("id", "project"),
+            TestContext.Current.CancellationToken
         );
 
         projectDetails.ShouldBe(error);

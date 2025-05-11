@@ -13,7 +13,10 @@ public class RunAnalysisValidatorTest
     {
         var command = new WebRunAnalysisCommand("project-id", "script-id");
 
-        var result = await _runAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -23,7 +26,10 @@ public class RunAnalysisValidatorTest
     {
         var command = new WebRunAnalysisCommand("", "script-id");
 
-        var result = await _runAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.ProjectId)
@@ -35,7 +41,10 @@ public class RunAnalysisValidatorTest
     {
         var command = new WebRunAnalysisCommand("project-id", "");
 
-        var result = await _runAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.ScriptId)
@@ -47,7 +56,10 @@ public class RunAnalysisValidatorTest
     {
         var command = new WebRunAnalysisCommand(null!, "script-id");
 
-        var result = await _runAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.ProjectId)
@@ -59,7 +71,10 @@ public class RunAnalysisValidatorTest
     {
         var command = new WebRunAnalysisCommand("project-id", null!);
 
-        var result = await _runAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.ScriptId)
@@ -71,7 +86,10 @@ public class RunAnalysisValidatorTest
     {
         var command = new WebRunAnalysisCommand(null!, null!);
 
-        var result = await _runAnalysisValidator.TestValidateAsync(command);
+        var result = await _runAnalysisValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.ProjectId)

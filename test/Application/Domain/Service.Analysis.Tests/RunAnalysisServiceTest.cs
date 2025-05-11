@@ -83,10 +83,15 @@ public class RunAnalysisServiceTest
             .Returns(expectedAnalysisInfo);
         _pluginRepository.GetPlugin(Arg.Any<Func<IScriptRunner, bool>>()).Returns(_scriptRunner);
 
-        var analysisResult = await _runAnalysisService.Run(command);
+        var analysisResult = await _runAnalysisService.Run(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
-        var runScriptRequest = await _runScriptChannel.Reader.ReadAsync();
+        var runScriptRequest = await _runScriptChannel.Reader.ReadAsync(
+            TestContext.Current.CancellationToken
+        );
 
         runScriptRequest.AnalysisInfo.ShouldBe(expectedAnalysisInfo);
         runScriptRequest.ScriptRunner.ShouldBe(_scriptRunner);
@@ -139,7 +144,10 @@ public class RunAnalysisServiceTest
             .GetPlugin(Arg.Any<Func<IScriptRunner, bool>>())
             .Returns((IScriptRunner?)null);
 
-        var analysisResult = await _runAnalysisService.Run(command);
+        var analysisResult = await _runAnalysisService.Run(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
     }
@@ -179,7 +187,10 @@ public class RunAnalysisServiceTest
             )
             .Returns(expectedAnalysisInfo);
 
-        var analysisResult = await _runAnalysisService.Run(command);
+        var analysisResult = await _runAnalysisService.Run(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.AssertAnalysisResult(expectedAnalysisInfo);
     }

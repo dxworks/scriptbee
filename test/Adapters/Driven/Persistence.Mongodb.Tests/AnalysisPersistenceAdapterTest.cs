@@ -38,7 +38,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.GetById(
@@ -91,7 +92,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         await _mongoCollection.InsertOneAsync(
             new MongodbAnalysisInfo
@@ -105,7 +107,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         await _mongoCollection.InsertOneAsync(
             new MongodbAnalysisInfo
@@ -128,7 +131,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 ],
                 CreationDate = creationDate,
                 FinishedDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var analysisInfos = await _adapter.GetAll(
@@ -202,7 +206,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         AssertAnalysisInfo(actualAnalysisInfo, expected);
         var foundAnalysisInfo = await _mongoCollection
             .Find(p => p.Id == "15ed8fda-d6c8-49c9-909d-bf01d58b45b2")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         AssertAnalysisInfo(foundAnalysisInfo.ToAnalysisInfo(), expected);
     }
 
@@ -222,7 +226,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         await _adapter.DeleteById(
@@ -232,7 +237,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 
         var analysisInfo = await _mongoCollection
             .Find(p => p.Id == "5ab73da4-aebc-442a-afb2-639a1a7eca32")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         analysisInfo.ShouldBeNull();
     }
 
@@ -262,7 +267,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         await _mongoCollection.InsertOneAsync(
             new MongodbAnalysisInfo
@@ -276,7 +282,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         await _adapter.DeleteAllByProjectId(
@@ -286,11 +293,11 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 
         var deletedAnalysisInfo = await _mongoCollection
             .Find(p => p.Id == "7c1c4a38-77fa-48b9-b37c-3dfa79177bb9")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         deletedAnalysisInfo.ShouldBeNull();
         var remainingAnalysisInfo = await _mongoCollection
             .Find(p => p.Id == "bb5687c4-0290-48e0-8d17-ef9d8f7bc5bb")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         AssertAnalysisInfo(
             remainingAnalysisInfo.ToAnalysisInfo(),
             new AnalysisInfo(
@@ -323,7 +330,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Results = [],
                 CreationDate = creationDate,
                 FinishedDate = null,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         var updatedAnalysisInfo = new AnalysisInfo(
             new AnalysisId("ded96511-1a12-45ad-a866-97497593d122"),
@@ -342,7 +350,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         AssertAnalysisInfo(result, updatedAnalysisInfo);
         var foundAnalysisInfo = await _mongoCollection
             .Find(p => p.Id == "ded96511-1a12-45ad-a866-97497593d122")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         AssertAnalysisInfo(foundAnalysisInfo.ToAnalysisInfo(), updatedAnalysisInfo);
     }
 
