@@ -40,6 +40,23 @@ public class TestApiCaller<TStartup>(string endpoint)
         return response;
     }
 
+    public async Task<HttpResponseMessage> PutApi<T>(
+        TestWebApplicationFactory<TStartup> factory,
+        T? data = default
+    )
+    {
+        using var client = factory.CreateClient();
+
+        var content = new StringContent(
+            JsonSerializer.Serialize(data),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json
+        );
+
+        var response = await client.PutAsync(endpoint, content);
+        return response;
+    }
+
     public async Task<HttpResponseMessage> PutApiFormWithFile(
         TestWebApplicationFactory<TStartup> factory,
         Dictionary<string, string> formData,
