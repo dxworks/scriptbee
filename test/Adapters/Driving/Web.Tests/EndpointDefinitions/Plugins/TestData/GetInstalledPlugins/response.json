@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "id": "plugin1",
+      "name": "Installed Plugin 1",
+      "type": "Plugin",
+      "authors": [
+        "Author 1",
+        "Author 2"
+      ],
+      "description": "Description for Plugin 1",
+      "versions": [
+        {
+          "version": "1.0.0"
+        }
+      ]
+    }
+  ]
+}

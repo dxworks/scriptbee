@@ -1,13 +1,5 @@
-﻿using System.Runtime.Serialization;
-
-namespace ScriptBee.Persistence.File.Exceptions;
+﻿namespace ScriptBee.Persistence.File.Exceptions;
 
 [Serializable]
-public class PluginVersionExistsException : Exception
-{
-    public PluginVersionExistsException(string name, string version)
-        : base($"Plugin with name '{name}' and version '{version}' already exists") { }
-
-    protected PluginVersionExistsException(SerializationInfo info, StreamingContext context)
-        : base(info, context) { }
-}
+public class PluginVersionExistsException(string name, string version)
+    : Exception($"Plugin with name '{name}' and version '{version}' already exists");

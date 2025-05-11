@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Persistence.File.Plugin;
 
-namespace ScriptBee.Persistence.File.Tests;
+namespace ScriptBee.Persistence.File.Tests.Plugin;
 
 public class PluginNameGeneratorTests
 {

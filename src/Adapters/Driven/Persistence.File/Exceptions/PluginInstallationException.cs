@@ -1,13 +1,5 @@
-﻿using System.Runtime.Serialization;
-
-namespace ScriptBee.Persistence.File.Exceptions;
+﻿namespace ScriptBee.Persistence.File.Exceptions;
 
 [Serializable]
-public class PluginInstallationException : Exception
-{
-    public PluginInstallationException(string name, string version)
-        : base($"Plugin with name '{name}' and version '{version}' could not be installed.") { }
-
-    protected PluginInstallationException(SerializationInfo info, StreamingContext context)
-        : base(info, context) { }
-}
+public class PluginInstallationException(string name, string version)
+    : Exception($"Plugin with name '{name}' and version '{version}' could not be installed.");
