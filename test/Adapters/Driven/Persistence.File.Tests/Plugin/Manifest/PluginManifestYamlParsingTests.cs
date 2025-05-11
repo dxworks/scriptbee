@@ -2,7 +2,7 @@
 using ScriptBee.Persistence.File.Plugin;
 using ScriptBee.Tests.Common;
 
-namespace ScriptBee.Persistence.File.Tests.Manifest;
+namespace ScriptBee.Persistence.File.Tests.Plugin.Manifest;
 
 public class PluginManifestYamlParsingTests
 {
