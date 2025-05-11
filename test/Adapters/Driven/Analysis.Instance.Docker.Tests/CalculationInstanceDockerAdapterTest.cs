@@ -154,8 +154,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             DateTimeOffset.UtcNow
         );
 
-        var exception = await Record.ExceptionAsync(
-            () => _calculationInstanceDockerAdapter.Deallocate(instanceInfo)
+        var exception = await Record.ExceptionAsync(() =>
+            _calculationInstanceDockerAdapter.Deallocate(instanceInfo)
         );
 
         exception.ShouldBeNull();

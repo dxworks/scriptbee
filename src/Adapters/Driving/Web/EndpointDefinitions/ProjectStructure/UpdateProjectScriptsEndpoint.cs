@@ -20,8 +20,7 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
     private static async Task<Ok<WebScriptData>> UpdateProjectScript(
         [FromRoute] string projectId,
         // TODO FIXIT: add validation
-        [FromBody]
-            WebUpdateScriptCommand command
+        [FromBody] WebUpdateScriptCommand command
     )
     {
         await Task.CompletedTask;

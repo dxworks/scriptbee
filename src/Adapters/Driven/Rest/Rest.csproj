@@ -1,20 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Rest</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj" />
-        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Http" />
-      <PackageReference Include="Refit" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="bin\" />
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Rest</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj" />
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" />
+    <PackageReference Include="Refit" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
 </Project>

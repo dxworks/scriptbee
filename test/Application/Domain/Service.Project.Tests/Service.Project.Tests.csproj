@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Service.Project.Tests</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\..\src\Application\Domain\Service.Project\Service.Project.csproj" />
-      <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Service.Project.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Application\Domain\Service.Project\Service.Project.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
 </Project>

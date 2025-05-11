@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Web.Tests</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\..\src\Adapters\Driving\Web\Web.csproj" />
-        <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Web.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Adapters\Driving\Web\Web.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Analysis.Instance.Docker.Tests</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj"/>
-        <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Analysis.Instance.Docker.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
 </Project>

@@ -68,8 +68,8 @@ public class BundlePluginInstallerTests
             .When(x => x.GetPluginUrl(Arg.Any<string>(), Arg.Any<string>()))
             .Throws(new Exception());
 
-        await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("pluginId", "1.0.0")
+        await Assert.ThrowsAsync<Exception>(() =>
+            _bundlePluginInstaller.Install("pluginId", "1.0.0")
         );
 
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
@@ -94,8 +94,8 @@ public class BundlePluginInstallerTests
             )
             .Throws(new Exception());
 
-        await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("pluginId", "1.0.0")
+        await Assert.ThrowsAsync<Exception>(() =>
+            _bundlePluginInstaller.Install("pluginId", "1.0.0")
         );
 
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
@@ -387,8 +387,7 @@ public class BundlePluginInstallerTests
                 )
             );
 
-        await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("bundle", "1.0.0")
+        await Assert.ThrowsAsync<Exception>(() => _bundlePluginInstaller.Install("bundle", "1.0.0")
         );
 
         _pluginUninstaller.Received(1).ForceUninstall("bundle_folder");
@@ -424,8 +423,7 @@ public class BundlePluginInstallerTests
                 )
             );
 
-        await Assert.ThrowsAsync<Exception>(
-            () => _bundlePluginInstaller.Install("bundle", "1.0.0")
+        await Assert.ThrowsAsync<Exception>(() => _bundlePluginInstaller.Install("bundle", "1.0.0")
         );
 
         _pluginFetcher.Received(1).GetPluginUrl("pluginId2", "2.0.0");

@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Analysis.Service.Tests</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\..\src\Application\Domain\Service.Analysis\Service.Analysis.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Analysis.Service.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Application\Domain\Service.Analysis\Service.Analysis.csproj" />
+  </ItemGroup>
 </Project>

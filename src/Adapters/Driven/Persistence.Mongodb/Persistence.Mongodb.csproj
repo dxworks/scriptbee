@@ -1,20 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Persistence.Mongodb</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Files\Ports.Files.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Project\Ports.Project.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Analysis\Ports.Analysis.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="MongoDB.Bson"/>
-        <PackageReference Include="MongoDB.Driver"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
-    </ItemGroup>
-
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Persistence.Mongodb</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Files\Ports.Files.csproj" />
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj" />
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Project\Ports.Project.csproj" />
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Analysis\Ports.Analysis.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" />
+    <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+  </ItemGroup>
 </Project>

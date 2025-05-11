@@ -1,24 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Web</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="FluentValidation"/>
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\Driven\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
-        <ProjectReference Include="..\..\Driven\Marketplace.Client\Marketplace.Client.csproj" />
-        <ProjectReference Include="..\Common.Web\Common.Web.csproj"/>
-        <ProjectReference Include="..\..\..\Common\Common.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Domain\Service.Analysis\Service.Analysis.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Domain\Service.Project\Service.Project.csproj"/>
-        <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Project\UseCases.Project.csproj"/>
-        <ProjectReference Include="..\..\Driven\Persistence.File\Persistence.File.csproj" />
-        <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj"/>
-        <ProjectReference Include="..\..\Driven\Rest\Rest.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Web</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Driven\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
+    <ProjectReference Include="..\..\Driven\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Application\Domain\Service.Analysis\Service.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Application\Domain\Service.Project\Service.Project.csproj" />
+    <ProjectReference Include="..\..\..\Application\Ports\Driving\UseCases.Project\UseCases.Project.csproj" />
+    <ProjectReference Include="..\..\Driven\Persistence.File\Persistence.File.csproj" />
+    <ProjectReference Include="..\..\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\..\Driven\Rest\Rest.csproj" />
+  </ItemGroup>
 </Project>

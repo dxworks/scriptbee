@@ -65,17 +65,16 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
 
         await _sut.DeleteFileAsync(new FileId("d8606c7f-9ad0-4751-93c7-b8ece3b3e0fc"));
 
-        await Assert.ThrowsAsync<GridFSFileNotFoundException>(
-            () => _bucket.OpenDownloadStreamByNameAsync(fileName)
+        await Assert.ThrowsAsync<GridFSFileNotFoundException>(() =>
+            _bucket.OpenDownloadStreamByNameAsync(fileName)
         );
     }
 
     [Fact]
     public async Task DeleteFileAsync_ShouldNotThrow_WhenFileNotFound()
     {
-        var exception = await Record.ExceptionAsync(
-            async () =>
-                await _sut.DeleteFileAsync(new FileId("bda201ca-27ef-4790-b8e5-cb383dfdd242"))
+        var exception = await Record.ExceptionAsync(async () =>
+            await _sut.DeleteFileAsync(new FileId("bda201ca-27ef-4790-b8e5-cb383dfdd242"))
         );
 
         exception.ShouldBeNull();
@@ -101,8 +100,8 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
 
         foreach (var fileId in fileIds)
         {
-            await Assert.ThrowsAsync<GridFSFileNotFoundException>(
-                () => _bucket.OpenDownloadStreamByNameAsync(fileId.ToString())
+            await Assert.ThrowsAsync<GridFSFileNotFoundException>(() =>
+                _bucket.OpenDownloadStreamByNameAsync(fileId.ToString())
             );
         }
     }

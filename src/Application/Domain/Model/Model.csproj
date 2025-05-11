@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Domain.Model</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="OneOf"/>
-        <PackageReference Include="OneOf.SourceGenerator"/>
-        <PackageReference Include="Slugify.Core" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
-    </ItemGroup>
-
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Domain.Model</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="OneOf" />
+    <PackageReference Include="OneOf.SourceGenerator" />
+    <PackageReference Include="Slugify.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
+  </ItemGroup>
 </Project>

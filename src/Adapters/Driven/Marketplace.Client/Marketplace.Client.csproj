@@ -1,17 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Marketplace.Client</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="DxWorks.Hub.Sdk" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
-        <PackageReference Include="Microsoft.Extensions.Http"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\..\Application\Domain\Model\Model.csproj" />
-      <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Marketplace.Client</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="DxWorks.Hub.Sdk" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Application\Domain\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
+  </ItemGroup>
 </Project>

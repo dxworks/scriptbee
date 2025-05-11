@@ -241,8 +241,8 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
     {
         var analysisId = new AnalysisId("2c4ef6b0-8048-4440-bc65-55c3442a425b");
 
-        await Should.NotThrowAsync(
-            async () => await _adapter.DeleteById(analysisId, CancellationToken.None)
+        await Should.NotThrowAsync(async () =>
+            await _adapter.DeleteById(analysisId, CancellationToken.None)
         );
     }
 

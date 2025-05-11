@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Service.Project</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Common\Common.csproj"/>
-        <ProjectReference Include="..\..\Ports\Driven\Ports.Analysis\Ports.Analysis.csproj"/>
-        <ProjectReference Include="..\..\Ports\Driven\Ports.Files\Ports.Files.csproj"/>
-        <ProjectReference Include="..\..\Ports\Driven\Ports.Instance\Ports.Instance.csproj"/>
-        <ProjectReference Include="..\..\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
-        <ProjectReference Include="..\..\Ports\Driven\Ports.Project\Ports.Project.csproj"/>
-        <ProjectReference Include="..\..\Ports\Driving\UseCases.Project\UseCases.Project.csproj"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Service.Project</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common.csproj" />
+    <ProjectReference Include="..\..\Ports\Driven\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\..\Ports\Driven\Ports.Files\Ports.Files.csproj" />
+    <ProjectReference Include="..\..\Ports\Driven\Ports.Instance\Ports.Instance.csproj" />
+    <ProjectReference Include="..\..\Ports\Driven\Ports.Plugins\Ports.Plugins.csproj" />
+    <ProjectReference Include="..\..\Ports\Driven\Ports.Project\Ports.Project.csproj" />
+    <ProjectReference Include="..\..\Ports\Driving\UseCases.Project\UseCases.Project.csproj" />
+  </ItemGroup>
 </Project>

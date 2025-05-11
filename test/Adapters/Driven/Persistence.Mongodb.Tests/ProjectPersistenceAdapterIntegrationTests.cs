@@ -74,8 +74,8 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var projectId = ProjectId.Create("to-delete-not-existing-id");
 
-        await Should.NotThrowAsync(
-            async () => await _adapter.Delete(projectId, CancellationToken.None)
+        await Should.NotThrowAsync(async () =>
+            await _adapter.Delete(projectId, CancellationToken.None)
         );
     }
 

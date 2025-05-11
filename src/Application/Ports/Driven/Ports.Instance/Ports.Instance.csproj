@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>ScriptBee.Ports.Instance</RootNamespace>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\Domain\Model\Model.csproj"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Ports.Instance</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Domain\Model\Model.csproj" />
+  </ItemGroup>
 </Project>
