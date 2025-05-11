@@ -1,6 +1,6 @@
 using System.Net;
-using LateApexEarlySpeed.Xunit.V3.Assertion.Json;
 using ScriptBee.Tests.Common;
+using VeriJson;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Plugins;
 
@@ -23,6 +23,6 @@ public class GetAllAvailablePluginsEndpointTest(ITestOutputHelper outputHelper)
             FilePathAttribute.GetFilePath(responsePath),
             TestContext.Current.CancellationToken
         );
-        JsonAssertion.Equivalent(expectedContent, actualContent);
+        actualContent.Should().BeEquivalentTo(expectedContent);
     }
 }

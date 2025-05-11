@@ -6,8 +6,8 @@
     <ProjectReference Include="..\..\..\src\Application\Domain\Model\Model.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="LateApexEarlySpeed.Xunit.V3.Assertion.Json" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="VeriJson" />
   </ItemGroup>
 </Project>
