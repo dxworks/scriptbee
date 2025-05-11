@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 
-namespace ScriptBee.Web.EndpointDefinitions.PluginMarketPlace.Contracts;
+namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 
 public sealed record WebMarketplaceProject(
     string Id,

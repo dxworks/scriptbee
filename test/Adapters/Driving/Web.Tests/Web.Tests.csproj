@@ -9,4 +9,9 @@
     <ProjectReference Include="..\..\..\..\src\Adapters\Driving\Web\Web.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="EndpointDefinitions\**\TestData\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
