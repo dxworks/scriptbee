@@ -7,6 +7,6 @@ public class LinkContextValidator : AbstractValidator<WebLinkContextCommand>
 {
     public LinkContextValidator()
     {
-        RuleFor(x => x.LinkerIds).NotEmpty();
+        RuleFor(x => x.LinkerIds).NotNull();
     }
 }

@@ -7,6 +7,6 @@ public class LoadContextValidator : AbstractValidator<WebLoadContextCommand>
 {
     public LoadContextValidator()
     {
-        RuleFor(x => x.FilesToLoad).NotEmpty();
+        RuleFor(x => x.FilesToLoad).NotNull();
     }
 }

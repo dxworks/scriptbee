@@ -33,14 +33,12 @@ public class LoadContextValidatorTest
     }
 
     [Fact]
-    public async Task GivenEmptyFilesToLoad_ThenResultHasErrors()
+    public async Task GivenEmptyFilesToLoad_ThenResultHasNoErrors()
     {
         var command = new WebLoadContextCommand(new Dictionary<string, List<string>>());
 
         var result = await _loadContextValidator.TestValidateAsync(command);
 
-        result
-            .ShouldHaveValidationErrorFor(x => x.FilesToLoad)
-            .WithErrorMessage("'Files To Load' must not be empty.");
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }
