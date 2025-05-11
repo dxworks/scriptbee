@@ -21,7 +21,10 @@ public class CreateScriptValidatorTest
             [new WebScriptParameter("parameter", type, "value")]
         );
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -31,7 +34,10 @@ public class CreateScriptValidatorTest
     {
         var createProject = new WebCreateScriptCommand("", "language", null);
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Path)
@@ -43,7 +49,10 @@ public class CreateScriptValidatorTest
     {
         var createProject = new WebCreateScriptCommand(null!, "language", null);
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Path)
@@ -55,7 +64,10 @@ public class CreateScriptValidatorTest
     {
         var createProject = new WebCreateScriptCommand("path", "", null);
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Language)
@@ -67,7 +79,10 @@ public class CreateScriptValidatorTest
     {
         var createProject = new WebCreateScriptCommand("path", null!, null);
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Language)
@@ -83,7 +98,10 @@ public class CreateScriptValidatorTest
             [new WebScriptParameter("", "string", "value")]
         );
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor("Parameters[0].Name")
@@ -99,7 +117,10 @@ public class CreateScriptValidatorTest
             [new WebScriptParameter(null!, "string", "value")]
         );
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
         result
             .ShouldHaveValidationErrorFor("Parameters[0].Name")
             .WithErrorMessage("'Name' must not be empty.");
@@ -114,7 +135,10 @@ public class CreateScriptValidatorTest
             [new WebScriptParameter("parameter", null!, "value")]
         );
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
         result
             .ShouldHaveValidationErrorFor("Parameters[0].Type")
             .WithErrorMessage("'Type' must not be empty.");
@@ -129,7 +153,10 @@ public class CreateScriptValidatorTest
             [new WebScriptParameter("parameter", "invalid", "value")]
         );
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
         result
             .ShouldHaveValidationErrorFor("Parameters[0].Type")
             .WithErrorMessage(
@@ -146,7 +173,10 @@ public class CreateScriptValidatorTest
             [new WebScriptParameter(null!, null!, null)]
         );
 
-        var result = await _createScriptValidator.TestValidateAsync(createProject);
+        var result = await _createScriptValidator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.Path)

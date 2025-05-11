@@ -7,7 +7,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Analysis;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Analysis;

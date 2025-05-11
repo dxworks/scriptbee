@@ -15,7 +15,10 @@ public class LoadContextValidatorTest
             new Dictionary<string, List<string>> { { "loader", [] } }
         );
 
-        var result = await _loadContextValidator.TestValidateAsync(command);
+        var result = await _loadContextValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -25,7 +28,10 @@ public class LoadContextValidatorTest
     {
         var command = new WebLoadContextCommand(null!);
 
-        var result = await _loadContextValidator.TestValidateAsync(command);
+        var result = await _loadContextValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.FilesToLoad)
@@ -37,7 +43,10 @@ public class LoadContextValidatorTest
     {
         var command = new WebLoadContextCommand(new Dictionary<string, List<string>>());
 
-        var result = await _loadContextValidator.TestValidateAsync(command);
+        var result = await _loadContextValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotHaveAnyValidationErrors();
     }

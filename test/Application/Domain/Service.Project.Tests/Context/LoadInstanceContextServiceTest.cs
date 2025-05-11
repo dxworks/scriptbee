@@ -70,7 +70,10 @@ public class LoadInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        var result = await _loadInstanceContextService.Load(command);
+        var result = await _loadInstanceContextService.Load(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(new Unit());
         await _loadInstanceContext
@@ -133,7 +136,7 @@ public class LoadInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
-        await _loadInstanceContextService.Load(command);
+        await _loadInstanceContextService.Load(command, TestContext.Current.CancellationToken);
 
         await _updateProject
             .Received(1)
@@ -172,7 +175,10 @@ public class LoadInstanceContextServiceTest
                 )
             );
 
-        var result = await _loadInstanceContextService.Load(command);
+        var result = await _loadInstanceContextService.Load(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(projectDoesNotExistsError);
     }
@@ -198,7 +204,10 @@ public class LoadInstanceContextServiceTest
                 )
             );
 
-        var result = await _loadInstanceContextService.Load(command);
+        var result = await _loadInstanceContextService.Load(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT2.ShouldBe(instanceDoesNotExistsError);
     }

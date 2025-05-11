@@ -59,7 +59,10 @@ public class TriggerAnalysisServiceTest
                 )
             );
 
-        var analysisResult = await _triggerAnalysisService.Trigger(command);
+        var analysisResult = await _triggerAnalysisService.Trigger(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.AsT1.ShouldBe(new InstanceDoesNotExistsError(instanceId));
     }
@@ -100,7 +103,10 @@ public class TriggerAnalysisServiceTest
             .Trigger(instanceInfo, scriptId, Arg.Any<CancellationToken>())
             .Returns(analysisInfo);
 
-        var analysisResult = await _triggerAnalysisService.Trigger(command);
+        var analysisResult = await _triggerAnalysisService.Trigger(
+            command,
+            TestContext.Current.CancellationToken
+        );
 
         analysisResult.AsT0.ShouldBe(analysisInfo);
     }

@@ -46,7 +46,10 @@ public class GetInstanceContextServiceTest
             .Get(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IEnumerable<ContextSlice>>(contextSlices));
 
-        var result = await _getInstanceContextService.Get(query);
+        var result = await _getInstanceContextService.Get(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.ShouldBe(contextSlices);
     }
@@ -66,7 +69,10 @@ public class GetInstanceContextServiceTest
                 )
             );
 
-        var result = await _getInstanceContextService.Get(query);
+        var result = await _getInstanceContextService.Get(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(instanceDoesNotExistsError);
     }

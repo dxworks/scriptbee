@@ -7,7 +7,6 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
-using Xunit.Abstractions;
 
 namespace ScriptBee.Analysis.Instance.Docker.Tests;
 
@@ -53,12 +52,17 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        var containerUrl = await _calculationInstanceDockerAdapter.Allocate(instanceId, image);
+        var containerUrl = await _calculationInstanceDockerAdapter.Allocate(
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
 
         containerUrl.ShouldStartWith("http://");
         containerUrl.ShouldContain($":{_testPort}");
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
-            new ContainersListParameters { All = true }
+            new ContainersListParameters { All = true },
+            TestContext.Current.CancellationToken
         );
         var ourContainer = containers.FirstOrDefault(c =>
             c.Names.Contains($"/scriptbee-calculation-{instanceId}")
@@ -80,7 +84,11 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        await _calculationInstanceDockerAdapter.Allocate(instanceId, image);
+        await _calculationInstanceDockerAdapter.Allocate(
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
 
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters
@@ -96,7 +104,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
                         }
                     },
                 },
-            }
+            },
+            TestContext.Current.CancellationToken
         );
         containers.ShouldHaveSingleItem();
         containers.First().Names.ShouldContain($"/scriptbee-calculation-{instanceId}");
@@ -113,7 +122,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         var instanceUrl = await _calculationInstanceDockerAdapter.Allocate(
             instanceId,
-            instanceImage
+            instanceImage,
+            TestContext.Current.CancellationToken
         );
         instanceUrl.ShouldStartWith("http://");
         var instanceInfo = new InstanceInfo(
@@ -138,7 +148,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
                         new Dictionary<string, bool> { { containerName, true } }
                     },
                 },
-            }
+            },
+            TestContext.Current.CancellationToken
         );
         containers.ShouldBeEmpty();
     }

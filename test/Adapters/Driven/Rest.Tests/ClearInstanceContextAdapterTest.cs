@@ -32,7 +32,8 @@ public sealed class ClearInstanceContextAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var requests = _server.FindLogEntries(

@@ -31,7 +31,12 @@ public class HelperFunctionsResultServiceTest
         var resultId = new ResultId(Guid.NewGuid());
         _guidProvider.NewGuid().Returns(resultId.Value);
 
-        await _helperFunctionsResultService.UploadResultAsync(fileName, type, content);
+        await _helperFunctionsResultService.UploadResultAsync(
+            fileName,
+            type,
+            content,
+            TestContext.Current.CancellationToken
+        );
 
         await _fileModelService
             .Received()
@@ -48,7 +53,12 @@ public class HelperFunctionsResultServiceTest
         var resultId = new ResultId(Guid.NewGuid());
         _guidProvider.NewGuid().Returns(resultId.Value);
 
-        await _helperFunctionsResultService.UploadResultAsync(fileName, type, content);
+        await _helperFunctionsResultService.UploadResultAsync(
+            fileName,
+            type,
+            content,
+            TestContext.Current.CancellationToken
+        );
 
         await _fileModelService
             .Received()

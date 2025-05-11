@@ -57,7 +57,7 @@ public class RunScriptServiceTest
             );
         _dateTimeProvider.UtcNow().Returns(finishedDate);
 
-        await _runScriptService.RunAsync(request);
+        await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
         await _updateAnalysis
             .Received(1)
@@ -104,7 +104,7 @@ public class RunScriptServiceTest
             )
             .Returns(Task.CompletedTask);
 
-        await _runScriptService.RunAsync(request);
+        await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
         await _updateAnalysis
             .Received(2)
@@ -154,7 +154,7 @@ public class RunScriptServiceTest
             )
             .Throws(new Exception("error"));
 
-        await _runScriptService.RunAsync(request);
+        await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
         await _updateAnalysis
             .Received(2)

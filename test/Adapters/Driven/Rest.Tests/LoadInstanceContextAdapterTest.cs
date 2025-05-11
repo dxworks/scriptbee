@@ -37,7 +37,8 @@ public sealed class LoadInstanceContextAdapterTest : IDisposable
             new Dictionary<string, IEnumerable<FileId>>
             {
                 { "loader-id", [new FileId("e65c0fd5-13ca-4b19-ba07-e915b17ef6ba")] },
-            }
+            },
+            TestContext.Current.CancellationToken
         );
 
         var requests = _server.FindLogEntries(

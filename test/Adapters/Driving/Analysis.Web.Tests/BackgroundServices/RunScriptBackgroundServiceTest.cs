@@ -29,8 +29,8 @@ public class RunScriptBackgroundServiceTest
             CreateScript(),
             CreateAnalysisInfo("5ba00f63-1b3b-48a2-8abf-73489ddb3bec")
         );
-        await runScriptChannel.Writer.WriteAsync(request1);
-        await runScriptChannel.Writer.WriteAsync(request2);
+        await runScriptChannel.Writer.WriteAsync(request1, TestContext.Current.CancellationToken);
+        await runScriptChannel.Writer.WriteAsync(request2, TestContext.Current.CancellationToken);
         runScriptChannel.Writer.Complete();
 
         await backgroundService.StartAsync(CancellationToken.None);

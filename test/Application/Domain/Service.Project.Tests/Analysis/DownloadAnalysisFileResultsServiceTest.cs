@@ -45,7 +45,8 @@ public class DownloadAnalysisFileResultsServiceTest
         var result = await _downloadAnalysisFileResultsService.GetFileResultStream(
             projectId,
             analysisId,
-            resultId
+            resultId,
+            TestContext.Current.CancellationToken
         );
 
         result.AsT1.ShouldBe(new AnalysisDoesNotExistsError(analysisId));
@@ -79,7 +80,8 @@ public class DownloadAnalysisFileResultsServiceTest
         var result = await _downloadAnalysisFileResultsService.GetFileResultStream(
             projectId,
             analysisId,
-            resultId
+            resultId,
+            TestContext.Current.CancellationToken
         );
 
         result.AsT2.ShouldBe(new AnalysisResultDoesNotExistsError(resultId));
@@ -126,7 +128,8 @@ public class DownloadAnalysisFileResultsServiceTest
         var result = await _downloadAnalysisFileResultsService.GetFileResultStream(
             projectId,
             analysisId,
-            resultId
+            resultId,
+            TestContext.Current.CancellationToken
         );
 
         result.AsT0.ShouldBe(stream);
@@ -147,7 +150,8 @@ public class DownloadAnalysisFileResultsServiceTest
 
         var result = await _downloadAnalysisFileResultsService.GetAllFilesZipStream(
             projectId,
-            analysisId
+            analysisId,
+            TestContext.Current.CancellationToken
         );
 
         result.AsT1.ShouldBe(new AnalysisDoesNotExistsError(analysisId));
@@ -189,7 +193,8 @@ public class DownloadAnalysisFileResultsServiceTest
 
         var result = await _downloadAnalysisFileResultsService.GetAllFilesZipStream(
             projectId,
-            analysisId
+            analysisId,
+            TestContext.Current.CancellationToken
         );
 
         result.AsT0.Name.ShouldBe($"{analysisId.Value}.zip");

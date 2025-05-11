@@ -50,7 +50,8 @@ public sealed class TriggerInstanceAnalysisAdapterTest : IDisposable
                 _server.Urls[0],
                 DateTimeOffset.Now
             ),
-            new ScriptId("403e05ae-f16b-4fd7-8d23-375b1d2accb4")
+            new ScriptId("403e05ae-f16b-4fd7-8d23-375b1d2accb4"),
+            TestContext.Current.CancellationToken
         );
 
         analysisInfo.ShouldBe(

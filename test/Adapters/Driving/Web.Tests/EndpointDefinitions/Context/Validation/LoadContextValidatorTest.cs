@@ -13,7 +13,10 @@ public class LoadContextValidatorTest
     {
         var command = new WebLoadContextCommand(["linker-id"]);
 
-        var result = await _linkContextValidator.TestValidateAsync(command);
+        var result = await _linkContextValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -23,7 +26,10 @@ public class LoadContextValidatorTest
     {
         var command = new WebLoadContextCommand(null!);
 
-        var result = await _linkContextValidator.TestValidateAsync(command);
+        var result = await _linkContextValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.LoaderIds)
@@ -35,7 +41,10 @@ public class LoadContextValidatorTest
     {
         var command = new WebLoadContextCommand([]);
 
-        var result = await _linkContextValidator.TestValidateAsync(command);
+        var result = await _linkContextValidator.TestValidateAsync(
+            command,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         result
             .ShouldHaveValidationErrorFor(x => x.LoaderIds)

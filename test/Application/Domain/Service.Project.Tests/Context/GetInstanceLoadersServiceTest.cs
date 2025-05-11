@@ -45,7 +45,10 @@ public class GetInstanceLoadersServiceTest
                 )
             );
 
-        var loaders = await _getInstanceLoadersService.Get(query);
+        var loaders = await _getInstanceLoadersService.Get(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         loaders.ShouldBeEmpty();
     }
@@ -105,7 +108,10 @@ public class GetInstanceLoadersServiceTest
                 )
             );
 
-        var loaders = await _getInstanceLoadersService.Get(query);
+        var loaders = await _getInstanceLoadersService.Get(
+            query,
+            TestContext.Current.CancellationToken
+        );
 
         loaders
             .ToList()

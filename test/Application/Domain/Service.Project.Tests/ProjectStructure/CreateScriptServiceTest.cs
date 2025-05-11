@@ -69,7 +69,8 @@ public class CreateScriptServiceTest
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         result.ShouldBe(error);
@@ -108,7 +109,8 @@ public class CreateScriptServiceTest
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         result.ShouldBe(error);
@@ -153,7 +155,8 @@ public class CreateScriptServiceTest
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         result.ShouldBe(error);
@@ -206,7 +209,8 @@ public class CreateScriptServiceTest
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         result.ShouldBe(new ScriptPathAlreadyExistsError("path.lang"));
@@ -260,7 +264,8 @@ public class CreateScriptServiceTest
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var script = new Script(
@@ -280,7 +285,12 @@ public class CreateScriptServiceTest
             ]
         );
         MatchScript(result.AsT0, script);
-        await _createScript.Received(1).Create(Arg.Is<Script>(x => MatchScript(x, script)));
+        await _createScript
+            .Received(1)
+            .Create(
+                Arg.Is<Script>(x => MatchScript(x, script)),
+                TestContext.Current.CancellationToken
+            );
     }
 
     [Fact]
@@ -331,7 +341,8 @@ public class CreateScriptServiceTest
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            TestContext.Current.CancellationToken
         );
 
         var script = new Script(
@@ -351,7 +362,12 @@ public class CreateScriptServiceTest
             ]
         );
         MatchScript(result.AsT0, script);
-        await _createScript.Received(1).Create(Arg.Is<Script>(x => MatchScript(x, script)));
+        await _createScript
+            .Received(1)
+            .Create(
+                Arg.Is<Script>(x => MatchScript(x, script)),
+                TestContext.Current.CancellationToken
+            );
     }
 
     private static bool MatchScript(Script actual, Script expected)

@@ -34,7 +34,7 @@ public class GetAvailablePluginsServiceTest
     [Fact]
     public async Task GetMarketPlugins_GetsProjectsFromFetcher()
     {
-        await _getAvailablePluginsService.GetMarketPlugins();
+        await _getAvailablePluginsService.GetMarketPlugins(TestContext.Current.CancellationToken);
 
         _marketPluginFetcher.Received(1).GetProjectsAsync();
     }
@@ -44,7 +44,9 @@ public class GetAvailablePluginsServiceTest
     {
         _marketPluginFetcher.GetProjectsAsync().Returns([]);
 
-        var result = await _getAvailablePluginsService.GetMarketPlugins();
+        var result = await _getAvailablePluginsService.GetMarketPlugins(
+            TestContext.Current.CancellationToken
+        );
 
         result.ShouldBeEmpty();
     }
@@ -80,7 +82,11 @@ public class GetAvailablePluginsServiceTest
         _pluginRepository.GetInstalledPluginVersion("id2").Returns((Version?)null);
 
         // Act
-        var result = (await _getAvailablePluginsService.GetMarketPlugins()).ToList();
+        var result = (
+            await _getAvailablePluginsService.GetMarketPlugins(
+                TestContext.Current.CancellationToken
+            )
+        ).ToList();
 
         // Assert
         result.Count.ShouldBe(2);
@@ -117,7 +123,11 @@ public class GetAvailablePluginsServiceTest
             .Returns(new List<MarketPlacePlugin> { marketPlacePlugin });
         _pluginRepository.GetInstalledPluginVersion("testId").Returns(new Version("2.1.0"));
 
-        var result = (await _getAvailablePluginsService.GetMarketPlugins()).Single();
+        var result = (
+            await _getAvailablePluginsService.GetMarketPlugins(
+                TestContext.Current.CancellationToken
+            )
+        ).Single();
 
         result.InstalledVersions.Single().Installed.ShouldBeTrue();
     }
@@ -138,7 +148,11 @@ public class GetAvailablePluginsServiceTest
             .Returns(new List<MarketPlacePlugin> { marketPlacePlugin });
         _pluginRepository.GetInstalledPluginVersion("testId").Returns((Version?)null);
 
-        var result = (await _getAvailablePluginsService.GetMarketPlugins()).Single();
+        var result = (
+            await _getAvailablePluginsService.GetMarketPlugins(
+                TestContext.Current.CancellationToken
+            )
+        ).Single();
 
         result.InstalledVersions.Single().Installed.ShouldBeFalse();
     }
@@ -159,7 +173,11 @@ public class GetAvailablePluginsServiceTest
             .Returns(new List<MarketPlacePlugin> { marketPlacePlugin });
         _pluginRepository.GetInstalledPluginVersion("testId").Returns(new Version("1.0.0"));
 
-        var result = (await _getAvailablePluginsService.GetMarketPlugins()).Single();
+        var result = (
+            await _getAvailablePluginsService.GetMarketPlugins(
+                TestContext.Current.CancellationToken
+            )
+        ).Single();
 
         result.InstalledVersions.Single().Installed.ShouldBeFalse();
     }

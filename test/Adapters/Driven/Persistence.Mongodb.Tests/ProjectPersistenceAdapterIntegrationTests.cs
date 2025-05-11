@@ -5,7 +5,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
-using Xunit.Abstractions;
 using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
@@ -23,7 +22,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         _mongoCollection = fixture.GetCollection<MongodbProjectModel>("Projects");
         _adapter = new ProjectPersistenceAdapter(
             new MongoRepository<MongodbProjectModel>(_mongoCollection),
-            new XunitLogger<ProjectPersistenceAdapter>(outputHelper)
+            new XUnitLogger<ProjectPersistenceAdapter>(outputHelper)
         );
     }
 
@@ -35,7 +34,9 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var result = await _adapter.Create(project, CancellationToken.None);
 
         result.IsT0.ShouldBeTrue();
-        var savedProject = await _mongoCollection.Find(p => p.Id == "id").FirstOrDefaultAsync();
+        var savedProject = await _mongoCollection
+            .Find(p => p.Id == "id")
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         savedProject.Id.ShouldBe("id");
         savedProject.Name.ShouldBe("project");
         savedProject.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
@@ -47,7 +48,8 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var projectId = ProjectId.Create("existing-id");
         var project = BasicProjectDetails(projectId);
         await _mongoCollection.InsertOneAsync(
-            new MongodbProjectModel { Id = "existing-id", Name = "existing" }
+            new MongodbProjectModel { Id = "existing-id", Name = "existing" },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.Create(project, CancellationToken.None);
@@ -60,12 +62,15 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var projectId = ProjectId.FromValue("to-delete");
         await _mongoCollection.InsertOneAsync(
-            new MongodbProjectModel { Id = "to-delete", Name = "to-delete" }
+            new MongodbProjectModel { Id = "to-delete", Name = "to-delete" },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         await _adapter.Delete(projectId, CancellationToken.None);
 
-        var project = await _mongoCollection.Find(p => p.Id == "to-delete").FirstOrDefaultAsync();
+        var project = await _mongoCollection
+            .Find(p => p.Id == "to-delete")
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         project.ShouldBeNull();
     }
 
@@ -89,7 +94,8 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                 Id = "all-projects-id",
                 Name = "all-projects-id",
                 CreationDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var projectDetailsList = await _adapter.GetAll(CancellationToken.None);
@@ -118,7 +124,8 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                         [new MongodbFileData("957969a8-c66e-498d-b00f-7e58ded36b80", "file")]
                     },
                 },
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.GetById(
@@ -159,7 +166,8 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                 Id = "update-project-id",
                 Name = "update-projects-id",
                 CreationDate = creationDate,
-            }
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
         var projectId = ProjectId.FromValue("update-project-id");
         var project = new ProjectDetails(
@@ -188,7 +196,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         updateProject.ShouldBe(project);
         var updatedMongoProject = await _mongoCollection
             .Find(p => p.Id == "update-project-id")
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         updatedMongoProject.Id.ShouldBe(projectId.Value);
         updatedMongoProject.Name.ShouldBe("updated-name");
         updatedMongoProject.CreationDate.ShouldBe(DateTimeOffset.Parse("2024-02-08"));

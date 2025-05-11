@@ -6,7 +6,6 @@ using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
-using Xunit.Abstractions;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 

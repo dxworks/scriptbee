@@ -1,5 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Persistence.File.Plugin;
+using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Persistence.File.Tests.Manifest;
 

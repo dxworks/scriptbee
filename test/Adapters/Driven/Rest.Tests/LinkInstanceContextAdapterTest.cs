@@ -33,7 +33,8 @@ public sealed class LinkInstanceContextAdapterTest : IDisposable
                 _server.Urls[0],
                 DateTimeOffset.Now
             ),
-            ["linker-id"]
+            ["linker-id"],
+            TestContext.Current.CancellationToken
         );
 
         var requests = _server.FindLogEntries(

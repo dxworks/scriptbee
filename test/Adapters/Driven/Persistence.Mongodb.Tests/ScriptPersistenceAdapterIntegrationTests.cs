@@ -33,7 +33,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         mongodbScript.AssertMongodbScript(CreateMongodbScript(scriptId, []));
     }
 
@@ -57,7 +57,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         mongodbScript.AssertMongodbScript(
             CreateMongodbScript(
                 scriptId,
@@ -93,7 +93,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         mongodbScript.AssertMongodbScript(
             CreateMongodbScript(
                 scriptId,
@@ -129,7 +129,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         mongodbScript.AssertMongodbScript(
             CreateMongodbScript(
                 scriptId,
@@ -165,7 +165,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         mongodbScript.AssertMongodbScript(
             CreateMongodbScript(
                 scriptId,
@@ -199,7 +199,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     public async Task GetScriptWithoutParameters()
     {
         const string scriptId = "fd2c1c8c-eb1a-4e6c-824c-b0e23b061c36";
-        await _mongoCollection.InsertOneAsync(CreateMongodbScript(scriptId, []));
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(scriptId, []),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
 
         var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
 
@@ -221,7 +224,8 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
                         Value = "value",
                     },
                 ]
-            )
+            ),
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
@@ -256,7 +260,8 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
                         Value = true,
                     },
                 ]
-            )
+            ),
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
@@ -291,7 +296,8 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
                         Value = 8,
                     },
                 ]
-            )
+            ),
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
@@ -326,7 +332,8 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
                         Value = 17.9,
                     },
                 ]
-            )
+            ),
+            cancellationToken: TestContext.Current.CancellationToken
         );
 
         var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);

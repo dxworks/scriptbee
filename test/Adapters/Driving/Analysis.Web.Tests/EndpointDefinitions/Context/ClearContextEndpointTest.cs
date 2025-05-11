@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Analysis;
-using Xunit.Abstractions;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Context;
 
