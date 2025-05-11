@@ -31,14 +31,12 @@ public class LinkContextValidatorTest
     }
 
     [Fact]
-    public async Task GivenEmptyLinkerIds_ThenResultHasErrors()
+    public async Task GivenEmptyLinkerIds_ThenResultHasNoErrors()
     {
         var command = new WebLinkContextCommand([]);
 
         var result = await _linkContextValidator.TestValidateAsync(command);
 
-        result
-            .ShouldHaveValidationErrorFor(x => x.LinkerIds)
-            .WithErrorMessage("'Linker Ids' must not be empty.");
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }
