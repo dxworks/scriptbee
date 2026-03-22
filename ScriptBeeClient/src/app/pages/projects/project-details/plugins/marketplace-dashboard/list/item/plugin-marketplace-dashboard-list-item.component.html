@@ -1,0 +1,50 @@
+<mat-card class="plugin-card" appearance="outlined">
+  <mat-card-header>
+    <div mat-card-avatar>
+      <mat-icon color="primary" [matBadge]="installedVersion() ? '✓' : null" matBadgeColor="accent" matBadgeSize="small">{{
+        plugin().type === 'Plugin' ? 'extension' : 'inventory_2'
+      }}</mat-icon>
+    </div>
+    <mat-card-title style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+      {{ plugin().name }}
+    </mat-card-title>
+    <mat-card-subtitle>
+      {{ plugin().authors.join(', ') }}
+    </mat-card-subtitle>
+    <div class="flex-spacer"></div>
+    <button mat-icon-button color="primary" [routerLink]="['./', plugin().id]" matTooltip="View Details">
+      <mat-icon>open_in_new</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="plugin-description mat-body-medium">{{ plugin().description }}</p>
+
+    <div class="version-info-section mat-body-small">
+      @if (installedVersion()) {
+        <div class="info-row">
+          <span>Installed Version:</span>
+          <span class="value installed-v">v{{ installedVersion() }}</span>
+        </div>
+      }
+      <div class="info-row">
+        <span>Latest Version:</span>
+        <span class="value">v{{ latestVersion() }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    @if (!loading()) {
+      @if (installedVersion()) {
+        <button mat-button color="warn" (click)="onUninstallButtonClick()">UNINSTALL</button>
+      }
+
+      @if (updateAvailable()) {
+        <button mat-flat-button color="primary" (click)="onInstallButtonClick()">UPDATE</button>
+      } @else if (!installedVersion()) {
+        <button mat-flat-button color="primary" (click)="onInstallButtonClick()">INSTALL</button>
+      }
+    }
+  </mat-card-actions>
+</mat-card>

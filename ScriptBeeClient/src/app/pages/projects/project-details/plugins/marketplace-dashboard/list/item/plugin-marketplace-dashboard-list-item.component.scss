@@ -1,0 +1,42 @@
+.plugin-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  mat-card-header {
+    .flex-spacer {
+      flex-grow: 1;
+    }
+
+    button[mat-icon-button] {
+      margin-left: 8px;
+    }
+  }
+
+  .update-chip-set {
+    margin-top: 4px;
+  }
+
+  mat-card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .plugin-description {
+    margin: 0;
+  }
+
+  .version-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: auto;
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

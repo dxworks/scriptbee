@@ -5,12 +5,8 @@ import { ProjectDetailsPage } from './pages/projects/project-details/project-det
 import { ProjectModelPage } from './pages/projects/project-details/model/project-model-page.component';
 import { AnalysisComponent } from './pages/projects/project-details/analysis/analysis.component';
 import { ProjectSettingsPage } from './pages/projects/project-details/settings/project-settings.component';
-import {
-  PluginsMarketplaceDashboardComponent
-} from './pages/projects/project-details/plugins/marketplace-dashboard/plugins-marketplace-dashboard.component';
-import {
-  PluginDetailsComponent
-} from './pages/projects/project-details/plugins/plugin-details/plugin-details.component';
+import { PluginsMarketplaceDashboardComponent } from './pages/projects/project-details/plugins/marketplace-dashboard/plugins-marketplace-dashboard.component';
+import { PluginDetailsComponent } from './pages/projects/project-details/plugins/plugin-details/plugin-details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'projects', pathMatch: 'full' },

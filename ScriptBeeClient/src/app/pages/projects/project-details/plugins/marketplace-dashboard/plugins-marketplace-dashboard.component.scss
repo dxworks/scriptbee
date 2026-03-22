@@ -1,0 +1,32 @@
+.dashboard-header {
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--mat-sys-surface);
+
+  .search-container {
+    flex: 1;
+
+    .search-field {
+      width: 100%;
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+    }
+  }
+
+  .filter-container {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.dashboard-content {
+  padding: 24px;
+}
