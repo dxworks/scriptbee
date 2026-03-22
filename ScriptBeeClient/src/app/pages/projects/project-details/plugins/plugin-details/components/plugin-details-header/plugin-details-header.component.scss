@@ -1,0 +1,54 @@
+.header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 24px;
+
+  .back-nav button {
+    margin-left: -8px;
+  }
+}
+
+.main-info {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.titles {
+  h1 {
+    margin: 0;
+  }
+
+  .author {
+    margin: 0;
+  }
+}
+
+.flex-spacer {
+  flex: 1;
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}

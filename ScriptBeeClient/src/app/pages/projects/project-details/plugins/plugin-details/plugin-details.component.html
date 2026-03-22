@@ -1,0 +1,31 @@
+<div class="plugin-details-page">
+  @if (loading() && !plugin()) {
+    <div class="loading-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
+  } @else if (plugin()) {
+    <app-plugin-details-header
+      [plugin]="plugin()!"
+      [installedVersion]="installedVersion()"
+      [latestVersion]="latestVersion()"
+      [updateAvailable]="updateAvailable()"
+      (install)="onInstallButtonClick()"
+      (uninstall)="onUninstallButtonClick()"></app-plugin-details-header>
+
+    <div class="details-content">
+      <app-plugin-details-info [plugin]="plugin()!"></app-plugin-details-info>
+
+      @if (plugin()!.extensionPoints && plugin()!.extensionPoints!.length > 0) {
+        <app-plugin-details-extensions [extensions]="plugin()!.extensionPoints!"></app-plugin-details-extensions>
+      }
+
+      @if (plugin()!.type === 'Bundle' && plugin()!.bundleItems && plugin()!.bundleItems!.length > 0) {
+        <app-plugin-details-bundle-navigator [items]="plugin()!.bundleItems!"></app-plugin-details-bundle-navigator>
+      }
+
+      <app-plugin-details-versions-table
+        [versions]="plugin()!.versions"
+        (installVersion)="onInstallSpecificVersion($event)"></app-plugin-details-versions-table>
+    </div>
+  }
+</div>

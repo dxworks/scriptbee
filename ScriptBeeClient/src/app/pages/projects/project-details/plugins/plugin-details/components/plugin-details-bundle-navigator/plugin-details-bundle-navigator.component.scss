@@ -1,0 +1,13 @@
+.bundle-section {
+  margin-top: 24px;
+
+  h3 {
+    margin-bottom: 16px;
+  }
+
+  .bundle-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

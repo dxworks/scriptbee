@@ -1,0 +1,43 @@
+<section class="description-section">
+  <h3 class="mat-title-medium">Description</h3>
+  <p class="mat-body-large">{{ plugin().description }}</p>
+
+  <div class="plugin-links">
+    @if (plugin().site) {
+      <a mat-button color="primary" [href]="plugin().site" target="_blank"><mat-icon>language</mat-icon> Website</a>
+    }
+    @if (plugin().sourceCode) {
+      <a mat-button color="primary" [href]="plugin().sourceCode" target="_blank"><mat-icon>code</mat-icon> Source Code</a>
+    }
+    @if (plugin().manifest) {
+      <a mat-button color="primary" [href]="plugin().manifest" target="_blank"><mat-icon>description</mat-icon> Manifest</a>
+    }
+    @if (plugin().license) {
+      <mat-chip-set
+        ><mat-chip><mat-icon matChipAvatar>gavel</mat-icon> License: {{ plugin().license }}</mat-chip></mat-chip-set
+      >
+    }
+  </div>
+
+  @if (plugin().tags && plugin().tags!.length > 0) {
+    <div class="metadata-row">
+      <strong>Tags:</strong>
+      <mat-chip-set>
+        @for (tag of plugin().tags; track tag) {
+          <mat-chip>{{ tag }}</mat-chip>
+        }
+      </mat-chip-set>
+    </div>
+  }
+
+  @if (plugin().technologies && plugin().technologies!.length > 0) {
+    <div class="metadata-row">
+      <strong>Technologies:</strong>
+      <mat-chip-set>
+        @for (tech of plugin().technologies; track tech) {
+          <mat-chip color="accent">{{ tech }}</mat-chip>
+        }
+      </mat-chip-set>
+    </div>
+  }
+</section>
