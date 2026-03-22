@@ -1,4 +1,4 @@
-import { Component, effect, viewChild } from '@angular/core';
+import { Component, computed, effect, viewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -12,7 +12,8 @@ import { MatButton } from '@angular/material/button';
 import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
-import { createRxResourceHandler } from '../../../utils/resource';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { convertError } from '../../../utils/api';
 
 @Component({
   selector: 'app-projects-page',
@@ -39,9 +40,10 @@ export class ProjectsPage {
   paginator = viewChild.required(MatPaginator);
   sort = viewChild.required(MatSort);
 
-  getAllProjectsResource = createRxResourceHandler({
-    loader: () => this.projectsService.getAllProjects(),
+  getAllProjectsResource = rxResource({
+    stream: () => this.projectsService.getAllProjects(),
   });
+  getAllProjectsResourceError = computed(() => convertError(this.getAllProjectsResource.error()));
 
   constructor(
     private projectsService: ProjectService,

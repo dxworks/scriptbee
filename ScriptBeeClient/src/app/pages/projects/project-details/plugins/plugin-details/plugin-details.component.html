@@ -1,11 +1,11 @@
 <div class="plugin-details-page">
-  @if (loading() && !plugin()) {
+  @if (pluginResource.isLoading() && !pluginResource.value()) {
     <div class="loading-overlay">
       <mat-spinner></mat-spinner>
     </div>
-  } @else if (plugin()) {
+  } @else if (pluginResource.value()) {
     <app-plugin-details-header
-      [plugin]="plugin()!"
+      [plugin]="pluginResource.value()!"
       [installedVersion]="installedVersion()"
       [latestVersion]="latestVersion()"
       [updateAvailable]="updateAvailable()"
@@ -13,18 +13,18 @@
       (uninstall)="onUninstallButtonClick()"></app-plugin-details-header>
 
     <div class="details-content">
-      <app-plugin-details-info [plugin]="plugin()!"></app-plugin-details-info>
+      <app-plugin-details-info [plugin]="pluginResource.value()!"></app-plugin-details-info>
 
-      @if (plugin()!.extensionPoints && plugin()!.extensionPoints!.length > 0) {
-        <app-plugin-details-extensions [extensions]="plugin()!.extensionPoints!"></app-plugin-details-extensions>
+      @if (pluginResource.value()!.extensionPoints && pluginResource.value()!.extensionPoints!.length > 0) {
+        <app-plugin-details-extensions [extensions]="pluginResource.value()!.extensionPoints!"></app-plugin-details-extensions>
       }
 
-      @if (plugin()!.type === 'Bundle' && plugin()!.bundleItems && plugin()!.bundleItems!.length > 0) {
-        <app-plugin-details-bundle-navigator [items]="plugin()!.bundleItems!"></app-plugin-details-bundle-navigator>
+      @if (pluginResource.value()!.type === 'Bundle' && pluginResource.value()!.bundleItems && pluginResource.value()!.bundleItems!.length > 0) {
+        <app-plugin-details-bundle-navigator [items]="pluginResource.value()!.bundleItems!"></app-plugin-details-bundle-navigator>
       }
 
       <app-plugin-details-versions-table
-        [versions]="plugin()!.versions"
+        [versions]="pluginResource.value()!.versions"
         (installVersion)="onInstallSpecificVersion($event)"></app-plugin-details-versions-table>
     </div>
   }

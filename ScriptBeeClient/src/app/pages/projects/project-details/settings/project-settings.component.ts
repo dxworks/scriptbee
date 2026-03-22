@@ -1,12 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ProjectInformationComponent } from './project-information/project-information.component';
 import { ProjectDangerZoneComponent } from './project-danger-zone/project-danger-zone.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../../../../services/projects/project.service';
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { ErrorStateComponent } from '../../../../components/error-state/error-state.component';
-import { createRxResourceHandler } from '../../../../utils/resource';
+import { convertError } from '../../../../utils/api';
 
 @Component({
   selector: 'app-project-settings',
@@ -17,10 +17,12 @@ import { createRxResourceHandler } from '../../../../utils/resource';
 export class ProjectSettingsPage {
   private projectId = signal<string | undefined>(undefined);
 
-  getProjectResource = createRxResourceHandler({
-    request: () => this.projectId(),
-    loader: (params) => this.projectService.getProject(params.request),
+  getProjectResource = rxResource({
+    params: () => this.projectId(),
+    stream: ({ params: projectId }) => this.projectService.getProject(projectId),
   });
+
+  getProjectResourceError = computed(() => convertError(this.getProjectResource.error()));
 
   constructor(
     route: ActivatedRoute,

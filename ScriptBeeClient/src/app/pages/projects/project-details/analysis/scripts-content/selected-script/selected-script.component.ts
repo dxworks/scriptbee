@@ -5,10 +5,11 @@ import { ThemeService } from '../../../../../../services/theme/theme.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SelectedScriptActionBarComponent } from './selected-script-action-bar/selected-script-action-bar.component';
-import { createRxResourceHandler } from '../../../../../../utils/resource';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ProjectStructureService } from '../../../../../../services/projects/project-structure.service';
 import { ErrorStateComponent } from '../../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
+import { convertError } from '../../../../../../utils/api';
 
 @Component({
   selector: 'app-selected-script',
@@ -31,21 +32,23 @@ export class SelectedScriptComponent {
     };
   });
 
-  scriptResource = createRxResourceHandler({
-    request: () => ({
+  scriptResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       scriptId: this.scriptId(),
     }),
-    loader: (params) => this.projectStructureService.getProjectScript(params.request.projectId, params.request.scriptId),
+    stream: ({ params }) => this.projectStructureService.getProjectScript(params.projectId, params.scriptId),
   });
+  scriptResourceError = computed(() => convertError(this.scriptResource.error()));
 
-  scriptContentResource = createRxResourceHandler({
-    request: () => ({
+  scriptContentResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       scriptId: this.scriptId(),
     }),
-    loader: (params) => this.projectStructureService.getScriptContent(params.request.projectId, params.request.scriptId),
+    stream: ({ params }) => this.projectStructureService.getScriptContent(params.projectId, params.scriptId),
   });
+  scriptContentResourceError = computed(() => convertError(this.scriptContentResource.error()));
 
   constructor(
     private themeService: ThemeService,

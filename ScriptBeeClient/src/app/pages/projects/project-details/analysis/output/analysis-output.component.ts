@@ -1,12 +1,13 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ConsoleOutputComponent } from './console-output/console-output.component';
 import { OutputErrorsComponent } from './output-errors/output-errors.component';
 import { FileOutputComponent } from './file-output/file-output.component';
 import { OutputFilesService } from '../../../../../services/output/output-files.service';
-import { createRxResourceHandler } from '../../../../../utils/resource';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
+import { convertError } from '../../../../../utils/api';
 
 @Component({
   selector: 'app-analysis-output',
@@ -18,29 +19,32 @@ export class AnalysisOutputComponent {
   projectId = input.required<string>();
   analysisId = input.required<string>();
 
-  consoleContentResource = createRxResourceHandler({
-    request: () => ({
+  consoleContentResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       analysisId: this.analysisId(),
     }),
-    loader: (params) => this.outputFilesService.getConsoleOutput(params.request.projectId, params.request.analysisId),
+    stream: ({ params }) => this.outputFilesService.getConsoleOutput(params.projectId, params.analysisId),
   });
+  consoleContentResourceError = computed(() => convertError(this.consoleContentResource.error()));
 
-  outputErrorsResource = createRxResourceHandler({
-    request: () => ({
+  outputErrorsResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       analysisId: this.analysisId(),
     }),
-    loader: (params) => this.outputFilesService.getErrorOutputs(params.request.projectId, params.request.analysisId),
+    stream: ({ params }) => this.outputFilesService.getErrorOutputs(params.projectId, params.analysisId),
   });
+  outputErrorsResourceError = computed(() => convertError(this.outputErrorsResource.error()));
 
-  outputFilesResource = createRxResourceHandler({
-    request: () => ({
+  outputFilesResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       analysisId: this.analysisId(),
     }),
-    loader: (params) => this.outputFilesService.getFileOutputs(params.request.projectId, params.request.analysisId),
+    stream: ({ params }) => this.outputFilesService.getFileOutputs(params.projectId, params.analysisId),
   });
+  outputFilesResourceError = computed(() => convertError(this.outputFilesResource.error()));
 
   constructor(private outputFilesService: OutputFilesService) {}
 }

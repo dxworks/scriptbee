@@ -1,15 +1,11 @@
-﻿<h1 mat-dialog-title style="text-align: center">Update script parameters</h1>
+<h1 mat-dialog-title style="text-align: center">Update script parameters</h1>
 <div mat-dialog-content>
   <h2>Parameters</h2>
 
   <app-script-parameters-list [parameters]="parameters()" (parametersChange)="onParametersChange($event)" (hasParameterErrors)="onHasParameterErrors($event)" />
 
-  @if (updateScriptHandler.isLoading()) {
+  @if (isUpdateLoading()) {
     <app-loading-progress-bar title="Updating parameters..."></app-loading-progress-bar>
-  }
-
-  @if (updateScriptHandler.error()) {
-    <app-error-state [error]="updateScriptHandler.error()!"></app-error-state>
   }
 </div>
 <div mat-dialog-actions>

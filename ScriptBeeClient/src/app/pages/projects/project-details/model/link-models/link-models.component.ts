@@ -1,13 +1,14 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { createRxResourceHandler } from '../../../../../utils/resource';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { LinkerService } from '../../../../../services/linkers/linker.service';
 import { MatButton } from '@angular/material/button';
-import { apiHandler } from '../../../../../utils/apiHandler';
+import { finalize } from 'rxjs';
+import { convertError } from '../../../../../utils/api';
 
 @Component({
   selector: 'app-link-models',
@@ -21,17 +22,16 @@ export class LinkModelsComponent {
 
   selectedLinkerId = signal<string | undefined>(undefined);
 
-  getLinkersResource = createRxResourceHandler({
-    request: () => ({
+  getLinkersResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       instanceId: this.instanceId(),
     }),
-    loader: (params) => this.linkerService.getAllLinkers(params.request.projectId, params.request.instanceId),
+    stream: ({ params }) => this.linkerService.getAllLinkers(params.projectId, params.instanceId),
   });
+  getLinkersResourceError = computed(() => convertError(this.getLinkersResource.error()));
 
-  linkModelsHandler = apiHandler((params: { projectId: string; instanceId: string; linkerId: string }) =>
-    this.linkerService.linkModels(params.projectId, params.instanceId, params.linkerId)
-  );
+  isLinkLoading = signal(false);
 
   constructor(private linkerService: LinkerService) {}
 
@@ -41,6 +41,10 @@ export class LinkModelsComponent {
       return;
     }
 
-    this.linkModelsHandler.execute({ projectId: this.projectId(), instanceId: this.instanceId(), linkerId: linkerId });
+    this.isLinkLoading.set(true);
+    this.linkerService
+      .linkModels(this.projectId(), this.instanceId(), linkerId)
+      .pipe(finalize(() => this.isLinkLoading.set(false)))
+      .subscribe();
   }
 }

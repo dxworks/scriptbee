@@ -20,9 +20,9 @@
 
 @if (getAllAvailablePlugins.isLoading()) {
   <app-loading-progress-bar title="Loading marketplace..."></app-loading-progress-bar>
-} @else if (getAllAvailablePlugins.error()) {
+} @else if (getAllAvailablePluginsError()) {
   <div style="margin: 1rem" class="center-column">
-    <app-error-state style="width: 400px" [error]="getAllAvailablePlugins.error()!"></app-error-state>
+    <app-error-state style="width: 400px" [error]="getAllAvailablePluginsError()!"></app-error-state>
   </div>
 } @else {
   <div class="dashboard-content">

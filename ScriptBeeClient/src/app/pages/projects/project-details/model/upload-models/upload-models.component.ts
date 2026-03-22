@@ -1,5 +1,5 @@
-import { Component, input, signal } from '@angular/core';
-import { createRxResourceHandler } from '../../../../../utils/resource';
+import { Component, computed, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
@@ -9,8 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { DragAndDropFilesComponent } from '../../../../../components/drag-and-drop-files/drag-and-drop-files.component';
 import { MatButtonModule } from '@angular/material/button';
-import { apiHandler } from '../../../../../utils/apiHandler';
 import { UploadService } from '../../../../../services/upload/upload.service';
+import { finalize } from 'rxjs';
+import { convertError } from '../../../../../utils/api';
 
 @Component({
   selector: 'app-upload-models',
@@ -33,20 +34,16 @@ export class UploadModelsComponent {
 
   selectedLoaderId = signal<string | undefined>(undefined);
 
-  getLoadersResource = createRxResourceHandler({
-    request: () => ({
+  getLoadersResource = rxResource({
+    params: () => ({
       projectId: this.projectId(),
       instanceId: this.instanceId(),
     }),
-    loader: (params) => this.loaderService.getAllLoaders(params.request.projectId, params.request.instanceId),
+    stream: ({ params }) => this.loaderService.getAllLoaders(params.projectId, params.instanceId),
   });
+  getLoadersResourceError = computed(() => convertError(this.getLoadersResource.error()));
 
-  uploadModelsHandler = apiHandler(
-    (params: { loaderId: string; projectId: string; files: File[] }) => this.uploadService.uploadModels(params.projectId, params.loaderId, params.files),
-    (data) => {
-      console.log(data);
-    }
-  );
+  isUploadLoading = signal(false);
 
   files: File[] = [];
 
@@ -58,11 +55,15 @@ export class UploadModelsComponent {
   onUploadFilesClick() {
     const loaderId = this.selectedLoaderId();
     if (loaderId) {
-      this.uploadModelsHandler.execute({
-        projectId: this.projectId(),
-        loaderId: loaderId,
-        files: this.files,
-      });
+      this.isUploadLoading.set(true);
+      this.uploadService
+        .uploadModels(this.projectId(), loaderId, this.files)
+        .pipe(finalize(() => this.isUploadLoading.set(false)))
+        .subscribe({
+          next: (data) => {
+            console.log(data);
+          },
+        });
     }
   }
 }

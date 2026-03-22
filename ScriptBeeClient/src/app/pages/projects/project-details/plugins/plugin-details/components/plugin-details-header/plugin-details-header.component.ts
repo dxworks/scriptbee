@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
@@ -10,7 +10,7 @@ import { MarketplacePluginWithDetails } from '../../../../../../../types/marketp
 @Component({
   selector: 'app-plugin-details-header',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatChipsModule, MatDividerModule, RouterModule],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatDividerModule, RouterModule],
   templateUrl: './plugin-details-header.component.html',
   styleUrls: ['./plugin-details-header.component.scss'],
 })

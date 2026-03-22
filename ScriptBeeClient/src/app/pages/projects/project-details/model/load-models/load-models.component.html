@@ -2,12 +2,8 @@
 
 <app-checkable-tree [data]="savedFiles()" (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-checkable-tree>
 
-@if (loadModelsHandler.isLoading()) {
+@if (isLoadModelsLoading()) {
   <app-centered-spinner text="Loading Models"></app-centered-spinner>
-} @else if (loadModelsHandler.error()) {
-  <app-error-state [error]="loadModelsHandler.error()!"></app-error-state>
 }
 
-<button class="load-button" mat-raised-button [disabled]="checkedFiles().length === 0 || loadModelsHandler.isLoading()" (click)="onLoadFilesClick()">
-  Load Files
-</button>
+<button class="load-button" mat-raised-button [disabled]="checkedFiles().length === 0 || isLoadModelsLoading()" (click)="onLoadFilesClick()">Load Files</button>

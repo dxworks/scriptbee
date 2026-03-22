@@ -48,9 +48,9 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of projects"></mat-paginator>
   </div>
 
-  @if (getAllProjectsResource.error()) {
+  @if (getAllProjectsResourceError()) {
     <div style="margin: 1rem" class="center-column">
-      <app-error-state style="width: 400px" [error]="getAllProjectsResource.error()!"></app-error-state>
+      <app-error-state style="width: 400px" [error]="getAllProjectsResourceError()!"></app-error-state>
     </div>
   }
 </div>

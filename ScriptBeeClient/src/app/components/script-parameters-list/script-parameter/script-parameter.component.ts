@@ -1,6 +1,6 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { MatSelectModule } from '@angular/material/select';
-import { ScriptParameter, ParameterType, ParameterValue } from '../../../types/script-types';
+import { ParameterType, ParameterValue, ScriptParameter } from '../../../types/script-types';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
