@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { RouterModule } from '@angular/router';
@@ -25,7 +25,6 @@ import { PluginService } from '../../../../../../../services/plugin/plugin.servi
     MatChipsModule,
     MatIconModule,
     MatDividerModule,
-    CommonModule,
     MatTooltipModule,
     MatBadgeModule,
     RouterModule,

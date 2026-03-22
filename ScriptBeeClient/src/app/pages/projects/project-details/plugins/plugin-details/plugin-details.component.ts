@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -20,7 +20,6 @@ import { PluginDetailsExtensionsComponent } from './components/plugin-details-ex
   styleUrls: ['./plugin-details.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
