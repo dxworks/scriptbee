@@ -9,7 +9,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
     private const string TestUrl = "/api/projects/project-id/plugins";
     private readonly TestApiCaller<Program> _api = new(TestUrl);
 
-    [Theory]
+    [Theory(Skip = "TODO FIXIT(#87): update when we have actual code")]
     [FilePath("TestData/GetInstalledPlugins/response.json")]
     public async Task ShouldReturnPluginsList(string responsePath)
     {

@@ -40,6 +40,11 @@ export class ProjectDetailsPage {
       name: 'Settings',
       icon: 'settings',
     },
+    {
+      link: 'plugins',
+      name: 'Plugins',
+      icon: 'extension',
+    },
   ];
   activeTab = signal(this.tabInfo[0]);
 

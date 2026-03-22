@@ -1,0 +1,34 @@
+<div class="dashboard-header">
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search plugins and bundles</mat-label>
+      <input matInput [ngModel]="searchText()" (ngModelChange)="searchText.set($event)" placeholder="E.g. Python, Standard Bundle..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="filter-container">
+    <mat-chip-listbox multiple [value]="selectedFilters()" (change)="selectedFilters.set($event.value)">
+      <mat-chip-option value="installed">Installed</mat-chip-option>
+      <mat-chip-option value="not-installed">Not installed</mat-chip-option>
+      <mat-chip-option value="plugins">Plugins</mat-chip-option>
+      <mat-chip-option value="bundles">Bundles</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+</div>
+<mat-divider></mat-divider>
+
+@if (getAllAvailablePlugins.isLoading()) {
+  <app-loading-progress-bar title="Loading marketplace..."></app-loading-progress-bar>
+} @else if (getAllAvailablePlugins.error()) {
+  <div style="margin: 1rem" class="center-column">
+    <app-error-state style="width: 400px" [error]="getAllAvailablePlugins.error()!"></app-error-state>
+  </div>
+} @else {
+  <div class="dashboard-content">
+    <app-plugin-marketplace-dashboard-list
+      [plugins]="filteredPlugins()"
+      [projectId]="projectId()"
+      (actionCompleted)="onActionCompleted()"></app-plugin-marketplace-dashboard-list>
+  </div>
+}

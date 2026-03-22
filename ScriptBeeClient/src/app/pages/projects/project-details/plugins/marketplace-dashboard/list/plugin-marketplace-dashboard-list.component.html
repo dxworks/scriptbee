@@ -1,0 +1,15 @@
+@if (plugins() && plugins()!.length > 0) {
+  <div class="plugin-grid">
+    @for (plugin of plugins(); track plugin.id) {
+      <app-plugin-marketplace-dashboard-list-item
+        [plugin]="plugin"
+        [projectId]="projectId()"
+        (actionCompleted)="actionCompleted.emit()"></app-plugin-marketplace-dashboard-list-item>
+    }
+  </div>
+} @else if (plugins() && plugins()!.length === 0) {
+  <div class="empty-state">
+    <mat-icon color="primary">extension_off</mat-icon>
+    <p class="mat-body-large">No plugins found.</p>
+  </div>
+}

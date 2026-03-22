@@ -1,0 +1,17 @@
+.versions-section {
+  margin-top: 24px;
+
+  h3 {
+    margin-bottom: 16px;
+  }
+
+  table {
+    width: 100%;
+    background: transparent;
+  }
+
+  .small-chip {
+    transform: scale(0.8);
+    transform-origin: left center;
+  }
+}

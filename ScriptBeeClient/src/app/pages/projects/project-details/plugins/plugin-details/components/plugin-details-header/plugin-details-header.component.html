@@ -1,0 +1,40 @@
+<div class="header-container">
+  <div class="back-nav">
+    <button mat-button color="primary" routerLink=".."><mat-icon>arrow_back</mat-icon> Back to Marketplace</button>
+  </div>
+
+  <div class="main-info">
+    <div class="icon-container">
+      <mat-icon color="primary">
+        {{ plugin().type === 'Plugin' ? 'extension' : 'inventory_2' }}
+      </mat-icon>
+    </div>
+    <div class="titles">
+      <h1 class="mat-headline-medium">{{ plugin().name }}</h1>
+      <p class="mat-body-large author">by {{ plugin().authors.join(', ') }}</p>
+    </div>
+
+    <div class="flex-spacer"></div>
+
+    <div class="actions-container">
+      @if (installedVersion()) {
+        <div class="status-row">
+          <span class="mat-body-large status-text">Installed Version: v{{ installedVersion() }}</span>
+        </div>
+      }
+
+      <div class="action-buttons">
+        @if (installedVersion()) {
+          <button mat-stroked-button color="warn" (click)="uninstall.emit()"><mat-icon>delete</mat-icon> Uninstall</button>
+        }
+
+        @if (updateAvailable()) {
+          <button mat-flat-button color="primary" (click)="install.emit()"><mat-icon>system_update_alt</mat-icon> Update</button>
+        } @else if (!installedVersion()) {
+          <button mat-flat-button color="primary" (click)="install.emit()"><mat-icon>download</mat-icon> Install</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<mat-divider></mat-divider>

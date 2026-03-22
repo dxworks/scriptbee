@@ -1,44 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Plugin } from './plugin';
-import { contentHeaders } from '../../shared/headers';
-import { MarketplaceProject } from './marketplace-project';
+import { map, Observable } from 'rxjs';
+import { MarketplacePlugin, MarketplacePluginWithDetails } from '../../types/marketplace-plugin';
+
+interface WebResponse<T> {
+  data: T;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class PluginService {
-  private pluginsApi = '/api/plugins';
-
   constructor(private http: HttpClient) {}
 
-  getAllLoadedPlugins(): Observable<Plugin[]> {
-    return this.http.get<Plugin[]>(this.pluginsApi, {
-      headers: contentHeaders,
+  public getAllAvailablePlugins(): Observable<MarketplacePlugin[]> {
+    return this.http.get<WebResponse<MarketplacePlugin[]>>('/api/plugins').pipe(map((response) => response.data));
+  }
+
+  public getPlugin(pluginId: string): Observable<MarketplacePluginWithDetails> {
+    return this.http.get<MarketplacePluginWithDetails>(`/api/plugins/${pluginId}`);
+  }
+
+  getInstalledPlugins(projectId: string): Observable<MarketplacePlugin[]> {
+    return this.http.get<WebResponse<MarketplacePlugin[]>>(`/api/projects/${projectId}/plugins`).pipe(map((response) => response.data));
+  }
+
+  installPlugin(projectId: string, pluginId: string, version: string | undefined): Observable<void> {
+    return this.http.put<void>(`/api/projects/${projectId}/plugins/${pluginId}`, {
+      version,
     });
   }
 
-  getAllAvailablePlugins(): Observable<MarketplaceProject[]> {
-    return this.http.get<MarketplaceProject[]>(`${this.pluginsApi}/available`, { headers: contentHeaders });
+  uninstallPlugin(projectId: string, pluginId: string) {
+    return this.http.delete<void>(`/api/projects/${projectId}/plugins/${pluginId}`);
   }
-
-  installPlugin(pluginId: string, version: string) {
-    return this.http.post<void>(
-      `${this.pluginsApi}/install`,
-      {
-        pluginId,
-        version,
-      },
-      { headers: contentHeaders }
-    );
-  }
-
-  uninstallPlugin(pluginId: string, version: string) {
-    return this.http.delete<void>(`${this.pluginsApi}/uninstall/${pluginId}/${version}`, { headers: contentHeaders });
-  }
-
-  // getAllUiPlugins():Observable<UIPlugin[]>{
-  //   return this.http.get<UIPlugin[]>(`${this.pluginsApi}/ui`, {headers: contentHeaders});
-  // }
 }

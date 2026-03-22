@@ -1,0 +1,8 @@
+<section class="bundle-section">
+  <h3 class="mat-title-medium">Included in this Bundle</h3>
+  <div class="bundle-grid">
+    @for (item of items(); track item.id) {
+      <button mat-button color="primary" [routerLink]="['..', item.id]" class="bundle-item-link"><mat-icon>extension</mat-icon> {{ item.name }}</button>
+    }
+  </div>
+</section>

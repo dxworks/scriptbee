@@ -1,0 +1,16 @@
+<section class="extensions-section">
+  <h3 class="mat-title-medium">Extension Points</h3>
+  <ul class="extension-list mat-body">
+    @for (ext of extensions(); track ext.kind + ext.language) {
+      <li>
+        <strong>{{ ext.kind }}</strong>
+        @if (ext.language) {
+          <span class="mat-body-small">&nbsp;(Language: {{ ext.language }})</span>
+        }
+        @if (ext.extension) {
+          <span class="mat-body-small">&nbsp;[File extension: {{ ext.extension }}]</span>
+        }
+      </li>
+    }
+  </ul>
+</section>
