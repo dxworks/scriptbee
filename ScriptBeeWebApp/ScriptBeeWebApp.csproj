@@ -33,7 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ScriptBee.Marketplace.Client\ScriptBee.Marketplace.Client.csproj" />
         <ProjectReference Include="..\ScriptBee\ScriptBee.csproj" />
     </ItemGroup>
 
