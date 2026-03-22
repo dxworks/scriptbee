@@ -10,10 +10,10 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         // TODO FIXIT(#87): replace hardcoded values with use cases
-        app.MapGet("/api/projects/{projectId}/plugins", GetAllAvailablePlugins);
+        app.MapGet("/api/projects/{projectId}/plugins", GetInstalledPlugins);
     }
 
-    private static Task<Ok<WebInstalledPluginsResponse>> GetAllAvailablePlugins(
+    private static Task<Ok<WebInstalledPluginsResponse>> GetInstalledPlugins(
         HttpContext context,
         [FromRoute] string projectId,
         CancellationToken cancellationToken = default
@@ -21,13 +21,23 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
     {
         var response = new WebInstalledPluginsResponse(
             [
-                new WebMarketplaceProject(
+                new WebMarketplacePlugin(
                     "plugin1",
-                    "Installed Plugin 1",
-                    WebMarketplaceProject.PluginType,
-                    "Description for Plugin 1",
-                    ["Author 1", "Author 2"],
-                    [new WebPluginVersion("1.0.0")]
+                    "Python Plugin",
+                    WebMarketplacePlugin.PluginType,
+                    "Allows running Python scripts for analysis and automation.",
+                    ["John Doe", "Jane Smith"],
+                    "1.1.0",
+                    "1.1.0"
+                ),
+                new WebMarketplacePlugin(
+                    "bundle1",
+                    "Standard Bundle",
+                    WebMarketplacePlugin.BundleType,
+                    "A collection of standard plugins for general use.",
+                    ["ScriptBee Team"],
+                    "1.0.0",
+                    "1.0.0"
                 ),
             ]
         );

@@ -1,3 +1,3 @@
 namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 
-public sealed record WebAllAvailablePluginsResponse(IEnumerable<WebMarketplaceProject> Data);
+public sealed record WebAllAvailablePluginsResponse(IEnumerable<WebMarketplacePlugin> Data);
