@@ -1,7 +1,7 @@
 ﻿@if (availableScriptLanguagesResource.isLoading()) {
   <app-loading-progress-bar title="Loading Script Languages..."></app-loading-progress-bar>
-} @else if (availableScriptLanguagesResource.error()) {
-  <app-error-state [error]="availableScriptLanguagesResource.error()!"></app-error-state>
+} @else if (availableScriptLanguagesResourceError()) {
+  <app-error-state [error]="availableScriptLanguagesResourceError()!"></app-error-state>
 } @else {
   <mat-form-field class="dialog-field" appearance="fill">
     <mat-label>Script Type</mat-label>

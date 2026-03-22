@@ -6,8 +6,8 @@
 
 @if (projectStructureResource.isLoading()) {
   <app-loading-progress-bar title="Loading Project Structure..."></app-loading-progress-bar>
-} @else if (projectStructureResource.error()) {
-  <app-error-state [error]="projectStructureResource.error()!"></app-error-state>
+} @else if (projectStructureResourceError()) {
+  <app-error-state [error]="projectStructureResourceError()!"></app-error-state>
 } @else {
   <app-selectable-tree
     [data]="projectStructureResource.value()!"

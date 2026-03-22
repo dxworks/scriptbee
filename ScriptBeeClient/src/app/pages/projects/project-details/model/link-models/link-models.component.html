@@ -2,8 +2,8 @@
 
 @if (getLinkersResource.isLoading()) {
   <app-centered-spinner text="Loading Linker"></app-centered-spinner>
-} @else if (getLinkersResource.error()) {
-  <app-error-state [error]="getLinkersResource.error()!"></app-error-state>
+} @else if (getLinkersResourceError()) {
+  <app-error-state [error]="getLinkersResourceError()!"></app-error-state>
 } @else {
   <mat-form-field class="select-linker" appearance="fill">
     <mat-label>Linker</mat-label>
@@ -17,14 +17,12 @@
   </mat-form-field>
 }
 
-@if (linkModelsHandler.isLoading()) {
+@if (isLinkLoading()) {
   <app-centered-spinner text="Linking Models"></app-centered-spinner>
-} @else if (linkModelsHandler.error()) {
-  <app-error-state [error]="linkModelsHandler.error()!"></app-error-state>
 }
 
 <div class="link-models-container">
-  <button class="link-button" mat-flat-button [disabled]="!selectedLinkerId() || linkModelsHandler.isLoading()" (click)="onLinkButtonClick()">Link</button>
+  <button class="link-button" mat-flat-button [disabled]="!selectedLinkerId() || isLinkLoading()" (click)="onLinkButtonClick()">Link</button>
 
   @if (!selectedLinkerId()) {
     <div class="warning">A linker must be selected</div>

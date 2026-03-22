@@ -1,8 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { createRxResourceHandler } from '../../../../utils/resource';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProjectService } from '../../../../services/projects/project.service';
 import { ErrorStateComponent } from '../../../../components/error-state/error-state.component';
 import { MatDivider } from '@angular/material/divider';
@@ -15,6 +14,7 @@ import { LoadingProgressBarComponent } from '../../../../components/loading-prog
 import { InstanceService } from '../../../../services/instances/instance.service';
 import { CenteredSpinnerComponent } from '../../../../components/centered-spinner/centered-spinner.component';
 import { InstanceInfoComponent } from './instance-info/instance-info.component';
+import { convertError } from '../../../../utils/api';
 
 @Component({
   selector: 'app-project-model-page',
@@ -37,15 +37,17 @@ import { InstanceInfoComponent } from './instance-info/instance-info.component';
 export class ProjectModelPage {
   projectId = signal<string | undefined>(undefined);
 
-  projectResource = createRxResourceHandler({
-    request: () => this.projectId(),
-    loader: (params) => this.projectService.getProject(params.request),
+  projectResource = rxResource({
+    params: () => this.projectId(),
+    stream: ({ params: projectId }) => this.projectService.getProject(projectId),
   });
+  projectResourceError = computed(() => convertError(this.projectResource.error()));
 
-  currentInstanceInfoResource = createRxResourceHandler({
-    request: () => this.projectId(),
-    loader: (params) => this.instanceService.getCurrentInstance(params.request),
+  currentInstanceInfoResource = rxResource({
+    params: () => this.projectId(),
+    stream: ({ params: projectId }) => this.instanceService.getCurrentInstance(projectId),
   });
+  currentInstanceInfoResourceError = computed(() => convertError(this.currentInstanceInfoResource.error()));
 
   constructor(
     route: ActivatedRoute,

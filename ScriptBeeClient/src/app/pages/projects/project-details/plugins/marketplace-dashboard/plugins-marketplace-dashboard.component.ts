@@ -1,9 +1,8 @@
 import { Component, computed, signal } from '@angular/core';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
-import { createRxResourceHandler } from '../../../../../utils/resource';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PluginService } from '../../../../../services/plugin/plugin.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -12,6 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
 import { PluginMarketplaceDashboardListComponent } from './list/plugin-marketplace-dashboard-list.component';
+import { convertError } from '../../../../../utils/api';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',
@@ -35,9 +35,11 @@ export class PluginsMarketplaceDashboardComponent {
   searchText = signal('');
   selectedFilters = signal<string[]>([]);
 
-  getAllAvailablePlugins = createRxResourceHandler({
-    loader: () => this.pluginsService.getAllAvailablePlugins(),
+  getAllAvailablePlugins = rxResource({
+    stream: () => this.pluginsService.getAllAvailablePlugins(),
   });
+
+  getAllAvailablePluginsError = computed(() => convertError(this.getAllAvailablePlugins.error()));
 
   filteredPlugins = computed(() => {
     const plugins = this.getAllAvailablePlugins.value() ?? [];

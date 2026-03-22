@@ -1,13 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { InstanceService } from '../../../services/instances/instance.service';
-import { ErrorStateComponent } from '../../error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../loading-progress-bar/loading-progress-bar.component';
-import { apiHandler } from '../../../utils/apiHandler';
+import { finalize } from 'rxjs';
 
 export interface InstanceNotAllocatedDialogData {
   projectId: string;
@@ -17,25 +16,10 @@ export interface InstanceNotAllocatedDialogData {
   selector: 'app-instance-not-allocated-dialog',
   templateUrl: './instance-not-allocated-dialog.component.html',
   styleUrls: ['./instance-not-allocated-dialog.component.scss'],
-  imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatExpansionModule,
-    MatSelectModule,
-    MatButtonModule,
-    FormsModule,
-    ErrorStateComponent,
-    LoadingProgressBarComponent,
-  ],
+  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatExpansionModule, MatSelectModule, MatButtonModule, FormsModule, LoadingProgressBarComponent],
 })
 export class InstanceNotAllocatedDialog {
-  allocateInstanceHandler = apiHandler(
-    (params: { projectId: string }) => this.instanceService.allocateInstance(params.projectId),
-    () => {
-      this.dialogRef.close();
-    }
-  );
+  isAllocateLoading = signal(false);
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -49,8 +33,10 @@ export class InstanceNotAllocatedDialog {
   }
 
   onAllocateClick(): void {
-    this.allocateInstanceHandler.execute({
-      projectId: this.data.projectId,
-    });
+    this.isAllocateLoading.set(true);
+    this.instanceService
+      .allocateInstance(this.data.projectId)
+      .pipe(finalize(() => this.isAllocateLoading.set(false)))
+      .subscribe({ next: () => this.dialogRef.close() });
   }
 }

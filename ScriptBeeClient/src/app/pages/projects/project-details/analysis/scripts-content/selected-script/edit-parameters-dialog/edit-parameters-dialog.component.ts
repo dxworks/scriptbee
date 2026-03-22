@@ -7,9 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { ScriptParametersListComponent } from '../../../../../../../components/script-parameters-list/script-parameters-list.component';
 import { ProjectStructureService } from '../../../../../../../services/projects/project-structure.service';
-import { apiHandler } from '../../../../../../../utils/apiHandler';
-import { ErrorStateComponent } from '../../../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../../../components/loading-progress-bar/loading-progress-bar.component';
+import { finalize } from 'rxjs';
 
 export interface EditParametersDialogData {
   projectId: string;
@@ -29,23 +28,15 @@ export interface EditParametersDialogData {
     MatButtonModule,
     FormsModule,
     ScriptParametersListComponent,
-    ErrorStateComponent,
     LoadingProgressBarComponent,
   ],
 })
 export class EditParametersDialogComponent {
   parameters = signal<ScriptParameter[]>([]);
   hasParameterErrors = signal<boolean>(true);
+  isUpdateLoading = signal(false);
 
-  isUpdateDisabled = computed(() => this.hasParameterErrors() || this.updateScriptHandler.isLoading());
-
-  updateScriptHandler = apiHandler(
-    (params: { projectId: string; parameters: ScriptParameter[] }) =>
-      this.projectStructureService.updateProjectScript(params.projectId, undefined, params.parameters),
-    () => {
-      this.dialogRef.close();
-    }
-  );
+  isUpdateDisabled = computed(() => this.hasParameterErrors() || this.isUpdateLoading());
 
   constructor(
     public dialogRef: MatDialogRef<EditParametersDialogData>,
@@ -66,9 +57,10 @@ export class EditParametersDialogComponent {
   }
 
   onUpdateClick() {
-    this.updateScriptHandler.execute({
-      projectId: this.data.projectId,
-      parameters: this.parameters(),
-    });
+    this.isUpdateLoading.set(true);
+    this.projectStructureService
+      .updateProjectScript(this.data.projectId, undefined, this.parameters())
+      .pipe(finalize(() => this.isUpdateLoading.set(false)))
+      .subscribe({ next: () => this.dialogRef.close() });
   }
 }

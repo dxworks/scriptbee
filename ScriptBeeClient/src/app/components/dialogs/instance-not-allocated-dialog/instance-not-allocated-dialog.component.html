@@ -4,12 +4,8 @@
   <br />
   <p>Do you want to allocate it now ?</p>
 
-  @if (allocateInstanceHandler.isLoading()) {
+  @if (isAllocateLoading()) {
     <app-loading-progress-bar title="Allocating instance..."></app-loading-progress-bar>
-  }
-
-  @if (allocateInstanceHandler.error()) {
-    <app-error-state [error]="allocateInstanceHandler.error()!"></app-error-state>
   }
 </div>
 <div mat-dialog-actions>

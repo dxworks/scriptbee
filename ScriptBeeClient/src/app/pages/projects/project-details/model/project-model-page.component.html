@@ -1,15 +1,15 @@
 @if (projectResource.isLoading()) {
   <app-loading-progress-bar title="Loading project..."></app-loading-progress-bar>
-} @else if (projectResource.error()) {
+} @else if (projectResourceError()) {
   <div style="margin: 1rem" class="center-column">
-    <app-error-state style="width: 400px" [error]="projectResource.error()!"></app-error-state>
+    <app-error-state style="width: 400px" [error]="projectResourceError()!"></app-error-state>
   </div>
 } @else {
   <div class="project-details-main-div">
     @if (currentInstanceInfoResource.isLoading()) {
       <app-loading-progress-bar title="Loading instance info..."></app-loading-progress-bar>
-    } @else if (currentInstanceInfoResource.error()) {
-      <app-error-state [error]="currentInstanceInfoResource.error()!"></app-error-state>
+    } @else if (currentInstanceInfoResourceError()) {
+      <app-error-state [error]="currentInstanceInfoResourceError()!"></app-error-state>
     } @else {
       <mat-card class="project-details-card" appearance="outlined">
         <app-instance-info [instanceInfo]="currentInstanceInfoResource.value()!" />
@@ -28,8 +28,8 @@
 
         @if (currentInstanceInfoResource.isLoading()) {
           <app-centered-spinner text="Loading Info" />
-        } @else if (currentInstanceInfoResource.error()) {
-          <app-error-state [error]="currentInstanceInfoResource.error()!" />
+        } @else if (currentInstanceInfoResourceError()) {
+          <app-error-state [error]="currentInstanceInfoResourceError()!" />
         } @else {
           <app-currently-loaded-models [instanceId]="currentInstanceInfoResource.value()!.id" />
         }
@@ -38,8 +38,8 @@
 
         @if (currentInstanceInfoResource.isLoading()) {
           <app-centered-spinner text="Loading Info" />
-        } @else if (currentInstanceInfoResource.error()) {
-          <app-error-state [error]="currentInstanceInfoResource.error()!" />
+        } @else if (currentInstanceInfoResourceError()) {
+          <app-error-state [error]="currentInstanceInfoResourceError()!" />
         } @else {
           <app-project-context [projectId]="projectId()!" [instanceId]="currentInstanceInfoResource.value()!.id" />
         }

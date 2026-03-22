@@ -26,12 +26,8 @@
       }
     </mat-form-field>
 
-    @if (createProjectHandler.isLoading()) {
+    @if (isCreateLoading()) {
       <app-loading-progress-bar title="Creating project..."></app-loading-progress-bar>
-    }
-
-    @if (createProjectHandler.error()) {
-      <app-error-state [error]="createProjectHandler.error()!"></app-error-state>
     }
 
     <button mat-flat-button [disabled]="projectId.invalid || projectName.invalid" (click)="onCreate()">Create</button>

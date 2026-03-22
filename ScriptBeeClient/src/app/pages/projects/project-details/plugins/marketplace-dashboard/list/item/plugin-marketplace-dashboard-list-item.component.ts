@@ -6,12 +6,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBadgeModule } from '@angular/material/badge';
 import { RouterModule } from '@angular/router';
 import { MarketplacePlugin } from '../../../../../../../types/marketplace-plugin';
 import { PluginService } from '../../../../../../../services/plugin/plugin.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-plugin-marketplace-dashboard-list-item',
@@ -64,18 +64,18 @@ export class PluginMarketplaceDashboardListItemComponent {
     }
 
     this.loading.set(true);
-
-    this.pluginService.installPlugin(projectId, project.id, versionToInstall).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.actionCompleted.emit();
-        this.snackbar.open(`${project.type} installed successfully`, 'Dismiss', { duration: 4000 });
-      },
-      error: () => {
-        this.loading.set(false);
-        this.snackbar.open(`Could not install ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
-      },
-    });
+    this.pluginService
+      .installPlugin(projectId, project.id, versionToInstall)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          this.actionCompleted.emit();
+          this.snackbar.open(`${project.type} installed successfully`, 'Dismiss', { duration: 4000 });
+        },
+        error: () => {
+          this.snackbar.open(`Could not install ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
+        },
+      });
   }
 
   onUninstallButtonClick() {
@@ -86,17 +86,17 @@ export class PluginMarketplaceDashboardListItemComponent {
     }
 
     this.loading.set(true);
-
-    this.pluginService.uninstallPlugin(projectId, project.id).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.actionCompleted.emit();
-        this.snackbar.open(`${project.type} uninstalled successfully`, 'Dismiss', { duration: 4000 });
-      },
-      error: () => {
-        this.loading.set(false);
-        this.snackbar.open(`Could not uninstall ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
-      },
-    });
+    this.pluginService
+      .uninstallPlugin(projectId, project.id)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          this.actionCompleted.emit();
+          this.snackbar.open(`${project.type} uninstalled successfully`, 'Dismiss', { duration: 4000 });
+        },
+        error: () => {
+          this.snackbar.open(`Could not uninstall ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
+        },
+      });
   }
 }

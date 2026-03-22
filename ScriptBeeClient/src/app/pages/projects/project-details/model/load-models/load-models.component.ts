@@ -3,15 +3,14 @@ import { TreeNode, TreeNodeWithParent } from '../../../../../types/tree-node';
 import { MatButtonModule } from '@angular/material/button';
 import { CheckableTreeComponent } from '../../../../../components/checkable-tree/checkable-tree.component';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
-import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
-import { apiHandler } from '../../../../../utils/apiHandler';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-load-models',
   templateUrl: './load-models.component.html',
   styleUrls: ['./load-models.component.scss'],
-  imports: [MatButtonModule, CheckableTreeComponent, CenteredSpinnerComponent, ErrorStateComponent],
+  imports: [MatButtonModule, CheckableTreeComponent, CenteredSpinnerComponent],
 })
 export class LoadModelsComponent {
   projectId = input.required<string>();
@@ -19,11 +18,7 @@ export class LoadModelsComponent {
 
   savedFiles = signal<TreeNode[]>([]);
   checkedFiles = signal<TreeNodeWithParent[]>([]);
-
-  loadModelsHandler = apiHandler((params: { projectId: string; instanceId: string; checkedFiles: TreeNode[] }) =>
-    // TODO FIXIT(#14): update with the list of loaders
-    this.loaderService.loadModels(params.projectId, params.instanceId, params.checkedFiles)
-  );
+  isLoadModelsLoading = signal(false);
 
   constructor(private loaderService: LoaderService) {}
 
@@ -32,10 +27,11 @@ export class LoadModelsComponent {
   }
 
   onLoadFilesClick() {
-    this.loadModelsHandler.execute({
-      projectId: this.projectId(),
-      instanceId: this.instanceId(),
-      checkedFiles: this.checkedFiles(),
-    });
+    this.isLoadModelsLoading.set(true);
+    // TODO FIXIT(#14): update with the list of loaders
+    this.loaderService
+      .loadModels(this.projectId(), this.instanceId(), this.checkedFiles())
+      .pipe(finalize(() => this.isLoadModelsLoading.set(false)))
+      .subscribe();
   }
 }

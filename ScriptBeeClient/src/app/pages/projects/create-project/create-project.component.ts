@@ -6,24 +6,12 @@ import { SlugifyPipe } from '../../../pipes/slugify.pipe';
 import { MatButton } from '@angular/material/button';
 import { LoadingProgressBarComponent } from '../../../components/loading-progress-bar/loading-progress-bar.component';
 import { ProjectService } from '../../../services/projects/project.service';
-import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 import { Router } from '@angular/router';
-import { apiHandler } from '../../../utils/apiHandler';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-create-project',
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatError,
-    SlugifyPipe,
-    MatButton,
-    LoadingProgressBarComponent,
-    ErrorStateComponent,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, MatFormField, MatInput, MatLabel, MatError, SlugifyPipe, MatButton, LoadingProgressBarComponent],
   templateUrl: './create-project.component.html',
   styleUrl: './create-project.component.scss',
 })
@@ -33,11 +21,7 @@ export class CreateProjectPage {
 
   projectIdErrorMessage = signal('');
   projectNameErrorMessage = signal('');
-
-  createProjectHandler = apiHandler(
-    (params: { id: string; name: string }) => this.projectService.createProject(params.id, params.name),
-    (response) => this.router.navigate([`/projects/${response.id}`])
-  );
+  isCreateLoading = signal(false);
 
   constructor(
     private projectService: ProjectService,
@@ -54,7 +38,11 @@ export class CreateProjectPage {
 
   onCreate() {
     if (this.projectId.value && this.projectName.value) {
-      this.createProjectHandler.execute({ id: this.projectId.value, name: this.projectName.value });
+      this.isCreateLoading.set(true);
+      this.projectService
+        .createProject(this.projectId.value, this.projectName.value)
+        .pipe(finalize(() => this.isCreateLoading.set(false)))
+        .subscribe({ next: (response) => this.router.navigate([`/projects/${response.id}`]) });
     }
   }
 
