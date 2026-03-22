@@ -10,7 +10,7 @@ import { ClickStopPropagation } from '../../../directives/click-stop-propagation
   selector: 'app-tree-actions-menu',
   templateUrl: './tree-actions-menu.component.html',
   imports: [MatTreeModule, MatCheckboxModule, MatButtonModule, MatIconModule, MatMenuModule, ClickStopPropagation],
-  styleUrls: ['./tree-actions-menu.scss'],
+  styleUrls: ['./tree-actions-menu.component.scss'],
 })
 export class TreeActionsMenuComponent {
   onDelete = output();
