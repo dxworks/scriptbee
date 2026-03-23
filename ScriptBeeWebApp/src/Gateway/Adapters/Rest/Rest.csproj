@@ -10,7 +10,4 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Refit" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\" />
-  </ItemGroup>
 </Project>
