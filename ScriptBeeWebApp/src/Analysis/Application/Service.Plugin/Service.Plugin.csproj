@@ -3,11 +3,12 @@
     <RootNamespace>ScriptBee.Service.Plugin</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Plugins\Ports.Plugins.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\UseCases.Plugin\UseCases.Plugin.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\Ports.Plugins\Ports.Plugins.csproj" />
+    <ProjectReference Include="..\UseCases.Plugin\UseCases.Plugin.csproj" />
   </ItemGroup>
 </Project>

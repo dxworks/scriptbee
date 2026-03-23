@@ -1,6 +1,5 @@
-﻿using ScriptBee.Persistence.File;
-using ScriptBee.Persistence.File.Config;
-using ScriptBee.Ports.Files;
+﻿using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Files.Config;
 
 namespace ScriptBee.Web.Extensions;
 

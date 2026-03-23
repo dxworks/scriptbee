@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Marketplace.Client;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Plugins.Installer;
 

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Persistence.File.Config;
 using ScriptBee.Persistence.File.Plugin;
 using ScriptBee.Ports.Files;
+using ScriptBee.Ports.Files.Config;
 using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Persistence.File.Extensions;

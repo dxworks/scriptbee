@@ -9,12 +9,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\Persistence.InMemory\Persistence.InMemory.csproj" />
     <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Service.Analysis\Service.Analysis.csproj" />
-    <ProjectReference Include="..\..\..\Analysis\Application\Service.Plugin\Service.Plugin.csproj" />
-    <ProjectReference Include="..\..\..\Analysis\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Common\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\Persistence.InMemory\Persistence.InMemory.csproj" />
     <ProjectReference Include="..\Persistence.File\Persistence.File.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Adapters\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\..\Application\Service.Plugin\Service.Plugin.csproj" />
+    <ProjectReference Include="..\..\Application\Service.Analysis\Service.Analysis.csproj" />
+    <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
   </ItemGroup>
 </Project>
