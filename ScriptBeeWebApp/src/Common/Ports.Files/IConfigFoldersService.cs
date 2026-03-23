@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Ports.Files;
 
 public interface IConfigFoldersService
 {

@@ -1,8 +1,7 @@
 ﻿using OneOf;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Files;
 
-namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Ports.Files;
 
 public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICreateFile
 {
@@ -15,7 +14,7 @@ public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICr
     {
         var pathInSrcFolder = configFoldersService.GetPathToSrcFolder(projectId, path);
 
-        if (System.IO.File.Exists(pathInSrcFolder))
+        if (File.Exists(pathInSrcFolder))
         {
             return new FileAlreadyExistsError(path);
         }
@@ -23,7 +22,7 @@ public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICr
         Directory.CreateDirectory(
             Path.GetDirectoryName(pathInSrcFolder) ?? throw new InvalidOperationException()
         );
-        await System.IO.File.WriteAllTextAsync(pathInSrcFolder, content, cancellationToken);
+        await File.WriteAllTextAsync(pathInSrcFolder, content, cancellationToken);
 
         return new CreateFileResult(
             Path.GetFileName(path),
