@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Analysis.Web</RootNamespace>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
+    <ProjectReference Include="..\Persistence.InMemory\Persistence.InMemory.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\Service.Analysis\Service.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Analysis\Application\Service.Plugin\Service.Plugin.csproj" />
+    <ProjectReference Include="..\..\..\Analysis\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
+    <ProjectReference Include="..\Persistence.File\Persistence.File.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Adapters\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+  </ItemGroup>
+</Project>

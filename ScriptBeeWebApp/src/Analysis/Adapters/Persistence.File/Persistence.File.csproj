@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Persistence.File</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Analysis\Application\Ports.Files\Ports.Files.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Plugins\Ports.Plugins.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Project\Ports.Project.csproj" />
+    <ProjectReference Include="..\..\..\Analysis\Application\Ports.Analysis\Ports.Analysis.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Persistence.InMemory.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Analysis\Adapters\Persistence.InMemory\Persistence.InMemory.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Web</RootNamespace>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
+    <ProjectReference Include="..\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\Service.Analysis\Service.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\Service.Project\Service.Project.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\UseCases.Project\UseCases.Project.csproj" />
+    <ProjectReference Include="..\..\..\Analysis\Adapters\Persistence.File\Persistence.File.csproj" />
+    <ProjectReference Include="..\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\Rest\Rest.csproj" />
+  </ItemGroup>
+</Project>

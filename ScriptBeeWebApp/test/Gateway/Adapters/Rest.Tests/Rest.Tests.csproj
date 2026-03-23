@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Rest.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Rest\Rest.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WireMock.Net" />
+  </ItemGroup>
+</Project>
