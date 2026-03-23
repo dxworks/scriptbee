@@ -17,8 +17,7 @@ public class MongoDbFixture : IAsyncLifetime
     {
         var freePort = GetAvailablePort();
 
-        _container = new MongoDbBuilder()
-            .WithImage("mongo:8.0.4")
+        _container = new MongoDbBuilder("mongo:8.0.4")
             .WithPortBinding(freePort, 27017)
             .WithCleanUp(true)
             .Build();
