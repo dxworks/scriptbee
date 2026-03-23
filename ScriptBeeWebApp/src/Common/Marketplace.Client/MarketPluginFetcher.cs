@@ -2,7 +2,6 @@
 using DxWorks.Hub.Sdk.Project;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
-using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Marketplace.Client;
 

@@ -1,5 +1,4 @@
 ﻿using ScriptBee.Marketplace.Client.Exceptions;
-using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Marketplace.Client;
 

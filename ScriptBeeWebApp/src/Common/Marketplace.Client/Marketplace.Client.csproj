@@ -8,7 +8,6 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Plugins\Ports.Plugins.csproj" />
+    <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
 </Project>

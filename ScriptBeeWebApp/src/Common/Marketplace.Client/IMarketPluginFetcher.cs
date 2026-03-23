@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 
-namespace ScriptBee.Ports.Plugins;
+namespace ScriptBee.Marketplace.Client;
 
 public interface IMarketPluginFetcher
 {
