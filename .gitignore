@@ -22,6 +22,7 @@ firebaseConfig.json
 # User-specific files
 *.rsuser
 *.suo
+*.user
 *.userosscache
 *.sln.docstates
 
@@ -81,7 +82,7 @@ StyleCopReport.xml
 # Files built by Visual Studio
 *_i.c
 *_p.c
-*_h.h
+*_i.h
 *.ilk
 *.meta
 *.obj
@@ -144,6 +145,9 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
+# JustCode is a .NET coding add-in
+.JustCode
+
 # TeamCity is a build add-in
 _TeamCity*
 
@@ -188,6 +192,9 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
+# Click-Once directory
+publish/
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
@@ -223,7 +230,10 @@ csx/
 ecf/
 rcf/
 
-# Windows Store app package directories and files
+# Microsoft Azure ApplicationInsights config file
+ApplicationInsights.config
+
+# Windows Store app package directory
 AppPackages/
 BundleArtifacts/
 Package.StoreAssociation.xml
