@@ -1,0 +1,41 @@
+<Solution>
+    <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Common/Common.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driven/Analysis.Instance.Docker/Analysis.Instance.Docker.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driven/Persistence.Mongodb/Persistence.Mongodb.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driving/Analysis.Web/Analysis.Web.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driving/Common.Web/Common.Web.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driving/Web/Web.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Domain/Model/Model.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Domain/Service.Analysis/Service.Analysis.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Domain/Service.Project/Service.Project.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driven/Ports.Analysis/Ports.Analysis.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driven/Ports.Instance/Ports.Instance.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driven/Ports.Project/Ports.Project.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driving/UseCases.Analysis/UseCases.Analysis.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driving/UseCases.Project/UseCases.Project.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driven/Marketplace.Client/Marketplace.Client.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driven/Persistence.File/Persistence.File.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driven/Persistence.InMemory/Persistence.InMemory.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Adapters/Driven/Rest/Rest.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Domain/Service.Plugin/Service.Plugin.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driven/Ports.Files/Ports.Files.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driven/Ports.Plugins/Ports.Plugins.csproj"/>
+    <Project Path="ScriptBeeWebApp/src/Application/Ports/Driving/UseCases.Plugin/UseCases.Plugin.csproj"/>
+    
+    <Project
+            Path="ScriptBeeWebApp/test/Adapters/Driven/Analysis.Instance.Docker.Tests/Analysis.Instance.Docker.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driven/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driven/Persistence.File.Tests/Persistence.File.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driven/Persistence.InMemory.Tests/Persistence.InMemory.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driven/Rest.Tests/Rest.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Application/Domain/Service.Plugin.Tests/Service.Plugin.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driven/Persistence.Mongodb.Tests/Persistence.Mongodb.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driving/Analysis.Web.Tests/Analysis.Web.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Adapters/Driving/Web.Tests/Web.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Application/Domain/Model.Tests/Model.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Application/Domain/Service.Analysis.Tests/Service.Analysis.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Application/Domain/Service.Project.Tests/Service.Project.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj"/>
+    <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj"/>
+</Solution>
