@@ -15,6 +15,7 @@
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Analysis/Ports.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Files/Ports.Files.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Plugins/Ports.Plugins.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
     
@@ -27,7 +28,6 @@
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Plugins/Ports.Plugins.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Analysis/Service.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Project/Service.Project.csproj" />
