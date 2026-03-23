@@ -2,7 +2,4 @@
   <PropertyGroup>
     <RootNamespace>ScriptBee.Common</RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
 </Project>

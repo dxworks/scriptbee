@@ -3,7 +3,7 @@
     <RootNamespace>ScriptBee.Analysis.Instance.Docker</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Application\Ports\Driven\Ports.Instance\Ports.Instance.csproj" />
+    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Instance\Ports.Instance.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Docker.DotNet" />

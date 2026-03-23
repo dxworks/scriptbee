@@ -6,7 +6,7 @@
     <PackageReference Include="Testcontainers.MongoDb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Persistence.Mongodb\Persistence.Mongodb.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 </Project>

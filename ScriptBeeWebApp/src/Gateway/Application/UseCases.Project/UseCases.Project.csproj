@@ -3,6 +3,6 @@
     <RootNamespace>ScriptBee.UseCases.Project</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Domain\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
   </ItemGroup>
 </Project>

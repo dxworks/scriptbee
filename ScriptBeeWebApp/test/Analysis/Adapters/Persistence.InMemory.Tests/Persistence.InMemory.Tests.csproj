@@ -3,6 +3,6 @@
     <RootNamespace>ScriptBee.Persistence.InMemory.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Persistence.InMemory\Persistence.InMemory.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Analysis\Adapters\Persistence.InMemory\Persistence.InMemory.csproj" />
   </ItemGroup>
 </Project>

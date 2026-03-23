@@ -3,7 +3,7 @@
     <RootNamespace>ScriptBee.Tests.Common</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Application\Domain\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\src\Common\Model\Model.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />

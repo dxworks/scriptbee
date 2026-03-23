@@ -3,6 +3,6 @@
     <RootNamespace>ScriptBee.Common.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\src\Common\Common\Common.csproj" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
     <RootNamespace>ScriptBee.Marketplace.Client.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Marketplace.Client\Marketplace.Client.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 </Project>

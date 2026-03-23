@@ -3,7 +3,7 @@
     <RootNamespace>ScriptBee.Persistence.File.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Adapters\Driven\Persistence.File\Persistence.File.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Analysis\Adapters\Persistence.File\Persistence.File.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
