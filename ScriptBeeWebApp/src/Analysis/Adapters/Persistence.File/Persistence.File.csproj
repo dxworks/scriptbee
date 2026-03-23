@@ -8,9 +8,7 @@
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Analysis\Application\Ports.Files\Ports.Files.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Plugins\Ports.Plugins.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Project\Ports.Project.csproj" />
-    <ProjectReference Include="..\..\..\Analysis\Application\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\..\Application\Ports.Files\Ports.Files.csproj" />
+    <ProjectReference Include="..\..\Application\Ports.Plugins\Ports.Plugins.csproj" />
   </ItemGroup>
 </Project>
