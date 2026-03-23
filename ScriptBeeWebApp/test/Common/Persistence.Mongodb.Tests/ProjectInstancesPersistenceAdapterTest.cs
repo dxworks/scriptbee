@@ -1,12 +1,4 @@
-﻿using MongoDB.Driver;
-using ScriptBee.Domain.Model.Errors;
-using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Project;
-using ScriptBee.Persistence.Mongodb.Entity;
-using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Tests.Common;
-
-namespace ScriptBee.Persistence.Mongodb.Tests;
+﻿namespace ScriptBee.Persistence.Mongodb.Tests;
 
 public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 {

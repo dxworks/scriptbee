@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using MongoDB.Driver;
 using Testcontainers.MongoDb;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
