@@ -1,4 +1,4 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Model;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 
 namespace ScriptBee.Persistence.Mongodb.Entity.Script;
 

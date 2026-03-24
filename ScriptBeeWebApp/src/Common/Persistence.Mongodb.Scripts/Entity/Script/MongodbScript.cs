@@ -1,8 +1,9 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Attributes;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Persistence.Mongodb.Entity.Script;
+
 
 [BsonIgnoreExtraElements]
 public class MongodbScript : IDocument

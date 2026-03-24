@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Domain.Model.ProjectStructure;
 
 namespace ScriptBee.Persistence.Mongodb.Entity.Script;
 

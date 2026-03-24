@@ -1,4 +1,4 @@
-﻿using OneOf;
+using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Entity.Script;
@@ -34,3 +34,4 @@ public class ScriptPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepos
         return mongodbScript.ToScript();
     }
 }
+
