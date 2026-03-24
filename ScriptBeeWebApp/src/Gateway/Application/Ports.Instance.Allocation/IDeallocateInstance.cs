@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Instance;
 
-namespace ScriptBee.Ports.Instance;
+namespace ScriptBee.Ports.Analysis.Integration;
 
 public interface IDeallocateInstance
 {

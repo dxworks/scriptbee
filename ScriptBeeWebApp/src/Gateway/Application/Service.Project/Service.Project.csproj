@@ -5,7 +5,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Ports.Files\Ports.Files.csproj" />
-    <ProjectReference Include="..\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\Ports.Instance.Allocation\Ports.Instance.Allocation.csproj" />
     <ProjectReference Include="..\Ports.Instance\Ports.Instance.csproj" />
     <ProjectReference Include="..\Ports.Project\Ports.Project.csproj" />
     <ProjectReference Include="..\Ports.Plugins.Fetching\Ports.Plugins.Fetching.csproj" />

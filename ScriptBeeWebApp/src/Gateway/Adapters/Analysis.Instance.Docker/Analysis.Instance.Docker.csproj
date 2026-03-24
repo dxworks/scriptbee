@@ -3,11 +3,11 @@
     <RootNamespace>ScriptBee.Analysis.Instance.Docker</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Instance\Ports.Instance.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Docker.DotNet" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Instance.Allocation\Ports.Instance.Allocation.csproj" />
   </ItemGroup>
 </Project>

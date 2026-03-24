@@ -30,6 +30,7 @@
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance.Allocation/Ports.Instance.Allocation.csproj" />
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />

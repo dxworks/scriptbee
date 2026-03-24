@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Ports.Analysis.Integration;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Analysis;
