@@ -44,6 +44,7 @@
     <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Persistence.Mongodb.Abstractions.Tests/Persistence.Mongodb.Abstractions.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
     
     <!-- Tests - Analysis Context -->
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
@@ -54,7 +55,6 @@
     
     <!-- Tests - Gateway Context -->
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Analysis.Instance.Docker.Tests/Analysis.Instance.Docker.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
