@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>ScriptBee.Persistence.Mongodb.Tests</RootNamespace>
   </PropertyGroup>
@@ -6,7 +6,7 @@
     <PackageReference Include="Testcontainers.MongoDb" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Common\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 </Project>

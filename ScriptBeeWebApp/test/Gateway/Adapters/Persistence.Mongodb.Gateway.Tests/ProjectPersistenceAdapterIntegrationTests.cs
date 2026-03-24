@@ -1,4 +1,12 @@
-﻿namespace ScriptBee.Persistence.Mongodb.Tests;
+﻿using MongoDB.Driver;
+using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.File;
+using ScriptBee.Domain.Model.Project;
+using ScriptBee.Persistence.Mongodb.Entity;
+using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Tests.Common;
+
+namespace ScriptBee.Persistence.Mongodb.Tests;
 
 public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFixture>
 {
@@ -20,7 +28,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     [Fact]
     public async Task CreateNewProject()
     {
-        var project = BasicProjectDetails(ProjectId.Create("id"));
+        var project = ProjectDetailsFixture.BasicProjectDetails(ProjectId.Create("id"));
 
         var result = await _adapter.Create(project, CancellationToken.None);
 
@@ -37,7 +45,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     public async Task GivenIdAlreadyExists_CreateProject_ExpectProjectAlreadyExistsError()
     {
         var projectId = ProjectId.Create("existing-id");
-        var project = BasicProjectDetails(projectId);
+        var project = ProjectDetailsFixture.BasicProjectDetails(projectId);
         await _mongoCollection.InsertOneAsync(
             new MongodbProjectModel { Id = "existing-id", Name = "existing" },
             cancellationToken: TestContext.Current.CancellationToken
