@@ -3,6 +3,6 @@
     <RootNamespace>ScriptBee.Analysis.Service.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Gateway\Application\Service.Analysis\Service.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Analysis\Application\Service.Analysis\Service.Analysis.csproj" />
   </ItemGroup>
 </Project>
