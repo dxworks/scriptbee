@@ -8,13 +8,14 @@
     <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Ports.Files/Ports.Files.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb/Persistence.Mongodb.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
     
     <!-- Analysis Bounded Context -->
     <!-- Adapters -->
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.File/Persistence.File.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.InMemory/Persistence.InMemory.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.Mongodb.Analysis/Persistence.Mongodb.Analysis.csproj" />
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Analysis/Ports.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Plugins/Ports.Plugins.csproj" />
@@ -28,6 +29,7 @@
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Analysis.Instance.Docker/Analysis.Instance.Docker.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
@@ -39,12 +41,13 @@
     <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Common/Persistence.Mongodb.Tests/Persistence.Mongodb.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Persistence.Mongodb.Abstractions.Tests/Persistence.Mongodb.Abstractions.Tests.csproj" />
     
     <!-- Tests - Analysis Context -->
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.File.Tests/Persistence.File.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.InMemory.Tests/Persistence.InMemory.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.Mongodb.Analysis.Tests/Persistence.Mongodb.Analysis.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Plugin.Tests/Service.Plugin.Tests.csproj" />
     
     <!-- Tests - Gateway Context -->
@@ -52,6 +55,7 @@
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Project.Tests/Service.Project.Tests.csproj" />
 </Solution>

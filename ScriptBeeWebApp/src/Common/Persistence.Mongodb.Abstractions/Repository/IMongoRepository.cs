@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace ScriptBee.Persistence.Mongodb.Repository;
 
@@ -26,3 +26,4 @@ public interface IMongoRepository<T>
         CancellationToken cancellationToken
     );
 }
+

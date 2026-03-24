@@ -10,7 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
-    <ProjectReference Include="..\..\..\Common\Persistence.Mongodb\Persistence.Mongodb.csproj" />
     <ProjectReference Include="..\Persistence.InMemory\Persistence.InMemory.csproj" />
     <ProjectReference Include="..\Persistence.File\Persistence.File.csproj" />
     <ProjectReference Include="..\..\Application\Service.Plugin\Service.Plugin.csproj" />

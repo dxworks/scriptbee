@@ -1,4 +1,6 @@
 using System.Text;
+using MongoDB.Driver.GridFS;
+using ScriptBee.Domain.Model.File;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
 

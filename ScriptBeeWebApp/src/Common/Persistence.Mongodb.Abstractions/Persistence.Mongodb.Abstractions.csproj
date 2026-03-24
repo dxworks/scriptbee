@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>ScriptBee.Persistence.Mongodb</RootNamespace>
   </PropertyGroup>
@@ -8,12 +8,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\Ports.Files\Ports.Files.csproj" />
-    <!-- TODO: refactor so that we don't need this -->
-    <ProjectReference Include="..\..\Analysis\Application\Ports.Analysis\Ports.Analysis.csproj" />
-    <ProjectReference Include="..\..\Gateway\Application\Ports.Project\Ports.Project.csproj" />
-    <ProjectReference Include="..\..\Gateway\Application\Ports.Instance\Ports.Instance.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using MongoDB.Driver;
 
 namespace ScriptBee.Persistence.Mongodb.Repository;
@@ -61,3 +61,4 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         await mongoCollection.DeleteOneAsync(predicate, cancellationToken);
     }
 }
+
