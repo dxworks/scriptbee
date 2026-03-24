@@ -12,9 +12,11 @@
     <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\Common\Persistence.Mongodb.Scripts\Persistence.Mongodb.Scripts.csproj" />
     <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
     <ProjectReference Include="..\Rest\Rest.csproj" />
     <ProjectReference Include="..\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
+    <!--    <ProjectReference Include="..\..\Application\Service.Analysis\Service.Analysis.csproj" />-->
     <ProjectReference Include="..\..\Application\Service.Project\Service.Project.csproj" />
     <ProjectReference Include="..\..\Application\UseCases.Project\UseCases.Project.csproj" />
   </ItemGroup>

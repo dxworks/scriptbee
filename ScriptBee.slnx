@@ -11,6 +11,7 @@
     <Project Path="ScriptBeeWebApp/src/Common/Ports.Scripts/Ports.Scripts.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Scripts/Persistence.Mongodb.Scripts.csproj" />
     
     <!-- Analysis Bounded Context -->
     <!-- Adapters -->
