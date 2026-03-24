@@ -2,7 +2,7 @@
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 
-namespace ScriptBee.Ports.Project.Structure;
+namespace ScriptBee.Ports.Scripts;
 
 public interface IGetScript
 {

@@ -8,7 +8,7 @@ using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project;
-using ScriptBee.Ports.Project.Structure;
+using ScriptBee.Ports.Scripts;
 using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
 

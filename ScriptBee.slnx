@@ -6,7 +6,9 @@
     <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Ports.Analysis/Ports.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Ports.Files/Ports.Files.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Ports.Scripts/Ports.Scripts.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
     
@@ -17,7 +19,6 @@
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.InMemory/Persistence.InMemory.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.Mongodb.Analysis/Persistence.Mongodb.Analysis.csproj" />
     <!-- Application Layer -->
-    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Analysis/Ports.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Plugins/Ports.Plugins.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
