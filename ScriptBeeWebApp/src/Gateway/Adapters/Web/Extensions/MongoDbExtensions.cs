@@ -1,4 +1,4 @@
-﻿using static ScriptBee.Persistence.Mongodb.Extensions.MongoDbExtensions;
+﻿using ScriptBee.Persistence.Mongodb.Extensions;
 
 namespace ScriptBee.Web.Extensions;
 
@@ -14,7 +14,6 @@ public static class MongoDbExtensions
         return services
             .AddProjectAdapters(mongoDatabase)
             .AddProjectInstancesAdapters(mongoDatabase)
-            .AddScriptAdapters(mongoDatabase)
-            .AddAnalysisAdapters(mongoDatabase);
+            .AddScriptAdapters(mongoDatabase);
     }
 }

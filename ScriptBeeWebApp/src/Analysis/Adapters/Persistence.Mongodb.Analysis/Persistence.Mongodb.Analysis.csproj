@@ -11,7 +11,7 @@
     <ProjectReference Include="..\..\..\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
     <ProjectReference Include="..\..\..\Common\Ports.Files\Ports.Files.csproj" />
-    <ProjectReference Include="..\..\Application\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Common\Ports.Analysis\Ports.Analysis.csproj" />
   </ItemGroup>
 </Project>
 

@@ -4,6 +4,7 @@ using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Marketplace.Client;
 using ScriptBee.Persistence.File.Plugin.Installer;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Tests.Common.Plugin;

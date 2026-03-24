@@ -1,4 +1,4 @@
-﻿using static ScriptBee.Persistence.Mongodb.Extensions.MongoDbExtensions;
+﻿using ScriptBee.Persistence.Mongodb.Extensions;
 
 namespace ScriptBee.Analysis.Web.Extensions;
 
@@ -11,6 +11,6 @@ public static class MongoDbExtensions
     {
         var mongoDatabase = services.AddMongodbDatabase(connectionString);
 
-        return services.AddAnalysisAdapters(mongoDatabase).AddScriptAdapters(mongoDatabase);
+        return services.AddAnalysisAdapters(mongoDatabase);
     }
 }

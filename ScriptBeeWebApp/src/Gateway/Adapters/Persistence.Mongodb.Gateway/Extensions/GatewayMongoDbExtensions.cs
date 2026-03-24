@@ -1,14 +1,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using ScriptBee.Persistence.Mongodb.Entity;
+using ScriptBee.Persistence.Mongodb.Entity.Script;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
+using ScriptBee.Ports.Scripts;
 
 namespace ScriptBee.Persistence.Mongodb.Extensions;
 
 public static class GatewayMongoDbExtensions
 {
-    public static IServiceCollection AddGatewayProjectAdapters(
+    public static IServiceCollection AddProjectAdapters(
         this IServiceCollection services,
         IMongoDatabase mongoDatabase
     )
@@ -22,7 +24,7 @@ public static class GatewayMongoDbExtensions
             .AddSingleton<IUpdateProject, ProjectPersistenceAdapter>();
     }
 
-    public static IServiceCollection AddGatewayProjectInstancesAdapters(
+    public static IServiceCollection AddProjectInstancesAdapters(
         this IServiceCollection services,
         IMongoDatabase mongoDatabase
     )
@@ -32,5 +34,16 @@ public static class GatewayMongoDbExtensions
             .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
+    }
+
+    public static IServiceCollection AddScriptAdapters(
+        this IServiceCollection services,
+        IMongoDatabase mongoDatabase
+    )
+    {
+        return services
+            .AddMongoCollection<MongodbScript>(mongoDatabase, "Scripts")
+            .AddSingleton<ICreateScript, ScriptPersistenceAdapter>()
+            .AddSingleton<IGetScript, ScriptPersistenceAdapter>();
     }
 }

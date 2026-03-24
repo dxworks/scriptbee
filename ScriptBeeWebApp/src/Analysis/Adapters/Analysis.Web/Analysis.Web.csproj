@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Persistence.InMemory\Persistence.InMemory.csproj" />
     <ProjectReference Include="..\Persistence.File\Persistence.File.csproj" />
+    <ProjectReference Include="..\Persistence.Mongodb.Analysis\Persistence.Mongodb.Analysis.csproj" />
     <ProjectReference Include="..\..\Application\Service.Plugin\Service.Plugin.csproj" />
     <ProjectReference Include="..\..\Application\Service.Analysis\Service.Analysis.csproj" />
     <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
