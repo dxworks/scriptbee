@@ -3,6 +3,7 @@ using DxWorks.ScriptBee.Plugin.Api.Model;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OneOf;
+using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Context;
@@ -10,7 +11,6 @@ using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
-using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Analysis;
 

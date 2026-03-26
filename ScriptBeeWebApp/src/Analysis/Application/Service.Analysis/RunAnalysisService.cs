@@ -1,13 +1,13 @@
 ﻿using System.Threading.Channels;
 using DxWorks.ScriptBee.Plugin.Api;
 using OneOf;
+using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Plugins;
-using ScriptBee.Ports.Scripts;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;

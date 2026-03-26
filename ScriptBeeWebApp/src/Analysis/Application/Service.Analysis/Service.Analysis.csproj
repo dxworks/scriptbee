@@ -4,9 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Common\Ports.Files\Ports.Files.csproj" />
-    <ProjectReference Include="..\..\..\Common\Ports.Scripts\Ports.Scripts.csproj" />
     <ProjectReference Include="..\..\..\Common\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Artifacts\Artifacts\Artifacts.csproj" />
     <ProjectReference Include="..\Ports.Plugins\Ports.Plugins.csproj" />
     <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
   </ItemGroup>

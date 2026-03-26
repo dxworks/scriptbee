@@ -1,6 +1,6 @@
 ﻿using NSubstitute;
+using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Files;
 
 namespace ScriptBee.Persistence.File.Tests;
 

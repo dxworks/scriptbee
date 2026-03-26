@@ -1,4 +1,5 @@
-﻿using ScriptBee.Persistence.Mongodb.Extensions;
+﻿using ScriptBee.Artifacts.Mongodb.Extensions;
+using ScriptBee.Persistence.Mongodb.Extensions;
 
 namespace ScriptBee.Web.Extensions;
 

@@ -9,10 +9,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Common\Persistence.Mongodb.Scripts\Persistence.Mongodb.Scripts.csproj" />
     <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
-    <ProjectReference Include="..\..\..\Common\Ports.Files\Ports.Files.csproj" />
-    <ProjectReference Include="..\..\..\Common\Ports.Scripts\Ports.Scripts.csproj" />
     <ProjectReference Include="..\..\Application\Ports.Project\Ports.Project.csproj" />
     <ProjectReference Include="..\..\Application\Ports.Instance\Ports.Instance.csproj" />
   </ItemGroup>

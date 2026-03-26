@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using ScriptBee.Artifacts;
+using ScriptBee.Artifacts.Config;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Files;
-using ScriptBee.Ports.Files.Config;
 
 namespace ScriptBee.Persistence.File.Tests;
 

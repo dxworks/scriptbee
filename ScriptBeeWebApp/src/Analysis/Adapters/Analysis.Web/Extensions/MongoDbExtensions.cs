@@ -1,6 +1,7 @@
-﻿using ScriptBee.Persistence.Mongodb;
+﻿using ScriptBee.Artifacts;
+using ScriptBee.Artifacts.Mongodb;
+using ScriptBee.Artifacts.Mongodb.Extensions;
 using ScriptBee.Persistence.Mongodb.Extensions;
-using ScriptBee.Ports.Files;
 
 namespace ScriptBee.Analysis.Web.Extensions;
 
