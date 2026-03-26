@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Artifacts;
 
 public interface IFileService
 {
@@ -22,3 +22,4 @@ public interface IFileService
 
     void CreateFolder(string path);
 }
+

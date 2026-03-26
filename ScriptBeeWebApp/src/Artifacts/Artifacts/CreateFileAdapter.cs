@@ -1,7 +1,7 @@
-﻿using OneOf;
+using OneOf;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Files;
+namespace ScriptBee.Artifacts;
 
 public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICreateFile
 {
@@ -31,3 +31,4 @@ public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICr
         );
     }
 }
+

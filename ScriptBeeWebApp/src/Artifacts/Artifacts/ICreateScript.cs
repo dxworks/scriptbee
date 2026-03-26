@@ -1,8 +1,9 @@
-﻿using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Domain.Model.ProjectStructure;
 
-namespace ScriptBee.Ports.Scripts;
+namespace ScriptBee.Artifacts;
 
 public interface ICreateScript
 {
     Task Create(Script script, CancellationToken cancellationToken = default);
 }
+

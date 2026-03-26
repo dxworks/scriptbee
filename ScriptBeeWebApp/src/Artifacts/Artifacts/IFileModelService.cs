@@ -1,6 +1,6 @@
-﻿using ScriptBee.Domain.Model.File;
+using ScriptBee.Domain.Model.File;
 
-namespace ScriptBee.Ports.Files;
+namespace ScriptBee.Artifacts;
 
 public interface IFileModelService
 {
@@ -21,3 +21,4 @@ public interface IFileModelService
         CancellationToken cancellationToken = default
     );
 }
+

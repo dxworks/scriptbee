@@ -1,4 +1,4 @@
-namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Artifacts;
 
 public sealed class FileService : IFileService
 {
@@ -26,7 +26,7 @@ public sealed class FileService : IFileService
 
     public bool FileExists(string path)
     {
-        return System.IO.File.Exists(path);
+        return File.Exists(path);
     }
 
     public string CombinePaths(string path1, string path2)
@@ -38,7 +38,7 @@ public sealed class FileService : IFileService
     {
         if (FileExists(path))
         {
-            System.IO.File.Delete(path);
+            File.Delete(path);
         }
     }
 
@@ -52,12 +52,12 @@ public sealed class FileService : IFileService
 
     public IEnumerable<string> ReadAllLines(string path)
     {
-        return System.IO.File.ReadAllLines(path);
+        return File.ReadAllLines(path);
     }
 
     public void AppendTextToFile(string path, string text)
     {
-        System.IO.File.AppendAllLines(path, new List<string> { text });
+        File.AppendAllLines(path, new List<string> { text });
     }
 
     public void CreateFolder(string path)

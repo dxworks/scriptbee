@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
+using ScriptBee.Artifacts.Config;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Files.Config;
 
-namespace ScriptBee.Ports.Files;
+namespace ScriptBee.Artifacts;
 
 public class ConfigFoldersService(IOptions<UserFolderSettings> userFolderSettingsOptions)
     : IConfigFoldersService

@@ -1,3 +1,4 @@
-﻿namespace ScriptBee.Ports.Files;
+namespace ScriptBee.Artifacts;
 
 public record FileAlreadyExistsError(string Path);
+

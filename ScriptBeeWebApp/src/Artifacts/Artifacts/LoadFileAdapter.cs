@@ -1,8 +1,7 @@
-﻿using OneOf;
+using OneOf;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Files;
 
-namespace ScriptBee.Persistence.File;
+namespace ScriptBee.Artifacts;
 
 public class LoadFileAdapter(IConfigFoldersService configFoldersService) : ILoadFile
 {
@@ -14,11 +13,12 @@ public class LoadFileAdapter(IConfigFoldersService configFoldersService) : ILoad
     {
         var pathInSrcFolder = configFoldersService.GetPathToSrcFolder(projectId, path);
 
-        if (!System.IO.File.Exists(pathInSrcFolder))
+        if (!File.Exists(pathInSrcFolder))
         {
             return new FileDoesNotExistsError(path);
         }
 
-        return await System.IO.File.ReadAllTextAsync(pathInSrcFolder, cancellationToken);
+        return await File.ReadAllTextAsync(pathInSrcFolder, cancellationToken);
     }
 }
+

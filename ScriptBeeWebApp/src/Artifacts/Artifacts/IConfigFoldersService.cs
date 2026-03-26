@@ -1,6 +1,6 @@
-﻿using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Files;
+namespace ScriptBee.Artifacts;
 
 public interface IConfigFoldersService
 {
@@ -8,3 +8,4 @@ public interface IConfigFoldersService
 
     string GetPathToUserFolder(string path);
 }
+

@@ -1,7 +1,7 @@
-﻿using OneOf;
+using OneOf;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Ports.Files;
+namespace ScriptBee.Artifacts;
 
 public interface ICreateFile
 {
@@ -12,3 +12,4 @@ public interface ICreateFile
         CancellationToken cancellationToken = default
     );
 }
+

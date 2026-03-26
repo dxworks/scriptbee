@@ -8,8 +8,8 @@
     <PackageReference Include="YamlDotNet" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Ports.Files\Ports.Files.csproj" />
     <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\Artifacts\Artifacts\Artifacts.csproj" />
     <ProjectReference Include="..\..\Application\Ports.Plugins\Ports.Plugins.csproj" />
   </ItemGroup>
 </Project>
