@@ -5,7 +5,6 @@ using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Entity;
-using ScriptBee.Persistence.Mongodb.Entity.Analysis;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
 

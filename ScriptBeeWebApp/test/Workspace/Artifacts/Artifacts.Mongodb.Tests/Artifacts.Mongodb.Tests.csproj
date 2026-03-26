@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Artifacts.Mongodb.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
+</Project>
