@@ -12,8 +12,8 @@
     <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
-    <ProjectReference Include="..\..\..\Artifacts\Artifacts\Artifacts.csproj" />
-    <ProjectReference Include="..\..\..\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
     <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
     <ProjectReference Include="..\Rest\Rest.csproj" />
     <ProjectReference Include="..\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />

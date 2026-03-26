@@ -6,7 +6,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
   </ItemGroup>
 </Project>
 

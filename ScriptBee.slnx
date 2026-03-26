@@ -10,8 +10,8 @@
     <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
     
-    <Project Path="ScriptBeeWebApp/src/Artifacts/Artifacts/Artifacts.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Artifacts/Artifacts.Mongodb/Artifacts.Mongodb.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts/Artifacts.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts.Mongodb/Artifacts.Mongodb.csproj" />
     
     <!-- Analysis Bounded Context -->
     <!-- Adapters -->
@@ -46,8 +46,8 @@
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
 
-    <Project Path="ScriptBeeWebApp/test/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Artifacts/Artifacts.Mongodb.Tests/Artifacts.Mongodb.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Mongodb.Tests/Artifacts.Mongodb.Tests.csproj" />
     
     <!-- Tests - Analysis Context -->
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
