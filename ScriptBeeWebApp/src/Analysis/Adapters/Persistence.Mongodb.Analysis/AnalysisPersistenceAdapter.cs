@@ -1,10 +1,10 @@
 ﻿using OneOf;
+using ScriptBee.Analysis;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Analysis;
 
 namespace ScriptBee.Persistence.Mongodb;
 

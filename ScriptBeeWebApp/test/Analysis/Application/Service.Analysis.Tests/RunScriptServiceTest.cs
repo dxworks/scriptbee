@@ -10,7 +10,6 @@ using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Analysis;
 

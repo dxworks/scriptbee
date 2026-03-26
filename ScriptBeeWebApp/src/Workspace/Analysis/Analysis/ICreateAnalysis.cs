@@ -1,10 +1,10 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 
-namespace ScriptBee.Ports.Analysis;
+namespace ScriptBee.Analysis;
 
-public interface IUpdateAnalysis
+public interface ICreateAnalysis
 {
-    Task<AnalysisInfo> Update(
+    Task<AnalysisInfo> Create(
         AnalysisInfo analysisInfo,
         CancellationToken cancellationToken = default
     );

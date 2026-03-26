@@ -10,6 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
-    <ProjectReference Include="..\..\..\Common\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
   </ItemGroup>
 </Project>

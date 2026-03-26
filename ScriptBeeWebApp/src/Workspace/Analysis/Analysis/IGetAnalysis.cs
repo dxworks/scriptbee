@@ -2,7 +2,7 @@
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 
-namespace ScriptBee.Ports.Analysis;
+namespace ScriptBee.Analysis;
 
 public interface IGetAnalysis
 {

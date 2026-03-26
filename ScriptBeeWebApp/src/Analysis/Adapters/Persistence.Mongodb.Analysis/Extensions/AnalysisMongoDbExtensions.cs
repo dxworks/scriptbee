@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using ScriptBee.Analysis;
 using ScriptBee.Persistence.Mongodb.Entity;
-using ScriptBee.Ports.Analysis;
 
 namespace ScriptBee.Persistence.Mongodb.Extensions;
 

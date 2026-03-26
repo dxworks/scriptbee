@@ -6,7 +6,7 @@
     <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Common/Ports.Analysis/Ports.Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
     

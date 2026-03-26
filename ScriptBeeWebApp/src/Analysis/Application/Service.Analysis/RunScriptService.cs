@@ -1,12 +1,12 @@
 ﻿using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
+using ScriptBee.Analysis;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Analysis;
 using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Service.Analysis;

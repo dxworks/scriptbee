@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Common\Ports.Analysis\Ports.Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
     <ProjectReference Include="..\Ports.Instance.Allocation\Ports.Instance.Allocation.csproj" />
     <ProjectReference Include="..\Ports.Instance\Ports.Instance.csproj" />
