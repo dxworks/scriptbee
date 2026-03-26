@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
-using ScriptBee.Artifacts;
 using ScriptBee.Artifacts.Config;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Persistence.File.Tests;
+namespace ScriptBee.Artifacts.Tests;
 
 public class ConfigFoldersServiceTest
 {

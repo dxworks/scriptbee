@@ -1,12 +1,13 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api.Model;
 using MongoDB.Driver;
+using ScriptBee.Artifacts.Mongodb.Entity.Script;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Persistence.Mongodb.Entity.Script;
 using ScriptBee.Persistence.Mongodb.Repository;
+using ScriptBee.Tests.Common;
 
-namespace ScriptBee.Persistence.Mongodb.Tests;
+namespace ScriptBee.Artifacts.Mongodb.Tests;
 
 public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFixture>
 {

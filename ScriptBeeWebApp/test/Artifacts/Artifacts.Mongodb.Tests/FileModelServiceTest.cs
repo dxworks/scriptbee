@@ -1,8 +1,9 @@
 using System.Text;
 using MongoDB.Driver.GridFS;
 using ScriptBee.Domain.Model.File;
+using ScriptBee.Tests.Common;
 
-namespace ScriptBee.Persistence.Mongodb.Tests;
+namespace ScriptBee.Artifacts.Mongodb.Tests;
 
 public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoDbFixture>
 {

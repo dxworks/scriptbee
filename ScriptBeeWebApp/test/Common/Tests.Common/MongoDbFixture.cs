@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using MongoDB.Driver;
 using Testcontainers.MongoDb;
 
-namespace ScriptBee.Persistence.Mongodb.Tests;
+namespace ScriptBee.Tests.Common;
 
 public class MongoDbFixture : IAsyncLifetime
 {

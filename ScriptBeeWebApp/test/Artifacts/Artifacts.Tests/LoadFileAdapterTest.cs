@@ -1,8 +1,7 @@
 ﻿using NSubstitute;
-using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.Persistence.File.Tests;
+namespace ScriptBee.Artifacts.Tests;
 
 public sealed class LoadFileAdapterTest : IDisposable
 {
@@ -36,7 +35,7 @@ public sealed class LoadFileAdapterTest : IDisposable
         _configFoldersService
             .GetPathToSrcFolder(projectId, pathToFileTxt)
             .Returns(pathToFileInSrcFolder);
-        await System.IO.File.WriteAllTextAsync(
+        await File.WriteAllTextAsync(
             pathToFileInSrcFolder,
             "content",
             TestContext.Current.CancellationToken
