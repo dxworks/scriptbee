@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.ProjectStructure;
 
-namespace ScriptBee.Persistence.Mongodb.Entity.Script;
+namespace ScriptBee.Artifacts.Mongodb.Entity.Script;
 
 public class MongodbScriptLanguage
 {

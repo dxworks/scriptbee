@@ -1,6 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api.Model;
 
-namespace ScriptBee.Persistence.Mongodb.Entity.Script;
+namespace ScriptBee.Artifacts.Mongodb.Entity.Script;
 
 public class MongodbScriptParameter
 {

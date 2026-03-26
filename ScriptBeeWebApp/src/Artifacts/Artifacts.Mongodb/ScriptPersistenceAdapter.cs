@@ -1,11 +1,10 @@
 using OneOf;
+using ScriptBee.Artifacts.Mongodb.Entity.Script;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Persistence.Mongodb.Entity.Script;
 using ScriptBee.Persistence.Mongodb.Repository;
-using ScriptBee.Ports.Scripts;
 
-namespace ScriptBee.Persistence.Mongodb;
+namespace ScriptBee.Artifacts.Mongodb;
 
 public class ScriptPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepository)
     : ICreateScript,
@@ -34,4 +33,3 @@ public class ScriptPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepos
         return mongodbScript.ToScript();
     }
 }
-

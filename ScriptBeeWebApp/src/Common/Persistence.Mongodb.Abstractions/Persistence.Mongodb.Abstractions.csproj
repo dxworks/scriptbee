@@ -9,6 +9,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj" />
-    <ProjectReference Include="..\Ports.Files\Ports.Files.csproj" />
   </ItemGroup>
 </Project>

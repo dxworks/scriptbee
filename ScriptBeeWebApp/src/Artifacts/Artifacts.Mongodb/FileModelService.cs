@@ -1,9 +1,8 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using ScriptBee.Domain.Model.File;
-using ScriptBee.Ports.Files;
 
-namespace ScriptBee.Persistence.Mongodb;
+namespace ScriptBee.Artifacts.Mongodb;
 
 public class FileModelService(IMongoDatabase mongoDatabase) : IFileModelService
 {

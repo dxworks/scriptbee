@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using ScriptBee.Persistence.Mongodb.Entity.Script;
-using ScriptBee.Ports.Scripts;
+using ScriptBee.Artifacts.Mongodb.Entity.Script;
+using ScriptBee.Persistence.Mongodb.Extensions;
 
-namespace ScriptBee.Persistence.Mongodb.Extensions;
+namespace ScriptBee.Artifacts.Mongodb.Extensions;
 
 public static class ScriptMongoDbExtensions
 {
@@ -18,4 +18,3 @@ public static class ScriptMongoDbExtensions
             .AddSingleton<IGetScript, ScriptPersistenceAdapter>();
     }
 }
-
