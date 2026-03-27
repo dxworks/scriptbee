@@ -5,6 +5,7 @@ using ScriptBee.Analysis.Web.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Marketplace.Client.Extensions;
 using ScriptBee.Persistence.File.Extensions;
 using ScriptBee.UseCases.Plugin;
 using Serilog;
@@ -24,6 +25,7 @@ builder
     .AddCommonServices()
     .AddDownloadService()
     .AddFileAdapters(userFolderConfigurationSection)
+    .AddScriptBeeMarketplaceClient()
     .AddPluginsConfig()
     .AddProjectContextConfig()
     .AddRunScriptServices();
