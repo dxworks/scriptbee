@@ -1,7 +1,11 @@
 using Microsoft.Extensions.Logging;
+using OneOf;
+using OneOf.Types;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Plugins.Installer;
 using ScriptBee.UseCases.Plugin;
+using ScriptBee.UseCases.Plugin.Errors;
+using PluginInstallationError = ScriptBee.UseCases.Plugin.Errors.PluginInstallationError;
 
 namespace ScriptBee.Service.Plugin;
 
@@ -12,31 +16,36 @@ public class InstallPluginService(
     ILogger<UninstallPluginService> logger
 ) : IInstallPluginUseCase
 {
-    public async Task InstallPlugin(
+    public async Task<OneOf<Success, InvalidPluginError, PluginInstallationError>> InstallPlugin(
         string pluginId,
         string version,
         CancellationToken cancellationToken = default
     )
     {
-        var installPluginPaths = await bundlePluginInstaller.Install(
-            pluginId,
-            version,
-            cancellationToken
-        );
+        var result = await bundlePluginInstaller.Install(pluginId, version, cancellationToken);
 
-        foreach (var installPluginPath in installPluginPaths)
-        {
-            var plugin = pluginReader.ReadPlugin(installPluginPath);
-            if (plugin is null)
+        return result.Match<OneOf<Success, InvalidPluginError, PluginInstallationError>>(
+            installPluginPaths =>
             {
-                logger.LogWarning(
-                    "Plugin Manifest from {Path} could not be read",
-                    installPluginPath
-                );
-                continue;
-            }
+                foreach (var installPluginPath in installPluginPaths)
+                {
+                    var plugin = pluginReader.ReadPlugin(installPluginPath);
+                    if (plugin is null)
+                    {
+                        logger.LogWarning(
+                            "Plugin Manifest from {Path} could not be read",
+                            installPluginPath
+                        );
+                        continue;
+                    }
 
-            pluginLoader.Load(plugin);
-        }
+                    pluginLoader.Load(plugin);
+                }
+
+                return new Success();
+            },
+            error => new InvalidPluginError(error.Name, error.Version),
+            error => new PluginInstallationError(error.Name, error.Version)
+        );
     }
 }

@@ -60,7 +60,8 @@ public class BundlePluginInstaller(
         var result = await InstallPlugin(pluginId, version, cancellationToken);
 
         return await result.Match<Task<BundleInstallResult>>(
-            async pluginResult => await InstallPluginBundle(pluginResult, cancellationToken),
+            async pluginResult =>
+                await InstallPluginBundle(pluginId, version, pluginResult, cancellationToken),
             error =>
                 Task.FromResult<BundleInstallResult>(
                     new PluginInstallationError(error.Name, error.Version)
@@ -70,6 +71,8 @@ public class BundlePluginInstaller(
     }
 
     private async Task<BundleInstallResult> InstallPluginBundle(
+        string pluginId,
+        string version,
         InstallPluginResult installPluginResult,
         CancellationToken cancellationToken = default
     )
@@ -130,7 +133,7 @@ public class BundlePluginInstaller(
             pluginUninstaller.ForceUninstall(installedPluginPath);
         }
 
-        throw new NotImplementedException();
+        return new PluginInstallationError(pluginId, version);
     }
 
     private async Task<PluginInstallResult> InstallPlugin(
@@ -183,15 +186,31 @@ public class BundlePluginInstaller(
         CancellationToken cancellationToken
     )
     {
-        var result = await simplePluginInstaller.Install(url, pluginId, version, cancellationToken);
+        try
+        {
+            var result = await simplePluginInstaller.Install(
+                url,
+                pluginId,
+                version,
+                cancellationToken
+            );
 
-        return result.Match<
-            OneOf<InstallPluginResult, PluginVersionExistsError, PluginInstallationError>
-        >(
-            pluginFolder => new InstallPluginResult(pluginFolder, installedPluginVersions),
-            error => error,
-            error => error
-        );
+            return result.Match<PluginInstallResult>(
+                pluginFolder => new InstallPluginResult(pluginFolder, installedPluginVersions),
+                error => error,
+                error => error
+            );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "An error occurred while installing plugin {PluginId} version {Version}",
+                pluginId,
+                version
+            );
+            return new PluginInstallationError(pluginId, version);
+        }
     }
 
     private IEnumerable<PluginExtensionPoint> GetPluginExtensionPoints(string bundleFolder)
