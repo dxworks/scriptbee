@@ -1,7 +1,7 @@
 ﻿using DxWorks.Hub.Sdk;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ScriptBee.Marketplace.Client;
+namespace ScriptBee.Marketplace.Client.Extensions;
 
 public static class ScriptBeeMarketplaceClientExtensions
 {

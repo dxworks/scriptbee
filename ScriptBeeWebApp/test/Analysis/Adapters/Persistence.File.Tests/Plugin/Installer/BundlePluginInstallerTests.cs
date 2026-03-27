@@ -2,11 +2,14 @@
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
+using OneOf;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
+using ScriptBee.Marketplace.Client.Errors;
 using ScriptBee.Persistence.File.Plugin.Installer;
 using ScriptBee.Ports.Plugins;
+using ScriptBee.Ports.Plugins.Installer;
 using ScriptBee.Tests.Common.Plugin;
 using static ScriptBee.Tests.Common.Plugin.PluginUtils;
 
@@ -53,82 +56,107 @@ public class BundlePluginInstallerTests
             .Install("url", "pluginId", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "pluginId",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal("plugin_folder", pluginFolders.Single());
+        result.IsT0.ShouldBe(true);
+        result.AsT0.Single().ShouldBe("plugin_folder");
     }
 
     [Theory]
     [ClassData(typeof(BundlePluginInstallerSimpleTestData))]
-    public async Task GivenSimplePluginAndUrlFetchFails_WhenInstall_ThenPluginIsNotInstalled(
+    public async Task GivenSimplePluginAndUrlFetchFailsWithPluginNotFound_WhenInstall_ThenReturnsError(
         PluginList pluginList
     )
     {
         _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
         _pluginFetcher
-            .When(x => x.GetPluginUrl(Arg.Any<string>(), Arg.Any<string>()))
-            .Throws(new Exception());
+            .GetPluginUrl("nonExistentPlugin", "1.0.0")
+            .Returns(_ => new PluginNotFoundError("nonExistentPlugin"));
 
-        await Assert.ThrowsAsync<Exception>(() =>
-            _bundlePluginInstaller.Install(
-                "pluginId",
-                "1.0.0",
-                TestContext.Current.CancellationToken
-            )
+        var result = await _bundlePluginInstaller.Install(
+            "nonExistentPlugin",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
+        result.IsT2.ShouldBe(true);
+        result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("nonExistentPlugin", "1.0.0"));
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
     }
 
     [Theory]
     [ClassData(typeof(BundlePluginInstallerSimpleTestData))]
-    public async Task GivenSimplePluginAndInstallFails_WhenInstall_ThenPluginIsNotInstalled(
+    public async Task GivenSimplePluginAndUrlFetchFailsWithPluginVersionNotFoundError_WhenInstall_ThenReturnsError(
+        PluginList pluginList
+    )
+    {
+        _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
+        _pluginFetcher
+            .GetPluginUrl("plugin", "1.0.0")
+            .Returns(_ => new PluginVersionNotFoundError("plugin", "1.0.0"));
+
+        var result = await _bundlePluginInstaller.Install(
+            "plugin",
+            "1.0.0",
+            TestContext.Current.CancellationToken
+        );
+
+        result.IsT2.ShouldBe(true);
+        _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
+    }
+
+    [Theory]
+    [ClassData(typeof(BundlePluginInstallerSimpleTestData))]
+    public async Task GivenSimplePluginAndInstallFails_WhenInstall_ThenReturnsError(
         PluginList pluginList
     )
     {
         _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
         _pluginFetcher.GetPluginUrl("pluginId", "1.0.0").Returns("url");
         _simplePluginInstaller
-            .When(x =>
-                x.Install(
-                    Arg.Any<string>(),
-                    Arg.Any<string>(),
-                    Arg.Any<string>(),
-                    Arg.Any<CancellationToken>()
-                )
+            .Install(
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<CancellationToken>()
             )
-            .Throws(new Exception());
+            .Returns(
+                Task.FromException<
+                    OneOf<string, PluginVersionExistsError, PluginInstallationError>
+                >(new Exception("Installation failed"))
+            );
 
-        await Assert.ThrowsAsync<Exception>(() =>
-            _bundlePluginInstaller.Install(
-                "pluginId",
-                "1.0.0",
-                TestContext.Current.CancellationToken
-            )
+        var result = await _bundlePluginInstaller.Install(
+            "pluginId",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
+        result.IsT2.ShouldBe(true);
+        result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("pluginId", "1.0.0"));
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
     }
 
     [Fact]
-    public async Task GivenSimplePluginAlreadyInstalled_WhenInstall_ThenNoPluginIsUninstalled()
+    public async Task GivenSimplePluginAlreadyInstalled_WhenInstall_ThenReturnsEmptyList()
     {
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "1.0.0") });
         _pluginFetcher.GetPluginUrl("pluginName", "1.0.0").Returns("url");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "pluginName",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Empty(pluginFolders);
+        result.IsT0.ShouldBe(true);
+        result.AsT0.ShouldBeEmpty();
         await _simplePluginInstaller
             .Received(0)
             .Install(
@@ -141,20 +169,21 @@ public class BundlePluginInstallerTests
     }
 
     [Fact]
-    public async Task GivenSimplePluginVersionAndExistingNewVersion_WhenInstall_ThenPluginIsNotInstalled()
+    public async Task GivenSimplePluginVersionAndExistingNewVersion_WhenInstall_ThenReturnsEmptyList()
     {
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "10.0.0") });
         _pluginFetcher.GetPluginUrl("pluginName", "1.0.0").Returns("url");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "pluginName",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Empty(pluginFolders);
+        result.IsT0.ShouldBe(true);
+        result.AsT0.ShouldBeEmpty();
         await _simplePluginInstaller
             .Received(0)
             .Install(
@@ -185,13 +214,14 @@ public class BundlePluginInstallerTests
             .Install("url", "pluginName", "14.3.1", Arg.Any<CancellationToken>())
             .Returns("plugin_folder");
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "pluginName",
             "14.3.1",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal("plugin_folder", pluginFolders.Single());
+        result.IsT0.ShouldBe(true);
+        result.AsT0.Single().ShouldBe("plugin_folder");
         for (var i = 1; i <= 5; i++)
         {
             _pluginUninstaller.Received(1).Uninstall($"plugin_folder_{i}");
@@ -251,13 +281,14 @@ public class BundlePluginInstallerTests
             .Returns("bundle_folder");
         _pluginReader.ReadPlugin("bundle_folder").Returns((Domain.Model.Plugin.Plugin?)null);
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "bundle",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal("bundle_folder", pluginFolders.Single());
+        result.IsT0.ShouldBe(true);
+        result.AsT0.Single().ShouldBe("bundle_folder");
     }
 
     [Fact]
@@ -278,15 +309,16 @@ public class BundlePluginInstallerTests
             );
         SetupBundlePlugins("bundle", "1.0.0", 1);
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "bundle",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(2, pluginFolders.Count);
-        Assert.Equal("bundle_folder", pluginFolders[0]);
-        Assert.Equal("plugin_folder1", pluginFolders[1]);
+        result.IsT0.ShouldBe(true);
+        result.AsT0.Count.ShouldBe(2);
+        result.AsT0[0].ShouldBe("bundle_folder");
+        result.AsT0[1].ShouldBe("plugin_folder1");
     }
 
     [Fact]
@@ -312,18 +344,19 @@ public class BundlePluginInstallerTests
             new TestBundlePlugin(PluginKind.Linker, "linker", "1.0.0")
         );
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "bundle",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(5, pluginFolders.Count);
-        Assert.Equal("bundle_folder", pluginFolders[0]);
-        Assert.Equal("plugin_folder1", pluginFolders[1]);
-        Assert.Equal("plugin_folder2", pluginFolders[2]);
-        Assert.Equal("plugin_folder3", pluginFolders[3]);
-        Assert.Equal("plugin_folder4", pluginFolders[4]);
+        result.IsT0.ShouldBe(true);
+        result.AsT0.Count.ShouldBe(5);
+        result.AsT0[0].ShouldBe("bundle_folder");
+        result.AsT0[1].ShouldBe("plugin_folder1");
+        result.AsT0[2].ShouldBe("plugin_folder2");
+        result.AsT0[3].ShouldBe("plugin_folder3");
+        result.AsT0[4].ShouldBe("plugin_folder4");
     }
 
     [Fact]
@@ -366,16 +399,17 @@ public class BundlePluginInstallerTests
             .ReadPlugin("plugin_folder2")
             .Returns(CreatePlugin("pluginId2", "1.0.0", "plugin_folder2"));
 
-        var pluginFolders = await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "bundle",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(3, pluginFolders.Count);
-        Assert.Equal("bundle_folder", pluginFolders[0]);
-        Assert.Equal("plugin_folder1", pluginFolders[1]);
-        Assert.Equal("plugin_folder2", pluginFolders[2]);
+        result.IsT0.ShouldBe(true);
+        result.AsT0.Count.ShouldBe(3);
+        result.AsT0[0].ShouldBe("bundle_folder");
+        result.AsT0[1].ShouldBe("plugin_folder1");
+        result.AsT0[2].ShouldBe("plugin_folder2");
     }
 
     [Fact]
@@ -401,24 +435,30 @@ public class BundlePluginInstallerTests
             new TestBundlePlugin(PluginKind.Linker, "linker", "1.0.0")
         );
 
-        await _bundlePluginInstaller.Install(
+        var result = await _bundlePluginInstaller.Install(
             "bundle",
             "4.0.0",
             TestContext.Current.CancellationToken
         );
 
+        result.IsT0.ShouldBe(true);
         _pluginUninstaller.Received(1).Uninstall("path");
         _pluginUninstaller.Received(1).Uninstall("old_plugin_folder1");
     }
 
     [Fact]
-    public async Task GivenBundlePluginThatFails_WhenInstall_ThenDataIsRemoved()
+    public async Task GivenBundlePluginThatFails_WhenInstall_ThenReturnsErrorAndDataIsRemoved()
     {
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin>());
         _pluginFetcher.GetPluginUrl("bundle", "1.0.0").Returns("url");
-        _pluginFetcher.When(x => x.GetPluginUrl("pluginId", "1.0.0")).Throws(new Exception());
+        _pluginFetcher
+            .GetPluginUrl("pluginId", "1.0.0")
+            .Returns(
+                (OneOf<string, PluginNotFoundError, PluginVersionNotFoundError>)
+                    new PluginNotFoundError("pluginId")
+            );
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("bundle_folder");
@@ -432,10 +472,14 @@ public class BundlePluginInstallerTests
                 )
             );
 
-        await Assert.ThrowsAsync<Exception>(() =>
-            _bundlePluginInstaller.Install("bundle", "1.0.0", TestContext.Current.CancellationToken)
+        var result = await _bundlePluginInstaller.Install(
+            "bundle",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
+        result.IsT2.ShouldBe(true);
+        result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("bundle", "1.0.0"));
         _pluginUninstaller.Received(1).ForceUninstall("bundle_folder");
         await _simplePluginInstaller
             .Received(0)
@@ -443,7 +487,7 @@ public class BundlePluginInstallerTests
     }
 
     [Fact]
-    public async Task GivenBundleWithMultiplePluginsWhereOneFails_WhenInstall_ThenDataIsRemoved()
+    public async Task GivenBundleWithMultiplePluginsWhereOneFails_WhenInstall_ThenReturnsErrorAndDataIsRemoved()
     {
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
@@ -456,7 +500,9 @@ public class BundlePluginInstallerTests
         _simplePluginInstaller
             .Install("url_plugin1", "pluginId1", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder1");
-        _pluginFetcher.When(x => x.GetPluginUrl("pluginId2", "2.0.0")).Throws(new Exception());
+        _pluginFetcher
+            .GetPluginUrl("pluginId2", "2.0.0")
+            .Returns(_ => new PluginVersionNotFoundError("pluginId2", "2.0.0"));
         _pluginReader
             .ReadPlugin("bundle_folder")
             .Returns(
@@ -469,10 +515,14 @@ public class BundlePluginInstallerTests
                 )
             );
 
-        await Assert.ThrowsAsync<Exception>(() =>
-            _bundlePluginInstaller.Install("bundle", "1.0.0", TestContext.Current.CancellationToken)
+        var result = await _bundlePluginInstaller.Install(
+            "bundle",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
+        result.IsT2.ShouldBe(true);
+        result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("bundle", "1.0.0"));
         _pluginFetcher.Received(1).GetPluginUrl("pluginId2", "2.0.0");
         await _simplePluginInstaller
             .Received(0)

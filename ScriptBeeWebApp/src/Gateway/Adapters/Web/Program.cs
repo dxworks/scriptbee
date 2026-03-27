@@ -4,7 +4,7 @@ using ScriptBee.Artifacts.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
-using ScriptBee.Marketplace.Client;
+using ScriptBee.Marketplace.Client.Extensions;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;
 using Serilog;
