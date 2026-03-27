@@ -21,9 +21,7 @@ public static class MongoDbAbstractionsExtensions
         var mongoClient = new MongoClient(mongoUrl);
         var mongoDatabase = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
-        services
-            .AddSingleton<IMongoClient>(mongoClient)
-            .AddSingleton(mongoDatabase);
+        services.AddSingleton<IMongoClient>(mongoClient).AddSingleton(mongoDatabase);
 
         return mongoDatabase;
     }
@@ -40,4 +38,3 @@ public static class MongoDbAbstractionsExtensions
             .AddSingleton<IMongoRepository<T>, MongoRepository<T>>();
     }
 }
-

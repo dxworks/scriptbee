@@ -2,8 +2,13 @@
 
 public interface IProjectStructureService
 {
-    public Task<(string extension, string content)> GetSampleCodeAsync(string scriptType,
-        CancellationToken cancellationToken = default);
+    public Task<(string extension, string content)> GetSampleCodeAsync(
+        string scriptType,
+        CancellationToken cancellationToken = default
+    );
 
-    public Task GenerateModelClasses(string projectId, CancellationToken cancellationToken = default);
+    public Task GenerateModelClasses(
+        string projectId,
+        CancellationToken cancellationToken = default
+    );
 }

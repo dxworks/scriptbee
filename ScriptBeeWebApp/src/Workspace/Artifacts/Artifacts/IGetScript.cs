@@ -11,4 +11,3 @@ public interface IGetScript
         CancellationToken cancellationToken = default
     );
 }
-

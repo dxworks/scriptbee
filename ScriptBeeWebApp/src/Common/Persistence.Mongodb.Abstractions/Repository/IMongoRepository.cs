@@ -26,4 +26,3 @@ public interface IMongoRepository<T>
         CancellationToken cancellationToken
     );
 }
-

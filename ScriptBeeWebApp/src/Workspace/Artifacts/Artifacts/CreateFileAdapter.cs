@@ -31,4 +31,3 @@ public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICr
         );
     }
 }
-

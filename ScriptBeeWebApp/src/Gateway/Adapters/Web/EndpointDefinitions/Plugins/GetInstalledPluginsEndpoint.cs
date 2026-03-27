@@ -19,28 +19,26 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
         CancellationToken cancellationToken = default
     )
     {
-        var response = new WebInstalledPluginsResponse(
-            [
-                new WebMarketplacePlugin(
-                    "plugin1",
-                    "Python Plugin",
-                    WebMarketplacePlugin.PluginType,
-                    "Allows running Python scripts for analysis and automation.",
-                    ["John Doe", "Jane Smith"],
-                    "1.1.0",
-                    "1.1.0"
-                ),
-                new WebMarketplacePlugin(
-                    "bundle1",
-                    "Standard Bundle",
-                    WebMarketplacePlugin.BundleType,
-                    "A collection of standard plugins for general use.",
-                    ["ScriptBee Team"],
-                    "1.0.0",
-                    "1.0.0"
-                ),
-            ]
-        );
+        var response = new WebInstalledPluginsResponse([
+            new WebMarketplacePlugin(
+                "plugin1",
+                "Python Plugin",
+                WebMarketplacePlugin.PluginType,
+                "Allows running Python scripts for analysis and automation.",
+                ["John Doe", "Jane Smith"],
+                "1.1.0",
+                "1.1.0"
+            ),
+            new WebMarketplacePlugin(
+                "bundle1",
+                "Standard Bundle",
+                WebMarketplacePlugin.BundleType,
+                "A collection of standard plugins for general use.",
+                ["ScriptBee Team"],
+                "1.0.0",
+                "1.0.0"
+            ),
+        ]);
 
         return Task.FromResult(TypedResults.Ok(response));
     }

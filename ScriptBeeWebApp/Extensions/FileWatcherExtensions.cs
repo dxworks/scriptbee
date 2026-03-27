@@ -12,5 +12,4 @@ public static class FileWatcherExtensions
         services.AddSingleton<IFileWatcherService, FileWatcherService>();
         return services;
     }
-    
 }

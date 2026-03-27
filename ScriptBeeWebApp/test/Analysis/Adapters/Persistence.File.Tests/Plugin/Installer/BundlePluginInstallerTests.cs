@@ -243,22 +243,18 @@ public class BundlePluginInstallerTests
             yield return [new PluginList([new TestPlugin("pluginName", new Version(1, 0, 0))])];
             yield return
             [
-                new PluginList(
-                    [
-                        new TestPlugin("pluginName", new Version(1, 0, 0)),
-                        new TestPlugin("pluginName", new Version(1, 0, 1)),
-                    ]
-                ),
+                new PluginList([
+                    new TestPlugin("pluginName", new Version(1, 0, 0)),
+                    new TestPlugin("pluginName", new Version(1, 0, 1)),
+                ]),
             ];
             yield return
             [
-                new PluginList(
-                    [
-                        new TestPlugin("pluginName2", new Version(1, 0, 0)),
-                        new TestPlugin("pluginName3", new Version(1, 0, 0)),
-                        new TestPlugin("pluginName3", new Version(1, 0, 5)),
-                    ]
-                ),
+                new PluginList([
+                    new TestPlugin("pluginName2", new Version(1, 0, 0)),
+                    new TestPlugin("pluginName3", new Version(1, 0, 0)),
+                    new TestPlugin("pluginName3", new Version(1, 0, 5)),
+                ]),
             ];
         }
 

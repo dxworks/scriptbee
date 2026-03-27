@@ -18,8 +18,12 @@ public sealed class LoadersService : ILoadersService
     private readonly IProjectManager _projectManager;
     private readonly IProjectModelService _projectModelService;
 
-    public LoadersService(IPluginRepository pluginRepository, IProjectModelService projectModelService,
-        IProjectManager projectManager, IFileModelService fileModelService)
+    public LoadersService(
+        IPluginRepository pluginRepository,
+        IProjectModelService projectModelService,
+        IProjectManager projectManager,
+        IFileModelService fileModelService
+    )
     {
         _pluginRepository = pluginRepository;
         _projectModelService = projectModelService;
@@ -29,8 +33,7 @@ public sealed class LoadersService : ILoadersService
 
     public IEnumerable<string> GetSupportedLoaders()
     {
-        return _pluginRepository.GetLoadedPlugins(PluginKind.Loader)
-            .Select(plugin => plugin.Id);
+        return _pluginRepository.GetLoadedPlugins(PluginKind.Loader).Select(plugin => plugin.Id);
     }
 
     public IModelLoader? GetLoader(string name)
@@ -50,26 +53,42 @@ public sealed class LoadersService : ILoadersService
         return acceptedModules;
     }
 
-    public async Task<Dictionary<string, List<string>>> LoadFiles(ProjectModel projectModel,
-        List<Node> loadModelsNodes, CancellationToken cancellationToken = default)
+    public async Task<Dictionary<string, List<string>>> LoadFiles(
+        ProjectModel projectModel,
+        List<Node> loadModelsNodes,
+        CancellationToken cancellationToken = default
+    )
     {
-        var loadedFiles = await SaveLoadedFilesInProjectModelAsync(projectModel, loadModelsNodes, cancellationToken);
+        var loadedFiles = await SaveLoadedFilesInProjectModelAsync(
+            projectModel,
+            loadModelsNodes,
+            cancellationToken
+        );
 
         var loadModels = await LoadModelFiles(projectModel.Id, loadedFiles, cancellationToken);
 
         return loadModels;
     }
 
-    public async Task<Dictionary<string, List<string>>> ReloadModels(ProjectModel projectModel,
-        CancellationToken cancellationToken = default)
+    public async Task<Dictionary<string, List<string>>> ReloadModels(
+        ProjectModel projectModel,
+        CancellationToken cancellationToken = default
+    )
     {
-        var loadedModels = await LoadModelFiles(projectModel.Id, projectModel.LoadedFiles, cancellationToken);
+        var loadedModels = await LoadModelFiles(
+            projectModel.Id,
+            projectModel.LoadedFiles,
+            cancellationToken
+        );
 
         return loadedModels;
     }
 
-    private async Task<Dictionary<string, List<string>>> LoadModelFiles(string projectId,
-        Dictionary<string, List<FileData>> loadedFiles, CancellationToken cancellationToken)
+    private async Task<Dictionary<string, List<string>>> LoadModelFiles(
+        string projectId,
+        Dictionary<string, List<FileData>> loadedFiles,
+        CancellationToken cancellationToken
+    )
     {
         var loadModels = new Dictionary<string, List<string>>();
 
@@ -90,7 +109,10 @@ public sealed class LoadersService : ILoadersService
                 loadedFileStreams.Add(new NamedFileStream(fileName, fileStream));
             }
 
-            var dictionary = await modelLoader.LoadModel(loadedFileStreams, cancellationToken: cancellationToken);
+            var dictionary = await modelLoader.LoadModel(
+                loadedFileStreams,
+                cancellationToken: cancellationToken
+            );
 
             _projectManager.AddToGivenProject(projectId, dictionary, modelLoader.GetName());
 
@@ -105,8 +127,11 @@ public sealed class LoadersService : ILoadersService
         return loadModels;
     }
 
-    private static void AddToLoadedModels(Dictionary<string, Dictionary<string, ScriptBeeModel>> dictionary,
-        string loader, IDictionary<string, List<string>> loadModels)
+    private static void AddToLoadedModels(
+        Dictionary<string, Dictionary<string, ScriptBeeModel>> dictionary,
+        string loader,
+        IDictionary<string, List<string>> loadModels
+    )
     {
         foreach (var model in dictionary.Keys)
         {
@@ -121,8 +146,11 @@ public sealed class LoadersService : ILoadersService
         }
     }
 
-    private async Task<Dictionary<string, List<FileData>>> SaveLoadedFilesInProjectModelAsync(ProjectModel projectModel,
-        List<Node> loadModelsNodes, CancellationToken cancellationToken)
+    private async Task<Dictionary<string, List<FileData>>> SaveLoadedFilesInProjectModelAsync(
+        ProjectModel projectModel,
+        List<Node> loadModelsNodes,
+        CancellationToken cancellationToken
+    )
     {
         Dictionary<string, List<FileData>> loadedFiles = new();
 
@@ -130,8 +158,7 @@ public sealed class LoadersService : ILoadersService
         {
             if (projectModel.SavedFiles.TryGetValue(loaderName, out var savedFiles))
             {
-                var files = savedFiles.Where(file => modelFileNames.Contains(file.Name))
-                    .ToList();
+                var files = savedFiles.Where(file => modelFileNames.Contains(file.Name)).ToList();
 
                 loadedFiles[loaderName] = files;
             }

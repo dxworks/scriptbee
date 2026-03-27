@@ -21,29 +21,41 @@ public class GenerateScriptService : IGenerateScriptService
 
     public IEnumerable<ScriptLanguage> GetSupportedLanguages()
     {
-        return _pluginRepository.GetLoadedPluginExtensionPoints<ScriptGeneratorPluginExtensionPoint>()
-            .Select(extensionPoint => new ScriptLanguage(extensionPoint.Language, extensionPoint.Extension));
+        return _pluginRepository
+            .GetLoadedPluginExtensionPoints<ScriptGeneratorPluginExtensionPoint>()
+            .Select(extensionPoint => new ScriptLanguage(
+                extensionPoint.Language,
+                extensionPoint.Extension
+            ));
     }
 
     public IScriptGeneratorStrategy? GetGenerationStrategy(string scriptType)
     {
-        return _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy => strategy.Language == scriptType);
+        return _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(strategy =>
+            strategy.Language == scriptType
+        );
     }
 
-    public async Task<Stream> GenerateClassesZip(IEnumerable<object> classes,
+    public async Task<Stream> GenerateClassesZip(
+        IEnumerable<object> classes,
         IScriptGeneratorStrategy scriptGeneratorStrategy,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var acceptedModules = _loadersService.GetAcceptedModules();
 
-        var sampleCode =
-            await new SampleCodeGenerator(scriptGeneratorStrategy, acceptedModules).GetSampleCode(classes,
-                cancellationToken);
+        var sampleCode = await new SampleCodeGenerator(
+            scriptGeneratorStrategy,
+            acceptedModules
+        ).GetSampleCode(classes, cancellationToken);
 
         return CreateFileZipStream(sampleCode, scriptGeneratorStrategy.Extension);
     }
 
-    private static Stream CreateFileZipStream(IEnumerable<SampleCodeFile> sampleCode, string extension)
+    private static Stream CreateFileZipStream(
+        IEnumerable<SampleCodeFile> sampleCode,
+        string extension
+    )
     {
         var zipStream = new MemoryStream();
         using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, true))

@@ -37,14 +37,14 @@ public class FilePathAttribute : DataAttribute
     {
         if (_parameter is null)
         {
-            return ValueTask.FromResult<IReadOnlyCollection<ITheoryDataRow>>(
-                [new TheoryDataRow(_filePath)]
-            );
+            return ValueTask.FromResult<IReadOnlyCollection<ITheoryDataRow>>([
+                new TheoryDataRow(_filePath),
+            ]);
         }
 
-        return ValueTask.FromResult<IReadOnlyCollection<ITheoryDataRow>>(
-            [new TheoryDataRow(_filePath, _parameter)]
-        );
+        return ValueTask.FromResult<IReadOnlyCollection<ITheoryDataRow>>([
+            new TheoryDataRow(_filePath, _parameter),
+        ]);
     }
 
     public override bool SupportsDiscoveryEnumeration()

@@ -21,18 +21,16 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Get(Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        CreatePlugin(
-                            new LoaderPluginExtensionPoint
-                            {
-                                EntryPoint = "entry-point",
-                                Kind = PluginKind.Loader,
-                                Version = "1.2.3",
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    CreatePlugin(
+                        new LoaderPluginExtensionPoint
+                        {
+                            EntryPoint = "entry-point",
+                            Kind = PluginKind.Loader,
+                            Version = "1.2.3",
+                        }
+                    ),
+                ])
             );
 
         var response = await _api.GetApi(
@@ -64,18 +62,16 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Get(Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        CreatePlugin(
-                            new LinkerPluginExtensionPoint
-                            {
-                                EntryPoint = "entry-point",
-                                Kind = PluginKind.Linker,
-                                Version = "1.2.3",
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    CreatePlugin(
+                        new LinkerPluginExtensionPoint
+                        {
+                            EntryPoint = "entry-point",
+                            Kind = PluginKind.Linker,
+                            Version = "1.2.3",
+                        }
+                    ),
+                ])
             );
 
         var response = await _api.GetApi(
@@ -107,18 +103,16 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Get(Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        CreatePlugin(
-                            new HelperFunctionsPluginExtensionPoint
-                            {
-                                EntryPoint = "entry-point",
-                                Kind = PluginKind.HelperFunctions,
-                                Version = "1.2.3",
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    CreatePlugin(
+                        new HelperFunctionsPluginExtensionPoint
+                        {
+                            EntryPoint = "entry-point",
+                            Kind = PluginKind.HelperFunctions,
+                            Version = "1.2.3",
+                        }
+                    ),
+                ])
             );
 
         var response = await _api.GetApi(
@@ -150,20 +144,18 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Get(Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        CreatePlugin(
-                            new ScriptGeneratorPluginExtensionPoint
-                            {
-                                EntryPoint = "entry-point",
-                                Kind = PluginKind.ScriptGenerator,
-                                Version = "1.2.3",
-                                Extension = ".cs",
-                                Language = "csharp",
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    CreatePlugin(
+                        new ScriptGeneratorPluginExtensionPoint
+                        {
+                            EntryPoint = "entry-point",
+                            Kind = PluginKind.ScriptGenerator,
+                            Version = "1.2.3",
+                            Extension = ".cs",
+                            Language = "csharp",
+                        }
+                    ),
+                ])
             );
 
         var response = await _api.GetApi(
@@ -197,20 +189,18 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Get(Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        CreatePlugin(
-                            new ScriptRunnerPluginExtensionPoint
-                            {
-                                EntryPoint = "entry-point",
-                                Kind = PluginKind.ScriptRunner,
-                                Version = "1.2.3",
-                                Language = "csharp",
-                                Extension = ".cs",
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    CreatePlugin(
+                        new ScriptRunnerPluginExtensionPoint
+                        {
+                            EntryPoint = "entry-point",
+                            Kind = PluginKind.ScriptRunner,
+                            Version = "1.2.3",
+                            Language = "csharp",
+                            Extension = ".cs",
+                        }
+                    ),
+                ])
             );
 
         var response = await _api.GetApi(
@@ -244,23 +234,21 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Get(Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        CreatePlugin(
-                            new UiPluginExtensionPoint
-                            {
-                                EntryPoint = "entry-point",
-                                Kind = PluginKind.Ui,
-                                Version = "1.2.3",
-                                Port = 1234,
-                                ComponentName = "component",
-                                ExposedModule = "module",
-                                RemoteEntry = "remote-entry",
-                                UiPluginType = "type",
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    CreatePlugin(
+                        new UiPluginExtensionPoint
+                        {
+                            EntryPoint = "entry-point",
+                            Kind = PluginKind.Ui,
+                            Version = "1.2.3",
+                            Port = 1234,
+                            ComponentName = "component",
+                            ExposedModule = "module",
+                            RemoteEntry = "remote-entry",
+                            UiPluginType = "type",
+                        }
+                    ),
+                ])
             );
 
         var response = await _api.GetApi(

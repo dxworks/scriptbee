@@ -8,4 +8,3 @@ public interface IConfigFoldersService
 
     string GetPathToUserFolder(string path);
 }
-

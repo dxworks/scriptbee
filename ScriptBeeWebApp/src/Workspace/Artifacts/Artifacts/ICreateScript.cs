@@ -6,4 +6,3 @@ public interface ICreateScript
 {
     Task Create(Script script, CancellationToken cancellationToken = default);
 }
-

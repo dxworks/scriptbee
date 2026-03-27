@@ -68,44 +68,42 @@ public class GetInstanceLinkersServiceTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        new Plugin(
-                            "folder",
-                            "linker-id",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                Name = "Linker",
-                                ExtensionPoints = [new LinkerPluginExtensionPoint()],
-                            }
-                        ),
-                        new Plugin(
-                            "folder",
-                            "linker-id-multiple",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                Name = "Multiple Linkers",
-                                ExtensionPoints =
-                                [
-                                    new LinkerPluginExtensionPoint(),
-                                    new LinkerPluginExtensionPoint(),
-                                ],
-                            }
-                        ),
-                        new Plugin(
-                            "folder",
-                            "linker-id-without-extension-point",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                Name = "Loader",
-                                ExtensionPoints = [new LoaderPluginExtensionPoint()],
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    new Plugin(
+                        "folder",
+                        "linker-id",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            Name = "Linker",
+                            ExtensionPoints = [new LinkerPluginExtensionPoint()],
+                        }
+                    ),
+                    new Plugin(
+                        "folder",
+                        "linker-id-multiple",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            Name = "Multiple Linkers",
+                            ExtensionPoints =
+                            [
+                                new LinkerPluginExtensionPoint(),
+                                new LinkerPluginExtensionPoint(),
+                            ],
+                        }
+                    ),
+                    new Plugin(
+                        "folder",
+                        "linker-id-without-extension-point",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            Name = "Loader",
+                            ExtensionPoints = [new LoaderPluginExtensionPoint()],
+                        }
+                    ),
+                ])
             );
 
         var linkers = await _getInstanceLinkersService.Get(
@@ -115,11 +113,9 @@ public class GetInstanceLinkersServiceTest
 
         linkers
             .ToList()
-            .ShouldBe(
-                [
-                    new Linker("linker-id", "Linker"),
-                    new Linker("linker-id-multiple", "Multiple Linkers"),
-                ]
-            );
+            .ShouldBe([
+                new Linker("linker-id", "Linker"),
+                new Linker("linker-id-multiple", "Multiple Linkers"),
+            ]);
     }
 }

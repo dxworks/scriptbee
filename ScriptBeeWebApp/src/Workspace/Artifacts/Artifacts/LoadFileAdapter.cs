@@ -21,4 +21,3 @@ public class LoadFileAdapter(IConfigFoldersService configFoldersService) : ILoad
         return await File.ReadAllTextAsync(pathInSrcFolder, cancellationToken);
     }
 }
-

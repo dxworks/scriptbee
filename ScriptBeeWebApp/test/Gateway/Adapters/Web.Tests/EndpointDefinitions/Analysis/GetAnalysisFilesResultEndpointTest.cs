@@ -49,15 +49,13 @@ public class GetAnalysisFilesResultEndpointTest(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getResponse = await response.ReadContentAsync<WebGetAnalysisResultFileList>();
-        getResponse.Files.ShouldBe(
-            [
-                new WebGetAnalysisResultFile(
-                    "04f29955-0456-46cf-be15-ef5b0d8e83bf",
-                    "file.txt",
-                    "file"
-                ),
-            ]
-        );
+        getResponse.Files.ShouldBe([
+            new WebGetAnalysisResultFile(
+                "04f29955-0456-46cf-be15-ef5b0d8e83bf",
+                "file.txt",
+                "file"
+            ),
+        ]);
     }
 
     [Fact]

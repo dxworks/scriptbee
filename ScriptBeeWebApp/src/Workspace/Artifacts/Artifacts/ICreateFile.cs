@@ -12,4 +12,3 @@ public interface ICreateFile
         CancellationToken cancellationToken = default
     );
 }
-

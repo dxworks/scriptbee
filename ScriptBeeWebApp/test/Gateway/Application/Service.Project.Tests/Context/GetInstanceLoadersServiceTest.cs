@@ -68,44 +68,42 @@ public class GetInstanceLoadersServiceTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        new Plugin(
-                            "folder",
-                            "loader-id",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                Name = "Loader",
-                                ExtensionPoints = [new LoaderPluginExtensionPoint()],
-                            }
-                        ),
-                        new Plugin(
-                            "folder",
-                            "loader-id-multiple",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                Name = "Multiple Loaders",
-                                ExtensionPoints =
-                                [
-                                    new LoaderPluginExtensionPoint(),
-                                    new LoaderPluginExtensionPoint(),
-                                ],
-                            }
-                        ),
-                        new Plugin(
-                            "folder",
-                            "loader-id-without-extension-point",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                Name = "Linker",
-                                ExtensionPoints = [new LinkerPluginExtensionPoint()],
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    new Plugin(
+                        "folder",
+                        "loader-id",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            Name = "Loader",
+                            ExtensionPoints = [new LoaderPluginExtensionPoint()],
+                        }
+                    ),
+                    new Plugin(
+                        "folder",
+                        "loader-id-multiple",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            Name = "Multiple Loaders",
+                            ExtensionPoints =
+                            [
+                                new LoaderPluginExtensionPoint(),
+                                new LoaderPluginExtensionPoint(),
+                            ],
+                        }
+                    ),
+                    new Plugin(
+                        "folder",
+                        "loader-id-without-extension-point",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            Name = "Linker",
+                            ExtensionPoints = [new LinkerPluginExtensionPoint()],
+                        }
+                    ),
+                ])
             );
 
         var loaders = await _getInstanceLoadersService.Get(
@@ -115,11 +113,9 @@ public class GetInstanceLoadersServiceTest
 
         loaders
             .ToList()
-            .ShouldBe(
-                [
-                    new Loader("loader-id", "Loader"),
-                    new Loader("loader-id-multiple", "Multiple Loaders"),
-                ]
-            );
+            .ShouldBe([
+                new Loader("loader-id", "Loader"),
+                new Loader("loader-id-multiple", "Multiple Loaders"),
+            ]);
     }
 }

@@ -31,41 +31,39 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
         // TODO FIXIT: remove hardcoded value
 
         return TypedResults.Ok(
-            new WebGetScriptDataResponse(
-                [
-                    new WebScriptData
-                    {
-                        Id = "file-1",
-                        Name = "file",
-                        Path = "folder-1/sub-folder-1/file",
-                        AbsolutePath = $"{projectId}/folder-1/sub-folder-1/file",
-                        ScriptLanguage = new WebScriptLanguage("csharp", ".cs"),
-                        Parameters = [new WebScriptParameter("param-1", "string", "hello")],
-                    },
-                    new WebScriptData
-                    {
-                        Id = "file-2",
-                        Name = "file",
-                        Path = "folder-2/sub-folder-1/file",
-                        AbsolutePath = $"{projectId}/folder-2/sub-folder-1/file",
-                        ScriptLanguage = new WebScriptLanguage("python", ".py"),
-                        Parameters =
-                        [
-                            new WebScriptParameter("param", "boolean", true),
-                            new WebScriptParameter("param2", "integer", 124),
-                        ],
-                    },
-                    new WebScriptData
-                    {
-                        Id = "file-2-1",
-                        Name = "file-2",
-                        Path = "folder-2/file-2",
-                        AbsolutePath = $"{projectId}/folder-2/file-2",
-                        ScriptLanguage = new WebScriptLanguage("javascript", ".js"),
-                        Parameters = [],
-                    },
-                ]
-            )
+            new WebGetScriptDataResponse([
+                new WebScriptData
+                {
+                    Id = "file-1",
+                    Name = "file",
+                    Path = "folder-1/sub-folder-1/file",
+                    AbsolutePath = $"{projectId}/folder-1/sub-folder-1/file",
+                    ScriptLanguage = new WebScriptLanguage("csharp", ".cs"),
+                    Parameters = [new WebScriptParameter("param-1", "string", "hello")],
+                },
+                new WebScriptData
+                {
+                    Id = "file-2",
+                    Name = "file",
+                    Path = "folder-2/sub-folder-1/file",
+                    AbsolutePath = $"{projectId}/folder-2/sub-folder-1/file",
+                    ScriptLanguage = new WebScriptLanguage("python", ".py"),
+                    Parameters =
+                    [
+                        new WebScriptParameter("param", "boolean", true),
+                        new WebScriptParameter("param2", "integer", 124),
+                    ],
+                },
+                new WebScriptData
+                {
+                    Id = "file-2-1",
+                    Name = "file-2",
+                    Path = "folder-2/file-2",
+                    AbsolutePath = $"{projectId}/folder-2/file-2",
+                    ScriptLanguage = new WebScriptLanguage("javascript", ".js"),
+                    Parameters = [],
+                },
+            ])
         );
     }
 

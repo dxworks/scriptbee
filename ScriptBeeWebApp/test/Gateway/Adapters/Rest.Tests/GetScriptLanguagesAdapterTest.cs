@@ -27,26 +27,24 @@ public class GetScriptLanguagesAdapterTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                ExtensionPoints =
-                                [
-                                    new ScriptRunnerPluginExtensionPoint
-                                    {
-                                        Language = "language",
-                                        Extension = ".lang",
-                                    },
-                                ],
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    new Plugin(
+                        "folder",
+                        "id",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            ExtensionPoints =
+                            [
+                                new ScriptRunnerPluginExtensionPoint
+                                {
+                                    Language = "language",
+                                    Extension = ".lang",
+                                },
+                            ],
+                        }
+                    ),
+                ])
             );
 
         var result = await _getScriptLanguagesAdapter.Get(
@@ -65,19 +63,14 @@ public class GetScriptLanguagesAdapterTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                ExtensionPoints = [new LoaderPluginExtensionPoint()],
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    new Plugin(
+                        "folder",
+                        "id",
+                        new Version(),
+                        new PluginManifest { ExtensionPoints = [new LoaderPluginExtensionPoint()] }
+                    ),
+                ])
             );
 
         var result = await _getScriptLanguagesAdapter.Get(
@@ -96,26 +89,24 @@ public class GetScriptLanguagesAdapterTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>(
-                    [
-                        new Plugin(
-                            "folder",
-                            "id",
-                            new Version(),
-                            new PluginManifest
-                            {
-                                ExtensionPoints =
-                                [
-                                    new ScriptRunnerPluginExtensionPoint
-                                    {
-                                        Language = "csharp",
-                                        Extension = ".cs",
-                                    },
-                                ],
-                            }
-                        ),
-                    ]
-                )
+                Task.FromResult<IEnumerable<Plugin>>([
+                    new Plugin(
+                        "folder",
+                        "id",
+                        new Version(),
+                        new PluginManifest
+                        {
+                            ExtensionPoints =
+                            [
+                                new ScriptRunnerPluginExtensionPoint
+                                {
+                                    Language = "csharp",
+                                    Extension = ".cs",
+                                },
+                            ],
+                        }
+                    ),
+                ])
             );
 
         var result = await _getScriptLanguagesAdapter.Get(

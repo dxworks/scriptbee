@@ -11,4 +11,3 @@ public interface ILoadFile
         CancellationToken cancellationToken = default
     );
 }
-

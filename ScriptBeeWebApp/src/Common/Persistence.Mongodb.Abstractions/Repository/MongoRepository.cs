@@ -61,4 +61,3 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         await mongoCollection.DeleteOneAsync(predicate, cancellationToken);
     }
 }
-

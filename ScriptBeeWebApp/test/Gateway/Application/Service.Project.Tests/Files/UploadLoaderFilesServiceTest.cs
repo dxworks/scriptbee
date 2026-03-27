@@ -155,12 +155,10 @@ public class UploadLoaderFilesServiceTest
 
         result
             .AsT0.ToList()
-            .ShouldBe(
-                [
-                    new FileData(new FileId("825cba0f-1de8-42ef-8225-47400644f9e2"), "file-name-1"),
-                    new FileData(new FileId("9e0ac246-fb26-461f-b77f-2c4fa64348b0"), "file-name-3"),
-                ]
-            );
+            .ShouldBe([
+                new FileData(new FileId("825cba0f-1de8-42ef-8225-47400644f9e2"), "file-name-1"),
+                new FileData(new FileId("9e0ac246-fb26-461f-b77f-2c4fa64348b0"), "file-name-3"),
+            ]);
         await _fileModelService
             .Received(1)
             .UploadFileAsync(

@@ -9,4 +9,3 @@
     <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />
   </ItemGroup>
 </Project>
-

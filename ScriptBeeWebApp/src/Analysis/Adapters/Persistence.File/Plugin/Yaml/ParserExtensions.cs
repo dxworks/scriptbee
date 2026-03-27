@@ -39,8 +39,7 @@ public static class ParserExtensions
                     parser.SkipThisAndNestedEvents();
 
                     break;
-                case MappingStart
-                or SequenceStart:
+                case MappingStart or SequenceStart:
                     parser.SkipThisAndNestedEvents();
                     break;
                 default:

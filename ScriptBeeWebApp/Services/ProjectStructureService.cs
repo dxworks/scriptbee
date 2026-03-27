@@ -19,9 +19,12 @@ public class ProjectStructureService : IProjectStructureService
     private readonly IPluginRepository _pluginRepository;
     private readonly ILoadersService _loadersService;
 
-    public ProjectStructureService(IProjectManager projectManager,
-        IProjectFileStructureManager projectFileStructureManager, IPluginRepository pluginRepository,
-        ILoadersService loadersService)
+    public ProjectStructureService(
+        IProjectManager projectManager,
+        IProjectFileStructureManager projectFileStructureManager,
+        IPluginRepository pluginRepository,
+        ILoadersService loadersService
+    )
     {
         _projectManager = projectManager;
         _projectFileStructureManager = projectFileStructureManager;
@@ -29,12 +32,14 @@ public class ProjectStructureService : IProjectStructureService
         _loadersService = loadersService;
     }
 
-    public async Task<(string extension, string content)> GetSampleCodeAsync(string scriptType,
-        CancellationToken cancellationToken = default)
+    public async Task<(string extension, string content)> GetSampleCodeAsync(
+        string scriptType,
+        CancellationToken cancellationToken = default
+    )
     {
-        var scriptGeneratorStrategy =
-            _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(manifest =>
-                manifest.Language == scriptType);
+        var scriptGeneratorStrategy = _pluginRepository.GetPlugin<IScriptGeneratorStrategy>(
+            manifest => manifest.Language == scriptType
+        );
 
         if (scriptGeneratorStrategy is null)
         {
@@ -43,14 +48,18 @@ public class ProjectStructureService : IProjectStructureService
 
         var acceptedModules = _loadersService.GetAcceptedModules();
 
-        var sampleCode =
-            await new SampleCodeGenerator(scriptGeneratorStrategy, acceptedModules).GenerateSampleCode(
-                cancellationToken);
+        var sampleCode = await new SampleCodeGenerator(
+            scriptGeneratorStrategy,
+            acceptedModules
+        ).GenerateSampleCode(cancellationToken);
 
         return (scriptGeneratorStrategy.Extension, sampleCode);
     }
 
-    public async Task GenerateModelClasses(string projectId, CancellationToken cancellationToken = default)
+    public async Task GenerateModelClasses(
+        string projectId,
+        CancellationToken cancellationToken = default
+    )
     {
         var project = _projectManager.GetProject(projectId);
 
@@ -65,23 +74,37 @@ public class ProjectStructureService : IProjectStructureService
         var generatorStrategies = _pluginRepository.GetPlugins<IScriptGeneratorStrategy>();
         foreach (var generatorStrategy in generatorStrategies)
         {
-            var generatedClasses = await
-                new SampleCodeGenerator(generatorStrategy, acceptedModules)
-                    .GetSampleCode(classes, cancellationToken);
+            var generatedClasses = await new SampleCodeGenerator(
+                generatorStrategy,
+                acceptedModules
+            ).GetSampleCode(classes, cancellationToken);
 
-            WriteSampleCodeFiles(generatedClasses, projectId, generatorStrategy.Language, generatorStrategy.Extension);
+            WriteSampleCodeFiles(
+                generatedClasses,
+                projectId,
+                generatorStrategy.Language,
+                generatorStrategy.Extension
+            );
         }
     }
 
-    private void WriteSampleCodeFiles(IEnumerable<SampleCodeFile> sampleCodeFiles, string projectId, string folderName,
-        string extension)
+    private void WriteSampleCodeFiles(
+        IEnumerable<SampleCodeFile> sampleCodeFiles,
+        string projectId,
+        string folderName,
+        string extension
+    )
     {
         var deleteFolderPath = Path.Combine(ConfigFolders.GeneratedFolder, folderName);
         _projectFileStructureManager.DeleteFolder(projectId, deleteFolderPath);
 
         foreach (var sampleCodeFile in sampleCodeFiles)
         {
-            var filePath = Path.Combine(ConfigFolders.GeneratedFolder, folderName, sampleCodeFile.Name + extension);
+            var filePath = Path.Combine(
+                ConfigFolders.GeneratedFolder,
+                folderName,
+                sampleCodeFile.Name + extension
+            );
             _projectFileStructureManager.CreateFile(projectId, filePath, sampleCodeFile.Content);
         }
     }
