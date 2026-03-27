@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 
-namespace ScriptBee.Ports.Analysis.Integration;
+namespace ScriptBee.Ports.Instance.Allocation;
 
 public interface IAllocateInstance
 {

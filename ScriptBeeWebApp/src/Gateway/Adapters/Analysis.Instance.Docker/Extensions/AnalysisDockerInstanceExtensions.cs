@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.Analysis.Instance.Docker.Config;
-using ScriptBee.Ports.Analysis.Integration;
+using ScriptBee.Ports.Instance.Allocation;
 
 namespace ScriptBee.Analysis.Instance.Docker.Extensions;
 
