@@ -1,6 +1,4 @@
 ﻿using ScriptBee.Analysis.Mongodb.Extensions;
-using ScriptBee.Artifacts;
-using ScriptBee.Artifacts.Mongodb;
 using ScriptBee.Artifacts.Mongodb.Extensions;
 using ScriptBee.Persistence.Mongodb.Extensions;
 
@@ -15,9 +13,6 @@ public static class MongoDbExtensions
     {
         var mongoDatabase = services.AddMongodbDatabase(connectionString);
 
-        return services
-            .AddSingleton<IFileModelService, FileModelService>()
-            .AddAnalysisAdapters(mongoDatabase)
-            .AddScriptAdapters(mongoDatabase);
+        return services.AddAnalysisAdapters(mongoDatabase).AddScriptAdapters(mongoDatabase);
     }
 }
