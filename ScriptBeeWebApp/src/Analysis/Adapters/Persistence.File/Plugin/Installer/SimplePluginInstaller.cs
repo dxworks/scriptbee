@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using OneOf;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Config;
-using ScriptBee.Persistence.File.Exceptions;
+using ScriptBee.Ports.Plugins.Installer;
 
 namespace ScriptBee.Persistence.File.Plugin.Installer;
 
@@ -12,7 +13,7 @@ public class SimplePluginInstaller(
     ILogger<SimplePluginInstaller> logger
 ) : ISimplePluginInstaller
 {
-    public async Task<string> Install(
+    public async Task<OneOf<string, PluginVersionExistsError, PluginInstallationError>> Install(
         string url,
         string pluginId,
         string version,
@@ -26,8 +27,7 @@ public class SimplePluginInstaller(
 
         if (fileService.DirectoryExists(pluginPath))
         {
-            // TODO FIXIT(#51): convert to error instead of exception
-            throw new PluginVersionExistsException(pluginId, version);
+            return new PluginVersionExistsError(pluginId, version);
         }
 
         try
@@ -48,9 +48,7 @@ public class SimplePluginInstaller(
             );
 
             fileService.DeleteDirectory(pluginPath);
-
-            // TODO FIXIT(#51): convert to error instead of exception
-            throw new PluginInstallationException(pluginId, version);
+            return new PluginInstallationError(pluginId, version);
         }
         finally
         {

@@ -2,7 +2,6 @@
 using NSubstitute;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Config;
-using ScriptBee.Persistence.File.Exceptions;
 using ScriptBee.Persistence.File.Plugin.Installer;
 
 namespace ScriptBee.Persistence.File.Tests.Plugin.Installer;
@@ -43,7 +42,7 @@ public class SimplePluginInstallerTests
     }
 
     [Fact]
-    public async Task GivenUrlDownloadException_WhenInstall_ThenNoZipFileIsPresent()
+    public async Task GivenUrlDownloadException_WhenInstall_ThenReturnsPluginInstallationError()
     {
         _downloadService
             .When(x =>
@@ -59,26 +58,23 @@ public class SimplePluginInstallerTests
             .Returns("path/pluginName@1.0.0");
         _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(true);
 
-        var pluginInstallationException = await Assert.ThrowsAsync<PluginInstallationException>(
-            () =>
-                _simplePluginInstaller.Install(
-                    "url",
-                    "pluginName",
-                    "1.0.0",
-                    TestContext.Current.CancellationToken
-                )
+        var result = await _simplePluginInstaller.Install(
+            "url",
+            "pluginName",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(
-            "Plugin with name 'pluginName' and version '1.0.0' could not be installed.",
-            pluginInstallationException.Message
-        );
+        result.IsT2.ShouldBe(true);
+        var error = result.AsT2;
+        error.Name.ShouldBe("pluginName");
+        error.Version.ShouldBe("1.0.0");
         _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
         _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
     }
 
     [Fact]
-    public async Task GivenUrlDownloadExceptionAndNoZipFileIsDownloaded_WhenInstall_ThenNoZipFileIsPresent()
+    public async Task GivenUrlDownloadExceptionAndNoZipFileIsDownloaded_WhenInstall_ThenReturnsPluginInstallationError()
     {
         _downloadService
             .When(x =>
@@ -94,26 +90,23 @@ public class SimplePluginInstallerTests
             .Returns("path/pluginName@1.0.0");
         _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(false);
 
-        var pluginInstallationException = await Assert.ThrowsAsync<PluginInstallationException>(
-            () =>
-                _simplePluginInstaller.Install(
-                    "url",
-                    "pluginName",
-                    "1.0.0",
-                    TestContext.Current.CancellationToken
-                )
+        var result = await _simplePluginInstaller.Install(
+            "url",
+            "pluginName",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(
-            "Plugin with name 'pluginName' and version '1.0.0' could not be installed.",
-            pluginInstallationException.Message
-        );
+        result.IsT2.ShouldBe(true);
+        var error = result.AsT2;
+        error.Name.ShouldBe("pluginName");
+        error.Version.ShouldBe("1.0.0");
         _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
         _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
     }
 
     [Fact]
-    public async Task GivenUnzipException_WhenInstall_ThenNoZipFileIsPresent()
+    public async Task GivenUnzipException_WhenInstall_ThenReturnsPluginInstallationError()
     {
         _zipFileService
             .When(x =>
@@ -125,20 +118,17 @@ public class SimplePluginInstallerTests
             .Returns("path/pluginName@1.0.0");
         _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(true);
 
-        var pluginInstallationException = await Assert.ThrowsAsync<PluginInstallationException>(
-            () =>
-                _simplePluginInstaller.Install(
-                    "url",
-                    "pluginName",
-                    "1.0.0",
-                    TestContext.Current.CancellationToken
-                )
+        var result = await _simplePluginInstaller.Install(
+            "url",
+            "pluginName",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(
-            "Plugin with name 'pluginName' and version '1.0.0' could not be installed.",
-            pluginInstallationException.Message
-        );
+        result.IsT2.ShouldBe(true);
+        var error = result.AsT2;
+        error.Name.ShouldBe("pluginName");
+        error.Version.ShouldBe("1.0.0");
         await _downloadService
             .Received(1)
             .DownloadFileAsync("url", "path/pluginName@1.0.0.zip", Arg.Any<CancellationToken>());
@@ -147,19 +137,21 @@ public class SimplePluginInstallerTests
     }
 
     [Fact]
-    public async Task GivenUrlForPluginAndVersion_WhenInstall_ThenZipFileIsDownloadedSuccessful()
+    public async Task GivenUrlForPluginAndVersion_WhenInstall_ThenZipFileIsDownloadedSuccessfully()
     {
         _fileService
             .CombinePaths(ConfigFolders.PathToPlugins, "pluginName@1.0.0")
             .Returns("path/pluginName@1.0.0");
 
-        await _simplePluginInstaller.Install(
+        var result = await _simplePluginInstaller.Install(
             "url",
             "pluginName",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
+        result.IsT0.ShouldBe(true);
+        result.AsT0.ShouldBe("path/pluginName@1.0.0");
         await _downloadService
             .Received(1)
             .DownloadFileAsync("url", "path/pluginName@1.0.0.zip", Arg.Any<CancellationToken>());
@@ -174,27 +166,24 @@ public class SimplePluginInstallerTests
     }
 
     [Fact]
-    public async Task GivenExistingPluginWithTheSameVersion_WhenInstall_ThenPluginIsNotInstalled()
+    public async Task GivenExistingPluginWithTheSameVersion_WhenInstall_ThenReturnsPluginVersionExistsError()
     {
         _fileService
             .CombinePaths(ConfigFolders.PathToPlugins, "pluginName@1.0.0")
             .Returns("path/pluginName@1.0.0");
         _fileService.DirectoryExists("path/pluginName@1.0.0").Returns(true);
 
-        var pluginVersionExistsException = await Assert.ThrowsAsync<PluginVersionExistsException>(
-            () =>
-                _simplePluginInstaller.Install(
-                    "url",
-                    "pluginName",
-                    "1.0.0",
-                    TestContext.Current.CancellationToken
-                )
+        var result = await _simplePluginInstaller.Install(
+            "url",
+            "pluginName",
+            "1.0.0",
+            TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(
-            "Plugin with name 'pluginName' and version '1.0.0' already exists",
-            pluginVersionExistsException.Message
-        );
+        result.IsT1.ShouldBe(true);
+        var error = result.AsT1;
+        error.Name.ShouldBe("pluginName");
+        error.Version.ShouldBe("1.0.0");
         await _downloadService
             .Received(0)
             .DownloadFileAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
@@ -207,13 +196,14 @@ public class SimplePluginInstallerTests
             .CombinePaths(ConfigFolders.PathToPlugins, "pluginName@1.0.0")
             .Returns("path/pluginName@1.0.0");
 
-        var installedPluginPath = await _simplePluginInstaller.Install(
+        var result = await _simplePluginInstaller.Install(
             "url",
             "pluginName",
             "1.0.0",
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal("path/pluginName@1.0.0", installedPluginPath);
+        result.IsT0.ShouldBe(true);
+        result.AsT0.ShouldBe("path/pluginName@1.0.0");
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text;
+using Microsoft.Extensions.Logging;
+using OneOf;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
@@ -6,6 +8,17 @@ using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Plugins.Installer;
 
 namespace ScriptBee.Persistence.File.Plugin.Installer;
+
+using BundleInstallResult = OneOf<
+    InstallBundleResult,
+    PluginVersionExistsError,
+    PluginInstallationError
+>;
+using PluginInstallResult = OneOf<
+    InstallPluginResult,
+    PluginVersionExistsError,
+    PluginInstallationError
+>;
 
 public class BundlePluginInstaller(
     IPluginReader pluginReader,
@@ -15,44 +28,57 @@ public class BundlePluginInstaller(
     ILogger<BundlePluginInstaller> logger
 ) : IBundlePluginInstaller
 {
-    public async Task<List<string>> Install(
-        string pluginId,
-        string version,
-        CancellationToken cancellationToken = default
-    )
+    public async Task<
+        OneOf<List<string>, PluginVersionExistsError, PluginInstallationError>
+    > Install(string pluginId, string version, CancellationToken cancellationToken = default)
     {
-        var (installedPluginFolders, pluginFoldersToUninstall) = await InstallPluginBundle(
-            pluginId,
-            version,
-            cancellationToken
+        var result = await InstallPluginBundle(pluginId, version, cancellationToken);
+
+        return result.Match<OneOf<List<string>, PluginVersionExistsError, PluginInstallationError>>(
+            installResult =>
+            {
+                var (installedPluginFolders, pluginFoldersToUninstall) = installResult;
+
+                foreach (var pathToPlugin in pluginFoldersToUninstall)
+                {
+                    pluginUninstaller.Uninstall(pathToPlugin);
+                }
+
+                return installedPluginFolders;
+            },
+            error => error,
+            error => error
         );
-
-        foreach (var pathToPlugin in pluginFoldersToUninstall)
-        {
-            pluginUninstaller.Uninstall(pathToPlugin);
-        }
-
-        return installedPluginFolders;
     }
 
-    private async Task<(
-        List<string> installedPluginFolders,
-        List<string> pluginFoldersToUninstall
-    )> InstallPluginBundle(
+    private async Task<BundleInstallResult> InstallPluginBundle(
         string pluginId,
         string version,
         CancellationToken cancellationToken = default
     )
     {
-        var (bundleFolder, existingVersionsToUninstall) = await InstallPlugin(
-            pluginId,
-            version,
-            cancellationToken
+        var result = await InstallPlugin(pluginId, version, cancellationToken);
+
+        return await result.Match<Task<BundleInstallResult>>(
+            async pluginResult => await InstallPluginBundle(pluginResult, cancellationToken),
+            error =>
+                Task.FromResult<BundleInstallResult>(
+                    new PluginInstallationError(error.Name, error.Version)
+                ),
+            error => Task.FromResult<BundleInstallResult>(error)
         );
+    }
+
+    private async Task<BundleInstallResult> InstallPluginBundle(
+        InstallPluginResult installPluginResult,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var (bundleFolder, existingVersionsToUninstall) = installPluginResult;
 
         if (string.IsNullOrEmpty(bundleFolder))
         {
-            return ([], []);
+            return new InstallBundleResult([], []);
         }
 
         var installedPluginsPaths = new List<string> { bundleFolder };
@@ -70,45 +96,48 @@ public class BundlePluginInstaller(
             )
             .ToList();
 
-        try
-        {
-            var installedBundlesTuples = await Task.WhenAll(tasks);
+        var errorMessageBuilder = new StringBuilder();
+        var installedBundlesTuples = await Task.WhenAll(tasks);
 
-            foreach (
-                var (
-                    installedPluginFolders,
-                    pluginFoldersToUninstallForExtensionPoint
-                ) in installedBundlesTuples
-            )
-            {
-                installedPluginsPaths.AddRange(installedPluginFolders);
-                pluginFoldersToUninstall.AddRange(pluginFoldersToUninstallForExtensionPoint);
-            }
-        }
-        catch (Exception e)
+        foreach (var installResult in installedBundlesTuples)
         {
-            logger.LogError(
-                e,
-                "Error while installing plugin {PluginId} version {Version}",
-                pluginId,
-                version
+            installResult.Switch(
+                result =>
+                {
+                    installedPluginsPaths.AddRange(result.InstalledPluginFolders);
+                    pluginFoldersToUninstall.AddRange(result.PluginFoldersToUninstall);
+                },
+                error =>
+                    errorMessageBuilder.AppendLine(
+                        $"Plugin {error.Name} version {error.Version} could not be installed."
+                    ),
+                error =>
+                    errorMessageBuilder.AppendLine(
+                        $"Plugin {error.Name} version {error.Version} could not be installed."
+                    )
             );
-
-            foreach (var installedPluginPath in installedPluginsPaths)
-            {
-                pluginUninstaller.ForceUninstall(installedPluginPath);
-            }
-
-            throw;
         }
 
-        return (installedPluginsPaths, pluginFoldersToUninstall);
+        if (errorMessageBuilder.Length <= 0)
+        {
+            return new InstallBundleResult(installedPluginsPaths, pluginFoldersToUninstall);
+        }
+
+        logger.LogError("{Message}", errorMessageBuilder.ToString());
+
+        foreach (var installedPluginPath in installedPluginsPaths)
+        {
+            pluginUninstaller.ForceUninstall(installedPluginPath);
+        }
+
+        throw new NotImplementedException();
     }
 
-    private async Task<(
-        string? pluginFolder,
-        List<Domain.Model.Plugin.Plugin> installedPluginVersions
-    )> InstallPlugin(string pluginId, string version, CancellationToken cancellationToken)
+    private async Task<PluginInstallResult> InstallPlugin(
+        string pluginId,
+        string version,
+        CancellationToken cancellationToken
+    )
     {
         var installedPluginVersions = pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
@@ -121,18 +150,48 @@ public class BundlePluginInstaller(
                 "A newer version of plugin {PluginId} is already installed",
                 pluginId
             );
-            return (null, installedPluginVersions);
+            return new InstallPluginResult(null, installedPluginVersions);
         }
 
-        var url = pluginUrlFetcher.GetPluginUrl(pluginId, version);
-        var pluginFolder = await simplePluginInstaller.Install(
-            url,
-            pluginId,
-            version,
-            cancellationToken
-        );
+        var result = pluginUrlFetcher.GetPluginUrl(pluginId, version);
 
-        return (pluginFolder, installedPluginVersions);
+        return await result.Match<Task<PluginInstallResult>>(
+            async url =>
+                await InstallPlugin(
+                    url,
+                    pluginId,
+                    version,
+                    installedPluginVersions,
+                    cancellationToken
+                ),
+            error =>
+                Task.FromResult<PluginInstallResult>(
+                    new PluginInstallationError(error.PluginId, version)
+                ),
+            error =>
+                Task.FromResult<PluginInstallResult>(
+                    new PluginInstallationError(error.PluginId, error.Version)
+                )
+        );
+    }
+
+    private async Task<PluginInstallResult> InstallPlugin(
+        string url,
+        string pluginId,
+        string version,
+        List<Domain.Model.Plugin.Plugin> installedPluginVersions,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await simplePluginInstaller.Install(url, pluginId, version, cancellationToken);
+
+        return result.Match<
+            OneOf<InstallPluginResult, PluginVersionExistsError, PluginInstallationError>
+        >(
+            pluginFolder => new InstallPluginResult(pluginFolder, installedPluginVersions),
+            error => error,
+            error => error
+        );
     }
 
     private IEnumerable<PluginExtensionPoint> GetPluginExtensionPoints(string bundleFolder)
@@ -155,3 +214,13 @@ public class BundlePluginInstaller(
         return plugins.All(plugin => plugin.Version < version);
     }
 }
+
+internal sealed record InstallPluginResult(
+    string? pluginFolder,
+    List<Domain.Model.Plugin.Plugin> installedPluginVersions
+);
+
+internal sealed record InstallBundleResult(
+    List<string> InstalledPluginFolders,
+    List<string> PluginFoldersToUninstall
+);
