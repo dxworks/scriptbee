@@ -6,8 +6,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="VeriJson" />
-    <PackageReference Include="MongoDB.Driver" />
-    <PackageReference Include="Testcontainers.MongoDb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Common\Model\Model.csproj" />

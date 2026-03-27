@@ -7,6 +7,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
-    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common.Mongodb\Tests.Common.Mongodb.csproj" />
   </ItemGroup>
 </Project>

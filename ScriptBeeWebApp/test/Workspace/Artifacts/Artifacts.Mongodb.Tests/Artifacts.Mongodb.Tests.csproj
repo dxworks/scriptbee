@@ -4,6 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
-    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common.Mongodb\Tests.Common.Mongodb.csproj" />
   </ItemGroup>
 </Project>

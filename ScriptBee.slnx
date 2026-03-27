@@ -44,6 +44,7 @@
     <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
 
     <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />

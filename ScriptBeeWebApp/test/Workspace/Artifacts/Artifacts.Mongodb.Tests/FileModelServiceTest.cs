@@ -1,7 +1,7 @@
 using System.Text;
 using MongoDB.Driver.GridFS;
 using ScriptBee.Domain.Model.File;
-using ScriptBee.Tests.Common;
+using ScriptBee.Tests.Common.Mongodb;
 
 namespace ScriptBee.Artifacts.Mongodb.Tests;
 

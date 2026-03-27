@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 using ScriptBee.Tests.Common;
+using ScriptBee.Tests.Common.Mongodb;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
 
