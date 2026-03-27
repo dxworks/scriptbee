@@ -1,18 +1,21 @@
-﻿using ScriptBee.Marketplace.Client.Exceptions;
+﻿using OneOf;
+using ScriptBee.Marketplace.Client.Errors;
 
 namespace ScriptBee.Marketplace.Client;
 
 public class PluginUrlFetcher(IMarketPluginFetcher marketPluginFetcher) : IPluginUrlFetcher
 {
-    public string GetPluginUrl(string pluginId, string version)
+    public OneOf<string, PluginNotFoundError, PluginVersionNotFoundError> GetPluginUrl(
+        string pluginId,
+        string version
+    )
     {
         var plugins = marketPluginFetcher.GetProjectsAsync();
 
         var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
         if (plugin is null)
         {
-            // TODO FIXIT(#51): convert to error instead of exception
-            throw new PluginNotFoundException(pluginId);
+            return new PluginNotFoundError(pluginId);
         }
 
         var semver = Version.Parse(version);
@@ -20,8 +23,7 @@ public class PluginUrlFetcher(IMarketPluginFetcher marketPluginFetcher) : IPlugi
 
         if (pluginVersion is null)
         {
-            // TODO FIXIT(#51): convert to error instead of exception
-            throw new PluginVersionNotFoundException($"{pluginId} {version}");
+            return new PluginVersionNotFoundError(pluginId, version);
         }
 
         return pluginVersion.Url;

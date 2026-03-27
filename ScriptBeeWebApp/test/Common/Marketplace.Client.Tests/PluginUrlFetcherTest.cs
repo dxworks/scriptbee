@@ -1,7 +1,7 @@
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
-using ScriptBee.Marketplace.Client.Exceptions;
+using ScriptBee.Marketplace.Client.Errors;
 
 namespace ScriptBee.Marketplace.Client.Tests;
 
@@ -18,17 +18,18 @@ public class PluginUrlFetcherTest
     }
 
     [Fact]
-    public void GetPluginUrl_ThrowsPluginNotFoundException_WhenPluginNotFound()
+    public void GetPluginUrl_ReturnsPluginNotFoundError_WhenPluginNotFound()
     {
         _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin>());
 
-        Action act = () => _pluginUrlFetcher.GetPluginUrl("nonExistentId", "1.0.0");
+        var result = _pluginUrlFetcher.GetPluginUrl("nonExistentId", "1.0.0");
 
-        act.ShouldThrow<PluginNotFoundException>().Message.ShouldBe("nonExistentId");
+        result.IsT1.ShouldBe(true);
+        result.AsT1.ShouldBeEquivalentTo(new PluginNotFoundError("nonExistentId"));
     }
 
     [Fact]
-    public void GetPluginUrl_ThrowsPluginVersionNotFoundException_WhenVersionNotFound()
+    public void GetPluginUrl_ReturnsPluginVersionNotFoundError_WhenVersionNotFound()
     {
         var project = new MarketPlacePlugin(
             "testId",
@@ -40,9 +41,10 @@ public class PluginUrlFetcherTest
         );
         _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { project });
 
-        Action act = () => _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
+        var result = _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
 
-        act.ShouldThrow<PluginVersionNotFoundException>().Message.ShouldBe("testId 2.0.0");
+        result.IsT2.ShouldBe(true);
+        result.AsT2.ShouldBeEquivalentTo(new PluginVersionNotFoundError("testId", "2.0.0"));
     }
 
     [Fact]
@@ -63,6 +65,7 @@ public class PluginUrlFetcherTest
 
         var url = _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
 
+        url.IsT0.ShouldBe(true);
         url.ShouldBe("url2");
     }
 
