@@ -31,7 +31,8 @@ public static class ConfigureFileAdapterExtensions
                 .AddSingleton<ISimplePluginInstaller, SimplePluginInstaller>()
                 .AddSingleton<IZipFileService, ZipFileService>()
                 .AddSingleton<IDownloadService, DownloadService>()
-                .AddSingleton<IPluginUninstaller, PluginUninstaller>();
+                .AddSingleton<IPluginUninstaller, PluginUninstaller>()
+                .AddSingleton<IBundlePluginUninstaller, BundlePluginUninstaller>();
         }
     }
 }
