@@ -1,12 +1,11 @@
 ﻿using OneOf;
-using ScriptBee.Analysis;
+using ScriptBee.Analysis.Mongodb.Entity;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Persistence.Mongodb;
+namespace ScriptBee.Analysis.Mongodb;
 
 public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mongoRepository)
     : IGetAnalysis,

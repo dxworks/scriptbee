@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>ScriptBee.Persistence.Mongodb</RootNamespace>
+    <RootNamespace>ScriptBee.Analysis.Mongodb</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MongoDB.Bson" />

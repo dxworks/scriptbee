@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using ScriptBee.Analysis;
-using ScriptBee.Persistence.Mongodb.Entity;
+using ScriptBee.Analysis.Mongodb.Entity;
+using ScriptBee.Persistence.Mongodb.Extensions;
 
-namespace ScriptBee.Persistence.Mongodb.Extensions;
+namespace ScriptBee.Analysis.Mongodb.Extensions;
 
 public static class AnalysisMongoDbExtensions
 {

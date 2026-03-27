@@ -1,4 +1,5 @@
-﻿using ScriptBee.Artifacts;
+﻿using ScriptBee.Analysis.Mongodb.Extensions;
+using ScriptBee.Artifacts;
 using ScriptBee.Artifacts.Mongodb;
 using ScriptBee.Artifacts.Mongodb.Extensions;
 using ScriptBee.Persistence.Mongodb.Extensions;

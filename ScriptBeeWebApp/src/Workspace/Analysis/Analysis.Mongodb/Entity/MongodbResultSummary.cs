@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Analysis;
 
-namespace ScriptBee.Persistence.Mongodb.Entity;
+namespace ScriptBee.Analysis.Mongodb.Entity;
 
 public class MongodbResultSummary
 {

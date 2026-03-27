@@ -4,7 +4,7 @@ using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Repository;
 
-namespace ScriptBee.Persistence.Mongodb.Entity;
+namespace ScriptBee.Analysis.Mongodb.Entity;
 
 [BsonIgnoreExtraElements]
 public class MongodbAnalysisInfo : IDocument
