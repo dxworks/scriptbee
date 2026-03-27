@@ -3,10 +3,10 @@
     <RootNamespace>ScriptBee.Rest.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Rest\Rest.csproj" />
-    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
+    <PackageReference Include="WireMock.Net" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="WireMock.Net" />
+    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Rest\Rest.csproj" />
+    <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 </Project>
