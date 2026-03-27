@@ -1,10 +1,10 @@
 using NSubstitute;
 using OneOf;
+using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Ports.Files;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Files;
 using ScriptBee.UseCases.Project.Files;

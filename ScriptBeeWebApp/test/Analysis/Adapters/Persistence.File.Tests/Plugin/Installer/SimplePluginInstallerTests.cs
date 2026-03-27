@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
+using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Persistence.File.Exceptions;
 using ScriptBee.Persistence.File.Plugin.Installer;

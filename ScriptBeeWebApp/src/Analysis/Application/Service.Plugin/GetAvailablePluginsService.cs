@@ -1,5 +1,6 @@
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
+using ScriptBee.Marketplace.Client;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.UseCases.Plugin;
 

@@ -6,51 +6,62 @@
     <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
+    
+    <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts/Artifacts.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts.Mongodb/Artifacts.Mongodb.csproj" />
     
     <!-- Analysis Bounded Context -->
     <!-- Adapters -->
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.File/Persistence.File.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.InMemory/Persistence.InMemory.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis.Mongodb/Analysis.Mongodb.csproj" />
     <!-- Application Layer -->
-    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Analysis/Ports.Analysis.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Files/Ports.Files.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Plugins/Ports.Plugins.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Plugin/UseCases.Plugin.csproj" />
     
     <!-- Gateway Bounded Context -->
     <!-- Adapters -->
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Analysis.Instance.Docker/Analysis.Instance.Docker.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Marketplace.Client/Marketplace.Client.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb/Persistence.Mongodb.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance.Allocation/Ports.Instance.Allocation.csproj" />
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Plugins/Ports.Plugins.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Analysis/Service.Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Plugins.Fetching/Ports.Plugins.Fetching.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Project/Service.Project.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Plugin/UseCases.Plugin.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Project/UseCases.Project.csproj" />
     
     <!-- Tests - Common Layer -->
     <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
+
+    <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Mongodb.Tests/Artifacts.Mongodb.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Workspace/Analysis/Analysis.Mongodb.Tests/Analysis.Mongodb.Tests.csproj" />
     
     <!-- Tests - Analysis Context -->
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.File.Tests/Persistence.File.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.InMemory.Tests/Persistence.InMemory.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Plugin.Tests/Service.Plugin.Tests.csproj" />
     
     <!-- Tests - Gateway Context -->
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Analysis.Instance.Docker.Tests/Analysis.Instance.Docker.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Tests/Persistence.Mongodb.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Project.Tests/Service.Project.Tests.csproj" />
 </Solution>

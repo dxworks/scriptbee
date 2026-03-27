@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Persistence.File.Exceptions;
 

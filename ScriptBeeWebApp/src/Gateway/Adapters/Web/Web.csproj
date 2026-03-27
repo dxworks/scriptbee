@@ -9,15 +9,17 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
-    <ProjectReference Include="..\Marketplace.Client\Marketplace.Client.csproj" />
     <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Service.Analysis\Service.Analysis.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Service.Project\Service.Project.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\UseCases.Project\UseCases.Project.csproj" />
-    <ProjectReference Include="..\..\..\Analysis\Adapters\Persistence.File\Persistence.File.csproj" />
-    <ProjectReference Include="..\Persistence.Mongodb\Persistence.Mongodb.csproj" />
+    <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj" />
+    <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
     <ProjectReference Include="..\Rest\Rest.csproj" />
+    <ProjectReference Include="..\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
+    <ProjectReference Include="..\..\Application\Service.Project\Service.Project.csproj" />
+    <ProjectReference Include="..\..\Application\UseCases.Project\UseCases.Project.csproj" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using ScriptBee.Artifacts.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
@@ -21,7 +22,7 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
-    .AddFileConfig(userFolderConfigurationSection)
+    .AddArtifactFileAdapters(userFolderConfigurationSection)
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
     .AddScriptBeeMarketplaceClient()

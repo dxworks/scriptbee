@@ -1,10 +1,10 @@
 ﻿using NSubstitute;
 using OneOf;
+using ScriptBee.Analysis;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Analysis;
 using ScriptBee.Service.Project.Analysis;
 
 namespace ScriptBee.Service.Project.Tests.Analysis;

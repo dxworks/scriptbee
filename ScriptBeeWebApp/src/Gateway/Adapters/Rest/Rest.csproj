@@ -3,11 +3,11 @@
     <RootNamespace>ScriptBee.Rest</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Instance\Ports.Instance.csproj" />
-    <ProjectReference Include="..\..\..\Gateway\Application\Ports.Plugins\Ports.Plugins.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Refit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Ports.Instance\Ports.Instance.csproj" />
+    <ProjectReference Include="..\..\Application\Ports.Plugins.Fetching\Ports.Plugins.Fetching.csproj" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Service.Analysis</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
+    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
+    <ProjectReference Include="..\Ports.Plugins\Ports.Plugins.csproj" />
+    <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
+  </ItemGroup>
+</Project>
