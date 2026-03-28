@@ -11,6 +11,7 @@ public static class RestConfigExtensions
         return services
             .AddHttpClient()
             .AddSingleton<IGetPlugins, GetPluginsAdapter>()
+            .AddSingleton<IInstallPlugin, InstallPluginAdapter>()
             .AddSingleton<IGetScriptLanguages, GetScriptLanguagesAdapter>()
             .AddSingleton<IGetInstanceContext, GetInstanceContextAdapter>()
             .AddSingleton<IClearInstanceContext, ClearInstanceContextAdapter>()
