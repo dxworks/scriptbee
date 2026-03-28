@@ -122,6 +122,7 @@ public class LoadInstanceContextServiceTest
                     [new FileData(new FileId("6c4e9f85-499a-455e-b5d6-ce7134a57650"), "file")]
                 },
             },
+            [],
             []
         );
         var instanceInfo = BasicInstanceInfo(projectId);

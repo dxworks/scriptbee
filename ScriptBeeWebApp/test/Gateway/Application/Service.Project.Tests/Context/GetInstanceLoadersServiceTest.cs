@@ -3,7 +3,6 @@ using OneOf;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
@@ -32,7 +31,7 @@ public class GetInstanceLoadersServiceTest
     }
 
     [Fact]
-    public async Task GivenNoInstance_ExpectEmtpyList()
+    public async Task GivenNoInstance_ExpectEmptyList()
     {
         var projectId = ProjectId.FromValue("id");
         var instanceId = new InstanceId("139ad4ad-1f4f-4006-863c-55bc76608d3c");
@@ -68,8 +67,8 @@ public class GetInstanceLoadersServiceTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>([
-                    new Plugin(
+                Task.FromResult<IEnumerable<Domain.Model.Plugin.Plugin>>([
+                    new Domain.Model.Plugin.Plugin(
                         "folder",
                         "loader-id",
                         new Version(),
@@ -79,7 +78,7 @@ public class GetInstanceLoadersServiceTest
                             ExtensionPoints = [new LoaderPluginExtensionPoint()],
                         }
                     ),
-                    new Plugin(
+                    new Domain.Model.Plugin.Plugin(
                         "folder",
                         "loader-id-multiple",
                         new Version(),
@@ -93,7 +92,7 @@ public class GetInstanceLoadersServiceTest
                             ],
                         }
                     ),
-                    new Plugin(
+                    new Domain.Model.Plugin.Plugin(
                         "folder",
                         "loader-id-without-extension-point",
                         new Version(),

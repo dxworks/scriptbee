@@ -125,17 +125,4 @@ public static class ApiErrorExtensions
             );
         }
     }
-
-    public static BadRequest<ProblemDetails> ToProblem(
-        this FailedToInstallPluginError error,
-        HttpContext context
-    )
-    {
-        return TypedResults.BadRequest(
-            context.ToProblemDetails(
-                "Failed To Install Plugin",
-                $"Failed to install plugin '{error.PluginId}' with version '{error.PluginVersion}' for project with the ID '{error.ProjectId}'. Reason: {error.Reason}"
-            )
-        );
-    }
 }

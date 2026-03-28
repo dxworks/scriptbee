@@ -3,7 +3,6 @@ using OneOf;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
@@ -68,8 +67,8 @@ public class GetInstanceLinkersServiceTest
         _getPlugins
             .GetLoadedPlugins(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<IEnumerable<Plugin>>([
-                    new Plugin(
+                Task.FromResult<IEnumerable<Domain.Model.Plugin.Plugin>>([
+                    new Domain.Model.Plugin.Plugin(
                         "folder",
                         "linker-id",
                         new Version(),
@@ -79,7 +78,7 @@ public class GetInstanceLinkersServiceTest
                             ExtensionPoints = [new LinkerPluginExtensionPoint()],
                         }
                     ),
-                    new Plugin(
+                    new Domain.Model.Plugin.Plugin(
                         "folder",
                         "linker-id-multiple",
                         new Version(),
@@ -93,7 +92,7 @@ public class GetInstanceLinkersServiceTest
                             ],
                         }
                     ),
-                    new Plugin(
+                    new Domain.Model.Plugin.Plugin(
                         "folder",
                         "linker-id-without-extension-point",
                         new Version(),

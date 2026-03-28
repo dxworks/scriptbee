@@ -8,7 +8,7 @@ using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
 
-using InstallResult = Results<NoContent, NotFound<ProblemDetails>, BadRequest<ProblemDetails>>;
+using InstallResult = Results<NoContent, NotFound<ProblemDetails>>;
 
 public class InstallPluginEndpoint : IEndpointDefinition
 {
@@ -38,8 +38,6 @@ public class InstallPluginEndpoint : IEndpointDefinition
 
         return result.Match<InstallResult>(
             _ => TypedResults.NoContent(),
-            error => error.ToProblem(context),
-            error => error.ToProblem(context),
             error => error.ToProblem(context)
         );
     }
