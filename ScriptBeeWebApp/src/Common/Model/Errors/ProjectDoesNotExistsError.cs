@@ -2,4 +2,4 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public record ProjectDoesNotExistsError(ProjectId Id);
+public sealed record ProjectDoesNotExistsError(ProjectId Id);

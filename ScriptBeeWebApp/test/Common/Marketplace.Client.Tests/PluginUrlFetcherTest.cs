@@ -1,4 +1,5 @@
 using NSubstitute;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 using ScriptBee.Marketplace.Client.Errors;

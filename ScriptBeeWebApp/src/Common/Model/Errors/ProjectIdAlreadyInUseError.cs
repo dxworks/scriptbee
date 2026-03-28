@@ -2,4 +2,4 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public record ProjectIdAlreadyInUseError(ProjectId Id);
+public sealed record ProjectIdAlreadyInUseError(ProjectId Id);

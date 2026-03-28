@@ -1,4 +1,5 @@
 ﻿using OneOf;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Marketplace.Client.Errors;
 
 namespace ScriptBee.Marketplace.Client;

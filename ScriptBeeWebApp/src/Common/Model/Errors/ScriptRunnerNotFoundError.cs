@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public record ScriptRunnerNotFoundError(ScriptLanguage Language)
+public sealed record ScriptRunnerNotFoundError(ScriptLanguage Language)
 {
     public override string ToString() => $"Runner for language '{Language.Name}' does not exist.";
 }

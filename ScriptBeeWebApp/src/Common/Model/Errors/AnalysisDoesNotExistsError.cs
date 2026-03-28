@@ -2,4 +2,4 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public record AnalysisDoesNotExistsError(AnalysisId Id);
+public sealed record AnalysisDoesNotExistsError(AnalysisId Id);
