@@ -1,4 +1,4 @@
-namespace ScriptBee.Domain.Model.Plugin;
+namespace ScriptBee.Domain.Model.Plugin.MarketPlace;
 
 public enum MarketPlacePluginType
 {

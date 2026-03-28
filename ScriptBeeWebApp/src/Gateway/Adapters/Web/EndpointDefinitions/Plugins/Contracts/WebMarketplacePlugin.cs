@@ -1,4 +1,3 @@
-using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
@@ -9,31 +8,23 @@ public sealed record WebMarketplacePlugin(
     string Type,
     string Description,
     List<string> Authors,
-    string? LatestVersion,
-    string? InstalledVersion
+    List<WebPluginVersion> Versions
 )
 {
     public const string PluginType = "Plugin";
     public const string BundleType = "Bundle";
 
-    public static WebMarketplacePlugin Map(MarketPlacePluginEntry marketPlacePluginEntry)
+    public static WebMarketplacePlugin Map(MarketPlacePlugin marketPlacePlugin)
     {
-        var plugin = marketPlacePluginEntry.Plugin;
-        var type = plugin.Type == MarketPlacePluginType.Plugin ? PluginType : BundleType;
-
-        var latestVersion = marketPlacePluginEntry.InstalledVersions.MaxBy(v => v.Version)?.Version;
-        var installedVersion = marketPlacePluginEntry
-            .InstalledVersions.FirstOrDefault(v => v.Installed)
-            ?.Version;
+        var type = marketPlacePlugin.Type == MarketPlacePluginType.Plugin ? PluginType : BundleType;
 
         return new WebMarketplacePlugin(
-            plugin.Id,
-            plugin.Name,
+            marketPlacePlugin.Id,
+            marketPlacePlugin.Name,
             type,
-            plugin.Description,
-            plugin.Authors,
-            latestVersion?.ToString(),
-            installedVersion?.ToString()
+            marketPlacePlugin.Description,
+            marketPlacePlugin.Authors,
+            marketPlacePlugin.Versions.Select(WebPluginVersion.Map).ToList()
         );
     }
 }

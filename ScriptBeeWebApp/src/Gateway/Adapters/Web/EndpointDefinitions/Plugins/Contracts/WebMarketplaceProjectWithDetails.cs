@@ -1,3 +1,5 @@
+using ScriptBee.Domain.Model.Plugin.MarketPlace;
+
 namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 
 public sealed record WebBundleItem(string Id, string Name);
@@ -17,4 +19,23 @@ public sealed record WebMarketplacePluginWithDetails(
     List<string>? Tags = null,
     List<string>? Technologies = null,
     List<WebExtensionPoint>? ExtensionPoints = null
-);
+)
+{
+    public static WebMarketplacePluginWithDetails Map(MarketPlacePlugin plugin)
+    {
+        var type =
+            plugin.Type == MarketPlacePluginType.Plugin
+                ? WebMarketplacePlugin.PluginType
+                : WebMarketplacePlugin.BundleType;
+
+        return new WebMarketplacePluginWithDetails(
+            plugin.Id,
+            plugin.Name,
+            type,
+            plugin.Description,
+            plugin.Authors,
+            plugin.Versions.Select(WebPluginVersion.Map).ToList(),
+            BundleItems: null
+        );
+    }
+}

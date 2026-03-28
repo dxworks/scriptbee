@@ -18,7 +18,7 @@ public class GetAvailablePluginsService(IMarketPluginFetcher marketPluginFetcher
         return marketPluginFetcher.GetProjectsAsync();
     }
 
-    public Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugins(
+    public Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugin(
         string pluginId,
         CancellationToken cancellationToken = default
     )

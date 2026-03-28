@@ -10,7 +10,7 @@ public interface IGetAvailablePluginsUseCase
         CancellationToken cancellationToken = default
     );
 
-    Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugins(
+    Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugin(
         string pluginId,
         CancellationToken cancellationToken = default
     );

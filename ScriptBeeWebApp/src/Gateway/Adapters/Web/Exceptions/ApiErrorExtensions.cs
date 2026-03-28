@@ -125,4 +125,17 @@ public static class ApiErrorExtensions
             );
         }
     }
+
+    public static NotFound<ProblemDetails> ToProblem(
+        this PluginNotFoundError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
+            context.ToProblemDetails(
+                "Plugin Not Found",
+                $"A plugin with the ID '{error.PluginId}' does not exists."
+            )
+        );
+    }
 }

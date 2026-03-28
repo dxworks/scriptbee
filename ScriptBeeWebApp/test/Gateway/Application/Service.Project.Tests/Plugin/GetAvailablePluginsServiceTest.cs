@@ -70,7 +70,7 @@ public class GetAvailablePluginsServiceTest
         );
         _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { plugin });
 
-        var result = await _getAvailablePluginsService.GetMarketPlugins(
+        var result = await _getAvailablePluginsService.GetMarketPlugin(
             "id",
             TestContext.Current.CancellationToken
         );
@@ -92,7 +92,7 @@ public class GetAvailablePluginsServiceTest
         );
         _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { plugin });
 
-        var result = await _getAvailablePluginsService.GetMarketPlugins(
+        var result = await _getAvailablePluginsService.GetMarketPlugin(
             "id2",
             TestContext.Current.CancellationToken
         );
