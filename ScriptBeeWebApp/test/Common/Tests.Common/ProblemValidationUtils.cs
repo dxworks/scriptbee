@@ -68,7 +68,7 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
-    private static async Task AssertBadRequestProblem(
+    public static async Task AssertBadRequestProblem(
         HttpContent responseContent,
         string url,
         string title,

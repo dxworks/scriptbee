@@ -2,4 +2,4 @@
 
 namespace ScriptBee.UseCases.Project;
 
-public record DeleteProjectCommand(ProjectId Id);
+public sealed record DeleteProjectCommand(ProjectId Id);

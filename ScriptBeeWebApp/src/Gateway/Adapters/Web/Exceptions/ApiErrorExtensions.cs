@@ -103,28 +103,38 @@ public static class ApiErrorExtensions
         );
     }
 
-    public static BadRequest<ProblemDetails> ToBadRequestProblem(
-        this NoInstanceAllocatedForProjectError error,
+    extension(NoInstanceAllocatedForProjectError error)
+    {
+        public BadRequest<ProblemDetails> ToBadRequestProblem(HttpContext context)
+        {
+            return TypedResults.BadRequest(
+                context.ToProblemDetails(
+                    "No Instance Allocated For Project",
+                    $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+                )
+            );
+        }
+
+        public NotFound<ProblemDetails> ToNotFoundProblem(HttpContext context)
+        {
+            return TypedResults.NotFound(
+                context.ToProblemDetails(
+                    "No Instance Allocated For Project",
+                    $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+                )
+            );
+        }
+    }
+
+    public static BadRequest<ProblemDetails> ToProblem(
+        this FailedToInstallPluginError error,
         HttpContext context
     )
     {
         return TypedResults.BadRequest(
             context.ToProblemDetails(
-                "No Instance Allocated For Project",
-                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
-            )
-        );
-    }
-
-    public static NotFound<ProblemDetails> ToNotFoundProblem(
-        this NoInstanceAllocatedForProjectError error,
-        HttpContext context
-    )
-    {
-        return TypedResults.NotFound(
-            context.ToProblemDetails(
-                "No Instance Allocated For Project",
-                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+                "Failed To Install Plugin",
+                $"Failed to install plugin '{error.PluginId}' with version '{error.PluginVersion}' for project with the ID '{error.ProjectId}'. Reason: {error.Reason}"
             )
         );
     }

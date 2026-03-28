@@ -8,5 +8,6 @@ public record ProjectDetails(
     DateTimeOffset CreationDate,
     IDictionary<string, List<FileData>> SavedFiles,
     IDictionary<string, List<FileData>> LoadedFiles,
-    IEnumerable<string> Linkers
+    IEnumerable<string> Linkers,
+    IEnumerable<PluginInstallationConfig> InstalledPlugins
 );

@@ -17,8 +17,8 @@ public class InstallPluginServiceTest
     private readonly IPluginLoader _pluginLoader = Substitute.For<IPluginLoader>();
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
 
-    private readonly ILogger<UninstallPluginService> _logger = Substitute.For<
-        ILogger<UninstallPluginService>
+    private readonly ILogger<InstallPluginService> _logger = Substitute.For<
+        ILogger<InstallPluginService>
     >();
 
     private readonly InstallPluginService _installPluginService;

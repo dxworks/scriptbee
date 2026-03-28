@@ -12,7 +12,8 @@ public static class ProjectDetailsFixture
             DateTimeOffset.UtcNow,
             new Dictionary<string, List<FileData>>(),
             new Dictionary<string, List<FileData>>(),
-            []
+            [],
+            new List<PluginInstallationConfig>()
         );
 
     public static ProjectDetails BasicProjectDetails(

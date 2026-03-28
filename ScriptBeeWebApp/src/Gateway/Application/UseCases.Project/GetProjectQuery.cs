@@ -2,4 +2,4 @@
 
 namespace ScriptBee.UseCases.Project;
 
-public record GetProjectQuery(ProjectId Id);
+public sealed record GetProjectQuery(ProjectId Id);
