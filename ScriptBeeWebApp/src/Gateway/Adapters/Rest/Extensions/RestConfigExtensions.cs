@@ -1,8 +1,8 @@
-﻿using ScriptBee.Ports.Instance;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Plugins;
-using ScriptBee.Rest;
 
-namespace ScriptBee.Web.Extensions;
+namespace ScriptBee.Rest.Extensions;
 
 public static class RestConfigExtensions
 {
@@ -12,6 +12,7 @@ public static class RestConfigExtensions
             .AddHttpClient()
             .AddSingleton<IGetPlugins, GetPluginsAdapter>()
             .AddSingleton<IInstallPlugin, InstallPluginAdapter>()
+            .AddSingleton<IUninstallPlugin, UninstallPluginAdapter>()
             .AddSingleton<IGetScriptLanguages, GetScriptLanguagesAdapter>()
             .AddSingleton<IGetInstanceContext, GetInstanceContextAdapter>()
             .AddSingleton<IClearInstanceContext, ClearInstanceContextAdapter>()

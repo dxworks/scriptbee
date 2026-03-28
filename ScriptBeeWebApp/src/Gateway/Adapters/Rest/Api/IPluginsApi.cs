@@ -10,4 +10,11 @@ public interface IPluginsApi
 
     [Post("/api/plugins")]
     Task InstallPlugin([Body] RestInstallPlugin request, CancellationToken cancellationToken);
+
+    [Delete("/api/plugins/{pluginId}")]
+    Task UninstallPlugin(
+        [AliasAs("pluginId")] string pluginId,
+        [Query] string version,
+        CancellationToken cancellationToken
+    );
 }

@@ -45,7 +45,7 @@ public sealed class LoadInstanceContextAdapterTest : IDisposable
             Request.Create().WithPath("/api/context/load").UsingPost()
         );
         var logEntry = requests.ShouldHaveSingleItem();
-        logEntry.RequestMessage.Body!.ShouldContainWithoutWhitespace(
+        logEntry.RequestMessage!.Body!.ShouldContainWithoutWhitespace(
             """
             {
                 "filesToLoad": {
