@@ -8,8 +8,6 @@ using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
 
-using InstallResult = Results<NoContent, NotFound<ProblemDetails>>;
-
 public class InstallPluginEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
@@ -22,7 +20,7 @@ public class InstallPluginEndpoint : IEndpointDefinition
         app.MapPut("/api/projects/{projectId}/plugins/{pluginId}", InstallPlugin);
     }
 
-    private static async Task<InstallResult> InstallPlugin(
+    private static async Task<Results<NoContent, NotFound<ProblemDetails>>> InstallPlugin(
         HttpContext context,
         [FromRoute] string projectId,
         [FromRoute] string pluginId,
@@ -36,7 +34,7 @@ public class InstallPluginEndpoint : IEndpointDefinition
             cancellationToken
         );
 
-        return result.Match<InstallResult>(
+        return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
             _ => TypedResults.NoContent(),
             error => error.ToProblem(context)
         );
