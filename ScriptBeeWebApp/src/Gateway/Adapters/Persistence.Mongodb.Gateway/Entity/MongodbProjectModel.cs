@@ -17,6 +17,8 @@ public class MongodbProjectModel : IDocument
 
     public IEnumerable<string> Linkers { get; set; } = [];
 
+    public IEnumerable<MongodbPluginInstallationConfig> InstalledPlugins { get; set; } = [];
+
     public ProjectDetails ToProjectDetails()
     {
         return new ProjectDetails(
@@ -25,7 +27,8 @@ public class MongodbProjectModel : IDocument
             CreationDate,
             SavedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
             LoadedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
-            Linkers.ToList()
+            Linkers.ToList(),
+            InstalledPlugins.Select(x => x.ToPluginInstallationConfig()).ToList()
         );
     }
 
@@ -45,6 +48,9 @@ public class MongodbProjectModel : IDocument
                 x => x.Value.Select(MongodbFileData.From).ToList()
             ),
             Linkers = projectDetails.Linkers,
+            InstalledPlugins = projectDetails
+                .InstalledPlugins.Select(MongodbPluginInstallationConfig.From)
+                .ToList(),
         };
     }
 }
