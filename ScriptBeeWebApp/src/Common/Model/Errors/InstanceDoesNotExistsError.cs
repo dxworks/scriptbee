@@ -2,4 +2,4 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public record InstanceDoesNotExistsError(InstanceId InstanceId);
+public sealed record InstanceDoesNotExistsError(InstanceId InstanceId);

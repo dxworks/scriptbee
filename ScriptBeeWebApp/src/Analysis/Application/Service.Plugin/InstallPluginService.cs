@@ -13,7 +13,7 @@ public class InstallPluginService(
     IBundlePluginInstaller bundlePluginInstaller,
     IPluginLoader pluginLoader,
     IPluginReader pluginReader,
-    ILogger<UninstallPluginService> logger
+    ILogger<InstallPluginService> logger
 ) : IInstallPluginUseCase
 {
     public async Task<OneOf<Success, InvalidPluginError, PluginInstallationError>> InstallPlugin(

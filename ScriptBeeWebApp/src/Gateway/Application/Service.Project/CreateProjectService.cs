@@ -22,6 +22,7 @@ public class CreateProjectService(ICreateProject createProject, IDateTimeProvide
             dateTimeProvider.UtcNow(),
             new Dictionary<string, List<FileData>>(),
             new Dictionary<string, List<FileData>>(),
+            [],
             []
         );
 

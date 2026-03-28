@@ -27,6 +27,7 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
                 creationDate,
                 new Dictionary<string, List<FileData>>(),
                 new Dictionary<string, List<FileData>>(),
+                [],
                 []
             ),
         };

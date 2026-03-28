@@ -51,7 +51,7 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
-    private static async Task AssertNotFoundProblem(
+    public static async Task AssertNotFoundProblem(
         HttpContent responseContent,
         string url,
         string title,
@@ -68,7 +68,7 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
-    private static async Task AssertBadRequestProblem(
+    public static async Task AssertBadRequestProblem(
         HttpContent responseContent,
         string url,
         string title,

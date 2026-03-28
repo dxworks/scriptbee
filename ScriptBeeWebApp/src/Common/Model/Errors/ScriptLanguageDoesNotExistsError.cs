@@ -1,3 +1,3 @@
 ﻿namespace ScriptBee.Domain.Model.Errors;
 
-public record ScriptLanguageDoesNotExistsError(string Language);
+public sealed record ScriptLanguageDoesNotExistsError(string Language);

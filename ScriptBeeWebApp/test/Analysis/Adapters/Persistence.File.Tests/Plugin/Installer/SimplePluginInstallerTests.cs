@@ -65,7 +65,7 @@ public class SimplePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         var error = result.AsT2;
         error.Name.ShouldBe("pluginName");
         error.Version.ShouldBe("1.0.0");
@@ -97,7 +97,7 @@ public class SimplePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         var error = result.AsT2;
         error.Name.ShouldBe("pluginName");
         error.Version.ShouldBe("1.0.0");
@@ -125,7 +125,7 @@ public class SimplePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         var error = result.AsT2;
         error.Name.ShouldBe("pluginName");
         error.Version.ShouldBe("1.0.0");
@@ -150,7 +150,7 @@ public class SimplePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.ShouldBe("path/pluginName@1.0.0");
         await _downloadService
             .Received(1)
@@ -180,7 +180,7 @@ public class SimplePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT1.ShouldBe(true);
+        result.IsT1.ShouldBeTrue();
         var error = result.AsT1;
         error.Name.ShouldBe("pluginName");
         error.Version.ShouldBe("1.0.0");
@@ -203,7 +203,7 @@ public class SimplePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.ShouldBe("path/pluginName@1.0.0");
     }
 }

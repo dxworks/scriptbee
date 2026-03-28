@@ -10,7 +10,7 @@ using ScriptBee.UseCases.Plugin;
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins;
 
 using InstallResult = Results<
-    Ok<WebInstallPluginResponse>,
+    NoContent,
     BadRequest<ProblemDetails>,
     InternalServerError<ProblemDetails>
 >;
@@ -40,7 +40,7 @@ public class InstallPluginEndpoint : IEndpointDefinition
             cancellationToken
         );
         return result.Match<InstallResult>(
-            _ => TypedResults.Ok(new WebInstallPluginResponse(command.PluginId, command.Version)),
+            _ => TypedResults.NoContent(),
             error =>
                 TypedResults.BadRequest(
                     context.ToProblemDetails(

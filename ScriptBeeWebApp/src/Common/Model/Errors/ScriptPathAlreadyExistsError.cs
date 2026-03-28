@@ -1,3 +1,3 @@
 ﻿namespace ScriptBee.Domain.Model.Errors;
 
-public record ScriptPathAlreadyExistsError(string Path);
+public sealed record ScriptPathAlreadyExistsError(string Path);

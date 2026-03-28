@@ -1,4 +1,5 @@
 using NSubstitute;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 using ScriptBee.Marketplace.Client.Errors;
@@ -24,7 +25,7 @@ public class PluginUrlFetcherTest
 
         var result = _pluginUrlFetcher.GetPluginUrl("nonExistentId", "1.0.0");
 
-        result.IsT1.ShouldBe(true);
+        result.IsT1.ShouldBeTrue();
         result.AsT1.ShouldBeEquivalentTo(new PluginNotFoundError("nonExistentId"));
     }
 
@@ -43,7 +44,7 @@ public class PluginUrlFetcherTest
 
         var result = _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginVersionNotFoundError("testId", "2.0.0"));
     }
 
@@ -65,7 +66,7 @@ public class PluginUrlFetcherTest
 
         var url = _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
 
-        url.IsT0.ShouldBe(true);
+        url.IsT0.ShouldBeTrue();
         url.ShouldBe("url2");
     }
 

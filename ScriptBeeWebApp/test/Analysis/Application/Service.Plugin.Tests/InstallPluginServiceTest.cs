@@ -17,8 +17,8 @@ public class InstallPluginServiceTest
     private readonly IPluginLoader _pluginLoader = Substitute.For<IPluginLoader>();
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
 
-    private readonly ILogger<UninstallPluginService> _logger = Substitute.For<
-        ILogger<UninstallPluginService>
+    private readonly ILogger<InstallPluginService> _logger = Substitute.For<
+        ILogger<InstallPluginService>
     >();
 
     private readonly InstallPluginService _installPluginService;
@@ -67,7 +67,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _pluginReader.Received(1).ReadPlugin("path1");
         _pluginReader.Received(1).ReadPlugin("path2");
         _pluginLoader.Received(1).Load(plugin1);
@@ -101,7 +101,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _logger
             .Received(1)
             .ReceivedWithAnyArgs()
@@ -163,7 +163,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _pluginLoader.DidNotReceive().Load(Arg.Any<Domain.Model.Plugin.Plugin>());
         _logger
             .Received(1)
@@ -196,7 +196,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _pluginLoader.DidNotReceive().Load(Arg.Any<Domain.Model.Plugin.Plugin>());
     }
 
@@ -219,7 +219,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _pluginReader.DidNotReceive().ReadPlugin(Arg.Any<string>());
         _pluginLoader.DidNotReceive().Load(Arg.Any<Domain.Model.Plugin.Plugin>());
     }
@@ -244,7 +244,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT1.ShouldBe(true);
+        result.IsT1.ShouldBeTrue();
         var error = result.AsT1;
         error.Name.ShouldBe(pluginId);
         error.Version.ShouldBe(version);
@@ -271,7 +271,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         var error = result.AsT2;
         error.Name.ShouldBe(pluginId);
         error.Version.ShouldBe(version);
@@ -315,7 +315,7 @@ public class InstallPluginServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _pluginLoader.Received(1).Load(plugin1);
         _pluginLoader.Received(1).Load(plugin3);
         _pluginLoader.Received(2).Load(Arg.Any<Domain.Model.Plugin.Plugin>());

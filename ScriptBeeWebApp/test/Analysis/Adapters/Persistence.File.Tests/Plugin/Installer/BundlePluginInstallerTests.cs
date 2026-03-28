@@ -4,6 +4,7 @@ using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using OneOf;
 using ScriptBee.Domain.Model.Config;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.Marketplace.Client.Errors;
@@ -62,7 +63,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.Single().ShouldBe("plugin_folder");
     }
 
@@ -83,7 +84,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("nonExistentPlugin", "1.0.0"));
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
     }
@@ -105,7 +106,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
     }
 
@@ -136,7 +137,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("pluginId", "1.0.0"));
         _pluginUninstaller.Received(0).Uninstall(Arg.Any<string>());
     }
@@ -155,7 +156,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.ShouldBeEmpty();
         await _simplePluginInstaller
             .Received(0)
@@ -182,7 +183,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.ShouldBeEmpty();
         await _simplePluginInstaller
             .Received(0)
@@ -220,7 +221,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.Single().ShouldBe("plugin_folder");
         for (var i = 1; i <= 5; i++)
         {
@@ -283,7 +284,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.Single().ShouldBe("bundle_folder");
     }
 
@@ -311,7 +312,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.Count.ShouldBe(2);
         result.AsT0[0].ShouldBe("bundle_folder");
         result.AsT0[1].ShouldBe("plugin_folder1");
@@ -346,7 +347,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.Count.ShouldBe(5);
         result.AsT0[0].ShouldBe("bundle_folder");
         result.AsT0[1].ShouldBe("plugin_folder1");
@@ -401,7 +402,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         result.AsT0.Count.ShouldBe(3);
         result.AsT0[0].ShouldBe("bundle_folder");
         result.AsT0[1].ShouldBe("plugin_folder1");
@@ -437,7 +438,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT0.ShouldBe(true);
+        result.IsT0.ShouldBeTrue();
         _pluginUninstaller.Received(1).Uninstall("path");
         _pluginUninstaller.Received(1).Uninstall("old_plugin_folder1");
     }
@@ -474,7 +475,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("bundle", "1.0.0"));
         _pluginUninstaller.Received(1).ForceUninstall("bundle_folder");
         await _simplePluginInstaller
@@ -517,7 +518,7 @@ public class BundlePluginInstallerTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBe(true);
+        result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("bundle", "1.0.0"));
         _pluginFetcher.Received(1).GetPluginUrl("pluginId2", "2.0.0");
         await _simplePluginInstaller

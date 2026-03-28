@@ -41,7 +41,7 @@ public class CreateProjectServiceTests
             TestContext.Current.CancellationToken
         );
 
-        MatchProjectDetails(projectDetails.AsT0, expectedProjectDetails).ShouldBe(true);
+        MatchProjectDetails(projectDetails.AsT0, expectedProjectDetails).ShouldBeTrue();
         await _createProject
             .Received(1)
             .Create(

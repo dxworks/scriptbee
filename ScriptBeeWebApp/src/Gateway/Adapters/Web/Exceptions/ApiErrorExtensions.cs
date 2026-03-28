@@ -103,28 +103,38 @@ public static class ApiErrorExtensions
         );
     }
 
-    public static BadRequest<ProblemDetails> ToBadRequestProblem(
-        this NoInstanceAllocatedForProjectError error,
-        HttpContext context
-    )
+    extension(NoInstanceAllocatedForProjectError error)
     {
-        return TypedResults.BadRequest(
-            context.ToProblemDetails(
-                "No Instance Allocated For Project",
-                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
-            )
-        );
+        public BadRequest<ProblemDetails> ToBadRequestProblem(HttpContext context)
+        {
+            return TypedResults.BadRequest(
+                context.ToProblemDetails(
+                    "No Instance Allocated For Project",
+                    $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+                )
+            );
+        }
+
+        public NotFound<ProblemDetails> ToNotFoundProblem(HttpContext context)
+        {
+            return TypedResults.NotFound(
+                context.ToProblemDetails(
+                    "No Instance Allocated For Project",
+                    $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+                )
+            );
+        }
     }
 
-    public static NotFound<ProblemDetails> ToNotFoundProblem(
-        this NoInstanceAllocatedForProjectError error,
+    public static NotFound<ProblemDetails> ToProblem(
+        this PluginNotFoundError error,
         HttpContext context
     )
     {
         return TypedResults.NotFound(
             context.ToProblemDetails(
-                "No Instance Allocated For Project",
-                $"There is no instance allocated for project with the ID '{error.ProjectId}'"
+                "Plugin Not Found",
+                $"A plugin with the ID '{error.PluginId}' does not exists."
             )
         );
     }

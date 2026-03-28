@@ -108,14 +108,15 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     }
 
     [Fact]
-    public async Task GetProjectById()
+    public async Task GetProjectByIdWithAllProperties()
     {
         var creationDate = DateTimeOffset.UtcNow;
+        const string projectId = "get-project-by-id";
         await _mongoCollection.InsertOneAsync(
             new MongodbProjectModel
             {
-                Id = "get-project-by-id",
-                Name = "get-project-by-id",
+                Id = projectId,
+                Name = projectId,
                 CreationDate = creationDate,
                 SavedFiles =
                 {
@@ -124,23 +125,71 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                         [new MongodbFileData("957969a8-c66e-498d-b00f-7e58ded36b80", "file")]
                     },
                 },
+                LoadedFiles =
+                {
+                    {
+                        "loader-id",
+                        [new MongodbFileData("1209bb17-e623-454b-a441-0102fa64daf6", "file")]
+                    },
+                },
+                Linkers = ["linker-id"],
+                InstalledPlugins =
+                [
+                    new MongodbPluginInstallationConfig
+                    {
+                        PluginId = "plugin-id",
+                        Version = "1.2.3",
+                    },
+                ],
             },
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.GetById(
-            ProjectId.Create("get-project-by-id"),
-            CancellationToken.None
-        );
+        var result = await _adapter.GetById(ProjectId.Create(projectId), CancellationToken.None);
 
-        result.AsT0.Id.ShouldBe(ProjectId.FromValue("get-project-by-id"));
-        result.AsT0.Name.ShouldBe("get-project-by-id");
+        result.AsT0.Id.ShouldBe(ProjectId.FromValue(projectId));
+        result.AsT0.Name.ShouldBe(projectId);
         result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
-        var keyValuePair = result.AsT0.SavedFiles.Single();
-        keyValuePair.Key.ShouldBe("loader-id");
-        keyValuePair
+        var savedFile = result.AsT0.SavedFiles.Single();
+        savedFile.Key.ShouldBe("loader-id");
+        savedFile
             .Value.Single()
             .ShouldBe(new FileData(new FileId("957969a8-c66e-498d-b00f-7e58ded36b80"), "file"));
+        var loadedFile = result.AsT0.LoadedFiles.Single();
+        loadedFile.Key.ShouldBe("loader-id");
+        loadedFile
+            .Value.Single()
+            .ShouldBe(new FileData(new FileId("1209bb17-e623-454b-a441-0102fa64daf6"), "file"));
+        result.AsT0.Linkers.Single().ShouldBe("linker-id");
+        result
+            .AsT0.InstalledPlugins.Single()
+            .ShouldBeEquivalentTo(new PluginInstallationConfig("plugin-id", "1.2.3"));
+    }
+
+    [Fact]
+    public async Task GetProjectByIdWithMinimalProperties()
+    {
+        var creationDate = DateTimeOffset.UtcNow;
+        const string projectId = "get-project-by-id-with-minimal-properties";
+        await _mongoCollection.InsertOneAsync(
+            new MongodbProjectModel
+            {
+                Id = projectId,
+                Name = projectId,
+                CreationDate = creationDate,
+            },
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        var result = await _adapter.GetById(ProjectId.Create(projectId), CancellationToken.None);
+
+        result.AsT0.Id.ShouldBe(ProjectId.FromValue(projectId));
+        result.AsT0.Name.ShouldBe(projectId);
+        result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        result.AsT0.SavedFiles.ShouldBeEmpty();
+        result.AsT0.LoadedFiles.ShouldBeEmpty();
+        result.AsT0.Linkers.ShouldBeEmpty();
+        result.AsT0.InstalledPlugins.ShouldBeEmpty();
     }
 
     [Fact]
@@ -188,7 +237,8 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                     [new FileData(new FileId("1209bb17-e623-454b-a441-0102fa64daf6"), "file")]
                 },
             },
-            ["linker-id"]
+            ["linker-id"],
+            [new PluginInstallationConfig("plugin-id", "1.2.3")]
         );
 
         var updateProject = await _adapter.Update(project, CancellationToken.None);
@@ -211,5 +261,10 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             .Value.Single()
             .ShouldBe(new MongodbFileData("1209bb17-e623-454b-a441-0102fa64daf6", "file"));
         updatedMongoProject.Linkers.Single().ShouldBe("linker-id");
+        updatedMongoProject
+            .InstalledPlugins.Single()
+            .ShouldBeEquivalentTo(
+                new MongodbPluginInstallationConfig { PluginId = "plugin-id", Version = "1.2.3" }
+            );
     }
 }

@@ -61,7 +61,8 @@ public class ReloadInstanceContextServiceTest
                     [new FileData(new FileId("38aaba34-6716-45ee-bb99-89450857516c"), "file.json")]
                 },
             },
-            ["linker"]
+            ["linker"],
+            []
         );
         var instanceInfo = BasicInstanceInfo(projectId);
         _getProject

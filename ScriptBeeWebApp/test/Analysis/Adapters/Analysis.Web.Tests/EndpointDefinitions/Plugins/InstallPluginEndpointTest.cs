@@ -41,10 +41,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
             new WebInstallPluginCommand(pluginId, version)
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var content = await response.ReadContentAsync<WebInstallPluginResponse>();
-        content.PluginId.ShouldBe(pluginId);
-        content.Version.ShouldBe(version);
+        response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         await useCase.Received(1).InstallPlugin(pluginId, version, Arg.Any<CancellationToken>());
     }
 
@@ -144,37 +141,5 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
-    }
-
-    [Fact]
-    public async Task ShouldReturnPluginInfo_OnSuccess()
-    {
-        const string pluginId = "my-plugin";
-        const string version = "2.0.0";
-
-        var useCase = Substitute.For<IInstallPluginUseCase>();
-        useCase
-            .InstallPlugin(pluginId, version, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<Success, InvalidPluginError, PluginInstallationError>>(
-                    new Success()
-                )
-            );
-
-        var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
-            new WebInstallPluginCommand(pluginId, version)
-        );
-
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var content = await response.ReadContentAsync<WebInstallPluginResponse>();
-        content.PluginId.ShouldBe(pluginId);
-        content.Version.ShouldBe(version);
     }
 }

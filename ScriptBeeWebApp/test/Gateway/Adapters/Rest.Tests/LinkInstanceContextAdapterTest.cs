@@ -41,7 +41,7 @@ public sealed class LinkInstanceContextAdapterTest : IDisposable
             Request.Create().WithPath("/api/context/link").UsingPost()
         );
         var logEntry = requests.ShouldHaveSingleItem();
-        logEntry.RequestMessage.Body!.ShouldContainWithoutWhitespace(
+        logEntry.RequestMessage!.Body!.ShouldContainWithoutWhitespace(
             """
             {
                 "linkerIds": ["linker-id"]
