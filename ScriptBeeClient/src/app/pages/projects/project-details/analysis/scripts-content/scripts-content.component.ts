@@ -1,4 +1,4 @@
-﻿import { Component, input } from '@angular/core';
+﻿import { Component, input, output } from '@angular/core';
 import { NoScriptsComponent } from './no-scripts/no-scripts.component';
 import { SelectedScriptComponent } from './selected-script/selected-script.component';
 
@@ -12,4 +12,10 @@ export class ScriptsContentComponent {
   projectId = input.required<string>();
   instanceId = input.required<string>();
   fileId = input<string | null>(null);
+
+  analysisFinished = output<string>();
+
+  onAnalysisFinished(analysisId: string) {
+    this.analysisFinished.emit(analysisId);
+  }
 }

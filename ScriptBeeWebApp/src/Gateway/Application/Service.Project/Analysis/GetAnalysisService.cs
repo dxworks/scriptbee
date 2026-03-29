@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using ScriptBee.Analysis;
+using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
@@ -12,10 +13,11 @@ public class GetAnalysisService(IGetAllAnalyses getAllAnalyses, IGetAnalysis get
 {
     public async Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
+        SortOrder sortOrder,
         CancellationToken cancellationToken = default
     )
     {
-        return await getAllAnalyses.GetAll(projectId, cancellationToken);
+        return await getAllAnalyses.GetAll(projectId, sortOrder, cancellationToken);
     }
 
     public async Task<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>> GetById(

@@ -2,7 +2,8 @@ using ScriptBee.Domain.Model.Analysis;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
-public sealed record WebAnalysisStatus(
+public sealed record WebAnalysisInfo(
+    string Id,
     string InstanceId,
     string Status,
     string ScriptId,
@@ -11,10 +12,11 @@ public sealed record WebAnalysisStatus(
     List<WebAnalysisError>? Errors
 )
 {
-    public static WebAnalysisStatus Map(AnalysisInfo analysisInfo)
+    public static WebAnalysisInfo Map(AnalysisInfo analysisInfo)
     {
         var errors = analysisInfo.Errors.ToList();
-        return new WebAnalysisStatus(
+        return new WebAnalysisInfo(
+            analysisInfo.Id.ToString(),
             analysisInfo.InstanceId.ToString(),
             analysisInfo.Status.ToString(),
             analysisInfo.ScriptId.ToString(),

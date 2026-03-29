@@ -1,0 +1,38 @@
+import { Component, computed, inject, input, model } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { AnalysisService } from '../../services/analysis/analysis.service';
+
+@Component({
+  selector: 'app-analysis-selector',
+  imports: [MatFormFieldModule, MatSelectModule, DatePipe],
+  templateUrl: './analysis-selector.component.html',
+  styleUrls: ['./analysis-selector.component.scss'],
+})
+export class AnalysisSelectorComponent {
+  projectId = input.required<string>();
+  analysisId = model<string | undefined>(undefined);
+
+  private analysisService = inject(AnalysisService);
+
+  analysesResource = rxResource({
+    params: () => ({
+      projectId: this.projectId(),
+    }),
+    stream: ({ params }) => {
+      if (params.projectId) {
+        return this.analysisService.getAnalyses(params.projectId);
+      }
+      return of([]);
+    },
+  });
+
+  analyses = computed(() => this.analysesResource.value() ?? []);
+
+  reload() {
+    this.analysesResource.reload();
+  }
+}

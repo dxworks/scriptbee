@@ -1,5 +1,5 @@
 ﻿@if (fileId()) {
-  <app-selected-script [projectId]="projectId()" [instanceId]="instanceId()" [scriptId]="fileId()!" />
+  <app-selected-script [projectId]="projectId()" [instanceId]="instanceId()" [scriptId]="fileId()!" (analysisFinished)="onAnalysisFinished($event)" />
 } @else {
   <app-no-scripts />
 }

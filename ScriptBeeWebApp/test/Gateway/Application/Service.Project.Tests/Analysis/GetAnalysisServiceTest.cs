@@ -1,6 +1,7 @@
 ﻿using NSubstitute;
 using OneOf;
 using ScriptBee.Analysis;
+using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
@@ -38,11 +39,12 @@ public class GetAnalysisServiceTest
             ),
         ];
         _getAllAnalyses
-            .GetAll(projectId, TestContext.Current.CancellationToken)
+            .GetAll(projectId, SortOrder.Descending, TestContext.Current.CancellationToken)
             .Returns(Task.FromResult(expectedAnalysisResults));
 
         var analysisResults = await _getAnalysisService.GetAll(
             projectId,
+            SortOrder.Descending,
             TestContext.Current.CancellationToken
         );
 
@@ -71,7 +73,7 @@ public class GetAnalysisServiceTest
             TestContext.Current.CancellationToken
         );
 
-        analysisResult.ShouldBe(expectedAnalysis);
+        analysisResult.AsT0.ShouldBe(expectedAnalysis);
     }
 
     [Fact]
@@ -90,6 +92,6 @@ public class GetAnalysisServiceTest
             TestContext.Current.CancellationToken
         );
 
-        analysisResult.ShouldBe(expectedError);
+        analysisResult.AsT1.ShouldBe(expectedError);
     }
 }

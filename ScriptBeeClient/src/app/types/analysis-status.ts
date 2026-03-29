@@ -1,6 +1,7 @@
 export type AnalysisStatusType = 'Started' | 'Running' | 'Finished' | 'Cancelled';
 
 export interface AnalysisStatus {
+  id: string;
   instanceId: string;
   status: AnalysisStatusType;
   scriptId: string;

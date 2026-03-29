@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ConsoleOutputComponent } from './console-output/console-output.component';
 import { OutputErrorsComponent } from './output-errors/output-errors.component';
@@ -18,6 +18,8 @@ import { convertError } from '../../../../../utils/api';
 export class AnalysisOutputComponent {
   projectId = input.required<string>();
   analysisId = input.required<string>();
+
+  private outputFilesService = inject(OutputFilesService);
 
   consoleContentResource = rxResource({
     params: () => ({
@@ -45,6 +47,4 @@ export class AnalysisOutputComponent {
     stream: ({ params }) => this.outputFilesService.getFileOutputs(params.projectId, params.analysisId),
   });
   outputFilesResourceError = computed(() => convertError(this.outputFilesResource.error()));
-
-  constructor(private outputFilesService: OutputFilesService) {}
 }

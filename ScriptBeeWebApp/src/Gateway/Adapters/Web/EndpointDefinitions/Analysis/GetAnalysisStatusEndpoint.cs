@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
@@ -18,13 +20,34 @@ public class GetAnalysisStatusEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/analyses/{analysisId}", GetAnalysisStatus)
+        app.MapGet("/api/projects/{projectId}/analyses", GetAllAnalysis).WithTags("Analysis");
+        app.MapGet("/api/projects/{projectId}/analyses/{analysisId}", GetAnalysisById)
             .WithTags("Analysis");
     }
 
     private static async Task<
-        Results<Accepted<WebAnalysisStatus>, Ok<WebAnalysisStatus>, NotFound<ProblemDetails>>
-    > GetAnalysisStatus(
+        Results<Ok<WebAnalysisListResponse>, NotFound<ProblemDetails>>
+    > GetAllAnalysis(
+        HttpContext context,
+        [FromRoute] string projectId,
+        IGetAnalysisUseCase useCase,
+        CancellationToken cancellationToken = default
+    )
+    {
+        // TODO FIXIT(#105): update sort parsing
+        var result = await useCase.GetAll(
+            ProjectId.FromValue(projectId),
+            SortOrder.Descending,
+            cancellationToken
+        );
+        return TypedResults.Ok(
+            new WebAnalysisListResponse(result.Select(WebAnalysisInfo.Map).ToList())
+        );
+    }
+
+    private static async Task<
+        Results<Accepted<WebAnalysisInfo>, Ok<WebAnalysisInfo>, NotFound<ProblemDetails>>
+    > GetAnalysisById(
         HttpContext context,
         [FromRoute] string projectId,
         [FromRoute] string analysisId,
@@ -35,7 +58,7 @@ public class GetAnalysisStatusEndpoint : IEndpointDefinition
         var result = await useCase.GetById(new AnalysisId(analysisId), cancellationToken);
 
         return result.Match<
-            Results<Accepted<WebAnalysisStatus>, Ok<WebAnalysisStatus>, NotFound<ProblemDetails>>
+            Results<Accepted<WebAnalysisInfo>, Ok<WebAnalysisInfo>, NotFound<ProblemDetails>>
         >(
             analysis =>
             {
@@ -43,11 +66,11 @@ public class GetAnalysisStatusEndpoint : IEndpointDefinition
                 {
                     return TypedResults.Accepted(
                         $"/api/projects/{projectId}/analyses/{analysisId}",
-                        WebAnalysisStatus.Map(analysis)
+                        WebAnalysisInfo.Map(analysis)
                     );
                 }
 
-                return TypedResults.Ok(WebAnalysisStatus.Map(analysis));
+                return TypedResults.Ok(WebAnalysisInfo.Map(analysis));
             },
             error => error.ToProblem(context)
         );

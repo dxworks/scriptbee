@@ -1,3 +1,12 @@
 ﻿.main-scripts-div {
   height: calc(100% - 113px);
 }
+
+.no-analysis-message {
+  text-align: center;
+  font-style: italic;
+}
+
+app-analysis-selector {
+  margin: 8px;
+}

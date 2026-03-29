@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../../../../services/theme/theme.service';
@@ -33,6 +33,11 @@ export class SelectedScriptComponent {
   scriptId = input.required<string>();
   statusUrl = signal<string | undefined>(undefined);
 
+  analysisFinished = output<string>();
+
+  private themeService = inject(ThemeService);
+  private projectStructureService = inject(ProjectStructureService);
+
   editorOptions = computed(() => {
     const language = this.scriptResource.value()?.scriptLanguage.name ?? 'csharp';
 
@@ -62,12 +67,11 @@ export class SelectedScriptComponent {
   });
   scriptContentResourceError = computed(() => convertError(this.scriptContentResource.error()));
 
-  constructor(
-    private themeService: ThemeService,
-    private projectStructureService: ProjectStructureService
-  ) {}
-
   protected onStatusUrlChanged(statusUrl: string | undefined) {
     this.statusUrl.set(statusUrl);
+  }
+
+  protected onAnalysisFinished(analysisId: string) {
+    this.analysisFinished.emit(analysisId);
   }
 }

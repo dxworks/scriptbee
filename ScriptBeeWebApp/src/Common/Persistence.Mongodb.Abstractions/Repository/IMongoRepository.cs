@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using ScriptBee.Domain.Model;
 
 namespace ScriptBee.Persistence.Mongodb.Repository;
 
@@ -14,6 +15,13 @@ public interface IMongoRepository<T>
 
     public Task<IEnumerable<T>> GetAllDocuments(
         Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    );
+
+    public Task<IEnumerable<T>> GetAllDocuments<TKey>(
+        Expression<Func<T, bool>> predicate,
+        Expression<Func<T, TKey>> keySelector,
+        SortOrder sortOrder,
         CancellationToken cancellationToken
     );
 

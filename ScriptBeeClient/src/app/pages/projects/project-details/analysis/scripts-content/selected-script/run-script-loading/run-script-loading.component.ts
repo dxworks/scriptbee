@@ -1,7 +1,7 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, output } from '@angular/core';
 import { AnalysisService } from '../../../../../../../services/analysis/analysis.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { interval, of, startWith, switchMap, takeWhile } from 'rxjs';
+import { interval, of, startWith, switchMap, takeWhile, tap } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
@@ -12,6 +12,8 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 })
 export class RunScriptLoadingComponent {
   statusUrl = input.required<string | undefined>();
+
+  analysisFinished = output<string>();
 
   private analysisService = inject(AnalysisService);
 
@@ -37,4 +39,13 @@ export class RunScriptLoadingComponent {
     const currentStatus = this.status();
     return currentStatus?.status === 'Finished' || currentStatus?.status === 'Cancelled';
   });
+
+  constructor() {
+    effect(() => {
+      const status = this.status();
+      if (status?.status === 'Finished') {
+        this.analysisFinished.emit(status!.id);
+      }
+    });
+  }
 }
