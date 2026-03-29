@@ -18,7 +18,7 @@ public class LoadContextEndpointTest(ITestOutputHelper outputHelper)
     public async Task InvalidRequestBody_ShouldReturnBadRequest()
     {
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(outputHelper),
+            new AnalysisTestWebApplicationFactory(outputHelper),
             new WebLoadContextCommand(null!)
         );
 
@@ -34,7 +34,7 @@ public class LoadContextEndpointTest(ITestOutputHelper outputHelper)
     public async Task EmptyBody_ShouldReturnBadRequest()
     {
         var response = await _api.PostApi<WebLoadContextCommand>(
-            new TestWebApplicationFactory<Program>(outputHelper)
+            new AnalysisTestWebApplicationFactory(outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -46,7 +46,7 @@ public class LoadContextEndpointTest(ITestOutputHelper outputHelper)
     {
         var useCase = Substitute.For<ILoadContextUseCase>();
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {

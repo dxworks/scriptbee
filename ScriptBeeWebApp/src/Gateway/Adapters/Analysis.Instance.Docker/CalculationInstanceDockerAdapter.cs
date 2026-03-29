@@ -51,6 +51,7 @@ public class CalculationInstanceDockerAdapter(
                 {
                     { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
                 },
+                Env = new List<string> { $"ScriptBee__InstanceId={instanceId}" },
             },
             cancellationToken
         );

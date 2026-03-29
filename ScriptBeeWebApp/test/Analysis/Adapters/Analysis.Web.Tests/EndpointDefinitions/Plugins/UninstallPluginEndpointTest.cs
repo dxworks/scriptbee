@@ -21,7 +21,7 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
         const string url = $"{TestUrl}?version={version}";
         var api = new TestApiCaller<Program>(url);
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {
@@ -41,7 +41,7 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         var api = new TestApiCaller<Program>(TestUrl);
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {

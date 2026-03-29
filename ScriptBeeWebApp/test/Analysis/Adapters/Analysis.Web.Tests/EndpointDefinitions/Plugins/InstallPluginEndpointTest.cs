@@ -31,7 +31,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {
@@ -51,7 +51,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IInstallPluginUseCase>();
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {
@@ -70,7 +70,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IInstallPluginUseCase>();
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {
@@ -100,7 +100,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {
@@ -130,7 +130,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {

@@ -17,7 +17,7 @@ public class LinkContextEndpointTest(ITestOutputHelper outputHelper)
     public async Task InvalidRequestBody_ShouldReturnBadRequest()
     {
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(outputHelper),
+            new AnalysisTestWebApplicationFactory(outputHelper),
             new WebLinkContextCommand(null!)
         );
 
@@ -33,7 +33,7 @@ public class LinkContextEndpointTest(ITestOutputHelper outputHelper)
     public async Task EmptyBody_ShouldReturnBadRequest()
     {
         var response = await _api.PostApi<WebLinkContextCommand>(
-            new TestWebApplicationFactory<Program>(outputHelper)
+            new AnalysisTestWebApplicationFactory(outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -46,7 +46,7 @@ public class LinkContextEndpointTest(ITestOutputHelper outputHelper)
         List<string> linkerIds = ["linker-id"];
         var useCase = Substitute.For<ILinkContextUseCase>();
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {

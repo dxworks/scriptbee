@@ -113,6 +113,26 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
+    public async Task Allocate_ShouldPassInstanceIdEnvironmentVariable()
+    {
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        await _calculationInstanceDockerAdapter.Allocate(
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-calculation-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.Config.Env.ShouldContain($"ScriptBee__InstanceId={instanceId}");
+    }
+
+    [Fact]
     public async Task Deallocate_ShouldStopAndRemoveExistingContainer()
     {
         // Arrange

@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
 var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
+var scriptBeeConfigurationSection = builder.Configuration.GetSection("ScriptBee");
 
 builder
     .Services.AddConfiguredHealthChecks()
@@ -21,6 +22,7 @@ builder
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
+    .AddInstanceConfig(scriptBeeConfigurationSection)
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
     .AddDownloadService()

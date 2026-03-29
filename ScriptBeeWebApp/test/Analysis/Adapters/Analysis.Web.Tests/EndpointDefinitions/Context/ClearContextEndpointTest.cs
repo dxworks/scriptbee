@@ -17,7 +17,7 @@ public class ClearContextEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IClearContextUseCase>();
 
         var response = await _api.PostApi<object>(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {
