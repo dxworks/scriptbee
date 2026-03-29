@@ -7,7 +7,6 @@ using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.Plugin;
-using VeriJson;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Plugins;
@@ -53,15 +52,7 @@ public class GetAvailablePluginByIdEndpointTest(ITestOutputHelper outputHelper)
             )
         );
 
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var actualContent = await response.Content.ReadAsStringAsync(
-            TestContext.Current.CancellationToken
-        );
-        var expectedContent = await File.ReadAllTextAsync(
-            FilePathAttribute.GetFilePath(responsePath),
-            TestContext.Current.CancellationToken
-        );
-        actualContent.Should().BeEquivalentTo(expectedContent);
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
     }
 
     [Fact]

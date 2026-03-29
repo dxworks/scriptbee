@@ -18,6 +18,11 @@ public record AnalysisInfo(
     DateTimeOffset? FinishedDate
 )
 {
+    public bool IsRunning()
+    {
+        return Status == AnalysisStatus.Started || Status == AnalysisStatus.Running;
+    }
+
     public static AnalysisInfo Started(
         AnalysisId analysisId,
         ProjectId projectId,

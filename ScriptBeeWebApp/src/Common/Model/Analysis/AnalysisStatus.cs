@@ -2,7 +2,6 @@
 
 public readonly record struct AnalysisStatus(string Value)
 {
-    public static AnalysisStatus Submitted { get; } = new("Submitted");
     public static AnalysisStatus Started { get; } = new("Started");
     public static AnalysisStatus Running { get; } = new("Running");
     public static AnalysisStatus Finished { get; } = new("Finished");

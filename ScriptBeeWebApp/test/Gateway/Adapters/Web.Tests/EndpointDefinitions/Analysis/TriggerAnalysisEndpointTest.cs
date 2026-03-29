@@ -53,7 +53,7 @@ public class TriggerAnalysisEndpointTest(ITestOutputHelper outputHelper)
                         instanceId,
                         new ScriptId(scriptId),
                         new FileId(Guid.NewGuid()),
-                        AnalysisStatus.Submitted,
+                        AnalysisStatus.Started,
                         [],
                         [],
                         DateTime.UtcNow,
@@ -80,7 +80,7 @@ public class TriggerAnalysisEndpointTest(ITestOutputHelper outputHelper)
     }
 
     [Fact]
-    public async Task AnalysisNotExists_ShouldReturnNotFound()
+    public async Task InstancesNotExists_ShouldReturnNotFound()
     {
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("35e67f78-ac54-44c6-b9b1-d6b0a3fa4d00");
