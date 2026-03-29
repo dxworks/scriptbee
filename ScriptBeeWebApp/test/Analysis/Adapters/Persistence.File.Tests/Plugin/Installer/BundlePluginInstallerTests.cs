@@ -52,7 +52,9 @@ public class BundlePluginInstallerTests
     )
     {
         _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
-        _pluginFetcher.GetPluginUrl("pluginId", "1.0.0").Returns("url");
+        _pluginFetcher
+            .GetPluginUrl("pluginId", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url");
         _simplePluginInstaller
             .Install("url", "pluginId", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder");
@@ -75,7 +77,7 @@ public class BundlePluginInstallerTests
     {
         _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
         _pluginFetcher
-            .GetPluginUrl("nonExistentPlugin", "1.0.0")
+            .GetPluginUrl("nonExistentPlugin", "1.0.0", Arg.Any<CancellationToken>())
             .Returns(_ => new PluginNotFoundError("nonExistentPlugin"));
 
         var result = await _bundlePluginInstaller.Install(
@@ -97,7 +99,7 @@ public class BundlePluginInstallerTests
     {
         _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
         _pluginFetcher
-            .GetPluginUrl("plugin", "1.0.0")
+            .GetPluginUrl("plugin", "1.0.0", Arg.Any<CancellationToken>())
             .Returns(_ => new PluginVersionNotFoundError("plugin", "1.0.0"));
 
         var result = await _bundlePluginInstaller.Install(
@@ -117,7 +119,9 @@ public class BundlePluginInstallerTests
     )
     {
         _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
-        _pluginFetcher.GetPluginUrl("pluginId", "1.0.0").Returns("url");
+        _pluginFetcher
+            .GetPluginUrl("pluginId", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url");
         _simplePluginInstaller
             .Install(
                 Arg.Any<string>(),
@@ -148,7 +152,9 @@ public class BundlePluginInstallerTests
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "1.0.0") });
-        _pluginFetcher.GetPluginUrl("pluginName", "1.0.0").Returns("url");
+        _pluginFetcher
+            .GetPluginUrl("pluginName", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url");
 
         var result = await _bundlePluginInstaller.Install(
             "pluginName",
@@ -175,7 +181,9 @@ public class BundlePluginInstallerTests
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "10.0.0") });
-        _pluginFetcher.GetPluginUrl("pluginName", "1.0.0").Returns("url");
+        _pluginFetcher
+            .GetPluginUrl("pluginName", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url");
 
         var result = await _bundlePluginInstaller.Install(
             "pluginName",
@@ -210,7 +218,9 @@ public class BundlePluginInstallerTests
                     CreatePlugin("pluginName", "1.5.0", "plugin_folder_5"),
                 }
             );
-        _pluginFetcher.GetPluginUrl("pluginName", "14.3.1").Returns("url");
+        _pluginFetcher
+            .GetPluginUrl("pluginName", "14.3.1", Arg.Any<CancellationToken>())
+            .Returns("url");
         _simplePluginInstaller
             .Install("url", "pluginName", "14.3.1", Arg.Any<CancellationToken>())
             .Returns("plugin_folder");
@@ -272,7 +282,7 @@ public class BundlePluginInstallerTests
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin>());
-        _pluginFetcher.GetPluginUrl("bundle", "1.0.0").Returns("url");
+        _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("bundle_folder");
@@ -362,15 +372,19 @@ public class BundlePluginInstallerTests
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin>());
-        _pluginFetcher.GetPluginUrl("bundle", "1.0.0").Returns("url");
+        _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("bundle_folder");
-        _pluginFetcher.GetPluginUrl("pluginId1", "1.0.0").Returns("url_plugin1");
+        _pluginFetcher
+            .GetPluginUrl("pluginId1", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url_plugin1");
         _simplePluginInstaller
             .Install("url_plugin1", "pluginId1", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder1");
-        _pluginFetcher.GetPluginUrl("pluginId2", "1.0.0").Returns("url_plugin2");
+        _pluginFetcher
+            .GetPluginUrl("pluginId2", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url_plugin2");
         _simplePluginInstaller
             .Install("url_plugin2", "pluginId2", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder2");
@@ -449,9 +463,9 @@ public class BundlePluginInstallerTests
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin>());
-        _pluginFetcher.GetPluginUrl("bundle", "1.0.0").Returns("url");
+        _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _pluginFetcher
-            .GetPluginUrl("pluginId", "1.0.0")
+            .GetPluginUrl("pluginId", "1.0.0", Arg.Any<CancellationToken>())
             .Returns(
                 (OneOf<string, PluginNotFoundError, PluginVersionNotFoundError>)
                     new PluginNotFoundError("pluginId")
@@ -489,16 +503,18 @@ public class BundlePluginInstallerTests
         _pluginReader
             .ReadPlugins(ConfigFolders.PathToPlugins)
             .Returns(new List<Domain.Model.Plugin.Plugin>());
-        _pluginFetcher.GetPluginUrl("bundle", "1.0.0").Returns("url");
+        _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("bundle_folder");
-        _pluginFetcher.GetPluginUrl("pluginId1", "1.0.0").Returns("url_plugin1");
+        _pluginFetcher
+            .GetPluginUrl("pluginId1", "1.0.0", Arg.Any<CancellationToken>())
+            .Returns("url_plugin1");
         _simplePluginInstaller
             .Install("url_plugin1", "pluginId1", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("plugin_folder1");
         _pluginFetcher
-            .GetPluginUrl("pluginId2", "2.0.0")
+            .GetPluginUrl("pluginId2", "2.0.0", Arg.Any<CancellationToken>())
             .Returns(_ => new PluginVersionNotFoundError("pluginId2", "2.0.0"));
         _pluginReader
             .ReadPlugin("bundle_folder")
@@ -520,7 +536,9 @@ public class BundlePluginInstallerTests
 
         result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginInstallationError("bundle", "1.0.0"));
-        _pluginFetcher.Received(1).GetPluginUrl("pluginId2", "2.0.0");
+        await _pluginFetcher
+            .Received(1)
+            .GetPluginUrl("pluginId2", "2.0.0", Arg.Any<CancellationToken>());
         await _simplePluginInstaller
             .Received(0)
             .Install(Arg.Any<string>(), "pluginId2", "2.0.0", Arg.Any<CancellationToken>());
@@ -537,7 +555,9 @@ public class BundlePluginInstallerTests
         params TestBundlePlugin[] bundleExtensionPoints
     )
     {
-        _pluginFetcher.GetPluginUrl(bundleName, bundleVersion).Returns("url");
+        _pluginFetcher
+            .GetPluginUrl(bundleName, bundleVersion, Arg.Any<CancellationToken>())
+            .Returns("url");
         _simplePluginInstaller
             .Install("url", bundleName, bundleVersion, Arg.Any<CancellationToken>())
             .Returns("bundle_folder");
@@ -550,7 +570,9 @@ public class BundlePluginInstallerTests
             var pluginUrl = $"url{i}";
             testPlugins.Add(new TestBundlePlugin(PluginKind.Plugin, pluginId, "1.0.0"));
 
-            _pluginFetcher.GetPluginUrl(pluginId, "1.0.0").Returns(pluginUrl);
+            _pluginFetcher
+                .GetPluginUrl(pluginId, "1.0.0", Arg.Any<CancellationToken>())
+                .Returns(pluginUrl);
             _simplePluginInstaller
                 .Install(pluginUrl, pluginId, "1.0.0", Arg.Any<CancellationToken>())
                 .Returns($"plugin_folder{i}");

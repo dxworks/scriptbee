@@ -19,36 +19,26 @@ public class GetAvailablePluginsServiceTest
     }
 
     [Fact]
-    public async Task GetMarketPlugins_CallsUpdateRepositoryAsync()
-    {
-        var cancellationToken = new CancellationTokenSource().Token;
-
-        await _getAvailablePluginsService.GetMarketPlugins(cancellationToken);
-
-        await _marketPluginFetcher.Received(1).UpdateRepositoryAsync(cancellationToken);
-    }
-
-    [Fact]
     public async Task GetMarketPlugins_GetsProjectsFromFetcher()
     {
         var plugins = new List<MarketPlacePlugin>
         {
             new("id", "name", MarketPlacePluginType.Bundle, "description", [], []),
         };
-        _marketPluginFetcher.GetProjectsAsync().Returns(plugins);
+        _marketPluginFetcher.GetProjectsAsync(Arg.Any<CancellationToken>()).Returns(plugins);
 
         var marketPlacePlugins = await _getAvailablePluginsService.GetMarketPlugins(
             TestContext.Current.CancellationToken
         );
 
         marketPlacePlugins.ShouldBe(plugins);
-        _marketPluginFetcher.Received(1).GetProjectsAsync();
+        await _marketPluginFetcher.Received(1).GetProjectsAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task GetMarketPlugins_ReturnsEmptyList_WhenFetcherReturnsEmptyList()
     {
-        _marketPluginFetcher.GetProjectsAsync().Returns([]);
+        _marketPluginFetcher.GetProjectsAsync(Arg.Any<CancellationToken>()).Returns([]);
 
         var result = await _getAvailablePluginsService.GetMarketPlugins(
             TestContext.Current.CancellationToken
@@ -68,7 +58,9 @@ public class GetAvailablePluginsServiceTest
             [],
             []
         );
-        _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { plugin });
+        _marketPluginFetcher
+            .GetProjectsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<MarketPlacePlugin> { plugin });
 
         var result = await _getAvailablePluginsService.GetMarketPlugin(
             "id",
@@ -90,7 +82,9 @@ public class GetAvailablePluginsServiceTest
             [],
             []
         );
-        _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { plugin });
+        _marketPluginFetcher
+            .GetProjectsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<MarketPlacePlugin> { plugin });
 
         var result = await _getAvailablePluginsService.GetMarketPlugin(
             "id2",

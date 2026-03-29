@@ -10,27 +10,20 @@ public class GetAvailablePluginsService(IMarketPluginFetcher marketPluginFetcher
     : IGetAvailablePluginsUseCase
 {
     public async Task<IEnumerable<MarketPlacePlugin>> GetMarketPlugins(
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
-        await marketPluginFetcher.UpdateRepositoryAsync(cancellationToken);
-
-        return marketPluginFetcher.GetProjectsAsync();
+        return await marketPluginFetcher.GetProjectsAsync(cancellationToken);
     }
 
-    public Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugin(
+    public async Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugin(
         string pluginId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
-        var marketPlacePlugin = marketPluginFetcher
-            .GetProjectsAsync()
-            .FirstOrDefault(plugin => plugin.Id == pluginId);
+        var plugins = await marketPluginFetcher.GetProjectsAsync(cancellationToken);
+        var marketPlacePlugin = plugins.FirstOrDefault(plugin => plugin.Id == pluginId);
 
-        return marketPlacePlugin is null
-            ? Task.FromResult<OneOf<MarketPlacePlugin, PluginNotFoundError>>(
-                new PluginNotFoundError(pluginId)
-            )
-            : Task.FromResult<OneOf<MarketPlacePlugin, PluginNotFoundError>>(marketPlacePlugin);
+        return marketPlacePlugin is null ? new PluginNotFoundError(pluginId) : marketPlacePlugin;
     }
 }

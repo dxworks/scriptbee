@@ -25,7 +25,10 @@ builder
     .AddCommonServices()
     .AddDownloadService()
     .AddFileAdapters(userFolderConfigurationSection)
-    .AddScriptBeeMarketplaceClient()
+    .AddScriptBeeMarketplaceClient(options =>
+    {
+        options.HubDownloadFolder = Path.Combine(Path.GetTempPath(), "DxWorksHubDownloads");
+    })
     .AddPluginsConfig()
     .AddProjectContextConfig()
     .AddRunScriptServices();

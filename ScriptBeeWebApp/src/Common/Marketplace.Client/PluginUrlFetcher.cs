@@ -6,12 +6,13 @@ namespace ScriptBee.Marketplace.Client;
 
 public class PluginUrlFetcher(IMarketPluginFetcher marketPluginFetcher) : IPluginUrlFetcher
 {
-    public OneOf<string, PluginNotFoundError, PluginVersionNotFoundError> GetPluginUrl(
+    public async Task<OneOf<string, PluginNotFoundError, PluginVersionNotFoundError>> GetPluginUrl(
         string pluginId,
-        string version
+        string version,
+        CancellationToken cancellationToken
     )
     {
-        var plugins = marketPluginFetcher.GetProjectsAsync();
+        var plugins = await marketPluginFetcher.GetProjectsAsync(cancellationToken);
 
         var plugin = plugins.FirstOrDefault(p => p.Id == pluginId);
         if (plugin is null)
