@@ -16,35 +16,26 @@ public class MarketPluginFetcherTest
     }
 
     [Fact]
-    public async Task UpdateRepositoryAsync_CallsHubClientUpdateRepositoryAsync()
+    public async Task GetProjectsAsync_CallsHubClientGetScriptBeeProjects()
     {
-        var cancellationToken = new CancellationTokenSource().Token;
-
-        await _pluginFetcher.UpdateRepositoryAsync(cancellationToken);
-
-        await _hubClient.Received(1).UpdateRepositoryAsync(cancellationToken);
-    }
-
-    [Fact]
-    public void GetProjectsAsync_CallsHubClientGetScriptBeeProjects()
-    {
-        _pluginFetcher.GetProjectsAsync();
+        await _pluginFetcher.GetProjectsAsync(TestContext.Current.CancellationToken);
 
         _hubClient.Received(1).GetScriptBeeProjects();
+        await _hubClient.Received(1).UpdateRepositoryAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
-    public void GetProjectsAsync_ReturnsEmptyList_WhenHubClientReturnsEmptyList()
+    public async Task GetProjectsAsync_ReturnsEmptyList_WhenHubClientReturnsEmptyList()
     {
         _hubClient.GetScriptBeeProjects().Returns([]);
 
-        var result = _pluginFetcher.GetProjectsAsync();
+        var result = await _pluginFetcher.GetProjectsAsync(TestContext.Current.CancellationToken);
 
         result.ShouldBeEmpty();
     }
 
     [Fact]
-    public void GetProjectsAsync_MapsScriptBeeProjectsToMarketPlaceProjects()
+    public async Task GetProjectsAsync_MapsScriptBeeProjectsToMarketPlaceProjects()
     {
         var scriptBeeProjects = new List<ScriptBeeProject>
         {
@@ -85,7 +76,9 @@ public class MarketPluginFetcherTest
         };
         _hubClient.GetScriptBeeProjects().Returns(scriptBeeProjects);
 
-        var result = _pluginFetcher.GetProjectsAsync().ToList();
+        var result = (
+            await _pluginFetcher.GetProjectsAsync(TestContext.Current.CancellationToken)
+        ).ToList();
 
         result.Count.ShouldBe(2);
         var pluginProject = result.First(p => p.Id == "project1");

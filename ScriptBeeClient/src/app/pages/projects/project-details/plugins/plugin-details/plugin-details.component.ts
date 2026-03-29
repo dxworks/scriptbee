@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { PluginService } from '../../../../../services/plugin/plugin.service';
-import { PluginVersion } from '../../../../../types/marketplace-plugin';
 import { PluginDetailsHeaderComponent } from './components/plugin-details-header/plugin-details-header.component';
 import { PluginDetailsVersionsTableComponent } from './components/plugin-details-versions-table/plugin-details-versions-table.component';
 import { PluginDetailsBundleNavigatorComponent } from './components/plugin-details-bundle-navigator/plugin-details-bundle-navigator.component';
@@ -49,21 +48,28 @@ export class PluginDetailsComponent {
     stream: ({ params: pluginId }) => this.pluginService.getPlugin(pluginId),
   });
 
+  installedPlugins = rxResource({
+    params: () => this.projectId(),
+    stream: ({ params: projectId }) => this.pluginService.getInstalledPlugins(projectId),
+  });
+
   installedVersion = computed(() => {
-    const p = this.pluginResource.value();
-    if (!p) {
+    const plugin = this.pluginResource.value();
+    const installedPlugins = this.installedPlugins.value();
+
+    if (!plugin || !installedPlugins) {
       return undefined;
     }
-    const version = p.versions.find((v: PluginVersion) => v.installed);
+    const version = plugin.versions.find((v) => installedPlugins.find((ip) => ip.id === plugin.id && ip.version === v.version) !== undefined);
     return version ? version.version : undefined;
   });
 
   latestVersion = computed(() => {
-    const p = this.pluginResource.value();
-    if (!p || p.versions.length === 0) {
+    const plugin = this.pluginResource.value();
+    if (!plugin || plugin.versions.length === 0) {
       return undefined;
     }
-    return p.versions[p.versions.length - 1].version;
+    return plugin.versions[plugin.versions.length - 1].version;
   });
 
   updateAvailable = computed(() => {
@@ -89,50 +95,49 @@ export class PluginDetailsComponent {
   }
 
   onInstallButtonClick(version?: string) {
-    const projId = this.projectId();
-    const p = this.pluginResource.value();
+    const projectId = this.projectId();
+    const plugin = this.pluginResource.value();
     const targetVersion = version || this.latestVersion();
-    if (!projId || !p || !targetVersion) {
+    if (!projectId || !plugin || !targetVersion) {
       return;
     }
 
     this.isActionLoading.set(true);
     this.pluginService
-      .installPlugin(projId, p.id, targetVersion)
+      .installPlugin(projectId, plugin.id, targetVersion)
       .pipe(finalize(() => this.isActionLoading.set(false)))
       .subscribe({
         next: () => {
           this.pluginResource.reload();
-          this.snackbar.open(`${p.type} v${targetVersion} installed successfully`, 'Dismiss', { duration: 4000 });
+          this.installedPlugins.reload();
+          this.snackbar.open(`${plugin.type} v${targetVersion} installed successfully`, 'Dismiss', { duration: 4000 });
         },
         error: () => {
-          this.snackbar.open(`Could not install ${p.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
+          this.snackbar.open(`Could not install ${plugin.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
         },
       });
   }
 
-  onInstallSpecificVersion(version: string) {
-    this.onInstallButtonClick(version);
-  }
-
   onUninstallButtonClick() {
-    const projId = this.projectId();
-    const p = this.pluginResource.value();
-    if (!projId || !p) {
+    const projectId = this.projectId();
+    const plugin = this.pluginResource.value();
+    const installedVersion = this.installedVersion();
+    if (!projectId || !plugin || !installedVersion) {
       return;
     }
 
     this.isActionLoading.set(true);
     this.pluginService
-      .uninstallPlugin(projId, p.id)
+      .uninstallPlugin(projectId, plugin.id, installedVersion)
       .pipe(finalize(() => this.isActionLoading.set(false)))
       .subscribe({
         next: () => {
           this.pluginResource.reload();
-          this.snackbar.open(`${p.type} uninstalled successfully`, 'Dismiss', { duration: 4000 });
+          this.installedPlugins.reload();
+          this.snackbar.open(`${plugin.type} uninstalled successfully`, 'Dismiss', { duration: 4000 });
         },
         error: () => {
-          this.snackbar.open(`Could not uninstall ${p.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
+          this.snackbar.open(`Could not uninstall ${plugin.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
         },
       });
   }

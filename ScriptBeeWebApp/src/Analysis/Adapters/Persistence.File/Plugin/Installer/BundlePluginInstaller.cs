@@ -156,7 +156,7 @@ public class BundlePluginInstaller(
             return new InstallPluginResult(null, installedPluginVersions);
         }
 
-        var result = pluginUrlFetcher.GetPluginUrl(pluginId, version);
+        var result = await pluginUrlFetcher.GetPluginUrl(pluginId, version, cancellationToken);
 
         return await result.Match<Task<PluginInstallResult>>(
             async url =>

@@ -6,12 +6,10 @@ namespace ScriptBee.UseCases.Project.Plugin;
 
 public interface IGetAvailablePluginsUseCase
 {
-    Task<IEnumerable<MarketPlacePlugin>> GetMarketPlugins(
-        CancellationToken cancellationToken = default
-    );
+    Task<IEnumerable<MarketPlacePlugin>> GetMarketPlugins(CancellationToken cancellationToken);
 
     Task<OneOf<MarketPlacePlugin, PluginNotFoundError>> GetMarketPlugin(
         string pluginId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

@@ -12,6 +12,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
 import { PluginMarketplaceDashboardListComponent } from './list/plugin-marketplace-dashboard-list.component';
 import { convertError } from '../../../../../utils/api';
+import { InstalledPlugin } from '../../../../../types/marketplace-plugin';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',
@@ -31,7 +33,7 @@ import { convertError } from '../../../../../utils/api';
   ],
 })
 export class PluginsMarketplaceDashboardComponent {
-  projectId = signal<string | undefined>(undefined);
+  projectId = signal<string>('');
   searchText = signal('');
   selectedFilters = signal<string[]>([]);
 
@@ -39,10 +41,21 @@ export class PluginsMarketplaceDashboardComponent {
     stream: () => this.pluginsService.getAllAvailablePlugins(),
   });
 
+  installedPlugins = rxResource({
+    params: () => this.projectId(),
+    stream: ({ params: projectId }) => {
+      if (projectId) {
+        return this.pluginsService.getInstalledPlugins(projectId);
+      }
+      return of([]);
+    },
+  });
+
   getAllAvailablePluginsError = computed(() => convertError(this.getAllAvailablePlugins.error()));
 
   filteredPlugins = computed(() => {
     const plugins = this.getAllAvailablePlugins.value() ?? [];
+    const installedPlugins = this.installedPlugins.value() ?? [];
     const search = this.searchText().toLowerCase();
     const filters = this.selectedFilters();
 
@@ -53,7 +66,7 @@ export class PluginsMarketplaceDashboardComponent {
     return plugins.filter((plugin) => {
       const matchesSearch = plugin.name.toLowerCase().includes(search) || plugin.description.toLowerCase().includes(search);
 
-      const isInstalled = !!plugin.installedVersion;
+      const isInstalled = this.isPluginInInstalled(installedPlugins, plugin.versions[plugin.versions.length - 1].version);
 
       if (wantInstalled && !wantNotInstalled && !isInstalled) {
         return false;
@@ -83,7 +96,7 @@ export class PluginsMarketplaceDashboardComponent {
     while (currentRoute) {
       currentRoute.paramMap.pipe(takeUntilDestroyed()).subscribe((paramMap) => {
         if (paramMap.has('id') && !this.projectId()) {
-          this.projectId.set(paramMap.get('id') ?? undefined);
+          this.projectId.set(paramMap.get('id') ?? (undefined as unknown as string));
         }
       });
       currentRoute = currentRoute.parent;
@@ -92,5 +105,10 @@ export class PluginsMarketplaceDashboardComponent {
 
   onActionCompleted() {
     this.getAllAvailablePlugins.reload();
+    this.installedPlugins.reload();
+  }
+
+  private isPluginInInstalled(plugins: InstalledPlugin[], version: string) {
+    return plugins.some((plugin) => plugin.version === version);
   }
 }

@@ -32,19 +32,16 @@ import { finalize } from 'rxjs';
 })
 export class PluginMarketplaceDashboardListItemComponent {
   plugin = input.required<MarketplacePlugin>();
-  projectId = input<string | undefined>(undefined);
+  projectId = input.required<string | undefined>();
+  installedVersion = input.required<string | undefined>();
 
   private pluginService = inject(PluginService);
   private snackbar = inject(MatSnackBar);
 
-  installedVersion = computed(() => {
-    return this.plugin().installedVersion;
-  });
-
   loading = signal(false);
 
   latestVersion = computed(() => {
-    return this.plugin().latestVersion;
+    return this.plugin().versions[this.plugin().versions.length - 1]?.version;
   });
 
   updateAvailable = computed(() => {
@@ -81,13 +78,14 @@ export class PluginMarketplaceDashboardListItemComponent {
   onUninstallButtonClick() {
     const projectId = this.projectId();
     const project = this.plugin();
-    if (!projectId || !project) {
+    const installedVersion = this.installedVersion();
+    if (!projectId || !project || !installedVersion) {
       return;
     }
 
     this.loading.set(true);
     this.pluginService
-      .uninstallPlugin(projectId, project.id)
+      .uninstallPlugin(projectId, project.id, installedVersion)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: () => {

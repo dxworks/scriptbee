@@ -19,18 +19,24 @@ public class PluginUrlFetcherTest
     }
 
     [Fact]
-    public void GetPluginUrl_ReturnsPluginNotFoundError_WhenPluginNotFound()
+    public async Task GetPluginUrl_ReturnsPluginNotFoundError_WhenPluginNotFound()
     {
-        _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin>());
+        _marketPluginFetcher
+            .GetProjectsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<MarketPlacePlugin>());
 
-        var result = _pluginUrlFetcher.GetPluginUrl("nonExistentId", "1.0.0");
+        var result = await _pluginUrlFetcher.GetPluginUrl(
+            "nonExistentId",
+            "1.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         result.IsT1.ShouldBeTrue();
         result.AsT1.ShouldBeEquivalentTo(new PluginNotFoundError("nonExistentId"));
     }
 
     [Fact]
-    public void GetPluginUrl_ReturnsPluginVersionNotFoundError_WhenVersionNotFound()
+    public async Task GetPluginUrl_ReturnsPluginVersionNotFoundError_WhenVersionNotFound()
     {
         var project = new MarketPlacePlugin(
             "testId",
@@ -40,16 +46,22 @@ public class PluginUrlFetcherTest
             [],
             [new PluginVersion("url1", new Version("1.0.0"), "manifest1")]
         );
-        _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { project });
+        _marketPluginFetcher
+            .GetProjectsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<MarketPlacePlugin> { project });
 
-        var result = _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
+        var result = await _pluginUrlFetcher.GetPluginUrl(
+            "testId",
+            "2.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         result.IsT2.ShouldBeTrue();
         result.AsT2.ShouldBeEquivalentTo(new PluginVersionNotFoundError("testId", "2.0.0"));
     }
 
     [Fact]
-    public void GetPluginUrl_ReturnsCorrectUrl_WhenPluginAndVersionFound()
+    public async Task GetPluginUrl_ReturnsCorrectUrl_WhenPluginAndVersionFound()
     {
         var project = new MarketPlacePlugin(
             "testId",
@@ -62,16 +74,22 @@ public class PluginUrlFetcherTest
                 new PluginVersion("url2", new Version("2.0.0"), "manifest2"),
             ]
         );
-        _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { project });
+        _marketPluginFetcher
+            .GetProjectsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<MarketPlacePlugin> { project });
 
-        var url = _pluginUrlFetcher.GetPluginUrl("testId", "2.0.0");
+        var url = await _pluginUrlFetcher.GetPluginUrl(
+            "testId",
+            "2.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         url.IsT0.ShouldBeTrue();
         url.ShouldBe("url2");
     }
 
     [Fact]
-    public void GetPluginUrl_ParsesVersionCorrectly()
+    public async Task GetPluginUrl_ParsesVersionCorrectly()
     {
         var project = new MarketPlacePlugin(
             "testId",
@@ -81,15 +99,21 @@ public class PluginUrlFetcherTest
             [],
             [new PluginVersion("url1", new Version("1.0.0"), "manifest1")]
         );
-        _marketPluginFetcher.GetProjectsAsync().Returns(new List<MarketPlacePlugin> { project });
+        _marketPluginFetcher
+            .GetProjectsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<MarketPlacePlugin> { project });
 
-        var url = _pluginUrlFetcher.GetPluginUrl("testId", "1.0.0");
+        var url = await _pluginUrlFetcher.GetPluginUrl(
+            "testId",
+            "1.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         url.ShouldBe("url1");
     }
 
     [Fact]
-    public void GetPluginUrl_FindsPluginWithCorrectId()
+    public async Task GetPluginUrl_FindsPluginWithCorrectId()
     {
         var project1 = new MarketPlacePlugin(
             "id1",
@@ -108,10 +132,14 @@ public class PluginUrlFetcherTest
             [new PluginVersion("url2", new Version("2.0.0"), "manifest2")]
         );
         _marketPluginFetcher
-            .GetProjectsAsync()
+            .GetProjectsAsync(TestContext.Current.CancellationToken)
             .Returns(new List<MarketPlacePlugin> { project1, project2 });
 
-        var url = _pluginUrlFetcher.GetPluginUrl("id2", "2.0.0");
+        var url = await _pluginUrlFetcher.GetPluginUrl(
+            "id2",
+            "2.0.0",
+            TestContext.Current.CancellationToken
+        );
 
         url.ShouldBe("url2");
     }

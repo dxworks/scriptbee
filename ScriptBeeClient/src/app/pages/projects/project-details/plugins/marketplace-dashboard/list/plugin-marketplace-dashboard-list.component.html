@@ -3,6 +3,7 @@
     @for (plugin of plugins(); track plugin.id) {
       <app-plugin-marketplace-dashboard-list-item
         [plugin]="plugin"
+        [installedVersion]="getInstalledVersion(plugin)"
         [projectId]="projectId()"
         (actionCompleted)="actionCompleted.emit()"></app-plugin-marketplace-dashboard-list-item>
     }

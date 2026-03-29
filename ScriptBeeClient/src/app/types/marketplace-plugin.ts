@@ -2,8 +2,8 @@ export type MarketplacePluginType = 'Plugin' | 'Bundle';
 
 export interface PluginVersion {
   version: string;
-  installed: boolean;
-  publishDate: string;
+  url: boolean;
+  manifestUrl: string;
 }
 
 export interface ExtensionPoint {
@@ -17,18 +17,21 @@ export interface BundleItem {
   name: string;
 }
 
+export interface InstalledPlugin {
+  id: string;
+  version: string;
+}
+
 export interface MarketplacePlugin {
   id: string;
   name: string;
   type: MarketplacePluginType;
   description: string;
   authors: string[];
-  latestVersion?: string;
-  installedVersion?: string;
+  versions: PluginVersion[];
 }
 
 export interface MarketplacePluginWithDetails extends MarketplacePlugin {
-  versions: PluginVersion[];
   bundleItems?: BundleItem[];
   sourceCode?: string;
   manifest?: string;

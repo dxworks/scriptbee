@@ -6,8 +6,9 @@ namespace ScriptBee.Marketplace.Client;
 
 public interface IPluginUrlFetcher
 {
-    OneOf<string, PluginNotFoundError, PluginVersionNotFoundError> GetPluginUrl(
+    Task<OneOf<string, PluginNotFoundError, PluginVersionNotFoundError>> GetPluginUrl(
         string pluginId,
-        string version
+        string version,
+        CancellationToken cancellationToken
     );
 }

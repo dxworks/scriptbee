@@ -1,5 +1,5 @@
 ﻿# Build the client app
-FROM node:22 AS build_client
+FROM node:24 AS build_client
 
 WORKDIR /src
 
@@ -14,7 +14,7 @@ COPY ./ScriptBeeClient/tsconfig*.json ./
 RUN npm run build-prod
 
 # Build the backend web app
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build_webapp
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build_webapp
 
 WORKDIR /app
 
@@ -22,33 +22,18 @@ COPY Directory.Packages.props Directory.Packages.props
 COPY Directory.Build.props Directory.Build.props
 
 COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
-# COPY ScriptBee.Marketplace.Client ./ScriptBee.Marketplace.Client
-COPY src/Common src/Common
 
-COPY src/Application/Domain/Model src/Application/Domain/Model
-COPY src/Application/Domain/Service.Project src/Application/Domain/Service.Project
+COPY ScriptBeeWebApp/src/Common ScriptBeeWebApp/src/Common
+COPY ScriptBeeWebApp/src/Workspace ScriptBeeWebApp/src/Workspace
+COPY ScriptBeeWebApp/src/Gateway/Application ScriptBeeWebApp/src/Gateway/Application
+COPY ScriptBeeWebApp/src/Gateway/Adapters ScriptBeeWebApp/src/Gateway/Adapters
 
-COPY src/Application/Ports/Driving/UseCases.Project src/Application/Ports/Driving/UseCases.Project
-COPY src/Application/Ports/Driven/Ports.Analysis src/Application/Ports/Driven/Ports.Analysis
-COPY src/Application/Ports/Driven/Ports.Files src/Application/Ports/Driven/Ports.Files
-COPY src/Application/Ports/Driven/Ports.Instance src/Application/Ports/Driven/Ports.Instance
-COPY src/Application/Ports/Driven/Ports.Plugins src/Application/Ports/Driven/Ports.Plugins
-COPY src/Application/Ports/Driven/Ports.Project src/Application/Ports/Driven/Ports.Project
+RUN dotnet restore ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj
 
-COPY src/Adapters/Driven/Persistence.Mongodb src/Adapters/Driven/Persistence.Mongodb
-COPY src/Adapters/Driven/Persistence.File src/Adapters/Driven/Persistence.File
-COPY src/Adapters/Driven/Analysis.Instance.Docker src/Adapters/Driven/Analysis.Instance.Docker
-COPY src/Adapters/Driven/Rest src/Adapters/Driven/Rest
-
-COPY src/Adapters/Driving/Common.Web src/Adapters/Driving/Common.Web
-COPY src/Adapters/Driving/Web src/Adapters/Driving/Web
-
-RUN dotnet restore ./src/Adapters/Driving/Web
-
-RUN dotnet publish ./src/Adapters/Driving/Web -c Release -o publish --no-restore
+RUN dotnet publish ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj -c Release -o publish --no-restore
 
 # Build the final image
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
 EXPOSE 80
 EXPOSE 443

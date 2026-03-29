@@ -3,6 +3,11 @@
     <div class="loading-overlay">
       <mat-spinner></mat-spinner>
     </div>
+  }
+  @if (installedPlugins.isLoading()) {
+    <div class="loading-overlay">
+      <mat-spinner></mat-spinner>
+    </div>
   } @else if (pluginResource.value()) {
     <app-plugin-details-header
       [plugin]="pluginResource.value()!"
@@ -25,7 +30,8 @@
 
       <app-plugin-details-versions-table
         [versions]="pluginResource.value()!.versions"
-        (installVersion)="onInstallSpecificVersion($event)"></app-plugin-details-versions-table>
+        [installedVersion]="installedVersion()"
+        (installVersion)="onInstallButtonClick($event)"></app-plugin-details-versions-table>
     </div>
   }
 </div>
