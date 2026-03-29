@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "instanceId": "c06c7bbd-292f-4468-8049-bcbea500a98d",
+      "status": "Running",
+      "scriptId": "be8e2489-3dd9-416d-af25-c69191416cf4",
+      "creationDate": "2020-01-01T00:00:00+00:00",
+      "finishedDate": null,
+      "errors": null
+    }
+  ]
+}

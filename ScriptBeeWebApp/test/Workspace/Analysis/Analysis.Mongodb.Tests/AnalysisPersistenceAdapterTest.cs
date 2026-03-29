@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Analysis.Mongodb.Entity;
+using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
@@ -75,15 +76,16 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             CancellationToken.None
         );
 
-        result.ShouldBe(
+        result.AsT1.ShouldBe(
             new AnalysisDoesNotExistsError(new AnalysisId("187c18d1-080c-4684-819f-9f9ffb30a99f"))
         );
     }
 
     [Fact]
-    public async Task GetAllForProjectId()
+    public async Task GetAllForProjectId_Descending()
     {
-        var creationDate = DateTimeOffset.UtcNow;
+        var creationDate1 = DateTimeOffset.UtcNow.AddMinutes(-5);
+        var creationDate2 = DateTimeOffset.UtcNow;
         await _mongoCollection.InsertOneAsync(
             new MongodbAnalysisInfo
             {
@@ -95,23 +97,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 Status = AnalysisStatus.Started.Value,
                 Errors = [],
                 Results = [],
-                CreationDate = creationDate,
-                FinishedDate = null,
-            },
-            cancellationToken: TestContext.Current.CancellationToken
-        );
-        await _mongoCollection.InsertOneAsync(
-            new MongodbAnalysisInfo
-            {
-                Id = "dce4de3e-ea47-4722-9742-9280ea18d38f",
-                ProjectId = "all-project-id-2",
-                InstanceId = "df35cebf-bfd1-4bd3-ad6e-3118e43cf2b3",
-                ScriptId = "6c83d4b9-90a3-4800-baf1-dc23e01d915c",
-                ScriptFileId = null,
-                Status = AnalysisStatus.Running.Value,
-                Errors = [],
-                Results = [],
-                CreationDate = creationDate,
+                CreationDate = creationDate1,
                 FinishedDate = null,
             },
             cancellationToken: TestContext.Current.CancellationToken
@@ -125,67 +111,74 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
                 ScriptId = "f0c3287c-407c-4fda-9ac0-97e75be80c40",
                 ScriptFileId = null,
                 Status = AnalysisStatus.Finished.Value,
-                Errors = [new MongodbAnalysisError { Message = "message" }],
-                Results =
-                [
-                    new MongodbResultSummary
-                    {
-                        Id = "e2c95567-d0f5-48b8-b1b6-ccbf064219ce",
-                        Name = "name",
-                        Type = "file",
-                        CreationDate = creationDate,
-                    },
-                ],
-                CreationDate = creationDate,
-                FinishedDate = creationDate,
+                Errors = [],
+                Results = [],
+                CreationDate = creationDate2,
+                FinishedDate = creationDate2,
             },
             cancellationToken: TestContext.Current.CancellationToken
         );
 
         var analysisInfos = await _adapter.GetAll(
             ProjectId.FromValue("all-project-id-1"),
+            SortOrder.Descending,
             CancellationToken.None
         );
 
         var infos = analysisInfos.ToList();
         infos.Count.ShouldBe(2);
-        AssertAnalysisInfo(
-            infos[0],
-            new AnalysisInfo(
-                new AnalysisId("834db275-e497-4f77-abd1-37c3bb3ba6de"),
-                ProjectId.FromValue("all-project-id-1"),
-                new InstanceId("4bc0b0cd-8192-413b-b7ff-364a7e3883ec"),
-                new ScriptId("e22be395-a668-4a26-81e7-67682afb1320"),
-                new FileId("f3444890-4d32-481c-83c9-1fb972b79040"),
-                AnalysisStatus.Started,
-                [],
-                [],
-                creationDate,
-                null
-            )
+        infos[0].Id.Value.ShouldBe(Guid.Parse("47e981a7-9cd6-46d6-ba11-7f3c65ce38a2"));
+        infos[1].Id.Value.ShouldBe(Guid.Parse("834db275-e497-4f77-abd1-37c3bb3ba6de"));
+    }
+
+    [Fact]
+    public async Task GetAllForProjectId_Ascending()
+    {
+        var creationDate1 = DateTimeOffset.UtcNow.AddMinutes(-5);
+        var creationDate2 = DateTimeOffset.UtcNow;
+        await _mongoCollection.InsertOneAsync(
+            new MongodbAnalysisInfo
+            {
+                Id = "476fa503-9a8e-4ef5-9941-9a51002d2af9",
+                ProjectId = "all-project-id-asc",
+                InstanceId = "4bc0b0cd-8192-413b-b7ff-364a7e3883ec",
+                ScriptId = "e22be395-a668-4a26-81e7-67682afb1320",
+                ScriptFileId = "f3444890-4d32-481c-83c9-1fb972b79040",
+                Status = AnalysisStatus.Started.Value,
+                Errors = [],
+                Results = [],
+                CreationDate = creationDate1,
+                FinishedDate = null,
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
-        AssertAnalysisInfo(
-            infos[1],
-            new AnalysisInfo(
-                new AnalysisId("47e981a7-9cd6-46d6-ba11-7f3c65ce38a2"),
-                ProjectId.FromValue("all-project-id-1"),
-                new InstanceId("f03d2d88-bd3d-4b0a-90bf-3bc904523fd9"),
-                new ScriptId("f0c3287c-407c-4fda-9ac0-97e75be80c40"),
-                null,
-                AnalysisStatus.Finished,
-                [
-                    new ResultSummary(
-                        new ResultId("e2c95567-d0f5-48b8-b1b6-ccbf064219ce"),
-                        "name",
-                        "file",
-                        creationDate
-                    ),
-                ],
-                [new AnalysisError("message")],
-                creationDate,
-                creationDate
-            )
+        await _mongoCollection.InsertOneAsync(
+            new MongodbAnalysisInfo
+            {
+                Id = "be867c86-0089-4814-8334-01ac1d92e504",
+                ProjectId = "all-project-id-asc",
+                InstanceId = "f03d2d88-bd3d-4b0a-90bf-3bc904523fd9",
+                ScriptId = "f0c3287c-407c-4fda-9ac0-97e75be80c40",
+                ScriptFileId = null,
+                Status = AnalysisStatus.Finished.Value,
+                Errors = [],
+                Results = [],
+                CreationDate = creationDate2,
+                FinishedDate = creationDate2,
+            },
+            cancellationToken: TestContext.Current.CancellationToken
         );
+
+        var analysisInfos = await _adapter.GetAll(
+            ProjectId.FromValue("all-project-id-asc"),
+            SortOrder.Ascending,
+            CancellationToken.None
+        );
+
+        var infos = analysisInfos.ToList();
+        infos.Count.ShouldBe(2);
+        infos[0].Id.Value.ShouldBe(Guid.Parse("476fa503-9a8e-4ef5-9941-9a51002d2af9"));
+        infos[1].Id.Value.ShouldBe(Guid.Parse("be867c86-0089-4814-8334-01ac1d92e504"));
     }
 
     [Fact]

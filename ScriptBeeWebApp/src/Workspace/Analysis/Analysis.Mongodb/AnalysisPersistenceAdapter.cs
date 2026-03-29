@@ -1,5 +1,6 @@
 ﻿using OneOf;
 using ScriptBee.Analysis.Mongodb.Entity;
+using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
@@ -34,11 +35,14 @@ public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mo
 
     public async Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
+        SortOrder sortOrder,
         CancellationToken cancellationToken
     )
     {
         var analysisInfos = await mongoRepository.GetAllDocuments(
             instance => instance.ProjectId == projectId.Value,
+            instance => instance.CreationDate,
+            sortOrder,
             cancellationToken
         );
 

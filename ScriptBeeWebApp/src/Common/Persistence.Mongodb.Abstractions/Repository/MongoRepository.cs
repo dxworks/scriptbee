@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using MongoDB.Driver;
+using ScriptBee.Domain.Model;
 
 namespace ScriptBee.Persistence.Mongodb.Repository;
 
@@ -36,6 +37,25 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
     )
     {
         return await mongoCollection.Find(predicate).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<T>> GetAllDocuments<TKey>(
+        Expression<Func<T, bool>> predicate,
+        Expression<Func<T, TKey>> keySelector,
+        SortOrder sortOrder,
+        CancellationToken cancellationToken
+    )
+    {
+        FieldDefinition<T> field = new ExpressionFieldDefinition<T, TKey>(keySelector);
+
+        var findFluent = mongoCollection.Find(predicate);
+        findFluent = findFluent.Sort(
+            sortOrder == SortOrder.Ascending
+                ? Builders<T>.Sort.Ascending(field)
+                : Builders<T>.Sort.Descending(field)
+        );
+
+        return await findFluent.ToListAsync(cancellationToken);
     }
 
     public async Task UpdateDocument(T model, CancellationToken cancellationToken)
