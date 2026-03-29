@@ -18,7 +18,8 @@ public class RunAnalysisService(
     ICreateAnalysis createAnalysis,
     IGetScript getScript,
     IPluginRepository pluginRepository,
-    Channel<RunScriptRequest> runScriptChannel
+    Channel<RunScriptRequest> runScriptChannel,
+    InstanceInformation instanceInformation
 ) : IRunAnalysisUseCase
 {
     public async Task<AnalysisInfo> Run(
@@ -35,6 +36,7 @@ public class RunAnalysisService(
                     AnalysisInfo.FailedToStart(
                         new AnalysisId(guidProvider.NewGuid()),
                         command.ProjectId,
+                        instanceInformation.Id,
                         command.ScriptId,
                         dateTimeProvider.UtcNow(),
                         error.ToString()
@@ -58,6 +60,7 @@ public class RunAnalysisService(
                     AnalysisInfo.FailedToStart(
                         new AnalysisId(guidProvider.NewGuid()),
                         script.ProjectId,
+                        instanceInformation.Id,
                         script.Id,
                         dateTimeProvider.UtcNow(),
                         error.ToString()
@@ -77,6 +80,7 @@ public class RunAnalysisService(
             AnalysisInfo.Started(
                 new AnalysisId(guidProvider.NewGuid()),
                 script.ProjectId,
+                instanceInformation.Id,
                 script.Id,
                 dateTimeProvider.UtcNow()
             ),

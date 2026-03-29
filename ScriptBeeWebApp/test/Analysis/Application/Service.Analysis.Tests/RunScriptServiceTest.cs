@@ -8,6 +8,7 @@ using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.File;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Plugins;
@@ -195,6 +196,7 @@ public class RunScriptServiceTest
         return new AnalysisInfo(
             new AnalysisId("805110c5-12e0-4bb5-a3b2-39c67dcead5b"),
             ProjectId.FromValue("project-id"),
+            new InstanceId("d732612e-90b5-4ef2-bcbe-5dbf52feaf77"),
             new ScriptId("2151737d-3d3d-41b4-802d-99519204d883"),
             null,
             AnalysisStatus.Started,

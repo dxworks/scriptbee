@@ -5,7 +5,13 @@
 } @else if (scriptContentResourceError()) {
   <app-error-state [error]="scriptContentResourceError()!"></app-error-state>
 } @else {
-  <app-selected-script-action-bar [projectId]="projectId()" [script]="scriptResource.value()!" />
+  <app-run-script-loading [statusUrl]="statusUrl()" />
+
+  <app-selected-script-action-bar
+    [projectId]="projectId()"
+    [instanceId]="instanceId()"
+    [script]="scriptResource.value()!"
+    (statusUrlChange)="onStatusUrlChanged($event)" />
 
   <ngx-monaco-editor style="height: 100%" [options]="editorOptions()" [ngModel]="scriptContentResource.value()"></ngx-monaco-editor>
 }

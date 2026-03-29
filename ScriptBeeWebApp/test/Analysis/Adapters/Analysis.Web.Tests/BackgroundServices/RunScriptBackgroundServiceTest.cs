@@ -3,6 +3,7 @@ using DxWorks.ScriptBee.Plugin.Api;
 using NSubstitute;
 using ScriptBee.Analysis.Web.BackgroundServices;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Analysis;
@@ -62,6 +63,7 @@ public class RunScriptBackgroundServiceTest
         return new AnalysisInfo(
             new AnalysisId(analysisId),
             ProjectId.FromValue("project-id"),
+            new InstanceId("19199fe2-73d6-4154-a50e-62761ee9d655"),
             new ScriptId("2151737d-3d3d-41b4-802d-99519204d883"),
             null,
             AnalysisStatus.Started,

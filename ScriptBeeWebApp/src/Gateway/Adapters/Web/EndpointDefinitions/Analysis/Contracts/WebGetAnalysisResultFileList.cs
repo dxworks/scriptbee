@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
-public record WebGetAnalysisResultFileList(IEnumerable<WebGetAnalysisResultFile> Files)
+public sealed record WebGetAnalysisResultFileList(IEnumerable<WebGetAnalysisResultFile> Files)
 {
     public static WebGetAnalysisResultFileList Map(IEnumerable<AnalysisFileResult> files)
     {

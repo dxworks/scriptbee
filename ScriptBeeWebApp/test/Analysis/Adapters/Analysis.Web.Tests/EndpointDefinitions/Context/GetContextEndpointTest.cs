@@ -20,7 +20,7 @@ public class GetContextEndpointTest(ITestOutputHelper outputHelper)
         useCase.Get().Returns([new ContextSlice("model", ["plugin-id"])]);
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {

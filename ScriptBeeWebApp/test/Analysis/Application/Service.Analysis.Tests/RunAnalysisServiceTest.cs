@@ -6,6 +6,7 @@ using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Plugins;
@@ -25,6 +26,11 @@ public class RunAnalysisServiceTest
     private readonly Channel<RunScriptRequest> _runScriptChannel =
         Channel.CreateUnbounded<RunScriptRequest>();
 
+    private readonly InstanceInformation _instanceInformation = new()
+    {
+        Id = new InstanceId("cd7f332a-88a4-4567-86f3-2a04fca2b1b1"),
+    };
+
     private readonly IScriptRunner _scriptRunner = Substitute.For<IScriptRunner>();
 
     private readonly RunAnalysisService _runAnalysisService;
@@ -37,7 +43,8 @@ public class RunAnalysisServiceTest
             _createAnalysis,
             _getScript,
             _pluginRepository,
-            _runScriptChannel
+            _runScriptChannel,
+            _instanceInformation
         );
     }
 
@@ -52,6 +59,7 @@ public class RunAnalysisServiceTest
         var expectedAnalysisInfo = new AnalysisInfo(
             analysisId,
             projectId,
+            new InstanceId("cd7f332a-88a4-4567-86f3-2a04fca2b1b1"),
             scriptId,
             null,
             AnalysisStatus.Started,
@@ -108,6 +116,7 @@ public class RunAnalysisServiceTest
         var expectedAnalysisInfo = new AnalysisInfo(
             analysisId,
             projectId,
+            new InstanceId("cd7f332a-88a4-4567-86f3-2a04fca2b1b1"),
             scriptId,
             null,
             AnalysisStatus.Finished,
@@ -162,6 +171,7 @@ public class RunAnalysisServiceTest
         var expectedAnalysisInfo = new AnalysisInfo(
             analysisId,
             projectId,
+            new InstanceId("cd7f332a-88a4-4567-86f3-2a04fca2b1b1"),
             scriptId,
             null,
             AnalysisStatus.Finished,

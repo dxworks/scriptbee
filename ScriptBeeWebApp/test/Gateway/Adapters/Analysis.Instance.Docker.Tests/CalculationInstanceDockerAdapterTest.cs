@@ -1,4 +1,5 @@
 using Docker.DotNet.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
@@ -14,9 +15,14 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 {
     private readonly IFreePortProvider _freePortProvider = Substitute.For<IFreePortProvider>();
     private readonly DockerFixture _dockerFixture;
+    private readonly IConfiguration _configuration = Substitute.For<IConfiguration>();
+    private readonly ILogger<CalculationInstanceDockerAdapter> _logger;
+    private readonly IOptions<CalculationDockerConfig> _configOptions;
 
-    private readonly CalculationInstanceDockerAdapter _calculationInstanceDockerAdapter;
     private readonly int _testPort;
+
+    private const string TestMongoConnectionString = "mongodb://test:27017";
+    private const string OverrideMongoConnectionString = "mongodb://mongodb-host:27017";
 
     public CalculationInstanceDockerAdapterTest(
         DockerFixture dockerFixture,
@@ -24,35 +30,39 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     )
     {
         _dockerFixture = dockerFixture;
-        var config = Options.Create(
-            new CalculationDockerConfig
-            {
-                DockerSocket = dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
-                Network = DockerFixture.TestNetworkName,
-            }
-        );
+        var config = new CalculationDockerConfig
+        {
+            DockerSocket = dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
+            Network = DockerFixture.TestNetworkName,
+        };
+        _configOptions = Options.Create(config);
+
         _testPort = new FreePortProvider().GetFreeTcpPort();
         _freePortProvider.GetFreeTcpPort().Returns(_testPort);
+
+        _configuration
+            .GetSection("ConnectionStrings")["mongodb"]
+            .Returns(TestMongoConnectionString);
 
         var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddProvider(new XUnitLoggerProvider(outputHelper))
         );
-        var logger = loggerFactory.CreateLogger<CalculationInstanceDockerAdapter>();
-
-        _calculationInstanceDockerAdapter = new CalculationInstanceDockerAdapter(
-            config,
-            logger,
-            _freePortProvider
-        );
+        _logger = loggerFactory.CreateLogger<CalculationInstanceDockerAdapter>();
     }
 
     [Fact]
     public async Task Allocate_ShouldCreateAndStartContainerAndReturnUrlWithNetworkIP()
     {
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        var containerUrl = await _calculationInstanceDockerAdapter.Allocate(
+        var containerUrl = await adapter.Allocate(
             instanceId,
             image,
             TestContext.Current.CancellationToken
@@ -81,14 +91,16 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Allocate_ShouldUseConfiguredNetworkAndContainerName()
     {
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        await _calculationInstanceDockerAdapter.Allocate(
-            instanceId,
-            image,
-            TestContext.Current.CancellationToken
-        );
+        await adapter.Allocate(instanceId, image, TestContext.Current.CancellationToken);
 
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters
@@ -113,14 +125,75 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
+    public async Task Allocate_ShouldPassEnvironmentVariables()
+    {
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        await adapter.Allocate(instanceId, image, TestContext.Current.CancellationToken);
+
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-calculation-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.Config.Env.ShouldContain($"ScriptBee__InstanceId={instanceId}");
+        containerInspect.Config.Env.ShouldContain(
+            $"ConnectionStrings__mongodb={TestMongoConnectionString}"
+        );
+    }
+
+    [Fact]
+    public async Task Allocate_ShouldUseOverrideMongoDbConnectionString_WhenConfigured()
+    {
+        var config = new CalculationDockerConfig
+        {
+            DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
+            Network = DockerFixture.TestNetworkName,
+            MongoDbConnectionString = OverrideMongoConnectionString,
+        };
+        var adapter = new CalculationInstanceDockerAdapter(
+            Options.Create(config),
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        await adapter.Allocate(instanceId, image, TestContext.Current.CancellationToken);
+
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-calculation-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.Config.Env.ShouldContain(
+            $"ConnectionStrings__mongodb={OverrideMongoConnectionString}"
+        );
+    }
+
+    [Fact]
     public async Task Deallocate_ShouldStopAndRemoveExistingContainer()
     {
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
         // Arrange
         var instanceId = new InstanceId(Guid.NewGuid());
         var instanceImage = new AnalysisInstanceImage(DockerFixture.TestImageName);
         var containerName = $"scriptbee-calculation-{instanceId}";
 
-        var instanceUrl = await _calculationInstanceDockerAdapter.Allocate(
+        var instanceUrl = await adapter.Allocate(
             instanceId,
             instanceImage,
             TestContext.Current.CancellationToken
@@ -134,7 +207,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         );
 
         // Act
-        await _calculationInstanceDockerAdapter.Deallocate(instanceInfo);
+        await adapter.Deallocate(instanceInfo);
 
         // Assert
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
@@ -157,6 +230,12 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Deallocate_ShouldNotThrowException_IfContainerNotFound()
     {
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
         var instanceId = new InstanceId(Guid.NewGuid());
         var instanceInfo = new InstanceInfo(
             instanceId,
@@ -165,9 +244,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             DateTimeOffset.UtcNow
         );
 
-        var exception = await Record.ExceptionAsync(() =>
-            _calculationInstanceDockerAdapter.Deallocate(instanceInfo)
-        );
+        var exception = await Record.ExceptionAsync(() => adapter.Deallocate(instanceInfo));
 
         exception.ShouldBeNull();
     }

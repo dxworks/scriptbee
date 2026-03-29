@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, signal } from '@angular/core';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../../../../services/theme/theme.service';
@@ -10,16 +10,28 @@ import { ProjectStructureService } from '../../../../../../services/projects/pro
 import { ErrorStateComponent } from '../../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { convertError } from '../../../../../../utils/api';
+import { RunScriptLoadingComponent } from './run-script-loading/run-script-loading.component';
 
 @Component({
   selector: 'app-selected-script',
   templateUrl: './selected-script.component.html',
   styleUrls: ['./selected-script.component.scss'],
-  imports: [EditorComponent, MatButtonModule, MatIconModule, FormsModule, SelectedScriptActionBarComponent, ErrorStateComponent, LoadingProgressBarComponent],
+  imports: [
+    EditorComponent,
+    MatButtonModule,
+    MatIconModule,
+    FormsModule,
+    SelectedScriptActionBarComponent,
+    ErrorStateComponent,
+    LoadingProgressBarComponent,
+    RunScriptLoadingComponent,
+  ],
 })
 export class SelectedScriptComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
   scriptId = input.required<string>();
+  statusUrl = signal<string | undefined>(undefined);
 
   editorOptions = computed(() => {
     const language = this.scriptResource.value()?.scriptLanguage.name ?? 'csharp';
@@ -54,4 +66,8 @@ export class SelectedScriptComponent {
     private themeService: ThemeService,
     private projectStructureService: ProjectStructureService
   ) {}
+
+  protected onStatusUrlChanged(statusUrl: string | undefined) {
+    this.statusUrl.set(statusUrl);
+  }
 }

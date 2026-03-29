@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Analysis.Contracts;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
@@ -20,7 +21,7 @@ public class RunAnalysisEndpointTest(ITestOutputHelper outputHelper)
     public async Task InvalidRequestBody_ShouldReturnBadRequest()
     {
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(outputHelper),
+            new AnalysisTestWebApplicationFactory(outputHelper),
             new WebRunAnalysisCommand("", "script-id")
         );
 
@@ -36,7 +37,7 @@ public class RunAnalysisEndpointTest(ITestOutputHelper outputHelper)
     public async Task EmptyBody_ShouldReturnBadRequest()
     {
         var response = await _api.PostApi<WebRunAnalysisCommand>(
-            new TestWebApplicationFactory<Program>(outputHelper)
+            new AnalysisTestWebApplicationFactory(outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -61,6 +62,7 @@ public class RunAnalysisEndpointTest(ITestOutputHelper outputHelper)
                     new AnalysisInfo(
                         new AnalysisId("3bb081e8-e453-42a1-a506-5f82bc28f0ae"),
                         ProjectId.FromValue("project-id"),
+                        new InstanceId("4e8931c5-686f-4cae-a727-8badc8ba9d67"),
                         new ScriptId("e22be395-a668-4a26-81e7-67682afb1320"),
                         null,
                         AnalysisStatus.Started,
@@ -73,7 +75,7 @@ public class RunAnalysisEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
+            new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
                 {

@@ -6,14 +6,14 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.Project.Validation;
 
 public class CreateProjectValidatorTests
 {
-    private readonly CreateProjectValidator _createProjectValidator = new();
+    private readonly CreateProjectValidator _validator = new();
 
     [Fact]
     public async Task GivenValidCreateProject_ThenResultHasNoErrors()
     {
         var createProject = new WebCreateProjectCommand("id", "name");
 
-        var result = await _createProjectValidator.TestValidateAsync(
+        var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
@@ -26,7 +26,7 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("", "name");
 
-        var result = await _createProjectValidator.TestValidateAsync(
+        var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
@@ -39,7 +39,7 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand(null!, "name");
 
-        var result = await _createProjectValidator.TestValidateAsync(
+        var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
@@ -52,7 +52,7 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("id", "");
 
-        var result = await _createProjectValidator.TestValidateAsync(
+        var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
@@ -67,7 +67,7 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand("id", null!);
 
-        var result = await _createProjectValidator.TestValidateAsync(
+        var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
@@ -82,7 +82,7 @@ public class CreateProjectValidatorTests
     {
         var createProject = new WebCreateProjectCommand(null!, null!);
 
-        var result = await _createProjectValidator.TestValidateAsync(
+        var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );

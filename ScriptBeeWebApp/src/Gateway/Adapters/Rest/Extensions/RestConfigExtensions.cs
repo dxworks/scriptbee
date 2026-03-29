@@ -17,6 +17,7 @@ public static class RestConfigExtensions
             .AddSingleton<IGetInstanceContext, GetInstanceContextAdapter>()
             .AddSingleton<IClearInstanceContext, ClearInstanceContextAdapter>()
             .AddSingleton<ILinkInstanceContext, LinkInstanceContextAdapter>()
-            .AddSingleton<ILoadInstanceContext, LoadInstanceContextAdapter>();
+            .AddSingleton<ILoadInstanceContext, LoadInstanceContextAdapter>()
+            .AddSingleton<ITriggerInstanceAnalysis, TriggerInstanceAnalysisAdapter>();
     }
 }

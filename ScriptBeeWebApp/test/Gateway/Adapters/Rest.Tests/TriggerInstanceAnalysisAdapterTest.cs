@@ -45,7 +45,7 @@ public sealed class TriggerInstanceAnalysisAdapterTest : IDisposable
 
         var analysisInfo = await _triggerInstanceAnalysisAdapter.Trigger(
             new InstanceInfo(
-                new InstanceId(Guid.Empty),
+                new InstanceId("d41a3d1a-1cd7-4f11-a1a7-667ed8dc289d"),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now
@@ -58,6 +58,7 @@ public sealed class TriggerInstanceAnalysisAdapterTest : IDisposable
             new AnalysisInfo(
                 new AnalysisId("428ea7d6-6f93-487a-b749-7d58e2c5112b"),
                 ProjectId.FromValue("project-id"),
+                new InstanceId("d41a3d1a-1cd7-4f11-a1a7-667ed8dc289d"),
                 new ScriptId("403e05ae-f16b-4fd7-8d23-375b1d2accb4"),
                 null,
                 AnalysisStatus.Started,

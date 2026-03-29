@@ -1,4 +1,5 @@
 ﻿using ScriptBee.Domain.Model.File;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 
@@ -7,6 +8,7 @@ namespace ScriptBee.Domain.Model.Analysis;
 public record AnalysisInfo(
     AnalysisId Id,
     ProjectId ProjectId,
+    InstanceId InstanceId,
     ScriptId ScriptId,
     FileId? ScriptFileId,
     AnalysisStatus Status,
@@ -16,9 +18,15 @@ public record AnalysisInfo(
     DateTimeOffset? FinishedDate
 )
 {
+    public bool IsRunning()
+    {
+        return Status == AnalysisStatus.Started || Status == AnalysisStatus.Running;
+    }
+
     public static AnalysisInfo Started(
         AnalysisId analysisId,
         ProjectId projectId,
+        InstanceId instanceId,
         ScriptId scriptId,
         DateTimeOffset creationDate
     )
@@ -26,6 +34,7 @@ public record AnalysisInfo(
         return new AnalysisInfo(
             analysisId,
             projectId,
+            instanceId,
             scriptId,
             null,
             AnalysisStatus.Started,
@@ -39,6 +48,7 @@ public record AnalysisInfo(
     public static AnalysisInfo FailedToStart(
         AnalysisId analysisId,
         ProjectId projectId,
+        InstanceId instanceId,
         ScriptId scriptId,
         DateTimeOffset date,
         string message
@@ -47,6 +57,7 @@ public record AnalysisInfo(
         return new AnalysisInfo(
             analysisId,
             projectId,
+            instanceId,
             scriptId,
             null,
             AnalysisStatus.Finished,

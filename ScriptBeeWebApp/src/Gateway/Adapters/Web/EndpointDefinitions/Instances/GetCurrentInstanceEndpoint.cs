@@ -20,6 +20,7 @@ public class GetCurrentInstanceEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
+        // TODO: this is just a temporary should be removed until the UI is capable of handling multiple instances
         app.MapGet("/api/projects/{projectId}/instances/current", GetCurrentInstance)
             .WithTags("Instances");
     }
