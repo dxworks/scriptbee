@@ -3,6 +3,7 @@ using OneOf;
 using ScriptBee.Analysis;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Project.Analysis;
@@ -31,6 +32,7 @@ public class GetAnalysisServiceTest
             AnalysisInfo.Started(
                 new AnalysisId(Guid.NewGuid()),
                 projectId,
+                new InstanceId(Guid.NewGuid()),
                 new ScriptId(Guid.NewGuid()),
                 DateTimeOffset.Now
             ),
@@ -54,6 +56,7 @@ public class GetAnalysisServiceTest
         var expectedAnalysis = AnalysisInfo.Started(
             new AnalysisId(Guid.NewGuid()),
             ProjectId.FromValue("project-id"),
+            new InstanceId(Guid.NewGuid()),
             new ScriptId(Guid.NewGuid()),
             DateTimeOffset.Now
         );

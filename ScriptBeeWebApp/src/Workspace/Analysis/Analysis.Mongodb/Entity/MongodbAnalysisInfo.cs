@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.File;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Repository;
 
@@ -12,6 +13,7 @@ public class MongodbAnalysisInfo : IDocument
     [BsonId]
     public required string Id { get; set; }
     public required string ProjectId { get; set; }
+    public required string InstanceId { get; set; }
     public required string ScriptId { get; set; }
     public required string? ScriptFileId { get; set; }
     public required string Status { get; set; }
@@ -25,6 +27,7 @@ public class MongodbAnalysisInfo : IDocument
         return new AnalysisInfo(
             new AnalysisId(Id),
             Domain.Model.Project.ProjectId.FromValue(ProjectId),
+            new InstanceId(InstanceId),
             new ScriptId(ScriptId),
             ScriptFileId == null ? null : new FileId(ScriptFileId),
             new AnalysisStatus(Status),
@@ -41,6 +44,7 @@ public class MongodbAnalysisInfo : IDocument
         {
             Id = analysisInfo.Id.ToString(),
             ProjectId = analysisInfo.ProjectId.ToString(),
+            InstanceId = analysisInfo.InstanceId.ToString(),
             ScriptId = analysisInfo.ScriptId.ToString(),
             ScriptFileId = analysisInfo.ScriptFileId?.ToString(),
             Status = analysisInfo.Status.Value,

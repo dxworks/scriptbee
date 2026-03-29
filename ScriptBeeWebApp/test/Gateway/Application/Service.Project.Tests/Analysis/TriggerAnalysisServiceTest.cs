@@ -79,6 +79,7 @@ public class TriggerAnalysisServiceTest
         var analysisInfo = new AnalysisInfo(
             analysisId,
             projectId,
+            new InstanceId(Guid.NewGuid()),
             scriptId,
             null,
             AnalysisStatus.Started,

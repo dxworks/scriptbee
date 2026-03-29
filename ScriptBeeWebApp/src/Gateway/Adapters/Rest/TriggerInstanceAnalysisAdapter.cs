@@ -1,6 +1,7 @@
 using Refit;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Rest.Api;
@@ -31,6 +32,17 @@ public class TriggerInstanceAnalysisAdapter(IHttpClientFactory httpClientFactory
             cancellationToken
         );
 
-        return response.MapToAnalysisInfo();
+        return new AnalysisInfo(
+            new AnalysisId(response.Id),
+            ProjectId.FromValue(response.ProjectId),
+            instanceInfo.Id,
+            new ScriptId(response.ScriptId),
+            null,
+            new AnalysisStatus(response.Status),
+            [],
+            [],
+            response.CreationDate,
+            null
+        );
     }
 }

@@ -7,6 +7,7 @@ using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Project.Analysis;
@@ -210,6 +211,7 @@ public class DownloadAnalysisFileResultsServiceTest
         return new AnalysisInfo(
             analysisId,
             projectId,
+            new InstanceId(Guid.NewGuid()),
             new ScriptId(Guid.NewGuid()),
             new FileId(Guid.NewGuid()),
             AnalysisStatus.Finished,
