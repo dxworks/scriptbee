@@ -41,7 +41,7 @@ public class GetAnalysisStatusEndpointTest(ITestOutputHelper outputHelper)
                         AnalysisStatus.Running,
                         [],
                         [],
-                        DateTime.Parse("2020-01-01T00:00:00Z"),
+                        DateTimeOffset.Parse("2020-01-01T00:00:00Z"),
                         null
                     )
                 )
@@ -83,8 +83,8 @@ public class GetAnalysisStatusEndpointTest(ITestOutputHelper outputHelper)
                         AnalysisStatus.Finished,
                         [],
                         [],
-                        DateTime.Parse("2050-01-01T00:00:00Z"),
-                        DateTime.Parse("2050-01-04T00:00:00Z")
+                        DateTimeOffset.Parse("2050-01-01T00:00:00Z"),
+                        DateTimeOffset.Parse("2050-01-04T00:00:00Z")
                     )
                 )
             );
