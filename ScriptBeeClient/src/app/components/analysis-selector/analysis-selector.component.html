@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline" subscriptSizing="dynamic">
+  <mat-select [(value)]="analysisId" placeholder="Select Analysis">
+    @for (analysis of analyses(); track analysis.id) {
+      <mat-option [value]="analysis.id">
+        {{ analysis.creationDate | date: 'short' }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>

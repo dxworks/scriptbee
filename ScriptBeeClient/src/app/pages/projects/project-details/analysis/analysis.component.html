@@ -7,16 +7,21 @@
         </as-split-area>
 
         <as-split-area size="75">
-          <app-scripts-content [projectId]="projectId()!" [instanceId]="instanceId()!" [fileId]="selectedFileId()" />
+          <app-scripts-content
+            [projectId]="projectId()!"
+            [instanceId]="instanceId()!"
+            [fileId]="selectedFileId()"
+            (analysisFinished)="onAnalysisFinished($event)" />
         </as-split-area>
       </as-split>
     </as-split-area>
 
     <as-split-area size="35">
+      <app-analysis-selector [projectId]="projectId()!" [(analysisId)]="analysisId" #selector />
       @if (analysisId()) {
         <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
       } @else {
-        <div>There are no results since no analysis was run yet</div>
+        <div class="no-analysis-message">There are no results since no analysis was run yet</div>
       }
     </as-split-area>
   </as-split>

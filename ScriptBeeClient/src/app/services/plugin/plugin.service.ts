@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { InstalledPlugin, MarketplacePlugin, MarketplacePluginWithDetails } from '../../types/marketplace-plugin';
-
-interface WebResponse<T> {
-  data: T;
-}
+import { WebResponse } from '../../types/web-response';
 
 @Injectable({
   providedIn: 'root',

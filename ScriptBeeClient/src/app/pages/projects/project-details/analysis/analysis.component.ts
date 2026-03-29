@@ -1,4 +1,4 @@
-﻿import { Component, signal } from '@angular/core';
+﻿import { Component, inject, model, signal, viewChild, ViewChild } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ScriptsContentComponent } from './scripts-content/scripts-content.component';
 import { ScriptTreeComponent } from './script-tree/script-tree.component';
@@ -7,29 +7,29 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TreeNode } from '../../../../types/tree-node';
 import { InstanceService } from '../../../../services/instances/instance.service';
+import { AnalysisSelectorComponent } from '../../../../components/analysis-selector/analysis-selector.component';
 
 @Component({
   selector: 'app-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.scss'],
-  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent, AnalysisOutputComponent],
+  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent, AnalysisOutputComponent, AnalysisSelectorComponent],
 })
 export class AnalysisComponent {
   projectId = signal<string | undefined>(undefined);
-  analysisId = signal<string | undefined>(undefined);
   instanceId = signal<string | undefined>(undefined);
 
   selectedFileId = signal<string | null>(null);
+  analysisId = model<string | undefined>(undefined);
 
-  // TODO: add the possibility to select the analysis (analysis should have also runIndex to be displayed to the user)
-  // TODO FIXIT: select the last analysis by default
+  selector = viewChild.required<AnalysisSelectorComponent>('selector');
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private instanceService: InstanceService
   ) {
-    route.queryParamMap.subscribe((params) => {
+    route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.selectedFileId.set(params.get('fileId'));
     });
 
@@ -57,5 +57,10 @@ export class AnalysisComponent {
         queryParamsHandling: 'merge',
       })
       .then();
+  }
+
+  onAnalysisFinished(analysisId: string) {
+    this.selector().reload();
+    this.analysisId.set(analysisId);
   }
 }
