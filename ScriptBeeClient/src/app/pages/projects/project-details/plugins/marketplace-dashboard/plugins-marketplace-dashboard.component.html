@@ -20,6 +20,9 @@
 
 @if (getAllAvailablePlugins.isLoading()) {
   <app-loading-progress-bar title="Loading marketplace..."></app-loading-progress-bar>
+}
+@if (installedPlugins.isLoading()) {
+  <app-loading-progress-bar title="Loading installed plugins..."></app-loading-progress-bar>
 } @else if (getAllAvailablePluginsError()) {
   <div style="margin: 1rem" class="center-column">
     <app-error-state style="width: 400px" [error]="getAllAvailablePluginsError()!"></app-error-state>
@@ -28,6 +31,7 @@
   <div class="dashboard-content">
     <app-plugin-marketplace-dashboard-list
       [plugins]="filteredPlugins()"
+      [installedPlugins]="installedPlugins.value() ?? []"
       [projectId]="projectId()"
       (actionCompleted)="onActionCompleted()"></app-plugin-marketplace-dashboard-list>
   </div>

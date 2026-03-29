@@ -1,9 +1,15 @@
 <mat-card class="plugin-card" appearance="outlined">
   <mat-card-header>
     <div mat-card-avatar>
-      <mat-icon color="primary" [matBadge]="installedVersion() ? '✓' : null" matBadgeColor="accent" matBadgeSize="small">{{
-        plugin().type === 'Plugin' ? 'extension' : 'inventory_2'
-      }}</mat-icon>
+      <mat-icon
+        color="primary"
+        [matBadge]="installedVersion() ? '✓' : null"
+        matBadgeColor="accent"
+        matBadgeSize="small"
+        aria-hidden="false"
+        [matBadgeDescription]="installedVersion() ? 'installed' : ''"
+        >{{ plugin().type === 'Plugin' ? 'extension' : 'inventory_2' }}
+      </mat-icon>
     </div>
     <mat-card-title style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
       {{ plugin().name }}
@@ -35,7 +41,9 @@
   </mat-card-content>
 
   <mat-card-actions align="end">
-    @if (!loading()) {
+    @if (loading()) {
+      <mat-spinner [diameter]="32"></mat-spinner>
+    } @else {
       @if (installedVersion()) {
         <button mat-button color="warn" (click)="onUninstallButtonClick()">UNINSTALL</button>
       }

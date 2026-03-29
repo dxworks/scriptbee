@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 
-import { MarketplacePlugin } from '../../../../../../types/marketplace-plugin';
+import { InstalledPlugin, MarketplacePlugin } from '../../../../../../types/marketplace-plugin';
 import { PluginMarketplaceDashboardListItemComponent } from './item/plugin-marketplace-dashboard-list-item.component';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,7 +11,17 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [PluginMarketplaceDashboardListItemComponent, MatIconModule],
 })
 export class PluginMarketplaceDashboardListComponent {
-  plugins = input<MarketplacePlugin[] | undefined>(undefined);
-  projectId = input<string | undefined>(undefined);
+  plugins = input.required<MarketplacePlugin[]>();
+  installedPlugins = input.required<InstalledPlugin[]>();
+  projectId = input.required<string>();
   actionCompleted = output<void>();
+
+  getInstalledVersion(marketPlacePlugin: MarketplacePlugin): string | undefined {
+    const installedPlugin = this.installedPlugins().find((ip) => ip.id === marketPlacePlugin.id);
+    if (!installedPlugin) {
+      return undefined;
+    }
+    const version = marketPlacePlugin.versions.find((v) => v.version === installedPlugin.version);
+    return version ? version.version : undefined;
+  }
 }
