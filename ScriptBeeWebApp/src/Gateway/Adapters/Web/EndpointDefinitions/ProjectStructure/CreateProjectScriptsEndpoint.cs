@@ -28,6 +28,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects/{projectId}/scripts", CreateProjectScript)
+            .WithTags("Scripts")
             .WithRequestValidation<WebCreateScriptCommand>();
     }
 

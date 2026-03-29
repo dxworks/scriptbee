@@ -19,6 +19,7 @@ public class CreateProjectEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects", CreateProject)
+            .WithTags("Projects")
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 

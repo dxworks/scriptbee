@@ -20,17 +20,20 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet(
-            "/api/projects/{projectId}/analyses/{analysisId}/results/console",
-            GetConsoleAnalysisResult
-        );
+                "/api/projects/{projectId}/analyses/{analysisId}/results/console",
+                GetConsoleAnalysisResult
+            )
+            .WithTags("Analysis");
         app.MapGet(
-            "/api/projects/{projectId}/analyses/{analysisId}/results/errors",
-            GetErrorsAnalysisResult
-        );
+                "/api/projects/{projectId}/analyses/{analysisId}/results/errors",
+                GetErrorsAnalysisResult
+            )
+            .WithTags("Analysis");
         app.MapGet(
-            "/api/projects/{projectId}/analyses/{analysisId}/results/files",
-            GetFilesAnalysisResult
-        );
+                "/api/projects/{projectId}/analyses/{analysisId}/results/files",
+                GetFilesAnalysisResult
+            )
+            .WithTags("Analysis");
     }
 
     private static async Task<

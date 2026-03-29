@@ -19,7 +19,8 @@ public class GetProjectContextEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/context", GetCurrentContext);
+        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/context", GetCurrentContext)
+            .WithTags("Instances", "Context");
     }
 
     private static async Task<

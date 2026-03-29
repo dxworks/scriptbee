@@ -18,7 +18,8 @@ public class ProjectContextClearEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/clear", ClearContext);
+        app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/clear", ClearContext)
+            .WithTags("Instances", "Context");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ClearContext(

@@ -19,9 +19,10 @@ public class ProjectContextReloadEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost(
-            "/api/projects/{projectId}/instances/{instanceId}/context/reload",
-            ReloadContext
-        );
+                "/api/projects/{projectId}/instances/{instanceId}/context/reload",
+                ReloadContext
+            )
+            .WithTags("Instances", "Context");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ReloadContext(

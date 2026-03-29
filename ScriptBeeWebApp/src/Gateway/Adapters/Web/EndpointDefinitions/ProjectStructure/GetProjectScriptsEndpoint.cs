@@ -14,12 +14,11 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/scripts", GetProjectScripts);
-        app.MapGet("/api/projects/{projectId}/scripts/{scriptId}", GetProjectScriptById);
-        app.MapGet(
-            "/api/projects/{projectId}/scripts/{scriptId}/content",
-            GetProjectScriptsContent
-        );
+        app.MapGet("/api/projects/{projectId}/scripts", GetProjectScripts).WithTags("Scripts");
+        app.MapGet("/api/projects/{projectId}/scripts/{scriptId}", GetProjectScriptById)
+            .WithTags("Scripts");
+        app.MapGet("/api/projects/{projectId}/scripts/{scriptId}/content", GetProjectScriptsContent)
+            .WithTags("Scripts");
     }
 
     private static async Task<Ok<WebGetScriptDataResponse>> GetProjectScripts(

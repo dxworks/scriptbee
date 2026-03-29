@@ -20,7 +20,8 @@ public class GetCurrentInstanceEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances/current", GetCurrentInstance);
+        app.MapGet("/api/projects/{projectId}/instances/current", GetCurrentInstance)
+            .WithTags("Instances");
     }
 
     private static async Task<GetCurrentInstanceType> GetCurrentInstance(

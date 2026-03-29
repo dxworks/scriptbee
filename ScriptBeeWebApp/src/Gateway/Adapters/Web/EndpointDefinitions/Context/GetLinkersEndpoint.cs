@@ -18,7 +18,8 @@ public class GetLinkersEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/linkers", GetInstanceLinkers);
+        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/linkers", GetInstanceLinkers)
+            .WithTags("Instances", "Context");
     }
 
     private static async Task<Ok<IEnumerable<WebLinker>>> GetInstanceLinkers(

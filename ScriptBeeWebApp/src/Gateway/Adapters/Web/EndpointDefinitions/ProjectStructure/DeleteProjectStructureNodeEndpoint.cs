@@ -14,9 +14,10 @@ public class DeleteProjectStructureNodeEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapDelete(
-            "/api/projects/{projectId}/structure/nodes/{nodeId}",
-            DeleteProjectStructureNode
-        );
+                "/api/projects/{projectId}/structure/nodes/{nodeId}",
+                DeleteProjectStructureNode
+            )
+            .WithTags("ProjectStructure");
     }
 
     private static async Task<NoContent> DeleteProjectStructureNode(

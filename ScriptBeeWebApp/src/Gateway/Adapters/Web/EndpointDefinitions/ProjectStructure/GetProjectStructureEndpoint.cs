@@ -14,11 +14,13 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/structure", GetProjectStructure);
+        app.MapGet("/api/projects/{projectId}/structure", GetProjectStructure)
+            .WithTags("ProjectStructure");
         app.MapGet(
-            "/api/projects/{projectId}/structure/available-script-types",
-            GetAvailableScriptTypes
-        );
+                "/api/projects/{projectId}/structure/available-script-types",
+                GetAvailableScriptTypes
+            )
+            .WithTags("ProjectStructure");
     }
 
     private static async Task<Ok<IEnumerable<WebProjectStructureNode>>> GetProjectStructure(

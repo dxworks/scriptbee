@@ -17,7 +17,8 @@ public class InstallPluginEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/projects/{projectId}/plugins/{pluginId}", InstallPlugin);
+        app.MapPut("/api/projects/{projectId}/plugins/{pluginId}", InstallPlugin)
+            .WithTags("Plugins");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> InstallPlugin(

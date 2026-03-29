@@ -19,7 +19,7 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/plugins", GetInstalledPlugins);
+        app.MapGet("/api/projects/{projectId}/plugins", GetInstalledPlugins).WithTags("Plugins");
     }
 
     private static async Task<

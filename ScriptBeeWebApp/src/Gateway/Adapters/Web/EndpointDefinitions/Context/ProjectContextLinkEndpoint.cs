@@ -21,6 +21,7 @@ public class ProjectContextLinkEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/link", LinkContext)
+            .WithTags("Instances", "Context")
             .WithRequestValidation<WebLinkContextCommand>();
     }
 

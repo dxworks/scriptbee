@@ -17,8 +17,8 @@ public class GetAllAvailablePluginsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/plugins", GetAllAvailablePlugins);
-        app.MapGet("/api/plugins/{id}", GetPlugin);
+        app.MapGet("/api/plugins", GetAllAvailablePlugins).WithTags("Plugins");
+        app.MapGet("/api/plugins/{id}", GetPlugin).WithTags("Plugins");
     }
 
     private static async Task<Ok<WebAllAvailablePluginsResponse>> GetAllAvailablePlugins(

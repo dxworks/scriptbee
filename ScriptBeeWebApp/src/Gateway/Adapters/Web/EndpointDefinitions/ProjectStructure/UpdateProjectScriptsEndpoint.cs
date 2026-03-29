@@ -14,7 +14,7 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPatch("/api/projects/{projectId}/scripts", UpdateProjectScript);
+        app.MapPatch("/api/projects/{projectId}/scripts", UpdateProjectScript).WithTags("Scripts");
     }
 
     private static async Task<Ok<WebScriptData>> UpdateProjectScript(

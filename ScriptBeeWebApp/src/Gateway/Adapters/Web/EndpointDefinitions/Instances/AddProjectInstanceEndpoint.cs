@@ -20,7 +20,7 @@ public class AddProjectInstanceEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/projects/{projectId}/instances", AllocateInstance);
+        app.MapPost("/api/projects/{projectId}/instances", AllocateInstance).WithTags("Instances");
     }
 
     private static async Task<AllocateInstanceType> AllocateInstance(

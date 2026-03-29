@@ -16,7 +16,7 @@ public class DeleteProjectEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/projects/{projectId}", DeleteProject);
+        app.MapDelete("/api/projects/{projectId}", DeleteProject).WithTags("Projects");
     }
 
     private static async Task<NoContent> DeleteProject(

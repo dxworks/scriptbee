@@ -21,6 +21,7 @@ public class ProjectContextLoadEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/load", LoadContext)
+            .WithTags("Instances", "Context")
             .WithRequestValidation<WebLoadContextCommand>();
     }
 

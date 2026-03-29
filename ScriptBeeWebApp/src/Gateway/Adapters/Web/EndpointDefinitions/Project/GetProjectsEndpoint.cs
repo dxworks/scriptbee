@@ -18,8 +18,8 @@ public class GetProjectsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects", GetAllProjects);
-        app.MapGet("/api/projects/{projectId}", GetProjectById);
+        app.MapGet("/api/projects", GetAllProjects).WithTags("Projects");
+        app.MapGet("/api/projects/{projectId}", GetProjectById).WithTags("Projects");
     }
 
     private static async Task<Ok<WebGetProjectListResponse>> GetAllProjects(

@@ -18,7 +18,8 @@ public class GetLoadersEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/loaders", GetInstanceLoaders);
+        app.MapGet("/api/projects/{projectId}/instances/{instanceId}/loaders", GetInstanceLoaders)
+            .WithTags("Instances", "Context");
     }
 
     private static async Task<Ok<IEnumerable<WebLoader>>> GetInstanceLoaders(

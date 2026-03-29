@@ -25,14 +25,16 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet(
-            "/api/projects/{projectId}/analyses/{analysisId}/results/files/{fileId}",
-            DownloadIndividualFile
-        );
+                "/api/projects/{projectId}/analyses/{analysisId}/results/files/{fileId}",
+                DownloadIndividualFile
+            )
+            .WithTags("Analysis");
 
         app.MapGet(
-            "/api/projects/{projectId}/analyses/{analysisId}/results/files/download",
-            DownloadAllFiles
-        );
+                "/api/projects/{projectId}/analyses/{analysisId}/results/files/download",
+                DownloadAllFiles
+            )
+            .WithTags("Analysis");
     }
 
     private static async Task<DownloadResult> DownloadIndividualFile(

@@ -17,7 +17,7 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances", GetAllInstances);
+        app.MapGet("/api/projects/{projectId}/instances", GetAllInstances).WithTags("Instances");
     }
 
     private static async Task<Ok<WebGetProjectInstancesListResponse>> GetAllInstances(
