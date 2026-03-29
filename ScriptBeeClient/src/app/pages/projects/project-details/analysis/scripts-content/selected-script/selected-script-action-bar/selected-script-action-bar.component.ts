@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SafeUrlPipe } from '../../../../../../../pipes/safe-url.pipe';
 import { ProjectScript } from '../../../../../../../types/project';
 import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-parameters-dialog.component';
+import { AnalysisService } from '../../../../../../../services/analysis/analysis.service';
 
 @Component({
   selector: 'app-selected-script-action-bar',
@@ -18,49 +19,34 @@ import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-pa
 })
 export class SelectedScriptActionBarComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
   script = input.required<ProjectScript>();
 
-  constructor(
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
-  ) {}
+  isLoadingResults = signal<boolean>(false);
+  statusUrlChange = output<string | undefined>();
+
+  analysisService = inject(AnalysisService);
+
+  private snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   onRunScriptButtonClick() {
-    //   this.isLoadingResults = true;
-    //   this.runScriptService.runScriptFromPath(this.projectId, this.scriptPath, this.getLanguage(this.scriptPath)).subscribe({
-    //     next: (run) => {
-    //       this.isLoadingResults = false;
-    //       // todo: remove this global store and use a component store
-    //
-    //       if (run.results.filter((r) => r.type === 'RunError').length > 0) {
-    //         this.snackBar.open('Script run has errors!', 'Ok', {
-    //           duration: 4000,
-    //         });
-    //       }
-    //
-    //       this.store.dispatch(
-    //         setOutput({
-    //           runIndex: run.index,
-    //           scriptName: run.scriptName,
-    //           results: run.results,
-    //         })
-    //       );
-    //     },
-    //     error: (err) => {
-    //       this.isLoadingResults = false;
-    //
-    //       if (err.status === 404 && err.error.includes('Could not find project')) {
-    //         this.snackBar.open('Project Context might not be loaded!', 'Ok', {
-    //           duration: 4000,
-    //         });
-    //         return;
-    //       }
-    //
-    //       this.snackBar.open('Could not run script!', 'Ok', {
-    //         duration: 4000,
-    //       });
-    //     },
-    //   });
+    this.isLoadingResults.set(true);
+    this.statusUrlChange.emit(undefined);
+
+    this.analysisService.triggerAnalysis(this.projectId(), this.instanceId(), this.script().id).subscribe({
+      next: (statusUrl) => {
+        this.isLoadingResults.set(false);
+        this.statusUrlChange.emit(statusUrl);
+      },
+      error: () => {
+        this.isLoadingResults.set(false);
+
+        this.snackBar.open('Could not run script!', 'Ok', {
+          duration: 4000,
+        });
+      },
+    });
   }
 
   onCopyToClipboardButtonClick() {

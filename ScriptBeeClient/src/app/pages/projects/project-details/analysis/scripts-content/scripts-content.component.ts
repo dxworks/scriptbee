@@ -10,5 +10,6 @@ import { SelectedScriptComponent } from './selected-script/selected-script.compo
 })
 export class ScriptsContentComponent {
   projectId = input.required<string>();
+  instanceId = input.required<string>();
   fileId = input<string | null>(null);
 }
