@@ -34,7 +34,7 @@ export class SelectedScriptActionBarComponent {
     this.isLoadingResults.set(true);
     this.statusUrlChange.emit(undefined);
 
-    this.analysisService.triggerAnalysis(this.projectId(), this.instanceId(), '019d39f9-09c9-7378-9092-904eeed62c2c').subscribe({
+    this.analysisService.triggerAnalysis(this.projectId(), this.instanceId(), this.script().id).subscribe({
       next: (statusUrl) => {
         this.isLoadingResults.set(false);
         this.statusUrlChange.emit(statusUrl);
