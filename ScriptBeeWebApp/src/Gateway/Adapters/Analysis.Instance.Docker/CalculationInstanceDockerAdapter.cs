@@ -1,6 +1,7 @@
-﻿using System.Net;
+using System.Net;
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Analysis.Instance.Docker.Config;
@@ -12,6 +13,7 @@ namespace ScriptBee.Analysis.Instance.Docker;
 
 public class CalculationInstanceDockerAdapter(
     IOptions<CalculationDockerConfig> config,
+    IConfiguration configuration,
     ILogger<CalculationInstanceDockerAdapter> logger,
     IFreePortProvider freePortProvider
 ) : IAllocateInstance, IDeallocateInstance
@@ -37,6 +39,10 @@ public class CalculationInstanceDockerAdapter(
             },
         };
 
+        var mongoDbConnectionString =
+            calculationDockerConfig.MongoDbConnectionString
+            ?? configuration.GetConnectionString("mongodb");
+
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
@@ -51,7 +57,11 @@ public class CalculationInstanceDockerAdapter(
                 {
                     { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
                 },
-                Env = new List<string> { $"ScriptBee__InstanceId={instanceId}" },
+                Env = new List<string>
+                {
+                    $"ScriptBee__InstanceId={instanceId}",
+                    $"ConnectionStrings__mongodb={mongoDbConnectionString}",
+                },
             },
             cancellationToken
         );

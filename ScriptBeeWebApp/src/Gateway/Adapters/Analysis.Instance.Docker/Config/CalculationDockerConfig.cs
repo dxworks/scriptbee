@@ -7,4 +7,6 @@ public class CalculationDockerConfig
     public int Port { get; init; } = 8080;
 
     public string? Network { get; init; }
+
+    public string? MongoDbConnectionString { get; init; }
 }
