@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
-public record WebAnalysisResultRunError(string Title, string Message, string Severity)
+public sealed record WebAnalysisResultRunError(string Title, string Message, string Severity)
 {
     public static WebAnalysisResultRunError Map(AnalysisErrorResult result)
     {

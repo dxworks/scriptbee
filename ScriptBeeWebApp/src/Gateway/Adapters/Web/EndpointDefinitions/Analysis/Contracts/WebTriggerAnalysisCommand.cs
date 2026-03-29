@@ -1,3 +1,3 @@
 ﻿namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
-public sealed record WebGetAnalysisResultConsole(string Content);
+public record WebTriggerAnalysisCommand(string ScriptId);
