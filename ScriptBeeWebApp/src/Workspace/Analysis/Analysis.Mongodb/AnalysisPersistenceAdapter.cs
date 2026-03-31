@@ -1,6 +1,9 @@
-﻿using OneOf;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
+using OneOf;
 using ScriptBee.Analysis.Mongodb.Entity;
-using ScriptBee.Domain.Model;
+using ScriptBee.Application.Model;
+using ScriptBee.Application.Model.Sorting;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
@@ -35,14 +38,15 @@ public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mo
 
     public async Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
-        SortOrder sortOrder,
+        IReadOnlyList<AnalysisSort> sorts,
         CancellationToken cancellationToken
     )
     {
+        var sortDefinition = BuildSortDefinition(sorts);
+
         var analysisInfos = await mongoRepository.GetAllDocuments(
             instance => instance.ProjectId == projectId.Value,
-            instance => instance.CreationDate,
-            sortOrder,
+            sortDefinition,
             cancellationToken
         );
 
@@ -90,5 +94,35 @@ public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mo
             d => d.ProjectId == projectId.ToString(),
             cancellationToken
         );
+    }
+
+    private static SortDefinition<MongodbAnalysisInfo>? BuildSortDefinition(
+        IReadOnlyList<AnalysisSort> sorts
+    )
+    {
+        if (sorts.Count == 0)
+        {
+            return null;
+        }
+
+        var builder = Builders<MongodbAnalysisInfo>.Sort;
+
+        var map = new Dictionary<AnalysisSortField, Expression<Func<MongodbAnalysisInfo, object>>>
+        {
+            { AnalysisSortField.CreationDate, x => x.CreationDate },
+            { AnalysisSortField.FinishedDate, x => x.FinishedDate! },
+            { AnalysisSortField.Status, x => x.Status },
+        };
+
+        var definitions = sorts
+            .Where(s => map.ContainsKey(s.Field))
+            .Select(s =>
+                s.Order == SortOrder.Ascending
+                    ? builder.Ascending(map[s.Field])
+                    : builder.Descending(map[s.Field])
+            )
+            .ToList();
+
+        return definitions.Count > 0 ? builder.Combine(definitions) : null;
     }
 }

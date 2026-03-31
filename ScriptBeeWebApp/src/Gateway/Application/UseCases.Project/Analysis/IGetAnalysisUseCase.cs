@@ -1,16 +1,13 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
-using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.UseCases.Project.Analysis;
 
 public interface IGetAnalysisUseCase
 {
     Task<IEnumerable<AnalysisInfo>> GetAll(
-        ProjectId projectId,
-        SortOrder sortOrder,
+        GetAnalysisQuery query,
         CancellationToken cancellationToken = default
     );
 

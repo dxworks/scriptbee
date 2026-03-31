@@ -40,6 +40,17 @@ public class TestApiCaller<TStartup>(string endpoint)
         return response;
     }
 
+    public async Task<HttpResponseMessage> GetApi(
+        string queryParams,
+        TestWebApplicationFactory<TStartup> factory
+    )
+    {
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync(endpoint + queryParams);
+        return response;
+    }
+
     public async Task<HttpResponseMessage> PutApi<T>(
         TestWebApplicationFactory<TStartup> factory,
         T? data = default

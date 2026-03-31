@@ -1,13 +1,16 @@
 ﻿using NSubstitute;
 using OneOf;
 using ScriptBee.Analysis;
-using ScriptBee.Domain.Model;
+using ScriptBee.Application.Model;
+using ScriptBee.Application.Model.Sorting;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Project.Analysis;
+using ScriptBee.UseCases.Project.Analysis;
+using static ScriptBee.Application.Model.AnalysisSortField;
 
 namespace ScriptBee.Service.Project.Tests.Analysis;
 
@@ -38,13 +41,14 @@ public class GetAnalysisServiceTest
                 DateTimeOffset.Now
             ),
         ];
+        IReadOnlyList<AnalysisSort> sorts = [new(CreationDate, SortOrder.Descending)];
+        var query = new GetAnalysisQuery(projectId, sorts);
         _getAllAnalyses
-            .GetAll(projectId, SortOrder.Descending, TestContext.Current.CancellationToken)
+            .GetAll(projectId, sorts, TestContext.Current.CancellationToken)
             .Returns(Task.FromResult(expectedAnalysisResults));
 
         var analysisResults = await _getAnalysisService.GetAll(
-            projectId,
-            SortOrder.Descending,
+            query,
             TestContext.Current.CancellationToken
         );
 

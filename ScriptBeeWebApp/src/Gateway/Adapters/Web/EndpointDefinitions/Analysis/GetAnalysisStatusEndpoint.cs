@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Application.Model;
+using ScriptBee.Application.Model.Sorting;
 using ScriptBee.Common.Web;
-using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Analysis;
@@ -31,13 +32,17 @@ public class GetAnalysisStatusEndpoint : IEndpointDefinition
         HttpContext context,
         [FromRoute] string projectId,
         IGetAnalysisUseCase useCase,
+        [FromQuery] string? sort = "-CreationDate",
         CancellationToken cancellationToken = default
     )
     {
-        // TODO FIXIT(#105): update sort parsing
+        var sorts = SortParser
+            .Parse<AnalysisSortField>(sort)
+            .Select(x => new AnalysisSort(x.Field, x.Direction))
+            .ToList();
+
         var result = await useCase.GetAll(
-            ProjectId.FromValue(projectId),
-            SortOrder.Descending,
+            new GetAnalysisQuery(ProjectId.FromValue(projectId), sorts),
             cancellationToken
         );
         return TypedResults.Ok(

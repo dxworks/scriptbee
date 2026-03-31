@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using ScriptBee.Analysis.Mongodb.Entity;
-using ScriptBee.Domain.Model;
+using ScriptBee.Application.Model;
+using ScriptBee.Application.Model.Sorting;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
@@ -118,10 +119,14 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             },
             cancellationToken: TestContext.Current.CancellationToken
         );
+        IReadOnlyList<AnalysisSort> sorts =
+        [
+            new(AnalysisSortField.CreationDate, SortOrder.Descending),
+        ];
 
         var analysisInfos = await _adapter.GetAll(
             ProjectId.FromValue("all-project-id-1"),
-            SortOrder.Descending,
+            sorts,
             CancellationToken.None
         );
 
@@ -168,10 +173,14 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             },
             cancellationToken: TestContext.Current.CancellationToken
         );
+        IReadOnlyList<AnalysisSort> sorts =
+        [
+            new(AnalysisSortField.CreationDate, SortOrder.Ascending),
+        ];
 
         var analysisInfos = await _adapter.GetAll(
             ProjectId.FromValue("all-project-id-asc"),
-            SortOrder.Ascending,
+            sorts,
             CancellationToken.None
         );
 

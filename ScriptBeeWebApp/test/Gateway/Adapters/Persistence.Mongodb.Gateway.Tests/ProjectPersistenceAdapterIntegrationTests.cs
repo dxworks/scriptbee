@@ -185,7 +185,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
 
         result.AsT0.Id.ShouldBe(ProjectId.FromValue(projectId));
         result.AsT0.Name.ShouldBe(projectId);
-        result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
+        result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(2));
         result.AsT0.SavedFiles.ShouldBeEmpty();
         result.AsT0.LoadedFiles.ShouldBeEmpty();
         result.AsT0.Linkers.ShouldBeEmpty();

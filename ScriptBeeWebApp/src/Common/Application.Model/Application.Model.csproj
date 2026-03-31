@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Application.Model</RootNamespace>
+  </PropertyGroup>
+</Project>
