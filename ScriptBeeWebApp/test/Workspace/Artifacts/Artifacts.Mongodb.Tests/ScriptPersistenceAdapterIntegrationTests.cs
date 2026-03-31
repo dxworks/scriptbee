@@ -11,13 +11,13 @@ namespace ScriptBee.Artifacts.Mongodb.Tests;
 
 public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFixture>
 {
-    private readonly ScriptPersistenceAdapter _adapter;
+    private readonly ScriptsPersistenceAdapter _adapter;
     private readonly IMongoCollection<MongodbScript> _mongoCollection;
 
     public ScriptPersistenceAdapterIntegrationTests(MongoDbFixture fixture)
     {
         _mongoCollection = fixture.GetCollection<MongodbScript>("Scripts");
-        _adapter = new ScriptPersistenceAdapter(
+        _adapter = new ScriptsPersistenceAdapter(
             new MongoRepository<MongodbScript>(_mongoCollection)
         );
     }
@@ -30,7 +30,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
         const string scriptId = "8447d113-2cf5-4eab-afd4-8e691778ff96";
         var script = CreateScript(new ScriptId(scriptId), []);
 
-        await _adapter.Create(script, CancellationToken.None);
+        await _adapter.Create(script, TestContext.Current.CancellationToken);
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
@@ -54,7 +54,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             ]
         );
 
-        await _adapter.Create(script, CancellationToken.None);
+        await _adapter.Create(script, TestContext.Current.CancellationToken);
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
@@ -90,7 +90,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             ]
         );
 
-        await _adapter.Create(script, CancellationToken.None);
+        await _adapter.Create(script, TestContext.Current.CancellationToken);
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
@@ -126,7 +126,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             ]
         );
 
-        await _adapter.Create(script, CancellationToken.None);
+        await _adapter.Create(script, TestContext.Current.CancellationToken);
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
@@ -162,7 +162,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             ]
         );
 
-        await _adapter.Create(script, CancellationToken.None);
+        await _adapter.Create(script, TestContext.Current.CancellationToken);
 
         var mongodbScript = await _mongoCollection
             .Find(p => p.Id == scriptId)
@@ -191,7 +191,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     {
         const string scriptId = "bccab17e-bfc1-4209-aa12-75cabd307299";
 
-        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+        var result = await _adapter.Get(
+            new ScriptId(scriptId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT1.ShouldBe(new ScriptDoesNotExistsError(new ScriptId(scriptId)));
     }
@@ -205,7 +208,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+        var result = await _adapter.Get(
+            new ScriptId(scriptId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.AssertScript(CreateScript(new ScriptId(scriptId), []));
     }
@@ -229,7 +235,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+        var result = await _adapter.Get(
+            new ScriptId(scriptId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.AssertScript(
             CreateScript(
@@ -265,7 +274,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+        var result = await _adapter.Get(
+            new ScriptId(scriptId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.AssertScript(
             CreateScript(
@@ -301,7 +313,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+        var result = await _adapter.Get(
+            new ScriptId(scriptId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.AssertScript(
             CreateScript(
@@ -337,7 +352,10 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.Get(new ScriptId(scriptId), CancellationToken.None);
+        var result = await _adapter.Get(
+            new ScriptId(scriptId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.AssertScript(
             CreateScript(
@@ -356,6 +374,28 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
 
     #endregion
 
+    #region Get All Scripts
+
+    [Fact]
+    public async Task GetAllScripts()
+    {
+        const string scriptId = "bea9a643-a42f-438c-85f8-40332302a43e";
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(scriptId, []),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        var result = await _adapter.GetAll(
+            ProjectId.FromValue("id"),
+            TestContext.Current.CancellationToken
+        );
+
+        result
+            .Single(s => s.Id.Value.ToString() == scriptId)
+            .AssertScript(CreateScript(new ScriptId(scriptId), []));
+    }
+
+    #endregion
 
     private static Script CreateScript(ScriptId id, IEnumerable<ScriptParameter> parameters)
     {

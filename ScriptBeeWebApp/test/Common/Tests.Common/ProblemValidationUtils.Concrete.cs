@@ -136,4 +136,19 @@ public static partial class ProblemValidationUtils
             $"There is no instance allocated for project with the ID '{projectId}'"
         );
     }
+
+    public static async Task AssertScriptDoesNotExistProblem(
+        HttpResponseMessage response,
+        string testUrl,
+        string scriptId
+    )
+    {
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        await AssertNotFoundProblem(
+            response.Content,
+            testUrl,
+            "Script Not Found",
+            $"A script with the ID '{scriptId}' does not exists."
+        );
+    }
 }

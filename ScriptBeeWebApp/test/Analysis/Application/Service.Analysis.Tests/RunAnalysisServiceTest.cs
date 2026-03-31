@@ -20,7 +20,7 @@ public class RunAnalysisServiceTest
     private readonly IDateTimeProvider _dateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly ICreateAnalysis _createAnalysis = Substitute.For<ICreateAnalysis>();
-    private readonly IGetScript _getScript = Substitute.For<IGetScript>();
+    private readonly IGetScripts _getScripts = Substitute.For<IGetScripts>();
     private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
 
     private readonly Channel<RunScriptRequest> _runScriptChannel =
@@ -41,7 +41,7 @@ public class RunAnalysisServiceTest
             _dateTimeProvider,
             _guidProvider,
             _createAnalysis,
-            _getScript,
+            _getScripts,
             _pluginRepository,
             _runScriptChannel,
             _instanceInformation
@@ -79,7 +79,7 @@ public class RunAnalysisServiceTest
         );
         _dateTimeProvider.UtcNow().Returns(creationDate);
         _guidProvider.NewGuid().Returns(analysisId.Value);
-        _getScript
+        _getScripts
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(script));
         _createAnalysis
@@ -127,7 +127,7 @@ public class RunAnalysisServiceTest
         );
         _dateTimeProvider.UtcNow().Returns(date);
         _guidProvider.NewGuid().Returns(analysisId.Value);
-        _getScript
+        _getScripts
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
@@ -182,7 +182,7 @@ public class RunAnalysisServiceTest
         );
         _dateTimeProvider.UtcNow().Returns(date);
         _guidProvider.NewGuid().Returns(analysisId.Value);
-        _getScript
+        _getScripts
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
