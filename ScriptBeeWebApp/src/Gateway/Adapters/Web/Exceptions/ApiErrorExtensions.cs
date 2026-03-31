@@ -138,4 +138,17 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static NotFound<ProblemDetails> ToProblem(
+        this ScriptDoesNotExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
+            context.ToProblemDetails(
+                "Script Not Found",
+                $"A script with the ID '{error.ScriptId}' does not exists."
+            )
+        );
+    }
 }

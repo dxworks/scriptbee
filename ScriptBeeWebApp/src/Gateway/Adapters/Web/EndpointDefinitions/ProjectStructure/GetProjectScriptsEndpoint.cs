@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure;
 
@@ -38,25 +40,25 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
         );
     }
 
-    private static async Task<Ok<WebScriptData>> GetProjectScriptById(
+    private static async Task<
+        Results<Ok<WebScriptData>, NotFound<ProblemDetails>>
+    > GetProjectScriptById(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string scriptId
+        [FromRoute] string scriptId,
+        IGetScriptsUseCase useCase,
+        CancellationToken cancellationToken
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.GetById(
+            ProjectId.FromValue(projectId),
+            new ScriptId(scriptId),
+            cancellationToken
+        );
 
-        // TODO FIXIT: remove hardcoded value
-
-        return TypedResults.Ok(
-            new WebScriptData
-            {
-                Id = "file-1",
-                Name = "file",
-                Path = "folder-1/sub-folder-1/file",
-                AbsolutePath = $"{projectId}/folder-1/sub-folder-1/file",
-                ScriptLanguage = new WebScriptLanguage("csharp", ".cs"),
-                Parameters = [new WebScriptParameter("param-1", "string", "hello")],
-            }
+        return result.Match<Results<Ok<WebScriptData>, NotFound<ProblemDetails>>>(
+            script => TypedResults.Ok(WebScriptData.Map(script)),
+            error => error.ToProblem(context)
         );
     }
 

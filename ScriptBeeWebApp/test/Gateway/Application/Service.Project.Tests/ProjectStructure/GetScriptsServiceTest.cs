@@ -1,5 +1,6 @@
 using NSubstitute;
 using ScriptBee.Artifacts;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Project.ProjectStructure;
@@ -43,5 +44,48 @@ public class GetScriptsServiceTest
         );
 
         Assert.Equal(expectedScripts, scripts);
+    }
+
+    [Fact]
+    public async Task GivenScript_ShouldReturnScript()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var scriptId = new ScriptId(Guid.NewGuid());
+        var script = new Script(
+            scriptId,
+            projectId,
+            "name",
+            "file-path",
+            "absolute-file-path",
+            new ScriptLanguage("language", "extension"),
+            []
+        );
+
+        _getScripts.Get(scriptId, TestContext.Current.CancellationToken).Returns(script);
+
+        var result = await _getScriptsService.GetById(
+            projectId,
+            scriptId,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(script, result);
+    }
+
+    [Fact]
+    public async Task GivenScriptDoesNotExistsError_ShouldReturnError()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var scriptId = new ScriptId(Guid.NewGuid());
+        var error = new ScriptDoesNotExistsError(scriptId);
+        _getScripts.Get(scriptId, TestContext.Current.CancellationToken).Returns(error);
+
+        var result = await _getScriptsService.GetById(
+            projectId,
+            scriptId,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(error, result);
     }
 }

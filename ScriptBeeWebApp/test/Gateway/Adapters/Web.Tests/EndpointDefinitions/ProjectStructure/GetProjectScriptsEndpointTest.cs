@@ -2,17 +2,19 @@
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using OneOf;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.ProjectStructure;
+using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;
 
 public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
 {
     private const string TestUrl = "/api/projects/id/scripts";
-    private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Theory]
     [FilePath("TestData/GetAllScripts/response.json")]
@@ -40,7 +42,8 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 ),
             ]);
 
-        var response = await _api.GetApi(
+        var api = new TestApiCaller<Program>(TestUrl);
+        var response = await api.GetApi(
             new TestWebApplicationFactory<Program>(
                 outputHelper,
                 services =>
@@ -51,5 +54,89 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
+    }
+
+    [Theory]
+    [FilePath("TestData/GetScriptById/response.json")]
+    public async Task GivenScript_ShouldReturnOk(string responsePath)
+    {
+        var useCase = Substitute.For<IGetScriptsUseCase>();
+        useCase
+            .GetById(
+                ProjectId.FromValue("id"),
+                new ScriptId("a60eafb2-7f85-432e-891e-863bdfab59fe"),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
+                    new Script(
+                        new ScriptId("a60eafb2-7f85-432e-891e-863bdfab59fe"),
+                        ProjectId.Create("id"),
+                        "name",
+                        "path",
+                        "absolute",
+                        new ScriptLanguage("csharp", ".cs"),
+                        [
+                            new ScriptParameter
+                            {
+                                Name = "name",
+                                Value = "value",
+                                Type = "string",
+                            },
+                        ]
+                    )
+                )
+            );
+
+        const string testUrl = $"{TestUrl}/a60eafb2-7f85-432e-891e-863bdfab59fe";
+        var api = new TestApiCaller<Program>(testUrl);
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
+    }
+
+    [Fact]
+    public async Task GivenScriptDoesNotExistsError_ShouldReturnNotFound()
+    {
+        var useCase = Substitute.For<IGetScriptsUseCase>();
+        useCase
+            .GetById(
+                ProjectId.FromValue("id"),
+                new ScriptId("e9ca58a1-c3cf-4bc1-9252-970484c67215"),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
+                    new ScriptDoesNotExistsError(
+                        new ScriptId("e9ca58a1-c3cf-4bc1-9252-970484c67215")
+                    )
+                )
+            );
+
+        const string testUrl = $"{TestUrl}/e9ca58a1-c3cf-4bc1-9252-970484c67215";
+        var api = new TestApiCaller<Program>(testUrl);
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await AssertScriptDoesNotExistProblem(
+            response,
+            testUrl,
+            "e9ca58a1-c3cf-4bc1-9252-970484c67215"
+        );
     }
 }
