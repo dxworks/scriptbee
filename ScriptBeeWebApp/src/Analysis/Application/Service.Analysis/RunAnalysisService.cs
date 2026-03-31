@@ -16,7 +16,7 @@ public class RunAnalysisService(
     IDateTimeProvider dateTimeProvider,
     IGuidProvider guidProvider,
     ICreateAnalysis createAnalysis,
-    IGetScript getScript,
+    IGetScripts getScripts,
     IPluginRepository pluginRepository,
     Channel<RunScriptRequest> runScriptChannel,
     InstanceInformation instanceInformation
@@ -27,7 +27,7 @@ public class RunAnalysisService(
         CancellationToken cancellationToken = default
     )
     {
-        var scriptResult = await getScript.Get(command.ScriptId, cancellationToken);
+        var scriptResult = await getScripts.Get(command.ScriptId, cancellationToken);
 
         return await scriptResult.Match(
             async script => await Run(script, cancellationToken),

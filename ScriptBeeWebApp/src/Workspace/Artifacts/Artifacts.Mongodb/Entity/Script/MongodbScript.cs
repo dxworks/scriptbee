@@ -14,7 +14,7 @@ public class MongodbScript : IDocument
     public required string FilePath { get; init; }
     public required string AbsoluteFilePath { get; init; }
     public required MongodbScriptLanguage ScriptLanguage { get; init; }
-    public required IEnumerable<MongodbScriptParameter> Parameters { get; init; }
+    public required IEnumerable<MongodbScriptParameter> Parameters { get; init; } = [];
 
     public static MongodbScript From(Domain.Model.ProjectStructure.Script script)
     {

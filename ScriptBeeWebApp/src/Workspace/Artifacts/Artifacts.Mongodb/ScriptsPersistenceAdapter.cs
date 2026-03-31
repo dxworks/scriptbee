@@ -1,18 +1,32 @@
 using OneOf;
 using ScriptBee.Artifacts.Mongodb.Entity.Script;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Artifacts.Mongodb;
 
-public class ScriptPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepository)
+public class ScriptsPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepository)
     : ICreateScript,
-        IGetScript
+        IGetScripts
 {
     public async Task Create(Script script, CancellationToken cancellationToken = default)
     {
         await mongoRepository.CreateDocument(MongodbScript.From(script), cancellationToken);
+    }
+
+    public async Task<IEnumerable<Script>> GetAll(
+        ProjectId projectId,
+        CancellationToken cancellationToken
+    )
+    {
+        var scripts = await mongoRepository.GetAllDocuments(
+            s => s.ProjectId == projectId.ToString(),
+            cancellationToken
+        );
+
+        return scripts.Select(s => s.ToScript());
     }
 
     public async Task<OneOf<Script, ScriptDoesNotExistsError>> Get(

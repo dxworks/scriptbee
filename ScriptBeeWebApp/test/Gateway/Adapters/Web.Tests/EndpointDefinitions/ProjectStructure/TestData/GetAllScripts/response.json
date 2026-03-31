@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "id": "c2dd5b46-0d19-4f9e-a5bc-52d0c6522727",
+      "name": "name",
+      "path": "path",
+      "absolutePath": "absolute",
+      "scriptLanguage": {
+        "name": "csharp",
+        "extension": ".cs"
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "type": "string",
+          "value": "value"
+        }
+      ]
+    }
+  ]
+}

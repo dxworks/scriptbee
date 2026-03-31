@@ -58,8 +58,8 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     [Fact]
     public async Task ShouldReturnCreated_WhenNoParametersArePassed()
     {
-        var createScriptUseCase = Substitute.For<ICreateScriptUseCase>();
-        createScriptUseCase
+        var useCase = Substitute.For<ICreateScriptUseCase>();
+        useCase
             .Create(
                 new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
                 Arg.Any<CancellationToken>()
@@ -83,7 +83,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 outputHelper,
                 services =>
                 {
-                    services.AddSingleton(createScriptUseCase);
+                    services.AddSingleton(useCase);
                 }
             ),
             new WebCreateScriptCommand("path", "csharp", null)
