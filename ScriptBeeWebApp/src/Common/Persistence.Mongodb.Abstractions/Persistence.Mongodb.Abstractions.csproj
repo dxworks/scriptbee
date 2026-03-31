@@ -7,7 +7,4 @@
     <PackageReference Include="MongoDB.Driver" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj" />
-  </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
   <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
+  <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
   <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
@@ -43,6 +44,7 @@
   <!-- Tests - Common Layer -->
   <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
+  <Project Path="ScriptBeeWebApp/test/Common/Application.Model.Tests/Application.Model.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />

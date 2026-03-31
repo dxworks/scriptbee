@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model;
+﻿using ScriptBee.Application.Model;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 
@@ -8,7 +8,7 @@ public interface IGetAllAnalyses
 {
     Task<IEnumerable<AnalysisInfo>> GetAll(
         ProjectId projectId,
-        SortOrder sortOrder,
+        IReadOnlyList<AnalysisSort> sort,
         CancellationToken cancellationToken
     );
 }
