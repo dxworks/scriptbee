@@ -14,4 +14,10 @@ public interface IGetScriptsUseCase
         ScriptId scriptId,
         CancellationToken cancellationToken
     );
+
+    Task<OneOf<string, ScriptDoesNotExistsError>> GetScriptContent(
+        ProjectId projectId,
+        ScriptId scriptId,
+        CancellationToken cancellationToken
+    );
 }

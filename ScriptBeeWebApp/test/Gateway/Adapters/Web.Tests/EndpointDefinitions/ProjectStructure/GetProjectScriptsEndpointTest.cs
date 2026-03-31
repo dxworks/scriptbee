@@ -8,6 +8,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.ProjectStructure;
+using VeriJson;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;
@@ -137,6 +138,74 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             response,
             testUrl,
             "e9ca58a1-c3cf-4bc1-9252-970484c67215"
+        );
+    }
+
+    [Fact]
+    public async Task GivenScriptContent_ShouldReturnOk()
+    {
+        var useCase = Substitute.For<IGetScriptsUseCase>();
+        useCase
+            .GetScriptContent(
+                ProjectId.FromValue("id"),
+                new ScriptId("04389d95-b217-45da-b690-c3f283134d9e"),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(Task.FromResult<OneOf<string, ScriptDoesNotExistsError>>("content"));
+
+        const string testUrl = $"{TestUrl}/04389d95-b217-45da-b690-c3f283134d9e/content";
+        var api = new TestApiCaller<Program>(testUrl);
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var actualContent = await response.Content.ReadAsStringAsync(
+            TestContext.Current.CancellationToken
+        );
+        actualContent.Should().BeEquivalentTo("\"content\"");
+    }
+
+    [Fact]
+    public async Task GivenScriptDoesNotExistsError_WhenGetContent_ShouldReturnNotFound()
+    {
+        var useCase = Substitute.For<IGetScriptsUseCase>();
+        useCase
+            .GetScriptContent(
+                ProjectId.FromValue("id"),
+                new ScriptId("58cdce76-e1ff-4011-9d41-31138da9e94a"),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<OneOf<string, ScriptDoesNotExistsError>>(
+                    new ScriptDoesNotExistsError(
+                        new ScriptId("58cdce76-e1ff-4011-9d41-31138da9e94a")
+                    )
+                )
+            );
+
+        const string testUrl = $"{TestUrl}/58cdce76-e1ff-4011-9d41-31138da9e94a/content";
+        var api = new TestApiCaller<Program>(testUrl);
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await AssertScriptDoesNotExistProblem(
+            response,
+            testUrl,
+            "58cdce76-e1ff-4011-9d41-31138da9e94a"
         );
     }
 }

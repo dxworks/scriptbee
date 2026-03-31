@@ -11,7 +11,7 @@ public class ScriptsPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepo
     : ICreateScript,
         IGetScripts
 {
-    public async Task Create(Script script, CancellationToken cancellationToken = default)
+    public async Task Create(Script script, CancellationToken cancellationToken)
     {
         await mongoRepository.CreateDocument(MongodbScript.From(script), cancellationToken);
     }

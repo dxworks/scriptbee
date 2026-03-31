@@ -14,7 +14,6 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        // TODO FIXIT: update dependencies
         services.AddSingleton<IGetScriptsUseCase, GetScriptsService>();
     }
 
@@ -62,14 +61,25 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
         );
     }
 
-    private static async Task<Ok<string>> GetProjectScriptsContent(
+    private static async Task<
+        Results<Ok<string>, NotFound<ProblemDetails>>
+    > GetProjectScriptsContent(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string scriptId
+        [FromRoute] string scriptId,
+        IGetScriptsUseCase useCase,
+        CancellationToken cancellationToken
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.GetScriptContent(
+            ProjectId.FromValue(projectId),
+            new ScriptId(scriptId),
+            cancellationToken
+        );
 
-        // TODO FIXIT: remove hardcoded value
-        return TypedResults.Ok(scriptId);
+        return result.Match<Results<Ok<string>, NotFound<ProblemDetails>>>(
+            content => TypedResults.Ok(content),
+            error => error.ToProblem(context)
+        );
     }
 }
