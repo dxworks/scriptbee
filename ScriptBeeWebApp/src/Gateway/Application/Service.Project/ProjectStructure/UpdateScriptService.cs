@@ -21,15 +21,23 @@ using CreateResult = OneOf<
     ScriptPathAlreadyExistsError
 >;
 
-public class CreateScriptService(
+public class UpdateScriptService(
     IGetProject getProject,
     IGetScriptLanguages getScriptLanguages,
     ICreateFile createFile,
     IGuidProvider guidProvider,
     ICreateScript createScript,
     IGetCurrentInstanceUseCase currentInstanceUseCase
-) : ICreateScriptUseCase
+) : IUpdateScriptUseCase
 {
+    public Task<OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError>> Update(
+        UpdateScriptCommand command,
+        CancellationToken cancellationToken
+    )
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<CreateResult> Create(
         CreateScriptCommand command,
         CancellationToken cancellationToken

@@ -24,6 +24,23 @@ public class TestApiCaller<TStartup>(string endpoint)
         return response;
     }
 
+    public async Task<HttpResponseMessage> PatchApi<T>(
+        TestWebApplicationFactory<TStartup> factory,
+        T? data = default
+    )
+    {
+        using var client = factory.CreateClient();
+
+        var content = new StringContent(
+            JsonSerializer.Serialize(data),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json
+        );
+
+        var response = await client.PatchAsync(endpoint, content);
+        return response;
+    }
+
     public async Task<HttpResponseMessage> DeleteApi(TestWebApplicationFactory<TStartup> factory)
     {
         using var client = factory.CreateClient();

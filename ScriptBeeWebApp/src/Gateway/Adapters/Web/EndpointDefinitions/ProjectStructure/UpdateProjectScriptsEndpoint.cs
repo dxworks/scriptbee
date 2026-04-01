@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Common.Web.Validation;
+using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Service.Project.ProjectStructure;
+using ScriptBee.UseCases.Project.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure;
 
@@ -9,34 +15,40 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        // TODO FIXIT: update dependencies
+        services.AddSingleton<IUpdateScriptUseCase, UpdateScriptService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPatch("/api/projects/{projectId}/scripts", UpdateProjectScript).WithTags("Scripts");
+        app.MapPatch("/api/projects/{projectId}/scripts/{scriptId}", UpdateProjectScript)
+            .WithTags("Scripts")
+            .WithRequestValidation<WebUpdateScriptCommand>();
     }
 
-    private static async Task<Ok<WebScriptData>> UpdateProjectScript(
+    private static async Task<
+        Results<Ok<WebScriptData>, NotFound<ProblemDetails>>
+    > UpdateProjectScript(
+        HttpContext context,
         [FromRoute] string projectId,
-        // TODO FIXIT: add validation
-        [FromBody] WebUpdateScriptCommand command
+        [FromRoute] string scriptId,
+        [FromBody] WebUpdateScriptCommand command,
+        IUpdateScriptUseCase useCase,
+        CancellationToken cancellationToken
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.Update(
+            new UpdateScriptCommand(
+                ProjectId.FromValue(projectId),
+                new ScriptId(scriptId),
+                command.Parameters?.Select(p => p.Map())
+            ),
+            cancellationToken
+        );
 
-        // TODO FIXIT: remove hardcoded value
-
-        return TypedResults.Ok(
-            new WebScriptData
-            {
-                Id = "file-1",
-                Name = "file",
-                Path = "folder-1/sub-folder-1/file",
-                AbsolutePath = $"{projectId}/folder-1/sub-folder-1/file",
-                ScriptLanguage = new WebScriptLanguage("csharp", ".cs"),
-                Parameters = [new WebScriptParameter("param-1", "string", "hello")],
-            }
+        return result.Match<Results<Ok<WebScriptData>, NotFound<ProblemDetails>>>(
+            script => TypedResults.Ok(WebScriptData.Map(script)),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context)
         );
     }
 }
