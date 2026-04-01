@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
@@ -22,7 +22,7 @@ public class GetLinkersEndpoint : IEndpointDefinition
             .WithTags("Instances", "Context");
     }
 
-    private static async Task<Ok<IEnumerable<WebLinker>>> GetInstanceLinkers(
+    private static async Task<Ok<WebGetLinkersResponse>> GetInstanceLinkers(
         [FromRoute] string projectId,
         [FromRoute] string instanceId,
         IGetInstanceLinkersUseCase useCase,
@@ -32,6 +32,6 @@ public class GetLinkersEndpoint : IEndpointDefinition
         var query = new GetLinkersQuery(ProjectId.FromValue(projectId), new InstanceId(instanceId));
         var linkers = await useCase.Get(query, cancellationToken);
 
-        return TypedResults.Ok(linkers.Select(WebLinker.Map));
+        return TypedResults.Ok(new WebGetLinkersResponse(linkers.Select(WebLinker.Map)));
     }
 }

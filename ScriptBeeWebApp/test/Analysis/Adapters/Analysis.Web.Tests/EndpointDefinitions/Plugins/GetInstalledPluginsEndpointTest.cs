@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -44,7 +44,8 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var installedPlugins = await response.ReadContentAsync<IEnumerable<JsonElement>>();
+        var responseContent = await response.ReadContentAsync<JsonElement>();
+        var installedPlugins = responseContent.GetProperty("data").EnumerateArray();
         var plugin = installedPlugins.Single();
         AssertPluginProperties(plugin);
         var extensionPoint = plugin
@@ -85,7 +86,8 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var installedPlugins = await response.ReadContentAsync<IEnumerable<JsonElement>>();
+        var responseContent = await response.ReadContentAsync<JsonElement>();
+        var installedPlugins = responseContent.GetProperty("data").EnumerateArray();
         var plugin = installedPlugins.Single();
         AssertPluginProperties(plugin);
         var extensionPoint = plugin
@@ -126,7 +128,8 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var installedPlugins = await response.ReadContentAsync<IEnumerable<JsonElement>>();
+        var responseContent = await response.ReadContentAsync<JsonElement>();
+        var installedPlugins = responseContent.GetProperty("data").EnumerateArray();
         var plugin = installedPlugins.Single();
         AssertPluginProperties(plugin);
         var extensionPoint = plugin
@@ -169,7 +172,8 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var installedPlugins = await response.ReadContentAsync<IEnumerable<JsonElement>>();
+        var responseContent = await response.ReadContentAsync<JsonElement>();
+        var installedPlugins = responseContent.GetProperty("data").EnumerateArray();
         var plugin = installedPlugins.Single();
         AssertPluginProperties(plugin);
         var extensionPoint = plugin
@@ -214,7 +218,8 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var installedPlugins = await response.ReadContentAsync<IEnumerable<JsonElement>>();
+        var responseContent = await response.ReadContentAsync<JsonElement>();
+        var installedPlugins = responseContent.GetProperty("data").EnumerateArray();
         var plugin = installedPlugins.Single();
         AssertPluginProperties(plugin);
         var extensionPoint = plugin
@@ -262,7 +267,8 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var installedPlugins = await response.ReadContentAsync<IEnumerable<JsonElement>>();
+        var responseContent = await response.ReadContentAsync<JsonElement>();
+        var installedPlugins = responseContent.GetProperty("data").EnumerateArray();
         var plugin = installedPlugins.Single();
         AssertPluginProperties(plugin);
         var extensionPoint = plugin

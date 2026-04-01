@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Common.Web;
 using ScriptBee.Service.Analysis;
@@ -18,13 +18,15 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
         app.MapGet("/api/plugins", GetInstalledPlugins);
     }
 
-    private static async Task<Ok<IEnumerable<WebInstalledPlugin>>> GetInstalledPlugins(
+    private static async Task<Ok<WebGetInstalledPluginsResponse>> GetInstalledPlugins(
         IGetInstalledPluginsUseCase useCase,
         CancellationToken cancellationToken = default
     )
     {
         var plugins = await useCase.Get(cancellationToken);
 
-        return TypedResults.Ok(plugins.Select(WebInstalledPlugin.Map));
+        return TypedResults.Ok(
+            new WebGetInstalledPluginsResponse(plugins.Select(WebInstalledPlugin.Map))
+        );
     }
 }

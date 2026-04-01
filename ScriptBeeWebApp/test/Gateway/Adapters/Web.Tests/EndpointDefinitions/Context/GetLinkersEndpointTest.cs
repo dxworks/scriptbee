@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.Context;
@@ -40,9 +40,9 @@ public class GetLinkersEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var linkersResponse = await response.ReadContentAsync<IEnumerable<WebLinker>>();
+        var linkersResponse = await response.ReadContentAsync<WebGetLinkersResponse>();
         linkersResponse
-            .ToList()
+            .Data.ToList()
             .ShouldBeEquivalentTo(new List<WebLinker> { new("linker-id", "linker-name") });
     }
 }

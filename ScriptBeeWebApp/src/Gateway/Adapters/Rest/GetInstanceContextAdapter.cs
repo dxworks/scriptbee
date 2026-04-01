@@ -18,7 +18,7 @@ public class GetInstanceContextAdapter(IHttpClientFactory httpClientFactory) : I
 
         var contextApi = RestService.For<IContextApi>(client);
 
-        var restContextSlices = await contextApi.Get(cancellationToken);
-        return restContextSlices.Select(s => s.Map());
+        var response = await contextApi.Get(cancellationToken);
+        return response.Data.Select(s => s.Map());
     }
 }

@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.Project;
@@ -273,24 +273,26 @@ public sealed class GetPluginsAdapterTest : IDisposable
                     .WithStatusCode(200)
                     .WithBody(
                         $$"""
-                        [
-                            {
-                                "folderPath": "folder",
-                                "id": "id",
-                                "version": "1.2.3",
-                                "manifest":
+                        {
+                            "data": [
                                 {
-                                    "apiVersion": "1.0.0",
-                                    "name": "name",
-                                    "author": "author",
-                                    "description": "description",
-                                    "extensionPoints":
-                                    [
-                                       {{extensionPoint}}
-                                    ]
+                                    "folderPath": "folder",
+                                    "id": "id",
+                                    "version": "1.2.3",
+                                    "manifest":
+                                    {
+                                        "apiVersion": "1.0.0",
+                                        "name": "name",
+                                        "author": "author",
+                                        "description": "description",
+                                        "extensionPoints":
+                                        [
+                                           {{extensionPoint}}
+                                        ]
+                                    }
                                 }
-                            }
-                        ]
+                            ]
+                        }
                         """
                     )
             );

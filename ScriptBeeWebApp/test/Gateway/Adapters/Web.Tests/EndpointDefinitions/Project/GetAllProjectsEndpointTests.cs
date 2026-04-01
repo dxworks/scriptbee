@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.File;
@@ -47,7 +47,7 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getProjectListResponse = await response.ReadContentAsync<WebGetProjectListResponse>();
-        getProjectListResponse.Projects.ShouldBeEquivalentTo(
+        getProjectListResponse.Data.ShouldBeEquivalentTo(
             new List<WebGetProjectDetailsResponse> { new("id", "name", creationDate) }
         );
     }

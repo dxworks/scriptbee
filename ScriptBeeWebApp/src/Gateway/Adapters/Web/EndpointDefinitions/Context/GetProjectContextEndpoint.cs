@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
@@ -24,7 +24,7 @@ public class GetProjectContextEndpoint : IEndpointDefinition
     }
 
     private static async Task<
-        Results<Ok<IEnumerable<WebProjectContextSlice>>, NotFound<ProblemDetails>>
+        Results<Ok<WebGetProjectContextResponse>, NotFound<ProblemDetails>>
     > GetCurrentContext(
         HttpContext context,
         [FromRoute] string projectId,
@@ -39,10 +39,11 @@ public class GetProjectContextEndpoint : IEndpointDefinition
         );
         var result = await useCase.Get(query, cancellationToken);
 
-        return result.Match<
-            Results<Ok<IEnumerable<WebProjectContextSlice>>, NotFound<ProblemDetails>>
-        >(
-            slices => TypedResults.Ok(slices.Select(s => WebProjectContextSlice.Map(s))),
+        return result.Match<Results<Ok<WebGetProjectContextResponse>, NotFound<ProblemDetails>>>(
+            slices =>
+                TypedResults.Ok(
+                    new WebGetProjectContextResponse(slices.Select(WebProjectContextSlice.Map))
+                ),
             error => error.ToProblem(context)
         );
     }
