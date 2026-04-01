@@ -6,10 +6,6 @@ export interface Project {
   creationDate: string;
 }
 
-export interface ProjectListResponse {
-  projects: Project[];
-}
-
 export interface CreateProjectRequest {
   id: string;
   name: string;

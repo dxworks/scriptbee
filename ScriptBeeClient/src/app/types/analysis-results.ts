@@ -3,11 +3,11 @@ export interface AnalysisConsoleOutput {
 }
 
 export interface AnalysisRunErrorOutput {
-  errors: AnalysisRunError[];
+  data: AnalysisRunError[];
 }
 
 export interface AnalysisFileOutput {
-  files: AnalysisFile[];
+  data: AnalysisFile[];
 }
 
 export interface AnalysisRunError {
