@@ -1,6 +1,7 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api.Model;
 using NSubstitute;
 using OneOf;
+using OneOf.Types;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
@@ -18,16 +19,24 @@ public class UpdateScriptServiceTest
     private readonly IGetProject _getProject = Substitute.For<IGetProject>();
     private readonly IGetScripts _getScripts = Substitute.For<IGetScripts>();
     private readonly IUpdateScript _updateScript = Substitute.For<IUpdateScript>();
+    private readonly IUpdateFile _updateFile = Substitute.For<IUpdateFile>();
 
     private readonly UpdateScriptService _updateScriptService;
 
     public UpdateScriptServiceTest()
     {
-        _updateScriptService = new UpdateScriptService(_getProject, _getScripts, _updateScript);
+        _updateScriptService = new UpdateScriptService(
+            _getProject,
+            _getScripts,
+            _updateScript,
+            _updateFile
+        );
     }
 
+    #region Update Script
+
     [Fact]
-    public async Task ProjectDoesNotExists()
+    public async Task ProjectDoesNotExists_WhenUpdate()
     {
         var projectId = ProjectId.FromValue("id");
         var error = new ProjectDoesNotExistsError(projectId);
@@ -44,7 +53,7 @@ public class UpdateScriptServiceTest
     }
 
     [Fact]
-    public async Task ScriptDoesNotExists()
+    public async Task ScriptDoesNotExists_WhenUpdate()
     {
         var projectId = ProjectId.FromValue("id");
         var scriptId = new ScriptId(Guid.NewGuid());
@@ -183,4 +192,96 @@ public class UpdateScriptServiceTest
     {
         return parameters.Single() is { Name: "parameter", Type: "string", Value: "value" };
     }
+
+    #endregion
+
+    #region Update Script Content
+
+    [Fact]
+    public async Task ProjectDoesNotExists_WhenUpdateContent()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var error = new ProjectDoesNotExistsError(projectId);
+        _getProject
+            .GetById(projectId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(error));
+
+        var result = await _updateScriptService.UpdateContent(
+            new UpdateScriptContentCommand(projectId, new ScriptId(Guid.NewGuid()), "content"),
+            TestContext.Current.CancellationToken
+        );
+
+        result.ShouldBe(error);
+    }
+
+    [Fact]
+    public async Task ScriptDoesNotExists_WhenUpdateContent()
+    {
+        var projectId = ProjectId.FromValue("id");
+        var scriptId = new ScriptId(Guid.NewGuid());
+        var error = new ScriptDoesNotExistsError(scriptId);
+        _getProject
+            .GetById(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    BasicProjectDetails(projectId)
+                )
+            );
+        _getScripts
+            .Get(scriptId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(error));
+
+        var result = await _updateScriptService.UpdateContent(
+            new UpdateScriptContentCommand(projectId, scriptId, "content"),
+            TestContext.Current.CancellationToken
+        );
+
+        result.ShouldBe(error);
+    }
+
+    [Fact]
+    public async Task UpdateScriptContentUpdated()
+    {
+        // Arrange
+        var projectId = ProjectId.FromValue("id");
+        var scriptId = new ScriptId(Guid.NewGuid());
+        var script = BasicScript(projectId, scriptId);
+        _getProject
+            .GetById(projectId, Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
+                    BasicProjectDetails(projectId)
+                )
+            );
+        _getScripts
+            .Get(scriptId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(script));
+        _updateFile
+            .UpdateScriptContent(
+                projectId,
+                script.FilePath,
+                "content",
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(Task.FromResult<OneOf<Success, FileDoesNotExistsError>>(new Success()));
+
+        // Act
+        var result = await _updateScriptService.UpdateContent(
+            new UpdateScriptContentCommand(projectId, scriptId, "content"),
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        result.AsT0.ShouldBe(new Success());
+        await _updateFile
+            .Received(1)
+            .UpdateScriptContent(
+                projectId,
+                script.FilePath,
+                "content",
+                TestContext.Current.CancellationToken
+            );
+    }
+
+    #endregion
 }

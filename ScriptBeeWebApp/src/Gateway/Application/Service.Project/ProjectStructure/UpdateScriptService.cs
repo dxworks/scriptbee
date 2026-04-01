@@ -1,4 +1,5 @@
 ﻿using OneOf;
+using OneOf.Types;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -7,12 +8,14 @@ using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.ProjectStructure;
 
+using UpdateContentResult = OneOf<Success, ProjectDoesNotExistsError, ScriptDoesNotExistsError>;
 using UpdateResult = OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError>;
 
 public class UpdateScriptService(
     IGetProject getProject,
     IGetScripts getScripts,
-    IUpdateScript updateScript
+    IUpdateScript updateScript,
+    IUpdateFile updateFile
 ) : IUpdateScriptUseCase
 {
     public async Task<UpdateResult> Update(
@@ -20,11 +23,24 @@ public class UpdateScriptService(
         CancellationToken cancellationToken
     )
     {
-        var projectDetailsResult = await getProject.GetById(command.ProjectId, cancellationToken);
+        var result = await getProject.GetById(command.ProjectId, cancellationToken);
 
-        return await projectDetailsResult.Match<Task<UpdateResult>>(
+        return await result.Match<Task<UpdateResult>>(
             async _ => await UpdateScript(command, cancellationToken),
             error => Task.FromResult<UpdateResult>(error)
+        );
+    }
+
+    public async Task<UpdateContentResult> UpdateContent(
+        UpdateScriptContentCommand command,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await getProject.GetById(command.ProjectId, cancellationToken);
+
+        return await result.Match<Task<UpdateContentResult>>(
+            async _ => await UpdateScriptContent(command, cancellationToken),
+            error => Task.FromResult<UpdateContentResult>(error)
         );
     }
 
@@ -55,5 +71,27 @@ public class UpdateScriptService(
         var updatedScript = script with { Parameters = command.Parameters };
 
         return await updateScript.Update(updatedScript, cancellationToken);
+    }
+
+    private async Task<UpdateContentResult> UpdateScriptContent(
+        UpdateScriptContentCommand command,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await getScripts.Get(command.ScriptId, cancellationToken);
+
+        return await result.Match<Task<UpdateContentResult>>(
+            async script =>
+            {
+                await updateFile.UpdateScriptContent(
+                    command.ProjectId,
+                    script.FilePath,
+                    command.Content,
+                    cancellationToken
+                );
+                return new Success();
+            },
+            error => Task.FromResult<UpdateContentResult>(error)
+        );
     }
 }

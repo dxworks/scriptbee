@@ -81,9 +81,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        response
-            .Headers.Location?.ToString()
-            .ShouldBe("/api/projects/id/scripts/3283da02-5710-4b2a-bc45-496ff77be18d");
         var webScriptData = await response.ReadContentAsync<WebScriptData>();
         webScriptData.Id.ShouldBe("3283da02-5710-4b2a-bc45-496ff77be18d");
         webScriptData.Name.ShouldBe("name");

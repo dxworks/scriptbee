@@ -23,6 +23,12 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
         app.MapPatch("/api/projects/{projectId}/scripts/{scriptId}", UpdateProjectScript)
             .WithTags("Scripts")
             .WithRequestValidation<WebUpdateScriptCommand>();
+
+        app.MapPut(
+                "/api/projects/{projectId}/scripts/{scriptId}/content",
+                UpdateProjectScriptContent
+            )
+            .WithTags("Scripts");
     }
 
     private static async Task<
@@ -47,6 +53,33 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
 
         return result.Match<Results<Ok<WebScriptData>, NotFound<ProblemDetails>>>(
             script => TypedResults.Ok(WebScriptData.Map(script)),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context)
+        );
+    }
+
+    private static async Task<
+        Results<NoContent, NotFound<ProblemDetails>>
+    > UpdateProjectScriptContent(
+        HttpContext context,
+        [FromRoute] string projectId,
+        [FromRoute] string scriptId,
+        [FromBody] string content,
+        IUpdateScriptUseCase useCase,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await useCase.UpdateContent(
+            new UpdateScriptContentCommand(
+                ProjectId.FromValue(projectId),
+                new ScriptId(scriptId),
+                content
+            ),
+            cancellationToken
+        );
+
+        return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
+            _ => TypedResults.NoContent(),
             error => error.ToProblem(context),
             error => error.ToProblem(context)
         );

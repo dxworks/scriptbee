@@ -16,6 +16,7 @@ public static class ConfigureProjectScriptingExtensions
             .AddSingleton<IConfigFoldersService, ConfigFoldersService>()
             .AddSingleton<ICreateFile, CreateFileAdapter>()
             .AddSingleton<ILoadFile, LoadFileAdapter>()
+            .AddSingleton<IUpdateFile, UpdateFileAdapter>()
             .AddSingleton<IFileService, FileService>();
     }
 }
