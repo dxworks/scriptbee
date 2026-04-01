@@ -4,22 +4,20 @@ using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Validation;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure.Validation;
 
-public class CreateScriptValidatorTest
+public class UpdateScriptValidatorTest
 {
-    private readonly CreateScriptValidator _validator = new();
+    private readonly UpdateScriptValidator _validator = new();
 
     [Theory]
     [InlineData("string")]
     [InlineData("integer")]
     [InlineData("float")]
     [InlineData("boolean")]
-    public async Task GivenValidCreateScript_ThenResultHasNoErrors(string type)
+    public async Task GivenValidUpdateScript_ThenResultHasNoErrors(string type)
     {
-        var createProject = new WebCreateScriptCommand(
-            "path",
-            "csharp",
-            [new WebScriptParameter("parameter", type, "value")]
-        );
+        var createProject = new WebUpdateScriptCommand([
+            new WebScriptParameter("parameter", type, "value"),
+        ]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -30,73 +28,37 @@ public class CreateScriptValidatorTest
     }
 
     [Fact]
-    public async Task GivenEmptyPath_ThenResultHasErrors()
+    public async Task GivenValidCreateScriptWithNullParameters_ThenResultHasNoErrors()
     {
-        var createProject = new WebCreateScriptCommand("", "language", null);
+        var createProject = new WebUpdateScriptCommand(null);
 
         var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        result
-            .ShouldHaveValidationErrorFor(x => x.Path)
-            .WithErrorMessage("'Path' must not be empty.");
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
-    public async Task GivenNullPath_ThenResultHasErrors()
+    public async Task GivenValidCreateScriptWithEmptyParameters_ThenResultHasNoErrors()
     {
-        var createProject = new WebCreateScriptCommand(null!, "language", null);
+        var createProject = new WebUpdateScriptCommand([]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        result
-            .ShouldHaveValidationErrorFor(x => x.Path)
-            .WithErrorMessage("'Path' must not be empty.");
-    }
-
-    [Fact]
-    public async Task GivenEmptyLanguage_ThenResultHasErrors()
-    {
-        var createProject = new WebCreateScriptCommand("path", "", null);
-
-        var result = await _validator.TestValidateAsync(
-            createProject,
-            cancellationToken: TestContext.Current.CancellationToken
-        );
-
-        result
-            .ShouldHaveValidationErrorFor(x => x.Language)
-            .WithErrorMessage("'Language' must not be empty.");
-    }
-
-    [Fact]
-    public async Task GivenNullLanguage_ThenResultHasErrors()
-    {
-        var createProject = new WebCreateScriptCommand("path", null!, null);
-
-        var result = await _validator.TestValidateAsync(
-            createProject,
-            cancellationToken: TestContext.Current.CancellationToken
-        );
-
-        result
-            .ShouldHaveValidationErrorFor(x => x.Language)
-            .WithErrorMessage("'Language' must not be empty.");
+        result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public async Task GivenEmptyParameterName_ThenResultHasErrors()
     {
-        var createProject = new WebCreateScriptCommand(
-            "path",
-            "language",
-            [new WebScriptParameter("", "string", "value")]
-        );
+        var createProject = new WebUpdateScriptCommand([
+            new WebScriptParameter("", "string", "value"),
+        ]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -111,11 +73,9 @@ public class CreateScriptValidatorTest
     [Fact]
     public async Task GivenNullParameterName_ThenResultHasErrors()
     {
-        var createProject = new WebCreateScriptCommand(
-            "path",
-            "language",
-            [new WebScriptParameter(null!, "string", "value")]
-        );
+        var createProject = new WebUpdateScriptCommand([
+            new WebScriptParameter(null!, "string", "value"),
+        ]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -129,11 +89,9 @@ public class CreateScriptValidatorTest
     [Fact]
     public async Task GivenNullParameterType_ThenResultHasErrors()
     {
-        var createProject = new WebCreateScriptCommand(
-            "path",
-            "language",
-            [new WebScriptParameter("parameter", null!, "value")]
-        );
+        var createProject = new WebUpdateScriptCommand([
+            new WebScriptParameter("parameter", null!, "value"),
+        ]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -147,11 +105,9 @@ public class CreateScriptValidatorTest
     [Fact]
     public async Task GivenInvalidParameterType_ThenResultHasErrors()
     {
-        var createProject = new WebCreateScriptCommand(
-            "path",
-            "language",
-            [new WebScriptParameter("parameter", "invalid", "value")]
-        );
+        var createProject = new WebUpdateScriptCommand([
+            new WebScriptParameter("parameter", "invalid", "value"),
+        ]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -167,23 +123,15 @@ public class CreateScriptValidatorTest
     [Fact]
     public async Task GivenInvalidFields_ThenResultHasErrors()
     {
-        var createProject = new WebCreateScriptCommand(
-            null!,
-            null!,
-            [new WebScriptParameter(null!, null!, null)]
-        );
+        var createProject = new WebUpdateScriptCommand([
+            new WebScriptParameter(null!, null!, null),
+        ]);
 
         var result = await _validator.TestValidateAsync(
             createProject,
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        result
-            .ShouldHaveValidationErrorFor(x => x.Path)
-            .WithErrorMessage("'Path' must not be empty.");
-        result
-            .ShouldHaveValidationErrorFor(x => x.Language)
-            .WithErrorMessage("'Language' must not be empty.");
         result
             .ShouldHaveValidationErrorFor("Parameters[0].Name")
             .WithErrorMessage("'Name' must not be empty.");

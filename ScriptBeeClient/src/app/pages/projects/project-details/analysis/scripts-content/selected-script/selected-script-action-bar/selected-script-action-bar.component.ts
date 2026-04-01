@@ -60,6 +60,7 @@ export class SelectedScriptActionBarComponent {
       disableClose: true,
       data: {
         projectId: this.projectId(),
+        scriptId: this.script().id,
         parameters: this.script().parameters,
       },
     });

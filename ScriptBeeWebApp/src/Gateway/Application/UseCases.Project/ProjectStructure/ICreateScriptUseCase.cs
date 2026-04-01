@@ -15,5 +15,5 @@ public interface ICreateScriptUseCase
             ScriptLanguageDoesNotExistsError,
             ScriptPathAlreadyExistsError
         >
-    > Create(CreateScriptCommand command, CancellationToken cancellationToken = default);
+    > Create(CreateScriptCommand command, CancellationToken cancellationToken);
 }

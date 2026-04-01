@@ -38,11 +38,10 @@ export class ProjectStructureService {
     return this.http.post<ProjectScript>(`/api/projects/${projectId}/scripts`, request);
   }
 
-  updateProjectScript(projectId: string, scriptLanguage: string | undefined, parameters: ScriptParameter[] | undefined) {
+  updateProjectScript(projectId: string, scriptId: string, parameters: ScriptParameter[] | undefined) {
     const request: Partial<UpdateScriptRequest> = {
-      language: scriptLanguage,
       parameters: parameters,
     };
-    return this.http.patch<ProjectScript>(`/api/projects/${projectId}/scripts`, request);
+    return this.http.patch<ProjectScript>(`/api/projects/${projectId}/scripts/${scriptId}`, request);
   }
 }

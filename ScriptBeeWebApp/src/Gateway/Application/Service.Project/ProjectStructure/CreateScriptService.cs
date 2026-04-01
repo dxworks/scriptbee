@@ -32,7 +32,7 @@ public class CreateScriptService(
 {
     public async Task<CreateResult> Create(
         CreateScriptCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var projectDetailsResult = await getProject.GetById(command.ProjectId, cancellationToken);
@@ -46,7 +46,7 @@ public class CreateScriptService(
     private async Task<CreateResult> Create(
         CreateScriptCommand command,
         ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var result = await currentInstanceUseCase.GetCurrentInstance(
@@ -65,7 +65,7 @@ public class CreateScriptService(
         CreateScriptCommand command,
         InstanceInfo instanceInfo,
         ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var languageResult = await getScriptLanguages.Get(
@@ -84,7 +84,7 @@ public class CreateScriptService(
         CreateScriptCommand command,
         ProjectDetails projectDetails,
         ScriptLanguage language,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         // TODO FIXIT(#35): add sample code to created file
@@ -113,7 +113,7 @@ public class CreateScriptService(
         ProjectDetails projectDetails,
         ScriptLanguage language,
         CreateFileResult createFileResult,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var script = new Script(

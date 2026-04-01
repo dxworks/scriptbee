@@ -3,12 +3,10 @@ using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Validation;
 
-public class CreateScriptValidator : AbstractValidator<WebCreateScriptCommand>
+public class UpdateScriptValidator : AbstractValidator<WebUpdateScriptCommand>
 {
-    public CreateScriptValidator()
+    public UpdateScriptValidator()
     {
-        RuleFor(x => x.Path).NotEmpty();
-        RuleFor(x => x.Language).NotEmpty();
         RuleForEach(x => x.Parameters)
             .ChildRules(parameter =>
             {

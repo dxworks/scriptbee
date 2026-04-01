@@ -12,6 +12,7 @@ import { finalize } from 'rxjs';
 
 export interface EditParametersDialogData {
   projectId: string;
+  scriptId: string;
   parameters: ScriptParameter[];
 }
 
@@ -59,7 +60,7 @@ export class EditParametersDialogComponent {
   onUpdateClick() {
     this.isUpdateLoading.set(true);
     this.projectStructureService
-      .updateProjectScript(this.data.projectId, undefined, this.parameters())
+      .updateProjectScript(this.data.projectId, this.data.scriptId, this.parameters())
       .pipe(finalize(() => this.isUpdateLoading.set(false)))
       .subscribe({ next: () => this.dialogRef.close() });
   }
