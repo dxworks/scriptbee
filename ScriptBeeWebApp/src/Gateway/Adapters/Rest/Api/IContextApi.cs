@@ -1,4 +1,4 @@
-﻿using Refit;
+using Refit;
 using ScriptBee.Rest.Contracts;
 
 namespace ScriptBee.Rest.Api;
@@ -6,7 +6,7 @@ namespace ScriptBee.Rest.Api;
 public interface IContextApi
 {
     [Get("/api/context")]
-    Task<IEnumerable<RestContextSlice>> Get(CancellationToken cancellationToken);
+    Task<RestGetContextResponse> Get(CancellationToken cancellationToken);
 
     [Post("/api/context/clear")]
     Task Clear(CancellationToken cancellationToken);

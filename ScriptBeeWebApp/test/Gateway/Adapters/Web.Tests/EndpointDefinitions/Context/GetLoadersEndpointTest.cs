@@ -40,9 +40,9 @@ public class GetLoadersEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var loadersResponse = await response.ReadContentAsync<IEnumerable<WebLoader>>();
+        var loadersResponse = await response.ReadContentAsync<WebGetLoadersResponse>();
         loadersResponse
-            .ToList()
+            .Data.ToList()
             .ShouldBeEquivalentTo(new List<WebLoader> { new("loader-id", "loader-name") });
     }
 }

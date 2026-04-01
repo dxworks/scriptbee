@@ -1,4 +1,4 @@
-﻿using Refit;
+using Refit;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Ports.Plugins;
@@ -18,8 +18,8 @@ public class GetPluginsAdapter(IHttpClientFactory httpClientFactory) : IGetPlugi
 
         var pluginsApi = RestService.For<IPluginsApi>(client);
 
-        var restInstalledPlugins = await pluginsApi.GetInstalledPlugins(cancellationToken);
+        var response = await pluginsApi.GetInstalledPlugins(cancellationToken);
 
-        return restInstalledPlugins.Select(plugin => plugin.Map());
+        return response.Data.Select(plugin => plugin.Map());
     }
 }

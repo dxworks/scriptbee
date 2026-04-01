@@ -45,9 +45,7 @@ public class GetAnalysisErrorsResultEndpointTest(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var getResponse = await response.ReadContentAsync<WebGetAnalysisResultRunErrors>();
-        getResponse.Errors.ShouldBe([
-            new WebAnalysisResultRunError("title", "message", "Critical"),
-        ]);
+        getResponse.Data.ShouldBe([new WebAnalysisResultRunError("title", "message", "Critical")]);
     }
 
     [Fact]

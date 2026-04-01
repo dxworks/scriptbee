@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ProjectContext } from '../../types/returned-context-slice';
+import { WebResponse } from '../../types/web-response';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ export class ProjectContextService {
   constructor(private http: HttpClient) {}
 
   getProjectContext(projectId: string, instanceId: string): Observable<ProjectContext> {
-    return this.http.get<ProjectContext>(`/api/projects/${projectId}/instances/${instanceId}/context`);
+    return this.http.get<WebResponse<ProjectContext>>(`/api/projects/${projectId}/instances/${instanceId}/context`).pipe(map((res) => res.data));
   }
 
   clearContext(projectId: string, instanceId: string) {

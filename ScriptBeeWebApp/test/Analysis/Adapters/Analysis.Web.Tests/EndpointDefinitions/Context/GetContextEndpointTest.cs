@@ -30,8 +30,8 @@ public class GetContextEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        var contextResponse = await response.ReadContentAsync<IEnumerable<WebContextSlice>>();
-        var slice = contextResponse.ToList().Single();
+        var contextResponse = await response.ReadContentAsync<WebGetContextResponse>();
+        var slice = contextResponse.Data.ToList().Single();
         slice.Model.ShouldBe("model");
         slice.PluginIds.ShouldBeEquivalentTo(new List<string> { "plugin-id" });
     }

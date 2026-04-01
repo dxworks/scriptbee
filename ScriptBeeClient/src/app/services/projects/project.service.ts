@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CreateProjectRequest, CreateProjectResponse, Project, ProjectListResponse } from '../../types/project';
+import { CreateProjectRequest, CreateProjectResponse, Project } from '../../types/project';
 import { map, Observable } from 'rxjs';
+import { WebResponse } from '../../types/web-response';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ export class ProjectService {
   constructor(private http: HttpClient) {}
 
   getAllProjects(): Observable<Project[]> {
-    return this.http.get<ProjectListResponse>(this.projectsAPIUrl).pipe(map((r) => r.projects));
+    return this.http.get<WebResponse<Project[]>>(this.projectsAPIUrl).pipe(map((r) => r.data));
   }
 
   createProject(projectId: string, projectName: string) {

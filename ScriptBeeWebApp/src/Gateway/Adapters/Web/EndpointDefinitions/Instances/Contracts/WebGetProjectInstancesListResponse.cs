@@ -1,8 +1,8 @@
-﻿using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Instance;
 
 namespace ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
 
-public record WebGetProjectInstancesListResponse(IEnumerable<WebProjectInstance> Instances)
+public record WebGetProjectInstancesListResponse(IEnumerable<WebProjectInstance> Data)
 {
     public static WebGetProjectInstancesListResponse Map(IEnumerable<InstanceInfo> instanceInfos)
     {

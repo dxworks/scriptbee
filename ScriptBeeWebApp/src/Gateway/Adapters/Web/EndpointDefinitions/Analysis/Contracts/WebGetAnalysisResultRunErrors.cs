@@ -1,8 +1,8 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Analysis;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 
-public sealed record WebGetAnalysisResultRunErrors(IEnumerable<WebAnalysisResultRunError> Errors)
+public sealed record WebGetAnalysisResultRunErrors(IEnumerable<WebAnalysisResultRunError> Data)
 {
     public static WebGetAnalysisResultRunErrors Map(IEnumerable<AnalysisErrorResult> errorResults)
     {

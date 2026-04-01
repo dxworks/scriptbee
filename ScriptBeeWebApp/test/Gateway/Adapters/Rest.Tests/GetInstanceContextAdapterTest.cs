@@ -30,12 +30,14 @@ public sealed class GetInstanceContextAdapterTest : IDisposable
                     .WithStatusCode(200)
                     .WithBody(
                         """
-                        [
-                            {
-                                "model": "model",
-                                "pluginIds": ["plugin-id"]
-                            }
-                        ]
+                        {
+                            "data": [
+                                {
+                                    "model": "model",
+                                    "pluginIds": ["plugin-id"]
+                                }
+                            ]
+                        }
                         """
                     )
             );

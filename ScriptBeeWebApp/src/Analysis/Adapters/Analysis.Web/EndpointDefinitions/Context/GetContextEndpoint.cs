@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Common.Web;
 using ScriptBee.Service.Analysis;
@@ -18,10 +18,12 @@ public class GetContextEndpoint : IEndpointDefinition
         app.MapGet("/api/context", GetContext);
     }
 
-    private static Ok<IEnumerable<WebContextSlice>> GetContext(IGetContextUseCase useCase)
+    private static Ok<WebGetContextResponse> GetContext(IGetContextUseCase useCase)
     {
         var contextSlices = useCase.Get();
 
-        return TypedResults.Ok(contextSlices.Select(WebContextSlice.Map));
+        return TypedResults.Ok(
+            new WebGetContextResponse(contextSlices.Select(WebContextSlice.Map))
+        );
     }
 }
