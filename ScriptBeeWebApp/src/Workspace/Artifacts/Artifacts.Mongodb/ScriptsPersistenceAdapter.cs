@@ -9,7 +9,8 @@ namespace ScriptBee.Artifacts.Mongodb;
 
 public class ScriptsPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepository)
     : ICreateScript,
-        IGetScripts
+        IGetScripts,
+        IUpdateScript
 {
     public async Task Create(Script script, CancellationToken cancellationToken)
     {
@@ -45,5 +46,12 @@ public class ScriptsPersistenceAdapter(IMongoRepository<MongodbScript> mongoRepo
         }
 
         return mongodbScript.ToScript();
+    }
+
+    public async Task<Script> Update(Script script, CancellationToken cancellationToken)
+    {
+        await mongoRepository.UpdateDocument(MongodbScript.From(script), cancellationToken);
+
+        return script;
     }
 }

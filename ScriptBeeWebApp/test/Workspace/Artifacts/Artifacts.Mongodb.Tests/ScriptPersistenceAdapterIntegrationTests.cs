@@ -27,7 +27,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task CreateScriptWithoutParameters()
     {
-        const string scriptId = "8447d113-2cf5-4eab-afd4-8e691778ff96";
+        var scriptId = Guid.NewGuid().ToString();
         var script = CreateScript(new ScriptId(scriptId), []);
 
         await _adapter.Create(script, TestContext.Current.CancellationToken);
@@ -41,7 +41,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task CreateScriptWithStringParameter()
     {
-        const string scriptId = "b5874db7-5351-4598-b958-b3cd0f799f94";
+        var scriptId = Guid.NewGuid().ToString();
         var script = CreateScript(
             new ScriptId(scriptId),
             [
@@ -77,7 +77,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task CreateScriptWithBooleanParameter()
     {
-        const string scriptId = "f0559010-2c56-4676-a460-75a854448f82";
+        var scriptId = Guid.NewGuid().ToString();
         var script = CreateScript(
             new ScriptId(scriptId),
             [
@@ -113,7 +113,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task CreateScriptWithIntegerParameter()
     {
-        const string scriptId = "ee1cfa99-16ff-4955-bc1d-3ef8266c0957";
+        var scriptId = Guid.NewGuid().ToString();
         var script = CreateScript(
             new ScriptId(scriptId),
             [
@@ -149,7 +149,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task CreateScriptWithFloatParameter()
     {
-        const string scriptId = "c8ccbfc2-638a-4f7f-aaa4-a166ff032324";
+        var scriptId = Guid.NewGuid().ToString();
         var script = CreateScript(
             new ScriptId(scriptId),
             [
@@ -189,7 +189,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GivenNoExistingScript_Get_ReturnScriptDoesNotExistsError()
     {
-        const string scriptId = "bccab17e-bfc1-4209-aa12-75cabd307299";
+        var scriptId = Guid.NewGuid().ToString();
 
         var result = await _adapter.Get(
             new ScriptId(scriptId),
@@ -202,7 +202,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GetScriptWithoutParameters()
     {
-        const string scriptId = "fd2c1c8c-eb1a-4e6c-824c-b0e23b061c36";
+        var scriptId = Guid.NewGuid().ToString();
         await _mongoCollection.InsertOneAsync(
             CreateMongodbScript(scriptId, []),
             cancellationToken: TestContext.Current.CancellationToken
@@ -219,7 +219,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GetScriptWithStringParameter()
     {
-        const string scriptId = "17938834-37f3-4316-a533-26ff079d156e";
+        var scriptId = Guid.NewGuid().ToString();
         await _mongoCollection.InsertOneAsync(
             CreateMongodbScript(
                 scriptId,
@@ -258,7 +258,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GetScriptWithBooleanParameter()
     {
-        const string scriptId = "1ae3ee68-2b4d-4ee2-a1c2-09784b68f1fd";
+        var scriptId = Guid.NewGuid().ToString();
         await _mongoCollection.InsertOneAsync(
             CreateMongodbScript(
                 scriptId,
@@ -297,7 +297,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GetScriptWithIntegerParameter()
     {
-        const string scriptId = "c7757e1d-54ce-45e0-8728-22dc78dcd578";
+        var scriptId = Guid.NewGuid().ToString();
         await _mongoCollection.InsertOneAsync(
             CreateMongodbScript(
                 scriptId,
@@ -336,7 +336,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GetScriptWithFloatParameter()
     {
-        const string scriptId = "fcf57f00-a1ba-4813-9d50-53e17894756a";
+        var scriptId = Guid.NewGuid().ToString();
         await _mongoCollection.InsertOneAsync(
             CreateMongodbScript(
                 scriptId,
@@ -379,7 +379,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
     [Fact]
     public async Task GetAllScripts()
     {
-        const string scriptId = "bea9a643-a42f-438c-85f8-40332302a43e";
+        var scriptId = Guid.NewGuid().ToString();
         await _mongoCollection.InsertOneAsync(
             CreateMongodbScript(scriptId, []),
             cancellationToken: TestContext.Current.CancellationToken
@@ -393,6 +393,198 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
         result
             .Single(s => s.Id.Value.ToString() == scriptId)
             .AssertScript(CreateScript(new ScriptId(scriptId), []));
+    }
+
+    #endregion
+
+    #region Update Script
+
+    [Fact]
+    public async Task UpdateScriptWithoutParameters()
+    {
+        var scriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(new ScriptId(scriptId), []);
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeString,
+                        Value = "value",
+                    },
+                ]
+            ),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.Update(script, TestContext.Current.CancellationToken);
+
+        var mongodbScript = await _mongoCollection
+            .Find(p => p.Id == scriptId)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        mongodbScript.AssertMongodbScript(CreateMongodbScript(scriptId, []));
+    }
+
+    [Fact]
+    public async Task UpdateScriptWithStringParameter()
+    {
+        var scriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(
+            new ScriptId(scriptId),
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = ScriptParameter.TypeString,
+                    Value = "value",
+                },
+            ]
+        );
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(scriptId, []),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.Update(script, TestContext.Current.CancellationToken);
+
+        var mongodbScript = await _mongoCollection
+            .Find(p => p.Id == scriptId)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        mongodbScript.AssertMongodbScript(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeString,
+                        Value = "value",
+                    },
+                ]
+            )
+        );
+    }
+
+    [Fact]
+    public async Task UpdateScriptWithBooleanParameter()
+    {
+        var scriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(
+            new ScriptId(scriptId),
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = ScriptParameter.TypeBoolean,
+                    Value = true,
+                },
+            ]
+        );
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(scriptId, []),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.Update(script, TestContext.Current.CancellationToken);
+
+        var mongodbScript = await _mongoCollection
+            .Find(p => p.Id == scriptId)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        mongodbScript.AssertMongodbScript(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeBoolean,
+                        Value = true,
+                    },
+                ]
+            )
+        );
+    }
+
+    [Fact]
+    public async Task UpdateScriptWithIntegerParameter()
+    {
+        var scriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(
+            new ScriptId(scriptId),
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = ScriptParameter.TypeInteger,
+                    Value = 20,
+                },
+            ]
+        );
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(scriptId, []),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.Update(script, TestContext.Current.CancellationToken);
+
+        var mongodbScript = await _mongoCollection
+            .Find(p => p.Id == scriptId)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        mongodbScript.AssertMongodbScript(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeInteger,
+                        Value = 20,
+                    },
+                ]
+            )
+        );
+    }
+
+    [Fact]
+    public async Task UpdateScriptWithFloatParameter()
+    {
+        var scriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(
+            new ScriptId(scriptId),
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = ScriptParameter.TypeFloat,
+                    Value = 12.2,
+                },
+            ]
+        );
+        await _mongoCollection.InsertOneAsync(
+            CreateMongodbScript(scriptId, []),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.Update(script, TestContext.Current.CancellationToken);
+
+        var mongodbScript = await _mongoCollection
+            .Find(p => p.Id == scriptId)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        mongodbScript.AssertMongodbScript(
+            CreateMongodbScript(
+                scriptId,
+                [
+                    new MongodbScriptParameter
+                    {
+                        Name = "parameter",
+                        Type = ScriptParameter.TypeFloat,
+                        Value = 12.2,
+                    },
+                ]
+            )
+        );
     }
 
     #endregion

@@ -1,141 +1,59 @@
 ﻿using OneOf;
 using ScriptBee.Artifacts;
-using ScriptBee.Common;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
-using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.ProjectStructure;
 
-using CreateResult = OneOf<
-    Script,
-    ProjectDoesNotExistsError,
-    NoInstanceAllocatedForProjectError,
-    ScriptLanguageDoesNotExistsError,
-    ScriptPathAlreadyExistsError
->;
+using UpdateResult = OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError>;
 
 public class UpdateScriptService(
     IGetProject getProject,
-    IGetScriptLanguages getScriptLanguages,
-    ICreateFile createFile,
-    IGuidProvider guidProvider,
-    ICreateScript createScript,
-    IGetCurrentInstanceUseCase currentInstanceUseCase
+    IGetScripts getScripts,
+    IUpdateScript updateScript
 ) : IUpdateScriptUseCase
 {
-    public Task<OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError>> Update(
+    public async Task<UpdateResult> Update(
         UpdateScriptCommand command,
-        CancellationToken cancellationToken
-    )
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<CreateResult> Create(
-        CreateScriptCommand command,
         CancellationToken cancellationToken
     )
     {
         var projectDetailsResult = await getProject.GetById(command.ProjectId, cancellationToken);
 
-        return await projectDetailsResult.Match<Task<CreateResult>>(
-            async details => await Create(command, details, cancellationToken),
-            error => Task.FromResult<CreateResult>(error)
+        return await projectDetailsResult.Match<Task<UpdateResult>>(
+            async _ => await UpdateScript(command, cancellationToken),
+            error => Task.FromResult<UpdateResult>(error)
         );
     }
 
-    private async Task<CreateResult> Create(
-        CreateScriptCommand command,
-        ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default
+    private async Task<UpdateResult> UpdateScript(
+        UpdateScriptCommand command,
+        CancellationToken cancellationToken
     )
     {
-        var result = await currentInstanceUseCase.GetCurrentInstance(
-            projectDetails.Id,
-            cancellationToken
-        );
+        var result = await getScripts.Get(command.ScriptId, cancellationToken);
 
-        return await result.Match<Task<CreateResult>>(
-            async instanceInfo =>
-                await Create(command, instanceInfo, projectDetails, cancellationToken),
-            error => Task.FromResult<CreateResult>(error)
+        return await result.Match<Task<UpdateResult>>(
+            async script => await Update(command, script, cancellationToken),
+            error => Task.FromResult<UpdateResult>(error)
         );
     }
 
-    private async Task<CreateResult> Create(
-        CreateScriptCommand command,
-        InstanceInfo instanceInfo,
-        ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default
+    private async Task<UpdateResult> Update(
+        UpdateScriptCommand command,
+        Script script,
+        CancellationToken cancellationToken
     )
     {
-        var languageResult = await getScriptLanguages.Get(
-            instanceInfo,
-            command.Language,
-            cancellationToken
-        );
+        if (command.Parameters == null)
+        {
+            return script;
+        }
 
-        return await languageResult.Match<Task<CreateResult>>(
-            async language => await Create(command, projectDetails, language, cancellationToken),
-            error => Task.FromResult<CreateResult>(error)
-        );
-    }
+        var updatedScript = script with { Parameters = command.Parameters };
 
-    private async Task<CreateResult> Create(
-        CreateScriptCommand command,
-        ProjectDetails projectDetails,
-        ScriptLanguage language,
-        CancellationToken cancellationToken = default
-    )
-    {
-        // TODO FIXIT(#35): add sample code to created file
-
-        var createFileResult = await createFile.Create(
-            projectDetails.Id,
-            GetScriptPath(command.Path, language.Extension),
-            "",
-            cancellationToken
-        );
-
-        return await createFileResult.Match<Task<CreateResult>>(
-            async result =>
-                await Create(command, projectDetails, language, result, cancellationToken),
-            error => Task.FromResult<CreateResult>(new ScriptPathAlreadyExistsError(error.Path))
-        );
-    }
-
-    private static string GetScriptPath(string path, string languageExtension)
-    {
-        return path.EndsWith(languageExtension) ? path : path + languageExtension;
-    }
-
-    private async Task<CreateResult> Create(
-        CreateScriptCommand command,
-        ProjectDetails projectDetails,
-        ScriptLanguage language,
-        CreateFileResult createFileResult,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var script = new Script(
-            new ScriptId(guidProvider.NewGuid()),
-            projectDetails.Id,
-            createFileResult.Name,
-            createFileResult.Path,
-            createFileResult.AbsolutePath,
-            language,
-            command.Parameters
-        );
-
-        await createScript.Create(script, cancellationToken);
-
-        return script;
+        return await updateScript.Update(updatedScript, cancellationToken);
     }
 }
