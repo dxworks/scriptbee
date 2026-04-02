@@ -11,7 +11,7 @@ namespace ScriptBee.Artifacts.Mongodb;
 public class ScriptsPersistenceAdapter(
     IMongoRepository<MongodbScript> mongoRepository,
     IGuidProvider guidProvider
-) : ICreateScript, IGetScripts, IUpdateScript
+) : ICreateScript, IGetScripts, IUpdateScript, IDeleteScript
 {
     private const int MaxDepth = 10_000;
 
@@ -61,6 +61,21 @@ public class ScriptsPersistenceAdapter(
         return script;
     }
 
+    public async Task<ProjectStructureEntry?> Delete(
+        ScriptId id,
+        CancellationToken cancellationToken
+    )
+    {
+        var mongodbScript = await mongoRepository.DeleteDocument(id.ToString(), cancellationToken);
+
+        if (mongodbScript is null)
+        {
+            return null;
+        }
+
+        return await Delete(id, mongodbScript, cancellationToken);
+    }
+
     private async Task CreateParentFolder(
         MongodbScript mongodbScript,
         CancellationToken cancellationToken
@@ -99,5 +114,28 @@ public class ScriptsPersistenceAdapter(
 
             mongodbScript = newFolder;
         }
+    }
+
+    private async Task<ProjectStructureEntry?> Delete(
+        ScriptId id,
+        MongodbScript parentScript,
+        CancellationToken cancellationToken
+    )
+    {
+        var mongodbScript = await mongoRepository.DeleteDocument(id.ToString(), cancellationToken);
+
+        if (mongodbScript is null)
+        {
+            return null;
+        }
+
+        var childrenIds = parentScript.ChildrenIds?.ToList() ?? [];
+
+        foreach (var childrenId in childrenIds)
+        {
+            await Delete(new ScriptId(childrenId), parentScript, cancellationToken);
+        }
+
+        return parentScript.ToProjectStructureEntry();
     }
 }
