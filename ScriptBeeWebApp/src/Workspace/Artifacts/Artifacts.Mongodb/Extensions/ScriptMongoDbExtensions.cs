@@ -16,7 +16,8 @@ public static class ScriptMongoDbExtensions
             .AddMongoCollection<MongodbScript>(mongoDatabase, "Scripts")
             .AddSingleton<IFileModelService, FileModelService>()
             .AddSingleton<ICreateScript, ScriptsPersistenceAdapter>()
+            .AddSingleton<IGetScripts, ScriptsPersistenceAdapter>()
             .AddSingleton<IUpdateScript, ScriptsPersistenceAdapter>()
-            .AddSingleton<IGetScripts, ScriptsPersistenceAdapter>();
+            .AddSingleton<IDeleteScript, ScriptsPersistenceAdapter>();
     }
 }

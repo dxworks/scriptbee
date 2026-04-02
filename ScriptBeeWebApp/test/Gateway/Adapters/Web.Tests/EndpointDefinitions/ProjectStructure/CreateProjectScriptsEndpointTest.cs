@@ -59,6 +59,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnCreated_WhenNoParametersArePassed()
     {
         var useCase = Substitute.For<ICreateScriptUseCase>();
+        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .Create(
                 new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
@@ -69,14 +70,13 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     new Script(
                         new ScriptId("7fff649a-bbd8-4570-83fb-0f8441e44999"),
                         ProjectId.Create("id"),
-                        "name",
-                        "path",
-                        "absolute",
+                        new ProjectStructureFile("path"),
                         new ScriptLanguage("csharp", ".cs"),
                         []
                     )
                 )
             );
+        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
@@ -84,6 +84,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
+                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebCreateScriptCommand("path", "csharp", null)
@@ -91,11 +92,11 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response
-            .Headers.Location?.ToString()
+            .Headers.Location!.ToString()
             .ShouldBe("/api/projects/id/scripts/7fff649a-bbd8-4570-83fb-0f8441e44999");
         var webScriptData = await response.ReadContentAsync<WebScriptData>();
         webScriptData.Id.ShouldBe("7fff649a-bbd8-4570-83fb-0f8441e44999");
-        webScriptData.Name.ShouldBe("name");
+        webScriptData.Name.ShouldBe("path");
         webScriptData.Path.ShouldBe("path");
         webScriptData.AbsolutePath.ShouldBe("absolute");
         webScriptData.ScriptLanguage.ShouldBe(new WebScriptLanguage("csharp", ".cs"));
@@ -110,6 +111,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnCreated_WhenParametersArePassed(string type, object value)
     {
         var useCase = Substitute.For<ICreateScriptUseCase>();
+        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .Create(
                 Arg.Is<CreateScriptCommand>(command =>
@@ -122,9 +124,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     new Script(
                         new ScriptId("5f33bd3b-9756-4344-8747-86afe64729ec"),
                         ProjectId.Create("id"),
-                        "name",
-                        "path",
-                        "absolute",
+                        new ProjectStructureFile("path"),
                         new ScriptLanguage("csharp", ".cs"),
                         [
                             new ScriptParameter
@@ -137,6 +137,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
+        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
@@ -144,6 +145,7 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
+                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebCreateScriptCommand(
@@ -155,11 +157,11 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
         response
-            .Headers.Location?.ToString()
+            .Headers.Location!.ToString()
             .ShouldBe("/api/projects/id/scripts/5f33bd3b-9756-4344-8747-86afe64729ec");
         var webScriptData = await response.ReadContentAsync<WebScriptData>();
         webScriptData.Id.ShouldBe("5f33bd3b-9756-4344-8747-86afe64729ec");
-        webScriptData.Name.ShouldBe("name");
+        webScriptData.Name.ShouldBe("path");
         webScriptData.Path.ShouldBe("path");
         webScriptData.AbsolutePath.ShouldBe("absolute");
         webScriptData.ScriptLanguage.ShouldBe(new WebScriptLanguage("csharp", ".cs"));

@@ -21,7 +21,7 @@ using CreateResult = OneOf<
     ScriptPathAlreadyExistsError
 >;
 
-public class CreateScriptService(
+public sealed class CreateScriptService(
     IGetProject getProject,
     IGetScriptLanguages getScriptLanguages,
     ICreateFile createFile,
@@ -35,9 +35,9 @@ public class CreateScriptService(
         CancellationToken cancellationToken
     )
     {
-        var projectDetailsResult = await getProject.GetById(command.ProjectId, cancellationToken);
+        var result = await getProject.GetById(command.ProjectId, cancellationToken);
 
-        return await projectDetailsResult.Match<Task<CreateResult>>(
+        return await result.Match<Task<CreateResult>>(
             async details => await Create(command, details, cancellationToken),
             error => Task.FromResult<CreateResult>(error)
         );
@@ -112,16 +112,14 @@ public class CreateScriptService(
         CreateScriptCommand command,
         ProjectDetails projectDetails,
         ScriptLanguage language,
-        CreateFileResult createFileResult,
+        ProjectStructureFile file,
         CancellationToken cancellationToken
     )
     {
         var script = new Script(
             new ScriptId(guidProvider.NewGuid()),
             projectDetails.Id,
-            createFileResult.Name,
-            createFileResult.Path,
-            createFileResult.AbsolutePath,
+            file,
             language,
             command.Parameters
         );

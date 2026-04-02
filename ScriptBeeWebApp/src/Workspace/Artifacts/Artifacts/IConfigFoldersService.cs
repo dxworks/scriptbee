@@ -6,5 +6,5 @@ public interface IConfigFoldersService
 {
     string GetPathToSrcFolder(ProjectId projectId, string path);
 
-    string GetPathToUserFolder(string path);
+    string GetAbsolutePathToSrcFolder(ProjectId projectId, string path);
 }

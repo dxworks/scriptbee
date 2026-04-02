@@ -190,7 +190,7 @@ public class CreateScriptServiceTest
         _createFile
             .Create(projectId, "path.lang", "", Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
+                Task.FromResult<OneOf<ProjectStructureFile, FileAlreadyExistsError>>(
                     new FileAlreadyExistsError("path.lang")
                 )
             );
@@ -244,8 +244,8 @@ public class CreateScriptServiceTest
         _createFile
             .Create(projectId, "path.lang", "", Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
-                    new CreateFileResult("name", "path.lang", "absolute-path.lang")
+                Task.FromResult<OneOf<ProjectStructureFile, FileAlreadyExistsError>>(
+                    new ProjectStructureFile("path.lang")
                 )
             );
         _guidProvider.NewGuid().Returns(Guid.Parse("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"));
@@ -270,9 +270,7 @@ public class CreateScriptServiceTest
         var script = new Script(
             new ScriptId("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"),
             projectId,
-            "name",
-            "path.lang",
-            "absolute-path.lang",
+            new ProjectStructureFile("path.lang"),
             new ScriptLanguage("language", ".lang"),
             [
                 new ScriptParameter
@@ -321,8 +319,8 @@ public class CreateScriptServiceTest
         _createFile
             .Create(projectId, "path.ext.lang", "", Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<CreateFileResult, FileAlreadyExistsError>>(
-                    new CreateFileResult("name", "path.ext.lang", "absolute-path.ext.lang")
+                Task.FromResult<OneOf<ProjectStructureFile, FileAlreadyExistsError>>(
+                    new ProjectStructureFile("path.ext.lang")
                 )
             );
         _guidProvider.NewGuid().Returns(Guid.Parse("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"));
@@ -347,9 +345,7 @@ public class CreateScriptServiceTest
         var script = new Script(
             new ScriptId("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"),
             projectId,
-            "name",
-            "path.ext.lang",
-            "absolute-path.ext.lang",
+            new ProjectStructureFile("path.ext.lang"),
             new ScriptLanguage("language", ".lang"),
             [
                 new ScriptParameter
@@ -373,9 +369,7 @@ public class CreateScriptServiceTest
     {
         return actual.Id.Equals(expected.Id)
             && actual.ProjectId.Equals(expected.ProjectId)
-            && actual.Name.Equals(expected.Name)
-            && actual.FilePath.Equals(expected.FilePath)
-            && actual.AbsoluteFilePath.Equals(expected.AbsoluteFilePath)
+            && actual.File.Path.Equals(expected.File.Path)
             && actual.ScriptLanguage.Equals(expected.ScriptLanguage)
             && MatchParameter(actual.Parameters);
     }

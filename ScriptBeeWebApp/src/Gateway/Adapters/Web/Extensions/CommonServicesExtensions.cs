@@ -1,4 +1,6 @@
 ﻿using ScriptBee.Common;
+using ScriptBee.Service.Project.ProjectStructure;
+using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Web.Extensions;
 
@@ -8,6 +10,7 @@ public static class CommonServicesExtensions
     {
         return services
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
-            .AddSingleton<IGuidProvider, GuidProvider>();
+            .AddSingleton<IGuidProvider, GuidProvider>()
+            .AddSingleton<IGetScriptAbsolutePathUseCase, GetScriptAbsolutePathService>();
     }
 }

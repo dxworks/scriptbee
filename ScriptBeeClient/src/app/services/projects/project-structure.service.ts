@@ -16,7 +16,7 @@ export class ProjectStructureService {
   }
 
   deleteProjectStructureNode(projectId: string, id: string) {
-    return this.http.delete(`/api/projects/${projectId}/structure/nodes/${id}`);
+    return this.http.delete(`/api/projects/${projectId}/files/${id}`);
   }
 
   getAvailableScriptTypes(projectId: string) {

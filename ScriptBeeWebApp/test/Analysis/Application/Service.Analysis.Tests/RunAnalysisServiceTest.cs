@@ -71,9 +71,7 @@ public class RunAnalysisServiceTest
         var script = new Script(
             scriptId,
             projectId,
-            "script",
-            "path",
-            "absolute-path",
+            new ProjectStructureFile("path"),
             new ScriptLanguage("language", ".lang"),
             []
         );
@@ -134,9 +132,7 @@ public class RunAnalysisServiceTest
                     new Script(
                         scriptId,
                         projectId,
-                        "script",
-                        "path",
-                        "absolute-path",
+                        new ProjectStructureFile("path"),
                         new ScriptLanguage("language", ".lang"),
                         []
                     )

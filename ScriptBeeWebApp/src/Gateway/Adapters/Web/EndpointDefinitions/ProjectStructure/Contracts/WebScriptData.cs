@@ -11,14 +11,14 @@ public class WebScriptData
     public required WebScriptLanguage ScriptLanguage { get; init; }
     public required IEnumerable<WebScriptParameter> Parameters { get; init; }
 
-    public static WebScriptData Map(Script script)
+    public static WebScriptData Map(Script script, string absolutePath)
     {
         return new WebScriptData
         {
             Id = script.Id.ToString(),
-            Name = script.Name,
-            Path = script.FilePath,
-            AbsolutePath = script.AbsoluteFilePath,
+            Name = script.File.Name,
+            Path = script.File.Path,
+            AbsolutePath = absolutePath,
             ScriptLanguage = WebScriptLanguage.Map(script.ScriptLanguage),
             Parameters = script.Parameters.Select(WebScriptParameter.Map),
         };

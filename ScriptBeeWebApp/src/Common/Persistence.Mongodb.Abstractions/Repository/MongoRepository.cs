@@ -13,10 +13,15 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
 
     public async Task<T?> GetDocument(string id, CancellationToken cancellationToken)
     {
-        var result = await mongoCollection
-            .Find(x => x.Id == id)
-            .FirstOrDefaultAsync(cancellationToken);
-        return result;
+        return await GetDocument(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<T?> GetDocument(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    )
+    {
+        return await mongoCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<bool> DocumentExists(string id, CancellationToken cancellationToken)
@@ -62,9 +67,15 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         );
     }
 
-    public async Task DeleteDocument(string id, CancellationToken cancellationToken)
+    public async Task<T?> DeleteDocument(string id, CancellationToken cancellationToken)
     {
-        await mongoCollection.DeleteOneAsync(x => x.Id == id, cancellationToken);
+        var filter = Builders<T>.Filter.Eq(x => x.Id, id);
+
+        return await mongoCollection.FindOneAndDeleteAsync(
+            filter,
+            new FindOneAndDeleteOptions<T, T>(),
+            cancellationToken
+        );
     }
 
     public async Task DeleteDocument(

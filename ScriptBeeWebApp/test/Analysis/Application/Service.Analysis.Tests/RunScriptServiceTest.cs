@@ -176,9 +176,7 @@ public class RunScriptServiceTest
         return new Script(
             new ScriptId(),
             ProjectId.FromValue("project-id"),
-            "name",
-            "filePath",
-            "absolute-path",
+            new ProjectStructureFile("filePath"),
             new ScriptLanguage("language", ".lang"),
             [
                 new ScriptParameter

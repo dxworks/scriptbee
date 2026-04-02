@@ -35,9 +35,6 @@ public sealed class CreateFileAdapterTest : IDisposable
         _configFoldersService
             .GetPathToSrcFolder(projectId, pathToFileTxt)
             .Returns(pathToFileInSrcFolder);
-        _configFoldersService
-            .GetPathToUserFolder(pathToFileInSrcFolder)
-            .Returns("path/to/user/folder/file.txt");
 
         var result = await _createFileAdapter.Create(
             projectId,
@@ -46,9 +43,7 @@ public sealed class CreateFileAdapterTest : IDisposable
             TestContext.Current.CancellationToken
         );
 
-        result.AsT0.ShouldBe(
-            new CreateFileResult("file.txt", pathToFileTxt, "path/to/user/folder/file.txt")
-        );
+        result.AsT0.Path.ShouldBe(pathToFileTxt);
         (
             await File.ReadAllTextAsync(
                 pathToFileInSrcFolder,

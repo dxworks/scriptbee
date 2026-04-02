@@ -24,10 +24,11 @@ public class ConfigFoldersServiceTest
     }
 
     [Fact]
-    public void GetPathToUserFolder_WithNonNullUserFolderPathOverride()
+    public void GetAbsolutePathToSrcFolder_WithNonNullUserFolderPathOverride()
     {
-        var pathToSrcFolder = _configFoldersService.GetPathToUserFolder(
-            $"{GetUserFolderPath()}/.scriptbee/projects/id/src/path/to/file.txt"
+        var pathToSrcFolder = _configFoldersService.GetAbsolutePathToSrcFolder(
+            ProjectId.FromValue("id"),
+            "path/to/file.txt"
         );
 
         pathToSrcFolder
@@ -36,14 +37,15 @@ public class ConfigFoldersServiceTest
     }
 
     [Fact]
-    public void GetPathToUserFolder_WithNullUserFolderPathOverride()
+    public void GetAbsolutePathToSrcFolder_WithNullUserFolderPathOverride()
     {
         var configFoldersService = new ConfigFoldersService(
             Options.Create(new UserFolderSettings { UserFolderPath = null })
         );
 
-        var pathToSrcFolder = configFoldersService.GetPathToUserFolder(
-            $"{GetUserFolderPath()}/.scriptbee/projects/id/src/path/to/file.txt"
+        var pathToSrcFolder = configFoldersService.GetAbsolutePathToSrcFolder(
+            ProjectId.FromValue("id"),
+            "path/to/file.txt"
         );
 
         pathToSrcFolder

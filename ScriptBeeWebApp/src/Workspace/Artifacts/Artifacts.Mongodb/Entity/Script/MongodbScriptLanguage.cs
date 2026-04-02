@@ -4,8 +4,8 @@ namespace ScriptBee.Artifacts.Mongodb.Entity.Script;
 
 public class MongodbScriptLanguage
 {
-    public required string Name { get; set; }
-    public required string Extension { get; set; }
+    public required string Name { get; init; }
+    public required string Extension { get; init; }
 
     public static MongodbScriptLanguage From(ScriptLanguage language)
     {

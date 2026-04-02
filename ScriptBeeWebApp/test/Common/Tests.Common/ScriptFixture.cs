@@ -10,9 +10,7 @@ public static class ScriptFixture
         new(
             id,
             projectId,
-            "name",
-            "path.lang",
-            "absolute-path.lang",
+            new ProjectStructureFile("path.lang"),
             new ScriptLanguage("language", ".lang"),
             [
                 new ScriptParameter

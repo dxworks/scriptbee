@@ -1,12 +1,10 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Model;
 using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.Domain.Model.ProjectStructure;
 
-public record Script(
+public record ScriptFolder(
     ScriptId Id,
     ProjectId ProjectId,
     ProjectStructureFile File,
-    ScriptLanguage ScriptLanguage,
-    IEnumerable<ScriptParameter> Parameters
+    IEnumerable<ScriptId> ChildrenIds
 ) : ProjectStructureEntry(Id, ProjectId, File);
