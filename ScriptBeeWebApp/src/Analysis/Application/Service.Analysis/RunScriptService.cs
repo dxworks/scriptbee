@@ -28,7 +28,7 @@ public sealed class RunScriptService(
     {
         var scriptContent = await loadFile.GetScriptContent(
             request.Script.ProjectId,
-            request.Script.FilePath,
+            request.Script.File.Path,
             cancellationToken
         );
 

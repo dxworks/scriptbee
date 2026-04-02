@@ -1,15 +1,16 @@
 using OneOf;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
 
 namespace ScriptBee.Artifacts;
 
 public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICreateFile
 {
-    public async Task<OneOf<CreateFileResult, FileAlreadyExistsError>> Create(
+    public async Task<OneOf<ProjectStructureFile, FileAlreadyExistsError>> Create(
         ProjectId projectId,
         string path,
         string content,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var pathInSrcFolder = configFoldersService.GetPathToSrcFolder(projectId, path);
@@ -24,10 +25,6 @@ public class CreateFileAdapter(IConfigFoldersService configFoldersService) : ICr
         );
         await File.WriteAllTextAsync(pathInSrcFolder, content, cancellationToken);
 
-        return new CreateFileResult(
-            Path.GetFileName(path),
-            path,
-            configFoldersService.GetPathToUserFolder(pathInSrcFolder)
-        );
+        return new ProjectStructureFile(path);
     }
 }

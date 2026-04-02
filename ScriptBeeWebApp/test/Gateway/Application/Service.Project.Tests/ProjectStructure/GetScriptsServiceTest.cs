@@ -99,8 +99,8 @@ public class GetScriptsServiceTest
         var script = CreateScript(projectId, scriptId);
         _getScripts.Get(scriptId, TestContext.Current.CancellationToken).Returns(script);
         _loadFile
-            .GetScriptContent(projectId, script.FilePath, TestContext.Current.CancellationToken)
-            .Returns(new FileDoesNotExistsError(script.FilePath));
+            .GetScriptContent(projectId, script.File.Path, TestContext.Current.CancellationToken)
+            .Returns(new FileDoesNotExistsError(script.File.Path));
 
         var result = await _getScriptsService.GetScriptContent(
             projectId,
@@ -119,7 +119,7 @@ public class GetScriptsServiceTest
         var script = CreateScript(projectId, scriptId);
         _getScripts.Get(scriptId, TestContext.Current.CancellationToken).Returns(script);
         _loadFile
-            .GetScriptContent(projectId, script.FilePath, TestContext.Current.CancellationToken)
+            .GetScriptContent(projectId, script.File.Path, TestContext.Current.CancellationToken)
             .Returns("content");
 
         var result = await _getScriptsService.GetScriptContent(
@@ -136,9 +136,7 @@ public class GetScriptsServiceTest
         return new Script(
             scriptId,
             projectId,
-            "name",
-            "file-path",
-            "absolute-file-path",
+            new ProjectStructureFile("file-path"),
             new ScriptLanguage("language", "extension"),
             []
         );

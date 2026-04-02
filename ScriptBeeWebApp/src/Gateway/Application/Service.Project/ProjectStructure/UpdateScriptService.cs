@@ -85,7 +85,7 @@ public class UpdateScriptService(
             {
                 await updateFile.UpdateScriptContent(
                     command.ProjectId,
-                    script.FilePath,
+                    script.File.Path,
                     command.Content,
                     cancellationToken
                 );

@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Service.Project.ProjectStructure;
+using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure;
 
@@ -8,27 +13,33 @@ public class DeleteProjectStructureNodeEndpoint : IEndpointDefinition
 {
     public void DefineServices(IServiceCollection services)
     {
-        // TODO FIXIT: update dependencies
+        services.AddSingleton<IDeleteProjectFilesUseCase, DeleteProjectFilesService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapDelete(
-                "/api/projects/{projectId}/structure/nodes/{nodeId}",
-                DeleteProjectStructureNode
-            )
+        app.MapDelete("/api/projects/{projectId}/files/{fileId}", DeleteProjectStructureNode)
             .WithTags("ProjectStructure");
     }
 
-    private static async Task<NoContent> DeleteProjectStructureNode(
+    private static async Task<
+        Results<NoContent, NotFound<ProblemDetails>>
+    > DeleteProjectStructureNode(
+        HttpContext context,
         [FromRoute] string projectId,
-        [FromRoute] string nodeId
+        [FromRoute] string fileId,
+        IDeleteProjectFilesUseCase useCase,
+        CancellationToken cancellationToken
     )
     {
-        await Task.CompletedTask;
+        var result = await useCase.Delete(
+            new DeleteFileCommand(ProjectId.FromValue(projectId), new ScriptId(fileId)),
+            cancellationToken
+        );
 
-        // TODO FIXIT: remove hardcoded value
-
-        return TypedResults.NoContent();
+        return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
+            _ => TypedResults.NoContent(),
+            error => error.ToProblem(context)
+        );
     }
 }

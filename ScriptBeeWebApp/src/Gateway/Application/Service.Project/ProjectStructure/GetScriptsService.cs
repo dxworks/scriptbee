@@ -46,7 +46,11 @@ public class GetScriptsService(IGetScripts getScripts, ILoadFile loadFile) : IGe
         CancellationToken cancellationToken
     )
     {
-        var result = await loadFile.GetScriptContent(projectId, script.FilePath, cancellationToken);
+        var result = await loadFile.GetScriptContent(
+            projectId,
+            script.File.Path,
+            cancellationToken
+        );
 
         return await result.Match<Task<OneOf<string, ScriptDoesNotExistsError>>>(
             content => Task.FromResult<OneOf<string, ScriptDoesNotExistsError>>(content),

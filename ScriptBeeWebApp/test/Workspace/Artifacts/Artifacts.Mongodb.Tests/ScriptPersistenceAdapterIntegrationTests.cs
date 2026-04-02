@@ -594,9 +594,7 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
         return new Script(
             id,
             ProjectId.Create("id"),
-            "script.cs",
-            "path",
-            "absolute",
+            new ProjectStructureFile("path"),
             new ScriptLanguage("csharp", ".cs"),
             parameters
         );
@@ -611,11 +609,11 @@ public class ScriptPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFix
         {
             Id = id,
             ProjectId = "id",
-            Name = "script.cs",
             FilePath = "path",
-            AbsoluteFilePath = "absolute",
             ScriptLanguage = new MongodbScriptLanguage { Name = "csharp", Extension = ".cs" },
             Parameters = parameters,
+            Type = MongodbScriptType.File,
+            ChildrenIds = null,
         };
     }
 }
@@ -626,21 +624,17 @@ public static class ScriptAssertionsExtensions
     {
         actual.Id.ShouldBe(expected.Id);
         actual.ProjectId.ShouldBe(expected.ProjectId);
-        actual.Name.ShouldBe(expected.Name);
         actual.FilePath.ShouldBe(expected.FilePath);
-        actual.AbsoluteFilePath.ShouldBe(expected.AbsoluteFilePath);
-        actual.ScriptLanguage.Name.ShouldBe(expected.ScriptLanguage.Name);
+        actual.ScriptLanguage!.Name.ShouldBe(expected.ScriptLanguage!.Name);
         actual.ScriptLanguage.Extension.ShouldBe(expected.ScriptLanguage.Extension);
-        actual.Parameters.ToList().ShouldBeEquivalentTo(expected.Parameters.ToList());
+        actual.Parameters!.ToList().ShouldBeEquivalentTo(expected.Parameters!.ToList());
     }
 
     public static void AssertScript(this Script actual, Script expected)
     {
         actual.Id.ShouldBe(expected.Id);
         actual.ProjectId.ShouldBe(expected.ProjectId);
-        actual.Name.ShouldBe(expected.Name);
-        actual.FilePath.ShouldBe(expected.FilePath);
-        actual.AbsoluteFilePath.ShouldBe(expected.AbsoluteFilePath);
+        actual.File.Path.ShouldBe(expected.File.Path);
         actual.ScriptLanguage.ShouldBe(expected.ScriptLanguage);
         actual.Parameters.ToList().ShouldBeEquivalentTo(expected.Parameters.ToList());
     }

@@ -37,6 +37,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
         [FromRoute] string projectId,
         [FromBody] WebCreateScriptCommand command,
         ICreateScriptUseCase useCase,
+        IGetScriptAbsolutePathUseCase absolutePathUseCase,
         CancellationToken cancellationToken = default
     )
     {
@@ -49,7 +50,7 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
             script =>
                 TypedResults.Created(
                     $"/api/projects/{projectId}/scripts/{script.Id}",
-                    WebScriptData.Map(script)
+                    WebScriptData.Map(script, absolutePathUseCase.GetScriptAbsolutePath(script))
                 ),
             error => error.ToProblem(context),
             error => error.ToBadRequestProblem(context),

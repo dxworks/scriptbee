@@ -18,7 +18,14 @@ public class ConfigFoldersService(IOptions<UserFolderSettings> userFolderSetting
         );
     }
 
-    public string GetPathToUserFolder(string path)
+    public string GetAbsolutePathToSrcFolder(ProjectId projectId, string path)
+    {
+        var pathInSrcFolder = GetPathToSrcFolder(projectId, path);
+
+        return GetPathToUserFolder(pathInSrcFolder);
+    }
+
+    private string GetPathToUserFolder(string path)
     {
         if (string.IsNullOrEmpty(userFolderSettingsOptions.Value.UserFolderPath))
         {

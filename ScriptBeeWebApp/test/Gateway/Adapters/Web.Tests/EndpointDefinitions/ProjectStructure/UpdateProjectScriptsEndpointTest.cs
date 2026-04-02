@@ -41,6 +41,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnOk_WhenParametersArePassed(string type, object value)
     {
         var useCase = Substitute.For<IUpdateScriptUseCase>();
+        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .Update(
                 Arg.Is<UpdateScriptCommand>(command =>
@@ -53,9 +54,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     new Script(
                         _scriptId,
                         ProjectId.Create("id"),
-                        "name",
-                        "path",
-                        "absolute",
+                        new ProjectStructureFile("path"),
                         new ScriptLanguage("csharp", ".cs"),
                         [
                             new ScriptParameter
@@ -68,6 +67,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
+        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PatchApi(
             new TestWebApplicationFactory<Program>(
@@ -75,6 +75,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
+                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebUpdateScriptCommand([new WebScriptParameter("parameter", type, value)])
@@ -83,7 +84,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var webScriptData = await response.ReadContentAsync<WebScriptData>();
         webScriptData.Id.ShouldBe("3283da02-5710-4b2a-bc45-496ff77be18d");
-        webScriptData.Name.ShouldBe("name");
+        webScriptData.Name.ShouldBe("path");
         webScriptData.Path.ShouldBe("path");
         webScriptData.AbsolutePath.ShouldBe("absolute");
         webScriptData.ScriptLanguage.ShouldBe(new WebScriptLanguage("csharp", ".cs"));

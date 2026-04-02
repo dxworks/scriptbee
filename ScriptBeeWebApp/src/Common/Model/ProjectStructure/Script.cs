@@ -6,9 +6,7 @@ namespace ScriptBee.Domain.Model.ProjectStructure;
 public record Script(
     ScriptId Id,
     ProjectId ProjectId,
-    string Name,
-    string FilePath,
-    string AbsoluteFilePath,
+    ProjectStructureFile File,
     ScriptLanguage ScriptLanguage,
     IEnumerable<ScriptParameter> Parameters
-);
+) : ProjectStructureEntry(Id, ProjectId, File);

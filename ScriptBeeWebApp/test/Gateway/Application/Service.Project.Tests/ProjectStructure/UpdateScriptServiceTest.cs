@@ -181,9 +181,7 @@ public class UpdateScriptServiceTest
     {
         return actual.Id.Equals(expected.Id)
             && actual.ProjectId.Equals(expected.ProjectId)
-            && actual.Name.Equals(expected.Name)
-            && actual.FilePath.Equals(expected.FilePath)
-            && actual.AbsoluteFilePath.Equals(expected.AbsoluteFilePath)
+            && actual.File.Path.Equals(expected.File.Path)
             && actual.ScriptLanguage.Equals(expected.ScriptLanguage)
             && MatchParameter(actual.Parameters);
     }
@@ -259,7 +257,7 @@ public class UpdateScriptServiceTest
         _updateFile
             .UpdateScriptContent(
                 projectId,
-                script.FilePath,
+                script.File.Path,
                 "content",
                 Arg.Any<CancellationToken>()
             )
@@ -277,7 +275,7 @@ public class UpdateScriptServiceTest
             .Received(1)
             .UpdateScriptContent(
                 projectId,
-                script.FilePath,
+                script.File.Path,
                 "content",
                 TestContext.Current.CancellationToken
             );

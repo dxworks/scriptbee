@@ -2,7 +2,7 @@
   "data": [
     {
       "id": "c2dd5b46-0d19-4f9e-a5bc-52d0c6522727",
-      "name": "name",
+      "name": "path",
       "path": "path",
       "absolutePath": "absolute",
       "scriptLanguage": {

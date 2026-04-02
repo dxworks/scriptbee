@@ -50,9 +50,7 @@ public class RunScriptBackgroundServiceTest
         return new Script(
             new ScriptId("2151737d-3d3d-41b4-802d-99519204d883"),
             ProjectId.FromValue("project-id"),
-            "name",
-            "filePath",
-            "absolute-path",
+            new ProjectStructureFile("filePath"),
             new ScriptLanguage("language", ".lang"),
             []
         );
