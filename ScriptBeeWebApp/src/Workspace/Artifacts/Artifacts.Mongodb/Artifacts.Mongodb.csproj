@@ -8,6 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Artifacts\Artifacts.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
   </ItemGroup>
 </Project>
