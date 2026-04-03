@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "id": "e0ff5fb3-a310-4d8b-a4bb-b69e9f3fb3ee",
+      "name": "path",
+      "path": "path",
+      "absolutePath": "absolute",
+      "type": "folder",
+      "hasChildren": true
+    }
+  ],
+  "totalCount": 66,
+  "offset": 2,
+  "limit": 3,
+  "hasNextPage": true
+}

@@ -26,7 +26,7 @@ public static class ProblemDetailsExtensions
         });
     }
 
-    public static (
+    private static (
         string instance,
         string? requestId,
         ActivityTraceId? traceId
