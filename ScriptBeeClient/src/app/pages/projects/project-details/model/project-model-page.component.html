@@ -23,28 +23,28 @@
         </mat-card>
       </div>
     } @else if (!currentInstance()) {
-      <app-centered-spinner text="Synchronizing and finding selected instance..."/>
+      <app-centered-spinner text="Synchronizing and finding selected instance..." />
     } @else {
       <mat-card class="project-details-card" appearance="outlined">
-        <app-instance-info [instanceInfo]="currentInstance()!"/>
+        <app-instance-info [instanceInfo]="currentInstance()!" />
 
-        <app-upload-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id"/>
+        <app-upload-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
 
-        <mat-divider/>
+        <mat-divider />
 
-        <app-load-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id"/>
+        <app-load-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
 
-        <mat-divider/>
+        <mat-divider />
 
-        <app-link-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id"/>
+        <app-link-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
 
-        <mat-divider/>
+        <mat-divider />
 
-        <app-currently-loaded-models [instanceId]="currentInstance()!.id"/>
+        <app-currently-loaded-models [instanceId]="currentInstance()!.id" />
 
-        <mat-divider/>
+        <mat-divider />
 
-        <app-project-context [projectId]="projectId()!" [instanceId]="currentInstance()!.id"/>
+        <app-project-context [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
       </mat-card>
     }
   </div>

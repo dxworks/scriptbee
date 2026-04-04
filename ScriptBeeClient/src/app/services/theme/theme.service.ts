@@ -1,16 +1,17 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { DOCUMENT, effect, inject, Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
+  private readonly document = inject(DOCUMENT);
   private darkModeSignal = signal(localStorage.getItem('theme') === 'Dark');
   readonly darkMode = this.darkModeSignal.asReadonly();
 
   constructor() {
     effect(() => {
       localStorage.setItem('theme', this.darkModeSignal() ? 'Dark' : 'Light');
-      document.body.classList.toggle('darkMode', this.darkModeSignal());
+      this.document.documentElement.classList.toggle('darkMode', this.darkModeSignal());
     });
   }
 
