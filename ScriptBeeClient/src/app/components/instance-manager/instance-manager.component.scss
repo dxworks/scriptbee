@@ -1,0 +1,72 @@
+.instance-manager-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.instance-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.instance-button-text {
+  display: flex;
+  gap: 8px;
+}
+
+.instance-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  &.active-instance {
+    background: var(--mat-sys-surface-container-highest);
+  }
+}
+
+.instance-select-action {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto !important;
+}
+
+.instance-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.instance-status-text {
+  font-size: 11px;
+  font-weight: 500;
+
+  &.running {
+    color: var(--mat-sys-primary);
+  }
+  &.allocating {
+    color: var(--mat-sys-secondary);
+  }
+  &.deallocating {
+    color: var(--mat-sys-error);
+  }
+}
+
+.mat-icon {
+  &.running {
+    color: var(--mat-sys-primary);
+  }
+  &.allocating {
+    color: var(--mat-sys-secondary);
+  }
+  &.deallocating {
+    color: var(--mat-sys-error);
+  }
+}
+
+.deallocate-button {
+  margin-right: 8px;
+  flex-shrink: 0;
+}

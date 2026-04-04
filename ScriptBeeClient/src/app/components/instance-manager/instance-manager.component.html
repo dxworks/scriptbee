@@ -1,0 +1,49 @@
+<div class="instance-manager-container">
+  <button mat-button [matMenuTriggerFor]="instanceMenu" class="instance-button">
+    @if (currentInstance()) {
+      <div class="instance-button-text">
+        <mat-icon [color]="currentInstance()?.status === 'Running' ? 'primary' : 'warn'">
+          {{ getStatusIcon(currentInstance()?.status!) }}
+        </mat-icon>
+
+        <span>{{ currentInstance()?.id?.substring(0, 8) }}</span>
+      </div>
+    } @else {
+      <div class="instance-button-text">
+        <mat-icon color="warn">error</mat-icon>
+        <span>No Instance</span>
+      </div>
+    }
+    <mat-icon iconPositionEnd>arrow_drop_down</mat-icon>
+  </button>
+
+  <mat-menu #instanceMenu="matMenu">
+    @for (instance of instances(); track instance.id) {
+      <div class="instance-menu-item" [class.active-instance]="currentInstanceId() === instance.id">
+        <button mat-menu-item (click)="onSelectInstance(instance)" class="instance-select-action">
+          <mat-icon [class]="getStatusClass(instance.status)">
+            {{ getStatusIcon(instance.status) }}
+          </mat-icon>
+          <div class="instance-info">
+            <span>{{ instance.id.substring(0, 12) }}...</span>
+            <span class="instance-status-text" [class]="getStatusClass(instance.status)">
+              {{ instance.status }} - {{ instance.creationDate | date: 'short' }}
+            </span>
+          </div>
+        </button>
+        <button mat-icon-button (click)="onDeallocateInstance($event, instance)" matTooltip="Deallocate Instance" class="deallocate-button">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </div>
+    }
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="onAllocateInstance()">
+      <mat-icon color="primary">add_circle</mat-icon>
+      <span>Allocate New Instance</span>
+    </button>
+  </mat-menu>
+
+  <button mat-icon-button (click)="reload()" matTooltip="Refresh instances" class="refresh-button">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
