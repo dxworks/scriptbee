@@ -5,7 +5,8 @@ namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 
 public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 {
-    private const string StartComment = "// Only the code written in the ExecuteScript method will be executed";
+    private const string StartComment =
+        "// Only the code written in the ExecuteScript method will be executed";
 
     public string Language => "csharp";
     public string Extension => ".cs";
@@ -21,7 +22,11 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return $"public class {className}";
     }
 
-    public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes)
+    public string GenerateClassName(
+        Type classType,
+        Type baseClassType,
+        out HashSet<Type> baseClassGenericTypes
+    )
     {
         var baseTypeName = GetTypeName(baseClassType, out baseClassGenericTypes);
         var className = GetTypeName(classType);
@@ -38,22 +43,35 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return "}";
     }
 
-    public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
-        out HashSet<Type> genericTypes)
+    public string GenerateField(
+        string fieldModifier,
+        Type fieldType,
+        string fieldName,
+        out HashSet<Type> genericTypes
+    )
     {
         var fieldTypeName = GetTypeName(fieldType, out genericTypes);
         return $"    {fieldModifier} {fieldTypeName} {fieldName};";
     }
 
-    public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
-        out HashSet<Type> genericTypes)
+    public string GenerateProperty(
+        string propertyModifier,
+        Type propertyType,
+        string propertyName,
+        out HashSet<Type> genericTypes
+    )
     {
         var propertyTypeName = GetTypeName(propertyType, out genericTypes);
         return $"    {propertyModifier} {propertyTypeName} {propertyName} {{ get; set; }}";
     }
 
-    public string GenerateMethod(string methodModifier, Type methodType, string methodName,
-        List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes)
+    public string GenerateMethod(
+        string methodModifier,
+        Type methodType,
+        string methodName,
+        List<Tuple<Type, string>> methodParams,
+        out HashSet<Type> genericTypes
+    )
     {
         var stringBuilder = new StringBuilder();
 
@@ -97,7 +115,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public async Task<string> GenerateSampleCode()
     {
-        return await RelativeFileContentProvider.GetFileContentAsync("SampleCodes/CSharpSampleCode.txt");
+        return await RelativeFileContentProvider.GetFileContentAsync(
+            "SampleCodes/CSharpSampleCode.txt"
+        );
     }
 
     public string GenerateEmptyClass()
@@ -107,7 +127,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public async Task<string> GenerateImports()
     {
-        return await RelativeFileContentProvider.GetFileContentAsync("SampleCodes/CSharpImports.txt");
+        return await RelativeFileContentProvider.GetFileContentAsync(
+            "SampleCodes/CSharpImports.txt"
+        );
     }
 
     public string GetStartComment()

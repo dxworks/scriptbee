@@ -16,8 +16,12 @@ internal static class ValidScriptExtractor
 
         if (startPosition >= 0 && endPosition > 0)
         {
-            return script.Substring(startPosition + PythonStartComment.Length,
-                endPosition - startPosition - PythonStartComment.Length).Trim();
+            return script
+                .Substring(
+                    startPosition + PythonStartComment.Length,
+                    endPosition - startPosition - PythonStartComment.Length
+                )
+                .Trim();
         }
 
         return "";

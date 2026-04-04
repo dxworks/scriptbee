@@ -1,33 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
-using ScriptBee.Scripts.ScriptSampleGenerators;
-using Xunit;
+﻿using DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+using ScriptBee.Service.Project.ProjectStructure;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;
 
 public class ScriptGeneratorStrategyTests
 {
-    private readonly SampleCodeGenerator _sampleCodeGenerator;
-
-    public ScriptGeneratorStrategyTests()
-    {
-        _sampleCodeGenerator = new SampleCodeGenerator(new ScriptGeneratorStrategy(), new HashSet<string>
-        {
-            new TestModelLoader().GetType().Module.Name
-        });
-    }
+    private readonly SampleCodeGenerator _sampleCodeGenerator = new(
+        new ScriptGeneratorStrategy(),
+        new HashSet<string> { new TestModelLoader().GetType().Module.Name }
+    );
 
     [Theory]
     [InlineData(
         "ScriptSampleTestStrings/CSharpDummyModel.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
-    public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModel(string pathToModel,
-        string pathToSampleCode)
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
+    public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModel(
+        string pathToModel,
+        string pathToSampleCode
+    )
     {
-        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModel() });
+        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new DummyModel() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(2, sampleCode.Count);
 
@@ -42,15 +46,31 @@ public class ScriptGeneratorStrategyTests
     [InlineData(
         "ScriptSampleTestStrings/CSharpDummyModel.txt",
         "ScriptSampleTestStrings/RecursiveModel/CSharpRecursiveModel_RecursiveModel.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnRecursiveModel(
-        string pathToDummyModel, string pathToMainModel, string pathToSampleCode)
+        string pathToDummyModel,
+        string pathToMainModel,
+        string pathToSampleCode
+    )
     {
-        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModel,
+            TestContext.Current.CancellationToken
+        );
+        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToMainModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new RecursiveModel() });
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new RecursiveModel() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(3, sampleCode.Count);
 
@@ -67,15 +87,31 @@ public class ScriptGeneratorStrategyTests
     [InlineData(
         "ScriptSampleTestStrings/CSharpDummyModel.txt",
         "ScriptSampleTestStrings/DummyModelInheritor/CSharpDummyModelInheritor_DummyModelInheritor.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModelInheritor(
-        string pathToDummyModel, string pathToMainModel, string pathToSampleCode)
+        string pathToDummyModel,
+        string pathToMainModel,
+        string pathToSampleCode
+    )
     {
-        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModel,
+            TestContext.Current.CancellationToken
+        );
+        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToMainModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModelInheritor() });
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new DummyModelInheritor() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(3, sampleCode.Count);
 
@@ -92,21 +128,33 @@ public class ScriptGeneratorStrategyTests
     [InlineData(
         "ScriptSampleTestStrings/CSharpDummyModel.txt",
         "ScriptSampleTestStrings/RecursiveModel/CSharpRecursiveModel_RecursiveModel.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
     public async Task GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnRecursiveModel(
-        string pathToDummyModel, string pathToMainModel, string pathToSampleCode)
+        string pathToDummyModel,
+        string pathToMainModel,
+        string pathToSampleCode
+    )
     {
-        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModel,
+            TestContext.Current.CancellationToken
+        );
+        var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToMainModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-        var models = new List<object>
-        {
-            new DummyModel(),
-            new RecursiveModel()
-        };
+        var models = new List<object> { new DummyModel(), new RecursiveModel() };
 
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(models);
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            models,
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(3, sampleCode.Count);
 
@@ -126,19 +174,46 @@ public class ScriptGeneratorStrategyTests
         "ScriptSampleTestStrings/DeepModel/CSharpDeepModel_RecursiveModel.txt",
         "ScriptSampleTestStrings/DeepModel/CSharpDeepModel_RecursiveModel2.txt",
         "ScriptSampleTestStrings/DeepModel/CSharpDeepModel_DeepModel.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
-    public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDeepModel(string pathToDummyModel,
-        string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel,
-        string pathToSampleCode)
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
+    public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDeepModel(
+        string pathToDummyModel,
+        string pathToEmptyModel,
+        string pathToRecursiveModel,
+        string pathToRecursiveModel2,
+        string pathToMainModel,
+        string pathToSampleCode
+    )
     {
-        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var emptyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToEmptyModel);
-        var recursiveModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel);
-        var recursiveModel2Content = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel2);
-        var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModel,
+            TestContext.Current.CancellationToken
+        );
+        var emptyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToEmptyModel,
+            TestContext.Current.CancellationToken
+        );
+        var recursiveModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToRecursiveModel,
+            TestContext.Current.CancellationToken
+        );
+        var recursiveModel2Content = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToRecursiveModel2,
+            TestContext.Current.CancellationToken
+        );
+        var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToMainModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DeepModel() });
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new DeepModel() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(6, sampleCode.Count);
 
@@ -164,17 +239,41 @@ public class ScriptGeneratorStrategyTests
         "ScriptSampleTestStrings/DeepModel/CSharpDeepModel_RecursiveModel.txt",
         "ScriptSampleTestStrings/DeepModel/CSharpDeepModel_RecursiveModel2.txt",
         "ScriptSampleTestStrings/DeepModel/CSharpDeepModel_DeepModel.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
-    public async Task GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnDeepModel(string pathToDummyModel,
-        string pathToEmptyModel, string pathToRecursiveModel, string pathToRecursiveModel2, string pathToMainModel,
-        string pathToSampleCode)
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
+    public async Task GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnDeepModel(
+        string pathToDummyModel,
+        string pathToEmptyModel,
+        string pathToRecursiveModel,
+        string pathToRecursiveModel2,
+        string pathToMainModel,
+        string pathToSampleCode
+    )
     {
-        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var emptyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToEmptyModel);
-        var recursiveModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel);
-        var recursiveModel2Content = await RelativeFileContentProvider.GetFileContentAsync(pathToRecursiveModel2);
-        var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToMainModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModel,
+            TestContext.Current.CancellationToken
+        );
+        var emptyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToEmptyModel,
+            TestContext.Current.CancellationToken
+        );
+        var recursiveModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToRecursiveModel,
+            TestContext.Current.CancellationToken
+        );
+        var recursiveModel2Content = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToRecursiveModel2,
+            TestContext.Current.CancellationToken
+        );
+        var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToMainModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
         var models = new List<object>
         {
@@ -182,10 +281,13 @@ public class ScriptGeneratorStrategyTests
             new RecursiveModel(),
             new RecursiveModel2(),
             new EmptyModel(),
-            new DeepModel()
+            new DeepModel(),
         };
 
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(models);
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            models,
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(6, sampleCode.Count);
 
@@ -207,14 +309,26 @@ public class ScriptGeneratorStrategyTests
     [Theory]
     [InlineData(
         "ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
-    public async Task GenerateSampleCode_DummyModelWithMethods_ShouldReturnDummyModelWithMethods(string pathToModel,
-        string pathToSampleCode)
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
+    public async Task GenerateSampleCode_DummyModelWithMethods_ShouldReturnDummyModelWithMethods(
+        string pathToModel,
+        string pathToSampleCode
+    )
     {
-        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModelWithMethods() });
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new DummyModelWithMethods() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(2, sampleCode.Count);
 
@@ -228,16 +342,26 @@ public class ScriptGeneratorStrategyTests
     [Theory]
     [InlineData(
         "ScriptSampleTestStrings/DummyModelWithMethods/CSharpDummyModel_WithMethods_Expando.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
-    public async Task
-        GenerateSampleCode_WithCSharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
-            string pathToModel, string pathToSampleCode)
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
+    public async Task GenerateSampleCode_WithCSharpStrategy_DummyModelWithMethodsExpando_ShouldReturnCSharpSimpleModelWithMethods(
+        string pathToModel,
+        string pathToSampleCode
+    )
     {
-        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var modelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-        var sampleCode =
-            await _sampleCodeGenerator.GetSampleCode(new List<object> { new DummyModelWithMethodsExpando() });
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new DummyModelWithMethodsExpando() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(2, sampleCode.Count);
 
@@ -255,22 +379,46 @@ public class ScriptGeneratorStrategyTests
         "ScriptSampleTestStrings/GenericModel/CSharpGenericModel_GenericModel.txt",
         "ScriptSampleTestStrings/GenericModel/CSharpGenericModel_GenericModel2.txt",
         "ScriptSampleTestStrings/GenericModel/CSharpGenericModel_NestedGenericModel.txt",
-        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt")]
+        "ScriptSampleTestStrings/SampleCode/CSharp_SampleCode.txt"
+    )]
     public async Task GenerateSampleCode_NestedGenericModel_ModelGivenAsObject_ShouldReturnGenericModel_CSharp(
-        string pathToDummyModel, string pathToDummyModelWithMethods, string pathToGenericModel,
+        string pathToDummyModel,
+        string pathToDummyModelWithMethods,
+        string pathToGenericModel,
         string pathToGenericModel2,
-        string pathToNestedGenericModel, string pathToSampleCode)
+        string pathToNestedGenericModel,
+        string pathToSampleCode
+    )
     {
-        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModel);
-        var dummyModelWithMethodsContent =
-            await RelativeFileContentProvider.GetFileContentAsync(pathToDummyModelWithMethods);
-        var genericModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToGenericModel);
-        var genericModel2Content = await RelativeFileContentProvider.GetFileContentAsync(pathToGenericModel2);
-        var nestedGenericModelContent = await RelativeFileContentProvider.GetFileContentAsync(pathToNestedGenericModel);
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(pathToSampleCode);
+        var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModel,
+            TestContext.Current.CancellationToken
+        );
+        var dummyModelWithMethodsContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyModelWithMethods,
+            TestContext.Current.CancellationToken
+        );
+        var genericModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToGenericModel,
+            TestContext.Current.CancellationToken
+        );
+        var genericModel2Content = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToGenericModel2,
+            TestContext.Current.CancellationToken
+        );
+        var nestedGenericModelContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToNestedGenericModel,
+            TestContext.Current.CancellationToken
+        );
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToSampleCode,
+            TestContext.Current.CancellationToken
+        );
 
-
-        var sampleCode = await _sampleCodeGenerator.GetSampleCode(new List<object> { new NestedGenericModel() });
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new NestedGenericModel() },
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(6, sampleCode.Count);
 

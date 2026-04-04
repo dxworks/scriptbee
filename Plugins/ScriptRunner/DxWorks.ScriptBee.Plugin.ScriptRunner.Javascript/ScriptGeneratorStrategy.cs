@@ -20,7 +20,11 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return $"class {className}";
     }
 
-    public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes)
+    public string GenerateClassName(
+        Type classType,
+        Type baseClassType,
+        out HashSet<Type> baseClassGenericTypes
+    )
     {
         baseClassGenericTypes = new HashSet<Type>();
 
@@ -40,8 +44,12 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return "}";
     }
 
-    public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
-        out HashSet<Type> genericTypes)
+    public string GenerateField(
+        string fieldModifier,
+        Type fieldType,
+        string fieldName,
+        out HashSet<Type> genericTypes
+    )
     {
         genericTypes = new HashSet<Type>();
 
@@ -49,14 +57,23 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return $"    {fieldName} = {GetFieldInitializationValue(fieldTypeName)};";
     }
 
-    public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
-        out HashSet<Type> genericTypes)
+    public string GenerateProperty(
+        string propertyModifier,
+        Type propertyType,
+        string propertyName,
+        out HashSet<Type> genericTypes
+    )
     {
         return GenerateField(propertyModifier, propertyType, propertyName, out genericTypes);
     }
 
-    public string GenerateMethod(string methodModifier, Type methodType, string methodName,
-        List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes)
+    public string GenerateMethod(
+        string methodModifier,
+        Type methodType,
+        string methodName,
+        List<Tuple<Type, string>> methodParams,
+        out HashSet<Type> genericTypes
+    )
     {
         genericTypes = new HashSet<Type>();
 
@@ -80,7 +97,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
         if (methodTypeName != "void" && methodTypeName != "Void")
         {
-            stringBuilder.AppendLine($"        return {GetFieldInitializationValue(methodTypeName)};");
+            stringBuilder.AppendLine(
+                $"        return {GetFieldInitializationValue(methodTypeName)};"
+            );
         }
 
         stringBuilder.AppendLine("    }");
@@ -95,7 +114,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
     public async Task<string> GenerateSampleCode()
     {
-        return await RelativeFileContentProvider.GetFileContentAsync("SampleCodes/JavascriptSampleCode.txt");
+        return await RelativeFileContentProvider.GetFileContentAsync(
+            "SampleCodes/JavascriptSampleCode.txt"
+        );
     }
 
     public string GenerateEmptyClass()
@@ -122,20 +143,41 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
     {
         switch (fieldType)
         {
-            case "byte" or "System.Byte" or "Byte" or
-                "sbyte" or "System.SByte" or "SByte" or
-                "decimal" or "System.Decimal" or "Decimal" or
-                "double" or "System.Double" or "Double" or
-                "float" or "System.Single" or "Single" or
-                "int" or "System.Int32" or "Int32" or
-                "uint" or "System.UInt32" or "UInt32" or
-                "long" or "System.Int64" or "Int64" or
-                "ulong" or "System.UInt64" or "UInt64" or
-                "short" or "System.Int16" or "Int16" or
-                "ushort" or "System.UInt16" or "UInt16":
+            case "byte"
+            or "System.Byte"
+            or "Byte"
+            or "sbyte"
+            or "System.SByte"
+            or "SByte"
+            or "decimal"
+            or "System.Decimal"
+            or "Decimal"
+            or "double"
+            or "System.Double"
+            or "Double"
+            or "float"
+            or "System.Single"
+            or "Single"
+            or "int"
+            or "System.Int32"
+            or "Int32"
+            or "uint"
+            or "System.UInt32"
+            or "UInt32"
+            or "long"
+            or "System.Int64"
+            or "Int64"
+            or "ulong"
+            or "System.UInt64"
+            or "UInt64"
+            or "short"
+            or "System.Int16"
+            or "Int16"
+            or "ushort"
+            or "System.UInt16"
+            or "UInt16":
                 return "0";
-            case "char" or "System.Char" or "Char" or
-                "string" or "System.String" or "String":
+            case "char" or "System.Char" or "Char" or "string" or "System.String" or "String":
                 return "\'\'";
             case "bool" or "System.Boolean" or "Boolean":
                 return "true";

@@ -13,8 +13,12 @@ public class JsonHelperFunctions : IHelperFunctions
         _helperFunctionsResultService = helperFunctionsResultService;
     }
 
-    public async Task ExportJsonAsync<T>(string fileName, T obj, JsonSerializerSettings? settings = default,
-        CancellationToken cancellationToken = default)
+    public async Task ExportJsonAsync<T>(
+        string fileName,
+        T obj,
+        JsonSerializerSettings? settings = default,
+        CancellationToken cancellationToken = default
+    )
     {
         var jsonSerializer = JsonSerializer.Create(settings);
         await using var stream = new MemoryStream();
@@ -25,8 +29,12 @@ public class JsonHelperFunctions : IHelperFunctions
 
         await jsonWriter.FlushAsync(cancellationToken);
         stream.Position = 0;
-        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, stream,
-            cancellationToken);
+        await _helperFunctionsResultService.UploadResultAsync(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            stream,
+            cancellationToken
+        );
     }
 
     public void ExportJson(string fileName, object obj)
@@ -40,7 +48,11 @@ public class JsonHelperFunctions : IHelperFunctions
 
         jsonWriter.Flush();
         stream.Position = 0;
-        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
+        _helperFunctionsResultService.UploadResult(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            stream
+        );
     }
 
     public string ConvertJson(object obj)

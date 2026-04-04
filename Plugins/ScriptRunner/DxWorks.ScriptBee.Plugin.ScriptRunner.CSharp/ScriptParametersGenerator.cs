@@ -7,9 +7,11 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 
-public static class ScriptParametersGenerator 
+public static class ScriptParametersGenerator
 {
-    public static ClassDeclarationSyntax GenerateScriptParameters(IEnumerable<ScriptParameter> parameters)
+    public static ClassDeclarationSyntax GenerateScriptParameters(
+        IEnumerable<ScriptParameter> parameters
+    )
     {
         return ClassDeclaration("ScriptParameters")
             .AddModifiers(Token(SyntaxKind.PublicKeyword))
@@ -17,7 +19,9 @@ public static class ScriptParametersGenerator
             .NormalizeWhitespace();
     }
 
-    private static MemberDeclarationSyntax[] GenerateProperties(IEnumerable<ScriptParameter> parameters)
+    private static MemberDeclarationSyntax[] GenerateProperties(
+        IEnumerable<ScriptParameter> parameters
+    )
     {
         var members = new List<MemberDeclarationSyntax>();
 
@@ -31,44 +35,59 @@ public static class ScriptParametersGenerator
 
     private static MemberDeclarationSyntax GenerateProperty(ScriptParameter scriptParameter)
     {
-        var property = PropertyDeclaration(ParseTypeName(scriptParameter.Type), scriptParameter.Name)
+        var property = PropertyDeclaration(
+                ParseTypeName(scriptParameter.Type),
+                scriptParameter.Name
+            )
             .AddModifiers(Token(SyntaxKind.PublicKeyword))
             .AddAccessorListAccessors(
                 AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
                 AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
-                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+            );
 
         if (scriptParameter.Value != null)
         {
-            property = property.WithInitializer(EqualsValueClause(
-                    GenerateLiteralExpression(scriptParameter.Type, scriptParameter.Value)))
+            property = property
+                .WithInitializer(
+                    EqualsValueClause(
+                        GenerateLiteralExpression(scriptParameter.Type, scriptParameter.Value)
+                    )
+                )
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         return property;
     }
 
-    private static LiteralExpressionSyntax GenerateLiteralExpression(string type, string value)
+    private static LiteralExpressionSyntax GenerateLiteralExpression(string type, object? value)
     {
         return type switch
         {
-            ScriptParameter.TypeString => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value)),
-            ScriptParameter.TypeInteger => LiteralExpression(SyntaxKind.NumericLiteralExpression,
-                Literal(int.Parse(value))),
-            ScriptParameter.TypeBoolean => GetBooleanExpressionSyntax(value),
-            ScriptParameter.TypeFloat => LiteralExpression(SyntaxKind.NumericLiteralExpression,
-                Literal(float.Parse(value))),
-            _ => throw new InvalidParameterTypeException(type)
+            ScriptParameter.TypeString => LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                Literal(value as string ?? "")
+            ),
+            ScriptParameter.TypeInteger => LiteralExpression(
+                SyntaxKind.NumericLiteralExpression,
+                Literal(value is int i ? i : 0)
+            ),
+            ScriptParameter.TypeBoolean => GetBooleanExpressionSyntax(value is true),
+            ScriptParameter.TypeFloat => LiteralExpression(
+                SyntaxKind.NumericLiteralExpression,
+                Literal(value is double d ? d : 0)
+            ),
+            _ => throw new InvalidParameterTypeException(type),
         };
     }
 
-    private static LiteralExpressionSyntax GetBooleanExpressionSyntax(string value)
+    private static LiteralExpressionSyntax GetBooleanExpressionSyntax(bool value)
     {
         return value switch
         {
-            "true" => LiteralExpression(SyntaxKind.TrueLiteralExpression),
-            _ => LiteralExpression(SyntaxKind.FalseLiteralExpression)
+            true => LiteralExpression(SyntaxKind.TrueLiteralExpression),
+            _ => LiteralExpression(SyntaxKind.FalseLiteralExpression),
         };
     }
 }

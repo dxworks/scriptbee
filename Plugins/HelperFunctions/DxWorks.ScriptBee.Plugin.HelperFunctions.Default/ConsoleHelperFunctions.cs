@@ -19,8 +19,12 @@ public class ConsoleHelperFunctions : IHelperFunctions
     {
         var consoleOutput = _consoleStringBuilder.ToString();
 
-        await _helperFunctionsResultService.UploadResultAsync("ConsoleOutput", RunResultDefaultTypes.ConsoleType,
-            consoleOutput, cancellationToken);
+        await _helperFunctionsResultService.UploadResultAsync(
+            "ConsoleOutput",
+            RunResultDefaultTypes.ConsoleType,
+            consoleOutput,
+            cancellationToken
+        );
     }
 
     public void ConsoleWrite(object message)

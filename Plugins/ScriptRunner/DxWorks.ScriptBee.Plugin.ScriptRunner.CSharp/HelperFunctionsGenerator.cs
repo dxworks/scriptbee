@@ -13,26 +13,37 @@ public static class HelperFunctionsGenerator
     // https://roslynquoter.azurewebsites.net/
 
     public static SyntaxList<MemberDeclarationSyntax> GetMemberDeclarationSyntaxList(
-        IHelperFunctionsContainer helperFunctionsContainer)
+        IHelperFunctionsContainer helperFunctionsContainer
+    )
     {
         var syntaxTree = CreateSyntaxTree(helperFunctionsContainer);
 
-        return (((syntaxTree.GetRoot() as CompilationUnitSyntax)!
-                .Members.First() as NamespaceDeclarationSyntax)!
-            .Members.First() as ClassDeclarationSyntax)!.Members;
+        return (
+            (
+                (syntaxTree.GetRoot() as CompilationUnitSyntax)!.Members.First()
+                as NamespaceDeclarationSyntax
+            )!.Members.First() as ClassDeclarationSyntax
+        )!.Members;
     }
 
     public static SyntaxTree CreateSyntaxTree(IHelperFunctionsContainer helperFunctionsContainer)
     {
-        var helperFunctionTypes = helperFunctionsContainer.GetFunctions()
+        var helperFunctionTypes = helperFunctionsContainer
+            .GetFunctions()
             .Select(f => f.GetType())
             .ToList();
 
-        var fieldDeclarationSyntaxes = helperFunctionTypes
-            .Select(t => FieldDeclaration(
+        var fieldDeclarationSyntaxes = helperFunctionTypes.Select(t =>
+            FieldDeclaration(
                     VariableDeclaration(IdentifierName(t.FullName ?? t.Name))
-                        .WithVariables(SingletonSeparatedList(VariableDeclarator(Identifier(t.Name)))))
-                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))));
+                        .WithVariables(
+                            SingletonSeparatedList(VariableDeclarator(Identifier(t.Name)))
+                        )
+                )
+                .WithModifiers(
+                    TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
+                )
+        );
 
         var methodDeclarationSyntaxes = helperFunctionTypes
             .SelectMany(t => t.GetMethods().Where(m => m.DeclaringType == t))
@@ -48,12 +59,17 @@ public static class HelperFunctionsGenerator
 
         var classDeclaration = ClassDeclaration(nameof(HelperFunctions))
             .WithMembers(List(fieldDeclarationSyntaxes.Concat(methodDeclarationSyntaxes)))
-            .WithModifiers(TokenList(Token(SyntaxKind.StaticKeyword), Token(SyntaxKind.PartialKeyword)));
+            .WithModifiers(
+                TokenList(Token(SyntaxKind.StaticKeyword), Token(SyntaxKind.PartialKeyword))
+            );
 
         var compilationUnit = CompilationUnit()
-            .WithMembers(SingletonList<MemberDeclarationSyntax>(
-                NamespaceDeclaration(IdentifierName(typeof(HelperFunctions).Namespace))
-                    .WithMembers(SingletonList<MemberDeclarationSyntax>(classDeclaration))))
+            .WithMembers(
+                SingletonList<MemberDeclarationSyntax>(
+                    NamespaceDeclaration(IdentifierName(typeof(HelperFunctions).Namespace))
+                        .WithMembers(SingletonList<MemberDeclarationSyntax>(classDeclaration))
+                )
+            )
             .WithUsings(GenerateUsings())
             .NormalizeWhitespace();
 
@@ -62,50 +78,85 @@ public static class HelperFunctionsGenerator
 
     private static SyntaxList<UsingDirectiveSyntax> GenerateUsings()
     {
-        return List(new List<UsingDirectiveSyntax>
-        {
-            UsingDirective(IdentifierName("System"))
-        });
+        return List(new List<UsingDirectiveSyntax> { UsingDirective(IdentifierName("System")) });
     }
 
-    private static MemberDeclarationSyntax GenerateMethodDeclarationWithReturnValue(MethodInfo methodInfo)
+    private static MemberDeclarationSyntax GenerateMethodDeclarationWithReturnValue(
+        MethodInfo methodInfo
+    )
     {
         return GenerateMethodSignature(methodInfo)
-            .WithBody(Block(SingletonList<StatementSyntax>(ReturnStatement(
-                InvocationExpression(
-                        GenerateHelperFunctionMethodCall(methodInfo))
-                    .WithArgumentList(
-                        ArgumentList(
-                            SeparatedList(
-                                methodInfo.GetParameters().Select(parameterInfo =>
-                                    Argument(IdentifierName(parameterInfo.Name))))))))));
+            .WithBody(
+                Block(
+                    SingletonList<StatementSyntax>(
+                        ReturnStatement(
+                            InvocationExpression(GenerateHelperFunctionMethodCall(methodInfo))
+                                .WithArgumentList(
+                                    ArgumentList(
+                                        SeparatedList(
+                                            methodInfo
+                                                .GetParameters()
+                                                .Select(parameterInfo =>
+                                                    Argument(IdentifierName(parameterInfo.Name))
+                                                )
+                                        )
+                                    )
+                                )
+                        )
+                    )
+                )
+            );
     }
 
     private static MethodDeclarationSyntax GenerateVoidMethodDeclaration(MethodInfo methodInfo)
     {
         return GenerateMethodSignature(methodInfo)
-            .WithBody(Block(SingletonList<StatementSyntax>(ExpressionStatement(
-                InvocationExpression(
-                        GenerateHelperFunctionMethodCall(methodInfo))
-                    .WithArgumentList(
-                        ArgumentList(
-                            SeparatedList(
-                                methodInfo.GetParameters().Select(parameterInfo =>
-                                    Argument(IdentifierName(parameterInfo.Name))))))))));
+            .WithBody(
+                Block(
+                    SingletonList<StatementSyntax>(
+                        ExpressionStatement(
+                            InvocationExpression(GenerateHelperFunctionMethodCall(methodInfo))
+                                .WithArgumentList(
+                                    ArgumentList(
+                                        SeparatedList(
+                                            methodInfo
+                                                .GetParameters()
+                                                .Select(parameterInfo =>
+                                                    Argument(IdentifierName(parameterInfo.Name))
+                                                )
+                                        )
+                                    )
+                                )
+                        )
+                    )
+                )
+            );
     }
 
     private static MethodDeclarationSyntax GenerateMethodSignature(MethodInfo methodInfo)
     {
-        var methodDeclarationSyntax =
-            MethodDeclaration(GenerateReturnValue(methodInfo.ReturnParameter), methodInfo.Name)
-                .WithModifiers(TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword)))
-                .WithParameterList(ParameterList(SeparatedList(
-                        methodInfo.GetParameters().Select(parameterInfo => Parameter(Identifier(parameterInfo.Name))
-                            .WithType(GenerateParameter(parameterInfo)))
+        var methodDeclarationSyntax = MethodDeclaration(
+                GenerateReturnValue(methodInfo.ReturnParameter),
+                methodInfo.Name
+            )
+            .WithModifiers(
+                TokenList(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.StaticKeyword))
+            )
+            .WithParameterList(
+                ParameterList(
+                    SeparatedList(
+                        methodInfo
+                            .GetParameters()
+                            .Select(parameterInfo =>
+                                Parameter(Identifier(parameterInfo.Name))
+                                    .WithType(GenerateParameter(parameterInfo))
+                            )
                     )
-                ));
+                )
+            );
 
-        var typeParameterSyntaxes = methodInfo.GetGenericArguments()
+        var typeParameterSyntaxes = methodInfo
+            .GetGenericArguments()
             .Select(type => TypeParameter(Identifier(type.Name)))
             .ToList();
 
@@ -114,19 +165,21 @@ public static class HelperFunctionsGenerator
             return methodDeclarationSyntax;
         }
 
-        var hasGenericConstrains = methodInfo.GetGenericArguments()
+        var hasGenericConstrains = methodInfo
+            .GetGenericArguments()
             .Any(x => x.GetGenericParameterConstraints().Any());
 
-        var methodDeclarationWithGenericParameters = methodDeclarationSyntax
-            .WithTypeParameterList(TypeParameterList(SeparatedList(typeParameterSyntaxes)));
-
+        var methodDeclarationWithGenericParameters = methodDeclarationSyntax.WithTypeParameterList(
+            TypeParameterList(SeparatedList(typeParameterSyntaxes))
+        );
 
         if (!hasGenericConstrains)
         {
             return methodDeclarationWithGenericParameters;
         }
 
-        var genericConstraintsSyntaxes = methodInfo.GetGenericArguments()
+        var genericConstraintsSyntaxes = methodInfo
+            .GetGenericArguments()
             .Select(type => (type, GenerateGenericConstrains(type).ToList()))
             .Where(tuple => tuple.Item2.Any())
             .Select(tuple =>
@@ -135,12 +188,15 @@ public static class HelperFunctionsGenerator
                 return TypeParameterConstraintClause(type.Name)
                     .WithConstraints(
                         SeparatedList<TypeParameterConstraintSyntax>(
-                            genericConstrains.Select(x => TypeConstraint(IdentifierName(x)))));
+                            genericConstrains.Select(x => TypeConstraint(IdentifierName(x)))
+                        )
+                    );
             })
             .ToList();
 
-        return methodDeclarationWithGenericParameters
-            .WithConstraintClauses(List(genericConstraintsSyntaxes));
+        return methodDeclarationWithGenericParameters.WithConstraintClauses(
+            List(genericConstraintsSyntaxes)
+        );
     }
 
     private static IEnumerable<string> GenerateGenericConstrains(Type type)
@@ -148,7 +204,8 @@ public static class HelperFunctionsGenerator
         var genericParameterConstraints = type.GetGenericParameterConstraints();
         foreach (var genericParameterConstraint in genericParameterConstraints)
         {
-            var constraintName = genericParameterConstraint.FullName ?? genericParameterConstraint.Name;
+            var constraintName =
+                genericParameterConstraint.FullName ?? genericParameterConstraint.Name;
             if (constraintName == typeof(ValueType).FullName)
             {
                 yield return "struct";
@@ -164,35 +221,57 @@ public static class HelperFunctionsGenerator
             yield break;
         }
 
-        if (type.GenericParameterAttributes.HasFlag(GenericParameterAttributes.ReferenceTypeConstraint))
+        if (
+            type.GenericParameterAttributes.HasFlag(
+                GenericParameterAttributes.ReferenceTypeConstraint
+            )
+        )
         {
             yield return "class";
         }
 
-        if (type.GenericParameterAttributes.HasFlag(GenericParameterAttributes.DefaultConstructorConstraint))
+        if (
+            type.GenericParameterAttributes.HasFlag(
+                GenericParameterAttributes.DefaultConstructorConstraint
+            )
+        )
         {
             yield return "new()";
         }
 
-        if (type.GenericParameterAttributes.HasFlag(GenericParameterAttributes.NotNullableValueTypeConstraint))
+        if (
+            type.GenericParameterAttributes.HasFlag(
+                GenericParameterAttributes.NotNullableValueTypeConstraint
+            )
+        )
         {
             yield return "struct";
         }
     }
 
-    private static MemberAccessExpressionSyntax GenerateHelperFunctionMethodCall(MethodBase methodInfo)
+    private static MemberAccessExpressionSyntax GenerateHelperFunctionMethodCall(
+        MethodBase methodInfo
+    )
     {
         SimpleNameSyntax nameSyntax = !methodInfo.IsGenericMethod
             ? IdentifierName(methodInfo.Name)
             : GenericName(methodInfo.Name)
-                .WithTypeArgumentList(TypeArgumentList(SeparatedList(
-                    methodInfo.GetGenericArguments().Select(t => IdentifierName(t.Name)).OfType<TypeSyntax>()
-                )));
+                .WithTypeArgumentList(
+                    TypeArgumentList(
+                        SeparatedList(
+                            methodInfo
+                                .GetGenericArguments()
+                                .Select(t => IdentifierName(t.Name))
+                                .OfType<TypeSyntax>()
+                        )
+                    )
+                );
 
         return MemberAccessExpression(
             SyntaxKind.SimpleMemberAccessExpression,
             IdentifierName(methodInfo.DeclaringType.Name),
-            nameSyntax);
+            nameSyntax
+        );
     }
 
     private static TypeSyntax GenerateParameter(ParameterInfo parameterInfo)
@@ -221,7 +300,6 @@ public static class HelperFunctionsGenerator
         return returnTypeSyntax;
     }
 
-
     private static NameSyntax GetParameterSyntax(Type parameterType)
     {
         var parameterTypeFullName = parameterType.FullName ?? parameterType.Name;
@@ -234,9 +312,13 @@ public static class HelperFunctionsGenerator
             parameterTypeFullName = parameterTypeFullName[..index];
 
             parameterSyntax = GenericName(parameterTypeFullName)
-                .WithTypeArgumentList(TypeArgumentList(SeparatedList<TypeSyntax>(
-                    parameterType.GetGenericArguments().Select(GetParameterSyntax)
-                )));
+                .WithTypeArgumentList(
+                    TypeArgumentList(
+                        SeparatedList<TypeSyntax>(
+                            parameterType.GetGenericArguments().Select(GetParameterSyntax)
+                        )
+                    )
+                );
         }
         else
         {
@@ -252,8 +334,8 @@ public static class HelperFunctionsGenerator
     {
         var nullabilityInfo = new NullabilityInfoContext().Create(parameterInfo);
 
-        return nullabilityInfo.ReadState == NullabilityState.Nullable ||
-               nullabilityInfo.WriteState == NullabilityState.Nullable;
+        return nullabilityInfo.ReadState == NullabilityState.Nullable
+            || nullabilityInfo.WriteState == NullabilityState.Nullable;
     }
 
     private static string ConvertSystemTypeToPrimitiveType(string type)
@@ -277,7 +359,7 @@ public static class HelperFunctionsGenerator
             "System.Decimal" => "decimal",
             "System.DateTime" => "DateTime",
             "System.Void" => "void",
-            _ => type
+            _ => type,
         };
     }
 }

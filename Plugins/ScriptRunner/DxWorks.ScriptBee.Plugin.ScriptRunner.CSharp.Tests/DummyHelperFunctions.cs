@@ -4,7 +4,5 @@ namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;
 
 public class DummyHelperFunctions : IHelperFunctions
 {
-    public void Print(string value)
-    {
-    }
+    public void Print(string value) { }
 }
