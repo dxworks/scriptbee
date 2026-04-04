@@ -15,11 +15,26 @@ public interface IMongoRepository<T>
         CancellationToken cancellationToken
     );
 
-    public Task<bool> DocumentExists(string id, CancellationToken cancellationToken);
-
     public Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken);
 
     public Task<IEnumerable<T>> GetAllDocuments(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    );
+
+    public Task<IEnumerable<T>> GetAllDocuments(
+        FilterDefinition<T> filter,
+        CancellationToken cancellationToken
+    );
+
+    public Task<IEnumerable<T>> GetAllDocuments(
+        Expression<Func<T, bool>> predicate,
+        int offset,
+        int limit,
+        CancellationToken cancellationToken
+    );
+
+    public Task<long> CountDocuments(
         Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken
     );

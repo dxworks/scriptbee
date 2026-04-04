@@ -17,14 +17,6 @@ export interface CreateProjectResponse {
   creationDate: string;
 }
 
-export interface ProjectStructureNode {
-  id: string;
-  name: string;
-  path: string;
-  absolutePath: string;
-  children?: ProjectStructureNode[];
-}
-
 export interface ProjectScript {
   id: string;
   name: string;
@@ -32,4 +24,20 @@ export interface ProjectScript {
   absolutePath: string;
   scriptLanguage: ScriptLanguage;
   parameters: ScriptParameter[];
+}
+
+export interface ProjectFileNode {
+  id: string;
+  name: string;
+  path: string;
+  absolutePath: string;
+  type: string;
+  hasChildren: boolean;
+}
+
+export interface GetProjectFilesResponse {
+  data: ProjectFileNode[];
+  totalCount: number;
+  offset: number;
+  limit: number;
 }

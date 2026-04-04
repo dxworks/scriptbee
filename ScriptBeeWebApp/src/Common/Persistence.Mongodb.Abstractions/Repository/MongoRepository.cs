@@ -24,12 +24,6 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         return await mongoCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<bool> DocumentExists(string id, CancellationToken cancellationToken)
-    {
-        var document = await GetDocument(id, cancellationToken);
-        return document != null;
-    }
-
     public async Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken)
     {
         return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken);
@@ -41,6 +35,36 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
     )
     {
         return await mongoCollection.Find(predicate).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<T>> GetAllDocuments(
+        FilterDefinition<T> filter,
+        CancellationToken cancellationToken
+    )
+    {
+        return await mongoCollection.Find(filter).ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<T>> GetAllDocuments(
+        Expression<Func<T, bool>> predicate,
+        int offset,
+        int limit,
+        CancellationToken cancellationToken
+    )
+    {
+        return await mongoCollection
+            .Find(predicate)
+            .Skip(offset)
+            .Limit(limit)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<long> CountDocuments(
+        Expression<Func<T, bool>> predicate,
+        CancellationToken cancellationToken
+    )
+    {
+        return await mongoCollection.CountDocumentsAsync(predicate, null, cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAllDocuments(

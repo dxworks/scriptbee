@@ -4,5 +4,5 @@ namespace ScriptBee.UseCases.Project.ProjectStructure;
 
 public interface IGetScriptAbsolutePathUseCase
 {
-    string GetScriptAbsolutePath(Script script);
+    string GetScriptAbsolutePath(ProjectStructureEntry entry);
 }

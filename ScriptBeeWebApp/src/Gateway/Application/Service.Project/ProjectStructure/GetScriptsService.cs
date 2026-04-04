@@ -7,7 +7,8 @@ using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.ProjectStructure;
 
-public class GetScriptsService(IGetScripts getScripts, ILoadFile loadFile) : IGetScriptsUseCase
+public sealed class GetScriptsService(IGetScripts getScripts, ILoadFile loadFile)
+    : IGetScriptsUseCase
 {
     public async Task<IEnumerable<Script>> GetAll(
         ProjectId projectId,
