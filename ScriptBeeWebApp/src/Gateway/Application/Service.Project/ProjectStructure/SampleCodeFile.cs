@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Scripts.ScriptSampleGenerators;
+﻿namespace ScriptBee.Service.Project.ProjectStructure;
 
 public record SampleCodeFile
 {
