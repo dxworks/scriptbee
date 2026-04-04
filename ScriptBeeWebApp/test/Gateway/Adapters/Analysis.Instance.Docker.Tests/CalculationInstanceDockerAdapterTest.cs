@@ -207,7 +207,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         );
 
         // Act
-        await adapter.Deallocate(instanceInfo);
+        await adapter.Deallocate(instanceInfo, TestContext.Current.CancellationToken);
 
         // Assert
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
@@ -244,7 +244,9 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             DateTimeOffset.UtcNow
         );
 
-        var exception = await Record.ExceptionAsync(() => adapter.Deallocate(instanceInfo));
+        var exception = await Record.ExceptionAsync(() =>
+            adapter.Deallocate(instanceInfo, TestContext.Current.CancellationToken)
+        );
 
         exception.ShouldBeNull();
     }

@@ -12,7 +12,7 @@ namespace ScriptBee.Service.Project.Analysis;
 
 using AllocateResult = OneOf<InstanceInfo, ProjectDoesNotExistsError>;
 
-public class AllocateProjectInstanceService(
+public sealed class AllocateProjectInstanceService(
     IGetProject getProject,
     IAllocateInstance allocateInstance,
     IGuidProvider guidProvider,

@@ -8,13 +8,13 @@ using ScriptBee.Ports.Instance;
 
 namespace ScriptBee.Persistence.Mongodb;
 
-public class ProjectInstancesPersistenceAdapter(
+public sealed class ProjectInstancesPersistenceAdapter(
     IMongoRepository<MongodbProjectInstance> mongoRepository
-) : ICreateProjectInstance, IGetAllProjectInstances, IGetProjectInstance
+) : ICreateProjectInstance, IGetAllProjectInstances, IGetProjectInstance, IDeleteProjectInstance
 {
     public async Task<InstanceInfo> Create(
         InstanceInfo instanceInfo,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var projectInstance = MongodbProjectInstance.From(instanceInfo);
@@ -26,7 +26,7 @@ public class ProjectInstancesPersistenceAdapter(
 
     public async Task<IEnumerable<InstanceInfo>> GetAll(
         ProjectId projectId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var projectInstances = await mongoRepository.GetAllDocuments(
@@ -39,7 +39,7 @@ public class ProjectInstancesPersistenceAdapter(
 
     public async Task<OneOf<InstanceInfo, InstanceDoesNotExistsError>> Get(
         InstanceId id,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var instance = await mongoRepository.GetDocument(id.ToString(), cancellationToken);
@@ -50,5 +50,10 @@ public class ProjectInstancesPersistenceAdapter(
         }
 
         return instance.ToCalculationInstanceInfo();
+    }
+
+    public async Task Delete(InstanceInfo instanceInfo, CancellationToken cancellationToken)
+    {
+        await mongoRepository.DeleteDocument(instanceInfo.Id.ToString(), cancellationToken);
     }
 }

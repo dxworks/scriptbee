@@ -91,7 +91,10 @@ public class CalculationInstanceDockerAdapter(
         ).CreateClient();
     }
 
-    public async Task Deallocate(InstanceInfo calculationInstanceInfo)
+    public async Task Deallocate(
+        InstanceInfo calculationInstanceInfo,
+        CancellationToken cancellationToken
+    )
     {
         var containerName = $"scriptbee-calculation-{calculationInstanceInfo.Id}";
         logger.LogInformation("Attempting to deallocate container: {Name}", containerName);
@@ -110,7 +113,8 @@ public class CalculationInstanceDockerAdapter(
                         new Dictionary<string, bool> { { containerName, true } }
                     },
                 },
-            }
+            },
+            cancellationToken
         );
 
         var container = containers.FirstOrDefault();
@@ -125,7 +129,8 @@ public class CalculationInstanceDockerAdapter(
                 );
                 await client.Containers.StopContainerAsync(
                     container.ID,
-                    new ContainerStopParameters()
+                    new ContainerStopParameters(),
+                    cancellationToken
                 );
 
                 logger.LogInformation(
@@ -135,7 +140,8 @@ public class CalculationInstanceDockerAdapter(
                 );
                 await client.Containers.RemoveContainerAsync(
                     container.ID,
-                    new ContainerRemoveParameters { Force = true }
+                    new ContainerRemoveParameters { Force = true },
+                    cancellationToken
                 );
 
                 logger.LogInformation("Container deallocated successfully: {Name}", containerName);

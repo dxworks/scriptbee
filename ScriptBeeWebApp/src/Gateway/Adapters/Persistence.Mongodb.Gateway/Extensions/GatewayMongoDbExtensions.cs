@@ -30,6 +30,7 @@ public static class GatewayMongoDbExtensions
         return services
             .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "Instances")
             .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
+            .AddSingleton<IDeleteProjectInstance, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>()
             .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
     }

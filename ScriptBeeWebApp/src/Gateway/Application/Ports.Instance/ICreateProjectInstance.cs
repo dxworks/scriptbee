@@ -4,8 +4,5 @@ namespace ScriptBee.Ports.Instance;
 
 public interface ICreateProjectInstance
 {
-    Task<InstanceInfo> Create(
-        InstanceInfo instanceInfo,
-        CancellationToken cancellationToken = default
-    );
+    Task<InstanceInfo> Create(InstanceInfo instanceInfo, CancellationToken cancellationToken);
 }

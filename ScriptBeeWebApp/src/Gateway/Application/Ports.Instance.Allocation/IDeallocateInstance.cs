@@ -4,5 +4,5 @@ namespace ScriptBee.Ports.Instance.Allocation;
 
 public interface IDeallocateInstance
 {
-    Task Deallocate(InstanceInfo calculationInstanceInfo);
+    Task Deallocate(InstanceInfo calculationInstanceInfo, CancellationToken cancellationToken);
 }
