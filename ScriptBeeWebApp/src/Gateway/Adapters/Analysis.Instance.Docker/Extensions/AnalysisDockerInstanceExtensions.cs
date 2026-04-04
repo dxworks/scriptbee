@@ -18,6 +18,7 @@ public static class AnalysisDockerInstanceExtensions
         return services
             .AddSingleton<IFreePortProvider, FreePortProvider>()
             .AddSingleton<IAllocateInstance, CalculationInstanceDockerAdapter>()
-            .AddSingleton<IDeallocateInstance, CalculationInstanceDockerAdapter>();
+            .AddSingleton<IDeallocateInstance, CalculationInstanceDockerAdapter>()
+            .AddSingleton<IGetInstanceStatus, CalculationInstanceDockerAdapter>();
     }
 }

@@ -16,8 +16,48 @@ public class CalculationInstanceDockerAdapter(
     IConfiguration configuration,
     ILogger<CalculationInstanceDockerAdapter> logger,
     IFreePortProvider freePortProvider
-) : IAllocateInstance, IDeallocateInstance
+) : IAllocateInstance, IDeallocateInstance, IGetInstanceStatus
 {
+    public async Task<CalculationInstanceStatus> GetStatus(
+        InstanceId instanceId,
+        CancellationToken cancellationToken
+    )
+    {
+        var containerName = $"scriptbee-calculation-{instanceId}";
+        var calculationDockerConfig = config.Value;
+        using var client = CreateDockerClient(calculationDockerConfig);
+
+        var containers = await client.Containers.ListContainersAsync(
+            new ContainersListParameters
+            {
+                All = true,
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "name",
+                        new Dictionary<string, bool> { { containerName, true } }
+                    },
+                },
+            },
+            cancellationToken
+        );
+
+        var container = containers.FirstOrDefault();
+
+        if (container == null)
+        {
+            return CalculationInstanceStatus.NotFound;
+        }
+
+        return container.State.ToLower() switch
+        {
+            "running" => CalculationInstanceStatus.Running,
+            "created" or "restarting" => CalculationInstanceStatus.Allocating,
+            "removing" => CalculationInstanceStatus.Deallocating,
+            _ => CalculationInstanceStatus.NotFound,
+        };
+    }
+
     public async Task<string> Allocate(
         InstanceId instanceId,
         AnalysisInstanceImage image,

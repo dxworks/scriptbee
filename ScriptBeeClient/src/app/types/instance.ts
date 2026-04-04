@@ -1,4 +1,4 @@
-export type CalculationInstanceStatus = 'Allocating' | 'Running' | 'Deallocating' | 'NotFound' | 'Unknown';
+export type CalculationInstanceStatus = 'Allocating' | 'Running' | 'Deallocating' | 'NotFound';
 
 export interface InstanceInfo {
   id: string;
