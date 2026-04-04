@@ -9,18 +9,28 @@ public class PythonScriptRunner : IScriptRunner
 {
     public string Language => "python";
 
-    public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        IEnumerable<ScriptParameter> parameters, string scriptContent, CancellationToken cancellationToken = default)
+    public async Task RunAsync(
+        IProject project,
+        IHelperFunctionsContainer helperFunctionsContainer,
+        IEnumerable<ScriptParameter> parameters,
+        string scriptContent,
+        CancellationToken cancellationToken = default
+    )
     {
         var pythonEngine = IronPython.Hosting.Python.CreateEngine();
 
         var dictionary = new Dictionary<string, object>
         {
             { "project", project },
-            { "scriptParameters", CreateScriptParameters(parameters) }
+            { "scriptParameters", CreateScriptParameters(parameters) },
         };
 
-        foreach (var (functionName, delegateFunction) in helperFunctionsContainer.GetFunctionsDictionary())
+        foreach (
+            var (
+                functionName,
+                delegateFunction
+            ) in helperFunctionsContainer.GetFunctionsDictionary()
+        )
         {
             dictionary.Add(functionName, delegateFunction);
         }
@@ -29,9 +39,14 @@ public class PythonScriptRunner : IScriptRunner
 
         var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
 
-        await Task.Run(() => { pythonEngine.Execute(validScript, scriptScope); }, cancellationToken);
+        await Task.Run(
+            () =>
+            {
+                pythonEngine.Execute(validScript, scriptScope);
+            },
+            cancellationToken
+        );
     }
-
 
     private static dynamic CreateScriptParameters(IEnumerable<ScriptParameter> parameters)
     {

@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 

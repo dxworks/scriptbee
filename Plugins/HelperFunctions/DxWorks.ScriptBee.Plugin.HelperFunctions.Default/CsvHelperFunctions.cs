@@ -14,8 +14,11 @@ public class CsvHelperFunctions : IHelperFunctions
         _helperFunctionsResultService = helperFunctionsResultService;
     }
 
-    public async Task ExportCsvAsync<T>(string fileName, IEnumerable<T> records,
-        CancellationToken cancellationToken = default)
+    public async Task ExportCsvAsync<T>(
+        string fileName,
+        IEnumerable<T> records,
+        CancellationToken cancellationToken = default
+    )
     {
         await using var stream = new MemoryStream();
 
@@ -24,8 +27,12 @@ public class CsvHelperFunctions : IHelperFunctions
 
         await csv.WriteRecordsAsync(records, cancellationToken);
 
-        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, stream,
-            cancellationToken);
+        await _helperFunctionsResultService.UploadResultAsync(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            stream,
+            cancellationToken
+        );
     }
 
     public void ExportCsv(string fileName, List<object> records)
@@ -37,6 +44,10 @@ public class CsvHelperFunctions : IHelperFunctions
 
         csv.WriteRecords(records);
 
-        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
+        _helperFunctionsResultService.UploadResult(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            stream
+        );
     }
 }

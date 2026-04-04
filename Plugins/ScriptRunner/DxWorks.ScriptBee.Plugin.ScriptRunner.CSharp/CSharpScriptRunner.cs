@@ -12,21 +12,33 @@ public class CSharpScriptRunner : IScriptRunner
 {
     public string Language => "csharp";
 
-    public async Task RunAsync(IProject project, IHelperFunctionsContainer helperFunctionsContainer,
-        IEnumerable<ScriptParameter> parameters, string scriptContent, CancellationToken cancellationToken = default)
+    public async Task RunAsync(
+        IProject project,
+        IHelperFunctionsContainer helperFunctionsContainer,
+        IEnumerable<ScriptParameter> parameters,
+        string scriptContent,
+        CancellationToken cancellationToken = default
+    )
     {
         var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
 
-        var compiledScript =
-            await Task.Run(() => CompileScript(validScript, parameters, helperFunctionsContainer, cancellationToken),
-                cancellationToken);
+        var compiledScript = await Task.Run(
+            () =>
+                CompileScript(validScript, parameters, helperFunctionsContainer, cancellationToken),
+            cancellationToken
+        );
 
-        await Task.Run(() => ExecuteScript(project, compiledScript, helperFunctionsContainer),
-            cancellationToken);
+        await Task.Run(
+            () => ExecuteScript(project, compiledScript, helperFunctionsContainer),
+            cancellationToken
+        );
     }
 
-    private static void ExecuteScript(IProject project, Assembly compiledScriptAssembly,
-        IHelperFunctionsContainer helperFunctionsContainer)
+    private static void ExecuteScript(
+        IProject project,
+        Assembly compiledScriptAssembly,
+        IHelperFunctionsContainer helperFunctionsContainer
+    )
     {
         PopulateHelperFunctionFields(compiledScriptAssembly, helperFunctionsContainer);
 
@@ -47,26 +59,24 @@ public class CSharpScriptRunner : IScriptRunner
                     {
                         case 1 when IsProjectType(methodParameters[0].ParameterType):
                         {
-                            var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
+                            var scriptContentObject = compiledScriptAssembly.CreateInstance(
+                                type.Name
+                            );
 
-                            method.Invoke(scriptContentObject, new object[]
-                            {
-                                project
-                            });
+                            method.Invoke(scriptContentObject, [project]);
 
                             return;
                         }
-                        case 2 when IsProjectType(methodParameters[0].ParameterType) &&
-                                    methodParameters[1].ParameterType.Name == "ScriptParameters":
+                        case 2
+                            when IsProjectType(methodParameters[0].ParameterType)
+                                && methodParameters[1].ParameterType.Name == "ScriptParameters":
                         {
-                            var scriptContentObject = compiledScriptAssembly.CreateInstance(type.Name);
+                            var scriptContentObject = compiledScriptAssembly.CreateInstance(
+                                type.Name
+                            );
                             var scriptParameters = CreateScriptParameters(compiledScriptAssembly);
 
-                            method.Invoke(scriptContentObject, new[]
-                            {
-                                project,
-                                scriptParameters
-                            });
+                            method.Invoke(scriptContentObject, [project, scriptParameters]);
 
                             return;
                         }
@@ -78,7 +88,9 @@ public class CSharpScriptRunner : IScriptRunner
 
     private static object? CreateScriptParameters(Assembly compiledScriptAssembly)
     {
-        var scriptParameters = compiledScriptAssembly.GetTypes().FirstOrDefault(t => t.Name == "ScriptParameters");
+        var scriptParameters = compiledScriptAssembly
+            .GetTypes()
+            .FirstOrDefault(t => t.Name == "ScriptParameters");
 
         return scriptParameters is null ? null : Activator.CreateInstance(scriptParameters);
     }
@@ -89,10 +101,13 @@ public class CSharpScriptRunner : IScriptRunner
     }
 
     // todo add tests
-    private static void PopulateHelperFunctionFields(Assembly compiledScriptAssembly,
-        IHelperFunctionsContainer helperFunctionsContainer)
+    private static void PopulateHelperFunctionFields(
+        Assembly compiledScriptAssembly,
+        IHelperFunctionsContainer helperFunctionsContainer
+    )
     {
-        var helperFunctionClass = compiledScriptAssembly.GetTypes()
+        var helperFunctionClass = compiledScriptAssembly
+            .GetTypes()
             .FirstOrDefault(t => t.FullName == "ScriptContent");
 
         if (helperFunctionClass is null)
@@ -102,32 +117,44 @@ public class CSharpScriptRunner : IScriptRunner
 
         foreach (var fieldInfo in helperFunctionClass.GetFields())
         {
-            var helperFunction = helperFunctionsContainer.GetFunctions()
+            var helperFunction = helperFunctionsContainer
+                .GetFunctions()
                 .FirstOrDefault(h => h.GetType().FullName == fieldInfo.FieldType.FullName);
 
             fieldInfo.SetValue(null, helperFunction);
         }
     }
 
-    private static Assembly CompileScript(string script, IEnumerable<ScriptParameter> parameters,
-        IHelperFunctionsContainer helperFunctionsContainer, CancellationToken cancellationToken)
+    private static Assembly CompileScript(
+        string script,
+        IEnumerable<ScriptParameter> parameters,
+        IHelperFunctionsContainer helperFunctionsContainer,
+        CancellationToken cancellationToken
+    )
     {
-        var members = HelperFunctionsGenerator.GetMemberDeclarationSyntaxList(helperFunctionsContainer);
+        var members = HelperFunctionsGenerator.GetMemberDeclarationSyntaxList(
+            helperFunctionsContainer
+        );
         var scriptParameters = ScriptParametersGenerator.GenerateScriptParameters(parameters);
 
-        script = script.Replace("public void ExecuteScript",
-            $"{scriptParameters}{members}public void ExecuteScript");
+        script = script.Replace(
+            "public void ExecuteScript",
+            $"{scriptParameters}{members}public void ExecuteScript"
+        );
 
-        // todo when writing script instead of class with execute method 
+        // todo when writing script instead of class with execute method
         // https://stackoverflow.com/questions/13601412/compilation-errors-when-dealing-with-c-sharp-script-using-roslyn
         var syntaxTree = CSharpSyntaxTree.ParseText(script, cancellationToken: cancellationToken);
 
         CheckErrors(syntaxTree, cancellationToken);
 
-        var compilation = CSharpCompilation.Create("Compilation")
-            .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                .WithOverflowChecks(true)
-                .WithOptimizationLevel(OptimizationLevel.Release))
+        var compilation = CSharpCompilation
+            .Create("Compilation")
+            .WithOptions(
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                    .WithOverflowChecks(true)
+                    .WithOptimizationLevel(OptimizationLevel.Release)
+            )
             .AddReferences(FindReferences())
             .AddSyntaxTrees(syntaxTree);
 
@@ -136,7 +163,8 @@ public class CSharpScriptRunner : IScriptRunner
 
         if (!emitResult.Success)
         {
-            var errorMessage = emitResult.Diagnostics.Select(d => d.GetMessage())
+            var errorMessage = emitResult
+                .Diagnostics.Select(d => d.GetMessage())
                 .Aggregate("", (current, error) => current + error + "\n");
             throw new CompilationErrorException(errorMessage);
         }
@@ -146,7 +174,9 @@ public class CSharpScriptRunner : IScriptRunner
 
     private static void CheckErrors(SyntaxTree syntaxTree, CancellationToken cancellationToken)
     {
-        var compilationUnitRoot = syntaxTree.GetCompilationUnitRoot(cancellationToken: cancellationToken);
+        var compilationUnitRoot = syntaxTree.GetCompilationUnitRoot(
+            cancellationToken: cancellationToken
+        );
 
         var diagnostics = compilationUnitRoot.GetDiagnostics();
 
@@ -164,7 +194,8 @@ public class CSharpScriptRunner : IScriptRunner
 
     private static IEnumerable<PortableExecutableReference> FindReferences()
     {
-        return AppDomain.CurrentDomain.GetAssemblies()
+        return AppDomain
+            .CurrentDomain.GetAssemblies()
             .Where(a => !a.IsDynamic)
             .Where(a => !string.IsNullOrEmpty(a.Location))
             .Select(assembly => MetadataReference.CreateFromFile(assembly.Location));

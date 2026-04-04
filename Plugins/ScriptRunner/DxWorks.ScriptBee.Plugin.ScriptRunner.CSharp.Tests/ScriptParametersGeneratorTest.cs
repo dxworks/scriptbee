@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Exceptions;
-using Xunit;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;
 
@@ -13,9 +10,14 @@ public class ScriptParametersGeneratorTest
     {
         var scriptParametersCode = GetScriptParametersCode(new List<ScriptParameter>());
 
-        Assert.Equal(@"public class ScriptParameters
-{
-}".Replace(Environment.NewLine, "\r\n"), scriptParametersCode);
+        Assert.Equal(
+            """
+            public class ScriptParameters
+            {
+            }
+            """.Replace(Environment.NewLine, "\r\n"),
+            scriptParametersCode
+        );
     }
 
     [Fact]
@@ -27,36 +29,41 @@ public class ScriptParametersGeneratorTest
             {
                 Name = "a",
                 Type = "string",
-                Value = "value"
+                Value = "value",
             },
             new()
             {
                 Name = "b",
                 Type = "integer",
-                Value = "5"
+                Value = 5,
             },
             new()
             {
                 Name = "c",
                 Type = "boolean",
-                Value = "true"
+                Value = true,
             },
             new()
             {
                 Name = "d",
                 Type = "float",
-                Value = "6.5"
-            }
+                Value = 6.5,
+            },
         };
         var scriptParametersCode = GetScriptParametersCode(parameters);
 
-        Assert.Equal(@"public class ScriptParameters
-{
-    public string a { get; set; } = ""value"";
-    public integer b { get; set; } = 5;
-    public boolean c { get; set; } = true;
-    public float d { get; set; } = 6.5F;
-}".Replace(Environment.NewLine, "\r\n"), scriptParametersCode);
+        Assert.Equal(
+            """
+            public class ScriptParameters
+            {
+                public string a { get; set; } = "value";
+                public integer b { get; set; } = 5;
+                public boolean c { get; set; } = true;
+                public float d { get; set; } = 6.5;
+            }
+            """.Replace(Environment.NewLine, "\r\n"),
+            scriptParametersCode
+        );
     }
 
     [Fact]
@@ -68,39 +75,41 @@ public class ScriptParametersGeneratorTest
             {
                 Name = "a",
                 Type = "string",
-                Value = null
+                Value = null,
             },
             new()
             {
                 Name = "b",
                 Type = "integer",
-                Value = null
+                Value = null,
             },
             new()
             {
                 Name = "c",
                 Type = "boolean",
-                Value = null
+                Value = null,
             },
             new()
             {
                 Name = "d",
                 Type = "float",
-                Value = null
-            }
+                Value = null,
+            },
         };
         var scriptParametersCode = GetScriptParametersCode(parameters);
 
-        Assert.Equal(@"public class ScriptParameters
-{
-    public string a { get; set; }
-
-    public integer b { get; set; }
-
-    public boolean c { get; set; }
-
-    public float d { get; set; }
-}".Replace(Environment.NewLine, "\r\n"), scriptParametersCode);
+        Assert.Equal(
+            """
+            public class ScriptParameters
+            {
+                public string a { get; set; }
+                public integer b { get; set; }
+                public boolean c { get; set; }
+                public float d { get; set; }
+            }
+            """.Replace(Environment.NewLine, "\r\n"),
+            scriptParametersCode
+        );
     }
 
     [Fact]
@@ -112,8 +121,8 @@ public class ScriptParametersGeneratorTest
             {
                 Name = "a",
                 Type = "invalid",
-                Value = "123"
-            }
+                Value = "123",
+            },
         };
 
         Assert.Throws<InvalidParameterTypeException>(() => GetScriptParametersCode(parameters));
@@ -121,7 +130,6 @@ public class ScriptParametersGeneratorTest
 
     private static string GetScriptParametersCode(IEnumerable<ScriptParameter> parameters)
     {
-        return ScriptParametersGenerator.GenerateScriptParameters(parameters)
-            .ToFullString();
+        return ScriptParametersGenerator.GenerateScriptParameters(parameters).ToFullString();
     }
 }

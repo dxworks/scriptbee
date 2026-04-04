@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using DxWorks.ScriptBee.Plugin.Api;
-using Xunit;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;
 
@@ -10,14 +7,14 @@ public class HelperFunctionsGeneratorTests
     [Fact]
     public void GivenNonGenericVoidMethod_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
     {
-        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
-        {
-            new HelperFunctionWithoutGenericMethodThatReturnsVoid()
-        });
+        var helperFunctionsContainer = new HelperFunctionsContainer(
+            new List<IHelperFunctions> { new HelperFunctionWithoutGenericMethodThatReturnsVoid() }
+        );
 
         var syntaxTree = HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
 
-        Assert.Equal(@"using System;
+        Assert.Equal(
+            @"using System;
 
 namespace DxWorks.ScriptBee.Plugin.Api
 {
@@ -29,20 +26,25 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionWithoutGenericMethodThatReturnsVoid.Method1(a, b);
         }
     }
-}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"),
+            syntaxTree.ToString()
+        );
     }
 
     [Fact]
     public void GivenNonGenericMethodThatReturnsSomething_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
     {
-        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
-        {
-            new HelperFunctionWithoutGenericMethodsThatReturnSomething()
-        });
+        var helperFunctionsContainer = new HelperFunctionsContainer(
+            new List<IHelperFunctions>
+            {
+                new HelperFunctionWithoutGenericMethodsThatReturnSomething(),
+            }
+        );
 
         var syntaxTree = HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
 
-        Assert.Equal(@"using System;
+        Assert.Equal(
+            @"using System;
 
 namespace DxWorks.ScriptBee.Plugin.Api
 {
@@ -59,20 +61,22 @@ namespace DxWorks.ScriptBee.Plugin.Api
             return HelperFunctionWithoutGenericMethodsThatReturnSomething.GetSomething(a, b, c);
         }
     }
-}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"),
+            syntaxTree.ToString()
+        );
     }
 
     [Fact]
     public void GivenGenericMethods_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
     {
-        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
-        {
-            new HelperFunctionsWithGenericMethods()
-        });
+        var helperFunctionsContainer = new HelperFunctionsContainer(
+            new List<IHelperFunctions> { new HelperFunctionsWithGenericMethods() }
+        );
 
         var syntaxTree = HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
 
-        Assert.Equal(@"using System;
+        Assert.Equal(
+            @"using System;
 
 namespace DxWorks.ScriptBee.Plugin.Api
 {
@@ -89,20 +93,22 @@ namespace DxWorks.ScriptBee.Plugin.Api
             return HelperFunctionsWithGenericMethods.Method<T1, T2, T3>(arg1, arg2, arg3);
         }
     }
-}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"),
+            syntaxTree.ToString()
+        );
     }
 
     [Fact]
     public void GivenGenericMethodWithConstrains_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
     {
-        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
-        {
-            new HelperFunctionsWithGenericMethodWithConstrains()
-        });
+        var helperFunctionsContainer = new HelperFunctionsContainer(
+            new List<IHelperFunctions> { new HelperFunctionsWithGenericMethodWithConstrains() }
+        );
 
         var syntaxTree = HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
 
-        Assert.Equal(@"using System;
+        Assert.Equal(
+            @"using System;
 
 namespace DxWorks.ScriptBee.Plugin.Api
 {
@@ -127,20 +133,22 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionsWithGenericMethodWithConstrains.Method<T, TR>();
         }
     }
-}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"),
+            syntaxTree.ToString()
+        );
     }
 
     [Fact]
     public void GivenMethodWithCollections_WhenCreateSyntaxTree_ThenCorrectSyntaxTreeIsGenerated()
     {
-        var helperFunctionsContainer = new HelperFunctionsContainer(new List<IHelperFunctions>
-        {
-            new HelperFunctionWithCollections()
-        });
+        var helperFunctionsContainer = new HelperFunctionsContainer(
+            new List<IHelperFunctions> { new HelperFunctionWithCollections() }
+        );
 
         var syntaxTree = HelperFunctionsGenerator.CreateSyntaxTree(helperFunctionsContainer);
 
-        Assert.Equal(@"using System;
+        Assert.Equal(
+            @"using System;
 
 namespace DxWorks.ScriptBee.Plugin.Api
 {
@@ -162,6 +170,8 @@ namespace DxWorks.ScriptBee.Plugin.Api
             HelperFunctionWithCollections.Method(values);
         }
     }
-}".Replace(Environment.NewLine, "\r\n"), syntaxTree.ToString());
+}".Replace(Environment.NewLine, "\r\n"),
+            syntaxTree.ToString()
+        );
     }
 }

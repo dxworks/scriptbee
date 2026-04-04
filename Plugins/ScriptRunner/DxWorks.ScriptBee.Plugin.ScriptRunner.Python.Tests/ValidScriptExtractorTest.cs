@@ -1,29 +1,28 @@
-﻿using System.Threading.Tasks;
-using Xunit;
-
-namespace DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests;
+﻿namespace DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests;
 
 public class ValidScriptExtractorTest : IAsyncLifetime
 {
     private string _validScript = "";
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
-        _validScript =
-            await RelativeFileContentProvider.GetFileContentAsync("ExtractorsTestStrings/PythonValidScript.txt");
+        _validScript = await RelativeFileContentProvider.GetFileContentAsync(
+            "ExtractorsTestStrings/PythonValidScript.txt"
+        );
     }
 
-    public Task DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     [Fact]
     public async Task ExtractValidScript_WithTextBefore()
     {
-        var script =
-            await RelativeFileContentProvider.GetFileContentAsync(
-                "ExtractorsTestStrings/PythonScriptWithTextBeforeStartComment.txt");
+        var script = await RelativeFileContentProvider.GetFileContentAsync(
+            "ExtractorsTestStrings/PythonScriptWithTextBeforeStartComment.txt",
+            TestContext.Current.CancellationToken
+        );
 
         var extractedScript = ValidScriptExtractor.ExtractValidScript(script);
 
@@ -33,9 +32,10 @@ public class ValidScriptExtractorTest : IAsyncLifetime
     [Fact]
     public async Task ExtractValidScript_WithTextAfter()
     {
-        var script =
-            await RelativeFileContentProvider.GetFileContentAsync(
-                "ExtractorsTestStrings/PythonScriptWithTextAfterEndComment.txt");
+        var script = await RelativeFileContentProvider.GetFileContentAsync(
+            "ExtractorsTestStrings/PythonScriptWithTextAfterEndComment.txt",
+            TestContext.Current.CancellationToken
+        );
 
         var extractedScript = ValidScriptExtractor.ExtractValidScript(script);
 
@@ -45,9 +45,10 @@ public class ValidScriptExtractorTest : IAsyncLifetime
     [Fact]
     public async Task ExtractValidScript_NoExtraText()
     {
-        var script =
-            await RelativeFileContentProvider.GetFileContentAsync(
-                "ExtractorsTestStrings/PythonScriptWithNoExtraText.txt");
+        var script = await RelativeFileContentProvider.GetFileContentAsync(
+            "ExtractorsTestStrings/PythonScriptWithNoExtraText.txt",
+            TestContext.Current.CancellationToken
+        );
 
         var extractedScript = ValidScriptExtractor.ExtractValidScript(script);
 
@@ -57,9 +58,10 @@ public class ValidScriptExtractorTest : IAsyncLifetime
     [Fact]
     public async Task ExtractValidScript_TextBeforeAndAfter()
     {
-        var script =
-            await RelativeFileContentProvider.GetFileContentAsync(
-                "ExtractorsTestStrings/PythonScriptWithTextBeforeAndAfter.txt");
+        var script = await RelativeFileContentProvider.GetFileContentAsync(
+            "ExtractorsTestStrings/PythonScriptWithTextBeforeAndAfter.txt",
+            TestContext.Current.CancellationToken
+        );
 
         var extractedScript = ValidScriptExtractor.ExtractValidScript(script);
 
@@ -71,14 +73,22 @@ public class ValidScriptExtractorTest : IAsyncLifetime
     [InlineData("")]
     [InlineData(null)]
     [InlineData("class DummyModel:")]
-    [InlineData(@"class DummyModel:
+    [InlineData(
+        """
+            class DummyModel:
 
-# start script
+            # start script
 
-some text")]
-    [InlineData(@"class DummyModel:
+            some text
+            """
+    )]
+    [InlineData(
+        """
+            class DummyModel:
 
-# end script")]
+            # end script
+            """
+    )]
     public void ExtractValidScript_InvalidCases(string script)
     {
         var extractedScript = ValidScriptExtractor.ExtractValidScript(script);

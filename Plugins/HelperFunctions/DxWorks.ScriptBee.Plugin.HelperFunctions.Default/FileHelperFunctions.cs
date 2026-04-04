@@ -14,24 +14,47 @@ public class FileHelperFunctions : IHelperFunctions
 
     public void FileWrite(string fileName, string fileContent)
     {
-        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, fileContent);
+        _helperFunctionsResultService.UploadResult(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            fileContent
+        );
     }
 
-    public async Task FileWriteAsync(string fileName, string fileContent, CancellationToken cancellationToken = default)
+    public async Task FileWriteAsync(
+        string fileName,
+        string fileContent,
+        CancellationToken cancellationToken = default
+    )
     {
-        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, fileContent,
-            cancellationToken);
+        await _helperFunctionsResultService.UploadResultAsync(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            fileContent,
+            cancellationToken
+        );
     }
 
-    public async Task FileWriteStreamAsync(string fileName, Stream stream,
-        CancellationToken cancellationToken = default)
+    public async Task FileWriteStreamAsync(
+        string fileName,
+        Stream stream,
+        CancellationToken cancellationToken = default
+    )
     {
-        await _helperFunctionsResultService.UploadResultAsync(fileName, RunResultDefaultTypes.FileType, stream,
-            cancellationToken);
+        await _helperFunctionsResultService.UploadResultAsync(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            stream,
+            cancellationToken
+        );
     }
 
     public void FileWriteStream(string fileName, Stream stream)
     {
-        _helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
+        _helperFunctionsResultService.UploadResult(
+            fileName,
+            RunResultDefaultTypes.FileType,
+            stream
+        );
     }
 }

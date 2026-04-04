@@ -16,8 +16,12 @@ internal static class ValidScriptExtractor
 
         if (startPosition >= 0 && endPosition > 0)
         {
-            return script.Substring(startPosition + JavascriptStartComment.Length,
-                endPosition - startPosition - JavascriptStartComment.Length).Trim();
+            return script
+                .Substring(
+                    startPosition + JavascriptStartComment.Length,
+                    endPosition - startPosition - JavascriptStartComment.Length
+                )
+                .Trim();
         }
 
         return "";

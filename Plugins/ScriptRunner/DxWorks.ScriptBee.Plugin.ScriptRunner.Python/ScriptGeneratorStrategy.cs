@@ -19,7 +19,11 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return $"class {className}:";
     }
 
-    public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes)
+    public string GenerateClassName(
+        Type classType,
+        Type baseClassType,
+        out HashSet<Type> baseClassGenericTypes
+    )
     {
         var baseTypeName = GetTypeName(baseClassType, out baseClassGenericTypes);
         var className = GetTypeName(classType);
@@ -36,21 +40,34 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return "";
     }
 
-    public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
-        out HashSet<Type> genericTypes)
+    public string GenerateField(
+        string fieldModifier,
+        Type fieldType,
+        string fieldName,
+        out HashSet<Type> genericTypes
+    )
     {
         var fieldTypeName = GetTypeName(fieldType, out genericTypes);
         return $"    {fieldName}: {fieldTypeName}";
     }
 
-    public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
-        out HashSet<Type> genericTypes)
+    public string GenerateProperty(
+        string propertyModifier,
+        Type propertyType,
+        string propertyName,
+        out HashSet<Type> genericTypes
+    )
     {
         return GenerateField(propertyModifier, propertyType, propertyName, out genericTypes);
     }
 
-    public string GenerateMethod(string methodModifier, Type methodType, string methodName,
-        List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes)
+    public string GenerateMethod(
+        string methodModifier,
+        Type methodType,
+        string methodName,
+        List<Tuple<Type, string>> methodParams,
+        out HashSet<Type> genericTypes
+    )
     {
         genericTypes = new HashSet<Type>();
 
@@ -107,22 +124,38 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
     {
         switch (typeName)
         {
-            case "decimal" or "System.Decimal" or "Decimal" or
-                "double" or "System.Double" or "Double" or
-                "float" or "System.Single" or "Single":
+            case "decimal"
+            or "System.Decimal"
+            or "Decimal"
+            or "double"
+            or "System.Double"
+            or "Double"
+            or "float"
+            or "System.Single"
+            or "Single":
                 return "float";
-            case "byte" or "System.Byte" or "Byte" or
-                "sbyte" or "System.SByte" or "SByte" or
-                "int" or "System.Int32" or "Int32" or
-                "uint" or "System.UInt32" or "UInt32" or
-                "short" or "System.Int16" or "Int16" or
-                "ushort" or "System.UInt16" or "UInt16":
+            case "byte"
+            or "System.Byte"
+            or "Byte"
+            or "sbyte"
+            or "System.SByte"
+            or "SByte"
+            or "int"
+            or "System.Int32"
+            or "Int32"
+            or "uint"
+            or "System.UInt32"
+            or "UInt32"
+            or "short"
+            or "System.Int16"
+            or "Int16"
+            or "ushort"
+            or "System.UInt16"
+            or "UInt16":
                 return "int";
-            case "long" or "System.Int64" or "Int64" or
-                "ulong" or "System.UInt64" or "UInt64":
+            case "long" or "System.Int64" or "Int64" or "ulong" or "System.UInt64" or "UInt64":
                 return "long";
-            case "char" or "System.Char" or "Char" or
-                "string" or "System.String" or "String":
+            case "char" or "System.Char" or "Char" or "string" or "System.String" or "String":
                 return "str";
             case "bool" or "System.Boolean" or "Boolean":
                 return "bool";

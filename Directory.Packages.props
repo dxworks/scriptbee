@@ -15,10 +15,7 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
-    <PackageVersion
-      Include="Microsoft.Extensions.Options.ConfigurationExtensions"
-      Version="10.0.5"
-    />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.5" />
     <PackageVersion Include="MongoDB.Bson" Version="3.7.1" />
     <PackageVersion Include="MongoDB.Driver" Version="3.7.1" />
     <PackageVersion Include="OneOf" Version="3.0.271" />
@@ -29,10 +26,14 @@
     <PackageVersion Include="Serilog.Expressions" Version="5.0.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="10.0.0" />
     <PackageVersion Include="Slugify.Core" Version="5.1.1" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.5" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
     <PackageVersion Include="Westwind.Utilities" Version="5.2.8.1" />
-    <PackageVersion Include="WireMock.Net" Version="2.0.0" />
+    <PackageVersion Include="WireMock.Net" Version="2.2.0" />
     <PackageVersion Include="YamlDotNet" Version="16.3.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.3.0" />
+    <PackageVersion Include="CsvHelper" Version="33.1.0" />
+    <PackageVersion Include="Jint" Version="4.7.1" />
+    <PackageVersion Include="IronPython" Version="3.4.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(ProjectName.ToLower().Contains(`test`))' == 'true'">
     <PackageVersion Include="VeriJson" Version="1.0.0" />

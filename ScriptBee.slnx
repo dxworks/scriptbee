@@ -2,6 +2,16 @@
   <!-- Plugin API -->
   <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj" />
 
+  <!--  Plugins  -->
+  <Project Path="Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default/DxWorks.ScriptBee.Plugin.HelperFunctions.Default.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests.csproj" />
+  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon.csproj" />
+
   <!-- Common Layer -->
   <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
