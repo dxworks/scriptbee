@@ -1,5 +1,4 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 
@@ -11,7 +10,6 @@ public interface ICreateScriptUseCase
         OneOf<
             Script,
             ProjectDoesNotExistsError,
-            NoInstanceAllocatedForProjectError,
             ScriptLanguageDoesNotExistsError,
             ScriptPathAlreadyExistsError
         >
