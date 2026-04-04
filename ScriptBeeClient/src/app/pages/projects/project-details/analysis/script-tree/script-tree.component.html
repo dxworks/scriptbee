@@ -9,7 +9,7 @@
 }
 
 @if (rootError()) {
-  <app-error-state [error]="rootError()!" (onRetry)="onRetry(null)"></app-error-state>
+  <app-error-state [error]="rootError()!" (retry)="onRetry(null)"></app-error-state>
 } @else {
   <app-lazy-file-tree
     [data]="rootData()"
