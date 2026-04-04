@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ProjectScript, ProjectStructureNode } from '../../types/project';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { GetProjectFilesResponse, ProjectScript } from '../../types/project';
 import { CreateScriptRequest, ScriptLanguage, ScriptParameter, UpdateScriptRequest } from '../../types/script-types';
 import { WebResponse } from '../../types/web-response';
 import { map } from 'rxjs';
@@ -11,12 +11,16 @@ import { map } from 'rxjs';
 export class ProjectStructureService {
   constructor(private http: HttpClient) {}
 
-  getProjectStructure(projectId: string) {
-    return this.http.get<WebResponse<ProjectStructureNode[]>>(`/api/projects/${projectId}/structure`).pipe(map((res) => res.data));
-  }
-
   deleteProjectStructureNode(projectId: string, id: string) {
     return this.http.delete(`/api/projects/${projectId}/files/${id}`);
+  }
+
+  getProjectFiles(projectId: string, parentId?: string, offset: number = 0, limit: number = 50) {
+    let params = new HttpParams().set('offset', offset).set('limit', limit);
+    if (parentId) {
+      params = params.set('parentId', parentId);
+    }
+    return this.http.get<GetProjectFilesResponse>(`/api/projects/${projectId}/files`, { params });
   }
 
   getAvailableScriptTypes(projectId: string) {

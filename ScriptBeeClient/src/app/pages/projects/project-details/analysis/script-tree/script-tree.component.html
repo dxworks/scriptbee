@@ -4,16 +4,20 @@
   </button>
 </div>
 
-@if (projectStructureResource.isLoading()) {
-  <app-loading-progress-bar title="Loading Project Structure..."></app-loading-progress-bar>
-} @else if (projectStructureResourceError()) {
-  <app-error-state [error]="projectStructureResourceError()!"></app-error-state>
+@if (isDeleteLoading()) {
+  <app-loading-progress-bar title="Deleting..."></app-loading-progress-bar>
+}
+
+@if (rootError()) {
+  <app-error-state [error]="rootError()!" (onRetry)="onRetry(null)"></app-error-state>
 } @else {
-  <app-selectable-tree
-    [data]="projectStructureResource.value()!"
-    fileIcon="description"
-    folderIcon="folder"
+  <app-lazy-file-tree
+    [data]="rootData()"
     [enableDelete]="true"
+    [childrenAccessor]="childrenAccessor"
     (onDelete)="onNodeDelete($event)"
-    (onClick)="onNodeClick($event)" />
+    (onClick)="onNodeClick($event)"
+    (onExpand)="onExpand($event)"
+    (onRetry)="onRetry($event)"
+    (onLoadMore)="onLoadMore($event)" />
 }

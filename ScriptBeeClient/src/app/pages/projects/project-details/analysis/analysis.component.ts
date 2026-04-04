@@ -1,13 +1,13 @@
-﻿import { Component, inject, model, signal, viewChild, ViewChild } from '@angular/core';
+import { Component, model, signal, viewChild } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ScriptsContentComponent } from './scripts-content/scripts-content.component';
 import { ScriptTreeComponent } from './script-tree/script-tree.component';
 import { AnalysisOutputComponent } from './output/analysis-output.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TreeNode } from '../../../../types/tree-node';
 import { InstanceService } from '../../../../services/instances/instance.service';
 import { AnalysisSelectorComponent } from '../../../../components/analysis-selector/analysis-selector.component';
+import { ProjectFileNode } from '../../../../types/project';
 
 @Component({
   selector: 'app-analysis',
@@ -49,11 +49,11 @@ export class AnalysisComponent {
     });
   }
 
-  onFileSelected(node: TreeNode) {
+  onFileSelected(node: ProjectFileNode) {
     this.router
       .navigate([], {
         relativeTo: this.route,
-        queryParams: { fileId: node.name },
+        queryParams: { fileId: node.id },
         queryParamsHandling: 'merge',
       })
       .then();
