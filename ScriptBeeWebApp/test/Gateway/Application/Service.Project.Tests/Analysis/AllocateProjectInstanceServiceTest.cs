@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Common;
@@ -26,6 +27,11 @@ public class AllocateProjectInstanceServiceTest
     private readonly IInstanceTemplateProvider _instanceTemplateProvider =
         Substitute.For<IInstanceTemplateProvider>();
 
+    private readonly Channel<InstanceAllocatedEvent> _eventsChannel =
+        Channel.CreateUnbounded<InstanceAllocatedEvent>(
+            new UnboundedChannelOptions { SingleReader = true }
+        );
+
     private readonly AllocateProjectInstanceService _allocateProjectInstanceService;
 
     public AllocateProjectInstanceServiceTest()
@@ -36,7 +42,8 @@ public class AllocateProjectInstanceServiceTest
             _guidProvider,
             _dateTimeProvider,
             _createProjectInstance,
-            _instanceTemplateProvider
+            _instanceTemplateProvider,
+            _eventsChannel
         );
     }
 
@@ -63,7 +70,9 @@ public class AllocateProjectInstanceServiceTest
     [Fact]
     public async Task GivenProject_ExpectInstanceToBeCreatedAndAllocated()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId);
         var instanceId = Guid.NewGuid();
         var createdDate = DateTimeOffset.UtcNow;
         var instanceInfo = new InstanceInfo(
@@ -77,9 +86,7 @@ public class AllocateProjectInstanceServiceTest
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    ProjectDetailsFixture.BasicProjectDetails(projectId)
-                )
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
             );
         _allocateInstance
             .Allocate(
@@ -95,11 +102,18 @@ public class AllocateProjectInstanceServiceTest
             .Create(instanceInfo, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(instanceInfo));
 
+        // Act
         var result = await _allocateProjectInstanceService.Allocate(
             projectId,
             TestContext.Current.CancellationToken
         );
 
+        // Assert
         result.AsT0.ShouldBe(instanceInfo);
+
+        var instanceAllocatedEvent = await _eventsChannel.Reader.ReadAsync(
+            TestContext.Current.CancellationToken
+        );
+        instanceAllocatedEvent.ShouldBe(new InstanceAllocatedEvent(projectDetails, instanceInfo));
     }
 }

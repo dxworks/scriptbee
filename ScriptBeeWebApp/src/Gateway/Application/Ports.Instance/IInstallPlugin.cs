@@ -8,6 +8,6 @@ public interface IInstallPlugin
         InstanceInfo instanceInfo,
         string pluginId,
         string pluginVersion,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

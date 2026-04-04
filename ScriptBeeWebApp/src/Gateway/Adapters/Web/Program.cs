@@ -27,6 +27,7 @@ builder
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
     .AddScriptBeeMarketplaceClient()
+    .AddInstallPluginsForAllocatedInstancesServices()
     // .AddFileWatcherServices()
     .AddSignalR();
 
