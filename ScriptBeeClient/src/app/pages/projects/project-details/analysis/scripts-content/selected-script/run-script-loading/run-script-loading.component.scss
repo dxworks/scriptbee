@@ -13,7 +13,8 @@
 }
 
 .loading-container {
-  background-color: white;
+  background-color: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
