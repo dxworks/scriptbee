@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
@@ -18,7 +19,8 @@ public sealed class AllocateProjectInstanceService(
     IGuidProvider guidProvider,
     IDateTimeProvider dateTimeProvider,
     ICreateProjectInstance createProjectInstance,
-    IInstanceTemplateProvider instanceTemplateProvider
+    IInstanceTemplateProvider instanceTemplateProvider,
+    Channel<InstanceAllocatedEvent> eventsChannel
 ) : IAllocateProjectInstanceUseCase
 {
     public async Task<AllocateResult> Allocate(
@@ -29,13 +31,13 @@ public sealed class AllocateProjectInstanceService(
         var result = await getProject.GetById(projectId, cancellationToken);
 
         return await result.Match<Task<AllocateResult>>(
-            async _ => await CreateAndAllocateInstance(projectId, cancellationToken),
+            async details => await CreateAndAllocateInstance(details, cancellationToken),
             error => Task.FromResult<AllocateResult>(error)
         );
     }
 
     private async Task<AllocateResult> CreateAndAllocateInstance(
-        ProjectId projectId,
+        ProjectDetails projectDetails,
         CancellationToken cancellationToken
     )
     {
@@ -49,12 +51,19 @@ public sealed class AllocateProjectInstanceService(
 
         var instanceInfo = new InstanceInfo(
             instanceId,
-            projectId,
+            projectDetails.Id,
             instanceUrl,
             dateTimeProvider.UtcNow(),
             CalculationInstanceStatus.NotFound
         );
 
-        return await createProjectInstance.Create(instanceInfo, cancellationToken);
+        var info = await createProjectInstance.Create(instanceInfo, cancellationToken);
+
+        await eventsChannel.Writer.WriteAsync(
+            new InstanceAllocatedEvent(projectDetails, instanceInfo),
+            cancellationToken
+        );
+
+        return info;
     }
 }

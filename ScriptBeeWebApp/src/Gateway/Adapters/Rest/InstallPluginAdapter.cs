@@ -12,7 +12,7 @@ public class InstallPluginAdapter(IHttpClientFactory httpClientFactory) : IInsta
         InstanceInfo instanceInfo,
         string pluginId,
         string pluginVersion,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var client = httpClientFactory.CreateClient();
