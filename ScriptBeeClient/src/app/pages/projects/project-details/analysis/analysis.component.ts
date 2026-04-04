@@ -1,51 +1,38 @@
-import { Component, model, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, model, signal, viewChild } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ScriptsContentComponent } from './scripts-content/scripts-content.component';
 import { ScriptTreeComponent } from './script-tree/script-tree.component';
 import { AnalysisOutputComponent } from './output/analysis-output.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { InstanceService } from '../../../../services/instances/instance.service';
 import { AnalysisSelectorComponent } from '../../../../components/analysis-selector/analysis-selector.component';
 import { ProjectFileNode } from '../../../../types/project';
+import { InstanceManagerComponent } from '../../../../components/instance-manager/instance-manager.component';
+import { ProjectStateService } from '../../../../services/projects/project-state.service';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.scss'],
-  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent, AnalysisOutputComponent, AnalysisSelectorComponent],
+  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent, AnalysisOutputComponent, AnalysisSelectorComponent, MatProgressBarModule],
 })
 export class AnalysisComponent {
-  projectId = signal<string | undefined>(undefined);
-  instanceId = signal<string | undefined>(undefined);
-
   selectedFileId = signal<string | null>(null);
   analysisId = model<string | undefined>(undefined);
 
   selector = viewChild.required<AnalysisSelectorComponent>('selector');
 
+  projectId = computed(() => this.projectStateService.currentProjectId());
+  instanceId = computed(() => this.projectStateService.currentInstanceId());
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private instanceService: InstanceService
+    private projectStateService: ProjectStateService
   ) {
     route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.selectedFileId.set(params.get('fileId'));
-    });
-
-    route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
-      next: (paramMap) => {
-        const id = paramMap.get('id');
-        this.projectId.set(id ?? undefined);
-
-        if (id) {
-          this.instanceService.getCurrentInstance(id).subscribe({
-            next: (instanceInfo) => {
-              this.instanceId.set(instanceInfo.id);
-            },
-          });
-        }
-      },
     });
   }
 

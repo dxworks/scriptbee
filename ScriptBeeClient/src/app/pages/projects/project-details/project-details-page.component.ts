@@ -4,11 +4,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { filter, first } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
-import { InstanceService } from '../../../services/instances/instance.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { isNoInstanceAllocatedForProjectError } from '../../../utils/api';
-import { MatDialog } from '@angular/material/dialog';
-import { InstanceNotAllocatedDialog } from '../../../components/dialogs/instance-not-allocated-dialog/instance-not-allocated-dialog.component';
 
 interface TabInfo {
   link: string;
@@ -50,9 +45,7 @@ export class ProjectDetailsPage {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private instanceService: InstanceService,
-    private dialog: MatDialog
+    private router: Router
   ) {
     router.events
       .pipe(
@@ -67,20 +60,8 @@ export class ProjectDetailsPage {
       });
 
     route.paramMap.pipe(takeUntilDestroyed()).subscribe({
-      next: (paramMap) => {
-        const projectId = paramMap.get('id');
-        if (projectId) {
-          this.instanceService.getCurrentInstance(projectId).subscribe({
-            error: (errorResponse: HttpErrorResponse) => {
-              if (isNoInstanceAllocatedForProjectError(errorResponse)) {
-                this.dialog.open(InstanceNotAllocatedDialog, {
-                  disableClose: true,
-                  data: { projectId },
-                });
-              }
-            },
-          });
-        }
+      next: () => {
+        this.activeTab.set(this.tabInfo.find((t) => t.link === this.router.url.split('/').pop()) ?? this.tabInfo[0]);
       },
     });
   }

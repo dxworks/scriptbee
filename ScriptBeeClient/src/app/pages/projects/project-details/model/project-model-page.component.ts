@@ -1,7 +1,6 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { ActivatedRoute } from '@angular/router';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ProjectService } from '../../../../services/projects/project.service';
 import { ErrorStateComponent } from '../../../../components/error-state/error-state.component';
 import { MatDivider } from '@angular/material/divider';
@@ -15,6 +14,12 @@ import { InstanceService } from '../../../../services/instances/instance.service
 import { CenteredSpinnerComponent } from '../../../../components/centered-spinner/centered-spinner.component';
 import { InstanceInfoComponent } from './instance-info/instance-info.component';
 import { convertError } from '../../../../utils/api';
+import { ProjectStateService } from '../../../../services/projects/project-state.service';
+import { of } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { InstanceNotAllocatedDialog } from '../../../../components/dialogs/instance-not-allocated-dialog/instance-not-allocated-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-project-model-page',
@@ -32,32 +37,40 @@ import { convertError } from '../../../../utils/api';
     LoadingProgressBarComponent,
     CenteredSpinnerComponent,
     InstanceInfoComponent,
+    MatIconModule,
+    MatButton,
   ],
 })
 export class ProjectModelPage {
-  projectId = signal<string | undefined>(undefined);
+  private projectStateService = inject(ProjectStateService);
+  private projectService = inject(ProjectService);
+  private instanceService = inject(InstanceService);
+  private dialog = inject(MatDialog);
+
+  projectId = computed(() => this.projectStateService.currentProjectId());
 
   projectResource = rxResource({
     params: () => this.projectId(),
-    stream: ({ params: projectId }) => this.projectService.getProject(projectId),
+    stream: ({ params: projectId }) => (projectId ? this.projectService.getProject(projectId) : of(undefined)),
   });
   projectResourceError = computed(() => convertError(this.projectResource.error()));
 
-  currentInstanceInfoResource = rxResource({
+  instancesResource = rxResource({
     params: () => this.projectId(),
-    stream: ({ params: projectId }) => this.instanceService.getCurrentInstance(projectId),
+    stream: ({ params: projectId }) => (projectId ? this.instanceService.getProjectInstances(projectId) : of([])),
   });
-  currentInstanceInfoResourceError = computed(() => convertError(this.currentInstanceInfoResource.error()));
+  instancesResourceError = computed(() => convertError(this.instancesResource.error()));
 
-  constructor(
-    route: ActivatedRoute,
-    private projectService: ProjectService,
-    private instanceService: InstanceService
-  ) {
-    route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
-      next: (paramMap) => {
-        this.projectId.set(paramMap.get('id') ?? undefined);
-      },
+  currentInstance = computed(() => {
+    const id = this.projectStateService.currentInstanceId();
+    const instances = this.instancesResource.value() ?? [];
+    return instances.find((i) => i.id === id);
+  });
+
+  onAllocate() {
+    this.dialog.open(InstanceNotAllocatedDialog, {
+      disableClose: true,
+      data: { projectId: this.projectId() },
     });
   }
 }
