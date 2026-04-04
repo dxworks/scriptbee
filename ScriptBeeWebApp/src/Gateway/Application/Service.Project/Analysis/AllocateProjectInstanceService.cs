@@ -51,7 +51,8 @@ public sealed class AllocateProjectInstanceService(
             instanceId,
             projectId,
             instanceUrl,
-            dateTimeProvider.UtcNow()
+            dateTimeProvider.UtcNow(),
+            CalculationInstanceStatus.NotFound
         );
 
         return await createProjectInstance.Create(instanceInfo, cancellationToken);

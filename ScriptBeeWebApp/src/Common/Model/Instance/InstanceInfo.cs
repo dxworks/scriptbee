@@ -7,5 +7,5 @@ public record InstanceInfo(
     ProjectId ProjectId,
     string Url,
     DateTimeOffset CreationDate,
-    CalculationInstanceStatus Status = CalculationInstanceStatus.NotFound
+    CalculationInstanceStatus Status
 );

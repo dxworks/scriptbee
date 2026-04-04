@@ -37,7 +37,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );
@@ -70,7 +71,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );
@@ -103,7 +105,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );
@@ -138,7 +141,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );
@@ -175,7 +179,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );
@@ -215,7 +220,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );
@@ -253,7 +259,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );

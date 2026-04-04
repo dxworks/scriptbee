@@ -41,7 +41,7 @@ public class GetProjectInstancesEndpointTest(ITestOutputHelper outputHelper)
         getProjectListResponse.Data.ShouldBeEquivalentTo(
             new List<WebProjectInstance>
             {
-                new(instanceInfo.Id.ToString(), instanceInfo.CreationDate),
+                new(instanceInfo.Id.ToString(), instanceInfo.CreationDate, "NotFound"),
             }
         );
     }

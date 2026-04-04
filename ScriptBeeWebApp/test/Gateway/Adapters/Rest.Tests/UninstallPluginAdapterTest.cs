@@ -37,7 +37,8 @@ public sealed class UninstallPluginAdapterTest : IDisposable
                 new InstanceId(Guid.Empty),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             "plugin-id",
             "1.2.3",

@@ -88,13 +88,15 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                         new InstanceId("834db275-e497-4f77-abd1-37c3bb3ba6de"),
                         ProjectId.FromValue("all-project-id-1"),
                         "http://test:80",
-                        creationDate
+                        creationDate,
+                        CalculationInstanceStatus.NotFound
                     ),
                     new(
                         new InstanceId("47e981a7-9cd6-46d6-ba11-7f3c65ce38a2"),
                         ProjectId.FromValue("all-project-id-1"),
                         "http://test:80",
-                        creationDate
+                        creationDate,
+                        CalculationInstanceStatus.NotFound
                     ),
                 }
             );
@@ -125,7 +127,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 new InstanceId("e01cd721-d9ae-4bb1-8ff6-c8c3b89c6dc7"),
                 ProjectId.FromValue("project-id"),
                 "http://test:80",
-                creationDate
+                creationDate,
+                CalculationInstanceStatus.NotFound
             )
         );
     }
@@ -154,7 +157,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                     new InstanceId("f34ce35c-6011-436b-85ca-d5c96b8ebe5c"),
                     ProjectId.FromValue("project-id"),
                     "http://test:80",
-                    creationDate
+                    creationDate,
+                    CalculationInstanceStatus.NotFound
                 ),
                 TestContext.Current.CancellationToken
             )
@@ -183,7 +187,8 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 new InstanceId(instanceId),
                 ProjectId.FromValue("project-id"),
                 "http://test:80",
-                creationDate
+                creationDate,
+                CalculationInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );

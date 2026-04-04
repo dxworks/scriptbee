@@ -203,7 +203,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             instanceId,
             ProjectId.FromValue("project-id"),
             instanceUrl,
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            CalculationInstanceStatus.NotFound
         );
 
         // Act
@@ -241,7 +242,8 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             instanceId,
             ProjectId.FromValue("project-id"),
             "http://fakeurl",
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            CalculationInstanceStatus.NotFound
         );
 
         var exception = await Record.ExceptionAsync(() =>
