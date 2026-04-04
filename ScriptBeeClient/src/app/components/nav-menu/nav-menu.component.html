@@ -7,6 +7,10 @@
 
   <span class="flex-spacer"></span>
 
+  @if (projectState.currentProjectId()) {
+    <app-instance-manager></app-instance-manager>
+  }
+
   <mat-slide-toggle [checked]="themeService.darkMode()" (toggleChange)="themeService.toggleDarkMode()" labelPosition="before">
     <mat-icon>bedtime</mat-icon>
   </mat-slide-toggle>

@@ -1,5 +1,5 @@
-import { Component, computed, effect, inject, output, signal } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { Component, computed, effect, inject, output } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -15,7 +15,7 @@ import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/conf
 
 @Component({
   selector: 'app-instance-manager',
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, MatDividerModule, MatDialogModule, DatePipe],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, MatDividerModule, MatDialogModule, DatePipe],
   templateUrl: './instance-manager.component.html',
   styleUrls: ['./instance-manager.component.scss'],
 })
