@@ -56,16 +56,6 @@ public class MongodbScript : IDocument
         );
     }
 
-    public ScriptFolder ToFolder()
-    {
-        return new ScriptFolder(
-            new ScriptId(Id),
-            Domain.Model.Project.ProjectId.FromValue(ProjectId),
-            new ProjectStructureFile(FilePath),
-            ChildrenIds?.Select(c => new ScriptId(c)) ?? []
-        );
-    }
-
     public ProjectStructureEntry ToProjectStructureEntry()
     {
         if (Type == MongodbScriptType.Folder)
@@ -74,5 +64,15 @@ public class MongodbScript : IDocument
         }
 
         return ToScript();
+    }
+
+    private ScriptFolder ToFolder()
+    {
+        return new ScriptFolder(
+            new ScriptId(Id),
+            Domain.Model.Project.ProjectId.FromValue(ProjectId),
+            new ProjectStructureFile(FilePath),
+            ChildrenIds?.Select(c => new ScriptId(c)) ?? []
+        );
     }
 }

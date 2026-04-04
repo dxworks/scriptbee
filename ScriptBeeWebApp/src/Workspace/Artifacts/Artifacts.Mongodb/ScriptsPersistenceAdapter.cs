@@ -1,4 +1,7 @@
+using System.Linq.Expressions;
+using MongoDB.Driver;
 using OneOf;
+using ScriptBee.Application.Model.Pagination;
 using ScriptBee.Artifacts.Mongodb.Entity.Script;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
@@ -38,20 +41,60 @@ public class ScriptsPersistenceAdapter(
 
     public async Task<OneOf<Script, ScriptDoesNotExistsError>> Get(
         ScriptId scriptId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
-        var mongodbScript = await mongoRepository.GetDocument(
-            scriptId.ToString(),
+        var result = await GetMongoFileEntry(scriptId, cancellationToken);
+
+        return result.Match<OneOf<Script, ScriptDoesNotExistsError>>(
+            script => script.ToScript(),
+            error => error
+        );
+    }
+
+    public async Task<Page<ProjectStructureEntry>> ListRootEntries(
+        ProjectId projectId,
+        int offset,
+        int limit,
+        CancellationToken cancellationToken
+    )
+    {
+        Expression<Func<MongodbScript, bool>> expression = script =>
+            script.ProjectId == projectId.Value && !script.FilePath.Contains('/');
+
+        var totalCount = await mongoRepository.CountDocuments(expression, cancellationToken);
+        var mongodbScripts = await mongoRepository.GetAllDocuments(
+            expression,
+            offset,
+            limit,
             cancellationToken
         );
 
-        if (mongodbScript == null)
-        {
-            return new ScriptDoesNotExistsError(scriptId);
-        }
+        return new Page<ProjectStructureEntry>(
+            mongodbScripts.Select(s => s.ToProjectStructureEntry()),
+            totalCount,
+            offset,
+            limit
+        );
+    }
 
-        return mongodbScript.ToScript();
+    public async Task<OneOf<Page<ProjectStructureEntry>, ScriptDoesNotExistsError>> ListEntries(
+        ProjectId projectId,
+        ScriptId scriptId,
+        int offset,
+        int limit,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await GetMongoFileEntry(scriptId, cancellationToken);
+
+        return await result.Match<
+            Task<OneOf<Page<ProjectStructureEntry>, ScriptDoesNotExistsError>>
+        >(
+            async script => await ListEntries(script, offset, limit, cancellationToken),
+            error =>
+                Task.FromResult<OneOf<Page<ProjectStructureEntry>, ScriptDoesNotExistsError>>(error)
+        );
     }
 
     public async Task<Script> Update(Script script, CancellationToken cancellationToken)
@@ -137,5 +180,45 @@ public class ScriptsPersistenceAdapter(
         }
 
         return parentScript.ToProjectStructureEntry();
+    }
+
+    private async Task<OneOf<MongodbScript, ScriptDoesNotExistsError>> GetMongoFileEntry(
+        ScriptId scriptId,
+        CancellationToken cancellationToken
+    )
+    {
+        var mongodbScript = await mongoRepository.GetDocument(
+            scriptId.ToString(),
+            cancellationToken
+        );
+
+        return mongodbScript == null ? new ScriptDoesNotExistsError(scriptId) : mongodbScript;
+    }
+
+    private async Task<Page<ProjectStructureEntry>> ListEntries(
+        MongodbScript script,
+        int offset,
+        int limit,
+        CancellationToken cancellationToken
+    )
+    {
+        if (script.Type == MongodbScriptType.File)
+        {
+            return new Page<ProjectStructureEntry>([script.ToScript()], 1, offset, limit);
+        }
+
+        var childrenIds = (script.ChildrenIds ?? []).ToList();
+        var filteredIds = childrenIds.Skip(offset).Take(limit);
+
+        var filter = Builders<MongodbScript>.Filter.In(x => x.Id, filteredIds);
+
+        var mongodbScripts = await mongoRepository.GetAllDocuments(filter, cancellationToken);
+
+        return new Page<ProjectStructureEntry>(
+            mongodbScripts.Select(s => s.ToProjectStructureEntry()),
+            childrenIds.Count,
+            offset,
+            limit
+        );
     }
 }

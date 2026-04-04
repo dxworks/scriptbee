@@ -25,27 +25,48 @@ public partial class ScriptPersistenceAdapterIntegrationTests : IClassFixture<Mo
         );
     }
 
-    private static Script CreateScript(ScriptId id, IEnumerable<ScriptParameter> parameters)
+    private static Script CreateScript(
+        ScriptId id,
+        IEnumerable<ScriptParameter> parameters,
+        string path = "path",
+        string projectId = "id"
+    )
     {
         return new Script(
             id,
-            ProjectId.Create("id"),
-            new ProjectStructureFile("path"),
+            ProjectId.Create(projectId),
+            new ProjectStructureFile(path),
             new ScriptLanguage("csharp", ".cs"),
             parameters
+        );
+    }
+
+    private static ScriptFolder CreateScriptFolder(
+        ScriptId id,
+        string path,
+        string projectId,
+        IEnumerable<ScriptId> scriptIds
+    )
+    {
+        return new ScriptFolder(
+            id,
+            ProjectId.Create(projectId),
+            new ProjectStructureFile(path),
+            scriptIds
         );
     }
 
     private static MongodbScript CreateMongodbScript(
         string id,
         IEnumerable<MongodbScriptParameter> parameters,
-        string filePath = "path"
+        string filePath = "path",
+        string projectId = "id"
     )
     {
         return new MongodbScript
         {
             Id = id,
-            ProjectId = "id",
+            ProjectId = projectId,
             FilePath = filePath,
             ScriptLanguage = new MongodbScriptLanguage { Name = "csharp", Extension = ".cs" },
             Parameters = parameters,
@@ -57,13 +78,14 @@ public partial class ScriptPersistenceAdapterIntegrationTests : IClassFixture<Mo
     private static MongodbScript CreateMongodbScriptFolder(
         string id,
         IEnumerable<string> childrenIds,
-        string filePath
+        string filePath,
+        string projectId = "id"
     )
     {
         return new MongodbScript
         {
             Id = id,
-            ProjectId = "id",
+            ProjectId = projectId,
             FilePath = filePath,
             ScriptLanguage = null,
             Parameters = null,
@@ -105,5 +127,35 @@ public static class ScriptAssertionsExtensions
         actual.File.Path.ShouldBe(expected.File.Path);
         actual.ScriptLanguage.ShouldBe(expected.ScriptLanguage);
         actual.Parameters.ToList().ShouldBeEquivalentTo(expected.Parameters.ToList());
+    }
+
+    public static void AssertProjectStructureEntry(
+        this ProjectStructureEntry actual,
+        ProjectStructureEntry expected
+    )
+    {
+        actual.Id.ShouldBe(expected.Id);
+        actual.ProjectId.ShouldBe(expected.ProjectId);
+        actual.File.Path.ShouldBe(expected.File.Path);
+        switch (actual)
+        {
+            case Script script:
+            {
+                var expectedScript = (Script)expected;
+                script.ScriptLanguage.ShouldBe(expectedScript.ScriptLanguage);
+                script.Parameters.ToList().ShouldBeEquivalentTo(expectedScript.Parameters.ToList());
+                break;
+            }
+            case ScriptFolder folder:
+                {
+                    var expectedFolder = (ScriptFolder)expected;
+                    folder
+                        .ChildrenIds.ToList()
+                        .ShouldBeEquivalentTo(expectedFolder.ChildrenIds.ToList());
+                }
+                break;
+            default:
+                throw new NotImplementedException();
+        }
     }
 }
