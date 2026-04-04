@@ -19,7 +19,8 @@ public class MongodbProjectInstance : IDocument
             new InstanceId(Id),
             Domain.Model.Project.ProjectId.FromValue(ProjectId),
             Url,
-            CreationDate
+            CreationDate,
+            CalculationInstanceStatus.NotFound
         );
     }
 

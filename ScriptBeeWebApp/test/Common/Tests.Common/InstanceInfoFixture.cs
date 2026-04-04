@@ -6,5 +6,11 @@ namespace ScriptBee.Tests.Common;
 public static class InstanceInfoFixture
 {
     public static InstanceInfo BasicInstanceInfo(ProjectId projectId) =>
-        new(new InstanceId(Guid.NewGuid()), projectId, "http://instance", DateTimeOffset.Now);
+        new(
+            new InstanceId(Guid.NewGuid()),
+            projectId,
+            "http://instance",
+            DateTimeOffset.Now,
+            CalculationInstanceStatus.NotFound
+        );
 }

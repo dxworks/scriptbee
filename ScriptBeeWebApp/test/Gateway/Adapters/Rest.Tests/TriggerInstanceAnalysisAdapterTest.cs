@@ -48,7 +48,8 @@ public sealed class TriggerInstanceAnalysisAdapterTest : IDisposable
                 new InstanceId("d41a3d1a-1cd7-4f11-a1a7-667ed8dc289d"),
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
-                DateTimeOffset.Now
+                DateTimeOffset.Now,
+                CalculationInstanceStatus.NotFound
             ),
             new ScriptId("403e05ae-f16b-4fd7-8d23-375b1d2accb4"),
             TestContext.Current.CancellationToken

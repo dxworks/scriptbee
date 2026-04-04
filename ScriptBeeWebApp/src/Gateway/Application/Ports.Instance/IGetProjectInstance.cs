@@ -8,6 +8,6 @@ public interface IGetProjectInstance
 {
     Task<OneOf<InstanceInfo, InstanceDoesNotExistsError>> Get(
         InstanceId id,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

@@ -8,7 +8,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.ProjectStructure;
@@ -26,8 +25,7 @@ public sealed class CreateScriptService(
     IGetScriptLanguages getScriptLanguages,
     ICreateFile createFile,
     IGuidProvider guidProvider,
-    ICreateScript createScript,
-    IGetCurrentInstanceUseCase currentInstanceUseCase
+    ICreateScript createScript
 ) : ICreateScriptUseCase
 {
     public async Task<CreateResult> Create(
@@ -49,16 +47,18 @@ public sealed class CreateScriptService(
         CancellationToken cancellationToken
     )
     {
-        var result = await currentInstanceUseCase.GetCurrentInstance(
-            projectDetails.Id,
-            cancellationToken
-        );
+        // TODO FIXIT(#35): implement this without the current instance
+        // var result = await currentInstanceUseCase.GetCurrentInstance(
+        //     projectDetails.Id,
+        //     cancellationToken
+        // );
 
-        return await result.Match<Task<CreateResult>>(
-            async instanceInfo =>
-                await Create(command, instanceInfo, projectDetails, cancellationToken),
-            error => Task.FromResult<CreateResult>(error)
-        );
+        return new NoInstanceAllocatedForProjectError(command.ProjectId);
+        // return await result.Match<Task<CreateResult>>(
+        //     async instanceInfo =>
+        //         await Create(command, instanceInfo, projectDetails, cancellationToken),
+        //     error => Task.FromResult<CreateResult>(error)
+        // );
     }
 
     private async Task<CreateResult> Create(

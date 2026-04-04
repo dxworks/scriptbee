@@ -1,28 +1,35 @@
-﻿<div class="main-scripts-div">
-  <as-split direction="vertical">
-    <as-split-area size="65">
-      <as-split direction="horizontal">
-        <as-split-area size="25">
-          <app-script-tree [projectId]="projectId()!" (onFileSelected)="onFileSelected($event)" />
-        </as-split-area>
+@if (projectId() && instanceId()) {
+  <div class="main-scripts-div">
+    <as-split direction="vertical">
+      <as-split-area size="65">
+        <as-split direction="horizontal">
+          <as-split-area size="25">
+            <app-script-tree [projectId]="projectId()!" (onFileSelected)="onFileSelected($event)" />
+          </as-split-area>
 
-        <as-split-area size="75">
-          <app-scripts-content
-            [projectId]="projectId()!"
-            [instanceId]="instanceId()!"
-            [fileId]="selectedFileId()"
-            (analysisFinished)="onAnalysisFinished($event)" />
-        </as-split-area>
-      </as-split>
-    </as-split-area>
+          <as-split-area size="75">
+            <app-scripts-content
+              [projectId]="projectId()!"
+              [instanceId]="instanceId()!"
+              [fileId]="selectedFileId()"
+              (analysisFinished)="onAnalysisFinished($event)" />
+          </as-split-area>
+        </as-split>
+      </as-split-area>
 
-    <as-split-area size="35">
-      <app-analysis-selector [projectId]="projectId()!" [(analysisId)]="analysisId" #selector />
-      @if (analysisId()) {
-        <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
-      } @else {
-        <div class="no-analysis-message">There are no results since no analysis was run yet</div>
-      }
-    </as-split-area>
-  </as-split>
-</div>
+      <as-split-area size="35">
+        <app-analysis-selector [projectId]="projectId()!" [(analysisId)]="analysisId" #selector />
+        @if (analysisId()) {
+          <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
+        } @else {
+          <div class="no-analysis-message">There are no results since no analysis was run yet</div>
+        }
+      </as-split-area>
+    </as-split>
+  </div>
+} @else {
+  <div class="loading-container">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Loading project context...</p>
+  </div>
+}

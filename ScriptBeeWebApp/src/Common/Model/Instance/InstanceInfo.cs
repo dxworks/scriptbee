@@ -6,5 +6,6 @@ public record InstanceInfo(
     InstanceId Id,
     ProjectId ProjectId,
     string Url,
-    DateTimeOffset CreationDate
+    DateTimeOffset CreationDate,
+    CalculationInstanceStatus Status
 );

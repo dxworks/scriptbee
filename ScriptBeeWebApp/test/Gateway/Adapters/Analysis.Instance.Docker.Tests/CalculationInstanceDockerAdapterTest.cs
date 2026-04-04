@@ -203,11 +203,12 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             instanceId,
             ProjectId.FromValue("project-id"),
             instanceUrl,
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            CalculationInstanceStatus.NotFound
         );
 
         // Act
-        await adapter.Deallocate(instanceInfo);
+        await adapter.Deallocate(instanceInfo, TestContext.Current.CancellationToken);
 
         // Assert
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
@@ -241,10 +242,13 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             instanceId,
             ProjectId.FromValue("project-id"),
             "http://fakeurl",
-            DateTimeOffset.UtcNow
+            DateTimeOffset.UtcNow,
+            CalculationInstanceStatus.NotFound
         );
 
-        var exception = await Record.ExceptionAsync(() => adapter.Deallocate(instanceInfo));
+        var exception = await Record.ExceptionAsync(() =>
+            adapter.Deallocate(instanceInfo, TestContext.Current.CancellationToken)
+        );
 
         exception.ShouldBeNull();
     }

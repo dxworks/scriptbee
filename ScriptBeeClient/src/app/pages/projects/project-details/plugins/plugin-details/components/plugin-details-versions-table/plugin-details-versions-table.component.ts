@@ -1,5 +1,4 @@
 import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +9,7 @@ import { PluginVersion } from '../../../../../../../types/marketplace-plugin';
 @Component({
   selector: 'app-plugin-details-versions-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatChipsModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatTableModule, MatChipsModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './plugin-details-versions-table.component.html',
   styleUrls: ['./plugin-details-versions-table.component.scss'],
 })
