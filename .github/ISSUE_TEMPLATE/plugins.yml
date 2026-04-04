@@ -1,0 +1,55 @@
+name: "Plugin / API Issue"
+description: "Report a bug or suggest a feature for the Plugin API or specific Plugins"
+labels: ["plugin"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this plugin-related issue!
+  - type: dropdown
+    id: type
+    attributes:
+      label: "Issue Type"
+      description: "What kind of issue are you reporting?"
+      options:
+        - Bug Report
+        - Feature Request
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: plugin-name
+    attributes:
+      label: "Plugin Name"
+      description: "Which plugin is this about?"
+      placeholder: "e.g. DxWorks.ScriptBee.DefaultBundle"
+    validations:
+      required: true
+  - type: input
+    id: api-version
+    attributes:
+      label: "Plugin API Version"
+      description: "Which version of the Plugin API are you using?"
+      placeholder: "e.g. v1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "Please provide a clear and concise description of the issue or feature request."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps to Reproduce / Use Case"
+      description: "How can we reproduce the bug, or what is the use case for the feature?"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: "Context"
+      description: "Please provide any relevant log output or extra information."

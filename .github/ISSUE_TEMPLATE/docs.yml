@@ -1,0 +1,39 @@
+name: "Documentation Improvement"
+description: "Suggest an improvement or report an error in the documentation"
+labels: ["documentation"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping to improve our documentation!
+  - type: input
+    id: page-url
+    attributes:
+      label: "Page URL"
+      description: "Which documentation page is affected?"
+      placeholder: "e.g. https://dxworks.github.io/scriptbee/docs/plugins/"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description of the Error or Improvement"
+      description: "A clear and concise description of the problem you are experiencing."
+    validations:
+      required: true
+  - type: textarea
+    id: suggest-content
+    attributes:
+      label: "Suggested New Content"
+      description: "If you have suggested content, please add it here."
+      placeholder: "e.g. \"Change the word 'foo' to 'bar' in the ... paragraph\""
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I would like to contribute to fixing this issue myself"
+          required: false

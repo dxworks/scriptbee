@@ -1,0 +1,69 @@
+name: "Bug Report"
+description: "Found a problem in the WebApp or Client?"
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: dropdown
+    id: component
+    attributes:
+      label: "Component"
+      description: "Where did you find the bug?"
+      options:
+        - WebApp (Backend)
+        - Client (Frontend)
+        - Both
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: "ScriptBee Version"
+      description: "What version of ScriptBee are you using?"
+      placeholder: "e.g. v1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: "Environment"
+      description: "OS, Browser, Docker version, etc."
+      placeholder: "Windows 11, Chrome 120, Docker 24.0"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps to Reproduce"
+      description: "How did you encounter this bug?"
+      placeholder: |
+        1. Start ScriptBee
+        2. Go to ...
+        3. Click on ...
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: "Expected vs Actual Behavior"
+      description: "A clear and concise description of what you expected to happen vs what actually happened."
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Relevant Logs / Console Output"
+      description: "Please provide any relevant log output or console logs."
+      render: "shell"
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Checklist"
+      options:
+        - label: "I have searched the existing issues"
+          required: true
+        - label: "I am using the latest version of ScriptBee"
+          required: true
