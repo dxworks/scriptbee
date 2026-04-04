@@ -68,22 +68,22 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
                 NotFound<ProblemDetails>
             >
         >(
-            queryResult =>
+            page =>
                 TypedResults.Ok(
                     new WebGetProjectFilesResponse(
-                        queryResult
-                            .Data.Select(entry =>
+                        page.Data.Select(entry =>
                                 WebProjectFileNode.Map(
                                     entry,
                                     absolutePathUseCase.GetScriptAbsolutePath(entry)
                                 )
                             )
                             .ToList(),
-                        queryResult.TotalCount,
-                        queryResult.Offset,
-                        queryResult.Limit
+                        page.TotalCount,
+                        page.Offset,
+                        page.Limit
                     )
                 ),
+            error => error.ToProblem(context),
             error => error.ToProblem(context)
         );
     }

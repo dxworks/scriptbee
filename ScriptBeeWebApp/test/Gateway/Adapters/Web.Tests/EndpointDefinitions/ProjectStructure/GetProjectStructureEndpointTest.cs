@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Application.Model.Pagination;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -75,9 +76,13 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<GetProjectFilesQueryResult, ProjectDoesNotExistsError>>(
-                    new ProjectDoesNotExistsError(ProjectId.FromValue("id"))
-                )
+                Task.FromResult<
+                    OneOf<
+                        Page<ProjectStructureEntry>,
+                        ProjectDoesNotExistsError,
+                        ScriptDoesNotExistsError
+                    >
+                >(new ProjectDoesNotExistsError(ProjectId.FromValue("id")))
             );
 
         var response = await _api.GetApi(
@@ -93,6 +98,39 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
         await AssertProjectNotFoundProblem(response, TestUrl, "id");
     }
 
+    [Fact]
+    public async Task ScriptDoesNotExistsError_ShouldReturnNotFound()
+    {
+        var useCase = Substitute.For<IGetProjectFilesUseCase>();
+        var scriptId = Guid.NewGuid();
+        useCase
+            .GetAll(
+                new GetProjectFilesQuery(ProjectId.FromValue("id"), null, 0, 50),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<
+                    OneOf<
+                        Page<ProjectStructureEntry>,
+                        ProjectDoesNotExistsError,
+                        ScriptDoesNotExistsError
+                    >
+                >(new ScriptDoesNotExistsError(new ScriptId(scriptId)))
+            );
+
+        var response = await _api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await AssertScriptDoesNotExistProblem(response, TestUrl, scriptId.ToString());
+    }
+
     [Theory]
     [FilePath("TestData/GetProjectFiles/file.json")]
     public async Task ShouldReturnOk_WhenParentIdIsNull(string responsePath)
@@ -105,8 +143,14 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<GetProjectFilesQueryResult, ProjectDoesNotExistsError>>(
-                    new GetProjectFilesQueryResult(
+                Task.FromResult<
+                    OneOf<
+                        Page<ProjectStructureEntry>,
+                        ProjectDoesNotExistsError,
+                        ScriptDoesNotExistsError
+                    >
+                >(
+                    new Page<ProjectStructureEntry>(
                         [
                             new Script(
                                 new ScriptId("4a382b18-da69-4b23-97fe-d9310b3dfea4"),
@@ -157,8 +201,14 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<GetProjectFilesQueryResult, ProjectDoesNotExistsError>>(
-                    new GetProjectFilesQueryResult(
+                Task.FromResult<
+                    OneOf<
+                        Page<ProjectStructureEntry>,
+                        ProjectDoesNotExistsError,
+                        ScriptDoesNotExistsError
+                    >
+                >(
+                    new Page<ProjectStructureEntry>(
                         [
                             new ScriptFolder(
                                 new ScriptId("e0ff5fb3-a310-4d8b-a4bb-b69e9f3fb3ee"),

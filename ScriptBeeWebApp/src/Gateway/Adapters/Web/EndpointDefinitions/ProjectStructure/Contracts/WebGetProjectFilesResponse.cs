@@ -2,7 +2,7 @@ namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 
 public sealed record WebGetProjectFilesResponse(
     IEnumerable<WebProjectFileNode> Data,
-    int TotalCount,
+    long TotalCount,
     int Offset,
     int Limit
 )
