@@ -14,7 +14,7 @@ public class SampleCodeGenerator(
         | System.Reflection.BindingFlags.Instance
         | System.Reflection.BindingFlags.Public;
 
-    private readonly HashSet<string> _generatedClassNames = new();
+    private readonly HashSet<string> _generatedClassNames = [];
 
     private const string ClassName = "ScriptContent";
     private const string MethodName = "ExecuteScript";
@@ -76,7 +76,9 @@ public class SampleCodeGenerator(
             || IsPrimitive(type)
             || !IsAcceptedModule(type.Module)
         )
+        {
             return new List<SampleCodeFile>();
+        }
 
         _generatedClassNames.Add(type.Name);
 
@@ -102,7 +104,9 @@ public class SampleCodeGenerator(
                 genericTypes.Add(genericType);
 
             if (!_generatedClassNames.Contains(baseType.Name))
+            {
                 sampleCodeFiles.AddRange(GenerateClasses(baseType));
+            }
         }
         else
         {
@@ -111,7 +115,9 @@ public class SampleCodeGenerator(
 
         var classStart = scriptGeneratorStrategy.GenerateClassStart();
         if (!string.IsNullOrEmpty(classStart))
+        {
             stringBuilder.AppendLine(classStart);
+        }
 
         foreach (var fieldInfo in type.GetFields(BindingFlags))
         {
@@ -129,7 +135,9 @@ public class SampleCodeGenerator(
                 genericTypes.Add(genericType);
 
             if (!_generatedClassNames.Contains(fieldInfo.FieldType.Name))
+            {
                 sampleCodeFiles.AddRange(GenerateClasses(fieldInfo.FieldType));
+            }
         }
 
         foreach (var propertyInfo in type.GetProperties(BindingFlags))
@@ -148,13 +156,17 @@ public class SampleCodeGenerator(
                 genericTypes.Add(genericType);
 
             if (!_generatedClassNames.Contains(propertyInfo.PropertyType.Name))
+            {
                 sampleCodeFiles.AddRange(GenerateClasses(propertyInfo.PropertyType));
+            }
         }
 
         foreach (var methodInfo in type.GetMethods(BindingFlags))
         {
             if (methodInfo.IsSpecialName)
+            {
                 continue;
+            }
 
             var modifier = GetMethodModifier(methodInfo);
             var methodParameters = methodInfo.GetParameters();
@@ -185,7 +197,9 @@ public class SampleCodeGenerator(
         foreach (var genericType in genericTypes)
         {
             if (!_generatedClassNames.Contains(genericType.Name))
+            {
                 sampleCodeFiles.AddRange(GenerateClasses(genericType));
+            }
         }
 
         // 4 = default object methods
@@ -194,11 +208,15 @@ public class SampleCodeGenerator(
             && type.GetFields().Length == 0
             && type.GetMethods().Length <= 4
         )
+        {
             stringBuilder.AppendLine(scriptGeneratorStrategy.GenerateEmptyClass());
+        }
 
         var classEnd = scriptGeneratorStrategy.GenerateClassEnd();
         if (!string.IsNullOrEmpty(classEnd))
+        {
             stringBuilder.AppendLine(classEnd);
+        }
 
         sampleCodeFiles.Add(
             new SampleCodeFile { Name = type.Name, Content = stringBuilder.ToString() }
@@ -207,7 +225,6 @@ public class SampleCodeGenerator(
         return sampleCodeFiles;
     }
 
-    // todo extract hardcoded strings as constants
     private string ReplaceSampleCodeTemplates(string modelName, string sampleCode)
     {
         var finalSampleCode = sampleCode.Replace(
@@ -235,9 +252,13 @@ public class SampleCodeGenerator(
     {
         var modifier = "public";
         if (fieldInfo.IsPrivate)
+        {
             modifier = "private";
+        }
         else if (fieldInfo.IsFamily)
+        {
             modifier = "protected";
+        }
 
         return modifier;
     }
@@ -247,9 +268,13 @@ public class SampleCodeGenerator(
     {
         var modifier = "public";
         if (methodInfo.IsPrivate)
+        {
             modifier = "private";
+        }
         else if (methodInfo.IsFamily)
+        {
             modifier = "protected";
+        }
 
         return modifier;
     }

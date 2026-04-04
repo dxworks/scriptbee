@@ -1,13 +1,13 @@
-﻿using OneOf;
+﻿using DxWorks.ScriptBee.Plugin.Api;
+using OneOf;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
-using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Plugins;
 using ScriptBee.Ports.Project;
+using ScriptBee.Service.Project.Plugin;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
 namespace ScriptBee.Service.Project.ProjectStructure;
@@ -22,10 +22,10 @@ using CreateResult = OneOf<
 
 public sealed class CreateScriptService(
     IGetProject getProject,
-    IGetScriptLanguages getScriptLanguages,
     ICreateFile createFile,
     IGuidProvider guidProvider,
-    ICreateScript createScript
+    ICreateScript createScript,
+    ScriptGeneratorStrategyFactory scriptGeneratorStrategyFactory
 ) : ICreateScriptUseCase
 {
     public async Task<CreateResult> Create(
@@ -47,52 +47,33 @@ public sealed class CreateScriptService(
         CancellationToken cancellationToken
     )
     {
-        // TODO FIXIT(#35): implement this without the current instance
-        // var result = await currentInstanceUseCase.GetCurrentInstance(
-        //     projectDetails.Id,
-        //     cancellationToken
-        // );
+        var result = scriptGeneratorStrategyFactory.Get(command.Language);
 
-        return new NoInstanceAllocatedForProjectError(command.ProjectId);
-        // return await result.Match<Task<CreateResult>>(
-        //     async instanceInfo =>
-        //         await Create(command, instanceInfo, projectDetails, cancellationToken),
-        //     error => Task.FromResult<CreateResult>(error)
-        // );
-    }
-
-    private async Task<CreateResult> Create(
-        CreateScriptCommand command,
-        InstanceInfo instanceInfo,
-        ProjectDetails projectDetails,
-        CancellationToken cancellationToken
-    )
-    {
-        var languageResult = await getScriptLanguages.Get(
-            instanceInfo,
-            command.Language,
-            cancellationToken
-        );
-
-        return await languageResult.Match<Task<CreateResult>>(
+        return await result.Match<Task<CreateResult>>(
             async language => await Create(command, projectDetails, language, cancellationToken),
-            error => Task.FromResult<CreateResult>(error)
+            error =>
+                Task.FromResult<CreateResult>(new ScriptLanguageDoesNotExistsError(error.Language))
         );
     }
 
     private async Task<CreateResult> Create(
         CreateScriptCommand command,
         ProjectDetails projectDetails,
-        ScriptLanguage language,
+        IScriptGeneratorStrategy strategy,
         CancellationToken cancellationToken
     )
     {
-        // TODO FIXIT(#35): add sample code to created file
+        var language = new ScriptLanguage(strategy.Language, strategy.Extension);
+
+        var sampleCode = await new SampleCodeGenerator(
+            strategy,
+            new HashSet<string>() // TODO: add accepted modules
+        ).GenerateSampleCode(cancellationToken);
 
         var createFileResult = await createFile.Create(
             projectDetails.Id,
             GetScriptPath(command.Path, language.Extension),
-            "",
+            sampleCode,
             cancellationToken
         );
 
