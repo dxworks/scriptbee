@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'ScriptBee Docs',
   description: 'Documentation for ScriptBee',
+  base: '/scriptbee/',
   themeConfig: {
     logo: '/assets/logo.png',
     nav: [
