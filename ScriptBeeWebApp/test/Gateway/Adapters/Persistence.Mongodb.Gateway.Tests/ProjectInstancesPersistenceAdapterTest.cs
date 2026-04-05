@@ -89,14 +89,14 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                         ProjectId.FromValue("all-project-id-1"),
                         "http://test:80",
                         creationDate,
-                        CalculationInstanceStatus.NotFound
+                        AnalysisInstanceStatus.NotFound
                     ),
                     new(
                         new InstanceId("47e981a7-9cd6-46d6-ba11-7f3c65ce38a2"),
                         ProjectId.FromValue("all-project-id-1"),
                         "http://test:80",
                         creationDate,
-                        CalculationInstanceStatus.NotFound
+                        AnalysisInstanceStatus.NotFound
                     ),
                 }
             );
@@ -128,7 +128,7 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 ProjectId.FromValue("project-id"),
                 "http://test:80",
                 creationDate,
-                CalculationInstanceStatus.NotFound
+                AnalysisInstanceStatus.NotFound
             )
         );
     }
@@ -158,7 +158,7 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                     ProjectId.FromValue("project-id"),
                     "http://test:80",
                     creationDate,
-                    CalculationInstanceStatus.NotFound
+                    AnalysisInstanceStatus.NotFound
                 ),
                 TestContext.Current.CancellationToken
             )
@@ -188,7 +188,7 @@ public class ProjectInstancesPersistenceAdapterTest : IClassFixture<MongoDbFixtu
                 ProjectId.FromValue("project-id"),
                 "http://test:80",
                 creationDate,
-                CalculationInstanceStatus.NotFound
+                AnalysisInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );

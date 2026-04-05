@@ -32,7 +32,7 @@ public sealed class ClearInstanceContextAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now,
-                CalculationInstanceStatus.NotFound
+                AnalysisInstanceStatus.NotFound
             ),
             TestContext.Current.CancellationToken
         );

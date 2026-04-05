@@ -10,7 +10,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { InstanceService } from '../../services/instances/instance.service';
 import { ProjectStateService } from '../../services/projects/project-state.service';
-import { CalculationInstanceStatus, InstanceInfo } from '../../types/instance';
+import { InstanceStatus, InstanceInfo } from '../../types/instance';
 import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
@@ -56,7 +56,7 @@ export class InstanceManagerComponent {
     return this.instances().find((i) => i.id === id);
   });
 
-  getStatusIcon(status: CalculationInstanceStatus): string {
+  getStatusIcon(status: InstanceStatus): string {
     switch (status) {
       case 'Running':
         return 'check_circle';
@@ -71,7 +71,7 @@ export class InstanceManagerComponent {
     }
   }
 
-  getStatusClass(status: CalculationInstanceStatus): string {
+  getStatusClass(status: InstanceStatus): string {
     return status.toLowerCase();
   }
 

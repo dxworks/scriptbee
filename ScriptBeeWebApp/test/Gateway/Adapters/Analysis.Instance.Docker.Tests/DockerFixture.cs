@@ -28,7 +28,7 @@ public class DockerFixture : IAsyncLifetime
                 {
                     {
                         "name",
-                        new Dictionary<string, bool> { { "scriptbee-calculation", true } }
+                        new Dictionary<string, bool> { { "scriptbee-analysis", true } }
                     },
                 },
             }

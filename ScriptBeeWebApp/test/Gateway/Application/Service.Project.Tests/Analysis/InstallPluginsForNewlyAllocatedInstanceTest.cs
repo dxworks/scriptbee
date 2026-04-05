@@ -42,7 +42,7 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
 
         _getInstanceStatus
             .GetStatus(instanceInfo.Id, Arg.Any<CancellationToken>())
-            .Returns(CalculationInstanceStatus.Allocating, CalculationInstanceStatus.Running);
+            .Returns(AnalysisInstanceStatus.Allocating, AnalysisInstanceStatus.Running);
 
         // Act
         await _installPluginsForNewlyAllocatedInstance.InstallPlugins(
@@ -70,7 +70,7 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
 
         _getInstanceStatus
             .GetStatus(instanceInfo.Id, Arg.Any<CancellationToken>())
-            .Returns(CalculationInstanceStatus.Allocating, CalculationInstanceStatus.NotFound);
+            .Returns(AnalysisInstanceStatus.Allocating, AnalysisInstanceStatus.NotFound);
 
         // Act
         await _installPluginsForNewlyAllocatedInstance.InstallPlugins(

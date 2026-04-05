@@ -1,6 +1,6 @@
 namespace ScriptBee.Domain.Model.Instance;
 
-public enum CalculationInstanceStatus
+public enum AnalysisInstanceStatus
 {
     Allocating,
     Running,

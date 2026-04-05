@@ -33,7 +33,7 @@ public sealed class LoadInstanceContextAdapterTest : IDisposable
                 ProjectId.FromValue("id"),
                 _server.Urls[0],
                 DateTimeOffset.Now,
-                CalculationInstanceStatus.NotFound
+                AnalysisInstanceStatus.NotFound
             ),
             new Dictionary<string, IEnumerable<FileId>>
             {

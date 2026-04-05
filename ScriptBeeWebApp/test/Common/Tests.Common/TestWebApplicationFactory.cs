@@ -43,9 +43,9 @@ public class TestWebApplicationFactory<TStartup>(
     {
         var configurationValues = new Dictionary<string, string?>
         {
-            { "ScriptBee:Calculation:Driver", "Docker" },
-            { "ScriptBee:Calculation:Image", "test-image" },
-            { "ScriptBee:Calculation:Docker:DockerSocket", "unix:///var/run/docker.sock" },
+            { "ScriptBee:Analysis:Driver", "Docker" },
+            { "ScriptBee:Analysis:Image", "test-image" },
+            { "ScriptBee:Analysis:Docker:DockerSocket", "unix:///var/run/docker.sock" },
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(configurationValues)

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Analysis.Instance.Docker.Config;
+using ScriptBee.Application.Model.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -12,10 +13,11 @@ using ScriptBee.Ports.Instance.Allocation;
 
 namespace ScriptBee.Analysis.Instance.Docker;
 
-public class CalculationInstanceDockerAdapter(
-    IOptions<CalculationDockerConfig> config,
+public class AnalysisInstanceDockerAdapter(
+    IOptions<AnalysisDockerConfig> config,
+    IOptions<UserFolderSettings> userFolderSettingsOptions,
     IConfiguration configuration,
-    ILogger<CalculationInstanceDockerAdapter> logger,
+    ILogger<AnalysisInstanceDockerAdapter> logger,
     IFreePortProvider freePortProvider
 ) : IAllocateInstance, IDeallocateInstance, IGetInstanceStatus
 {
@@ -26,8 +28,8 @@ public class CalculationInstanceDockerAdapter(
         CancellationToken cancellationToken = default
     )
     {
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
+        var analysisDockerConfig = config.Value;
+        using var client = CreateDockerClient(analysisDockerConfig);
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
@@ -36,36 +38,32 @@ public class CalculationInstanceDockerAdapter(
         var portBindings = new Dictionary<string, IList<PortBinding>>
         {
             {
-                $"{calculationDockerConfig.Port}/tcp",
+                $"{analysisDockerConfig.Port}/tcp",
                 new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
             },
         };
 
         var mongoDbConnectionString =
-            calculationDockerConfig.MongoDbConnectionString
+            analysisDockerConfig.MongoDbConnectionString
             ?? configuration.GetConnectionString("mongodb");
 
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Name = $"scriptbee-calculation-{instanceId}",
+                Name = $"scriptbee-analysis-{instanceId}",
                 Image = image.ImageName,
                 HostConfig = new HostConfig
                 {
-                    NetworkMode = calculationDockerConfig.Network,
+                    NetworkMode = analysisDockerConfig.Network,
                     PortBindings = portBindings,
+                    Binds = GetBinds(),
                 },
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
-                    { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
+                    { $"{analysisDockerConfig.Port}/tcp", new EmptyStruct() },
                 },
-                Env = new List<string>
-                {
-                    $"ScriptBee__InstanceId={instanceId}",
-                    $"ScriptBee__ProjectId={projectDetails.Id}",
-                    $"ScriptBee__ProjectName={projectDetails.Name}",
-                    $"ConnectionStrings__mongodb={mongoDbConnectionString}",
-                },
+                Env = GetEnvironmentVariables(projectDetails, instanceId, mongoDbConnectionString),
+                Volumes = GetVolumes(),
             },
             cancellationToken
         );
@@ -82,29 +80,19 @@ public class CalculationInstanceDockerAdapter(
         return await GetContainerUrl(
             client,
             response.ID,
-            calculationDockerConfig.Network,
+            analysisDockerConfig.Network,
             hostPort,
             cancellationToken
         );
     }
 
-    private static DockerClient CreateDockerClient(CalculationDockerConfig calculationDockerConfig)
+    public async Task Deallocate(InstanceInfo instanceInfo, CancellationToken cancellationToken)
     {
-        return new DockerClientConfiguration(
-            new Uri(calculationDockerConfig.DockerSocket)
-        ).CreateClient();
-    }
-
-    public async Task Deallocate(
-        InstanceInfo calculationInstanceInfo,
-        CancellationToken cancellationToken
-    )
-    {
-        var containerName = $"scriptbee-calculation-{calculationInstanceInfo.Id}";
+        var containerName = $"scriptbee-analysis-{instanceInfo.Id}";
         logger.LogInformation("Attempting to deallocate container: {Name}", containerName);
 
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
+        var analysisDockerConfig = config.Value;
+        using var client = CreateDockerClient(analysisDockerConfig);
 
         IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
             new ContainersListParameters
@@ -164,6 +152,107 @@ public class CalculationInstanceDockerAdapter(
         }
     }
 
+    public async Task<AnalysisInstanceStatus> GetStatus(
+        InstanceId instanceId,
+        CancellationToken cancellationToken
+    )
+    {
+        var containerName = $"scriptbee-analysis-{instanceId}";
+        var analysisDockerConfig = config.Value;
+        using var client = CreateDockerClient(analysisDockerConfig);
+
+        var containers = await client.Containers.ListContainersAsync(
+            new ContainersListParameters
+            {
+                All = true,
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "name",
+                        new Dictionary<string, bool> { { containerName, true } }
+                    },
+                },
+            },
+            cancellationToken
+        );
+
+        var container = containers.FirstOrDefault();
+
+        if (container == null)
+        {
+            return AnalysisInstanceStatus.NotFound;
+        }
+
+        return container.State.ToLower() switch
+        {
+            "running" => AnalysisInstanceStatus.Running,
+            "created" or "restarting" => AnalysisInstanceStatus.Allocating,
+            "removing" => AnalysisInstanceStatus.Deallocating,
+            _ => AnalysisInstanceStatus.NotFound,
+        };
+    }
+
+    private List<string> GetEnvironmentVariables(
+        ProjectDetails projectDetails,
+        InstanceId instanceId,
+        string? mongoDbConnectionString
+    )
+    {
+        var environmentVariables = new List<string>
+        {
+            $"ScriptBee__InstanceId={instanceId}",
+            $"ScriptBee__ProjectId={projectDetails.Id}",
+            $"ScriptBee__ProjectName={projectDetails.Name}",
+            $"ConnectionStrings__mongodb={mongoDbConnectionString}",
+        };
+
+        if (
+            string.IsNullOrEmpty(userFolderSettingsOptions.Value.UserFolderPath)
+            && string.IsNullOrEmpty(config.Value.UserFolderHostPath)
+        )
+        {
+            return environmentVariables;
+        }
+
+        environmentVariables.Add($"UserFolder__UserFolderPath={config.Value.UserFolderVolumePath}");
+
+        return environmentVariables;
+    }
+
+    private List<string> GetBinds()
+    {
+        var hostPath =
+            config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
+        return string.IsNullOrEmpty(hostPath)
+            ? []
+            : [$"{hostPath}:{config.Value.UserFolderVolumePath}"];
+    }
+
+    private Dictionary<string, EmptyStruct> GetVolumes()
+    {
+        var hostPath =
+            config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
+        if (
+            string.IsNullOrEmpty(hostPath)
+            || string.IsNullOrEmpty(config.Value.UserFolderVolumePath)
+        )
+        {
+            return new Dictionary<string, EmptyStruct>();
+        }
+
+        return new Dictionary<string, EmptyStruct>
+        {
+            { config.Value.UserFolderVolumePath, new EmptyStruct() },
+        };
+    }
+
+    private static DockerClient CreateDockerClient(AnalysisDockerConfig analysisDockerConfig)
+    {
+        return new DockerClientConfiguration(
+            new Uri(analysisDockerConfig.DockerSocket)
+        ).CreateClient();
+    }
+
     private static async Task<string> GetContainerUrl(
         DockerClient client,
         string containerId,
@@ -195,7 +284,7 @@ public class CalculationInstanceDockerAdapter(
     {
         var parts = imageName.Split(":");
         var image = parts[0];
-        var tag = parts[1];
+        var tag = parts.Length > 1 ? parts[1] : "latest";
 
         var images = await client.Images.ListImagesAsync(
             new ImagesListParameters
@@ -227,45 +316,5 @@ public class CalculationInstanceDockerAdapter(
         {
             logger.LogInformation("Image {Image}:{Tag} already exists", image, tag);
         }
-    }
-
-    public async Task<CalculationInstanceStatus> GetStatus(
-        InstanceId instanceId,
-        CancellationToken cancellationToken
-    )
-    {
-        var containerName = $"scriptbee-calculation-{instanceId}";
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
-
-        var containers = await client.Containers.ListContainersAsync(
-            new ContainersListParameters
-            {
-                All = true,
-                Filters = new Dictionary<string, IDictionary<string, bool>>
-                {
-                    {
-                        "name",
-                        new Dictionary<string, bool> { { containerName, true } }
-                    },
-                },
-            },
-            cancellationToken
-        );
-
-        var container = containers.FirstOrDefault();
-
-        if (container == null)
-        {
-            return CalculationInstanceStatus.NotFound;
-        }
-
-        return container.State.ToLower() switch
-        {
-            "running" => CalculationInstanceStatus.Running,
-            "created" or "restarting" => CalculationInstanceStatus.Allocating,
-            "removing" => CalculationInstanceStatus.Deallocating,
-            _ => CalculationInstanceStatus.NotFound,
-        };
     }
 }

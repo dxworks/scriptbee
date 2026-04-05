@@ -1,6 +1,6 @@
 ﻿namespace ScriptBee.Analysis.Instance.Docker.Config;
 
-public class CalculationDockerConfig
+public class AnalysisDockerConfig
 {
     public required string DockerSocket { get; init; }
 
@@ -9,4 +9,8 @@ public class CalculationDockerConfig
     public string? Network { get; init; }
 
     public string? MongoDbConnectionString { get; init; }
+
+    public string? UserFolderVolumePath { get; init; }
+
+    public string? UserFolderHostPath { get; init; }
 }

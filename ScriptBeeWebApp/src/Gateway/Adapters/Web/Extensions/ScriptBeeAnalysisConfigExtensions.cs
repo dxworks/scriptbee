@@ -7,28 +7,28 @@ using ScriptBee.Web.Services;
 
 namespace ScriptBee.Web.Extensions;
 
-public static class ScriptBeeCalculationConfigExtensions
+public static class ScriptBeeAnalysisConfigExtensions
 {
     public static IServiceCollection AddAnalysisConfig(
         this IServiceCollection services,
         ConfigurationManager configurationManager
     )
     {
-        var scriptBeeCalculationConfig = configurationManager
-            .GetSection("ScriptBee:Calculation")
-            .Get<ScriptBeeCalculationConfig>()!;
+        var scriptBeeAnalysisConfig = configurationManager
+            .GetSection("ScriptBee:Analysis")
+            .Get<ScriptBeeAnalysisConfig>()!;
 
-        if (scriptBeeCalculationConfig.Driver != "Docker")
+        if (scriptBeeAnalysisConfig.Driver != "Docker")
         {
-            throw new AnalysisInstanceDriverTypeNotSupported(scriptBeeCalculationConfig.Driver);
+            throw new AnalysisInstanceDriverTypeNotSupported(scriptBeeAnalysisConfig.Driver);
         }
 
         services.AddSingleton<IInstanceTemplateProvider, InstanceTemplateProvider>(
             _ => new InstanceTemplateProvider(
-                new AnalysisInstanceImage(scriptBeeCalculationConfig.Image)
+                new AnalysisInstanceImage(scriptBeeAnalysisConfig.Image)
             )
         );
 
-        return services.AddDockerInstanceAdapter("ScriptBee:Calculation:Docker");
+        return services.AddDockerInstanceAdapter("ScriptBee:Analysis:Docker");
     }
 }

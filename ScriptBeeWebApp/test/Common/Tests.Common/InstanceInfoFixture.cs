@@ -11,6 +11,6 @@ public static class InstanceInfoFixture
             projectId,
             "http://instance",
             DateTimeOffset.Now,
-            CalculationInstanceStatus.NotFound
+            AnalysisInstanceStatus.NotFound
         );
 }

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Artifacts.Config;
+using ScriptBee.Application.Model.Config;
 
 namespace ScriptBee.Artifacts.Extensions;
 

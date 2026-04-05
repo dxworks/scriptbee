@@ -18,15 +18,15 @@ public sealed class InstallPluginsForNewlyAllocatedInstance(
         CancellationToken cancellationToken
     )
     {
-        CalculationInstanceStatus status;
+        AnalysisInstanceStatus status;
         do
         {
             await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
 
             status = await getInstanceStatus.GetStatus(instanceInfo.Id, cancellationToken);
-        } while (status == CalculationInstanceStatus.Allocating);
+        } while (status == AnalysisInstanceStatus.Allocating);
 
-        if (status != CalculationInstanceStatus.Running)
+        if (status != AnalysisInstanceStatus.Running)
         {
             logger.LogWarning(
                 "Could not install plugins for instance {Instance} because instance is {Status}",
