@@ -1,0 +1,49 @@
+/**
+ * Custom Material-inspired theme for VitePress
+ */
+:root {
+  --vp-c-brand-1: #ffb300; /* Amber 600 */
+  --vp-c-brand-2: #ffa000; /* Amber 700 */
+  --vp-c-brand-3: #ff8f00; /* Amber 800 */
+  --vp-c-brand-soft: rgba(255, 179, 0, 0.14);
+
+  --vp-c-accent-1: #ff5722; /* Deep Orange 500 */
+  --vp-c-accent-2: #f4511e; /* Deep Orange 600 */
+  --vp-c-accent-3: #e64a19; /* Deep Orange 700 */
+
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+  --vp-home-hero-name-background: transparent;
+
+  /* Material Design-like typography and spacing */
+  --vp-font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* Adjusting the hero section to look more like Material */
+.VPHero.has-image .container {
+  text-align: center;
+}
+
+.VPHero.has-image .image {
+  order: -1;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 960px) {
+  .VPHero.has-image .container {
+    text-align: left;
+  }
+  .VPHero.has-image .image {
+    order: 2;
+    margin-bottom: 0;
+  }
+}
+
+.VPButton.brand {
+  border-color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-1);
+}
+
+.VPButton.brand:hover {
+  border-color: var(--vp-c-brand-2);
+  background-color: var(--vp-c-brand-2);
+}
