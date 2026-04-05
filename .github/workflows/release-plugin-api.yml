@@ -1,0 +1,68 @@
+name: Release Plugin API
+
+on:
+  push:
+    tags:
+      - 'plugin-api/v*'
+
+jobs:
+  build-and-publish:
+    name: Build and Publish to NuGet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Extract version from tag
+        id: meta
+        run: |
+          TAG="${GITHUB_REF#refs/tags/plugin-api/v}"
+          echo "version=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Restore dependencies
+        run: dotnet restore DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
+
+      - name: Build
+        run: >
+          dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
+          --no-restore
+          -c Release
+          -p:Version=${{ steps.meta.outputs.version }}
+
+      - name: Pack
+        run: >
+          dotnet pack DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
+          --no-build
+          -c Release
+          -p:Version=${{ steps.meta.outputs.version }}
+          -o ./nuget-output
+
+      - name: Push to NuGet
+        run: >
+          dotnet nuget push ./nuget-output/*.nupkg
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+  create-release:
+    name: Create GitHub Release
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          tag_name: ${{ github.ref_name }}
