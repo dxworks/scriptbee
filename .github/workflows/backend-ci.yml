@@ -6,13 +6,11 @@ on:
     paths:
       - 'ScriptBeeWebApp/**'
       - 'Plugins/**'
-      - 'DxWorks.ScriptBee.Plugin.Api/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     paths:
       - 'ScriptBeeWebApp/**'
       - 'Plugins/**'
-      - 'DxWorks.ScriptBee.Plugin.Api/**'
       - '.github/workflows/backend-ci.yml'
 
 jobs:
