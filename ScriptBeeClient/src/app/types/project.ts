@@ -1,9 +1,17 @@
 import { ScriptLanguage, ScriptParameter } from './script-types';
 
+export interface ProjectFile {
+  id: string;
+  name: string;
+}
+
 export interface Project {
   id: string;
   name: string;
   creationDate: string;
+  savedFiles: Record<string, ProjectFile[]>;
+  loadedFiles: Record<string, ProjectFile[]>;
+  linkers: string[];
 }
 
 export interface CreateProjectRequest {

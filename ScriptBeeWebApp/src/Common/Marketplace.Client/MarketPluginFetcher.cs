@@ -7,11 +7,21 @@ namespace ScriptBee.Marketplace.Client;
 
 public sealed class MarketPluginFetcher(IScriptBeeClient hubClient) : IMarketPluginFetcher
 {
+    private readonly SemaphoreSlim _updateRepository = new(1, 1);
+
     public async Task<IEnumerable<MarketPlacePlugin>> GetProjectsAsync(
         CancellationToken cancellationToken
     )
     {
-        await hubClient.UpdateRepositoryAsync(cancellationToken);
+        try
+        {
+            await _updateRepository.WaitAsync(cancellationToken);
+            await hubClient.UpdateRepositoryAsync(cancellationToken);
+        }
+        finally
+        {
+            _updateRepository.Release();
+        }
 
         return hubClient.GetScriptBeeProjects().Select(ConvertToPlugin);
     }

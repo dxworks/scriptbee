@@ -1,10 +1,14 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { TreeNode, TreeNodeWithParent } from '../../../../../types/tree-node';
 import { MatButtonModule } from '@angular/material/button';
 import { CheckableTreeComponent } from '../../../../../components/checkable-tree/checkable-tree.component';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
 import { finalize } from 'rxjs';
+import { Project } from '../../../../../types/project';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { convertError } from '../../../../../utils/api';
 
 @Component({
   selector: 'app-load-models',
@@ -13,14 +17,27 @@ import { finalize } from 'rxjs';
   imports: [MatButtonModule, CheckableTreeComponent, CenteredSpinnerComponent],
 })
 export class LoadModelsComponent {
-  projectId = input.required<string>();
+  project = input.required<Project>();
   instanceId = input.required<string>();
 
-  savedFiles = signal<TreeNode[]>([]);
+  savedFiles = computed<TreeNode[]>(() => {
+    const project = this.project();
+
+    const nodes: TreeNode[] = [];
+    for (const loaderId of Object.keys(project.savedFiles)) {
+      nodes.push({
+        name: loaderId,
+        children: project.savedFiles[loaderId].map((file) => ({ name: file.name })),
+      });
+    }
+    return nodes;
+  });
+
   checkedFiles = signal<TreeNodeWithParent[]>([]);
   isLoadModelsLoading = signal(false);
 
   private loaderService = inject(LoaderService);
+  private snackbar = inject(MatSnackBar);
 
   onUpdateCheckedFiles(checkedNodes: TreeNodeWithParent[]) {
     this.checkedFiles.set(checkedNodes.filter((node) => !!node.parent));
@@ -28,10 +45,20 @@ export class LoadModelsComponent {
 
   onLoadFilesClick() {
     this.isLoadModelsLoading.set(true);
-    // TODO FIXIT(#14): update with the list of loaders
+
+    const loaderIds = this.checkedFiles().map((node) => node.parent!.name);
+
     this.loaderService
-      .loadModels(this.projectId(), this.instanceId(), this.checkedFiles())
+      .loadModels(this.project().id, this.instanceId(), loaderIds)
       .pipe(finalize(() => this.isLoadModelsLoading.set(false)))
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Load successful', 'Dismiss', { duration: 4000 });
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          const error = convertError(errorResponse);
+          this.snackbar.open(`Could not load models because ${error?.title}`, 'Dismiss', { duration: 4000 });
+        },
+      });
   }
 }

@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { TreeNodeWithParent } from '../../types/tree-node';
 import { Loader } from '../../types/load-model';
 import { ReturnedContextSlice } from '../../types/returned-context-slice';
 import { WebResponse } from '../../types/web-response';
@@ -16,9 +15,7 @@ export class LoaderService {
     return this.http.get<WebResponse<Loader[]>>(`/api/projects/${projectId}/instances/${instanceId}/loaders`).pipe(map((res) => res.data));
   }
 
-  loadModels(projectId: string, instanceId: string, checkedFiles: TreeNodeWithParent[]) {
-    const loaderIds = checkedFiles.map((node) => node.parent?.name);
-
+  loadModels(projectId: string, instanceId: string, loaderIds: string[]) {
     return this.http.post<ReturnedContextSlice[]>(`/api/projects/${projectId}/instances/${instanceId}/context/load`, {
       loaderIds,
     });
