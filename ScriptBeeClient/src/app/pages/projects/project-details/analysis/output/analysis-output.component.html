@@ -28,7 +28,7 @@
       } @else if (outputFilesResourceError()) {
         <app-error-state [error]="outputFilesResourceError()!"></app-error-state>
       } @else {
-        <app-file-output [files]="outputFilesResource.value()!.data" />
+        <app-file-output [projectId]="projectId()" [analysisId]="analysisId()" [files]="outputFilesResource.value()!.data" />
       }
     </div>
   </mat-tab>

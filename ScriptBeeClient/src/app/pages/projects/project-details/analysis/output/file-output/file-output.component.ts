@@ -1,7 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AnalysisFile } from '../../../../../../types/analysis-results';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { OutputFilesService } from '../../../../../../services/output/output-files.service';
+import { DownloadService } from '../../../../../../services/output/download.service';
 
 @Component({
   selector: 'app-file-output',
@@ -10,35 +12,23 @@ import { MatIcon } from '@angular/material/icon';
   imports: [MatIcon, MatButton],
 })
 export class FileOutputComponent {
+  projectId = input.required<string>();
+  analysisId = input.required<string>();
+
   files = input.required<AnalysisFile[]>();
-  // TODO FIXIT(#125): update download with the new endpoints
-  // constructor(private outputFilesService: OutputFilesService) {
-  // }
-  //
+
+  private outputFilesService = inject(OutputFilesService);
+  private downloadService = inject(DownloadService);
+
   onDownloadFileButtonClick(file: AnalysisFile) {
-    console.log(file);
-    //   this.outputFilesService.downloadFile(file.fileId, file.fileName).subscribe((data) => {
-    //     FileOutputComponent.downloadFile(file.fileName, data);
-    //   });
+    this.outputFilesService.downloadFile(this.projectId(), this.analysisId(), file.id).subscribe((data) => {
+      this.downloadService.downloadFile(file.name, data);
+    });
   }
 
   onDownloadAllButtonClick() {
-    //   this.outputFilesService.downloadAll(this.projectId, this.runIndex).subscribe((data) => {
-    //     FileOutputComponent.downloadFile('outputFiles.zip', data);
-    //   });
+    this.outputFilesService.downloadAll(this.projectId(), this.analysisId()).subscribe((data) => {
+      this.downloadService.downloadFile('outputFiles.zip', data);
+    });
   }
-
-  //
-  // todo to be moved to common service
-  // private static downloadFile(fileName: string, data: any) {
-  //   const a: any = document.createElement('a');
-  //   document.body.appendChild(a);
-  //   a.style = 'display: none';
-  //   const blob = new Blob([data], {type: 'octet/stream'});
-  //   const url = window.URL.createObjectURL(blob);
-  //   a.href = url;
-  //   a.download = fileName;
-  //   a.click();
-  //   window.URL.revokeObjectURL(url);
-  // }
 }
