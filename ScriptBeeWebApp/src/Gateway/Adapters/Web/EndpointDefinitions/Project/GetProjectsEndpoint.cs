@@ -33,7 +33,7 @@ public class GetProjectsEndpoint : IEndpointDefinition
     }
 
     private static async Task<
-        Results<Ok<WebGetProjectDetailsResponse>, NotFound<ProblemDetails>>
+        Results<Ok<WebProjectDetails>, NotFound<ProblemDetails>>
     > GetProjectById(
         HttpContext context,
         [FromRoute] string projectId,
@@ -44,8 +44,8 @@ public class GetProjectsEndpoint : IEndpointDefinition
         var query = new GetProjectQuery(ProjectId.FromValue(projectId));
         var result = await useCase.GetProject(query, cancellationToken);
 
-        return result.Match<Results<Ok<WebGetProjectDetailsResponse>, NotFound<ProblemDetails>>>(
-            projectDetails => TypedResults.Ok(WebGetProjectDetailsResponse.Map(projectDetails)),
+        return result.Match<Results<Ok<WebProjectDetails>, NotFound<ProblemDetails>>>(
+            projectDetails => TypedResults.Ok(WebProjectDetails.Map(projectDetails)),
             error => error.ToProblem(context)
         );
     }

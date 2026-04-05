@@ -1,0 +1,24 @@
+{
+  "id": "id",
+  "name": "name",
+  "creationDate": "2026-01-01T00:00:00+00:00",
+  "savedFiles": {
+    "loader-id": [
+      {
+        "id": "f2461a1d-b63a-4f7f-a486-d6b1aad57ad9",
+        "name": "file-name"
+      }
+    ]
+  },
+  "loadedFiles": {
+    "loader-id": [
+      {
+        "id": "f2461a1d-b63a-4f7f-a486-d6b1aad57ad9",
+        "name": "file-name"
+      }
+    ]
+  },
+  "linkers": [
+    "linker-id"
+  ]
+}
