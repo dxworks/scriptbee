@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using ScriptBee.Artifacts.Config;
+using ScriptBee.Application.Model.Config;
 using ScriptBee.Domain.Model.Config;
 using ScriptBee.Domain.Model.Project;
 

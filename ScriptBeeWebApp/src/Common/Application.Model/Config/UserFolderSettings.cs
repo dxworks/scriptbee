@@ -1,4 +1,4 @@
-namespace ScriptBee.Artifacts.Config;
+namespace ScriptBee.Application.Model.Config;
 
 public class UserFolderSettings
 {

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Analysis.Instance.Docker.Config;
+using ScriptBee.Application.Model.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -14,6 +15,7 @@ namespace ScriptBee.Analysis.Instance.Docker;
 
 public class CalculationInstanceDockerAdapter(
     IOptions<CalculationDockerConfig> config,
+    IOptions<UserFolderSettings> userFolderSettingsOptions,
     IConfiguration configuration,
     ILogger<CalculationInstanceDockerAdapter> logger,
     IFreePortProvider freePortProvider
@@ -54,18 +56,14 @@ public class CalculationInstanceDockerAdapter(
                 {
                     NetworkMode = calculationDockerConfig.Network,
                     PortBindings = portBindings,
+                    Binds = GetBinds(),
                 },
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
                     { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
                 },
-                Env = new List<string>
-                {
-                    $"ScriptBee__InstanceId={instanceId}",
-                    $"ScriptBee__ProjectId={projectDetails.Id}",
-                    $"ScriptBee__ProjectName={projectDetails.Name}",
-                    $"ConnectionStrings__mongodb={mongoDbConnectionString}",
-                },
+                Env = GetEnvironmentVariables(projectDetails, instanceId, mongoDbConnectionString),
+                Volumes = GetVolumes(),
             },
             cancellationToken
         );
@@ -86,13 +84,6 @@ public class CalculationInstanceDockerAdapter(
             hostPort,
             cancellationToken
         );
-    }
-
-    private static DockerClient CreateDockerClient(CalculationDockerConfig calculationDockerConfig)
-    {
-        return new DockerClientConfiguration(
-            new Uri(calculationDockerConfig.DockerSocket)
-        ).CreateClient();
     }
 
     public async Task Deallocate(
@@ -164,71 +155,6 @@ public class CalculationInstanceDockerAdapter(
         }
     }
 
-    private static async Task<string> GetContainerUrl(
-        DockerClient client,
-        string containerId,
-        string? networkName,
-        int port,
-        CancellationToken cancellationToken
-    )
-    {
-        var containerInfo = await client.Containers.InspectContainerAsync(
-            containerId,
-            cancellationToken
-        );
-
-        if (networkName == null)
-        {
-            return $"http://localhost:{port}";
-        }
-
-        return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
-            ? $"http://{network.IPAddress}:{port}"
-            : $"http://localhost:{port}";
-    }
-
-    private async Task PullImageIfNeeded(
-        DockerClient client,
-        string imageName,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var parts = imageName.Split(":");
-        var image = parts[0];
-        var tag = parts[1];
-
-        var images = await client.Images.ListImagesAsync(
-            new ImagesListParameters
-            {
-                Filters = new Dictionary<string, IDictionary<string, bool>>
-                {
-                    {
-                        "reference",
-                        new Dictionary<string, bool> { { $"{image}:{tag}", true } }
-                    },
-                },
-            },
-            cancellationToken
-        );
-
-        if (images.Count == 0)
-        {
-            logger.LogInformation("Pulling image {Image}:{Tag}...", image, tag);
-            await client.Images.CreateImageAsync(
-                new ImagesCreateParameters { FromImage = image, Tag = tag },
-                new AuthConfig(),
-                new Progress<JSONMessage>(msg =>
-                    logger.LogInformation("Pulling image status {Status}", msg.Status)
-                ),
-                cancellationToken
-            );
-        }
-        else
-        {
-            logger.LogInformation("Image {Image}:{Tag} already exists", image, tag);
-        }
-    }
-
     public async Task<CalculationInstanceStatus> GetStatus(
         InstanceId instanceId,
         CancellationToken cancellationToken
@@ -267,5 +193,131 @@ public class CalculationInstanceDockerAdapter(
             "removing" => CalculationInstanceStatus.Deallocating,
             _ => CalculationInstanceStatus.NotFound,
         };
+    }
+
+    private List<string> GetEnvironmentVariables(
+        ProjectDetails projectDetails,
+        InstanceId instanceId,
+        string? mongoDbConnectionString
+    )
+    {
+        var environmentVariables = new List<string>
+        {
+            $"ScriptBee__InstanceId={instanceId}",
+            $"ScriptBee__ProjectId={projectDetails.Id}",
+            $"ScriptBee__ProjectName={projectDetails.Name}",
+            $"ConnectionStrings__mongodb={mongoDbConnectionString}",
+        };
+
+        if (
+            string.IsNullOrEmpty(userFolderSettingsOptions.Value.UserFolderPath)
+            && string.IsNullOrEmpty(config.Value.UserFolderHostPath)
+        )
+        {
+            return environmentVariables;
+        }
+
+        environmentVariables.Add($"UserFolder__UserFolderPath={config.Value.UserFolderVolumePath}");
+
+        return environmentVariables;
+    }
+
+    private List<string> GetBinds()
+    {
+        var hostPath =
+            config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
+        return string.IsNullOrEmpty(hostPath)
+            ? []
+            : [$"{hostPath}:{config.Value.UserFolderVolumePath}"];
+    }
+
+    private Dictionary<string, EmptyStruct> GetVolumes()
+    {
+        var hostPath =
+            config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
+        if (
+            string.IsNullOrEmpty(hostPath)
+            || string.IsNullOrEmpty(config.Value.UserFolderVolumePath)
+        )
+        {
+            return new Dictionary<string, EmptyStruct>();
+        }
+
+        return new Dictionary<string, EmptyStruct>
+        {
+            { config.Value.UserFolderVolumePath, new EmptyStruct() },
+        };
+    }
+
+    private static DockerClient CreateDockerClient(CalculationDockerConfig calculationDockerConfig)
+    {
+        return new DockerClientConfiguration(
+            new Uri(calculationDockerConfig.DockerSocket)
+        ).CreateClient();
+    }
+
+    private static async Task<string> GetContainerUrl(
+        DockerClient client,
+        string containerId,
+        string? networkName,
+        int port,
+        CancellationToken cancellationToken
+    )
+    {
+        var containerInfo = await client.Containers.InspectContainerAsync(
+            containerId,
+            cancellationToken
+        );
+
+        if (networkName == null)
+        {
+            return $"http://localhost:{port}";
+        }
+
+        return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
+            ? $"http://{network.IPAddress}:{port}"
+            : $"http://localhost:{port}";
+    }
+
+    private async Task PullImageIfNeeded(
+        DockerClient client,
+        string imageName,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var parts = imageName.Split(":");
+        var image = parts[0];
+        var tag = parts.Length > 1 ? parts[1] : "latest";
+
+        var images = await client.Images.ListImagesAsync(
+            new ImagesListParameters
+            {
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "reference",
+                        new Dictionary<string, bool> { { $"{image}:{tag}", true } }
+                    },
+                },
+            },
+            cancellationToken
+        );
+
+        if (images.Count == 0)
+        {
+            logger.LogInformation("Pulling image {Image}:{Tag}...", image, tag);
+            await client.Images.CreateImageAsync(
+                new ImagesCreateParameters { FromImage = image, Tag = tag },
+                new AuthConfig(),
+                new Progress<JSONMessage>(msg =>
+                    logger.LogInformation("Pulling image status {Status}", msg.Status)
+                ),
+                cancellationToken
+            );
+        }
+        else
+        {
+            logger.LogInformation("Image {Image}:{Tag} already exists", image, tag);
+        }
     }
 }

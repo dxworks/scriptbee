@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using ScriptBee.Analysis.Instance.Docker.Config;
+using ScriptBee.Application.Model.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -18,11 +19,23 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     private readonly IConfiguration _configuration = Substitute.For<IConfiguration>();
     private readonly ILogger<CalculationInstanceDockerAdapter> _logger;
     private readonly IOptions<CalculationDockerConfig> _configOptions;
+    private readonly IOptions<UserFolderSettings> _userFolderOptions;
 
     private readonly int _testPort;
 
     private const string TestMongoConnectionString = "mongodb://test:27017";
     private const string OverrideMongoConnectionString = "mongodb://mongodb-host:27017";
+
+    private static readonly string TestUserFolderPath = Path.Combine(
+            Path.GetTempPath(),
+            "scriptbee-test-userfolder"
+        )
+        .Replace("\\", "/");
+    private static readonly string OverrideHostPath = Path.Combine(
+            Path.GetTempPath(),
+            "scriptbee-test-override"
+        )
+        .Replace("\\", "/");
 
     public CalculationInstanceDockerAdapterTest(
         DockerFixture dockerFixture,
@@ -36,6 +49,9 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             Network = DockerFixture.TestNetworkName,
         };
         _configOptions = Options.Create(config);
+        _userFolderOptions = Options.Create(
+            new UserFolderSettings { UserFolderPath = TestUserFolderPath }
+        );
 
         _testPort = new FreePortProvider().GetFreeTcpPort();
         _freePortProvider.GetFreeTcpPort().Returns(_testPort);
@@ -56,6 +72,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
+            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -99,6 +116,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
+            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -144,6 +162,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
+            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -177,6 +196,115 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         containerInspect.Config.Env.ShouldContain(
             $"ConnectionStrings__mongodb={TestMongoConnectionString}"
         );
+        containerInspect.Config.Env.ShouldContain(
+            $"UserFolder__UserFolderPath={_configOptions.Value.UserFolderVolumePath}"
+        );
+    }
+
+    [Fact]
+    public async Task Allocate_ShouldMountVolumes_WhenUserFolderIsConfigured()
+    {
+        // Arrange
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            _userFolderOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-calculation-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.HostConfig.Binds.ShouldContain(
+            $"{TestUserFolderPath}:{_configOptions.Value.UserFolderVolumePath}"
+        );
+    }
+
+    [Fact]
+    public async Task Allocate_ShouldUseUserFolderHostPath_WhenConfigured()
+    {
+        // Arrange
+        var config = new CalculationDockerConfig
+        {
+            DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
+            Network = DockerFixture.TestNetworkName,
+            UserFolderHostPath = OverrideHostPath,
+        };
+        var adapter = new CalculationInstanceDockerAdapter(
+            Options.Create(config),
+            _userFolderOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-calculation-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.HostConfig.Binds.ShouldContain(
+            $"{OverrideHostPath}:{_configOptions.Value.UserFolderVolumePath}"
+        );
+    }
+
+    [Fact]
+    public async Task Allocate_ShouldNotMountVolumes_WhenNoUserFolderIsConfigured()
+    {
+        // Arrange
+        var adapter = new CalculationInstanceDockerAdapter(
+            _configOptions,
+            Options.Create(new UserFolderSettings { UserFolderPath = null }),
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-calculation-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.HostConfig.Binds.ShouldBeEmpty();
     }
 
     [Fact]
@@ -191,6 +319,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         };
         var adapter = new CalculationInstanceDockerAdapter(
             Options.Create(config),
+            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -224,6 +353,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
+            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -274,6 +404,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     {
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
+            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider

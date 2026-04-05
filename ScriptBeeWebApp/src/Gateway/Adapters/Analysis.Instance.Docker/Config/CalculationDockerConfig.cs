@@ -9,4 +9,8 @@ public class CalculationDockerConfig
     public string? Network { get; init; }
 
     public string? MongoDbConnectionString { get; init; }
+
+    public string? UserFolderVolumePath { get; init; }
+
+    public string? UserFolderHostPath { get; init; }
 }
