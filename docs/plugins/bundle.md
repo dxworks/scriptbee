@@ -11,7 +11,7 @@ An example can be seen below:
 ```yaml title="manifest.yaml"
 apiVersion: 1.0.0
 author: ScriptBee
-description: "Bundle Plugin"
+description: 'Bundle Plugin'
 name: Bundle Plugin
 extensionPoints:
   - kind: HelperFunctions
@@ -22,7 +22,7 @@ extensionPoints:
     version: 1.0.1
   - kind: Plugin
     entryPoint: plugin-id-2
-    version: 5.0.1  
+    version: 5.0.1
 ```
 
 - `apiVersion`: The version of the plugin manifest api

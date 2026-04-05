@@ -14,7 +14,7 @@ an environment variable.
 An example of the `docker-compose.yaml`:
 
 ```yaml title="docker-compose.yaml"
-version: "3.8"
+version: '3.8'
 services:
   mongo:
     image: mongo:4.4
@@ -26,7 +26,7 @@ services:
   scripbee:
     image: dxworks/scriptbee
     ports:
-      - "4201:80"
+      - '4201:80'
     volumes:
       - /host/scriptbee_data:/root/.scriptbee
 

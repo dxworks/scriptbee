@@ -22,12 +22,12 @@ The manifest file describes how the plugin is structured and what it does. It ca
 ```yaml title="manifest.yaml"
 apiVersion: 1.0.0
 author: ScriptBee
-description: "Description"
-name: "HelperFunctions example"
+description: 'Description'
+name: 'HelperFunctions example'
 extensionPoints:
   - kind: HelperFunctions
     entryPoint: Plugin.dll
-    version: "0.0.1"
+    version: '0.0.1'
 ```
 
 - `apiVersion`: The version of the plugin manifest api

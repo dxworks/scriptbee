@@ -15,7 +15,7 @@ let project = new Project();
 
 // start script
 
-ConsoleWriteLine("Hello, JavaScript!");
+ConsoleWriteLine('Hello, JavaScript!');
 
 // end script
 ```
@@ -33,8 +33,8 @@ let scriptParameters = new ScriptParameters();
 
 // start script
 
-ConsoleWriteLine("Hello, JavaScript!");
-ConsoleWriteLine("Parameter: " + scriptParameters.MyParameter);
+ConsoleWriteLine('Hello, JavaScript!');
+ConsoleWriteLine('Parameter: ' + scriptParameters.MyParameter);
 
 // end script
 ```
@@ -53,34 +53,33 @@ let project = new Project();
 
 // start script
 
-var repos = ContextGetValue(project.Context, "Repository", "honeydew");
+var repos = ContextGetValue(project.Context, 'Repository', 'honeydew');
 
-ConsoleWriteLine("Repos: " + repos.Count);
+ConsoleWriteLine('Repos: ' + repos.Count);
 
 var projects = [];
 
-var keys = Object.keys(repos)
+var keys = Object.keys(repos);
 
 for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    var repo = repos[key];
+  var key = keys[i];
+  var repo = repos[key];
 
-    var repoProjects = repo.Projects;
+  var repoProjects = repo.Projects;
 
-    for (var j = 0; j < repoProjects.Count; j++) {
-        var repoProject = repoProjects[j];
-        projects.push({
-            FilePath: repoProject.FilePath,
-            Name: repoProject.Name,
-            FileCount: repoProject.Files.Count,
-        });
-    }
+  for (var j = 0; j < repoProjects.Count; j++) {
+    var repoProject = repoProjects[j];
+    projects.push({
+      FilePath: repoProject.FilePath,
+      Name: repoProject.Name,
+      FileCount: repoProject.Files.Count,
+    });
+  }
 }
 
-
 ConsoleWriteLine(ConvertJson(projects));
-ConsoleWriteLine("It contained " + projects.length + " projects.");
-ExportJson("output.json", projects);
+ConsoleWriteLine('It contained ' + projects.length + ' projects.');
+ExportJson('output.json', projects);
 
 // end script
 ```
@@ -91,4 +90,4 @@ It uses the classes offered by the Honeydew plugin that are stored in the contex
 Using the helper functions from `DxWorks.ScriptBee.Plugin.Api.HelperFunctions`, we can easily convert the projects to
 json and export them to a file.
 
-If everything is ok, you should see the results in the console and the file outputs section.  
+If everything is ok, you should see the results in the console and the file outputs section.

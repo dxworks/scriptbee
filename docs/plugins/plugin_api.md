@@ -33,7 +33,7 @@ functionality of ScriptBee. They can be used to add custom functions that can be
 public interface IHelperFunctionsContainer
 {
     public Dictionary<string, Delegate> GetFunctionsDictionary();
-    
+
     public IEnumerable<IHelperFunctions> GetFunctions();
 }
 ```
