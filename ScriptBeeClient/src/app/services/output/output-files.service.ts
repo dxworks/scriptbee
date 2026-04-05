@@ -20,27 +20,16 @@ export class OutputFilesService {
     return this.http.get<AnalysisFileOutput>(`/api/projects/${projectId}/analyses/${analysisId}/results/files`);
   }
 
-  downloadFile(id: string, name: string) {
-    return this.http.post(
-      '/api/output/files/download',
-      { id, name },
-      {
-        responseType: 'blob',
-      }
-    );
+  downloadFile(projectId: string, analysisId: string, fileId: string) {
+    return this.http.get(`/api/projects/${projectId}/analyses/${analysisId}/results/files/${fileId}`, {
+      responseType: 'blob',
+    });
   }
 
-  downloadAll(projectId: string, runIndex: number) {
-    return this.http.post(
-      '/api/output/files/downloadAll',
-      {
-        projectId,
-        runIndex,
-      },
-      {
-        responseType: 'blob',
-      }
-    );
+  downloadAll(projectId: string, analysisId: string) {
+    return this.http.get(`/api/projects/${projectId}/analyses/${analysisId}/results/files/download`, {
+      responseType: 'blob',
+    });
   }
 
   fetchOutput(outputId: string) {
