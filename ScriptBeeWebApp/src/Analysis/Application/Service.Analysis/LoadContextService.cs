@@ -3,7 +3,10 @@ using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 
-public class LoadContextService(ILoadModelFilesService loadModelFilesService) : ILoadContextUseCase
+public class LoadContextService(
+    ILoadModelFilesService loadModelFilesService,
+    IProjectStructureService projectStructureService
+) : ILoadContextUseCase
 {
     public async Task Load(
         IDictionary<string, IEnumerable<FileId>> filesToLoad,
@@ -12,7 +15,6 @@ public class LoadContextService(ILoadModelFilesService loadModelFilesService) : 
     {
         await loadModelFilesService.LoadModelFiles(filesToLoad, cancellationToken);
 
-        // TODO FIXIT(#54): generate model classes
-        // await projectStructureService.GenerateModelClasses(loadModels.ProjectId, cancellationToken);
+        await projectStructureService.GenerateModelClasses(cancellationToken);
     }
 }
