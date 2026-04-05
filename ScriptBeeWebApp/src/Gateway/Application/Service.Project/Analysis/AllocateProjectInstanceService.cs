@@ -44,6 +44,7 @@ public sealed class AllocateProjectInstanceService(
         var instanceId = new InstanceId(guidProvider.NewGuid());
 
         var instanceUrl = await allocateInstance.Allocate(
+            projectDetails,
             instanceId,
             instanceTemplateProvider.GetTemplate(),
             cancellationToken

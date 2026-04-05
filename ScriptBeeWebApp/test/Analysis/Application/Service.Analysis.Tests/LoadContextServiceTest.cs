@@ -9,11 +9,17 @@ public class LoadContextServiceTest
     private readonly ILoadModelFilesService _loadModelFilesService =
         Substitute.For<ILoadModelFilesService>();
 
+    private readonly IProjectStructureService _projectStructureService =
+        Substitute.For<IProjectStructureService>();
+
     private readonly LoadContextService _loadContextService;
 
     public LoadContextServiceTest()
     {
-        _loadContextService = new LoadContextService(_loadModelFilesService);
+        _loadContextService = new LoadContextService(
+            _loadModelFilesService,
+            _projectStructureService
+        );
     }
 
     [Fact]
@@ -26,5 +32,8 @@ public class LoadContextServiceTest
         await _loadModelFilesService
             .Received(1)
             .LoadModelFiles(filesToLoad, Arg.Any<CancellationToken>());
+        await _projectStructureService
+            .Received(1)
+            .GenerateModelClasses(Arg.Any<CancellationToken>());
     }
 }

@@ -22,9 +22,9 @@ builder
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
+    .AddCommonServices()
     .AddInstanceConfig(scriptBeeConfigurationSection)
     .AddMongoDb(mongoConnectionString)
-    .AddCommonServices()
     .AddDownloadService()
     .AddFileAdapters(userFolderConfigurationSection)
     .AddScriptBeeMarketplaceClient(options =>
@@ -32,7 +32,6 @@ builder
         options.HubDownloadFolder = Path.Combine(Path.GetTempPath(), "DxWorksHubDownloads");
     })
     .AddPluginsConfig()
-    .AddProjectContextConfig()
     .AddRunScriptServices();
 
 builder.Services.AddEndpointDefinitions(

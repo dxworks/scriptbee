@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.Python\DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\Common\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
     <ProjectReference Include="..\Ports.Instance.Allocation\Ports.Instance.Allocation.csproj" />

@@ -4,7 +4,6 @@ using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -18,7 +17,6 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;
 using CreateResponse = OneOf<
     Script,
     ProjectDoesNotExistsError,
-    NoInstanceAllocatedForProjectError,
     ScriptLanguageDoesNotExistsError,
     ScriptPathAlreadyExistsError
 >;
@@ -200,35 +198,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl, "id");
-    }
-
-    [Fact]
-    public async Task NoInstanceAllocatedForProject_ShouldReturnBadRequest()
-    {
-        var useCase = Substitute.For<ICreateScriptUseCase>();
-        useCase
-            .Create(
-                new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
-                Arg.Any<CancellationToken>()
-            )
-            .Returns(
-                Task.FromResult<CreateResponse>(
-                    new NoInstanceAllocatedForProjectError(ProjectId.FromValue("id"))
-                )
-            );
-
-        var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
-            new WebCreateScriptCommand("path", "csharp", null)
-        );
-
-        await AssertNoInstanceAllocatedForProjectBadRequestProblem(response, TestUrl, "id");
     }
 
     [Fact]

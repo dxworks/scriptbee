@@ -53,21 +53,26 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Allocate_ShouldCreateAndStartContainerAndReturnUrlWithNetworkIP()
     {
+        // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
             _configuration,
             _logger,
             _freePortProvider
         );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
+        // Act
         var containerUrl = await adapter.Allocate(
+            projectDetails,
             instanceId,
             image,
             TestContext.Current.CancellationToken
         );
 
+        // Assert
         containerUrl.ShouldStartWith("http://");
         containerUrl.ShouldContain($":{_testPort}");
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
@@ -91,17 +96,26 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Allocate_ShouldUseConfiguredNetworkAndContainerName()
     {
+        // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
             _configuration,
             _logger,
             _freePortProvider
         );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        await adapter.Allocate(instanceId, image, TestContext.Current.CancellationToken);
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
 
+        // Assert
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters
             {
@@ -127,23 +141,39 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Allocate_ShouldPassEnvironmentVariables()
     {
+        // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
             _configuration,
             _logger,
             _freePortProvider
         );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(
+            ProjectId.FromValue("id")
+        ) with
+        {
+            Name = "project-name",
+        };
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        await adapter.Allocate(instanceId, image, TestContext.Current.CancellationToken);
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
 
+        // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
             $"scriptbee-calculation-{instanceId}",
             TestContext.Current.CancellationToken
         );
 
         containerInspect.Config.Env.ShouldContain($"ScriptBee__InstanceId={instanceId}");
+        containerInspect.Config.Env.ShouldContain("ScriptBee__ProjectId=id");
+        containerInspect.Config.Env.ShouldContain("ScriptBee__ProjectName=project-name");
         containerInspect.Config.Env.ShouldContain(
             $"ConnectionStrings__mongodb={TestMongoConnectionString}"
         );
@@ -152,6 +182,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Allocate_ShouldUseOverrideMongoDbConnectionString_WhenConfigured()
     {
+        // Arrange
         var config = new CalculationDockerConfig
         {
             DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
@@ -164,11 +195,19 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             _logger,
             _freePortProvider
         );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
         var instanceId = new InstanceId(Guid.NewGuid());
         var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
 
-        await adapter.Allocate(instanceId, image, TestContext.Current.CancellationToken);
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
 
+        // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
             $"scriptbee-calculation-{instanceId}",
             TestContext.Current.CancellationToken
@@ -182,18 +221,20 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Deallocate_ShouldStopAndRemoveExistingContainer()
     {
+        // Arrange
         var adapter = new CalculationInstanceDockerAdapter(
             _configOptions,
             _configuration,
             _logger,
             _freePortProvider
         );
-        // Arrange
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
         var instanceId = new InstanceId(Guid.NewGuid());
         var instanceImage = new AnalysisInstanceImage(DockerFixture.TestImageName);
         var containerName = $"scriptbee-calculation-{instanceId}";
 
         var instanceUrl = await adapter.Allocate(
+            projectDetails,
             instanceId,
             instanceImage,
             TestContext.Current.CancellationToken

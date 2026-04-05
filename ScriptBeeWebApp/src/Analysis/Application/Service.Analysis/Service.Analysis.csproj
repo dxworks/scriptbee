@@ -3,6 +3,7 @@
     <RootNamespace>ScriptBee.Service.Analysis</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />

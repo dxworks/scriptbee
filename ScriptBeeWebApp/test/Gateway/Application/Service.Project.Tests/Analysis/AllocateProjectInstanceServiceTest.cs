@@ -90,6 +90,7 @@ public class AllocateProjectInstanceServiceTest
             );
         _allocateInstance
             .Allocate(
+                projectDetails,
                 new InstanceId(instanceId),
                 analysisInstanceImage,
                 Arg.Any<CancellationToken>()
