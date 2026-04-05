@@ -1,0 +1,39 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'ScriptBeeWebApp/**'
+      - 'Plugins/**'
+      - 'DxWorks.ScriptBee.Plugin.Api/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    paths:
+      - 'ScriptBeeWebApp/**'
+      - 'Plugins/**'
+      - 'DxWorks.ScriptBee.Plugin.Api/**'
+      - '.github/workflows/backend-ci.yml'
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ScriptBee.slnx
+
+      - name: Build
+        run: dotnet build ScriptBee.slnx --no-restore
+
+      - name: Test
+        run: dotnet test ScriptBee.slnx --no-build --verbosity normal
