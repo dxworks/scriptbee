@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { GetProjectFilesResponse, ProjectScript } from '../../types/project';
 import { CreateScriptRequest, ScriptLanguage, ScriptParameter, UpdateScriptRequest } from '../../types/script-types';
@@ -9,13 +9,13 @@ import { map } from 'rxjs';
   providedIn: 'root',
 })
 export class ProjectStructureService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   deleteProjectStructureNode(projectId: string, id: string) {
     return this.http.delete(`/api/projects/${projectId}/files/${id}`);
   }
 
-  getProjectFiles(projectId: string, parentId?: string, offset: number = 0, limit: number = 50) {
+  getProjectFiles(projectId: string, parentId?: string, offset = 0, limit = 50) {
     let params = new HttpParams().set('offset', offset).set('limit', limit);
     if (parentId) {
       params = params.set('parentId', parentId);

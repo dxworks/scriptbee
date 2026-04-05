@@ -14,7 +14,7 @@ export class DragAndDropFilesComponent {
   @ViewChild('modelFileInput') modelFileInput?: ElementRef;
   @Output() filesChange = new EventEmitter<File[]>();
 
-  isHovering: boolean = false;
+  isHovering = false;
   @Input() files: File[] = [];
 
   toggleHover(event: boolean) {

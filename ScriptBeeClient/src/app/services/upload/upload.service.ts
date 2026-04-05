@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UploadModelsResult } from '../../types/upload-models-result';
 
@@ -6,7 +6,7 @@ import { UploadModelsResult } from '../../types/upload-models-result';
   providedIn: 'root',
 })
 export class UploadService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   uploadModels(projectId: string, loaderId: string, files: File[]) {
     const formData = new FormData();

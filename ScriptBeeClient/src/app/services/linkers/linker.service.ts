@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Linker } from '../../types/link-model';
 import { WebResponse } from '../../types/web-response';
@@ -8,7 +8,7 @@ import { map } from 'rxjs';
   providedIn: 'root',
 })
 export class LinkerService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getAllLinkers(projectId: string, instanceId: string) {
     return this.http.get<WebResponse<Linker[]>>(`/api/projects/${projectId}/instances/${instanceId}/loaders`).pipe(map((res) => res.data));

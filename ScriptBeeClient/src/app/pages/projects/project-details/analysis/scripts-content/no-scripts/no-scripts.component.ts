@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatMiniFabButton } from '@angular/material/button';
 
-type Action = {
+interface Action {
   name: string;
   icon: string;
   color: string;
-};
+}
 
 @Component({
   selector: 'app-no-scripts',

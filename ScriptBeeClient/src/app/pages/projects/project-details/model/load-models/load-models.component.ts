@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { TreeNode, TreeNodeWithParent } from '../../../../../types/tree-node';
 import { MatButtonModule } from '@angular/material/button';
 import { CheckableTreeComponent } from '../../../../../components/checkable-tree/checkable-tree.component';
@@ -20,7 +20,7 @@ export class LoadModelsComponent {
   checkedFiles = signal<TreeNodeWithParent[]>([]);
   isLoadModelsLoading = signal(false);
 
-  constructor(private loaderService: LoaderService) {}
+  private loaderService = inject(LoaderService);
 
   onUpdateCheckedFiles(checkedNodes: TreeNodeWithParent[]) {
     this.checkedFiles.set(checkedNodes.filter((node) => !!node.parent));

@@ -30,7 +30,7 @@ interface FolderState {
 export class ScriptTreeComponent {
   projectId = input.required<string>();
 
-  onFileSelected = output<ProjectFileNode>();
+  fileSelected = output<ProjectFileNode>();
 
   isDeleteLoading = signal(false);
 
@@ -53,10 +53,10 @@ export class ScriptTreeComponent {
     return null;
   });
 
-  constructor(
-    private projectStructureService: ProjectStructureService,
-    private dialog: MatDialog
-  ) {
+  private projectStructureService = inject(ProjectStructureService);
+  private dialog = inject(MatDialog);
+
+  constructor() {
     effect(() => {
       const pid = this.projectId();
       if (pid && !this.folderStates().has(null)) {
@@ -87,7 +87,7 @@ export class ScriptTreeComponent {
 
   onNodeClick(node: ProjectFileNode) {
     if (node.type === 'file') {
-      this.onFileSelected.emit(node);
+      this.fileSelected.emit(node);
     }
   }
 

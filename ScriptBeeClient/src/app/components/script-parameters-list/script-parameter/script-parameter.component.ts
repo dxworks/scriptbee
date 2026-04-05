@@ -9,7 +9,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { ScriptParameterValueComponent } from './script-parameter-value/script-parameter-value.component';
 
 class ParameterNameErrorMatcher implements ErrorStateMatcher {
-  private isError: boolean = false;
+  private isError = false;
 
   setErrorState(isError: boolean) {
     this.isError = isError;

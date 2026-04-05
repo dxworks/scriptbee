@@ -52,9 +52,8 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium --with-deps
 
-# TODO FIXIT(#123): uncomment when eslint issues are fixed
-#      - name: Lint
-#        run: npm run lint
+      - name: Lint
+        run: npm run lint
 
       - name: Run Tests
         run: npm run test:ci

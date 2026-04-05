@@ -13,5 +13,5 @@ import { ClickStopPropagation } from '../../../directives/click-stop-propagation
   styleUrls: ['./tree-actions-menu.component.scss'],
 })
 export class TreeActionsMenuComponent {
-  onDelete = output();
+  delete = output();
 }

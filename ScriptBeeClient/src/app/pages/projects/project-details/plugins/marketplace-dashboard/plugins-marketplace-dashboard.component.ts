@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { PluginMarketplaceDashboardListComponent } from './list/plugin-marketplace-dashboard-list.component';
 import { convertError } from '../../../../../utils/api';
 import { InstalledPlugin } from '../../../../../types/marketplace-plugin';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',
@@ -88,11 +88,11 @@ export class PluginsMarketplaceDashboardComponent {
     });
   });
 
-  constructor(
-    route: ActivatedRoute,
-    private pluginsService: PluginService
-  ) {
-    let currentRoute: ActivatedRoute | null = route;
+  private route = inject(ActivatedRoute);
+  private pluginsService = inject(PluginService);
+
+  constructor() {
+    let currentRoute: ActivatedRoute | null = this.route;
     while (currentRoute) {
       currentRoute.paramMap.pipe(takeUntilDestroyed()).subscribe((paramMap) => {
         if (paramMap.has('id') && !this.projectId()) {

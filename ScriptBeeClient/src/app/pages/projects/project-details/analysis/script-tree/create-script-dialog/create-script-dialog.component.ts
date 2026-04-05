@@ -1,4 +1,4 @@
-import { Component, computed, Inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ScriptParameter } from '../../../../../../types/script-types';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -45,11 +45,9 @@ export class CreateScriptDialogComponent {
 
   isOkDisabled = computed(() => !this.scriptPath() || !this.scriptLanguage() || this.hasParameterErrors() || this.isCreateLoading());
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CreateScriptDialogData,
-    public dialogRef: MatDialogRef<CreateScriptDialogComponent>,
-    private projectStructureService: ProjectStructureService
-  ) {}
+  public data = inject<CreateScriptDialogData>(MAT_DIALOG_DATA);
+  public dialogRef = inject(MatDialogRef<CreateScriptDialogComponent>);
+  private projectStructureService = inject(ProjectStructureService);
 
   onParametersChange(parameters: ScriptParameter[]) {
     this.parameters.set(parameters);

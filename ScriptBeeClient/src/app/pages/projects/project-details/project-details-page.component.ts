@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { filter, first } from 'rxjs';
@@ -43,11 +43,11 @@ export class ProjectDetailsPage {
   ];
   activeTab = signal(this.tabInfo[0]);
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    router.events
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  constructor() {
+    this.router.events
       .pipe(
         filter((e) => e instanceof NavigationEnd),
         first(),
@@ -59,7 +59,7 @@ export class ProjectDetailsPage {
         this.activeTab.set(this.tabInfo.find((t) => t.link === urlPart) ?? this.tabInfo[0]);
       });
 
-    route.paramMap.pipe(takeUntilDestroyed()).subscribe({
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: () => {
         this.activeTab.set(this.tabInfo.find((t) => t.link === this.router.url.split('/').pop()) ?? this.tabInfo[0]);
       },

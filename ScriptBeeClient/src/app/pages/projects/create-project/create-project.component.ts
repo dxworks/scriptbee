@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -23,10 +23,8 @@ export class CreateProjectPage {
   projectNameErrorMessage = signal('');
   isCreateLoading = signal(false);
 
-  constructor(
-    private projectService: ProjectService,
-    private router: Router
-  ) {}
+  private projectService = inject(ProjectService);
+  private router = inject(Router);
 
   updateProjectIdErrorMessage() {
     this.updateErrorMessage(this.projectId, this.projectIdErrorMessage);

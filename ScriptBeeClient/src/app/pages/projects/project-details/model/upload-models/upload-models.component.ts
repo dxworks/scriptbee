@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
@@ -47,10 +47,8 @@ export class UploadModelsComponent {
 
   files: File[] = [];
 
-  constructor(
-    private loaderService: LoaderService,
-    private uploadService: UploadService
-  ) {}
+  private loaderService = inject(LoaderService);
+  private uploadService = inject(UploadService);
 
   onUploadFilesClick() {
     const loaderId = this.selectedLoaderId();

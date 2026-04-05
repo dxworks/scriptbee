@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ProjectContextService } from '../../../../../services/projects/project-context.service';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
@@ -33,7 +33,7 @@ export class ProjectContextComponent {
   isClearContextLoading = signal(false);
   isReloadContextLoading = signal(false);
 
-  constructor(private projectContextService: ProjectContextService) {}
+  private projectContextService = inject(ProjectContextService);
 
   onReloadModelsClick() {
     this.isReloadContextLoading.set(true);

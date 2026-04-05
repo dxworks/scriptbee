@@ -15,9 +15,9 @@
     [data]="rootData()"
     [enableDelete]="true"
     [childrenAccessor]="childrenAccessor"
-    (onDelete)="onNodeDelete($event)"
-    (onClick)="onNodeClick($event)"
-    (onExpand)="onExpand($event)"
-    (onRetry)="onRetry($event)"
-    (onLoadMore)="onLoadMore($event)" />
+    (delete)="onNodeDelete($event)"
+    (clickChange)="onNodeClick($event)"
+    (expand)="onExpand($event)"
+    (retry)="onRetry($event)"
+    (loadMore)="onLoadMore($event)" />
 }

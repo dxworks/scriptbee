@@ -11,11 +11,12 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class FileOutputComponent {
   files = input.required<AnalysisFile[]>();
-  // TODO FIXIT: update download with the new endpoints
+  // TODO FIXIT(#125): update download with the new endpoints
   // constructor(private outputFilesService: OutputFilesService) {
   // }
   //
   onDownloadFileButtonClick(file: AnalysisFile) {
+    console.log(file);
     //   this.outputFilesService.downloadFile(file.fileId, file.fileName).subscribe((data) => {
     //     FileOutputComponent.downloadFile(file.fileName, data);
     //   });

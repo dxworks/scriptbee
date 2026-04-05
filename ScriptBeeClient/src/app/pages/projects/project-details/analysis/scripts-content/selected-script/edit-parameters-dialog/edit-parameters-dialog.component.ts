@@ -1,4 +1,4 @@
-import { Component, computed, Inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { ScriptParameter } from '../../../../../../../types/script-types';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -39,11 +39,9 @@ export class EditParametersDialogComponent {
 
   isUpdateDisabled = computed(() => this.hasParameterErrors() || this.isUpdateLoading());
 
-  constructor(
-    public dialogRef: MatDialogRef<EditParametersDialogData>,
-    @Inject(MAT_DIALOG_DATA) public data: EditParametersDialogData,
-    private projectStructureService: ProjectStructureService
-  ) {}
+  public dialogRef = inject(MatDialogRef<EditParametersDialogData>);
+  public data = inject<EditParametersDialogData>(MAT_DIALOG_DATA);
+  private projectStructureService = inject(ProjectStructureService);
 
   onParametersChange(parameters: ScriptParameter[]) {
     this.parameters.set(parameters);

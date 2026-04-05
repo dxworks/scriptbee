@@ -49,9 +49,8 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install chromium --with-deps
 
-      # TODO FIXIT(#123): uncomment when eslint issues are fixed
-      #      - name: Lint
-      #        run: npm run lint
+      - name: Lint
+        run: npm run lint
 
       - name: Run tests
         run: npm run test:ci
@@ -197,7 +196,7 @@ jobs:
   # ------------------------------------------------------------------
   create-release:
     name: Create GitHub Release
-    needs: [ui-build-push, gateway-build-push, calculation-build-push]
+    needs: [ ui-build-push, gateway-build-push, calculation-build-push ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
