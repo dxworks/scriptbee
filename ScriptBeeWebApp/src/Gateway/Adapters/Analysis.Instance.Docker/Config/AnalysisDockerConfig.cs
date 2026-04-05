@@ -1,6 +1,6 @@
 ﻿namespace ScriptBee.Analysis.Instance.Docker.Config;
 
-public class CalculationDockerConfig
+public class AnalysisDockerConfig
 {
     public required string DockerSocket { get; init; }
 

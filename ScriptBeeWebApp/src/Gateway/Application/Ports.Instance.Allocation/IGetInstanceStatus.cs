@@ -4,7 +4,7 @@ namespace ScriptBee.Ports.Instance.Allocation;
 
 public interface IGetInstanceStatus
 {
-    Task<CalculationInstanceStatus> GetStatus(
+    Task<AnalysisInstanceStatus> GetStatus(
         InstanceId instanceId,
         CancellationToken cancellationToken
     );

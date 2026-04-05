@@ -34,7 +34,7 @@ public sealed class ProjectInstancesPersistenceAdapter(
             cancellationToken
         );
 
-        return projectInstances.Select(instance => instance.ToCalculationInstanceInfo());
+        return projectInstances.Select(instance => instance.ToInstanceInfo());
     }
 
     public async Task<OneOf<InstanceInfo, InstanceDoesNotExistsError>> Get(
@@ -49,7 +49,7 @@ public sealed class ProjectInstancesPersistenceAdapter(
             return new InstanceDoesNotExistsError(id);
         }
 
-        return instance.ToCalculationInstanceInfo();
+        return instance.ToInstanceInfo();
     }
 
     public async Task Delete(InstanceInfo instanceInfo, CancellationToken cancellationToken)

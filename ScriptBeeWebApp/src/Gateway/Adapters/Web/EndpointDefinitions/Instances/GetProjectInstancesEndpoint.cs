@@ -27,8 +27,8 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
     )
     {
         var id = ProjectId.FromValue(projectId);
-        var calculationInstanceInfos = await useCase.GetAllInstances(id, cancellationToken);
+        var instanceInfos = await useCase.GetAllInstances(id, cancellationToken);
 
-        return TypedResults.Ok(WebGetProjectInstancesListResponse.Map(calculationInstanceInfos));
+        return TypedResults.Ok(WebGetProjectInstancesListResponse.Map(instanceInfos));
     }
 }

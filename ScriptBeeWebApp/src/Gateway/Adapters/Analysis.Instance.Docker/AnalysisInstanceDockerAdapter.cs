@@ -13,11 +13,11 @@ using ScriptBee.Ports.Instance.Allocation;
 
 namespace ScriptBee.Analysis.Instance.Docker;
 
-public class CalculationInstanceDockerAdapter(
-    IOptions<CalculationDockerConfig> config,
+public class AnalysisInstanceDockerAdapter(
+    IOptions<AnalysisDockerConfig> config,
     IOptions<UserFolderSettings> userFolderSettingsOptions,
     IConfiguration configuration,
-    ILogger<CalculationInstanceDockerAdapter> logger,
+    ILogger<AnalysisInstanceDockerAdapter> logger,
     IFreePortProvider freePortProvider
 ) : IAllocateInstance, IDeallocateInstance, IGetInstanceStatus
 {
@@ -28,8 +28,8 @@ public class CalculationInstanceDockerAdapter(
         CancellationToken cancellationToken = default
     )
     {
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
+        var analysisDockerConfig = config.Value;
+        using var client = CreateDockerClient(analysisDockerConfig);
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
@@ -38,29 +38,29 @@ public class CalculationInstanceDockerAdapter(
         var portBindings = new Dictionary<string, IList<PortBinding>>
         {
             {
-                $"{calculationDockerConfig.Port}/tcp",
+                $"{analysisDockerConfig.Port}/tcp",
                 new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
             },
         };
 
         var mongoDbConnectionString =
-            calculationDockerConfig.MongoDbConnectionString
+            analysisDockerConfig.MongoDbConnectionString
             ?? configuration.GetConnectionString("mongodb");
 
         var response = await client.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Name = $"scriptbee-calculation-{instanceId}",
+                Name = $"scriptbee-analysis-{instanceId}",
                 Image = image.ImageName,
                 HostConfig = new HostConfig
                 {
-                    NetworkMode = calculationDockerConfig.Network,
+                    NetworkMode = analysisDockerConfig.Network,
                     PortBindings = portBindings,
                     Binds = GetBinds(),
                 },
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
-                    { $"{calculationDockerConfig.Port}/tcp", new EmptyStruct() },
+                    { $"{analysisDockerConfig.Port}/tcp", new EmptyStruct() },
                 },
                 Env = GetEnvironmentVariables(projectDetails, instanceId, mongoDbConnectionString),
                 Volumes = GetVolumes(),
@@ -80,22 +80,19 @@ public class CalculationInstanceDockerAdapter(
         return await GetContainerUrl(
             client,
             response.ID,
-            calculationDockerConfig.Network,
+            analysisDockerConfig.Network,
             hostPort,
             cancellationToken
         );
     }
 
-    public async Task Deallocate(
-        InstanceInfo calculationInstanceInfo,
-        CancellationToken cancellationToken
-    )
+    public async Task Deallocate(InstanceInfo instanceInfo, CancellationToken cancellationToken)
     {
-        var containerName = $"scriptbee-calculation-{calculationInstanceInfo.Id}";
+        var containerName = $"scriptbee-analysis-{instanceInfo.Id}";
         logger.LogInformation("Attempting to deallocate container: {Name}", containerName);
 
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
+        var analysisDockerConfig = config.Value;
+        using var client = CreateDockerClient(analysisDockerConfig);
 
         IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
             new ContainersListParameters
@@ -155,14 +152,14 @@ public class CalculationInstanceDockerAdapter(
         }
     }
 
-    public async Task<CalculationInstanceStatus> GetStatus(
+    public async Task<AnalysisInstanceStatus> GetStatus(
         InstanceId instanceId,
         CancellationToken cancellationToken
     )
     {
-        var containerName = $"scriptbee-calculation-{instanceId}";
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
+        var containerName = $"scriptbee-analysis-{instanceId}";
+        var analysisDockerConfig = config.Value;
+        using var client = CreateDockerClient(analysisDockerConfig);
 
         var containers = await client.Containers.ListContainersAsync(
             new ContainersListParameters
@@ -183,15 +180,15 @@ public class CalculationInstanceDockerAdapter(
 
         if (container == null)
         {
-            return CalculationInstanceStatus.NotFound;
+            return AnalysisInstanceStatus.NotFound;
         }
 
         return container.State.ToLower() switch
         {
-            "running" => CalculationInstanceStatus.Running,
-            "created" or "restarting" => CalculationInstanceStatus.Allocating,
-            "removing" => CalculationInstanceStatus.Deallocating,
-            _ => CalculationInstanceStatus.NotFound,
+            "running" => AnalysisInstanceStatus.Running,
+            "created" or "restarting" => AnalysisInstanceStatus.Allocating,
+            "removing" => AnalysisInstanceStatus.Deallocating,
+            _ => AnalysisInstanceStatus.NotFound,
         };
     }
 
@@ -249,10 +246,10 @@ public class CalculationInstanceDockerAdapter(
         };
     }
 
-    private static DockerClient CreateDockerClient(CalculationDockerConfig calculationDockerConfig)
+    private static DockerClient CreateDockerClient(AnalysisDockerConfig analysisDockerConfig)
     {
         return new DockerClientConfiguration(
-            new Uri(calculationDockerConfig.DockerSocket)
+            new Uri(analysisDockerConfig.DockerSocket)
         ).CreateClient();
     }
 

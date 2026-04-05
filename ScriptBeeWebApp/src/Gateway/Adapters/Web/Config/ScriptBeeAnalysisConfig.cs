@@ -2,11 +2,11 @@ using ScriptBee.Analysis.Instance.Docker.Config;
 
 namespace ScriptBee.Web.Config;
 
-public class ScriptBeeCalculationConfig
+public class ScriptBeeAnalysisConfig
 {
     public required string Image { get; init; }
 
     public required string Driver { get; init; }
 
-    public CalculationDockerConfig? Docker { get; init; }
+    public AnalysisDockerConfig? Docker { get; init; }
 }

@@ -80,7 +80,7 @@ public class AllocateProjectInstanceServiceTest
             projectId,
             "http://instance-url",
             createdDate,
-            CalculationInstanceStatus.NotFound
+            AnalysisInstanceStatus.NotFound
         );
         var analysisInstanceImage = new AnalysisInstanceImage("scriptbee/analysis:latest");
         _getProject

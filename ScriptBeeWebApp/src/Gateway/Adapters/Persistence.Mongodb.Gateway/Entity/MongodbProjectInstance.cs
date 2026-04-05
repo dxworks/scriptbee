@@ -13,14 +13,14 @@ public class MongodbProjectInstance : IDocument
     public required string Url { get; init; }
     public DateTimeOffset CreationDate { get; init; }
 
-    public InstanceInfo ToCalculationInstanceInfo()
+    public InstanceInfo ToInstanceInfo()
     {
         return new InstanceInfo(
             new InstanceId(Id),
             Domain.Model.Project.ProjectId.FromValue(ProjectId),
             Url,
             CreationDate,
-            CalculationInstanceStatus.NotFound
+            AnalysisInstanceStatus.NotFound
         );
     }
 

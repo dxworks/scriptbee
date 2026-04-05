@@ -12,13 +12,13 @@ using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Analysis.Instance.Docker.Tests;
 
-public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
+public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 {
     private readonly IFreePortProvider _freePortProvider = Substitute.For<IFreePortProvider>();
     private readonly DockerFixture _dockerFixture;
     private readonly IConfiguration _configuration = Substitute.For<IConfiguration>();
-    private readonly ILogger<CalculationInstanceDockerAdapter> _logger;
-    private readonly IOptions<CalculationDockerConfig> _configOptions;
+    private readonly ILogger<AnalysisInstanceDockerAdapter> _logger;
+    private readonly IOptions<AnalysisDockerConfig> _configOptions;
     private readonly IOptions<UserFolderSettings> _userFolderOptions;
 
     private readonly int _testPort;
@@ -37,16 +37,17 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         )
         .Replace("\\", "/");
 
-    public CalculationInstanceDockerAdapterTest(
+    public AnalysisInstanceDockerAdapterTest(
         DockerFixture dockerFixture,
         ITestOutputHelper outputHelper
     )
     {
         _dockerFixture = dockerFixture;
-        var config = new CalculationDockerConfig
+        var config = new AnalysisDockerConfig
         {
             DockerSocket = dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
             Network = DockerFixture.TestNetworkName,
+            UserFolderVolumePath = "/root/.scriptbee",
         };
         _configOptions = Options.Create(config);
         _userFolderOptions = Options.Create(
@@ -63,14 +64,14 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddProvider(new XUnitLoggerProvider(outputHelper))
         );
-        _logger = loggerFactory.CreateLogger<CalculationInstanceDockerAdapter>();
+        _logger = loggerFactory.CreateLogger<AnalysisInstanceDockerAdapter>();
     }
 
     [Fact]
     public async Task Allocate_ShouldCreateAndStartContainerAndReturnUrlWithNetworkIP()
     {
         // Arrange
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             _userFolderOptions,
             _configuration,
@@ -97,7 +98,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             TestContext.Current.CancellationToken
         );
         var ourContainer = containers.FirstOrDefault(c =>
-            c.Names.Contains($"/scriptbee-calculation-{instanceId}")
+            c.Names.Contains($"/scriptbee-analysis-{instanceId}")
         );
         ourContainer.ShouldNotBeNull();
         ourContainer.State.ShouldBe("running");
@@ -114,7 +115,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Allocate_ShouldUseConfiguredNetworkAndContainerName()
     {
         // Arrange
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             _userFolderOptions,
             _configuration,
@@ -144,7 +145,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
                         "name",
                         new Dictionary<string, bool>
                         {
-                            { $"scriptbee-calculation-{instanceId}", true },
+                            { $"scriptbee-analysis-{instanceId}", true },
                         }
                     },
                 },
@@ -152,7 +153,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             TestContext.Current.CancellationToken
         );
         containers.ShouldHaveSingleItem();
-        containers.First().Names.ShouldContain($"/scriptbee-calculation-{instanceId}");
+        containers.First().Names.ShouldContain($"/scriptbee-analysis-{instanceId}");
         containers.First().NetworkSettings.Networks.ShouldContainKey(DockerFixture.TestNetworkName);
     }
 
@@ -160,7 +161,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Allocate_ShouldPassEnvironmentVariables()
     {
         // Arrange
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             _userFolderOptions,
             _configuration,
@@ -186,7 +187,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
-            $"scriptbee-calculation-{instanceId}",
+            $"scriptbee-analysis-{instanceId}",
             TestContext.Current.CancellationToken
         );
 
@@ -205,7 +206,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Allocate_ShouldMountVolumes_WhenUserFolderIsConfigured()
     {
         // Arrange
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             _userFolderOptions,
             _configuration,
@@ -226,7 +227,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
-            $"scriptbee-calculation-{instanceId}",
+            $"scriptbee-analysis-{instanceId}",
             TestContext.Current.CancellationToken
         );
 
@@ -239,13 +240,14 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Allocate_ShouldUseUserFolderHostPath_WhenConfigured()
     {
         // Arrange
-        var config = new CalculationDockerConfig
+        var config = new AnalysisDockerConfig
         {
             DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
             Network = DockerFixture.TestNetworkName,
+            UserFolderVolumePath = "/root/.scriptbee",
             UserFolderHostPath = OverrideHostPath,
         };
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
             _userFolderOptions,
             _configuration,
@@ -266,7 +268,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
-            $"scriptbee-calculation-{instanceId}",
+            $"scriptbee-analysis-{instanceId}",
             TestContext.Current.CancellationToken
         );
 
@@ -279,7 +281,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Allocate_ShouldNotMountVolumes_WhenNoUserFolderIsConfigured()
     {
         // Arrange
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             Options.Create(new UserFolderSettings { UserFolderPath = null }),
             _configuration,
@@ -300,7 +302,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
-            $"scriptbee-calculation-{instanceId}",
+            $"scriptbee-analysis-{instanceId}",
             TestContext.Current.CancellationToken
         );
 
@@ -311,13 +313,14 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Allocate_ShouldUseOverrideMongoDbConnectionString_WhenConfigured()
     {
         // Arrange
-        var config = new CalculationDockerConfig
+        var config = new AnalysisDockerConfig
         {
             DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
             Network = DockerFixture.TestNetworkName,
+            UserFolderVolumePath = "/root/.scriptbee",
             MongoDbConnectionString = OverrideMongoConnectionString,
         };
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
             _userFolderOptions,
             _configuration,
@@ -338,7 +341,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         // Assert
         var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
-            $"scriptbee-calculation-{instanceId}",
+            $"scriptbee-analysis-{instanceId}",
             TestContext.Current.CancellationToken
         );
 
@@ -351,7 +354,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     public async Task Deallocate_ShouldStopAndRemoveExistingContainer()
     {
         // Arrange
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             _userFolderOptions,
             _configuration,
@@ -361,7 +364,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
         var instanceId = new InstanceId(Guid.NewGuid());
         var instanceImage = new AnalysisInstanceImage(DockerFixture.TestImageName);
-        var containerName = $"scriptbee-calculation-{instanceId}";
+        var containerName = $"scriptbee-analysis-{instanceId}";
 
         var instanceUrl = await adapter.Allocate(
             projectDetails,
@@ -375,7 +378,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             ProjectId.FromValue("project-id"),
             instanceUrl,
             DateTimeOffset.UtcNow,
-            CalculationInstanceStatus.NotFound
+            AnalysisInstanceStatus.NotFound
         );
 
         // Act
@@ -402,7 +405,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     [Fact]
     public async Task Deallocate_ShouldNotThrowException_IfContainerNotFound()
     {
-        var adapter = new CalculationInstanceDockerAdapter(
+        var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
             _userFolderOptions,
             _configuration,
@@ -415,7 +418,7 @@ public class CalculationInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             ProjectId.FromValue("project-id"),
             "http://fakeurl",
             DateTimeOffset.UtcNow,
-            CalculationInstanceStatus.NotFound
+            AnalysisInstanceStatus.NotFound
         );
 
         var exception = await Record.ExceptionAsync(() =>

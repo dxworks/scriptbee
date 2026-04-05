@@ -34,15 +34,15 @@ public class GetProjectInstancesServiceTest
             projectId,
             "http://url:8080",
             DateTimeOffset.UtcNow,
-            CalculationInstanceStatus.Allocating
+            AnalysisInstanceStatus.Allocating
         );
-        IEnumerable<InstanceInfo> expectedCalculationInstanceInfos = [instanceInfo];
+        IEnumerable<InstanceInfo> expectedInstanceInfos = [instanceInfo];
         _getAllProjectInstances
             .GetAll(projectId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(expectedCalculationInstanceInfos));
+            .Returns(Task.FromResult(expectedInstanceInfos));
         _getInstanceStatus
             .GetStatus(instanceId, Arg.Any<CancellationToken>())
-            .Returns(CalculationInstanceStatus.Allocating);
+            .Returns(AnalysisInstanceStatus.Allocating);
 
         var instanceInfos = await _getProjectInstancesService.GetAllInstances(
             projectId,

@@ -11,14 +11,12 @@ public static class AnalysisDockerInstanceExtensions
         string dockerConfigSection
     )
     {
-        services
-            .AddOptions<CalculationDockerConfig>()
-            .BindConfiguration("ScriptBee:Calculation:Docker");
+        services.AddOptions<AnalysisDockerConfig>().BindConfiguration("ScriptBee:Analysis:Docker");
 
         return services
             .AddSingleton<IFreePortProvider, FreePortProvider>()
-            .AddSingleton<IAllocateInstance, CalculationInstanceDockerAdapter>()
-            .AddSingleton<IDeallocateInstance, CalculationInstanceDockerAdapter>()
-            .AddSingleton<IGetInstanceStatus, CalculationInstanceDockerAdapter>();
+            .AddSingleton<IAllocateInstance, AnalysisInstanceDockerAdapter>()
+            .AddSingleton<IDeallocateInstance, AnalysisInstanceDockerAdapter>()
+            .AddSingleton<IGetInstanceStatus, AnalysisInstanceDockerAdapter>();
     }
 }

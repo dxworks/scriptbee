@@ -154,8 +154,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  calculation-build-push:
-    name: Calculation Build & Push Docker
+  analysis-build-push:
+    name: Analysis Build & Push Docker
     needs: backend-test
     runs-on: ubuntu-latest
     permissions:
@@ -179,15 +179,15 @@ jobs:
         id: meta
         run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Build and push Calculation Docker image
+      - name: Build and push Analysis Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./calculation.Dockerfile
+          file: ./analysis.Dockerfile
           push: true
           tags: |
-            dxworks/scriptbee/calculation:${{ steps.meta.outputs.version }}
-            dxworks/scriptbee/calculation:latest
+            dxworks/scriptbee/analysis:${{ steps.meta.outputs.version }}
+            dxworks/scriptbee/analysis:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -196,7 +196,7 @@ jobs:
   # ------------------------------------------------------------------
   create-release:
     name: Create GitHub Release
-    needs: [ ui-build-push, gateway-build-push, calculation-build-push ]
+    needs: [ ui-build-push, gateway-build-push, analysis-build-push ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
