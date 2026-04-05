@@ -20,8 +20,8 @@ export class SelectableTreeComponent {
   fileIcon = input<string | undefined>(undefined);
   enableDelete = input<boolean>(false);
 
-  onDelete = output<TreeNode>();
-  onClick = output<TreeNode>();
+  delete = output<TreeNode>();
+  clickChange = output<TreeNode>();
 
   childrenAccessor = (node: TreeNodeWithParent) => node.children ?? [];
 

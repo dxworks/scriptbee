@@ -1,4 +1,4 @@
-import { Component, computed, effect, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, viewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -45,10 +45,10 @@ export class ProjectsPage {
   });
   getAllProjectsResourceError = computed(() => convertError(this.getAllProjectsResource.error()));
 
-  constructor(
-    private projectsService: ProjectService,
-    private router: Router
-  ) {
+  private projectsService = inject(ProjectService);
+  private router = inject(Router);
+
+  constructor() {
     effect(() => {
       this.dataSource.data = this.getAllProjectsResource.value() || [];
     });

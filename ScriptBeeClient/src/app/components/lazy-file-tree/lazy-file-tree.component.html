@@ -4,14 +4,14 @@
 
 <mat-tree #tree [dataSource]="data()" [childrenAccessor]="childrenAccessor()" [trackBy]="trackByFn" class="non-selectable-tree">
   <!-- Leaf node -->
-  <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click)="onClick.emit(node)">
+  <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click)="clickChange.emit(node)">
     <div class="leaf-node">
       <span class="node-with-icon">
         <mat-icon>description</mat-icon>
         {{ node.name }}
         @if (enableDelete()) {
           <div class="flex-spacer"></div>
-          <app-tree-actions-menu (onDelete)="onDelete.emit(node)" />
+          <app-tree-actions-menu (delete)="delete.emit(node)" />
         }
       </span>
     </div>
@@ -20,7 +20,7 @@
   <!-- Parent node (Folder) -->
   <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
     <div class="mat-tree-node">
-      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="onExpand.emit(node)">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" (click)="expand.emit(node)">
         <mat-icon class="mat-icon-rtl-mirror">
           {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
@@ -31,7 +31,7 @@
           {{ node.name }}
           @if (enableDelete()) {
             <div class="flex-spacer"></div>
-            <app-tree-actions-menu (onDelete)="onDelete.emit(node)" />
+            <app-tree-actions-menu (delete)="delete.emit(node)" />
           }
         </span>
       </div>
@@ -50,9 +50,9 @@
       } @else if (node.state === 'error') {
         <mat-icon color="warn">error</mat-icon>
         <span style="margin-left: 8px; color: var(--sys-error)">Error loading folder</span>
-        <button mat-button color="primary" (click)="onRetry.emit(node.parentId)" style="margin-left: 8px">Retry</button>
+        <button mat-button color="primary" (click)="retry.emit(node.parentId)" style="margin-left: 8px">Retry</button>
       } @else if (node.state === 'load-more') {
-        <button mat-button color="primary" (click)="onLoadMore.emit(node.parentId)">Load More</button>
+        <button mat-button color="primary" (click)="loadMore.emit(node.parentId)">Load More</button>
       }
     </div>
   </mat-nested-tree-node>

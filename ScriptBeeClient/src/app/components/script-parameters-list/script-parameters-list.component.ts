@@ -67,8 +67,8 @@ export class ScriptParametersListComponent {
 
   private isParameterNameUnique(parameter: ScriptParameter, parameters: ScriptParameter[]): boolean {
     let numbersOfApparitions = 0;
-    for (let i = 0; i < parameters.length; i++) {
-      if (parameters[i].name === parameter.name) {
+    for (const item of parameters) {
+      if (item.name === parameter.name) {
         numbersOfApparitions++;
       }
     }

@@ -8,11 +8,11 @@ export class FileDropDirective {
   @Output() filesHovered = new EventEmitter<boolean>();
 
   @HostListener('drop', ['$event'])
-  onDrop($event: any) {
+  onDrop($event: DragEvent) {
     $event.preventDefault();
 
     const transfer = $event.dataTransfer;
-    this.filesDropped.emit(transfer.files);
+    this.filesDropped.emit(transfer?.files);
     this.filesHovered.emit(false);
   }
 

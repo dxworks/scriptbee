@@ -21,10 +21,8 @@ export class ProjectDangerZoneComponent {
 
   isDeleteLoading = signal(false);
 
-  constructor(
-    private projectService: ProjectService,
-    private router: Router
-  ) {}
+  private projectService = inject(ProjectService);
+  private router = inject(Router);
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DeleteProjectDialogComponent);

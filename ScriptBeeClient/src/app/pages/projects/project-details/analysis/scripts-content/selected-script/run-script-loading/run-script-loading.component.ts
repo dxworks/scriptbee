@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject, input, OnInit, output } from '@angular/core';
+import { Component, computed, effect, inject, input, output } from '@angular/core';
 import { AnalysisService } from '../../../../../../../services/analysis/analysis.service';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { interval, of, startWith, switchMap, takeWhile, tap } from 'rxjs';
+import { interval, of, startWith, switchMap, takeWhile } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({

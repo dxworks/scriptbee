@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AnalysisConsoleOutput, AnalysisFileOutput, AnalysisRunErrorOutput } from '../../types/analysis-results';
 
@@ -6,7 +6,7 @@ import { AnalysisConsoleOutput, AnalysisFileOutput, AnalysisRunErrorOutput } fro
   providedIn: 'root',
 })
 export class OutputFilesService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getConsoleOutput(projectId: string, analysisId: string) {
     return this.http.get<AnalysisConsoleOutput>(`/api/projects/${projectId}/analyses/${analysisId}/results/console`);

@@ -1,4 +1,4 @@
-import { Component, computed, input, model } from '@angular/core';
+import { Component, computed, inject, input, model } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormField } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -26,5 +26,5 @@ export class CreateScriptDialogScriptLanguageComponent {
   });
   availableScriptLanguagesResourceError = computed(() => convertError(this.availableScriptLanguagesResource.error()));
 
-  constructor(private projectStructureService: ProjectStructureService) {}
+  private projectStructureService = inject(ProjectStructureService);
 }

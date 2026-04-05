@@ -27,11 +27,11 @@ export class LazyFileTreeComponent {
   data = input.required<FileTreeNode[]>();
   enableDelete = input<boolean>(false);
 
-  onDelete = output<ProjectFileNode>();
-  onClick = output<ProjectFileNode>();
-  onExpand = output<ProjectFileNode>();
-  onRetry = output<string | null>();
-  onLoadMore = output<string | null>();
+  delete = output<ProjectFileNode>();
+  clickChange = output<ProjectFileNode>();
+  expand = output<ProjectFileNode>();
+  retry = output<string | null>();
+  loadMore = output<string | null>();
 
   childrenAccessor = input.required<(node: FileTreeNode) => FileTreeNode[] | Observable<FileTreeNode[]>>();
 

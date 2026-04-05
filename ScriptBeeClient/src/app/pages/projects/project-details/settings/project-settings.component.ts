@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ProjectInformationComponent } from './project-information/project-information.component';
 import { ProjectDangerZoneComponent } from './project-danger-zone/project-danger-zone.component';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -24,11 +24,11 @@ export class ProjectSettingsPage {
 
   getProjectResourceError = computed(() => convertError(this.getProjectResource.error()));
 
-  constructor(
-    route: ActivatedRoute,
-    private projectService: ProjectService
-  ) {
-    route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
+  private route = inject(ActivatedRoute);
+  private projectService = inject(ProjectService);
+
+  constructor() {
+    this.route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
       next: (paramMap) => {
         this.projectId.set(paramMap.get('id') ?? undefined);
       },

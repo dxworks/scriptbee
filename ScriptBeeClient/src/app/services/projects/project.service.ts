@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CreateProjectRequest, CreateProjectResponse, Project } from '../../types/project';
 import { map, Observable } from 'rxjs';
@@ -10,7 +10,7 @@ import { WebResponse } from '../../types/web-response';
 export class ProjectService {
   private projectsAPIUrl = '/api/projects';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getAllProjects(): Observable<Project[]> {
     return this.http.get<WebResponse<Project[]>>(this.projectsAPIUrl).pipe(map((r) => r.data));

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TreeNodeWithParent } from '../../types/tree-node';
 import { Loader } from '../../types/load-model';
@@ -10,7 +10,7 @@ import { map } from 'rxjs';
   providedIn: 'root',
 })
 export class LoaderService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getAllLoaders(projectId: string, instanceId: string) {
     return this.http.get<WebResponse<Loader[]>>(`/api/projects/${projectId}/instances/${instanceId}/loaders`).pipe(map((res) => res.data));

@@ -1,4 +1,4 @@
-import { Component, computed, model, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, model, signal, viewChild } from '@angular/core';
 import { AngularSplitModule } from 'angular-split';
 import { ScriptsContentComponent } from './scripts-content/scripts-content.component';
 import { ScriptTreeComponent } from './script-tree/script-tree.component';
@@ -25,12 +25,12 @@ export class AnalysisComponent {
   projectId = computed(() => this.projectStateService.currentProjectId());
   instanceId = computed(() => this.projectStateService.currentInstanceId());
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private projectStateService: ProjectStateService
-  ) {
-    route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private projectStateService = inject(ProjectStateService);
+
+  constructor() {
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       this.selectedFileId.set(params.get('fileId'));
     });
   }

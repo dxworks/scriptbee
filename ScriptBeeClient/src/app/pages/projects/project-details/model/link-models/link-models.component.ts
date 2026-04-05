@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
@@ -33,7 +33,7 @@ export class LinkModelsComponent {
 
   isLinkLoading = signal(false);
 
-  constructor(private linkerService: LinkerService) {}
+  private linkerService = inject(LinkerService);
 
   onLinkButtonClick() {
     const linkerId = this.selectedLinkerId();

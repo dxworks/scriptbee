@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -9,7 +9,9 @@ export class ProjectStateService {
   currentProjectId = signal<string | null>(null);
   currentInstanceId = signal<string | null>(null);
 
-  constructor(private router: Router) {
+  private router = inject(Router);
+
+  constructor() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       const path = this.router.url;
       const match = path.match(/\/projects\/([^/]+)/);

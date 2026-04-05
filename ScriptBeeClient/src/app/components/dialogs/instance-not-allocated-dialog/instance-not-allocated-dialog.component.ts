@@ -1,4 +1,4 @@
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,12 +21,9 @@ export interface InstanceNotAllocatedDialogData {
 export class InstanceNotAllocatedDialog {
   isAllocateLoading = signal(false);
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public data: InstanceNotAllocatedDialogData,
-    public dialogRef: MatDialogRef<InstanceNotAllocatedDialog>,
-    private instanceService: InstanceService
-  ) {}
+  public data = inject<InstanceNotAllocatedDialogData>(MAT_DIALOG_DATA);
+  public dialogRef = inject(MatDialogRef<InstanceNotAllocatedDialog>);
+  private instanceService = inject(InstanceService);
 
   onCloseClick(): void {
     this.dialogRef.close();

@@ -13,7 +13,7 @@ export class SlugifyPipe implements PipeTransform {
       .toString()
       .toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[^\w\-]+/g, '')
+      .replace(/[^\w-]+/g, '')
       .replace(/--+/g, '-')
       .replace(/^-+/, '')
       .replace(/-+$/, '');
