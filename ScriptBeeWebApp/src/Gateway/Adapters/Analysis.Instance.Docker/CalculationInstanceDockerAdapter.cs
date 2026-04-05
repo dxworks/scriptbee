@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using ScriptBee.Analysis.Instance.Docker.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance.Allocation;
 
 namespace ScriptBee.Analysis.Instance.Docker;
@@ -18,47 +19,8 @@ public class CalculationInstanceDockerAdapter(
     IFreePortProvider freePortProvider
 ) : IAllocateInstance, IDeallocateInstance, IGetInstanceStatus
 {
-    public async Task<CalculationInstanceStatus> GetStatus(
-        InstanceId instanceId,
-        CancellationToken cancellationToken
-    )
-    {
-        var containerName = $"scriptbee-calculation-{instanceId}";
-        var calculationDockerConfig = config.Value;
-        using var client = CreateDockerClient(calculationDockerConfig);
-
-        var containers = await client.Containers.ListContainersAsync(
-            new ContainersListParameters
-            {
-                All = true,
-                Filters = new Dictionary<string, IDictionary<string, bool>>
-                {
-                    {
-                        "name",
-                        new Dictionary<string, bool> { { containerName, true } }
-                    },
-                },
-            },
-            cancellationToken
-        );
-
-        var container = containers.FirstOrDefault();
-
-        if (container == null)
-        {
-            return CalculationInstanceStatus.NotFound;
-        }
-
-        return container.State.ToLower() switch
-        {
-            "running" => CalculationInstanceStatus.Running,
-            "created" or "restarting" => CalculationInstanceStatus.Allocating,
-            "removing" => CalculationInstanceStatus.Deallocating,
-            _ => CalculationInstanceStatus.NotFound,
-        };
-    }
-
     public async Task<string> Allocate(
+        ProjectDetails projectDetails,
         InstanceId instanceId,
         AnalysisInstanceImage image,
         CancellationToken cancellationToken = default
@@ -100,6 +62,8 @@ public class CalculationInstanceDockerAdapter(
                 Env = new List<string>
                 {
                     $"ScriptBee__InstanceId={instanceId}",
+                    $"ScriptBee__ProjectId={projectDetails.Id}",
+                    $"ScriptBee__ProjectName={projectDetails.Name}",
                     $"ConnectionStrings__mongodb={mongoDbConnectionString}",
                 },
             },
@@ -263,5 +227,45 @@ public class CalculationInstanceDockerAdapter(
         {
             logger.LogInformation("Image {Image}:{Tag} already exists", image, tag);
         }
+    }
+
+    public async Task<CalculationInstanceStatus> GetStatus(
+        InstanceId instanceId,
+        CancellationToken cancellationToken
+    )
+    {
+        var containerName = $"scriptbee-calculation-{instanceId}";
+        var calculationDockerConfig = config.Value;
+        using var client = CreateDockerClient(calculationDockerConfig);
+
+        var containers = await client.Containers.ListContainersAsync(
+            new ContainersListParameters
+            {
+                All = true,
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    {
+                        "name",
+                        new Dictionary<string, bool> { { containerName, true } }
+                    },
+                },
+            },
+            cancellationToken
+        );
+
+        var container = containers.FirstOrDefault();
+
+        if (container == null)
+        {
+            return CalculationInstanceStatus.NotFound;
+        }
+
+        return container.State.ToLower() switch
+        {
+            "running" => CalculationInstanceStatus.Running,
+            "created" or "restarting" => CalculationInstanceStatus.Allocating,
+            "removing" => CalculationInstanceStatus.Deallocating,
+            _ => CalculationInstanceStatus.NotFound,
+        };
     }
 }
