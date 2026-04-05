@@ -1,5 +1,5 @@
 using DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
-using ScriptBee.Service.Project.ProjectStructure;
+using ScriptBee.Common.CodeGeneration;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests;
 

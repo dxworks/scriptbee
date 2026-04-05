@@ -2,6 +2,7 @@
 using OneOf;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
+using ScriptBee.Common.CodeGeneration;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;

@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
+using ScriptBee.Domain.Model.Context;
 
-namespace ScriptBee.Service.Project.ProjectStructure;
+namespace ScriptBee.Common.CodeGeneration;
 
 public class SampleCodeGenerator(
     IScriptGeneratorStrategy scriptGeneratorStrategy,

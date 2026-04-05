@@ -16,6 +16,7 @@
   <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
+  <Project Path="ScriptBeeWebApp/src/Common/CodeGeneration/CodeGeneration.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
   <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
