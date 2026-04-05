@@ -7,9 +7,7 @@
   "paths": {
     "/error": {
       "get": {
-        "tags": [
-          "ExceptionHandlerEndpointDefinition"
-        ],
+        "tags": ["ExceptionHandlerEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success"
@@ -19,9 +17,7 @@
     },
     "/api/generatescript/languages": {
       "get": {
-        "tags": [
-          "GenerateScriptEndpointDefinition"
-        ],
+        "tags": ["GenerateScriptEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -41,9 +37,7 @@
     },
     "/api/generatescript": {
       "post": {
-        "tags": [
-          "GenerateScriptEndpointDefinition"
-        ],
+        "tags": ["GenerateScriptEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -63,9 +57,7 @@
     },
     "/api/linkers": {
       "get": {
-        "tags": [
-          "LinkersEndpointDefinition"
-        ],
+        "tags": ["LinkersEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -83,9 +75,7 @@
         }
       },
       "post": {
-        "tags": [
-          "LinkersEndpointDefinition"
-        ],
+        "tags": ["LinkersEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -105,9 +95,7 @@
     },
     "/api/loaders": {
       "get": {
-        "tags": [
-          "LoadersEndpointDefinition"
-        ],
+        "tags": ["LoadersEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -125,9 +113,7 @@
         }
       },
       "post": {
-        "tags": [
-          "LoadersEndpointDefinition"
-        ],
+        "tags": ["LoadersEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -147,9 +133,7 @@
     },
     "/api/loaders/{projectId}": {
       "post": {
-        "tags": [
-          "LoadersEndpointDefinition"
-        ],
+        "tags": ["LoadersEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -169,9 +153,7 @@
     },
     "/api/loaders/clear/{projectId}": {
       "post": {
-        "tags": [
-          "LoadersEndpointDefinition"
-        ],
+        "tags": ["LoadersEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -191,9 +173,7 @@
     },
     "/api/output/{outputId}": {
       "get": {
-        "tags": [
-          "OutputEndpointDefinition"
-        ],
+        "tags": ["OutputEndpointDefinition"],
         "parameters": [
           {
             "name": "outputId",
@@ -213,9 +193,7 @@
     },
     "/api/output/files/download": {
       "post": {
-        "tags": [
-          "OutputEndpointDefinition"
-        ],
+        "tags": ["OutputEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -235,9 +213,7 @@
     },
     "/api/output/files/downloadAll": {
       "post": {
-        "tags": [
-          "OutputEndpointDefinition"
-        ],
+        "tags": ["OutputEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -257,9 +233,7 @@
     },
     "/api/plugins": {
       "get": {
-        "tags": [
-          "PluginsEndpointDefinition"
-        ],
+        "tags": ["PluginsEndpointDefinition"],
         "parameters": [
           {
             "name": "type",
@@ -288,9 +262,7 @@
     },
     "/api/plugins/ui": {
       "get": {
-        "tags": [
-          "PluginsEndpointDefinition"
-        ],
+        "tags": ["PluginsEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -310,9 +282,7 @@
     },
     "/api/plugins/available": {
       "get": {
-        "tags": [
-          "PluginsEndpointDefinition"
-        ],
+        "tags": ["PluginsEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -332,9 +302,7 @@
     },
     "/api/plugins/install": {
       "post": {
-        "tags": [
-          "PluginsEndpointDefinition"
-        ],
+        "tags": ["PluginsEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -354,9 +322,7 @@
     },
     "/api/plugins/uninstall/{pluginId}/{pluginVersion}": {
       "delete": {
-        "tags": [
-          "PluginsEndpointDefinition"
-        ],
+        "tags": ["PluginsEndpointDefinition"],
         "parameters": [
           {
             "name": "pluginId",
@@ -384,9 +350,7 @@
     },
     "/api/projects": {
       "get": {
-        "tags": [
-          "ProjectsEndpointDefinition"
-        ],
+        "tags": ["ProjectsEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -404,9 +368,7 @@
         }
       },
       "post": {
-        "tags": [
-          "ProjectsEndpointDefinition"
-        ],
+        "tags": ["ProjectsEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -424,9 +386,7 @@
         }
       },
       "put": {
-        "tags": [
-          "ProjectsEndpointDefinition"
-        ],
+        "tags": ["ProjectsEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -446,9 +406,7 @@
     },
     "/api/projects/{projectId}": {
       "get": {
-        "tags": [
-          "ProjectsEndpointDefinition"
-        ],
+        "tags": ["ProjectsEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -466,9 +424,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "ProjectsEndpointDefinition"
-        ],
+        "tags": ["ProjectsEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -488,9 +444,7 @@
     },
     "/api/projects/context/{projectId}": {
       "get": {
-        "tags": [
-          "ProjectsEndpointDefinition"
-        ],
+        "tags": ["ProjectsEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -510,9 +464,7 @@
     },
     "/api/projectstructure/{projectId}": {
       "get": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -532,9 +484,7 @@
     },
     "/api/projectstructure/script": {
       "post": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -552,9 +502,7 @@
         }
       },
       "get": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -582,9 +530,7 @@
     },
     "/api/projectstructure/scriptabsolutepath": {
       "get": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -612,9 +558,7 @@
     },
     "/api/projectstructure/projectabsolutepath": {
       "get": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -634,9 +578,7 @@
     },
     "/api/projectstructure/filewatcher": {
       "post": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -656,9 +598,7 @@
     },
     "/api/projectstructure/filewatcher/{projectId}": {
       "delete": {
-        "tags": [
-          "ProjectStructureEndpointDefinition"
-        ],
+        "tags": ["ProjectStructureEndpointDefinition"],
         "parameters": [
           {
             "name": "projectId",
@@ -678,9 +618,7 @@
     },
     "/api/runscript/languages": {
       "get": {
-        "tags": [
-          "RunScriptEndpointDefinition"
-        ],
+        "tags": ["RunScriptEndpointDefinition"],
         "responses": {
           "200": {
             "description": "Success",
@@ -700,9 +638,7 @@
     },
     "/api/runscript": {
       "post": {
-        "tags": [
-          "RunScriptEndpointDefinition"
-        ],
+        "tags": ["RunScriptEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -722,9 +658,7 @@
     },
     "/api/uploadmodel/fromfile": {
       "post": {
-        "tags": [
-          "UploadModelEndpointDefinition"
-        ],
+        "tags": ["UploadModelEndpointDefinition"],
         "requestBody": {
           "content": {
             "application/json": {

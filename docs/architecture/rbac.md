@@ -12,7 +12,7 @@ Roles:
 ## Project Management
 
 | Permission     | Guest   | Analyst | Maintainer | Administrator |
-|----------------|---------|---------|------------|---------------|
+| -------------- | ------- | ------- | ---------- | ------------- |
 | view_project   | &check; | &check; | &check;    | &check;       |
 | update_project |         |         | &check;    | &check;       |
 | delete_project |         |         | &check;    | &check;       |
@@ -21,14 +21,14 @@ Roles:
 ## User Management
 
 | Permission          | Guest | Analyst | Maintainer | Administrator |
-|---------------------|-------|---------|------------|---------------|
+| ------------------- | ----- | ------- | ---------- | ------------- |
 | update_project_user |       |         | &check;    | &check;       |
 | update_user_role    |       |         |            | &check;       |
 
 ## Model Management
 
 | Permission       | Guest | Analyst | Maintainer | Administrator |
-|------------------|-------|---------|------------|---------------|
+| ---------------- | ----- | ------- | ---------- | ------------- |
 | install_loader   |       | &check; | &check;    | &check;       |
 | uninstall_loader |       | &check; | &check;    | &check;       |
 | install_linker   |       | &check; | &check;    | &check;       |
@@ -37,7 +37,7 @@ Roles:
 ## Analysis
 
 | Permission            | Guest   | Analyst | Maintainer | Administrator |
-|-----------------------|---------|---------|------------|---------------|
+| --------------------- | ------- | ------- | ---------- | ------------- |
 | view_analysis         | &check; | &check; | &check;    | &check;       |
 | run_analysis          |         | &check; | &check;    | &check;       |
 | remove_analysis       |         | &check; | &check;    | &check;       |

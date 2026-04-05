@@ -82,4 +82,4 @@ It uses the classes offered by the Honeydew plugin that are stored in the contex
 Using the helper functions from `DxWorks.ScriptBee.Plugin.Api.HelperFunctions`, we can easily convert the projects to
 json and export them to a file.
 
-If everything is ok, you should see the results in the console and the file outputs section.  
+If everything is ok, you should see the results in the console and the file outputs section.

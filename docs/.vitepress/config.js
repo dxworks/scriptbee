@@ -1,8 +1,8 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 export default defineConfig({
-  title: "ScriptBee Docs",
-  description: "Documentation for ScriptBee",
+  title: 'ScriptBee Docs',
+  description: 'Documentation for ScriptBee',
   themeConfig: {
     logo: '/assets/logo.png',
     nav: [
@@ -11,7 +11,7 @@ export default defineConfig({
       { text: 'Plugins', link: '/plugins/installation' },
       { text: 'Scripts', link: '/scripts/setup' },
       { text: 'Results', link: '/results/view' },
-      { text: 'Architecture', link: '/architecture/overview' }
+      { text: 'Architecture', link: '/architecture/overview' },
     ],
     sidebar: [
       {
@@ -19,16 +19,16 @@ export default defineConfig({
         items: [
           { text: 'Introduction', link: '/' },
           { text: 'Installation', link: '/home/installation' },
-          { text: 'Run', link: '/home/run' }
-        ]
+          { text: 'Run', link: '/home/run' },
+        ],
       },
       {
         text: 'Projects',
         items: [
           { text: 'Creation', link: '/projects/creation' },
           { text: 'Context', link: '/projects/context' },
-          { text: 'Deletion', link: '/projects/deletion' }
-        ]
+          { text: 'Deletion', link: '/projects/deletion' },
+        ],
       },
       {
         text: 'Plugins',
@@ -51,13 +51,13 @@ export default defineConfig({
                   { text: 'File', link: '/plugins/helper_functions/file_helper_functions' },
                   { text: 'Json', link: '/plugins/helper_functions/json_helper_functions' },
                   { text: 'Csv', link: '/plugins/helper_functions/csv_helper_functions' },
-                  { text: 'Context', link: '/plugins/helper_functions/context_helper_functions' }
-                ]
+                  { text: 'Context', link: '/plugins/helper_functions/context_helper_functions' },
+                ],
               },
-              { text: 'Bundle', link: '/plugins/bundle' }
-            ]
-          }
-        ]
+              { text: 'Bundle', link: '/plugins/bundle' },
+            ],
+          },
+        ],
       },
       {
         text: 'Scripts',
@@ -65,14 +65,15 @@ export default defineConfig({
           { text: 'Setup', link: '/scripts/setup' },
           { text: 'Writing Your First C# Script', link: '/scripts/first_csharp_script' },
           { text: 'Writing Your First Python Script', link: '/scripts/first_python_script' },
-          { text: 'Writing Your First Javascript Script', link: '/scripts/first_javascript_script' }
-        ]
+          {
+            text: 'Writing Your First Javascript Script',
+            link: '/scripts/first_javascript_script',
+          },
+        ],
       },
       {
         text: 'Results',
-        items: [
-          { text: 'View Results', link: '/results/view' }
-        ]
+        items: [{ text: 'View Results', link: '/results/view' }],
       },
       {
         text: 'Architecture',
@@ -80,19 +81,17 @@ export default defineConfig({
           { text: 'Diagram', link: '/architecture/diagram' },
           { text: 'Overview', link: '/architecture/overview' },
           { text: 'Features', link: '/architecture/features' },
-          { text: 'RBAC', link: '/architecture/rbac' }
-        ]
-      }
+          { text: 'RBAC', link: '/architecture/rbac' },
+        ],
+      },
     ],
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/dxworks/scriptbee' }
-    ],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/dxworks/scriptbee' }],
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024-present'
+      copyright: 'Copyright © 2024-present',
     },
     search: {
-      provider: 'local'
-    }
-  }
-})
+      provider: 'local',
+    },
+  },
+});

@@ -12,7 +12,7 @@ extensionPoints:
     entryPoint: Generator.dll
     version: 1.0.1
     language: csharp
-    extension: ".cs"
+    extension: '.cs'
 ```
 
 - `kind`: The type of plugin
@@ -27,7 +27,7 @@ extensionPoints:
 public interface IScriptGeneratorStrategy : IPlugin
 {
     public string Language { get; }
-    
+
     public string Extension { get; }
 
     public string ExtractValidScript(string script);
