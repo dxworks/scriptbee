@@ -11,6 +11,7 @@ export interface Project {
   creationDate: string;
   savedFiles: Record<string, ProjectFile[]>;
   loadedFiles: Record<string, ProjectFile[]>;
+  linkers: string[];
 }
 
 export interface CreateProjectRequest {

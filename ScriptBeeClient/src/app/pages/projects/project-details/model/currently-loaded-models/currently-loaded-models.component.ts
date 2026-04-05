@@ -1,6 +1,7 @@
 ﻿import { Component, computed, input } from '@angular/core';
 import { TreeNode } from '../../../../../types/tree-node';
 import { SelectableTreeComponent } from '../../../../../components/selectable-tree/selectable-tree.component';
+import { Project } from '../../../../../types/project';
 
 @Component({
   selector: 'app-currently-loaded-models',
@@ -9,23 +10,19 @@ import { SelectableTreeComponent } from '../../../../../components/selectable-tr
   imports: [SelectableTreeComponent],
 })
 export class CurrentlyLoadedModelsComponent {
+  project = input.required<Project>();
   instanceId = input.required<string>();
 
   loadedFiles = computed<TreeNode[]>(() => {
-    // TODO FIXIT(#61): populate from api
-    return convertToTreeNodes({});
+    const project = this.project();
+
+    const nodes: TreeNode[] = [];
+    for (const loaderId of Object.keys(project.savedFiles)) {
+      nodes.push({
+        name: loaderId,
+        children: project.savedFiles[loaderId].map((file) => ({ name: file.name })),
+      });
+    }
+    return nodes;
   });
-}
-
-function convertToTreeNodes(loadedModels: Record<string, string[]>): TreeNode[] {
-  const nodes: TreeNode[] = [];
-
-  for (const loaderId of Object.keys(loadedModels)) {
-    nodes.push({
-      name: loaderId,
-      children: loadedModels[loaderId].map((model) => ({ name: model })),
-    });
-  }
-
-  return nodes;
 }
