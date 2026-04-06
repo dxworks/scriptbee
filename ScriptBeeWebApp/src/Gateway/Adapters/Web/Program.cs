@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Artifacts.Extensions;
 using ScriptBee.Common.Web;
@@ -51,6 +51,7 @@ if (app.Environment.IsDevelopment())
     app.MapSwaggerUi();
 }
 
+app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -62,19 +63,9 @@ app.UseExceptionEndpoint();
 
 app.UseEndpoints(_ => { });
 
-// app.UseSpa(spa =>
-// {
-//     spa.Options.SourcePath = "../ScriptBeeClient";
-//
-//     if (app.Environment.IsDevelopment())
-//     {
-//         spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-//     }
-// });
-
-// app.MapHub<FileWatcherHub>("/api/fileWatcherHub");
-
 app.UseEndpointDefinitions();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();
 

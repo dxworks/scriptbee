@@ -18,7 +18,12 @@ public static class ScriptBeeAnalysisConfigExtensions
             .GetSection("ScriptBee:Analysis")
             .Get<ScriptBeeAnalysisConfig>()!;
 
-        if (scriptBeeAnalysisConfig.Driver != "Docker")
+        if (
+            !scriptBeeAnalysisConfig.Driver.Equals(
+                "Docker",
+                StringComparison.InvariantCultureIgnoreCase
+            )
+        )
         {
             throw new AnalysisInstanceDriverTypeNotSupported(scriptBeeAnalysisConfig.Driver);
         }

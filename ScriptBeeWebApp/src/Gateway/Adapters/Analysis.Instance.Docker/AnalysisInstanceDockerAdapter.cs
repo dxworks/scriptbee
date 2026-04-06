@@ -81,6 +81,7 @@ public class AnalysisInstanceDockerAdapter(
             client,
             response.ID,
             analysisDockerConfig.Network,
+            analysisDockerConfig.Port,
             hostPort,
             cancellationToken
         );
@@ -204,6 +205,7 @@ public class AnalysisInstanceDockerAdapter(
             $"ScriptBee__ProjectId={projectDetails.Id}",
             $"ScriptBee__ProjectName={projectDetails.Name}",
             $"ConnectionStrings__mongodb={mongoDbConnectionString}",
+            $"ASPNETCORE_HTTP_PORTS={config.Value.Port}",
         };
 
         if (
@@ -257,7 +259,8 @@ public class AnalysisInstanceDockerAdapter(
         DockerClient client,
         string containerId,
         string? networkName,
-        int port,
+        int internalPort,
+        int hostPort,
         CancellationToken cancellationToken
     )
     {
@@ -268,12 +271,12 @@ public class AnalysisInstanceDockerAdapter(
 
         if (networkName == null)
         {
-            return $"http://localhost:{port}";
+            return $"http://localhost:{hostPort}";
         }
 
         return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
-            ? $"http://{network.IPAddress}:{port}"
-            : $"http://localhost:{port}";
+            ? $"http://{network.IPAddress}:{internalPort}"
+            : $"http://localhost:{hostPort}";
     }
 
     private async Task PullImageIfNeeded(
