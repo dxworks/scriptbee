@@ -1,54 +1,57 @@
-﻿# Overview
+# Overview
 
-> Work in Progress
+This section provides a high-level overview of ScriptBee's architecture and the roles of its core components.
 
 ## UI
 
-The UI uses plugins defined by the gateway.
-
-The plugins can be of several types
-
-### Output Type plugin
-
-To offer different visualization of the data
+The User Interface provides a web-based experience for managing projects, loading data from various sources, and running analysis scripts.
 
 ## Gateway
 
-Is responsible for the interaction with UI, user authentication and authorization, project management, communicating
-with the calculation instances
+The Gateway is the central orchestration component. Its responsibilities include:
 
-### Persistence
+- Handling UI interactions and requests.
+- Managing projects and user workspaces.
+- Orchestrating the lifecycle of analysis instances.
 
-Data is stored in MongoDB
+> [!NOTE]
+> **Authentication & Authorization** are handled by a separate, external service. The Gateway integrates with this service to manage project access.
 
-## Calculation
+## Analysis
 
-Is responsible for loading data, linking the models and executing scripts to obtain different results
+Analysis is responsible for the core logic of processing models and executing scripts. It performs the following functions:
 
-Calculation can be done in 2 types of instances:
+- **Data Loading**: Ingesting data from various sources using loader plugins.
+- **Model Linking**: Connecting loaded models using linker plugins to create a unified data structure.
+- **Script Execution**: Running C#, Javascript, or Python scripts against the linked models.
 
-- Permanent
-- Temporary
+Analysis can be performed in two modes:
 
-A permanent instance is allocated and deallocated by the user on command. The purpose is to have a long-running instance
-with the linked model to run different types of analysis
+- **Permanent Instances**: Manually managed by the user for long-running exploration and interactive analysis.
+- **Temporary Instances**: Automatically created for one-time processing, ideal for automated pipelines or quick checks.
 
-A temporary instance is used for one time processing of the models. The model is loaded and linked, a set of predefined
-scripts is run to perform the analysis. After the calculations are done, the instance is deallocated. It is used for
-CI/CD analysis
+## Persistence
 
-### Persistence
+Both the **Gateway** and **Analysis** services rely on a MongoDB database for data persistence:
 
-Data is stored in MongoDB
+- **Gateway**: Stores project configurations, workspace metadata, and instance statuses.
+- **Analysis**: Uses the database for temporary data storage during processing and for persisting analysis results.
 
-## Deployment
+## Deployment & Orchestration
 
-See [Features](features.md) for more information about the deployment
-
-### Kubernetes
-
-The deployment in Kubernetes is done deploying the calculation engine via a CRD
+The orchestration of analysis components varies based on the environment:
 
 ### Docker
 
-The deployment is done using Docker API
+In standard containerized environments, a **Docker Executor** manages analysis instances dynamically. It handles:
+
+- **Networking**: Ensuring the Gateway can communicate with the analysis instance.
+- **Data Access**: Mapping local data folders to the analysis container so loaders and scripts can access source files.
+
+See [Docker Compose](../home/installation.md#docker-compose) for more information about deployment to Docker
+
+### Kubernetes
+
+In Kubernetes deployments, analysis is managed through specialized controllers that handle the lifecycle of each instance as a native resource.
+
+See [Kubernetes](../home/installation.md#) for more information about deployment to Kubernetes

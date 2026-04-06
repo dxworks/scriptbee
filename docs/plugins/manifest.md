@@ -1,4 +1,4 @@
-﻿# Plugin Manifest
+# Plugin Manifest
 
 Each plugin folder must have a `manifest.yaml` file that describes the plugin. If the file is missing, the plugin will
 not be loaded.
@@ -35,10 +35,10 @@ extensionPoints:
 - `description`: A description of the plugin
 - `name`: The name of the plugin
 - `extensionPoints`: A list of extension points that the plugin provides
-- `kind`: The type of plugin
-- `entryPoint`: If the extension point is a plugin, the entry point is the relative path to the DLL containing the
-  implemented interfaces for the respective plugins. If the extension point is a bundle, the entryPoint is the id of
-  the plugin
-- `version`: The version of the plugin
+  - `kind`: The type of plugin (`Loader`, `Linker`, `ScriptGenerator`, `ScriptRunner`, `HelperFunctions`)
+  - `entryPoint`: If the extension point is a plugin, the entry point is the relative path to the DLL containing the implemented interfaces. If the extension point is a bundle, the entryPoint is the id of the plugin.
+  - `version`: The version of the plugin
+  - `language`: (Optional) The programming language supported by the plugin (e.g., `csharp`, `javascript`, `python`).
+  - `extension`: (Optional) The file extension associated with the plugin (e.g., `.cs`, `.js`, `.py`).
 
 > Note: depending on the plugin type, each extension point can have different properties
