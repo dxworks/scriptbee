@@ -82,7 +82,7 @@ You can fine-tune the Docker driver behavior using the following environment var
 
 | Environment Variable                                   | Description                                                                                       | Default / Example                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `SCRIPTBEE__ANALYSIS__IMAGE`                           | The Docker image used for analysis instances.                                                     | `dxworks/scriptbee/analysis:latest` |
+| `SCRIPTBEE__ANALYSIS__IMAGE`                           | The Docker image used for analysis instances.                                                     | `dxworks/scriptbee-analysis:latest` |
 | `SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET`            | URI to the Docker daemon socket.                                                                  | `unix:///var/run/docker.sock`       |
 | `SCRIPTBEE__ANALYSIS__DOCKER__PORT`                    | The internal port the analysis container listens on.                                              | `80`                                |
 | `SCRIPTBEE__ANALYSIS__DOCKER__NETWORK`                 | The Docker network name to attach containers to (required if using a custom network for MongoDB). | _None_                              |
@@ -112,7 +112,7 @@ You can fine-tune the Docker driver behavior using the following environment var
 
 | Environment Variable                                   | Description                                                                                       | Default / Example                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `SCRIPTBEE__ANALYSIS__IMAGE`                           | The Docker image used for analysis instances.                                                     | `dxworks/scriptbee/analysis:latest` |
+| `SCRIPTBEE__ANALYSIS__IMAGE`                           | The Docker image used for analysis instances.                                                     | `dxworks/scriptbee-analysis:latest` |
 | `SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET`            | URI to the Docker daemon socket.                                                                  | `unix:///var/run/docker.sock`       |
 | `SCRIPTBEE__ANALYSIS__DOCKER__PORT`                    | The internal port the analysis container listens on.                                              | `80`                                |
 | `SCRIPTBEE__ANALYSIS__DOCKER__NETWORK`                 | The Docker network name to attach containers to (required if using a custom network for MongoDB). | _None_                              |

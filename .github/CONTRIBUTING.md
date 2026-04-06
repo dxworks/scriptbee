@@ -88,7 +88,7 @@ ScriptBee uses a namespaced tagging strategy to manage independent component rel
 | Tag Format             | Component                          | Artifact(s)                           | GitHub Release |
 |:-----------------------|:-----------------------------------|:--------------------------------------|:---------------|
 | `v<version>`           | Unified Application (Backend + UI) | Docker: `dxworks/scriptbee`           | **Yes (Main)** |
-| `analysis@<version>`   | Analysis Microservice              | Docker: `dxworks/scriptbee/analysis`  | No (Silent)    |
+| `analysis@<version>`   | Analysis Microservice              | Docker: `dxworks/scriptbee-analysis`  | No (Silent)    |
 | `plugin-api@<version>` | Plugin API                         | NuGet: `DxWorks.ScriptBee.Plugin.Api` | **Yes**        |
 | `bundle@<version>`     | Default Plugin Bundle              | Zip Archive                           | **Yes**        |
 

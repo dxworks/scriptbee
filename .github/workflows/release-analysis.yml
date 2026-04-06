@@ -53,6 +53,7 @@ jobs:
         id: meta
         run: |
           VERSION="${GITHUB_REF_NAME#*@}"
+          VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build and push Analysis Docker image
@@ -62,7 +63,7 @@ jobs:
           file: ./analysis.Dockerfile
           push: true
           tags: |
-            dxworks/scriptbee/analysis:${{ steps.meta.outputs.version }}
-            dxworks/scriptbee/analysis:latest
+            dxworks/scriptbee-analysis:${{ steps.meta.outputs.version }}
+            dxworks/scriptbee-analysis:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

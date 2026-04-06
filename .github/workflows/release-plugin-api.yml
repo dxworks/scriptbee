@@ -23,6 +23,7 @@ jobs:
         id: meta
         run: |
           VERSION="${GITHUB_REF_NAME#*@}"
+          VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Restore dependencies

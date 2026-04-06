@@ -82,7 +82,7 @@ public class AllocateProjectInstanceServiceTest
             createdDate,
             AnalysisInstanceStatus.NotFound
         );
-        var analysisInstanceImage = new AnalysisInstanceImage("scriptbee/analysis:latest");
+        var analysisInstanceImage = new AnalysisInstanceImage("scriptbee-analysis:latest");
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
