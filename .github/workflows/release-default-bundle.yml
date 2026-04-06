@@ -37,6 +37,12 @@ jobs:
           chmod +x ./scripts/prepare_plugin_folder.sh
           sh ./scripts/create_default_bundle_zip.sh "${{ steps.meta.outputs.version }}" "${{ steps.meta.outputs.zip_name }}"
 
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: default-bundle
+          path: ${{ steps.meta.outputs.zip_name }}
+
   create-release:
     name: Create GitHub Release
     needs: build-and-publish
