@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build_webapp
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build_webapp
 
 WORKDIR /app
 
@@ -19,8 +19,8 @@ RUN dotnet publish ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.W
 # Build the final image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 
+ENV ASPNETCORE_HTTP_PORTS=80
 EXPOSE 80
-EXPOSE 443
 
 WORKDIR /app
 

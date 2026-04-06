@@ -16,35 +16,51 @@ The fastest way to get started with ScriptBee is using Docker Compose.
 
 ### Run with Docker
 
-To get ScriptBee running quickly, create a `docker-compose.yaml` file with the following content and run
-`docker compose up -d`:
+The fastest way to get started is by using Docker Compose. Create a `docker-compose.yaml` file with the following
+configuration and run `docker compose up -d`:
 
 ```yaml
-version: "3.8"
 services:
   mongo:
-    image: mongo:4.4
+    image: mongo:8.0.4
     container_name: mongo
     restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
 
   scriptbee:
-    image: dxworks/scriptbee
+    image: dxworks/scriptbee:latest
+    user: root
     ports:
       - "4201:80"
     volumes:
-      - scriptbee_data:/root/.scriptbee
+      - ./database/scriptbee:/root/.scriptbee
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - ConnectionStrings__mongodb=mongodb://mongo:27017/ScriptBee?authSource=admin
+      - ConnectionStrings__mongodb=mongodb://root:example@mongo:27017/ScriptBee?authSource=admin
       - UserFolder__UserFolderPath=/root/.scriptbee
+      - SCRIPTBEE__ANALYSIS__DRIVER=docker
+      - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
+      - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/database/scriptbee
     depends_on:
       - mongo
 
 volumes:
   mongodb_data:
-  scriptbee_data:
 ```
+
+#### Docker Hosting Tips
+
+| Setting                           | Importance                                                                       |
+|:----------------------------------|:---------------------------------------------------------------------------------|
+| **`user: root`**                  | Allows the ScriptBee container to communicate with the host's Docker engine.     |
+| **`${PWD}`**                      | Ensures absolute path resolution on the host machine for analysis volume mounts. |
+| **`unix:///var/run/docker.sock`** | The standard socket for Docker-out-of-Docker communication.                      |
 
 ### Accessing the UI
 
