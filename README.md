@@ -62,8 +62,8 @@ ScriptBee can be configured using environment variables. Below are the most impo
 | `UserFolder__UserFolderPath` | Host path for storing project data and shared files.             |                            |
 | `SCRIPTBEE_ANALYSIS__DRIVER` | How analysis instances are managed: `docker` or `kubernetes`.    | `docker`                   |
 
-For more detailed information on advanced configuration, check the *
-*[Deployment Features](docs/architecture/features.md)** documentation.
+For more detailed information on advanced configuration, check the
+*[Deployment Features](docs/architecture/features.md)* documentation.
 
 ---
 
@@ -73,5 +73,5 @@ Full documentation is available at [https://dxworks.org/scriptbee/](https://dxwo
 
 ## Contributing
 
-For information on the repository structure, development setup, and how to contribute, please refer to our *
-*[Contributing Guide](.github/CONTRIBUTING.md)**.
+For information on the repository structure, development setup, and how to contribute, please refer to our
+*[Contributing Guide](.github/CONTRIBUTING.md)*.
