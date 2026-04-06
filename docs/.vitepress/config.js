@@ -20,7 +20,6 @@ export default defineConfig({
         items: [
           { text: 'Introduction', link: '/' },
           { text: 'Installation', link: '/home/installation' },
-          { text: 'Run', link: '/home/run' },
         ],
       },
       {
@@ -81,7 +80,6 @@ export default defineConfig({
         items: [
           { text: 'Diagram', link: '/architecture/diagram' },
           { text: 'Overview', link: '/architecture/overview' },
-          { text: 'Features', link: '/architecture/features' },
           { text: 'RBAC', link: '/architecture/rbac' },
         ],
       },

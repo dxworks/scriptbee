@@ -1,11 +1,10 @@
-﻿# ScriptBee's Plugin API
+# ScriptBee's Plugin API
 
 ## DxWorks.ScriptBee.Plugin.Api
 
-ScriptBee's plugin API is a way to extend the functionality of ScriptBee. Plugins can be used to add custom
-functionality to ScriptBee.
+ScriptBee's plugin API provides a way to extend the functionality of the system. Plugins can be used to add custom loaders, linkers, script generators, script runners, and helper functions.
 
-Currently, ScriptBee supports the following plugins:
+Currently, ScriptBee supports the following types of plugins:
 
 - [Loader Plugins](loader.md)
 - [Linker Plugins](linker.md)
@@ -14,13 +13,11 @@ Currently, ScriptBee supports the following plugins:
 - [Script Runner Plugins](script_runner.md)
 - [Bundle Plugins](bundle.md)
 
-Every plugin must have a `manifest.yaml` file in its root directory. More information about the manifest can be found in
-the [manifest section](manifest.md).
+Every plugin must have a `manifest.yaml` file in its root directory. More information about the manifest can be found in the [manifest section](manifest.md).
 
 ## Services
 
-Besides the plugin interfaces, ScriptBee also offers a set of services that can be used by plugins via dependency
-injection.
+Besides the plugin interfaces, ScriptBee offers a set of services that can be used by plugins via dependency injection.
 
 ### IHelperFunctionsContainer
 
@@ -57,7 +54,6 @@ public interface IHelperFunctionsResultService
 
     void UploadResult(string fileName, string type, Stream content);
 }
-
 ```
 
 [ScriptBee's default helper functions](https://github.com/dxworks/scriptbee/tree/master/Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default)

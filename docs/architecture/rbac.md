@@ -1,49 +1,46 @@
-﻿# RBAC
+# RBAC Configuration
 
-> Work in Progress
+> [!IMPORTANT]
+> Role-Based Access Control (RBAC) and Authentication features are handled by a **separate, external service**. The
+> implementation details here represent how ScriptBee interacts with that service. The implementation is not yet fully
+> finalized and may be subject to change.
 
-Roles:
+## Roles
 
-- Guest - basic user with limited capabilities
-- Analyst - user that can perform different analysis on allowed projects
-- Maintainer - handles operations on the allowed projects
-- Administrator - has full access for every functionality
+Detailed here are the possible roles a user can have in ScriptBee.
 
-## Project Management
+- Administrator - user that can perform any action
+- Manager - user that can perform project management on project they belong to
+- Analyst - user that can perform different analysis tasks on allowed projects
+- Auditor - user that can view only allowed projects
 
-| Permission     | Guest   | Analyst | Maintainer | Administrator |
-| -------------- | ------- | ------- | ---------- | ------------- |
-| view_project   | &check; | &check; | &check;    | &check;       |
-| update_project |         |         | &check;    | &check;       |
-| delete_project |         |         | &check;    | &check;       |
-| create_project |         |         |            | &check;       |
+## Permissions
 
-## User Management
+### Project
 
-| Permission          | Guest | Analyst | Maintainer | Administrator |
-| ------------------- | ----- | ------- | ---------- | ------------- |
-| update_project_user |       |         | &check;    | &check;       |
-| update_user_role    |       |         |            | &check;       |
+| Permission      | Admin   | Manager | Analyst | Auditor |
+| --------------- | ------- | ------- | ------- | ------- |
+| view_project    | &check; | &check; | &check; | &check; |
+| edit_project    | &check; | &check; |         |         |
+| remove_project  | &check; | &check; |         |         |
+| load_model      | &check; | &check; | &check; |         |
+| link_model      | &check; | &check; | &check; |         |
+| generate_script | &check; | &check; | &check; |         |
+| create_script   | &check; | &check; | &check; |         |
+| edit_script     | &check; | &check; | &check; |         |
+| delete_script   | &check; | &check; | &check; |         |
 
-## Model Management
+### Analysis
 
-| Permission       | Guest | Analyst | Maintainer | Administrator |
-| ---------------- | ----- | ------- | ---------- | ------------- |
-| install_loader   |       | &check; | &check;    | &check;       |
-| uninstall_loader |       | &check; | &check;    | &check;       |
-| install_linker   |       | &check; | &check;    | &check;       |
-| uninstall_linker |       | &check; | &check;    | &check;       |
+| Permission      | Admin   | Manager | Analyst | Auditor |
+| --------------- | ------- | ------- | ------- | ------- |
+| view_analysis   | &check; | &check; | &check; | &check; |
+| run_analysis    |         | &check; | &check; | &check; |
+| remove_analysis |         | &check; | &check; | &check; |
 
-## Analysis
+### Token management
 
-| Permission            | Guest   | Analyst | Maintainer | Administrator |
-| --------------------- | ------- | ------- | ---------- | ------------- |
-| view_analysis         | &check; | &check; | &check;    | &check;       |
-| run_analysis          |         | &check; | &check;    | &check;       |
-| remove_analysis       |         | &check; | &check;    | &check;       |
-| view_script           |         | &check; | &check;    | &check;       |
-| create_script         |         | &check; | &check;    | &check;       |
-| update_script         |         | &check; | &check;    | &check;       |
-| delete_script         |         | &check; | &check;    | &check;       |
-| create_analysis_token |         |         | &check;    | &check;       |
-| delete_analysis_token |         |         | &check;    | &check;       |
+| Permission            | Admin | Manager | Analyst | Auditor |
+| --------------------- | ----- | ------- | ------- | ------- |
+| create_analysis_token |       |         | &check; | &check; |
+| delete_analysis_token |       |         | &check; | &check; |
