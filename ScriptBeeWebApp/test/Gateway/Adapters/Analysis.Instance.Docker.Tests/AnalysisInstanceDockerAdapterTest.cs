@@ -92,7 +92,7 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         // Assert
         containerUrl.ShouldStartWith("http://");
-        containerUrl.ShouldContain($":{_testPort}");
+        containerUrl.ShouldContain($":{_configOptions.Value.Port}");
         var containers = await _dockerFixture.DockerClient.Containers.ListContainersAsync(
             new ContainersListParameters { All = true },
             TestContext.Current.CancellationToken
@@ -107,7 +107,7 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             .NetworkSettings.Networks[DockerFixture.TestNetworkName]
             .IPAddress.ShouldNotBeNullOrEmpty();
         containerUrl.ShouldBe(
-            $"http://{ourContainer.NetworkSettings.Networks[DockerFixture.TestNetworkName].IPAddress}:{_testPort}"
+            $"http://{ourContainer.NetworkSettings.Networks[DockerFixture.TestNetworkName].IPAddress}:{_configOptions.Value.Port}"
         );
     }
 
@@ -158,6 +158,39 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
+    public async Task Allocate_ShouldReturnLocalhostWithHostPort_WhenNoNetworkIsConfigured()
+    {
+        // Arrange
+        var config = new AnalysisDockerConfig
+        {
+            DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
+            Network = null,
+            UserFolderVolumePath = "/root/.scriptbee",
+        };
+        var adapter = new AnalysisInstanceDockerAdapter(
+            Options.Create(config),
+            _userFolderOptions,
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        var containerUrl = await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        containerUrl.ShouldBe($"http://localhost:{_testPort}");
+    }
+
+    [Fact]
     public async Task Allocate_ShouldPassEnvironmentVariables()
     {
         // Arrange
@@ -199,6 +232,9 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         );
         containerInspect.Config.Env.ShouldContain(
             $"UserFolder__UserFolderPath={_configOptions.Value.UserFolderVolumePath}"
+        );
+        containerInspect.Config.Env.ShouldContain(
+            $"ASPNETCORE_HTTP_PORTS={_configOptions.Value.Port}"
         );
     }
 

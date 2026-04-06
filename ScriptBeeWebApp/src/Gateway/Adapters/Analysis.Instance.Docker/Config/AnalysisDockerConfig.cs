@@ -1,10 +1,10 @@
-﻿namespace ScriptBee.Analysis.Instance.Docker.Config;
+namespace ScriptBee.Analysis.Instance.Docker.Config;
 
 public class AnalysisDockerConfig
 {
     public required string DockerSocket { get; init; }
 
-    public int Port { get; init; } = 8080;
+    public int Port { get; init; } = 80;
 
     public string? Network { get; init; }
 

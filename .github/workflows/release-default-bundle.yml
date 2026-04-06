@@ -3,7 +3,7 @@ name: Release Default Bundle
 on:
   push:
     tags:
-      - 'bundle/v*'
+      - 'bundle@*'
 
 jobs:
   build-and-publish:
@@ -22,9 +22,9 @@ jobs:
       - name: Extract version from tag
         id: meta
         run: |
-          TAG="${GITHUB_REF#refs/tags/bundle/v}"
-          echo "version=$TAG" >> $GITHUB_OUTPUT
-          echo "zip_name=scriptbee-default-bundle-$TAG.zip" >> $GITHUB_OUTPUT
+          VERSION="${GITHUB_REF_NAME#*@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "zip_name=scriptbee-default-bundle-$VERSION.zip" >> $GITHUB_OUTPUT
 
       - name: Install zip
         run: sudo apt-get install -y zip
@@ -50,9 +50,9 @@ jobs:
       - name: Extract version from tag
         id: meta
         run: |
-          TAG="${GITHUB_REF#refs/tags/bundle/v}"
-          echo "version=$TAG" >> $GITHUB_OUTPUT
-          echo "zip_name=scriptbee-default-bundle-$TAG.zip" >> $GITHUB_OUTPUT
+          VERSION="${GITHUB_REF_NAME#*@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "zip_name=scriptbee-default-bundle-$VERSION.zip" >> $GITHUB_OUTPUT
 
       - name: Download bundle artifact
         uses: actions/download-artifact@v4

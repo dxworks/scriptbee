@@ -1,0 +1,68 @@
+name: Release Analysis
+
+on:
+  push:
+    tags:
+      - 'analysis@*'
+
+jobs:
+  backend-test:
+    name: Backend Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ScriptBee.slnx
+
+      - name: Build
+        run: dotnet build ScriptBee.slnx --no-restore
+
+      - name: Test
+        run: dotnet test ScriptBee.slnx --no-build --verbosity normal
+
+  analysis-build-push:
+    name: Analysis Build & Push Docker
+    needs: backend-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract version from tag
+        id: meta
+        run: |
+          VERSION="${GITHUB_REF_NAME#*@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build and push Analysis Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./analysis.Dockerfile
+          push: true
+          tags: |
+            dxworks/scriptbee/analysis:${{ steps.meta.outputs.version }}
+            dxworks/scriptbee/analysis:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

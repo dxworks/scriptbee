@@ -79,4 +79,30 @@ Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 - **Docker**: Many components rely on Docker for container orchestration during development (e.g., running MongoDB or
   Analysis instances).
 
+## Release Strategy
+
+ScriptBee uses a namespaced tagging strategy to manage independent component releases within the monorepo.
+
+### Tag Naming Convention
+
+| Tag Format             | Component                          | Artifact(s)                           | GitHub Release |
+|:-----------------------|:-----------------------------------|:--------------------------------------|:---------------|
+| `v<version>`           | Unified Application (Backend + UI) | Docker: `dxworks/scriptbee`           | **Yes (Main)** |
+| `analysis@<version>`   | Analysis Microservice              | Docker: `dxworks/scriptbee/analysis`  | No (Silent)    |
+| `plugin-api@<version>` | Plugin API                         | NuGet: `DxWorks.ScriptBee.Plugin.Api` | **Yes**        |
+| `bundle@<version>`     | Default Plugin Bundle              | Zip Archive                           | **Yes**        |
+
+### Release Process
+
+1. **Tagging**: Push a tag matching one of the patterns above (e.g., `git tag v1.2.3 && git push origin v1.2.3`).
+2. **Automation**: GitHub Actions will automatically:
+    - Run the relevant test suites.
+    - Build and publish the artifacts to Docker Hub or NuGet.
+    - Draft a GitHub Release with auto-generated release notes (for `v*`, `plugin-api@`, and `bundle@`).
+3. **Manual Finalization**: The maintainer should review the drafted GitHub Release, refine the notes if necessary, and
+   publish it.
+
+> All releases are intended to be backward compatible. If a breaking change is required, it must be clearly documented
+> in the release notes.
+
 Thank you for your contributions!
