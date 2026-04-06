@@ -3,7 +3,7 @@ name: Release Plugin API
 on:
   push:
     tags:
-      - 'plugin-api/v*'
+      - 'plugin-api@*'
 
 jobs:
   build-and-publish:
@@ -22,8 +22,8 @@ jobs:
       - name: Extract version from tag
         id: meta
         run: |
-          TAG="${GITHUB_REF#refs/tags/plugin-api/v}"
-          echo "version=$TAG" >> $GITHUB_OUTPUT
+          VERSION="${GITHUB_REF_NAME#*@}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Restore dependencies
         run: dotnet restore DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj

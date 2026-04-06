@@ -1,9 +1,9 @@
-name: Release
+name: Release Server
 
 on:
   push:
     tags:
-      - 'v*'
+      - 'v[0-9]*'
 
 jobs:
   # ------------------------------------------------------------------
@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           PLAYWRIGHT_VERSION=$(npm list @vitest/browser-playwright --json | jq -r '.dependencies["@vitest/browser-playwright"].version')
-          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Cache Playwright binaries
         uses: actions/cache@v5
@@ -43,7 +43,7 @@ jobs:
         with:
           path: |
             ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
 
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -55,42 +55,6 @@ jobs:
       - name: Run tests
         run: npm run test:ci
 
-  ui-build-push:
-    name: UI Build & Push Docker
-    needs: ui-test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Extract version from tag
-        id: meta
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Build and push UI Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: |
-            dxworks/scriptbee:${{ steps.meta.outputs.version }}
-            dxworks/scriptbee:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   # ------------------------------------------------------------------
   # BACKEND JOBS
@@ -117,9 +81,9 @@ jobs:
       - name: Test
         run: dotnet test ScriptBee.slnx --no-build --verbosity normal
 
-  gateway-build-push:
-    name: Gateway Build & Push Docker
-    needs: backend-test
+  server-build-push:
+    name: Server Build & Push Docker
+    needs: [ ui-test, backend-test ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -140,54 +104,19 @@ jobs:
 
       - name: Extract version from tag
         id: meta
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Build and push Gateway Docker image
+      - name: Build and push Server Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: |
-            dxworks/scriptbee/gateway:${{ steps.meta.outputs.version }}
-            dxworks/scriptbee/gateway:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  analysis-build-push:
-    name: Analysis Build & Push Docker
-    needs: backend-test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Extract version from tag
-        id: meta
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Build and push Analysis Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./analysis.Dockerfile
-          push: true
-          tags: |
-            dxworks/scriptbee/analysis:${{ steps.meta.outputs.version }}
-            dxworks/scriptbee/analysis:latest
+            dxworks/scriptbee:${{ steps.meta.outputs.version }}
+            dxworks/scriptbee:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -196,7 +125,7 @@ jobs:
   # ------------------------------------------------------------------
   create-release:
     name: Create GitHub Release
-    needs: [ ui-build-push, gateway-build-push, analysis-build-push ]
+    needs: [ server-build-push ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -209,3 +138,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          tag_name: ${{ github.ref_name }}
+          draft: true
