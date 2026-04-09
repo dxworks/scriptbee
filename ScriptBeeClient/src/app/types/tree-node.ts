@@ -1,11 +1,18 @@
-﻿export interface TreeNodeWithParent {
+export interface TreeNodeWithParent<T> {
   name: string;
-  children?: TreeNodeWithParent[];
-  parent?: TreeNodeWithParent;
+  children?: TreeNodeWithParent<T>[];
+  parent?: TreeNodeWithParent<T>;
+  data: T;
 }
 
-export interface TreeNode {
-  // TODO: pass node data
+export interface TreeNode<T> {
   name: string;
-  children?: TreeNode[];
+  children?: TreeNode<T>[];
+  data: T;
+}
+
+export interface TreeAction<T> {
+  label: string;
+  icon: string;
+  callback: (node: TreeNode<T>) => void;
 }

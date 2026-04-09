@@ -9,9 +9,9 @@
 
         {{ node.name }}
 
-        @if (enableDelete()) {
+        @if (actions().length > 0) {
           <div class="flex-spacer"></div>
-          <app-tree-actions-menu (delete)="delete.emit(node)" />
+          <app-tree-actions-menu [actions]="actions()" [node]="node" />
         }
       </span>
     </div>
@@ -33,9 +33,9 @@
 
           {{ node.name }}
 
-          @if (enableDelete()) {
+          @if (actions().length > 0) {
             <div class="flex-spacer"></div>
-            <app-tree-actions-menu (delete)="delete.emit(node)" />
+            <app-tree-actions-menu [actions]="actions()" [node]="node" />
           }
         </span>
       </div>

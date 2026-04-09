@@ -3,7 +3,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { FileTreeNode, LazyFileTreeComponent, VirtualStateNode } from '../../../../../components/lazy-file-tree/lazy-file-tree.component';
+import { FileTreeNode, LazyFileTreeComponent, VirtualStateNode } from '../../../../../components/tree/lazy-file-tree/lazy-file-tree.component';
 import { ProjectFileNode } from '../../../../../types/project';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateScriptDialogComponent } from './create-script-dialog/create-script-dialog.component';
@@ -13,9 +13,10 @@ import { ProjectStructureService } from '../../../../../services/projects/projec
 import { finalize } from 'rxjs';
 import { ErrorResponse } from '../../../../../types/api';
 import { convertError } from '../../../../../utils/api';
+import { TreeAction, TreeNode } from '../../../../../types/tree-node';
 
 interface FolderState {
-  data: ProjectFileNode[];
+  data: TreeNode<ProjectFileNode>[];
   status: 'idle' | 'loading' | 'error' | 'loaded';
   error?: ErrorResponse;
   totalCount: number;
@@ -33,6 +34,14 @@ export class ScriptTreeComponent {
   fileSelected = output<ProjectFileNode>();
 
   isDeleteLoading = signal(false);
+
+  actions: TreeAction<ProjectFileNode>[] = [
+    {
+      label: 'Delete',
+      icon: 'delete',
+      callback: (node) => this.deleteNode(node.data),
+    },
+  ];
 
   private injector = inject(Injector);
 
@@ -72,7 +81,7 @@ export class ScriptTreeComponent {
     });
   }
 
-  onNodeDelete(node: ProjectFileNode) {
+  private deleteNode(node: ProjectFileNode) {
     this.isDeleteLoading.set(true);
     this.projectStructureService
       .deleteProjectStructureNode(this.projectId(), node.id)
@@ -85,15 +94,15 @@ export class ScriptTreeComponent {
       });
   }
 
-  onNodeClick(node: ProjectFileNode) {
-    if (node.type === 'file') {
-      this.fileSelected.emit(node);
+  onNodeClick(node: TreeNode<ProjectFileNode>) {
+    if (node.data.type === 'file') {
+      this.fileSelected.emit(node.data);
     }
   }
 
-  onExpand(node: ProjectFileNode) {
-    if (node.type === 'folder' && !this.folderStates().has(node.id)) {
-      this.loadFolder(node.id);
+  onExpand(node: TreeNode<ProjectFileNode>) {
+    if (node.data.type === 'folder' && !this.folderStates().has(node.data.id)) {
+      this.loadFolder(node.data.id);
     }
   }
 
@@ -105,19 +114,24 @@ export class ScriptTreeComponent {
     this.loadFolder(parentId);
   }
 
-  childrenAccessor = (node: FileTreeNode) => {
+  hasChildAccessor = (node: TreeNode<ProjectFileNode>) => node.data.hasChildren;
+  idAccessor = (node: TreeNode<ProjectFileNode>) => node.data.id;
+
+  childrenAccessor = (node: FileTreeNode<ProjectFileNode>) => {
     if ('isVirtual' in node) return [];
     return toObservable(
-      computed(() => this.getChildren(node.id)),
+      computed(() => this.getChildren(node.data.id)),
       { injector: this.injector }
     );
   };
 
-  private getChildren(parentId: string | null): FileTreeNode[] {
+  private getChildren(parentId: string | null): FileTreeNode<ProjectFileNode>[] {
     const state = this.folderStates().get(parentId);
-    if (!state) return [];
+    if (!state) {
+      return [];
+    }
 
-    const nodes: FileTreeNode[] = [...state.data];
+    const nodes: FileTreeNode<ProjectFileNode>[] = [...state.data];
 
     if (state.status === 'loading') {
       nodes.push({ isVirtual: true, parentId, state: 'loading' } as VirtualStateNode);
@@ -155,7 +169,8 @@ export class ScriptTreeComponent {
         this.folderStates.update((map) => {
           const newMap = new Map(map);
           const previousData = newMap.get(parentId)?.data || [];
-          const combinedData = [...previousData, ...response.data];
+          const mappedResponse = response.data.map((d) => ({ name: d.name, data: d }));
+          const combinedData = [...previousData, ...mappedResponse];
           const isFullyLoaded = combinedData.length >= response.totalCount || response.data.length === 0;
 
           newMap.set(parentId, {

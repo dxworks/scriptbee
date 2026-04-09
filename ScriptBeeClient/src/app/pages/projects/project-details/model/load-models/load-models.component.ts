@@ -1,11 +1,11 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { TreeNode, TreeNodeWithParent } from '../../../../../types/tree-node';
 import { MatButtonModule } from '@angular/material/button';
-import { CheckableTreeComponent } from '../../../../../components/checkable-tree/checkable-tree.component';
+import { CheckableTreeComponent } from '../../../../../components/tree/checkable-tree/checkable-tree.component';
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
 import { finalize } from 'rxjs';
-import { Project } from '../../../../../types/project';
+import { Project, ProjectFile } from '../../../../../types/project';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { convertError } from '../../../../../utils/api';
@@ -20,26 +20,27 @@ export class LoadModelsComponent {
   project = input.required<Project>();
   instanceId = input.required<string>();
 
-  savedFiles = computed<TreeNode[]>(() => {
+  savedFiles = computed<TreeNode<ProjectFile | null>[]>(() => {
     const project = this.project();
 
-    const nodes: TreeNode[] = [];
+    const nodes: TreeNode<ProjectFile | null>[] = [];
     for (const loaderId of Object.keys(project.savedFiles)) {
       nodes.push({
         name: loaderId,
-        children: project.savedFiles[loaderId].map((file) => ({ name: file.name })),
+        data: null,
+        children: project.savedFiles[loaderId].map((file) => ({ name: file.name, data: file })),
       });
     }
     return nodes;
   });
 
-  checkedFiles = signal<TreeNodeWithParent[]>([]);
+  checkedFiles = signal<TreeNodeWithParent<ProjectFile | null>[]>([]);
   isLoadModelsLoading = signal(false);
 
   private loaderService = inject(LoaderService);
   private snackbar = inject(MatSnackBar);
 
-  onUpdateCheckedFiles(checkedNodes: TreeNodeWithParent[]) {
+  onUpdateCheckedFiles(checkedNodes: TreeNodeWithParent<ProjectFile | null>[]) {
     this.checkedFiles.set(checkedNodes.filter((node) => !!node.parent));
   }
 

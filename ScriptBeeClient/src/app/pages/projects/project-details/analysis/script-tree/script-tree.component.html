@@ -13,9 +13,10 @@
 } @else {
   <app-lazy-file-tree
     [data]="rootData()"
-    [enableDelete]="true"
+    [actions]="actions"
     [childrenAccessor]="childrenAccessor"
-    (delete)="onNodeDelete($event)"
+    [hasChildAccessor]="hasChildAccessor"
+    [idAccessor]="idAccessor"
     (clickChange)="onNodeClick($event)"
     (expand)="onExpand($event)"
     (retry)="onRetry($event)"

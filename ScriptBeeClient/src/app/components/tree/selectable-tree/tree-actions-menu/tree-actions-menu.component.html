@@ -1,0 +1,12 @@
+<button clickStopPropagation mat-icon-button [matMenuTriggerFor]="menu" aria-label="Tree actions menu">
+  <mat-icon>more_vert</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+  @for (action of actions(); track action.label) {
+    <button mat-menu-item (click)="action.callback(node())">
+      <mat-icon>{{ action.icon }}</mat-icon>
+      <span>{{ action.label }}</span>
+    </button>
+  }
+</mat-menu>
