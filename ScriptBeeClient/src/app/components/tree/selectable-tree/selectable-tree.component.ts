@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { MatTreeModule } from '@angular/material/tree';
-import { TreeNode, TreeNodeWithParent } from '../../types/tree-node';
+import { TreeAction, TreeNode, TreeNodeWithParent } from '../../../types/tree-node';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,17 +13,16 @@ import { TreeActionsMenuComponent } from './tree-actions-menu/tree-actions-menu.
   imports: [MatTreeModule, MatCheckboxModule, MatButtonModule, MatIconModule, MatMenuModule, TreeActionsMenuComponent],
   styleUrls: ['./selectable-tree.component.scss'],
 })
-export class SelectableTreeComponent {
-  data = input.required<TreeNode[]>();
+export class SelectableTreeComponent<T> {
+  data = input.required<TreeNode<T>[]>();
 
   folderIcon = input<string | undefined>(undefined);
   fileIcon = input<string | undefined>(undefined);
-  enableDelete = input<boolean>(false);
+  actions = input<TreeAction<T>[]>([]);
 
-  delete = output<TreeNode>();
-  clickChange = output<TreeNode>();
+  clickChange = output<TreeNode<T>>();
 
-  childrenAccessor = (node: TreeNodeWithParent) => node.children ?? [];
+  childrenAccessor = (node: TreeNodeWithParent<T>) => node.children ?? [];
 
-  hasChild = (_: number, node: TreeNodeWithParent) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: TreeNodeWithParent<T>) => !!node.children && node.children.length > 0;
 }

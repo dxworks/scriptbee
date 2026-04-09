@@ -1,28 +1,30 @@
 import { Component, input, output } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTreeModule } from '@angular/material/tree';
-import { TreeNode, TreeNodeWithParent } from '../../types/tree-node';
+import { TreeAction, TreeNode, TreeNodeWithParent } from '../../../types/tree-node';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { TreeActionsMenuComponent } from '../selectable-tree/tree-actions-menu/tree-actions-menu.component';
 
 @Component({
   selector: 'app-checkable-tree',
   templateUrl: './checkable-tree.component.html',
-  imports: [MatTreeModule, MatCheckboxModule, MatButtonModule, MatIcon],
+  imports: [MatTreeModule, MatCheckboxModule, MatButtonModule, MatIcon, TreeActionsMenuComponent],
   styleUrls: ['./checkable-tree.component.scss'],
 })
-export class CheckableTreeComponent {
-  data = input.required<TreeNodeWithParent[], TreeNode[]>({ transform: transformToUITreeNode });
-  updateCheckedFiles = output<TreeNode[]>();
+export class CheckableTreeComponent<T> {
+  data = input.required<TreeNodeWithParent<T>[], TreeNode<T>[]>({ transform: transformToUITreeNode });
+  actions = input<TreeAction<T>[]>([]);
+  updateCheckedFiles = output<TreeNode<T>[]>();
 
-  selection = new SelectionModel<TreeNodeWithParent>(true);
+  selection = new SelectionModel<TreeNodeWithParent<T>>(true);
 
-  childrenAccessor = (node: TreeNodeWithParent) => node.children ?? [];
+  childrenAccessor = (node: TreeNodeWithParent<T>) => node.children ?? [];
 
-  hasChild = (_: number, node: TreeNodeWithParent) => !!node.children && node.children.length > 0;
+  hasChild = (_: number, node: TreeNodeWithParent<T>) => !!node.children && node.children.length > 0;
 
-  isIndeterminate(node: TreeNodeWithParent): boolean {
+  isIndeterminate(node: TreeNodeWithParent<T>): boolean {
     if (!node.children || node.children.length === 0) {
       return false;
     }
@@ -31,7 +33,7 @@ export class CheckableTreeComponent {
     return indeterminateChildren || (selectedChildren.length > 0 && selectedChildren.length < node.children.length);
   }
 
-  toggleSelection(node: TreeNodeWithParent): void {
+  toggleSelection(node: TreeNodeWithParent<T>): void {
     this.selection.toggle(node);
     const isSelected = this.selection.isSelected(node);
     if (node.children && node.children.length > 0) {
@@ -43,7 +45,7 @@ export class CheckableTreeComponent {
     this.updateCheckedFiles.emit(this.selection.selected);
   }
 
-  private toggleChildrenSelection(node: TreeNodeWithParent, isSelected: boolean): void {
+  private toggleChildrenSelection(node: TreeNodeWithParent<T>, isSelected: boolean): void {
     node.children?.forEach((child) => {
       if (isSelected) {
         this.selection.select(child);
@@ -56,16 +58,12 @@ export class CheckableTreeComponent {
     });
   }
 
-  private updateParentSelection(node?: TreeNodeWithParent): void {
+  private updateParentSelection(node?: TreeNodeWithParent<T>): void {
     if (!node) return;
     const allSelected = node.children?.every((child) => this.selection.isSelected(child)) ?? false;
-    const anySelected = node.children?.some((child) => this.selection.isSelected(child));
-    const anyIndeterminate = node.children?.some((child) => this.isIndeterminate(child));
 
     if (allSelected) {
       this.selection.select(node);
-    } else if (anySelected || anyIndeterminate) {
-      this.selection.deselect(node);
     } else {
       this.selection.deselect(node);
     }
@@ -74,16 +72,17 @@ export class CheckableTreeComponent {
   }
 }
 
-function transformToUITreeNode(nodes: TreeNode[], parent?: TreeNodeWithParent): TreeNodeWithParent[] {
+function transformToUITreeNode<T>(nodes: TreeNode<T>[], parent?: TreeNodeWithParent<T>): TreeNodeWithParent<T>[] {
   return nodes.map((node) => {
-    const newNode: TreeNodeWithParent = {
+    const newNode: TreeNodeWithParent<T> = {
       name: node.name,
-      children: node.children ? transformToUITreeNode(node.children) : undefined,
+      data: node.data,
+      children: undefined,
       parent,
     };
 
-    if (newNode.children) {
-      newNode.children.forEach((child) => (child.parent = newNode));
+    if (node.children) {
+      newNode.children = transformToUITreeNode(node.children, newNode);
     }
 
     return newNode;

@@ -4,7 +4,7 @@ import { ProjectContextService } from '../../../../../services/projects/project-
 import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { MatButton } from '@angular/material/button';
-import { SelectableTreeComponent } from '../../../../../components/selectable-tree/selectable-tree.component';
+import { SelectableTreeComponent } from '../../../../../components/tree/selectable-tree/selectable-tree.component';
 import { TreeNode } from '../../../../../types/tree-node';
 import { ProjectContext } from '../../../../../types/returned-context-slice';
 import { finalize } from 'rxjs';
@@ -20,7 +20,7 @@ export class ProjectContextComponent {
   projectId = input.required<string>();
   instanceId = input.required<string>();
 
-  context = computed<TreeNode[]>(() => {
+  context = computed<TreeNode<null>[]>(() => {
     return convertToTreeNodes(this.projectContextResource.value() ?? []);
   });
 
@@ -52,13 +52,14 @@ export class ProjectContextComponent {
   }
 }
 
-function convertToTreeNodes(context: ProjectContext): TreeNode[] {
-  const nodes: TreeNode[] = [];
+function convertToTreeNodes(context: ProjectContext): TreeNode<null>[] {
+  const nodes: TreeNode<null>[] = [];
 
   for (const contextSlice of context) {
     nodes.push({
       name: contextSlice.model,
-      children: contextSlice.pluginIds.map((pluginId) => ({ name: pluginId })),
+      data: null,
+      children: contextSlice.pluginIds.map((pluginId) => ({ name: pluginId, data: null })),
     });
   }
 

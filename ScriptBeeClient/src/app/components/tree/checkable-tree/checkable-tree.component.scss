@@ -13,3 +13,13 @@
 .selectable-tree .leaf-node {
   padding-left: 32px;
 }
+
+.node-content-wrapper {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.flex-spacer {
+  flex-grow: 1;
+}
