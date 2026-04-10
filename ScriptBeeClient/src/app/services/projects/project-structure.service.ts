@@ -44,8 +44,9 @@ export class ProjectStructureService {
     return this.http.post<ProjectScript>(`/api/projects/${projectId}/scripts`, request);
   }
 
-  updateProjectScript(projectId: string, scriptId: string, parameters: ScriptParameter[] | undefined) {
+  updateProjectScript(projectId: string, scriptId: string, scriptName: string | undefined, parameters: ScriptParameter[] | undefined) {
     const request: Partial<UpdateScriptRequest> = {
+      name: scriptName,
       parameters: parameters,
     };
     return this.http.patch<ProjectScript>(`/api/projects/${projectId}/scripts/${scriptId}`, request);

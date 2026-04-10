@@ -20,34 +20,40 @@ export class LoadModelsComponent {
   project = input.required<Project>();
   instanceId = input.required<string>();
 
-  savedFiles = computed<TreeNode<ProjectFile | null>[]>(() => {
+  savedFiles = computed<TreeNode<ProjectFile | string>[]>(() => {
     const project = this.project();
 
-    const nodes: TreeNode<ProjectFile | null>[] = [];
+    const nodes: TreeNode<ProjectFile | string>[] = [];
     for (const loaderId of Object.keys(project.savedFiles)) {
       nodes.push({
-        name: loaderId,
-        data: null,
-        children: project.savedFiles[loaderId].map((file) => ({ name: file.name, data: file })),
+        data: loaderId,
+        children: project.savedFiles[loaderId].map((file) => ({ data: file })),
       });
     }
     return nodes;
   });
 
-  checkedFiles = signal<TreeNodeWithParent<ProjectFile | null>[]>([]);
+  displayNameAccessor = (node: TreeNode<ProjectFile | string>) => {
+    if (typeof node.data === 'string') {
+      return node.data;
+    }
+    return node.data.name;
+  };
+
+  checkedFiles = signal<TreeNodeWithParent<ProjectFile | string>[]>([]);
   isLoadModelsLoading = signal(false);
 
   private loaderService = inject(LoaderService);
   private snackbar = inject(MatSnackBar);
 
-  onUpdateCheckedFiles(checkedNodes: TreeNodeWithParent<ProjectFile | null>[]) {
+  onUpdateCheckedFiles(checkedNodes: TreeNodeWithParent<ProjectFile | string>[]) {
     this.checkedFiles.set(checkedNodes.filter((node) => !!node.parent));
   }
 
   onLoadFilesClick() {
     this.isLoadModelsLoading.set(true);
 
-    const loaderIds = this.checkedFiles().map((node) => node.parent!.name);
+    const loaderIds = this.checkedFiles().map((node) => node.parent!.data as string);
 
     this.loaderService
       .loadModels(this.project().id, this.instanceId(), loaderIds)

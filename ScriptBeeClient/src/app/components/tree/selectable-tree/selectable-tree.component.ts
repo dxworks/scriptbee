@@ -23,6 +23,7 @@ export class SelectableTreeComponent<T> {
   clickChange = output<TreeNode<T>>();
 
   childrenAccessor = (node: TreeNodeWithParent<T>) => node.children ?? [];
+  displayNameAccessor = input.required<(node: TreeNode<T>) => string>();
 
   hasChild = (_: number, node: TreeNodeWithParent<T>) => !!node.children && node.children.length > 0;
 }

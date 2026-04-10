@@ -16,6 +16,7 @@ import { TreeActionsMenuComponent } from '../selectable-tree/tree-actions-menu/t
 export class CheckableTreeComponent<T> {
   data = input.required<TreeNodeWithParent<T>[], TreeNode<T>[]>({ transform: transformToUITreeNode });
   actions = input<TreeAction<T>[]>([]);
+  displayNameAccessor = input.required<(node: TreeNode<T>) => string>();
   updateCheckedFiles = output<TreeNode<T>[]>();
 
   selection = new SelectionModel<TreeNodeWithParent<T>>(true);
@@ -75,7 +76,6 @@ export class CheckableTreeComponent<T> {
 function transformToUITreeNode<T>(nodes: TreeNode<T>[], parent?: TreeNodeWithParent<T>): TreeNodeWithParent<T>[] {
   return nodes.map((node) => {
     const newNode: TreeNodeWithParent<T> = {
-      name: node.name,
       data: node.data,
       children: undefined,
       parent,

@@ -78,7 +78,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     services.AddSingleton(absolutePathUseCase);
                 }
             ),
-            new WebUpdateScriptCommand([new WebScriptParameter("parameter", type, value)])
+            new WebUpdateScriptCommand(null, [new WebScriptParameter("parameter", type, value)])
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -96,13 +96,53 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             .ShouldBe(JsonSerializer.SerializeToElement(value).GetRawText());
     }
 
+    [Theory]
+    [FilePath("TestData/UpdateProjectScripts/name-response.json")]
+    public async Task ShouldReturnOk_WhenNameIsPassed(string responsePath)
+    {
+        var useCase = Substitute.For<IUpdateScriptUseCase>();
+        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
+        var projectId = ProjectId.Create("id");
+        useCase
+            .Update(
+                new UpdateScriptCommand(projectId, _scriptId, "name", null),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<UpdateResponse>(
+                    new Script(
+                        _scriptId,
+                        projectId,
+                        new ProjectStructureFile("name"),
+                        new ScriptLanguage("csharp", ".cs"),
+                        []
+                    )
+                )
+            );
+        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
+
+        var response = await _api.PatchApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                    services.AddSingleton(absolutePathUseCase);
+                }
+            ),
+            new WebUpdateScriptCommand("name", null)
+        );
+
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
+    }
+
     [Fact]
     public async Task ProjectNotExists_ShouldReturnNotFound()
     {
         var useCase = Substitute.For<IUpdateScriptUseCase>();
         useCase
             .Update(
-                new UpdateScriptCommand(ProjectId.FromValue("id"), _scriptId, null),
+                new UpdateScriptCommand(ProjectId.FromValue("id"), _scriptId, null, null),
                 Arg.Any<CancellationToken>()
             )
             .Returns(
@@ -119,7 +159,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     services.AddSingleton(useCase);
                 }
             ),
-            new WebUpdateScriptCommand(null)
+            new WebUpdateScriptCommand(null, null)
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl, "id");
@@ -131,7 +171,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IUpdateScriptUseCase>();
         useCase
             .Update(
-                new UpdateScriptCommand(ProjectId.FromValue("id"), _scriptId, null),
+                new UpdateScriptCommand(ProjectId.FromValue("id"), _scriptId, null, null),
                 Arg.Any<CancellationToken>()
             )
             .Returns(Task.FromResult<UpdateResponse>(new ScriptDoesNotExistsError(_scriptId)));
@@ -144,7 +184,7 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     services.AddSingleton(useCase);
                 }
             ),
-            new WebUpdateScriptCommand(null)
+            new WebUpdateScriptCommand(null, null)
         );
 
         await AssertScriptDoesNotExistProblem(response, TestUrl, _scriptId.Value.ToString());

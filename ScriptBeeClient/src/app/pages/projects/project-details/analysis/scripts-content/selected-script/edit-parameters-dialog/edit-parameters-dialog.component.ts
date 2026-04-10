@@ -58,7 +58,7 @@ export class EditParametersDialogComponent {
   onUpdateClick() {
     this.isUpdateLoading.set(true);
     this.projectStructureService
-      .updateProjectScript(this.data.projectId, this.data.scriptId, this.parameters())
+      .updateProjectScript(this.data.projectId, this.data.scriptId, undefined, this.parameters())
       .pipe(finalize(() => this.isUpdateLoading.set(false)))
       .subscribe({ next: () => this.dialogRef.close() });
   }

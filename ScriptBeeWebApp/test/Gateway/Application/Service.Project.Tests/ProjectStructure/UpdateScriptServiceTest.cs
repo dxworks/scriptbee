@@ -45,7 +45,7 @@ public class UpdateScriptServiceTest
             .Returns(Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(error));
 
         var result = await _updateScriptService.Update(
-            new UpdateScriptCommand(projectId, new ScriptId(Guid.NewGuid()), null),
+            new UpdateScriptCommand(projectId, new ScriptId(Guid.NewGuid()), null, null),
             TestContext.Current.CancellationToken
         );
 
@@ -73,6 +73,7 @@ public class UpdateScriptServiceTest
             new UpdateScriptCommand(
                 projectId,
                 scriptId,
+                null,
                 [
                     new ScriptParameter
                     {
@@ -108,7 +109,7 @@ public class UpdateScriptServiceTest
 
         // Act
         var result = await _updateScriptService.Update(
-            new UpdateScriptCommand(projectId, scriptId, null),
+            new UpdateScriptCommand(projectId, scriptId, null, null),
             TestContext.Current.CancellationToken
         );
 
@@ -120,7 +121,70 @@ public class UpdateScriptServiceTest
     }
 
     [Fact]
-    public async Task UpdateScriptSuccessfully()
+    public async Task UpdateScriptSuccessfullyWithAllParameters()
+    {
+        // Arrange
+        var projectId = ProjectId.FromValue("id");
+        var scriptId = new ScriptId(Guid.NewGuid());
+        var script = BasicScript(projectId, scriptId);
+        var updateScript = BasicScript(projectId, scriptId) with
+        {
+            File = new ProjectStructureFile("name"),
+            Parameters =
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = "string",
+                    Value = "value",
+                },
+            ],
+        };
+        SetupMocks(projectId, scriptId, script, updateScript);
+
+        // Act
+        var result = await UpdateScript(
+            projectId,
+            scriptId,
+            "name",
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = "string",
+                    Value = "value",
+                },
+            ]
+        );
+
+        // Assert
+        await VerifyUpdateScript(result, updateScript);
+        _updateFile.Received(1).RenameFile(projectId, "path.lang", "name");
+    }
+
+    [Fact]
+    public async Task UpdateScriptSuccessfully_WhenOnlyNameIsUpdated()
+    {
+        // Arrange
+        var projectId = ProjectId.FromValue("id");
+        var scriptId = new ScriptId(Guid.NewGuid());
+        var script = BasicScript(projectId, scriptId);
+        var updateScript = BasicScript(projectId, scriptId) with
+        {
+            File = new ProjectStructureFile("name"),
+        };
+        SetupMocks(projectId, scriptId, script, updateScript);
+
+        // Act
+        var result = await UpdateScript(projectId, scriptId, "name", null);
+
+        // Assert
+        await VerifyUpdateScript(result, updateScript);
+        _updateFile.Received(1).RenameFile(projectId, "path.lang", "name");
+    }
+
+    [Fact]
+    public async Task UpdateScriptSuccessfully_WhenOnlyParametersAreUpdated()
     {
         // Arrange
         var projectId = ProjectId.FromValue("id");
@@ -138,6 +202,67 @@ public class UpdateScriptServiceTest
                 },
             ],
         };
+        SetupMocks(projectId, scriptId, script, updateScript);
+
+        // Act
+        var result = await UpdateScript(
+            projectId,
+            scriptId,
+            null,
+            [
+                new ScriptParameter
+                {
+                    Name = "parameter",
+                    Type = "string",
+                    Value = "value",
+                },
+            ]
+        );
+
+        // Assert
+        await VerifyUpdateScript(result, updateScript);
+        _updateFile
+            .Received(0)
+            .RenameFile(Arg.Any<ProjectId>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    private async Task VerifyUpdateScript(
+        OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError> result,
+        Script updateScript
+    )
+    {
+        MatchScript(result.AsT0, updateScript);
+        await _updateScript
+            .Received(1)
+            .Update(
+                Arg.Is<Script>(x => MatchScript(x, updateScript)),
+                TestContext.Current.CancellationToken
+            );
+    }
+
+    private async Task<
+        OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError>
+    > UpdateScript(
+        ProjectId projectId,
+        ScriptId scriptId,
+        string? name,
+        IEnumerable<ScriptParameter>? scriptParameters
+    )
+    {
+        var result = await _updateScriptService.Update(
+            new UpdateScriptCommand(projectId, scriptId, name, scriptParameters),
+            TestContext.Current.CancellationToken
+        );
+        return result;
+    }
+
+    private void SetupMocks(
+        ProjectId projectId,
+        ScriptId scriptId,
+        Script script,
+        Script updateScript
+    )
+    {
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -149,32 +274,6 @@ public class UpdateScriptServiceTest
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(script));
         _updateScript.Update(Arg.Any<Script>(), Arg.Any<CancellationToken>()).Returns(updateScript);
-
-        // Act
-        var result = await _updateScriptService.Update(
-            new UpdateScriptCommand(
-                projectId,
-                scriptId,
-                [
-                    new ScriptParameter
-                    {
-                        Name = "parameter",
-                        Type = "string",
-                        Value = "value",
-                    },
-                ]
-            ),
-            TestContext.Current.CancellationToken
-        );
-
-        // Assert
-        MatchScript(result.AsT0, script);
-        await _updateScript
-            .Received(1)
-            .Update(
-                Arg.Is<Script>(x => MatchScript(x, script)),
-                TestContext.Current.CancellationToken
-            );
     }
 
     private static bool MatchScript(Script actual, Script expected)
@@ -255,12 +354,7 @@ public class UpdateScriptServiceTest
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(script));
         _updateFile
-            .UpdateScriptContent(
-                projectId,
-                script.File.Path,
-                "content",
-                Arg.Any<CancellationToken>()
-            )
+            .UpdateContent(projectId, script.File.Path, "content", Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<Success, FileDoesNotExistsError>>(new Success()));
 
         // Act
@@ -273,7 +367,7 @@ public class UpdateScriptServiceTest
         result.AsT0.ShouldBe(new Success());
         await _updateFile
             .Received(1)
-            .UpdateScriptContent(
+            .UpdateContent(
                 projectId,
                 script.File.Path,
                 "content",

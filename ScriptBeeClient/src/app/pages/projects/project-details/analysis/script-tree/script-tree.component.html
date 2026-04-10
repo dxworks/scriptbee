@@ -2,23 +2,19 @@
   <button mat-icon-button aria-label="create new script" matTooltip="Create new script" (click)="onCreateNewScriptButtonClick()">
     <mat-icon>note_add</mat-icon>
   </button>
+  <button mat-icon-button aria-label="reload tree" matTooltip="Reload tree" (click)="onReloadTreeButtonClick()">
+    <mat-icon>sync</mat-icon>
+  </button>
 </div>
 
 @if (isDeleteLoading()) {
   <app-loading-progress-bar title="Deleting..."></app-loading-progress-bar>
 }
 
-@if (rootError()) {
-  <app-error-state [error]="rootError()!" (retry)="onRetry(null)"></app-error-state>
-} @else {
-  <app-lazy-file-tree
-    [data]="rootData()"
-    [actions]="actions"
-    [childrenAccessor]="childrenAccessor"
-    [hasChildAccessor]="hasChildAccessor"
-    [idAccessor]="idAccessor"
-    (clickChange)="onNodeClick($event)"
-    (expand)="onExpand($event)"
-    (retry)="onRetry($event)"
-    (loadMore)="onLoadMore($event)" />
-}
+<app-lazy-file-tree
+  [fetchData]="fetchData"
+  [actions]="actions"
+  [hasChildAccessor]="hasChildAccessor"
+  [idAccessor]="idAccessor"
+  [displayNameAccessor]="displayNameAccessor"
+  (clickChange)="onNodeClick($event)" />

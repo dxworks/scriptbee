@@ -1,4 +1,4 @@
-﻿<div class="project-model-section-title project-model-content-after-divider">Currently loaded models</div>
+<div class="project-model-section-title project-model-content-after-divider">Currently loaded models</div>
 
 <div class="currently-loaded-models-content">
   @if (project().linkers.length > 0) {
@@ -13,6 +13,6 @@
 <div class="currently-loaded-models-content">
   <span>Used Loaders: </span>
   <div>
-    <app-selectable-tree [data]="loadedFiles()"></app-selectable-tree>
+    <app-selectable-tree [data]="loadedFiles()" [displayNameAccessor]="displayNameAccessor"></app-selectable-tree>
   </div>
 </div>

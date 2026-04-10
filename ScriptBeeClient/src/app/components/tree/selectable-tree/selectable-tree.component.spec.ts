@@ -12,6 +12,7 @@ import { By } from '@angular/platform-browser';
 
 interface TestData {
   id: string;
+  name: string;
   description: string;
 }
 
@@ -21,14 +22,13 @@ describe('SelectableTreeComponent', () => {
 
   const mockData: TreeNode<TestData>[] = [
     {
-      name: 'Folder 1',
-      data: { id: 'f1', description: 'Folder 1 Description' },
+      data: { id: 'f1', name: 'Folder 1', description: 'Folder 1 Description' },
       children: [
-        { name: 'File 1.1', data: { id: 'file1.1', description: 'File 1.1 Description' } },
-        { name: 'File 1.2', data: { id: 'file1.2', description: 'File 1.2 Description' } },
+        { data: { id: 'file1.1', name: 'File 1.1', description: 'File 1.1 Description' } },
+        { data: { id: 'file1.2', name: 'File 1.2', description: 'File 1.2 Description' } },
       ],
     },
-    { name: 'File 2', data: { id: 'file2', description: 'File 2 Description' } },
+    { data: { id: 'file2', name: 'File 2', description: 'File 2 Description' } },
   ];
 
   beforeEach(async () => {
@@ -39,6 +39,7 @@ describe('SelectableTreeComponent', () => {
     fixture = TestBed.createComponent<SelectableTreeComponent<TestData>>(SelectableTreeComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('data', mockData);
+    fixture.componentRef.setInput('displayNameAccessor', (node: TreeNode<TestData>) => node.data.name);
     fixture.detectChanges();
   });
 
@@ -74,7 +75,7 @@ describe('SelectableTreeComponent', () => {
   });
 
   it('should show actions menu only when actions are provided', () => {
-    const actions: TreeAction<TestData>[] = [{ label: 'Delete', icon: 'delete', callback: vi.fn() }];
+    const actions: TreeAction<TestData>[] = [{ label: 'Delete', icon: 'delete', type: 'all', callback: vi.fn() }];
     fixture.componentRef.setInput('actions', actions);
     fixture.detectChanges();
 
@@ -84,7 +85,7 @@ describe('SelectableTreeComponent', () => {
 
   it('should call action callback with node data when action is clicked', async () => {
     const actionSpy = vi.fn();
-    const actions: TreeAction<TestData>[] = [{ label: 'Delete', icon: 'delete', callback: actionSpy }];
+    const actions: TreeAction<TestData>[] = [{ label: 'Delete', icon: 'delete', type: 'all', callback: actionSpy }];
     fixture.componentRef.setInput('actions', actions);
     fixture.detectChanges();
 

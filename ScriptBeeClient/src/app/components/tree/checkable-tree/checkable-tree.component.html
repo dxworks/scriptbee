@@ -4,7 +4,7 @@
     <div class="leaf-node">
       <div class="node-content-wrapper">
         <mat-checkbox [checked]="selection.isSelected(node)" (change)="toggleSelection(node)" (click)="$event.stopPropagation()">
-          {{ node.name }}
+          {{ displayNameAccessor()(node) }}
         </mat-checkbox>
         @if (actions().length > 0) {
           <div class="flex-spacer"></div>
@@ -17,7 +17,7 @@
   <!-- Parent node -->
   <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
     <div class="mat-tree-node">
-      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + displayNameAccessor()(node)">
         <mat-icon class="mat-icon-rtl-mirror">
           {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
@@ -28,7 +28,7 @@
           [checked]="selection.isSelected(node)"
           (change)="toggleSelection(node)"
           (click)="$event.stopPropagation()">
-          {{ node.name }}
+          {{ displayNameAccessor()(node) }}
         </mat-checkbox>
         @if (actions().length > 0) {
           <div class="flex-spacer"></div>

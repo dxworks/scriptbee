@@ -10,6 +10,7 @@ import { By } from '@angular/platform-browser';
 
 interface TestData {
   id: string;
+  name: string;
 }
 
 describe('CheckableTreeComponent', () => {
@@ -18,14 +19,10 @@ describe('CheckableTreeComponent', () => {
 
   const mockData: TreeNode<TestData>[] = [
     {
-      name: 'Folder 1',
-      data: { id: 'f1' },
-      children: [
-        { name: 'File 1.1', data: { id: 'file1.1' } },
-        { name: 'File 1.2', data: { id: 'file1.2' } },
-      ],
+      data: { id: 'f1', name: 'Folder 1' },
+      children: [{ data: { id: 'file1.1', name: 'File 1.1' } }, { data: { id: 'file1.2', name: 'File 1.2' } }],
     },
-    { name: 'File 2', data: { id: 'file2' } },
+    { data: { id: 'file2', name: 'File 2' } },
   ];
 
   beforeEach(async () => {
@@ -36,6 +33,7 @@ describe('CheckableTreeComponent', () => {
     fixture = TestBed.createComponent<CheckableTreeComponent<TestData>>(CheckableTreeComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('data', mockData);
+    fixture.componentRef.setInput('displayNameAccessor', (node: TreeNode<TestData>) => node.data.name);
     fixture.detectChanges();
   });
 
@@ -77,6 +75,59 @@ describe('CheckableTreeComponent', () => {
     expect(component.selection.isSelected(folderNode)).toBe(true);
     expect(component.selection.isSelected(folderNode.children![0])).toBe(true);
     expect(component.selection.isSelected(folderNode.children![1])).toBe(true);
-    expect(folderNode.children![0].data?.id).toBe('file1.1');
+  });
+
+  it('should deselect all children when parent is deselected', () => {
+    const folderNode = component.data()[0];
+    component.selection.select(folderNode, ...folderNode.children!);
+
+    const toggleButton = fixture.debugElement.query(By.css('button[matTreeNodeToggle]'));
+    toggleButton.nativeElement.click();
+    fixture.detectChanges();
+
+    const checkboxes = fixture.debugElement.queryAll(By.css('mat-checkbox'));
+    const folder1Checkbox = checkboxes.find((c) => c.nativeElement.textContent.includes('Folder 1'));
+
+    folder1Checkbox!.query(By.css('input')).nativeElement.click();
+    fixture.detectChanges();
+
+    expect(component.selection.isSelected(folderNode)).toBe(false);
+    expect(component.selection.isSelected(folderNode.children![0])).toBe(false);
+    expect(component.selection.isSelected(folderNode.children![1])).toBe(false);
+  });
+
+  it('should show indeterminate state when some but not all children are selected', () => {
+    const toggleButton = fixture.debugElement.query(By.css('button[matTreeNodeToggle]'));
+    toggleButton.nativeElement.click();
+    fixture.detectChanges();
+
+    const checkboxes = fixture.debugElement.queryAll(By.css('mat-checkbox'));
+    const file11Checkbox = checkboxes.find((c) => c.nativeElement.textContent.includes('File 1.1'));
+
+    file11Checkbox!.query(By.css('input')).nativeElement.click();
+    fixture.detectChanges();
+
+    const folderNode = component.data()[0];
+    expect(component.isIndeterminate(folderNode)).toBe(true);
+    expect(component.selection.isSelected(folderNode)).toBe(false);
+  });
+
+  it('should select parent when all children are selected one by one', () => {
+    const toggleButton = fixture.debugElement.query(By.css('button[matTreeNodeToggle]'));
+    toggleButton.nativeElement.click();
+    fixture.detectChanges();
+
+    const checkboxes = fixture.debugElement.queryAll(By.css('mat-checkbox'));
+    const file11Checkbox = checkboxes.find((c) => c.nativeElement.textContent.includes('File 1.1'));
+    const file12Checkbox = checkboxes.find((c) => c.nativeElement.textContent.includes('File 1.2'));
+
+    file11Checkbox!.query(By.css('input')).nativeElement.click();
+    fixture.detectChanges();
+    file12Checkbox!.query(By.css('input')).nativeElement.click();
+    fixture.detectChanges();
+
+    const folderNode = component.data()[0];
+    expect(component.selection.isSelected(folderNode)).toBe(true);
+    expect(component.isIndeterminate(folderNode)).toBe(false);
   });
 });

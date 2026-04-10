@@ -47,6 +47,7 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
             new UpdateScriptCommand(
                 ProjectId.FromValue(projectId),
                 new ScriptId(scriptId),
+                command.Name,
                 command.Parameters?.Select(p => p.Map())
             ),
             cancellationToken

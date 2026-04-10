@@ -17,7 +17,7 @@
     <app-centered-spinner text="Reloading Context"></app-centered-spinner>
   }
 
-  <app-selectable-tree [data]="context()"></app-selectable-tree>
+  <app-selectable-tree [data]="context()" [displayNameAccessor]="displayNameAccessor"></app-selectable-tree>
 
   <div class="action-buttons-container">
     <button mat-flat-button [disabled]="isReloadContextLoading()" (click)="onReloadModelsClick()">Reload Models</button>

@@ -66,6 +66,10 @@ export class CreateScriptDialogComponent {
     this.projectStructureService
       .createProjectScript(this.data.projectId, this.scriptPath(), this.scriptLanguage(), this.parameters())
       .pipe(finalize(() => this.isCreateLoading.set(false)))
-      .subscribe({ next: () => this.dialogRef.close() });
+      .subscribe({
+        next: (result) => {
+          this.dialogRef.close(result);
+        },
+      });
   }
 }
