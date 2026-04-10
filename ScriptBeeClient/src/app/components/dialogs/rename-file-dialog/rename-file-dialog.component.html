@@ -1,0 +1,11 @@
+<h1 mat-dialog-title style="text-align: center">Rename file: {{ data.currentScriptName }}</h1>
+<div mat-dialog-content>
+  <mat-form-field class="example-full-width">
+    <mat-label>New Name</mat-label>
+    <input matInput placeholder="Name" [(ngModel)]="newName" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="newName()">RENAME</button>
+  <button mat-button (click)="onCloseClick()">CLOSE</button>
+</div>
