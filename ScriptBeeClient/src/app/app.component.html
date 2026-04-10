@@ -1,4 +1,36 @@
 <div style="height: 100%">
-  <app-nav-menu></app-nav-menu>
-  <router-outlet></router-outlet>
+  <mat-toolbar>
+    @if (shouldDisplayMenuHamburger()) {
+      <button matIconButton (click)="onMenuButtonClick()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
+
+    <a routerLink="/" style="margin-top: 12px" class="primary-light-background">
+      <img src="/images/logo_text_mini.png" alt="logo" height="48" width="112" />
+    </a>
+
+    <button mat-button routerLink="/projects">Projects</button>
+
+    <span class="flex-spacer"></span>
+
+    @if (projectState.currentProjectId()) {
+      <app-instance-manager></app-instance-manager>
+    }
+    <mat-slide-toggle [checked]="themeService.darkMode()" (toggleChange)="themeService.toggleDarkMode()" labelPosition="before">
+      <mat-icon>bedtime</mat-icon>
+    </mat-slide-toggle>
+  </mat-toolbar>
+
+  <mat-sidenav-container>
+    <mat-sidenav [opened]="shouldDisplayMenuHamburger()" mode="side" [style.width]="sideNavWidth()">
+      @if (projectState.currentProjectId()) {
+        <app-project-side-nav-list [projectId]="projectState.currentProjectId()!" [isCollapsed]="!isMenuOpen()" />
+      }
+    </mat-sidenav>
+
+    <mat-sidenav-content [style.margin-left]="sideNavWidth()">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
