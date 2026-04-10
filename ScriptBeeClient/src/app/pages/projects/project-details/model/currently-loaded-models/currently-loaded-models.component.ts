@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { TreeNode } from '../../../../../types/tree-node';
 import { SelectableTreeComponent } from '../../../../../components/tree/selectable-tree/selectable-tree.component';
-import { Project } from '../../../../../types/project';
+import { Project, ProjectFile } from '../../../../../types/project';
 
 @Component({
   selector: 'app-currently-loaded-models',
@@ -13,17 +13,23 @@ export class CurrentlyLoadedModelsComponent {
   project = input.required<Project>();
   instanceId = input.required<string>();
 
-  loadedFiles = computed<TreeNode<null>[]>(() => {
+  loadedFiles = computed<TreeNode<ProjectFile | string>[]>(() => {
     const project = this.project();
 
-    const nodes: TreeNode<null>[] = [];
+    const nodes: TreeNode<ProjectFile | string>[] = [];
     for (const loaderId of Object.keys(project.savedFiles)) {
       nodes.push({
-        name: loaderId,
-        data: null,
-        children: project.savedFiles[loaderId].map((file) => ({ name: file.name, data: null })),
+        data: loaderId,
+        children: project.savedFiles[loaderId].map((file) => ({ data: file })),
       });
     }
     return nodes;
   });
+
+  displayNameAccessor = (node: TreeNode<ProjectFile | string>) => {
+    if (typeof node.data === 'string') {
+      return node.data;
+    }
+    return node.data.name;
+  };
 }

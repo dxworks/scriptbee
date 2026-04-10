@@ -20,6 +20,6 @@ export interface CreateScriptRequest {
 }
 
 export interface UpdateScriptRequest {
-  language: string;
+  name: string;
   parameters: ScriptParameter[];
 }

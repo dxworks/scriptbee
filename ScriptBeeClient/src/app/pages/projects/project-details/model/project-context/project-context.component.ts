@@ -20,9 +20,11 @@ export class ProjectContextComponent {
   projectId = input.required<string>();
   instanceId = input.required<string>();
 
-  context = computed<TreeNode<null>[]>(() => {
+  context = computed<TreeNode<string>[]>(() => {
     return convertToTreeNodes(this.projectContextResource.value() ?? []);
   });
+
+  displayNameAccessor = (node: TreeNode<string>) => node.data;
 
   projectContextResource = rxResource({
     params: () => ({ projectId: this.projectId(), instanceId: this.instanceId() }),
@@ -52,14 +54,13 @@ export class ProjectContextComponent {
   }
 }
 
-function convertToTreeNodes(context: ProjectContext): TreeNode<null>[] {
-  const nodes: TreeNode<null>[] = [];
+function convertToTreeNodes(context: ProjectContext): TreeNode<string>[] {
+  const nodes: TreeNode<string>[] = [];
 
   for (const contextSlice of context) {
     nodes.push({
-      name: contextSlice.model,
-      data: null,
-      children: contextSlice.pluginIds.map((pluginId) => ({ name: pluginId, data: null })),
+      data: contextSlice.model,
+      children: contextSlice.pluginIds.map((pluginId) => ({ data: pluginId })),
     });
   }
 

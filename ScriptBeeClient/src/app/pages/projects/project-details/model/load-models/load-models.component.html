@@ -1,6 +1,6 @@
 <div class="project-model-section-title project-model-content-after-divider">Load Models</div>
 
-<app-checkable-tree [data]="savedFiles()" (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-checkable-tree>
+<app-checkable-tree [data]="savedFiles()" [displayNameAccessor]="displayNameAccessor" (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-checkable-tree>
 
 @if (isLoadModelsLoading()) {
   <app-centered-spinner text="Loading Models"></app-centered-spinner>
