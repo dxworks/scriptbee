@@ -63,12 +63,30 @@ public class UpdateScriptService(
         CancellationToken cancellationToken
     )
     {
-        if (command.Parameters == null)
+        var updatedScript = script;
+
+        if (command.Parameters is not null)
+        {
+            updatedScript = updatedScript with { Parameters = command.Parameters };
+        }
+
+        if (!string.IsNullOrWhiteSpace(command.Name))
+        {
+            updatedScript = updatedScript with
+            {
+                File = updatedScript.File.UpdateName(command.Name),
+            };
+        }
+
+        if (updatedScript == script)
         {
             return script;
         }
 
-        var updatedScript = script with { Parameters = command.Parameters };
+        if (script.File != updatedScript.File)
+        {
+            updateFile.RenameFile(command.ProjectId, script.File.Path, updatedScript.File.Path);
+        }
 
         return await updateScript.Update(updatedScript, cancellationToken);
     }
@@ -83,7 +101,7 @@ public class UpdateScriptService(
         return await result.Match<Task<UpdateContentResult>>(
             async script =>
             {
-                await updateFile.UpdateScriptContent(
+                await updateFile.UpdateContent(
                     command.ProjectId,
                     script.File.Path,
                     command.Content,

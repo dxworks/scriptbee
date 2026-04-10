@@ -15,9 +15,10 @@ public class UpdateScriptValidatorTest
     [InlineData("boolean")]
     public async Task GivenValidUpdateScript_ThenResultHasNoErrors(string type)
     {
-        var createProject = new WebUpdateScriptCommand([
-            new WebScriptParameter("parameter", type, "value"),
-        ]);
+        var createProject = new WebUpdateScriptCommand(
+            null,
+            [new WebScriptParameter("parameter", type, "value")]
+        );
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -30,7 +31,20 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenValidCreateScriptWithNullParameters_ThenResultHasNoErrors()
     {
-        var createProject = new WebUpdateScriptCommand(null);
+        var createProject = new WebUpdateScriptCommand("name", null);
+
+        var result = await _validator.TestValidateAsync(
+            createProject,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task GivenValidCreateScriptWithNullName_ThenResultHasNoErrors()
+    {
+        var createProject = new WebUpdateScriptCommand(null, []);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -43,7 +57,7 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenValidCreateScriptWithEmptyParameters_ThenResultHasNoErrors()
     {
-        var createProject = new WebUpdateScriptCommand([]);
+        var createProject = new WebUpdateScriptCommand("name", []);
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -56,9 +70,10 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenEmptyParameterName_ThenResultHasErrors()
     {
-        var createProject = new WebUpdateScriptCommand([
-            new WebScriptParameter("", "string", "value"),
-        ]);
+        var createProject = new WebUpdateScriptCommand(
+            "name",
+            [new WebScriptParameter("", "string", "value")]
+        );
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -73,9 +88,10 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenNullParameterName_ThenResultHasErrors()
     {
-        var createProject = new WebUpdateScriptCommand([
-            new WebScriptParameter(null!, "string", "value"),
-        ]);
+        var createProject = new WebUpdateScriptCommand(
+            "name",
+            [new WebScriptParameter(null!, "string", "value")]
+        );
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -89,9 +105,10 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenNullParameterType_ThenResultHasErrors()
     {
-        var createProject = new WebUpdateScriptCommand([
-            new WebScriptParameter("parameter", null!, "value"),
-        ]);
+        var createProject = new WebUpdateScriptCommand(
+            "name",
+            [new WebScriptParameter("parameter", null!, "value")]
+        );
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -105,9 +122,10 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenInvalidParameterType_ThenResultHasErrors()
     {
-        var createProject = new WebUpdateScriptCommand([
-            new WebScriptParameter("parameter", "invalid", "value"),
-        ]);
+        var createProject = new WebUpdateScriptCommand(
+            "name",
+            [new WebScriptParameter("parameter", "invalid", "value")]
+        );
 
         var result = await _validator.TestValidateAsync(
             createProject,
@@ -123,9 +141,10 @@ public class UpdateScriptValidatorTest
     [Fact]
     public async Task GivenInvalidFields_ThenResultHasErrors()
     {
-        var createProject = new WebUpdateScriptCommand([
-            new WebScriptParameter(null!, null!, null),
-        ]);
+        var createProject = new WebUpdateScriptCommand(
+            "name",
+            [new WebScriptParameter(null!, null!, null)]
+        );
 
         var result = await _validator.TestValidateAsync(
             createProject,

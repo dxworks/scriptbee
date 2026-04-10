@@ -7,5 +7,6 @@ namespace ScriptBee.UseCases.Project.ProjectStructure;
 public record UpdateScriptCommand(
     ProjectId ProjectId,
     ScriptId ScriptId,
+    string? Name,
     IEnumerable<ScriptParameter>? Parameters
 );
