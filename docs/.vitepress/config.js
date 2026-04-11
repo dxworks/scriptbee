@@ -19,7 +19,14 @@ export default defineConfig({
         text: 'Home',
         items: [
           { text: 'Introduction', link: '/' },
-          { text: 'Installation', link: '/home/installation' },
+          {
+            text: 'Installation',
+            link: '/installation/installation',
+            items: [
+              { text: 'Docker Compose', link: '/installation/docker_installation' },
+              { text: 'Kubernetes', link: '/installation/kubernetes_installation' },
+            ],
+          },
         ],
       },
       {

@@ -6,7 +6,7 @@ written in C#, Javascript and Python on it.
 
 ## Installation
 
-For detailed setup instructions, please refer to the [installation guide](home/installation.md).
+For detailed setup instructions, please refer to the [installation guide](installation/installation.md).
 
 ## How to run
 
