@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Analysis;
@@ -48,7 +48,13 @@ public sealed class RunScriptService(
         CancellationToken cancellationToken
     )
     {
-        var scriptFileId = await SaveStringContentToFile(content, cancellationToken);
+        var metadata = new HistoricalScriptMetadata(
+            request.Script.File.Path,
+            request.Script.ScriptLanguage.Name,
+            request.Script.ScriptLanguage.Extension
+        );
+
+        var scriptFileId = await SaveStringContentToFile(content, metadata, cancellationToken);
 
         var analysisInfo = request.AnalysisInfo with { ScriptFileId = scriptFileId };
         await updateAnalysis.Update(analysisInfo, cancellationToken);
@@ -78,17 +84,19 @@ public sealed class RunScriptService(
         );
     }
 
-    private async Task<FileId> SaveStringContentToFile(
+    private async Task<FileId> SaveStringContentToFile<TMetadata>(
         string scriptContent,
+        TMetadata? metadata,
         CancellationToken cancellationToken
     )
+        where TMetadata : class
     {
         var byteArray = Encoding.ASCII.GetBytes(scriptContent);
         await using var stream = new MemoryStream(byteArray);
 
         var fileId = new FileId(guidProvider.NewGuid());
 
-        await fileModelService.UploadFileAsync(fileId, stream, cancellationToken);
+        await fileModelService.UploadFileAsync(fileId, stream, metadata, cancellationToken);
         return fileId;
     }
 
@@ -120,7 +128,11 @@ public sealed class RunScriptService(
         }
         catch (Exception e)
         {
-            var runErrorId = await SaveStringContentToFile(e.Message, cancellationToken);
+            var runErrorId = await SaveStringContentToFile<object>(
+                e.Message,
+                null,
+                cancellationToken
+            );
 
             resultCollector.Add(
                 new ResultId(runErrorId.Value),

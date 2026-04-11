@@ -2,6 +2,11 @@
 layout: page
 ---
 
+<script setup>
+
+const specUrl = import.meta.env.BASE_URL + 'gateway_swagger.json'
+</script>
+
 <ClientOnly>
-  <Redoc  specUrl="../api/gateway_swagger.json" />
+  <Redoc :specUrl="specUrl" />
 </ClientOnly>

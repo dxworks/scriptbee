@@ -49,7 +49,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 
         var result = await _adapter.GetById(
             new AnalysisId("b2038fa2-75ef-4bb4-bb7a-9cc37725bf2c"),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         AssertAnalysisInfo(
@@ -74,7 +74,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
     {
         var result = await _adapter.GetById(
             new AnalysisId("187c18d1-080c-4684-819f-9f9ffb30a99f"),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         result.AsT1.ShouldBe(
@@ -127,7 +127,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         var analysisInfos = await _adapter.GetAll(
             ProjectId.FromValue("all-project-id-1"),
             sorts,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         var infos = analysisInfos.ToList();
@@ -181,7 +181,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         var analysisInfos = await _adapter.GetAll(
             ProjectId.FromValue("all-project-id-asc"),
             sorts,
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         var infos = analysisInfos.ToList();
@@ -202,7 +202,10 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             creationDate
         );
 
-        var actualAnalysisInfo = await _adapter.Create(analysisInfo, CancellationToken.None);
+        var actualAnalysisInfo = await _adapter.Create(
+            analysisInfo,
+            TestContext.Current.CancellationToken
+        );
 
         var expected = new AnalysisInfo(
             new AnalysisId("15ed8fda-d6c8-49c9-909d-bf01d58b45b2"),
@@ -246,7 +249,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 
         await _adapter.DeleteById(
             new AnalysisId("5ab73da4-aebc-442a-afb2-639a1a7eca32"),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         var analysisInfo = await _mongoCollection
@@ -261,7 +264,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
         var analysisId = new AnalysisId("2c4ef6b0-8048-4440-bc65-55c3442a425b");
 
         await Should.NotThrowAsync(async () =>
-            await _adapter.DeleteById(analysisId, CancellationToken.None)
+            await _adapter.DeleteById(analysisId, TestContext.Current.CancellationToken)
         );
     }
 
@@ -304,7 +307,7 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
 
         await _adapter.DeleteAllByProjectId(
             ProjectId.FromValue("delete-all-by-project-id-to-delete"),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         var deletedAnalysisInfo = await _mongoCollection
@@ -364,7 +367,10 @@ public class AnalysisPersistenceAdapterTest : IClassFixture<MongoDbFixture>
             null
         );
 
-        var result = await _adapter.Update(updatedAnalysisInfo, CancellationToken.None);
+        var result = await _adapter.Update(
+            updatedAnalysisInfo,
+            TestContext.Current.CancellationToken
+        );
 
         AssertAnalysisInfo(result, updatedAnalysisInfo);
         var foundAnalysisInfo = await _mongoCollection

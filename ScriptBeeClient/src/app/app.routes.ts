@@ -4,6 +4,7 @@ import { CreateProjectPage } from './pages/projects/create-project/create-projec
 import { ProjectDetailsPage } from './pages/projects/project-details/project-details-page.component';
 import { ProjectModelPage } from './pages/projects/project-details/model/project-model-page.component';
 import { AnalysisComponent } from './pages/projects/project-details/analysis/analysis.component';
+import { AnalysisRunDetailsComponent } from './pages/projects/project-details/analysis-run-details/analysis-run-details.component';
 import { ProjectSettingsPage } from './pages/projects/project-details/settings/project-settings.component';
 import { PluginsMarketplaceDashboardComponent } from './pages/projects/project-details/plugins/marketplace-dashboard/plugins-marketplace-dashboard.component';
 import { PluginDetailsComponent } from './pages/projects/project-details/plugins/plugin-details/plugin-details.component';
@@ -23,6 +24,10 @@ export const routes: Routes = [
       {
         path: 'analysis',
         component: AnalysisComponent,
+      },
+      {
+        path: 'analysis/:analysisId',
+        component: AnalysisRunDetailsComponent,
       },
       { path: 'settings', component: ProjectSettingsPage },
       {

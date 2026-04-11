@@ -40,7 +40,12 @@ public class HelperFunctionsResultServiceTest
 
         await _fileModelService
             .Received()
-            .UploadFileAsync(resultId.ToFileId(), Arg.Any<Stream>(), Arg.Any<CancellationToken>());
+            .UploadFileAsync<object>(
+                resultId.ToFileId(),
+                Arg.Any<Stream>(),
+                null,
+                Arg.Any<CancellationToken>()
+            );
         _resultCollector.Received().Add(resultId, fileName, type);
     }
 
@@ -62,7 +67,12 @@ public class HelperFunctionsResultServiceTest
 
         await _fileModelService
             .Received()
-            .UploadFileAsync(resultId.ToFileId(), content, Arg.Any<CancellationToken>());
+            .UploadFileAsync<object>(
+                resultId.ToFileId(),
+                content,
+                null,
+                Arg.Any<CancellationToken>()
+            );
         _resultCollector.Received().Add(resultId, fileName, type);
     }
 
@@ -77,7 +87,7 @@ public class HelperFunctionsResultServiceTest
 
         _helperFunctionsResultService.UploadResult(fileName, type, content);
 
-        _fileModelService.Received().UploadFile(resultId.ToFileId(), Arg.Any<Stream>());
+        _fileModelService.Received().UploadFile<object>(resultId.ToFileId(), Arg.Any<Stream>());
         _resultCollector.Received().Add(resultId, fileName, type);
     }
 
@@ -92,7 +102,7 @@ public class HelperFunctionsResultServiceTest
 
         _helperFunctionsResultService.UploadResult(fileName, type, content);
 
-        _fileModelService.Received().UploadFile(resultId.ToFileId(), content);
+        _fileModelService.Received().UploadFile<object>(resultId.ToFileId(), content);
         _resultCollector.Received().Add(resultId, fileName, type);
     }
 }

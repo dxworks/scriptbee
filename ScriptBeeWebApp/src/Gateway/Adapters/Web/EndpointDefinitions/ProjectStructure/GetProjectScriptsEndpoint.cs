@@ -73,7 +73,7 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
     }
 
     private static async Task<
-        Results<Ok<string>, NotFound<ProblemDetails>>
+        Results<ContentHttpResult, NotFound<ProblemDetails>>
     > GetProjectScriptsContent(
         HttpContext context,
         [FromRoute] string projectId,
@@ -88,8 +88,8 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
             cancellationToken
         );
 
-        return result.Match<Results<Ok<string>, NotFound<ProblemDetails>>>(
-            content => TypedResults.Ok(content),
+        return result.Match<Results<ContentHttpResult, NotFound<ProblemDetails>>>(
+            content => TypedResults.Text(content),
             error => error.ToProblem(context)
         );
     }

@@ -5,6 +5,7 @@ export interface AnalysisStatus {
   instanceId: string;
   status: AnalysisStatusType;
   scriptId: string;
+  scriptFileId?: string;
   creationDate: Date;
   finishedDate?: Date;
   errors?: AnalysisError[];

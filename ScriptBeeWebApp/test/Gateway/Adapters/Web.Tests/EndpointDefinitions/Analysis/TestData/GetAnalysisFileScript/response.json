@@ -1,0 +1,11 @@
+{
+  "id": "d6912b05-0297-45a2-8af3-b3541dd8dba7",
+  "name": "historical-script.py",
+  "path": "historical-script.py",
+  "absolutePath": "absolute",
+  "scriptLanguage": {
+    "name": "python",
+    "extension": ".py"
+  },
+  "parameters": []
+}

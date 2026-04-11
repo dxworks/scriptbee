@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { GetProjectFilesResponse, ProjectScript } from '../../types/project';
 import { CreateScriptRequest, ScriptLanguage, ScriptParameter, UpdateScriptRequest } from '../../types/script-types';
 import { WebResponse } from '../../types/web-response';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +31,8 @@ export class ProjectStructureService {
     return this.http.get<ProjectScript>(`/api/projects/${projectId}/scripts/${scriptId}`);
   }
 
-  getScriptContent(projectId: string, scriptId: string) {
-    return this.http.get<string>(`/api/projects/${projectId}/scripts/${scriptId}/content`);
+  getScriptContent(projectId: string, scriptId: string): Observable<string> {
+    return this.http.get(`/api/projects/${projectId}/scripts/${scriptId}/content`, { responseType: 'text' });
   }
 
   createProjectScript(projectId: string, scriptPath: string, scriptLanguage: string, parameters: ScriptParameter[]) {

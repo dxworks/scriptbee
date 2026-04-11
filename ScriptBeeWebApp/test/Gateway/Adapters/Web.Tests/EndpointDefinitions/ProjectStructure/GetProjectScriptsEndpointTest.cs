@@ -8,7 +8,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project.ProjectStructure;
-using VeriJson;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;
@@ -171,7 +170,7 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         var actualContent = await response.Content.ReadAsStringAsync(
             TestContext.Current.CancellationToken
         );
-        actualContent.Should().BeEquivalentTo("\"content\"");
+        actualContent.ShouldBe("content");
     }
 
     [Fact]

@@ -7,6 +7,7 @@ public sealed record WebAnalysisInfo(
     string InstanceId,
     string Status,
     string ScriptId,
+    string? ScriptFileId,
     DateTimeOffset CreationDate,
     DateTimeOffset? FinishedDate,
     List<WebAnalysisError>? Errors
@@ -20,6 +21,7 @@ public sealed record WebAnalysisInfo(
             analysisInfo.InstanceId.ToString(),
             analysisInfo.Status.ToString(),
             analysisInfo.ScriptId.ToString(),
+            analysisInfo.ScriptFileId?.ToString(),
             analysisInfo.CreationDate,
             analysisInfo.FinishedDate,
             errors.Count == 0

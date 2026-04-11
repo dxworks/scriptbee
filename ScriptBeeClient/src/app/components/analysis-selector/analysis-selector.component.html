@@ -7,3 +7,9 @@
     }
   </mat-select>
 </mat-form-field>
+
+@if (analysisId()) {
+  <button mat-icon-button class="extended-view-btn" (click)="openExtendedView()" matTooltip="Extended Analysis View">
+    <mat-icon svgIcon="open-in-new"></mat-icon>
+  </button>
+}

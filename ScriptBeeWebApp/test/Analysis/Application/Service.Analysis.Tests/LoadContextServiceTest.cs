@@ -28,7 +28,7 @@ public class LoadContextServiceTest
     {
         var filesToLoad = new Dictionary<string, IEnumerable<FileId>> { { "loader", [] } };
 
-        await _loadContextService.Load(filesToLoad, CancellationToken.None);
+        await _loadContextService.Load(filesToLoad, TestContext.Current.CancellationToken);
 
         await _loadModelFilesService
             .Received(1)

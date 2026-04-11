@@ -36,15 +36,21 @@ public class LinkContextServiceTest
 
         await _linkContextService.Link(
             new List<string> { "linker1", "linker2" },
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         await modelLinker1
             .Received(1)
-            .LinkModel(project.Context.Models, cancellationToken: CancellationToken.None);
+            .LinkModel(
+                project.Context.Models,
+                cancellationToken: TestContext.Current.CancellationToken
+            );
         await modelLinker2
             .Received(1)
-            .LinkModel(project.Context.Models, cancellationToken: CancellationToken.None);
+            .LinkModel(
+                project.Context.Models,
+                cancellationToken: TestContext.Current.CancellationToken
+            );
     }
 
     [Fact]
@@ -59,7 +65,7 @@ public class LinkContextServiceTest
 
         await _linkContextService.Link(
             new List<string> { "invalidLinker" },
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         await modelLinker
@@ -88,11 +94,14 @@ public class LinkContextServiceTest
 
         await _linkContextService.Link(
             new List<string> { "linker1", "invalidLinker" },
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         await modelLinker1
             .Received(1)
-            .LinkModel(project.Context.Models, cancellationToken: CancellationToken.None);
+            .LinkModel(
+                project.Context.Models,
+                cancellationToken: TestContext.Current.CancellationToken
+            );
     }
 }

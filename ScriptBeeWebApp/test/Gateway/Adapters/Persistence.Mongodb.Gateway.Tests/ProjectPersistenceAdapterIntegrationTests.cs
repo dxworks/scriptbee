@@ -31,7 +31,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var project = ProjectDetailsFixture.BasicProjectDetails(ProjectId.Create("id"));
 
-        var result = await _adapter.Create(project, CancellationToken.None);
+        var result = await _adapter.Create(project, TestContext.Current.CancellationToken);
 
         result.IsT0.ShouldBeTrue();
         var savedProject = await _mongoCollection
@@ -52,7 +52,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.Create(project, CancellationToken.None);
+        var result = await _adapter.Create(project, TestContext.Current.CancellationToken);
 
         result.AsT1.ShouldBe(new ProjectIdAlreadyInUseError(projectId));
     }
@@ -66,7 +66,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        await _adapter.Delete(projectId, CancellationToken.None);
+        await _adapter.Delete(projectId, TestContext.Current.CancellationToken);
 
         var project = await _mongoCollection
             .Find(p => p.Id == "to-delete")
@@ -80,7 +80,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         var projectId = ProjectId.Create("to-delete-not-existing-id");
 
         await Should.NotThrowAsync(async () =>
-            await _adapter.Delete(projectId, CancellationToken.None)
+            await _adapter.Delete(projectId, TestContext.Current.CancellationToken)
         );
     }
 
@@ -98,7 +98,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var projectDetailsList = await _adapter.GetAll(CancellationToken.None);
+        var projectDetailsList = await _adapter.GetAll(TestContext.Current.CancellationToken);
 
         var projectId = ProjectId.FromValue("all-projects-id");
         var projectDetails = projectDetailsList.First(x => x.Id == projectId);
@@ -145,7 +145,10 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.GetById(ProjectId.Create(projectId), CancellationToken.None);
+        var result = await _adapter.GetById(
+            ProjectId.Create(projectId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.Id.ShouldBe(ProjectId.FromValue(projectId));
         result.AsT0.Name.ShouldBe(projectId);
@@ -181,7 +184,10 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.GetById(ProjectId.Create(projectId), CancellationToken.None);
+        var result = await _adapter.GetById(
+            ProjectId.Create(projectId),
+            TestContext.Current.CancellationToken
+        );
 
         result.AsT0.Id.ShouldBe(ProjectId.FromValue(projectId));
         result.AsT0.Name.ShouldBe(projectId);
@@ -197,7 +203,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
     {
         var result = await _adapter.GetById(
             ProjectId.Create("get-project-by-not-existing-id"),
-            CancellationToken.None
+            TestContext.Current.CancellationToken
         );
 
         result.ShouldBe(
@@ -241,7 +247,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
             [new PluginInstallationConfig("plugin-id", "1.2.3")]
         );
 
-        var updateProject = await _adapter.Update(project, CancellationToken.None);
+        var updateProject = await _adapter.Update(project, TestContext.Current.CancellationToken);
 
         updateProject.ShouldBe(project);
         var updatedMongoProject = await _mongoCollection

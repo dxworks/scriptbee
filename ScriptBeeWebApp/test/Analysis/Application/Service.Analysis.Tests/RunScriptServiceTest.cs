@@ -74,9 +74,15 @@ public class RunScriptServiceTest
     [Fact]
     public async Task RunAsync_ShouldUpdateAnalysisWithSuccess_WhenScriptRunsSuccessfully()
     {
+        // Arrange
         var script = CreateScript();
         var request = new RunScriptRequest(_scriptRunner, script, CreateAnalysisInfo());
         var finishedDate = DateTime.UtcNow;
+        var metadata = new HistoricalScriptMetadata(
+            request.Script.File.Path,
+            request.Script.ScriptLanguage.Name,
+            request.Script.ScriptLanguage.Extension
+        );
         _loadFile
             .GetScriptContent(Arg.Any<ProjectId>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<string, FileDoesNotExistsError>>("content"));
@@ -87,7 +93,12 @@ public class RunScriptServiceTest
                 new Guid("00000000-0000-0000-0000-000000000002")
             );
         _fileModelService
-            .UploadFileAsync(Arg.Any<FileId>(), Arg.Any<Stream>(), Arg.Any<CancellationToken>())
+            .UploadFileAsync(
+                Arg.Any<FileId>(),
+                Arg.Any<Stream>(),
+                metadata,
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.CompletedTask);
         _dateTimeProvider.UtcNow().Returns(finishedDate);
         _pluginRepository
@@ -104,8 +115,10 @@ public class RunScriptServiceTest
             )
             .Returns(Task.CompletedTask);
 
+        // Act
         await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
+        // Assert
         await _updateAnalysis
             .Received(2)
             .Update(Arg.Any<AnalysisInfo>(), Arg.Any<CancellationToken>());
@@ -124,6 +137,7 @@ public class RunScriptServiceTest
     [Fact]
     public async Task RunAsync_ShouldUpdateAnalysisWithFailure_WhenScriptThrowsException()
     {
+        // Arrange
         var script = CreateScript();
         var request = new RunScriptRequest(_scriptRunner, script, CreateAnalysisInfo());
         var finishedDate = DateTime.UtcNow;
@@ -137,7 +151,12 @@ public class RunScriptServiceTest
                 new Guid("00000000-0000-0000-0000-000000000002")
             );
         _fileModelService
-            .UploadFileAsync(Arg.Any<FileId>(), Arg.Any<Stream>(), Arg.Any<CancellationToken>())
+            .UploadFileAsync<object>(
+                Arg.Any<FileId>(),
+                Arg.Any<Stream>(),
+                null,
+                Arg.Any<CancellationToken>()
+            )
             .Returns(Task.CompletedTask);
         _dateTimeProvider.UtcNow().Returns(finishedDate);
         _pluginRepository
@@ -154,8 +173,10 @@ public class RunScriptServiceTest
             )
             .Throws(new Exception("error"));
 
+        // Act
         await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
+        // Assert
         await _updateAnalysis
             .Received(2)
             .Update(Arg.Any<AnalysisInfo>(), Arg.Any<CancellationToken>());
