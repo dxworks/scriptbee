@@ -14,6 +14,8 @@ import { TreeAction, TreeNode } from '../../../../../types/tree-node';
 import { RenameFileDialog } from '../../../../../components/dialogs/rename-file-dialog/rename-file-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectContextService } from '../../../../../services/projects/project-context.service';
+import { ProjectStateService } from '../../../../../services/projects/project-state.service';
 
 @Component({
   selector: 'app-script-tree',
@@ -27,6 +29,7 @@ export class ScriptTreeComponent {
   fileSelected = output<ProjectFileNode>();
 
   isDeleteLoading = signal(false);
+  isGenerateClassesLoading = signal(false);
 
   lazyTree = viewChild.required(LazyFileTreeComponent<ProjectFileNode>);
 
@@ -52,6 +55,8 @@ export class ScriptTreeComponent {
   private projectStructureService = inject(ProjectStructureService);
   private dialog = inject(MatDialog);
   private snackbar = inject(MatSnackBar);
+  private projectContextService = inject(ProjectContextService);
+  projectStateService = inject(ProjectStateService);
 
   fetchData = (parentId: string | null, offset: number, limit: number) => {
     return this.projectStructureService.getProjectFiles(this.projectId(), parentId || undefined, offset, limit).pipe(
@@ -80,6 +85,28 @@ export class ScriptTreeComponent {
 
   onReloadTreeButtonClick() {
     this.lazyTree().resetTree();
+  }
+
+  onGenerateClassesClick() {
+    const instanceId = this.projectStateService.currentInstanceId();
+    if (!instanceId) {
+      this.snackbar.open('Cannot generate classes without an active instance', 'Dismiss', { duration: 4000 });
+      return;
+    }
+
+    this.isGenerateClassesLoading.set(true);
+    this.projectContextService
+      .generateClasses(this.projectId(), instanceId)
+      .pipe(finalize(() => this.isGenerateClassesLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackbar.open('Successfully generated model classes', 'Dismiss', { duration: 4000 });
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          const error = convertError(errorResponse);
+          this.snackbar.open(`Could not generate classes because ${error?.title}`, 'Dismiss', { duration: 4000 });
+        },
+      });
   }
 
   private deleteNode(node: ProjectFileNode) {

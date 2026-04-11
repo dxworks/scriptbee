@@ -17,10 +17,16 @@
     <app-centered-spinner text="Reloading Context"></app-centered-spinner>
   }
 
+  @if (isGenerateClassesLoading()) {
+    <app-centered-spinner text="Generating Classes"></app-centered-spinner>
+  }
+
   <app-selectable-tree [data]="context()" [displayNameAccessor]="displayNameAccessor"></app-selectable-tree>
 
   <div class="action-buttons-container">
     <button mat-flat-button [disabled]="isReloadContextLoading()" (click)="onReloadModelsClick()">Reload Models</button>
+
+    <button mat-flat-button [disabled]="isGenerateClassesLoading()" (click)="onGenerateClassesClick()">Generate Classes</button>
 
     <button mat-flat-button [disabled]="isClearContextLoading()" (click)="onClearContextButtonClick()">Clear Context</button>
   </div>

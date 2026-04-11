@@ -24,4 +24,8 @@ export class ProjectContextService {
   reloadContext(projectId: string, instanceId: string) {
     return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/reload`, {});
   }
+
+  generateClasses(projectId: string, instanceId: string) {
+    return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/generate-classes`, {});
+  }
 }
