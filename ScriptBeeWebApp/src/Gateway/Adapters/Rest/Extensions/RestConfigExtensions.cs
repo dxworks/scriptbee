@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Plugins;
 
@@ -17,6 +17,7 @@ public static class RestConfigExtensions
             .AddSingleton<IClearInstanceContext, ClearInstanceContextAdapter>()
             .AddSingleton<ILinkInstanceContext, LinkInstanceContextAdapter>()
             .AddSingleton<ILoadInstanceContext, LoadInstanceContextAdapter>()
+            .AddSingleton<IGenerateInstanceClasses, GenerateInstanceClassesAdapter>()
             .AddSingleton<ITriggerInstanceAnalysis, TriggerInstanceAnalysisAdapter>();
     }
 }

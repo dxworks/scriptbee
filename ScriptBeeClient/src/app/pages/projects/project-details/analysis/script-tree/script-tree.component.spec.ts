@@ -8,6 +8,8 @@ import { of, Subject, throwError } from 'rxjs';
 import { GetProjectFilesResponse, ProjectFileNode } from '../../../../../types/project';
 import { HttpErrorResponse } from '@angular/common/http';
 import { By } from '@angular/platform-browser';
+import { ProjectContextService } from '../../../../../services/projects/project-context.service';
+import { ProjectStateService } from '../../../../../services/projects/project-state.service';
 
 const makeFileNode = (overrides: Partial<ProjectFileNode> = {}): ProjectFileNode => ({
   id: 'file-1',
@@ -72,11 +74,15 @@ describe('ScriptTreeComponent', () => {
   let component: ScriptTreeComponent;
   let fixture: ComponentFixture<ScriptTreeComponent>;
   let projectStructureService: ReturnType<typeof createProjectStructureServiceMock>;
+  let projectContextService: { generateClasses: ReturnType<typeof vi.fn> };
+  let projectStateService: { currentInstanceId: ReturnType<typeof vi.fn> };
   let dialog: ReturnType<typeof createDialogMock>;
   let snackbar: { open: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
     projectStructureService = createProjectStructureServiceMock();
+    projectContextService = { generateClasses: vi.fn().mockReturnValue(of(undefined)) };
+    projectStateService = { currentInstanceId: vi.fn().mockReturnValue('instance-123') };
     dialog = createDialogMock();
     snackbar = { open: vi.fn() };
 
@@ -84,6 +90,8 @@ describe('ScriptTreeComponent', () => {
       imports: [ScriptTreeComponent],
       providers: [
         { provide: ProjectStructureService, useValue: projectStructureService },
+        { provide: ProjectContextService, useValue: projectContextService },
+        { provide: ProjectStateService, useValue: projectStateService },
         { provide: MatDialog, useValue: dialog },
         { provide: MatSnackBar, useValue: snackbar },
       ],
@@ -162,6 +170,30 @@ describe('ScriptTreeComponent', () => {
       fileNode.nativeElement.parentElement.click();
 
       expect(fileSelectedSpy).toHaveBeenCalledWith(file);
+    });
+
+    it('should generate classes when generate classes button is clicked', () => {
+      fixture.componentRef.setInput('projectId', 'project-abc');
+      fixture.detectChanges();
+      const generateButton = fixture.debugElement.query(By.css('button[aria-label="generate classes"]'));
+
+      generateButton.nativeElement.click();
+
+      expect(projectContextService.generateClasses).toHaveBeenCalledWith('project-abc', 'instance-123');
+      expect(snackbar.open).toHaveBeenCalledWith('Successfully generated model classes', 'Dismiss', expect.anything());
+    });
+
+    it('should show error when generate classes fails', () => {
+      fixture.componentRef.setInput('projectId', 'project-abc');
+      const httpError = new HttpErrorResponse({ error: { title: 'Unknown Error', status: 500 }, status: 500 });
+      projectContextService.generateClasses.mockReturnValue(throwError(() => httpError));
+      fixture.detectChanges();
+      const generateButton = fixture.debugElement.query(By.css('button[aria-label="generate classes"]'));
+
+      generateButton.nativeElement.click();
+
+      expect(projectContextService.generateClasses).toHaveBeenCalledWith('project-abc', 'instance-123');
+      expect(snackbar.open).toHaveBeenCalledWith(expect.stringContaining('Unknown Error'), 'Dismiss', expect.anything());
     });
   });
 

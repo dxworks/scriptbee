@@ -5,7 +5,7 @@ namespace ScriptBee.Service.Analysis;
 
 public class LoadContextService(
     ILoadModelFilesService loadModelFilesService,
-    IProjectStructureService projectStructureService
+    IGenerateClassesUseCase generateClassesUseCase
 ) : ILoadContextUseCase
 {
     public async Task Load(
@@ -15,6 +15,6 @@ public class LoadContextService(
     {
         await loadModelFilesService.LoadModelFiles(filesToLoad, cancellationToken);
 
-        await projectStructureService.GenerateModelClasses(cancellationToken);
+        await generateClassesUseCase.GenerateClasses(cancellationToken);
     }
 }

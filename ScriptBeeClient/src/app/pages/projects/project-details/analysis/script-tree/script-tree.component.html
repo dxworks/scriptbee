@@ -1,14 +1,26 @@
 <div class="create-new-script-container">
-  <button mat-icon-button aria-label="create new script" matTooltip="Create new script" (click)="onCreateNewScriptButtonClick()">
-    <mat-icon>note_add</mat-icon>
+  <button
+    mat-icon-button
+    aria-label="generate classes"
+    matTooltip="Generate Classes"
+    (click)="onGenerateClassesClick()"
+    [disabled]="!projectStateService.currentInstanceId()">
+    <mat-icon>data_object</mat-icon>
   </button>
   <button mat-icon-button aria-label="reload tree" matTooltip="Reload tree" (click)="onReloadTreeButtonClick()">
     <mat-icon>sync</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="create new script" matTooltip="Create new script" (click)="onCreateNewScriptButtonClick()">
+    <mat-icon>note_add</mat-icon>
   </button>
 </div>
 
 @if (isDeleteLoading()) {
   <app-loading-progress-bar title="Deleting..."></app-loading-progress-bar>
+}
+
+@if (isGenerateClassesLoading()) {
+  <app-loading-progress-bar title="Generating classes..."></app-loading-progress-bar>
 }
 
 <app-lazy-file-tree
