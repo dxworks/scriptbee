@@ -11,7 +11,12 @@
     [projectId]="projectId()"
     [instanceId]="instanceId()"
     [script]="scriptResource.value()!"
+    [saveStatus]="saveStatus()"
     (statusUrlChange)="onStatusUrlChanged($event)" />
 
-  <ngx-monaco-editor style="height: 100%" [options]="editorOptions()" [ngModel]="scriptContentResource.value()"></ngx-monaco-editor>
+  <ngx-monaco-editor
+    style="height: 100%"
+    [options]="editorOptions()"
+    [ngModel]="scriptContentResource.value()"
+    (ngModelChange)="onContentChange($event)"></ngx-monaco-editor>
 }

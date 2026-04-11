@@ -1,5 +1,16 @@
 .top-action-buttons {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 2px;
+}
+
+.save-status {
+  font-size: 0.8rem;
+  color: var(--mat-sys-outline);
+  margin-right: 8px;
+
+  &.error {
+    color: var(--mat-sys-error);
+  }
 }

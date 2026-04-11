@@ -51,4 +51,8 @@ export class ProjectStructureService {
     };
     return this.http.patch<ProjectScript>(`/api/projects/${projectId}/scripts/${scriptId}`, request);
   }
+
+  updateScriptContent(projectId: string, scriptId: string, content: string) {
+    return this.http.put(`/api/projects/${projectId}/scripts/${scriptId}/content`, content);
+  }
 }
