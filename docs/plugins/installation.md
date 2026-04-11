@@ -2,7 +2,7 @@
 
 ScriptBee supports different types of plugins, as well as plugin bundles which are a collection of plugins.
 They are installed in the plugins folder of the ScriptBee data folder. For more information about the ScriptBee data
-folder, see [Installation section](../home/installation.md).
+folder, see [Installation section](../installation/installation.md).
 
 In order for a plugin to be considered valid, the folder must contain a `manifest.yaml` file.
 

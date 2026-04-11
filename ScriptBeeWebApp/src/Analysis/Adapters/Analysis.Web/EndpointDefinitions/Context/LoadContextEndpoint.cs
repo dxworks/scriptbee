@@ -19,7 +19,8 @@ public class LoadContextEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/context/load", LoadContext)
-            .WithRequestValidation<WebLoadContextCommand>();
+            .WithRequestValidation<WebLoadContextCommand>()
+            .WithTags("Context");
     }
 
     private static async Task<NoContent> LoadContext(

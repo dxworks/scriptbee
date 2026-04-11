@@ -13,7 +13,7 @@ automatically update the preview.
 
 In order to work properly, the `UserFolder__UserFolderPath` environment variable must be set correctly.
 
-See [User Folder Setup](../home/installation.md#user-folder-setup) section for more information.
+See [User Folder Setup](../installation/installation.md#user-folder-setup) section for more information.
 
 ## Code Generation
 

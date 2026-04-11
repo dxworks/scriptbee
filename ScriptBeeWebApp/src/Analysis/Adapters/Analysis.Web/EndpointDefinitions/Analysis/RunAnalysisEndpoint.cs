@@ -20,7 +20,8 @@ public class RunAnalysisEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/analyses", TriggerAnalysis)
-            .WithRequestValidation<WebRunAnalysisCommand>();
+            .WithRequestValidation<WebRunAnalysisCommand>()
+            .WithTags("Analysis");
     }
 
     private static async Task<Accepted<WebRunAnalysisResponse>> TriggerAnalysis(

@@ -18,7 +18,8 @@ public class LinkContextEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/context/link", LinkContext)
-            .WithRequestValidation<WebLinkContextCommand>();
+            .WithRequestValidation<WebLinkContextCommand>()
+            .WithTags("Context");
     }
 
     private static async Task<NoContent> LinkContext(

@@ -14,7 +14,7 @@ public class GenerateClassesEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/context/generate-classes", GenerateClasses);
+        app.MapPost("/api/context/generate-classes", GenerateClasses).WithTags("Context");
     }
 
     private static async Task<NoContent> GenerateClasses(

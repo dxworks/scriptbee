@@ -48,10 +48,10 @@ In standard containerized environments, a **Docker Executor** manages analysis i
 - **Networking**: Ensuring the Gateway can communicate with the analysis instance.
 - **Data Access**: Mapping local data folders to the analysis container so loaders and scripts can access source files.
 
-See [Docker Compose](../home/installation.md#docker-compose) for more information about deployment to Docker
+See [Docker Compose](../installation/docker_installation.md) for more information about deployment to Docker
 
 ### Kubernetes
 
 In Kubernetes deployments, analysis is managed through specialized controllers that handle the lifecycle of each instance as a native resource.
 
-See [Kubernetes](../home/installation.md#) for more information about deployment to Kubernetes
+See [Kubernetes](../installation/kubernetes_installation.md) for more information about deployment to Kubernetes

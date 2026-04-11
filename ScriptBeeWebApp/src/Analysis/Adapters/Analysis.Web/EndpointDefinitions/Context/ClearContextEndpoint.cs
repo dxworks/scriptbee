@@ -14,7 +14,7 @@ public class ClearContextEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/context/clear", ClearContext);
+        app.MapPost("/api/context/clear", ClearContext).WithTags("Context");
     }
 
     private static NoContent ClearContext(IClearContextUseCase useCase)
