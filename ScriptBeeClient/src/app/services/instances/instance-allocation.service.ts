@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { map, of, tap } from 'rxjs';
+import { filter, map, of, switchMap, take, tap, timer } from 'rxjs';
 import { InstanceInfo } from '../../types/instance';
 import { InstanceService } from './instance.service';
 import { ProjectStateService } from '../projects/project-state.service';
@@ -43,9 +43,18 @@ export class InstanceAllocationService {
 
   public allocateInstance(projectId: string) {
     return this.instanceService.allocateInstance(projectId).pipe(
-      tap((instance) => {
+      switchMap((pollUrl) => {
+        return timer(1500, 2000).pipe(
+          switchMap(() => this.instanceService.getInstanceStatus(pollUrl)),
+
+          filter((instance) => instance.status !== 'Allocating'),
+
+          take(1)
+        );
+      }),
+      tap((finalInstance) => {
         this.instancesResource.reload();
-        this.setCurrentInstance(instance);
+        this.setCurrentInstance(finalInstance);
       })
     );
   }

@@ -10,8 +10,21 @@ import { WebResponse } from '../../types/web-response';
 export class InstanceService {
   private http = inject(HttpClient);
 
-  allocateInstance(projectId: string): Observable<InstanceInfo> {
-    return this.http.post<InstanceInfo>(`/api/projects/${projectId}/instances`, null);
+  allocateInstance(projectId: string): Observable<string> {
+    return this.http
+      .post<InstanceInfo>(
+        `/api/projects/${projectId}/instances`,
+        null,
+
+        {
+          observe: 'response',
+        }
+      )
+      .pipe(map((response) => response.headers.get('Location') ?? ''));
+  }
+
+  getInstanceStatus(url: string): Observable<InstanceInfo> {
+    return this.http.get<InstanceInfo>(url);
   }
 
   getProjectInstances(projectId: string): Observable<InstanceInfo[]> {
