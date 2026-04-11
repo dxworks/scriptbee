@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { AnalysisStatus } from '../../types/analysis-status';
 import { WebResponse } from '../../types/web-response';
+import { ProjectScript } from '../../types/project';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +31,17 @@ export class AnalysisService {
 
   getAnalyses(projectId: string): Observable<AnalysisStatus[]> {
     return this.http.get<WebResponse<AnalysisStatus[]>>(`/api/projects/${projectId}/analyses`).pipe(map((res) => res.data));
+  }
+
+  getAnalysis(projectId: string, analysisId: string): Observable<AnalysisStatus> {
+    return this.http.get<AnalysisStatus>(`/api/projects/${projectId}/analyses/${analysisId}`);
+  }
+
+  getAnalysisScriptContent(projectId: string, analysisId: string, scriptId: string): Observable<string> {
+    return this.http.get(`/api/projects/${projectId}/analyses/${analysisId}/scripts/${scriptId}/content`, { responseType: 'text' });
+  }
+
+  getAnalysisScriptMetadata(projectId: string, analysisId: string, scriptId: string): Observable<ProjectScript> {
+    return this.http.get<ProjectScript>(`/api/projects/${projectId}/analyses/${analysisId}/scripts/${scriptId}`);
   }
 }

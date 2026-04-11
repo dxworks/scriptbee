@@ -1,0 +1,43 @@
+<div class="header">
+  <button mat-icon-button routerLink=".." matTooltip="Back to Analysis View">
+    <mat-icon svgIcon="arrow-left"></mat-icon>
+  </button>
+  <h2>Extended Analysis Run Details</h2>
+  @if (creationDate()) {
+    <mat-chip-set>
+      <mat-chip>Run Date: {{ creationDate() | date: 'medium' }}</mat-chip>
+    </mat-chip-set>
+  }
+</div>
+
+@if (runResource.isLoading()) {
+  <app-loading-progress-bar title="Loading analysis details..."></app-loading-progress-bar>
+} @else if (error()) {
+  <app-error-state [error]="error()!" (retry)="onRetry()"></app-error-state>
+} @else {
+  <mat-expansion-panel [expanded]="false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ scriptComparisonTitle() }}</mat-panel-title>
+      <mat-panel-description>
+        @if (canShowDiff()) {
+          <mat-slide-toggle [checked]="showDiff()" (change)="showDiff.set($event.checked)" (click)="$event.stopPropagation()" color="primary">
+            Show Diff
+          </mat-slide-toggle>
+        } @else {
+          <span>Current script not available for diffing</span>
+        }
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div class="editor-container">
+      @if (showDiff()) {
+        <ngx-monaco-diff-editor [options]="editorOptions()" [originalModel]="originalModel()" [modifiedModel]="modifiedModel()" />
+      } @else {
+        <ngx-monaco-editor [options]="editorOptions()" [ngModel]="originalModel().code" />
+      }
+    </div>
+  </mat-expansion-panel>
+
+  <h3>Analysis Results</h3>
+  <app-analysis-output [projectId]="projectId()" [analysisId]="analysisId()" />
+}
