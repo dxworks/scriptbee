@@ -1,9 +1,9 @@
 @if (scriptResource.isLoading() || scriptContentResource.isLoading()) {
   <app-loading-progress-bar title="Loading Script..."></app-loading-progress-bar>
 } @else if (scriptResourceError()) {
-  <app-error-state [error]="scriptResourceError()!"></app-error-state>
+  <app-error-state [error]="scriptResourceError()!" (retry)="scriptResource.reload()"></app-error-state>
 } @else if (scriptContentResourceError()) {
-  <app-error-state [error]="scriptContentResourceError()!"></app-error-state>
+  <app-error-state [error]="scriptContentResourceError()!" (retry)="scriptContentResource.reload()"></app-error-state>
 } @else {
   <app-run-script-loading [statusUrl]="statusUrl()" (analysisFinished)="onAnalysisFinished($event)" />
 

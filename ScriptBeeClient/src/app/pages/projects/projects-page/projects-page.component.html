@@ -50,7 +50,7 @@
 
   @if (getAllProjectsResourceError()) {
     <div style="margin: 1rem" class="center-column">
-      <app-error-state style="width: 400px" [error]="getAllProjectsResourceError()!"></app-error-state>
+      <app-error-state style="width: 400px" [error]="getAllProjectsResourceError()!" (retry)="getAllProjectsResource.reload()"></app-error-state>
     </div>
   }
 </div>

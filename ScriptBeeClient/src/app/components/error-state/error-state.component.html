@@ -1,30 +1,45 @@
-<mat-card appearance="outlined">
-  <mat-card-header>
-    <mat-card-title-group>
+<div class="error-state-wrapper">
+  <mat-card class="error-container-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar color="warn">report_problem</mat-icon>
       <mat-card-title>{{ error().title }}</mat-card-title>
-    </mat-card-title-group>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="error-detail">{{ error().detail }}</div>
+      <mat-card-subtitle>HTTP {{ error().status }}</mat-card-subtitle>
+    </mat-card-header>
 
-    <mat-accordion>
-      @for (validationError of validationErrors(); track validationError.name) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Validation Error for {{ validationError.name }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          @for (message of validationError.messages; track message) {
-            <p>{{ message }}</p>
-          }
-        </mat-expansion-panel>
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <p class="mat-body-large">{{ error().detail }}</p>
+
+      @if (validationErrors().length > 0) {
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Validation Errors</mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list>
+              @for (validationError of validationErrors(); track validationError.name) {
+                <mat-list-item>
+                  <span matListItemTitle>{{ validationError.name }}</span>
+                  @for (message of validationError.messages; track message) {
+                    <span matListItemLine>{{ message }}</span>
+                  }
+                </mat-list-item>
+              }
+            </mat-list>
+          </mat-expansion-panel>
+        </mat-accordion>
       }
-    </mat-accordion>
-  </mat-card-content>
-  <!-- TODO: add retry button -->
-  <!--  <mat-card-actions>-->
-  <!--    <button mat-flat-button color="primary" (click)="onRetryButtonClick()">-->
-  <!--      <mat-icon>refresh</mat-icon>-->
-  <!--      Retry-->
-  <!--    </button>-->
-  <!--  </mat-card-actions>-->
-</mat-card>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-icon-button class="copy-button" (click)="onCopySupportInfo()" matTooltip="Copy support info to clipboard">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+      <button mat-button (click)="onRetryButtonClick()">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

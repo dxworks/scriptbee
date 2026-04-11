@@ -8,10 +8,10 @@ export function convertError(error?: HttpErrorResponse | Error): ErrorResponse |
 
   if (error instanceof HttpErrorResponse) {
     return {
-      title: error.error.title,
-      detail: error.error.detail,
+      title: error.error?.title ?? 'Unexpected Error Occurred',
+      detail: error.error?.detail ?? 'Please try again or contact support.',
       status: error.status,
-      errors: error.error.errors,
+      errors: error.error?.errors,
     };
   }
 
