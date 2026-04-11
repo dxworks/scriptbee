@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Net.Mime;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
@@ -41,7 +42,8 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
                     services.AddSingleton(useCase);
                 }
             ),
-            "content"
+            "content",
+            MediaTypeNames.Text.Plain
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -52,10 +54,7 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
     {
         var useCase = Substitute.For<IUpdateScriptUseCase>();
         useCase
-            .UpdateContent(
-                new UpdateScriptContentCommand(ProjectId.FromValue("id"), _scriptId, ""),
-                Arg.Any<CancellationToken>()
-            )
+            .UpdateContent(Arg.Any<UpdateScriptContentCommand>(), Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<UpdateResponse>(
                     new ProjectDoesNotExistsError(ProjectId.FromValue("id"))
@@ -70,7 +69,8 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
                     services.AddSingleton(useCase);
                 }
             ),
-            ""
+            "content",
+            MediaTypeNames.Text.Plain
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl, "id");
@@ -81,10 +81,7 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
     {
         var useCase = Substitute.For<IUpdateScriptUseCase>();
         useCase
-            .UpdateContent(
-                new UpdateScriptContentCommand(ProjectId.FromValue("id"), _scriptId, "content"),
-                Arg.Any<CancellationToken>()
-            )
+            .UpdateContent(Arg.Any<UpdateScriptContentCommand>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<UpdateResponse>(new ScriptDoesNotExistsError(_scriptId)));
 
         var response = await _api.PutApi(
@@ -95,7 +92,8 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
                     services.AddSingleton(useCase);
                 }
             ),
-            "content"
+            "content",
+            MediaTypeNames.Text.Plain
         );
 
         await AssertScriptDoesNotExistProblem(response, TestUrl, _scriptId.Value.ToString());

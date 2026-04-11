@@ -1,4 +1,7 @@
 <div class="top-action-buttons">
+  @if (saveStatus()) {
+    <span class="save-status" [class.error]="saveStatus() === 'Error'">{{ saveStatus() }}</span>
+  }
   <button mat-icon-button matTooltip="Copy path to clipboard" [cdkCopyToClipboard]="script().absolutePath" (click)="onCopyToClipboardButtonClick()">
     <mat-icon>content_copy</mat-icon>
   </button>

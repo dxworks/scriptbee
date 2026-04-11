@@ -21,6 +21,7 @@ export class SelectedScriptActionBarComponent {
   projectId = input.required<string>();
   instanceId = input.required<string>();
   script = input.required<ProjectScript>();
+  saveStatus = input<string | undefined>();
 
   isLoadingResults = signal<boolean>(false);
   statusUrlChange = output<string | undefined>();

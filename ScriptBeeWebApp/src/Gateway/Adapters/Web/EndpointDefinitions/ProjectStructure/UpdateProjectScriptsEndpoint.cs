@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
@@ -28,6 +29,7 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
                 "/api/projects/{projectId}/scripts/{scriptId}/content",
                 UpdateProjectScriptContent
             )
+            .Accepts<string>(MediaTypeNames.Text.Plain)
             .WithTags("Scripts");
     }
 
@@ -69,11 +71,14 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
         HttpContext context,
         [FromRoute] string projectId,
         [FromRoute] string scriptId,
-        [FromBody] string content,
+        Stream bodyStream,
         IUpdateScriptUseCase useCase,
         CancellationToken cancellationToken
     )
     {
+        using var reader = new StreamReader(bodyStream);
+        var content = await reader.ReadToEndAsync(cancellationToken);
+
         var result = await useCase.UpdateContent(
             new UpdateScriptContentCommand(
                 ProjectId.FromValue(projectId),
