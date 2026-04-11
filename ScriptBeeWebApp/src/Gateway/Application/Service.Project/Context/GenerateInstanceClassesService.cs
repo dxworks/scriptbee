@@ -1,0 +1,32 @@
+using OneOf;
+using ScriptBee.Domain.Model;
+using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Ports.Instance;
+using ScriptBee.UseCases.Project.Context;
+
+namespace ScriptBee.Service.Project.Context;
+
+using GenerateClassesResult = OneOf<Unit, InstanceDoesNotExistsError>;
+
+public class GenerateInstanceClassesService(
+    IGetProjectInstance getProjectInstance,
+    IGenerateInstanceClasses generateInstanceClasses
+) : IGenerateInstanceClassesUseCase
+{
+    public async Task<GenerateClassesResult> Generate(
+        GenerateClassesCommand command,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await getProjectInstance.Get(command.InstanceId, cancellationToken);
+
+        return await result.Match<Task<GenerateClassesResult>>(
+            async instanceInfo =>
+            {
+                await generateInstanceClasses.Generate(instanceInfo, cancellationToken);
+                return new Unit();
+            },
+            error => Task.FromResult<GenerateClassesResult>(error)
+        );
+    }
+}

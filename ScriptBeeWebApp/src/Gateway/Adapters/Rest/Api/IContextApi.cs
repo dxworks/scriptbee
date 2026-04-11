@@ -16,4 +16,7 @@ public interface IContextApi
 
     [Post("/api/context/load")]
     Task Load([Body] RestContextLoad request, CancellationToken cancellationToken);
+
+    [Post("/api/context/generate-classes")]
+    Task GenerateClasses(CancellationToken cancellationToken);
 }
