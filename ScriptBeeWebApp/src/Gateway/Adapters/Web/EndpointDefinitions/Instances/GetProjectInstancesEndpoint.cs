@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Analysis;
 using ScriptBee.UseCases.Project.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
+using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Instances;
 
@@ -18,6 +20,8 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/instances", GetAllInstances).WithTags("Instances");
+        app.MapGet("/api/projects/{projectId}/instances/{instanceId}", GetInstance)
+            .WithTags("Instances");
     }
 
     private static async Task<Ok<WebGetProjectInstancesListResponse>> GetAllInstances(
@@ -30,5 +34,27 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
         var instanceInfos = await useCase.GetAllInstances(id, cancellationToken);
 
         return TypedResults.Ok(WebGetProjectInstancesListResponse.Map(instanceInfos));
+    }
+
+    private static async Task<
+        Results<Ok<WebProjectInstance>, NotFound<ProblemDetails>>
+    > GetInstance(
+        HttpContext context,
+        [FromRoute] string projectId,
+        [FromRoute] string instanceId,
+        IGetProjectInstancesUseCase useCase,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await useCase.GetInstance(
+            ProjectId.FromValue(projectId),
+            new InstanceId(instanceId),
+            cancellationToken
+        );
+
+        return result.Match<Results<Ok<WebProjectInstance>, NotFound<ProblemDetails>>>(
+            info => TypedResults.Ok(WebProjectInstance.Map(info)),
+            error => error.ToProblem(context)
+        );
     }
 }

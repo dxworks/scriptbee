@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, output } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,12 +6,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
-import { InstanceService } from '../../services/instances/instance.service';
 import { ProjectStateService } from '../../services/projects/project-state.service';
-import { InstanceStatus, InstanceInfo } from '../../types/instance';
+import { InstanceInfo, InstanceStatus } from '../../types/instance';
 import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/confirmation-dialog.component';
+import { InstanceAllocationService } from '../../services/instances/instance-allocation.service';
 
 @Component({
   selector: 'app-instance-manager',
@@ -20,9 +18,7 @@ import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/conf
   styleUrls: ['./instance-manager.component.scss'],
 })
 export class InstanceManagerComponent {
-  instanceAllocated = output<InstanceInfo>();
-
-  private instanceService = inject(InstanceService);
+  private instanceAllocationService = inject(InstanceAllocationService);
   private projectStateService = inject(ProjectStateService);
   private dialog = inject(MatDialog);
 
@@ -35,19 +31,7 @@ export class InstanceManagerComponent {
     });
   }
 
-  instancesResource = rxResource({
-    params: () => ({
-      projectId: this.projectStateService.currentProjectId(),
-    }),
-    stream: ({ params }) => {
-      if (params.projectId) {
-        return this.instanceService.getProjectInstances(params.projectId);
-      }
-      return of([]);
-    },
-  });
-
-  instances = computed(() => this.instancesResource.value() ?? []);
+  instances = computed(() => this.instanceAllocationService.instancesResource.value() ?? []);
 
   currentInstanceId = computed(() => this.projectStateService.currentInstanceId());
 
@@ -76,7 +60,7 @@ export class InstanceManagerComponent {
   }
 
   onSelectInstance(instance: InstanceInfo) {
-    this.projectStateService.currentInstanceId.set(instance.id);
+    this.instanceAllocationService.setCurrentInstance(instance);
   }
 
   onDeallocateInstance(event: MouseEvent, instance: InstanceInfo) {
@@ -94,12 +78,7 @@ export class InstanceManagerComponent {
         .afterClosed()
         .subscribe((result) => {
           if (result) {
-            this.instanceService.deallocateInstance(projectId, instance.id).subscribe({
-              next: () => {
-                this.instancesResource.reload();
-                this.projectStateService.currentInstanceId.set(null);
-              },
-            });
+            this.instanceAllocationService.deallocateInstance(projectId, instance.id).subscribe();
           }
         });
     }
@@ -108,17 +87,11 @@ export class InstanceManagerComponent {
   onAllocateInstance() {
     const projectId = this.projectStateService.currentProjectId();
     if (projectId) {
-      this.instanceService.allocateInstance(projectId).subscribe({
-        next: (instance) => {
-          this.instancesResource.reload();
-          this.projectStateService.currentInstanceId.set(instance.id);
-          this.instanceAllocated.emit(instance);
-        },
-      });
+      this.instanceAllocationService.allocateInstance(projectId).subscribe();
     }
   }
 
   reload() {
-    this.instancesResource.reload();
+    this.instanceAllocationService.reload();
   }
 }

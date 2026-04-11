@@ -10,8 +10,6 @@ import { LinkModelsComponent } from './link-models/link-models.component';
 import { CurrentlyLoadedModelsComponent } from './currently-loaded-models/currently-loaded-models.component';
 import { ProjectContextComponent } from './project-context/project-context.component';
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
-import { InstanceService } from '../../../../services/instances/instance.service';
-import { CenteredSpinnerComponent } from '../../../../components/centered-spinner/centered-spinner.component';
 import { InstanceInfoComponent } from './instance-info/instance-info.component';
 import { convertError } from '../../../../utils/api';
 import { ProjectStateService } from '../../../../services/projects/project-state.service';
@@ -20,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { InstanceNotAllocatedDialog } from '../../../../components/dialogs/instance-not-allocated-dialog/instance-not-allocated-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
+import { InstanceAllocationService } from '../../../../services/instances/instance-allocation.service';
 
 @Component({
   selector: 'app-project-model-page',
@@ -35,7 +34,6 @@ import { MatButton } from '@angular/material/button';
     CurrentlyLoadedModelsComponent,
     ProjectContextComponent,
     LoadingProgressBarComponent,
-    CenteredSpinnerComponent,
     InstanceInfoComponent,
     MatIconModule,
     MatButton,
@@ -44,7 +42,7 @@ import { MatButton } from '@angular/material/button';
 export class ProjectModelPage {
   private projectStateService = inject(ProjectStateService);
   private projectService = inject(ProjectService);
-  private instanceService = inject(InstanceService);
+  private instanceAllocationService = inject(InstanceAllocationService);
   private dialog = inject(MatDialog);
 
   projectId = computed(() => this.projectStateService.currentProjectId());
@@ -55,17 +53,8 @@ export class ProjectModelPage {
   });
   projectResourceError = computed(() => convertError(this.projectResource.error()));
 
-  instancesResource = rxResource({
-    params: () => this.projectId(),
-    stream: ({ params: projectId }) => (projectId ? this.instanceService.getProjectInstances(projectId) : of([])),
-  });
-  instancesResourceError = computed(() => convertError(this.instancesResource.error()));
-
-  currentInstance = computed(() => {
-    const id = this.projectStateService.currentInstanceId();
-    const instances = this.instancesResource.value() ?? [];
-    return instances.find((i) => i.id === id);
-  });
+  currentInstanceResource = this.instanceAllocationService.currentInstanceResource;
+  currentInstanceResourceError = computed(() => convertError(this.currentInstanceResource.error()));
 
   onAllocate() {
     this.dialog.open(InstanceNotAllocatedDialog, {
