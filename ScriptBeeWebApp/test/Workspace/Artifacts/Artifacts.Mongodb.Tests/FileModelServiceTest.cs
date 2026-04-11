@@ -1,4 +1,6 @@
 using System.Text;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Tests.Common.Mongodb;
@@ -13,14 +15,18 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     [Fact]
     public async Task UploadFileAsync_ShouldUploadFile()
     {
+        // Arrange
         const string fileName = "2af40c6f-4a4f-4a3f-892b-5e44a3ebd8dc";
 
-        await _sut.UploadFileAsync(
+        // Act
+        await _sut.UploadFileAsync<object>(
             new FileId(fileName),
             new MemoryStream("test content"u8.ToArray()),
-            CancellationToken.None
+            null,
+            TestContext.Current.CancellationToken
         );
 
+        // Assert
         var downloadedStream = await _bucket.OpenDownloadStreamByNameAsync(
             fileName,
             cancellationToken: TestContext.Current.CancellationToken
@@ -31,12 +37,40 @@ public class FileModelServiceTest(MongoDbFixture fixture) : IClassFixture<MongoD
     }
 
     [Fact]
+    public async Task UploadFileAsyncWithMetadata_ShouldUploadMetadata()
+    {
+        // Arrange
+        const string fileName = "403d6cf0-6161-4498-8293-8c7f1fbdc47e";
+        var metadata = new { field = 123 };
+
+        // Act
+        await _sut.UploadFileAsync<object>(
+            new FileId(fileName),
+            new MemoryStream("test content"u8.ToArray()),
+            metadata,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var filter = Builders<GridFSFileInfo>.Filter.Eq(f => f.Filename, fileName);
+        using var cursor = await _bucket.FindAsync(
+            filter,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+        var fileInfo = await cursor.FirstOrDefaultAsync(TestContext.Current.CancellationToken);
+
+        var deserialize = BsonSerializer.Deserialize<Dictionary<string, object>>(fileInfo.Metadata);
+        deserialize.Keys.Count.ShouldBe(1);
+        deserialize["field"].ShouldBe(123);
+    }
+
+    [Fact]
     public void UploadFile_ShouldUploadFileSynchronously()
     {
         const string fileName = "2af40c6f-4a4f-4a3f-892b-5e44a3ebd8dc";
         var stream = new MemoryStream("sync test content"u8.ToArray());
 
-        _sut.UploadFile(new FileId(fileName), stream);
+        _sut.UploadFile<object>(new FileId(fileName), stream);
 
         var downloadedStream = _bucket.OpenDownloadStreamByName(
             fileName,

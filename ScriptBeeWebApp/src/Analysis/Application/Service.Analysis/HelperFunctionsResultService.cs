@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
@@ -36,7 +36,12 @@ public class HelperFunctionsResultService(
 
         resultCollector.Add(resultId, fileName, type);
 
-        await fileModelService.UploadFileAsync(resultId.ToFileId(), content, cancellationToken);
+        await fileModelService.UploadFileAsync<object>(
+            resultId.ToFileId(),
+            content,
+            null,
+            cancellationToken
+        );
     }
 
     public void UploadResult(string fileName, string type, string content)
@@ -53,6 +58,6 @@ public class HelperFunctionsResultService(
 
         resultCollector.Add(resultId, fileName, type);
 
-        fileModelService.UploadFile(resultId.ToFileId(), content);
+        fileModelService.UploadFile<object>(resultId.ToFileId(), content);
     }
 }

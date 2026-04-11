@@ -77,7 +77,12 @@ public class UploadLoaderFilesService(
             var fileData = new FileData(new FileId(guidProvider.NewGuid()), file.FileName);
 
             await using var stream = file.FileStream;
-            await fileModelService.UploadFileAsync(fileData.Id, stream, cancellationToken);
+            await fileModelService.UploadFileAsync<object>(
+                fileData.Id,
+                stream,
+                null,
+                cancellationToken
+            );
 
             savedFilesData.Add(fileData);
         }

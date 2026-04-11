@@ -119,7 +119,12 @@ public class UploadLoaderFilesServiceTest
         result.AsT0.ShouldBeEmpty();
         await _fileModelService
             .Received(0)
-            .UploadFileAsync(Arg.Any<FileId>(), Arg.Any<Stream>(), Arg.Any<CancellationToken>());
+            .UploadFileAsync<object>(
+                Arg.Any<FileId>(),
+                Arg.Any<Stream>(),
+                null,
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -161,16 +166,18 @@ public class UploadLoaderFilesServiceTest
             ]);
         await _fileModelService
             .Received(1)
-            .UploadFileAsync(
+            .UploadFileAsync<object>(
                 new FileId("825cba0f-1de8-42ef-8225-47400644f9e2"),
                 Arg.Any<Stream>(),
+                null,
                 Arg.Any<CancellationToken>()
             );
         await _fileModelService
             .Received(1)
-            .UploadFileAsync(
+            .UploadFileAsync<object>(
                 new FileId("9e0ac246-fb26-461f-b77f-2c4fa64348b0"),
                 Arg.Any<Stream>(),
+                null,
                 Arg.Any<CancellationToken>()
             );
     }

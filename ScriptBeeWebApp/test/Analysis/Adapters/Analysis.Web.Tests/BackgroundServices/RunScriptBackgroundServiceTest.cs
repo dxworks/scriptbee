@@ -31,7 +31,7 @@ public class RunScriptBackgroundServiceTest
             CreateAnalysisInfo("5ba00f63-1b3b-48a2-8abf-73489ddb3bec")
         );
 
-        await backgroundService.StartAsync(CancellationToken.None);
+        await backgroundService.StartAsync(TestContext.Current.CancellationToken);
 
         await runScriptChannel.Writer.WriteAsync(request1, TestContext.Current.CancellationToken);
         await runScriptChannel.Writer.WriteAsync(request2, TestContext.Current.CancellationToken);
@@ -39,7 +39,7 @@ public class RunScriptBackgroundServiceTest
 
         await Task.Delay(200, TestContext.Current.CancellationToken);
 
-        await backgroundService.StopAsync(CancellationToken.None);
+        await backgroundService.StopAsync(TestContext.Current.CancellationToken);
 
         await runScriptService.Received(1).RunAsync(request1, Arg.Any<CancellationToken>());
         await runScriptService.Received(1).RunAsync(request2, Arg.Any<CancellationToken>());
