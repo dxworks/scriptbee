@@ -24,7 +24,9 @@ public class InstallPluginEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/plugins", InstallPlugin).WithRequestValidation<WebInstallPluginCommand>();
+        app.MapPost("/api/plugins", InstallPlugin)
+            .WithRequestValidation<WebInstallPluginCommand>()
+            .WithTags("Plugins");
     }
 
     private static async Task<InstallResult> InstallPlugin(

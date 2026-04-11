@@ -15,7 +15,7 @@ public class GetContextEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/context", GetContext);
+        app.MapGet("/api/context", GetContext).WithTags("Context");
     }
 
     private static Ok<WebGetContextResponse> GetContext(IGetContextUseCase useCase)
