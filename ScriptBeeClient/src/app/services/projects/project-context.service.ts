@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, retry } from 'rxjs';
 import { ProjectContext } from '../../types/returned-context-slice';
 import { WebResponse } from '../../types/web-response';
 
@@ -11,7 +11,10 @@ export class ProjectContextService {
   private http = inject(HttpClient);
 
   getProjectContext(projectId: string, instanceId: string): Observable<ProjectContext> {
-    return this.http.get<WebResponse<ProjectContext>>(`/api/projects/${projectId}/instances/${instanceId}/context`).pipe(map((res) => res.data));
+    return this.http.get<WebResponse<ProjectContext>>(`/api/projects/${projectId}/instances/${instanceId}/context`).pipe(
+      retry({ count: 3, delay: 1000 }),
+      map((res) => res.data)
+    );
   }
 
   clearContext(projectId: string, instanceId: string) {

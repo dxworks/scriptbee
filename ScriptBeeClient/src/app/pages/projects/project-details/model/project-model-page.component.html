@@ -6,45 +6,41 @@
   </div>
 } @else {
   <div class="project-details-main-div">
-    @if (instancesResource.isLoading()) {
-      <app-loading-progress-bar title="Loading instances..."></app-loading-progress-bar>
-    } @else if (instancesResourceError()) {
-      <app-error-state [error]="instancesResourceError()!"></app-error-state>
-    } @else if (!currentInstance()) {
-      <div class="no-instance-context">
-        <mat-card class="project-details-card" appearance="outlined">
-          <mat-card-content class="center-column" style="padding: 2rem">
-            <mat-icon color="warn" style="font-size: 48px; width: 48px; height: 48px">error_outline</mat-icon>
-            <h2>No Instance Selected</h2>
-            <p>Please select or allocate an instance in the navigation bar to manage models.</p>
+    @if (currentInstanceResource.isLoading()) {
+      <app-loading-progress-bar title="Loading instance..."></app-loading-progress-bar>
+    } @else if (currentInstanceResourceError()) {
+      <app-error-state [error]="currentInstanceResourceError()!"></app-error-state>
+    } @else if (!currentInstanceResource.value()) {
+      <mat-card class="project-details-card" appearance="outlined">
+        <mat-card-content class="center-column" style="padding: 2rem">
+          <mat-icon color="warn" style="font-size: 48px; width: 48px; height: 48px">error_outline</mat-icon>
+          <h2>No Instance Selected</h2>
+          <p>Please select or allocate an instance in the navigation bar to manage models.</p>
 
-            <button mat-button (click)="onAllocate()">Allocate</button>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    } @else if (!currentInstance()) {
-      <app-centered-spinner text="Synchronizing and finding selected instance..." />
+          <button mat-button (click)="onAllocate()">Allocate</button>
+        </mat-card-content>
+      </mat-card>
     } @else {
       <mat-card class="project-details-card" appearance="outlined">
-        <app-instance-info [instanceInfo]="currentInstance()!" />
+        <app-instance-info [instanceInfo]="currentInstanceResource.value()!" />
 
-        <app-upload-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
-
-        <mat-divider />
-
-        <app-load-models [project]="projectResource.value()!" [instanceId]="currentInstance()!.id" />
+        <app-upload-models [projectId]="projectId()!" [instanceId]="currentInstanceResource.value()!.id" />
 
         <mat-divider />
 
-        <app-link-models [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
+        <app-load-models [project]="projectResource.value()!" [instanceId]="currentInstanceResource.value()!.id" />
 
         <mat-divider />
 
-        <app-currently-loaded-models [project]="projectResource.value()!" [instanceId]="currentInstance()!.id" />
+        <app-link-models [projectId]="projectId()!" [instanceId]="currentInstanceResource.value()!.id" />
 
         <mat-divider />
 
-        <app-project-context [projectId]="projectId()!" [instanceId]="currentInstance()!.id" />
+        <app-currently-loaded-models [project]="projectResource.value()!" [instanceId]="currentInstanceResource.value()!.id" />
+
+        <mat-divider />
+
+        <app-project-context [projectId]="projectId()!" [instanceId]="currentInstanceResource.value()!.id" />
       </mat-card>
     }
   </div>
