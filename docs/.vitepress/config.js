@@ -85,6 +85,14 @@ export default defineConfig({
       {
         text: 'Architecture',
         items: [
+          {
+            text: 'REST API',
+            link: '/architecture/rest_api',
+            items: [
+              { text: 'Gateway REST API', link: '/architecture/gateway_rest_api' },
+              { text: 'Analysis REST API', link: '/architecture/analysis_rest_api' },
+            ],
+          },
           { text: 'Diagram', link: '/architecture/diagram' },
           { text: 'Overview', link: '/architecture/overview' },
           { text: 'RBAC', link: '/architecture/rbac' },
