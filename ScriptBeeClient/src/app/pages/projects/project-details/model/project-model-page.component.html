@@ -2,14 +2,14 @@
   <app-loading-progress-bar title="Loading project..."></app-loading-progress-bar>
 } @else if (projectResourceError()) {
   <div style="margin: 1rem" class="center-column">
-    <app-error-state style="width: 400px" [error]="projectResourceError()!"></app-error-state>
+    <app-error-state style="width: 400px" [error]="projectResourceError()!" (retry)="projectResource.reload()"></app-error-state>
   </div>
 } @else {
   <div class="project-details-main-div">
     @if (currentInstanceResource.isLoading()) {
       <app-loading-progress-bar title="Loading instance..."></app-loading-progress-bar>
     } @else if (currentInstanceResourceError()) {
-      <app-error-state [error]="currentInstanceResourceError()!"></app-error-state>
+      <app-error-state [error]="currentInstanceResourceError()!" (retry)="currentInstanceResource.reload()"></app-error-state>
     } @else if (!currentInstanceResource.value()) {
       <mat-card class="project-details-card" appearance="outlined">
         <mat-card-content class="center-column" style="padding: 2rem">

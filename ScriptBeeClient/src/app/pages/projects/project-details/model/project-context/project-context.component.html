@@ -3,7 +3,7 @@
 @if (projectContextResource.isLoading()) {
   <app-centered-spinner text="Loading Context"></app-centered-spinner>
 } @else if (projectContextResourceError()) {
-  <app-error-state [error]="projectContextResourceError()!"></app-error-state>
+  <app-error-state [error]="projectContextResourceError()!" (retry)="projectContextResource.reload()"></app-error-state>
 } @else {
   @if (projectContextResource.value()!.length === 0) {
     <div>No context loaded</div>

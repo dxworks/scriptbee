@@ -4,7 +4,7 @@
       @if (consoleContentResource.isLoading()) {
         <app-loading-progress-bar title="Loading Console Output..."></app-loading-progress-bar>
       } @else if (consoleContentResourceError()) {
-        <app-error-state [error]="consoleContentResourceError()!"></app-error-state>
+        <app-error-state [error]="consoleContentResourceError()!" (retry)="consoleContentResource.reload()"></app-error-state>
       } @else {
         <app-console-output [content]="consoleContentResource.value()!.content" />
       }
@@ -15,7 +15,7 @@
       @if (outputErrorsResource.isLoading()) {
         <app-loading-progress-bar title="Loading Output Errors..."></app-loading-progress-bar>
       } @else if (outputErrorsResourceError()) {
-        <app-error-state [error]="outputErrorsResourceError()!"></app-error-state>
+        <app-error-state [error]="outputErrorsResourceError()!" (retry)="outputErrorsResource.reload()"></app-error-state>
       } @else {
         <app-output-errors [errors]="outputErrorsResource.value()!.data" />
       }
@@ -26,7 +26,7 @@
       @if (outputFilesResource.isLoading()) {
         <app-loading-progress-bar title="Loading Output Files..."></app-loading-progress-bar>
       } @else if (outputFilesResourceError()) {
-        <app-error-state [error]="outputFilesResourceError()!"></app-error-state>
+        <app-error-state [error]="outputFilesResourceError()!" (retry)="outputFilesResource.reload()"></app-error-state>
       } @else {
         <app-file-output [projectId]="projectId()" [analysisId]="analysisId()" [files]="outputFilesResource.value()!.data" />
       }

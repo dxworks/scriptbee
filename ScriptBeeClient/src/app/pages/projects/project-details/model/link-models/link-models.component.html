@@ -3,7 +3,7 @@
 @if (getLinkersResource.isLoading()) {
   <app-centered-spinner text="Loading Linker"></app-centered-spinner>
 } @else if (getLinkersResourceError()) {
-  <app-error-state [error]="getLinkersResourceError()!"></app-error-state>
+  <app-error-state [error]="getLinkersResourceError()!" (retry)="getLinkersResource.reload()"></app-error-state>
 } @else {
   <mat-form-field class="select-linker" appearance="fill">
     <mat-label>Linker</mat-label>
