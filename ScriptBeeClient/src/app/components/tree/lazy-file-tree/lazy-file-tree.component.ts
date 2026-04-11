@@ -8,6 +8,7 @@ import { TreeActionsMenuComponent } from '../selectable-tree/tree-actions-menu/t
 import { ErrorResponse } from '../../../types/api';
 import { TreeAction, TreeNode } from '../../../types/tree-node';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { NgClass } from '@angular/common';
 
 export interface VirtualStateNode {
   isVirtual: true;
@@ -33,7 +34,7 @@ export interface FetchResult<T> {
 
 @Component({
   selector: 'app-lazy-file-tree',
-  imports: [MatTreeModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, TreeActionsMenuComponent],
+  imports: [MatTreeModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, TreeActionsMenuComponent, NgClass],
   templateUrl: './lazy-file-tree.component.html',
   styleUrls: ['./lazy-file-tree.component.scss'],
 })
@@ -56,6 +57,7 @@ export class LazyFileTreeComponent<T> implements OnInit {
   hasChildAccessor = input.required<(node: TreeNode<T>) => boolean>();
   idAccessor = input.required<(node: TreeNode<T>) => string>();
   displayNameAccessor = input.required<(node: TreeNode<T>) => string>();
+  selectedAccessor = input.required<(node: TreeNode<T>) => boolean>();
 
   private folderStates = signal<Map<string | null, FolderState<T>>>(new Map());
   private childrenObservables = new Map<string, Observable<FileTreeNode<T>[]>>();

@@ -15,7 +15,7 @@ public class MongodbScript : IDocument
     public required MongodbScriptLanguage? ScriptLanguage { get; init; }
     public required IEnumerable<MongodbScriptParameter>? Parameters { get; init; }
 
-    public required IEnumerable<string>? ChildrenIds { get; init; }
+    public required IEnumerable<string>? ChildrenIds { get; set; }
 
     public static MongodbScript From(Domain.Model.ProjectStructure.Script script)
     {

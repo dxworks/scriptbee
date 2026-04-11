@@ -116,7 +116,14 @@ public class ScriptsPersistenceAdapter(
             return null;
         }
 
-        return await Delete(id, mongodbScript, cancellationToken);
+        var childrenIds = mongodbScript.ChildrenIds ?? [];
+
+        foreach (var childrenId in childrenIds)
+        {
+            await Delete(new ScriptId(childrenId), cancellationToken);
+        }
+
+        return mongodbScript.ToProjectStructureEntry();
     }
 
     private async Task CreateParentFolder(
@@ -140,6 +147,9 @@ public class ScriptsPersistenceAdapter(
 
             if (existingFolder is not null)
             {
+                var children = existingFolder.ChildrenIds ?? [];
+                existingFolder.ChildrenIds = [.. children, mongodbScript.Id];
+                await mongoRepository.UpdateDocument(existingFolder, cancellationToken);
                 return;
             }
 
@@ -157,29 +167,6 @@ public class ScriptsPersistenceAdapter(
 
             mongodbScript = newFolder;
         }
-    }
-
-    private async Task<ProjectStructureEntry?> Delete(
-        ScriptId id,
-        MongodbScript parentScript,
-        CancellationToken cancellationToken
-    )
-    {
-        var mongodbScript = await mongoRepository.DeleteDocument(id.ToString(), cancellationToken);
-
-        if (mongodbScript is null)
-        {
-            return null;
-        }
-
-        var childrenIds = parentScript.ChildrenIds?.ToList() ?? [];
-
-        foreach (var childrenId in childrenIds)
-        {
-            await Delete(new ScriptId(childrenId), parentScript, cancellationToken);
-        }
-
-        return parentScript.ToProjectStructureEntry();
     }
 
     private async Task<OneOf<MongodbScript, ScriptDoesNotExistsError>> GetMongoFileEntry(

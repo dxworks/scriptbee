@@ -99,6 +99,8 @@ describe('ScriptTreeComponent', () => {
 
     fixture = TestBed.createComponent(ScriptTreeComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('selectedFileId', null);
   });
 
   describe('Initialization', () => {

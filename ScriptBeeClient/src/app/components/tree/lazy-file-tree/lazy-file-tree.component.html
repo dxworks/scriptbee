@@ -5,7 +5,7 @@
 <mat-tree #tree [dataSource]="rootData()" [childrenAccessor]="childrenAccessor" [trackBy]="trackByFn" class="non-selectable-tree">
   <!-- Leaf node -->
   <mat-nested-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding (click)="clickChange.emit(node)">
-    <div class="leaf-node">
+    <div class="leaf-node" [ngClass]="selectedAccessor()(node) ? 'selected' : null">
       <span class="node-with-icon">
         <mat-icon>description</mat-icon>
         {{ displayNameAccessor()(node) }}

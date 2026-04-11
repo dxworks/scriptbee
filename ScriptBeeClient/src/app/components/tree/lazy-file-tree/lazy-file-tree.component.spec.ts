@@ -36,6 +36,7 @@ describe('LazyFileTreeComponent', () => {
   const hasChildAccessor = (node: TreeNode<TestData>) => node.data.hasChildren;
   const idAccessor = (node: TreeNode<TestData>) => node.data.id;
   const displayNameAccessor = (node: TreeNode<TestData>) => node.data.name;
+  const selectedAccessor = () => false;
 
   beforeEach(async () => {
     fetchDataMock = vi.fn().mockReturnValue(of({ data: mockData, totalCount: 2 }));
@@ -50,6 +51,7 @@ describe('LazyFileTreeComponent', () => {
     fixture.componentRef.setInput('hasChildAccessor', hasChildAccessor);
     fixture.componentRef.setInput('idAccessor', idAccessor);
     fixture.componentRef.setInput('displayNameAccessor', displayNameAccessor);
+    fixture.componentRef.setInput('selectedAccessor', selectedAccessor);
     fixture.detectChanges();
   });
 

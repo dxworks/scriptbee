@@ -26,6 +26,7 @@ import { ProjectStateService } from '../../../../../services/projects/project-st
 export class ScriptTreeComponent {
   projectId = input.required<string>();
 
+  selectedFileId = input.required<string | null>();
   fileSelected = output<ProjectFileNode>();
 
   isDeleteLoading = signal(false);
@@ -51,6 +52,7 @@ export class ScriptTreeComponent {
   hasChildAccessor = (node: TreeNode<ProjectFileNode>) => node.data.hasChildren;
   idAccessor = (node: TreeNode<ProjectFileNode>) => node.data.id;
   displayNameAccessor = (node: TreeNode<ProjectFileNode>) => node.data.name;
+  selectedAccessor = (node: TreeNode<ProjectFileNode>) => node.data.id === this.selectedFileId();
 
   private projectStructureService = inject(ProjectStructureService);
   private dialog = inject(MatDialog);
