@@ -39,6 +39,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      
+      # QEMU is needed to emulate ARM instructions on an x86 runner
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -62,6 +66,7 @@ jobs:
           context: .
           file: ./analysis.Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
             dxworks/scriptbee-analysis:${{ steps.meta.outputs.version }}
             dxworks/scriptbee-analysis:latest
