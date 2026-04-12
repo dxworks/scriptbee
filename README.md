@@ -1,7 +1,7 @@
 # ScriptBee
 
 <p align="center">
-  <img src="docs/public/assets/logo.png" alt="ScriptBee Logo" width="200"/>
+  <img src="docs/public/assets/logo.svg" alt="ScriptBee Logo" width="200"/>
 </p>
 
 ## What is ScriptBee?
