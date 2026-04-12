@@ -38,7 +38,7 @@ jobs:
           sh ./scripts/create_default_bundle_zip.sh "${{ steps.meta.outputs.version }}" "${{ steps.meta.outputs.zip_name }}"
 
       - name: Upload bundle artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: default-bundle
           path: ${{ steps.meta.outputs.zip_name }}
@@ -63,13 +63,13 @@ jobs:
           echo "zip_name=scriptbee-default-bundle-$VERSION.zip" >> $GITHUB_OUTPUT
 
       - name: Download bundle artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: default-bundle
           path: dist
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           tag_name: ${{ github.ref_name }}
