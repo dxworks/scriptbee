@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProjectContextComponent } from './project-context.component';
-import { ProjectContextService } from '../../../../../services/projects/project-context.service';
+import { ProjectContextService } from '../../../../../../services/projects/project-context.service';
 import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { By } from '@angular/platform-browser';

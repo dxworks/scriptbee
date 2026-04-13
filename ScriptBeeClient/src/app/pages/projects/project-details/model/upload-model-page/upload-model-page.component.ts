@@ -6,7 +6,6 @@ import { convertError } from '../../../../../utils/api';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
 import { UploadService } from '../../../../../services/upload/upload.service';
 import { finalize } from 'rxjs';
-import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
 import { DragAndDropFilesComponent } from '../../../../../components/drag-and-drop-files/drag-and-drop-files.component';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
@@ -19,7 +18,6 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-upload-model-page',
   imports: [
-    CenteredSpinnerComponent,
     ErrorStateComponent,
     MatFormFieldModule,
     MatSelectModule,

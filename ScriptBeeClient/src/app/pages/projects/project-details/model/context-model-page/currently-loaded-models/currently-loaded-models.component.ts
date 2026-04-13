@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
-import { TreeNode } from '../../../../../types/tree-node';
-import { SelectableTreeComponent } from '../../../../../components/tree/selectable-tree/selectable-tree.component';
-import { Project, ProjectFile } from '../../../../../types/project';
+import { TreeNode } from '../../../../../../types/tree-node';
+import { SelectableTreeComponent } from '../../../../../../components/tree/selectable-tree/selectable-tree.component';
+import { Project, ProjectFile } from '../../../../../../types/project';
 
 @Component({
   selector: 'app-currently-loaded-models',
