@@ -1,7 +1,6 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatDivider } from '@angular/material/list';
 import { ProjectStateService } from '../../../../../services/projects/project-state.service';
-import { Project } from '../../../../../types/project';
 import { LoadModelsComponent } from './load-models/load-models.component';
 import { LinkModelsComponent } from './link-models/link-models.component';
 
@@ -14,6 +13,6 @@ import { LinkModelsComponent } from './link-models/link-models.component';
 export class LoadModelPage {
   private projectStateService = inject(ProjectStateService);
 
-  project = input.required<Project>();
+  project = computed(() => this.projectStateService.currentProject()!);
   instanceId = computed(() => this.projectStateService.currentInstanceId());
 }

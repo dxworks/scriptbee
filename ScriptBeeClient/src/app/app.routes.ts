@@ -12,7 +12,6 @@ import { UploadModelPage } from './pages/projects/project-details/model/upload-m
 import { LoadModelPage } from './pages/projects/project-details/model/load-model-page/load-model-page.component';
 import { ContextModelPage } from './pages/projects/project-details/model/context-model-page/context-model-page.component';
 import { inject } from '@angular/core';
-import { parentProjectResolver, projectResolver } from './app.routes.resolvers';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
@@ -21,29 +20,23 @@ export const routes: Routes = [
   {
     path: 'projects/:id',
     component: ProjectDetailsPage,
-
-    resolve: { project: projectResolver },
     children: [
       {
         path: 'model',
         component: ProjectModelPage,
-        resolve: { project: parentProjectResolver },
         children: [
           { path: '', redirectTo: 'upload', pathMatch: 'full' },
           {
             path: 'upload',
             component: UploadModelPage,
-            resolve: { project: parentProjectResolver },
           },
           {
             path: 'load',
             component: LoadModelPage,
-            resolve: { project: parentProjectResolver },
           },
           {
             path: 'context',
             component: ContextModelPage,
-            resolve: { project: parentProjectResolver },
           },
         ],
       },

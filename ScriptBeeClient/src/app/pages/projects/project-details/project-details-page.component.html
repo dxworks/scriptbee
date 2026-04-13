@@ -1,5 +1,7 @@
-@if (isNavigating()) {
+@if (projectResource.isLoading()) {
   <app-loading-progress-bar title="Loading project..."></app-loading-progress-bar>
+} @else if (projectResourceError()) {
+  <app-error-state [error]="projectResourceError()!" (retry)="projectResource.reload()"></app-error-state>
+} @else {
+  <router-outlet></router-outlet>
 }
-
-<router-outlet></router-outlet>

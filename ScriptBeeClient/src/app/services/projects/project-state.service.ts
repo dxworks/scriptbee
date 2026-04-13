@@ -1,12 +1,14 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { Project } from '../../types/project';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectStateService {
   currentProjectId = signal<string | null>(null);
+  currentProject = signal<Project | null>(null);
   currentInstanceId = signal<string | null>(null);
 
   private router = inject(Router);

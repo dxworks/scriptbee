@@ -1,18 +1,41 @@
-import { Component, computed, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, computed, effect, inject } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { ProjectService } from '../../../services/projects/project.service';
 import { LoadingProgressBarComponent } from '../../../components/loading-progress-bar/loading-progress-bar.component';
+import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
+import { convertError } from '../../../utils/api';
+import { ProjectStateService } from '../../../services/projects/project-state.service';
+import { of } from 'rxjs';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-project-details',
   templateUrl: './project-details-page.component.html',
   styleUrls: ['./project-details-page.component.scss'],
   providers: [],
-  imports: [RouterOutlet, LoadingProgressBarComponent],
+  imports: [LoadingProgressBarComponent, ErrorStateComponent, RouterOutlet],
 })
 export class ProjectDetailsPage {
-  private router = inject(Router);
-
-  isNavigating = computed(() => {
-    return !!this.router.currentNavigation();
+  projectResource = rxResource({
+    params: () => this.projectStateService.currentProjectId(),
+    stream: ({ params: id }) => {
+      if (!id) {
+        return of(null);
+      }
+      return this.projectService.getProject(id);
+    },
   });
+  projectResourceError = computed(() => convertError(this.projectResource.error()));
+
+  private projectService = inject(ProjectService);
+  private projectStateService = inject(ProjectStateService);
+
+  constructor() {
+    effect(() => {
+      const project = this.projectResource.value();
+      if (project) {
+        this.projectStateService.currentProject.set(project);
+      }
+    });
+  }
 }

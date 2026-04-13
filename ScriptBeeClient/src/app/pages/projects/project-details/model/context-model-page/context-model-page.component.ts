@@ -1,9 +1,8 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CurrentlyLoadedModelsComponent } from './currently-loaded-models/currently-loaded-models.component';
 import { MatDivider } from '@angular/material/list';
 import { ProjectContextComponent } from './project-context/project-context.component';
 import { ProjectStateService } from '../../../../../services/projects/project-state.service';
-import { Project } from '../../../../../types/project';
 
 @Component({
   selector: 'app-context-model-page',
@@ -14,7 +13,6 @@ import { Project } from '../../../../../types/project';
 export class ContextModelPage {
   private projectStateService = inject(ProjectStateService);
 
-  project = input.required<Project>();
-
+  project = computed(() => this.projectStateService.currentProject()!);
   instanceId = computed(() => this.projectStateService.currentInstanceId());
 }

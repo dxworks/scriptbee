@@ -10,7 +10,6 @@ import { finalize } from 'rxjs';
 import { convertError } from '../../../../../../utils/api';
 import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { RouterStateSnapshot } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

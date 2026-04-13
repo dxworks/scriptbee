@@ -67,7 +67,10 @@ describe('SideNavListItemComponent', () => {
     fixture.componentRef.setInput('isCollapsed', false);
     fixture.detectChanges();
 
-    const expandIcon = Array.from(fixture.nativeElement.querySelectorAll('mat-icon')).find((i: any) => i.textContent.trim() === 'expand_more');
+    const expandIcon = Array.from(fixture.nativeElement.querySelectorAll('mat-icon')).find((i) => {
+      const icon = i as HTMLElement;
+      return icon.textContent.trim() === 'expand_more';
+    });
 
     expect(expandIcon).toBeTruthy();
   });
@@ -77,9 +80,10 @@ describe('SideNavListItemComponent', () => {
     fixture.componentRef.setInput('isCollapsed', true);
     fixture.detectChanges();
 
-    const expandIcon = Array.from(fixture.nativeElement.querySelectorAll('mat-icon')).find((i: any) =>
-      ['expand_more', 'expand_less'].includes(i.textContent.trim())
-    );
+    const expandIcon = Array.from(fixture.nativeElement.querySelectorAll('mat-icon')).find((i) => {
+      const icon = i as HTMLElement;
+      ['expand_more', 'expand_less'].includes(icon.textContent.trim());
+    });
 
     expect(expandIcon).toBeFalsy();
   });

@@ -1,6 +1,5 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ProjectStateService } from '../../../../../services/projects/project-state.service';
-import { Project } from '../../../../../types/project';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { convertError } from '../../../../../utils/api';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
@@ -33,14 +32,14 @@ import { MatButtonModule } from '@angular/material/button';
 export class UploadModelPage {
   private projectStateService = inject(ProjectStateService);
 
-  project = input.required<Project>();
+  projectId = computed(() => this.projectStateService.currentProjectId()!);
   instanceId = computed(() => this.projectStateService.currentInstanceId());
 
   selectedLoaderId = signal<string | undefined>(undefined);
 
   getLoadersResource = rxResource({
     params: () => ({
-      projectId: this.project().id,
+      projectId: this.projectId(),
       instanceId: this.instanceId()!,
     }),
     stream: ({ params }) => this.loaderService.getAllLoaders(params.projectId, params.instanceId),
@@ -59,7 +58,7 @@ export class UploadModelPage {
     if (loaderId) {
       this.isUploadLoading.set(true);
       this.uploadService
-        .uploadModels(this.project().id, loaderId, this.files)
+        .uploadModels(this.projectId(), loaderId, this.files)
         .pipe(finalize(() => this.isUploadLoading.set(false)))
         .subscribe({
           next: (data) => {
