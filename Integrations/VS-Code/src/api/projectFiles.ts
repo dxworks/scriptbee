@@ -73,3 +73,9 @@ export async function getScriptContent(baseUrl: string, projectId: string, scrip
   });
   return response.data;
 }
+
+export async function deleteProjectFile(baseUrl: string, projectId: string, fileId: string): Promise<void> {
+  await axiosInstance.delete(`/api/projects/${projectId}/files/${fileId}`, {
+    baseURL: baseUrl,
+  });
+}

@@ -1,10 +1,15 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { getProjectFiles, getScriptContent, updateScriptContent, createScript, WebProjectFileNode } from '../api/projectFiles';
+import { getProjectFiles, getScriptContent, updateScriptContent, createScript, deleteProjectFile, WebProjectFileNode } from '../api/projectFiles';
 import { connectionService } from './connectionService';
 import { getProjectSrcPath } from '../utils/workspaceUtils';
 import { Dirent } from 'fs';
+
+interface ScriptMeta {
+  id: string;
+  type: 'file' | 'folder';
+}
 
 export class ScriptSyncService {
   public async sync(connectionId: string): Promise<void> {
@@ -15,20 +20,24 @@ export class ScriptSyncService {
   public async pull(connectionId: string): Promise<void> {
     const connection = await this.getConnectionOrThrow(connectionId);
     const srcPath = getProjectSrcPath(connection.projectId!);
-    console.log('srcPath', srcPath);
     await fs.mkdir(srcPath, { recursive: true });
 
     await this.pullRecursive(connection.url, connection.projectId!, undefined, srcPath);
   }
 
-  private async pullRecursive(baseUrl: string, projectId: string, parentId: string | undefined, currentLocalPath: string): Promise<void> {
+  private async pullRecursive(
+    baseUrl: string,
+    projectId: string,
+    parentId: string | undefined,
+    currentLocalPath: string
+  ): Promise<void> {
     let offset = 0;
     const limit = 50;
     let hasMore = true;
 
     while (hasMore) {
       const response = await getProjectFiles(baseUrl, projectId, parentId, offset, limit);
-      console.log('offset', response.data);
+
       for (const node of response.data) {
         await this.handlePullNode(baseUrl, projectId, node, currentLocalPath);
       }
@@ -40,17 +49,16 @@ export class ScriptSyncService {
 
   private async handlePullNode(baseUrl: string, projectId: string, node: WebProjectFileNode, currentLocalPath: string): Promise<void> {
     const localPath = path.join(currentLocalPath, node.name);
+    await this.writeMetaFile(localPath, { id: node.id, type: node.type });
 
     if (node.type === 'folder') {
       await fs.mkdir(localPath, { recursive: true });
       await this.pullRecursive(baseUrl, projectId, node.id, localPath);
     } else {
       try {
-        console.log(baseUrl, projectId, node.id);
         const content = await getScriptContent(baseUrl, projectId, node.id);
         await fs.writeFile(localPath, content, 'utf8');
       } catch (error) {
-        console.log(error);
         vscode.window.showErrorMessage(`Failed to pull script ${node.name}: ${error}`);
       }
     }
@@ -59,7 +67,7 @@ export class ScriptSyncService {
   public async push(connectionId: string): Promise<void> {
     const connection = await this.getConnectionOrThrow(connectionId);
     const srcPath = getProjectSrcPath(connection.projectId!);
-
+    
     if (!(await this.exists(srcPath))) {
       throw new Error(`Project source folder does not exist: ${srcPath}`);
     }
@@ -67,22 +75,49 @@ export class ScriptSyncService {
     await this.pushRecursive(connection.url, connection.projectId!, srcPath, '');
   }
 
-  private async pushRecursive(baseUrl: string, projectId: string, srcRoot: string, relativeDirPath: string): Promise<void> {
+  private async pushRecursive(
+    baseUrl: string,
+    projectId: string,
+    srcRoot: string,
+    relativeDirPath: string
+  ): Promise<void> {
     const currentLocalPath = path.join(srcRoot, relativeDirPath);
-    const files = await fs.readdir(currentLocalPath, { withFileTypes: true });
-    const parentId = await this.getRemoteParentId(baseUrl, projectId, relativeDirPath);
+    const localEntries = await fs.readdir(currentLocalPath, { withFileTypes: true });
+    const parentId = await this.getRemoteParentId(baseUrl, projectId, srcRoot, relativeDirPath);
     const remoteNodes = (await getProjectFiles(baseUrl, projectId, parentId, 0, 1000)).data;
 
-    for (const file of files) {
-      await this.handlePushEntry(baseUrl, projectId, srcRoot, relativeDirPath, file, remoteNodes);
+    await this.handleDeletions(baseUrl, projectId, currentLocalPath, localEntries, remoteNodes);
+
+    for (const entry of localEntries) {
+      if (entry.name.endsWith('.sb.meta')) {
+        continue;
+      }
+      await this.handlePushEntry(baseUrl, projectId, srcRoot, relativeDirPath, entry, remoteNodes);
     }
   }
 
-  private async getRemoteParentId(baseUrl: string, projectId: string, relativeDirPath: string): Promise<string | undefined> {
-    if (relativeDirPath === '') {
-      return undefined;
+  private async handleDeletions(
+    baseUrl: string,
+    projectId: string,
+    currentLocalPath: string,
+    localEntries: Dirent[],
+    remoteNodes: WebProjectFileNode[]
+  ): Promise<void> {
+    const localNames = new Set(localEntries.map(f => f.name));
+    
+    for (const remoteNode of remoteNodes) {
+      if (!localNames.has(remoteNode.name)) {
+        try {
+          await deleteProjectFile(baseUrl, projectId, remoteNode.id);
+          const metaPath = path.join(currentLocalPath, `${remoteNode.name}.sb.meta`);
+          if (await this.exists(metaPath)) {
+            await fs.unlink(metaPath);
+          }
+        } catch (error) {
+          vscode.window.showErrorMessage(`Failed to delete remote node ${remoteNode.name}: ${error}`);
+        }
+      }
     }
-    return await this.findRemoteFolderId(baseUrl, projectId, relativeDirPath);
   }
 
   private async handlePushEntry(
@@ -90,16 +125,21 @@ export class ScriptSyncService {
     projectId: string,
     srcRoot: string,
     relativeDirPath: string,
-    file: Dirent,
+    entry: Dirent,
     remoteNodes: WebProjectFileNode[]
   ): Promise<void> {
-    const relativeFilePath = path.join(relativeDirPath, file.name).replace(/\\/g, '/');
-    const remoteNode = remoteNodes.find((n) => n.name === file.name);
+    const relativeFilePath = path.join(relativeDirPath, entry.name).replace(/\\/g, '/');
+    const localPath = path.join(srcRoot, relativeFilePath);
+    const meta = await this.readMetaFile(localPath);
+    
+    const remoteNode = meta 
+      ? remoteNodes.find(n => n.id === meta.id)
+      : remoteNodes.find(n => n.name === entry.name);
 
-    if (file.isDirectory()) {
+    if (entry.isDirectory()) {
       await this.pushRecursive(baseUrl, projectId, srcRoot, relativeFilePath);
     } else {
-      await this.pushFile(baseUrl, projectId, srcRoot, relativeFilePath, file.name, remoteNode);
+      await this.pushFile(baseUrl, projectId, srcRoot, relativeFilePath, entry.name, remoteNode);
     }
   }
 
@@ -117,14 +157,45 @@ export class ScriptSyncService {
     try {
       if (remoteNode) {
         await updateScriptContent(baseUrl, projectId, remoteNode.id, content);
+        if (!(await this.readMetaFile(localPath))) {
+          await this.writeMetaFile(localPath, { id: remoteNode.id, type: 'file' });
+        }
       } else {
         const language = this.getLanguageFromExtension(fileName);
         const newScript = await createScript(baseUrl, projectId, relativeFilePath, language);
+        await this.writeMetaFile(localPath, { id: newScript.id, type: 'file' });
         await updateScriptContent(baseUrl, projectId, newScript.id, content);
       }
     } catch (error) {
       vscode.window.showErrorMessage(`Failed to push script ${fileName}: ${error}`);
     }
+  }
+
+  private async getRemoteParentId(baseUrl: string, projectId: string, srcRoot: string, relativeDirPath: string): Promise<string | undefined> {
+    if (relativeDirPath === '') {
+      return undefined;
+    }
+    const localPath = path.join(srcRoot, relativeDirPath);
+    const meta = await this.readMetaFile(localPath);
+    return meta?.id;
+  }
+
+  private async readMetaFile(targetPath: string): Promise<ScriptMeta | undefined> {
+    const metaPath = `${targetPath}.sb.meta`;
+    if (await this.exists(metaPath)) {
+      try {
+        const content = await fs.readFile(metaPath, 'utf8');
+        return JSON.parse(content);
+      } catch {
+        return undefined;
+      }
+    }
+    return undefined;
+  }
+
+  private async writeMetaFile(targetPath: string, meta: ScriptMeta): Promise<void> {
+    const metaPath = `${targetPath}.sb.meta`;
+    await fs.writeFile(metaPath, JSON.stringify(meta), 'utf8');
   }
 
   private async getConnectionOrThrow(connectionId: string) {
