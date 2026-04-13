@@ -4,6 +4,7 @@
   "description": "ScriptBee is a tool that helps the analysis of different models with scripts written in C#, Javascript or Python.",
   "version": "0.0.1",
   "publisher": "dxworks",
+  "icon": "assets/logo_bee.png",
   "engines": {
     "vscode": "^1.115.0"
   },
@@ -13,12 +14,86 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "scriptbee-explorer",
+          "title": "ScriptBee",
+          "icon": "assets/logo_bee.svg"
+        }
+      ]
+    },
+    "views": {
+      "scriptbee-explorer": [
+        {
+          "id": "scriptbee-connections",
+          "name": "Connections",
+          "type": "tree",
+          "icon": "assets/logo_bee.svg"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "scriptbee.helloWorld",
-        "title": "Hello World"
+        "command": "scriptbee.addConnection",
+        "title": "ScriptBee: Add Connection",
+        "icon": "$(add)"
+      },
+      {
+        "command": "scriptbee.editConnection",
+        "title": "ScriptBee: Edit Connection",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "scriptbee.switchConnection",
+        "title": "ScriptBee: Switch Connection"
+      },
+      {
+        "command": "scriptbee.deleteConnection",
+        "title": "ScriptBee: Delete Connection",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "scriptbee.selectProject",
+        "title": "ScriptBee: Select Project"
+      },
+      {
+        "command": "scriptbee.refreshTreeView",
+        "title": "ScriptBee: Refresh Tree View",
+        "icon": "$(refresh)"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "scriptbee.addConnection",
+          "when": "view == scriptbee-connections",
+          "group": "navigation"
+        },
+        {
+          "command": "scriptbee.refreshTreeView",
+          "when": "view == scriptbee-connections",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "scriptbee.switchConnection",
+          "when": "view == scriptbee-connections && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "scriptbee.editConnection",
+          "when": "view == scriptbee-connections && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "scriptbee.deleteConnection",
+          "when": "view == scriptbee-connections && viewItem == connection",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -26,16 +101,25 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "prettier:fix": "prettier --write ."
+  },
+  "dependencies": {
+    "axios": "^1.15.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "25.x",
+    "@types/sinon": "^21.0.1",
     "@types/vscode": "^1.115.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "^10.2.0",
+    "mocha": "^11.7.5",
+    "sinon": "^21.1.2",
     "typescript": "^6.0.2",
+    "prettier": "^3.8.1",
     "typescript-eslint": "^8.58.1"
   }
 }
