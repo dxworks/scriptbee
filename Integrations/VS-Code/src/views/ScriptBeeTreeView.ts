@@ -57,7 +57,7 @@ export class ConnectionItem extends ScriptBeeTreeItem {
   ) {
     super(connection.name, vscode.TreeItemCollapsibleState.Collapsed, connection);
     this.description = connection.url;
-    this.contextValue = 'connection';
+    this.contextValue = isActive ? 'connectionActive' : 'connection';
     this.iconPath = new vscode.ThemeIcon(isActive ? 'check' : 'link');
     if (isActive) {
       this.tooltip = `${connection.name} (Active)`;
@@ -70,11 +70,6 @@ class ProjectItem extends ScriptBeeTreeItem {
     super(`Project: ${projectId}`, vscode.TreeItemCollapsibleState.None, connection);
     this.iconPath = new vscode.ThemeIcon('project');
     this.contextValue = 'project';
-    this.command = {
-      title: 'Change Project',
-      command: CommandIds.COMMAND_SELECT_PROJECT,
-      arguments: [this],
-    };
   }
 }
 

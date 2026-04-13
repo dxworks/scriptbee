@@ -5,6 +5,10 @@ export const COMMAND_SWITCH_CONNECTION = 'scriptbee.switchConnection';
 export const COMMAND_SELECT_PROJECT = 'scriptbee.selectProject';
 export const COMMAND_REFRESH_TREE_VIEW = 'scriptbee.refreshTreeView';
 export const COMMAND_REFRESH_UI = 'scriptbee.refreshUI';
+export const COMMAND_SYNC_SCRIPTS = 'scriptbee.syncScripts';
+export const COMMAND_PULL_SCRIPTS = 'scriptbee.pullScripts';
+export const COMMAND_PUSH_SCRIPTS = 'scriptbee.pushScripts';
+export const COMMAND_OPEN_PROJECT_FOLDER = 'scriptbee.openProjectFolder';
 
 export const VIEW_ID_CONNECTIONS = 'scriptbee-connections';
 export const VIEW_CONTAINER_ID = 'scriptbee-explorer';

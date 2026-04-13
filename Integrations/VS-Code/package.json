@@ -14,6 +14,16 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "ScriptBee",
+      "properties": {
+        "scriptbee.workspaceRoot": {
+          "type": "string",
+          "default": "~/.scriptbee",
+          "description": "The root folder where ScriptBee projects and generated code are stored."
+        }
+      }
+    },
     "viewsContainers": {
       "activitybar": [
         {
@@ -46,7 +56,8 @@
       },
       {
         "command": "scriptbee.switchConnection",
-        "title": "ScriptBee: Switch Connection"
+        "title": "ScriptBee: Switch Connection",
+        "icon": "$(check)"
       },
       {
         "command": "scriptbee.deleteConnection",
@@ -55,12 +66,33 @@
       },
       {
         "command": "scriptbee.selectProject",
-        "title": "ScriptBee: Select Project"
+        "title": "ScriptBee: Select Project",
+        "icon": "$(settings-gear)"
       },
       {
         "command": "scriptbee.refreshTreeView",
         "title": "ScriptBee: Refresh Tree View",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "scriptbee.syncScripts",
+        "title": "ScriptBee: Sync Scripts",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "scriptbee.pullScripts",
+        "title": "ScriptBee: Pull Scripts",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "scriptbee.pushScripts",
+        "title": "ScriptBee: Push Scripts",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "scriptbee.openProjectFolder",
+        "title": "ScriptBee: Open Project Folder",
+        "icon": "$(folder-opened)"
       }
     ],
     "menus": {
@@ -68,29 +100,54 @@
         {
           "command": "scriptbee.addConnection",
           "when": "view == scriptbee-connections",
-          "group": "navigation"
+          "group": "navigation@1"
         },
         {
           "command": "scriptbee.refreshTreeView",
           "when": "view == scriptbee-connections",
-          "group": "navigation"
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
         {
           "command": "scriptbee.switchConnection",
           "when": "view == scriptbee-connections && viewItem == connection",
-          "group": "inline"
+          "group": "inline@1"
+        },
+        {
+          "command": "scriptbee.selectProject",
+          "when": "view == scriptbee-connections && (viewItem == connection || viewItem == connectionActive)",
+          "group": "inline@2"
         },
         {
           "command": "scriptbee.editConnection",
-          "when": "view == scriptbee-connections && viewItem == connection",
-          "group": "inline"
+          "when": "view == scriptbee-connections && (viewItem == connection || viewItem == connectionActive)",
+          "group": "inline@3"
         },
         {
           "command": "scriptbee.deleteConnection",
-          "when": "view == scriptbee-connections && viewItem == connection",
-          "group": "inline"
+          "when": "view == scriptbee-connections && (viewItem == connection || viewItem == connectionActive)",
+          "group": "inline@4"
+        },
+        {
+          "command": "scriptbee.syncScripts",
+          "when": "view == scriptbee-connections && viewItem == project",
+          "group": "inline@1"
+        },
+        {
+          "command": "scriptbee.pullScripts",
+          "when": "view == scriptbee-connections && viewItem == project",
+          "group": "inline@2"
+        },
+        {
+          "command": "scriptbee.pushScripts",
+          "when": "view == scriptbee-connections && viewItem == project",
+          "group": "inline@3"
+        },
+        {
+          "command": "scriptbee.openProjectFolder",
+          "when": "view == scriptbee-connections && viewItem == project",
+          "group": "inline@4"
         }
       ]
     }

@@ -9,7 +9,15 @@ This is the Official VS Code extension for [ScriptBee](https://github.com/dxwork
 - **Activity Bar Integration**: Access all your saved ScriptBee connections right from the Activity Bar.
 - **Multiple Connections**: Connect to local, staging, or production ScriptBee instances and switch seamlessly.
 - **Project Selection**: Browse and select a project for the currently active connection.
+- **Script Syncing**: Push and pull scripts between your local machine and the ScriptBee server.
+- **Project Folder Management**: Easily open your project's script folder in VS Code.
 - **Status Bar Indicator**: Quickly see which connection and project you are currently working on.
+
+## Configuration
+
+This extension can be configured via VS Code settings:
+
+- `scriptbee.workspaceRoot`: The root folder where ScriptBee projects and generated code are stored. Default is `~/.scriptbee`.
 
 ## Getting Started
 
@@ -17,6 +25,7 @@ This is the Official VS Code extension for [ScriptBee](https://github.com/dxwork
 2. Click **Add Connection** (`+` icon) or run `ScriptBee: Add Connection` from the command palette.
 3. Provide a name (e.g., `Local`) and the URL of your ScriptBee backend (e.g., `http://localhost:5000`).
 4. Click **Select Project** inside your connection in the Activity Bar to choose an active project.
+5. Once a project is selected, you can use the Sync, Pull, and Push icons to manage your scripts.
 
 ## Commands
 
@@ -26,6 +35,10 @@ This is the Official VS Code extension for [ScriptBee](https://github.com/dxwork
 - `ScriptBee: Delete Connection`
 - `ScriptBee: Select Project`
 - `ScriptBee: Refresh Tree View`
+- `ScriptBee: Sync Scripts`
+- `ScriptBee: Pull Scripts`
+- `ScriptBee: Push Scripts`
+- `ScriptBee: Open Project Folder`
 
 ## Requirements
 
