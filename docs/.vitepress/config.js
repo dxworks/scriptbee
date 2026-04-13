@@ -4,7 +4,7 @@ export default defineConfig({
   title: 'ScriptBee Docs',
   description: 'Documentation for ScriptBee',
   base: '/scriptbee/',
-  head: [['link', { rel: 'icon', href: '/scriptbee/assets/bee-icon.ico' }]],
+  head: [['link', { rel: 'icon', href: '/scriptbee/assets/logo_bee.ico' }]],
   themeConfig: {
     logo: '/assets/logo.svg',
 
