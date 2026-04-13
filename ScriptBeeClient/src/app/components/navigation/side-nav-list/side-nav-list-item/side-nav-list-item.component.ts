@@ -1,8 +1,8 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { NavItem } from '../../navItem';
 import { MatIcon } from '@angular/material/icon';
 import { MatListItem, MatListItemMeta, MatListItemTitle } from '@angular/material/list';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-side-nav-list-item',
@@ -15,7 +15,15 @@ export class SideNavListItemComponent {
   linkPrefix = input<string | undefined>(undefined);
   isCollapsed = input<boolean>(false);
 
+  router = inject(Router);
+
   isNestedMenuOpen = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      this.isNestedMenuOpen.set(this.isRouteFromNestedRoute());
+    });
+  }
 
   nestedMenuPadding = computed(() => {
     return this.isCollapsed() ? null : '48px';
@@ -26,13 +34,34 @@ export class SideNavListItemComponent {
   }
 
   getUrl(): string {
-    if (this.linkPrefix()) {
-      return this.linkPrefix() + '/' + this.navItem().link;
+    const prefix = this.linkPrefix();
+    if (prefix) {
+      return concatenatePaths(prefix, this.navItem().link);
     }
     return this.navItem().link;
   }
 
   getChildUrl(navItem: NavItem): string {
-    return `${this.getUrl()}${navItem.link}`;
+    return concatenatePaths(this.getUrl(), navItem.link);
   }
+
+  private isRouteFromNestedRoute(): boolean {
+    const children = this.navItem().children ?? [];
+
+    for (const child of children) {
+      const url = this.getChildUrl(child);
+      if (url === this.router.url) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+function concatenatePaths(part1: string, part2: string) {
+  const cleanedPart1 = part1.replace(/\/$/, '');
+  const cleanedPart2 = part2.replace(/^\//, '');
+
+  return `${cleanedPart1}/${cleanedPart2}`;
 }
