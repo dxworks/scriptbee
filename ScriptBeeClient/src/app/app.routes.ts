@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Router, Routes, withNavigationErrorHandler } from '@angular/router';
 import { ProjectsPage } from './pages/projects/projects-page/projects-page.component';
 import { CreateProjectPage } from './pages/projects/create-project/create-project.component';
 import { ProjectDetailsPage } from './pages/projects/project-details/project-details-page.component';
@@ -8,6 +8,11 @@ import { AnalysisRunDetailsComponent } from './pages/projects/project-details/an
 import { ProjectSettingsPage } from './pages/projects/project-details/settings/project-settings.component';
 import { PluginsMarketplaceDashboardComponent } from './pages/projects/project-details/plugins/marketplace-dashboard/plugins-marketplace-dashboard.component';
 import { PluginDetailsComponent } from './pages/projects/project-details/plugins/plugin-details/plugin-details.component';
+import { UploadModelPage } from './pages/projects/project-details/model/upload-model-page/upload-model-page.component';
+import { LoadModelPage } from './pages/projects/project-details/model/load-model-page/load-model-page.component';
+import { ContextModelPage } from './pages/projects/project-details/model/context-model-page/context-model-page.component';
+import { inject } from '@angular/core';
+import { parentProjectResolver, projectResolver } from './app.routes.resolvers';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
@@ -16,10 +21,31 @@ export const routes: Routes = [
   {
     path: 'projects/:id',
     component: ProjectDetailsPage,
+
+    resolve: { project: projectResolver },
     children: [
       {
         path: 'model',
         component: ProjectModelPage,
+        resolve: { project: parentProjectResolver },
+        children: [
+          { path: '', redirectTo: 'upload', pathMatch: 'full' },
+          {
+            path: 'upload',
+            component: UploadModelPage,
+            resolve: { project: parentProjectResolver },
+          },
+          {
+            path: 'load',
+            component: LoadModelPage,
+            resolve: { project: parentProjectResolver },
+          },
+          {
+            path: 'context',
+            component: ContextModelPage,
+            resolve: { project: parentProjectResolver },
+          },
+        ],
       },
       {
         path: 'analysis',
@@ -41,3 +67,11 @@ export const routes: Routes = [
     ],
   },
 ];
+
+export const withErrorNavigation = withNavigationErrorHandler((error) => {
+  const router = inject(Router);
+  if (error?.error) {
+    console.error('Navigation error occurred:', error.error);
+  }
+  void router.navigate(['/projects']);
+});
