@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { connectionService } from '../../services/connectionService';
+import { projectService } from '../../services/projectService';
 import { storage } from '../../utils/storage';
 
 suite('Integration Test Suite', () => {
@@ -58,8 +59,7 @@ suite('Integration Test Suite', () => {
     await connectionService.setActiveConnection(conn.id);
 
     const projectId = 'project-123';
-    conn.projectId = projectId;
-    await connectionService.updateConnection(conn);
+    await projectService.setSelectedProject(conn.id, projectId);
 
     const activeConnection = await connectionService.getActiveConnection();
     assert.strictEqual(activeConnection?.projectId, projectId);
@@ -69,13 +69,28 @@ suite('Integration Test Suite', () => {
     const conn = await connectionService.addConnection('Conn 1', 'http://url1');
     await connectionService.setActiveConnection(conn.id);
 
-    conn.projectId = 'some-project';
-    await connectionService.updateConnection(conn);
-
-    conn.projectId = undefined;
-    await connectionService.updateConnection(conn);
+    await projectService.setSelectedProject(conn.id, 'some-project');
+    await projectService.setSelectedProject(conn.id, undefined);
 
     const updatedConn = await connectionService.getActiveConnection();
     assert.strictEqual(updatedConn?.projectId, undefined);
+  });
+
+  test('Setting project for non-active connection should not affect active one', async () => {
+    const connA = await connectionService.addConnection('Conn A', 'http://urlA');
+    const connB = await connectionService.addConnection('Conn B', 'http://urlB');
+
+    await connectionService.setActiveConnection(connA.id);
+
+    const projectIdB = 'project-B';
+    await projectService.setSelectedProject(connB.id, projectIdB);
+
+    const activeConn = await connectionService.getActiveConnection();
+    assert.strictEqual(activeConn?.id, connA.id);
+    assert.strictEqual(activeConn?.projectId, undefined);
+
+    const connections = await connectionService.getConnections();
+    const updatedConnB = connections.find((c) => c.id === connB.id);
+    assert.strictEqual(updatedConnB?.projectId, projectIdB);
   });
 });

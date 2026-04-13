@@ -23,7 +23,7 @@ export class ConnectionService {
   public async addConnection(name: string, url: string): Promise<Connection> {
     const connections = await this.getConnections();
     const newConnection: Connection = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       name,
       url,
     };

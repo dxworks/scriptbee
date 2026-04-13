@@ -2,16 +2,16 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import { projectService } from '../../../services/projectService';
 import { connectionService } from '../../../services/connectionService';
-import * as projectsApi from '../../../api/projects';
 import { Connection } from '../../../utils/storage';
+import * as projectsApi from '../../../api/projects';
 
 suite('ProjectService Test Suite', () => {
-  let getActiveConnectionStub: sinon.SinonStub;
+  let getConnectionsStub: sinon.SinonStub;
   let updateConnectionStub: sinon.SinonStub;
   let getAllProjectsStub: sinon.SinonStub;
 
   setup(() => {
-    getActiveConnectionStub = sinon.stub(connectionService, 'getActiveConnection');
+    getConnectionsStub = sinon.stub(connectionService, 'getConnections');
     updateConnectionStub = sinon.stub(connectionService, 'updateConnection');
     getAllProjectsStub = sinon.stub(projectsApi, 'getAllProjects');
   });
@@ -20,30 +20,36 @@ suite('ProjectService Test Suite', () => {
     sinon.restore();
   });
 
-  test('setSelectedProject should update active connection bundle', async () => {
-    const connection: Connection = {
-      id: '1',
-      name: 'Local',
-      url: '...',
-    };
-    getActiveConnectionStub.resolves(connection);
+  test('fetchProjects should pass the URL to the API layer', async () => {
+    const url = 'http://test-url';
+    await projectService.fetchProjects(url);
+    assert.ok(getAllProjectsStub.calledWith(url));
+  });
 
-    await projectService.setSelectedProject('proj-1');
+  test('setSelectedProject should update connection by id', async () => {
+    const connection: Connection = {
+      id: 'conn-1',
+      name: 'Local',
+      url: 'url-1',
+    };
+    getConnectionsStub.resolves([connection]);
+
+    await projectService.setSelectedProject('conn-1', 'proj-1');
 
     assert.strictEqual(connection.projectId, 'proj-1');
     assert.ok(updateConnectionStub.calledWith(connection));
   });
 
-  test('getSelectedProjectId should return from active connection', async () => {
-    const connection = {
-      id: '1',
+  test('getSelectedProjectId should return from connection by id', async () => {
+    const connection: Connection = {
+      id: 'conn-1',
       name: 'Local',
-      url: '...',
+      url: 'url-1',
       projectId: 'proj-1',
     };
-    getActiveConnectionStub.resolves(connection);
+    getConnectionsStub.resolves([connection]);
 
-    const result = await projectService.getSelectedProjectId();
+    const result = await projectService.getSelectedProjectId('conn-1');
     assert.strictEqual(result, 'proj-1');
   });
 });

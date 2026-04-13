@@ -1,13 +1,11 @@
-import { ConnectionItem } from '../views/ScriptBeeTreeView';
-
-export type CommandConnectionArg = string | ConnectionItem | undefined;
+export type CommandConnectionArg = string | { connection?: { id: string } } | undefined;
 
 export function getConnectionId(arg: CommandConnectionArg): string | undefined {
   if (typeof arg === 'string') {
     return arg;
   }
 
-  if (arg instanceof ConnectionItem) {
+  if (arg && typeof arg === 'object' && 'connection' in arg && arg.connection) {
     return arg.connection.id;
   }
 

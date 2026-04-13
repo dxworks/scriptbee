@@ -34,7 +34,7 @@ export async function selectProject(connectionArg?: CommandConnectionArg) {
       },
       async (progress) => {
         progress.report({ message: `Fetching projects for ${connection?.name}...` });
-        return await projectService.fetchProjects();
+        return await projectService.fetchProjects(connection!.url);
       }
     );
 
@@ -63,15 +63,13 @@ export async function selectProject(connectionArg?: CommandConnectionArg) {
     });
 
     if (selected !== undefined) {
-      connection.projectId = selected.projectId;
-      await connectionService.updateConnection(connection);
-
+      await projectService.setSelectedProject(connection.id, selected.projectId);
       const message = selected.projectId ? `Selected project: ${selected.label}` : 'Project disassociated.';
       vscode.window.setStatusBarMessage(message, 3000);
       vscode.commands.executeCommand(COMMAND_REFRESH_UI);
     }
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    vscode.window.showErrorMessage(`Failed to fetch projects: ${message}`);
+    vscode.window.showErrorMessage(`Failed to fetch projects for ${connection.name}: ${message}`);
   }
 }

@@ -28,9 +28,9 @@ export class ScriptBeeTreeDataProvider implements vscode.TreeDataProvider<Script
       const items: ScriptBeeTreeItem[] = [];
 
       if (connection.projectId) {
-        items.push(new ProjectItem(connection.projectId));
+        items.push(new ProjectItem(connection.projectId, connection));
       } else {
-        items.push(new ActionItem('Select Project', CommandIds.COMMAND_SELECT_PROJECT, 'project'));
+        items.push(new ActionItem('Select Project', CommandIds.COMMAND_SELECT_PROJECT, 'project', connection));
       }
 
       return items;
@@ -40,14 +40,22 @@ export class ScriptBeeTreeDataProvider implements vscode.TreeDataProvider<Script
   }
 }
 
-export abstract class ScriptBeeTreeItem extends vscode.TreeItem {}
+export abstract class ScriptBeeTreeItem extends vscode.TreeItem {
+  constructor(
+    label: string,
+    collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly connection?: Connection
+  ) {
+    super(label, collapsibleState);
+  }
+}
 
 export class ConnectionItem extends ScriptBeeTreeItem {
   constructor(
     public readonly connection: Connection,
     public readonly isActive: boolean
   ) {
-    super(connection.name, vscode.TreeItemCollapsibleState.Collapsed);
+    super(connection.name, vscode.TreeItemCollapsibleState.Collapsed, connection);
     this.description = connection.url;
     this.contextValue = 'connection';
     this.iconPath = new vscode.ThemeIcon(isActive ? 'check' : 'link');
@@ -58,20 +66,26 @@ export class ConnectionItem extends ScriptBeeTreeItem {
 }
 
 class ProjectItem extends ScriptBeeTreeItem {
-  constructor(projectId: string) {
-    super(`Project: ${projectId}`, vscode.TreeItemCollapsibleState.None);
+  constructor(projectId: string, connection: Connection) {
+    super(`Project: ${projectId}`, vscode.TreeItemCollapsibleState.None, connection);
     this.iconPath = new vscode.ThemeIcon('project');
     this.contextValue = 'project';
+    this.command = {
+      title: 'Change Project',
+      command: CommandIds.COMMAND_SELECT_PROJECT,
+      arguments: [this],
+    };
   }
 }
 
 class ActionItem extends ScriptBeeTreeItem {
-  constructor(label: string, commandId: string, icon: string) {
-    super(label, vscode.TreeItemCollapsibleState.None);
+  constructor(label: string, commandId: string, icon: string, connection: Connection) {
+    super(label, vscode.TreeItemCollapsibleState.None, connection);
     this.iconPath = new vscode.ThemeIcon(icon);
     this.command = {
       title: label,
       command: commandId,
+      arguments: [this],
     };
   }
 }
