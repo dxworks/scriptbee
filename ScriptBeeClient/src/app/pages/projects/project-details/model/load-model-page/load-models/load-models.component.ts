@@ -1,20 +1,20 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import { TreeNode, TreeNodeWithParent } from '../../../../../types/tree-node';
+import { TreeNode, TreeNodeWithParent } from '../../../../../../types/tree-node';
 import { MatButtonModule } from '@angular/material/button';
-import { CheckableTreeComponent } from '../../../../../components/tree/checkable-tree/checkable-tree.component';
-import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
-import { LoaderService } from '../../../../../services/loaders/loader.service';
+import { CheckableTreeComponent } from '../../../../../../components/tree/checkable-tree/checkable-tree.component';
+import { LoaderService } from '../../../../../../services/loaders/loader.service';
 import { finalize } from 'rxjs';
-import { Project, ProjectFile } from '../../../../../types/project';
+import { Project, ProjectFile } from '../../../../../../types/project';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
-import { convertError } from '../../../../../utils/api';
+import { convertError } from '../../../../../../utils/api';
+import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 
 @Component({
   selector: 'app-load-models',
   templateUrl: './load-models.component.html',
   styleUrls: ['./load-models.component.scss'],
-  imports: [MatButtonModule, CheckableTreeComponent, CenteredSpinnerComponent],
+  imports: [MatButtonModule, CheckableTreeComponent, LoadingProgressBarComponent],
 })
 export class LoadModelsComponent {
   project = input.required<Project>();
