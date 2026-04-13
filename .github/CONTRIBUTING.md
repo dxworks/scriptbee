@@ -37,7 +37,7 @@ To help you navigate the project, here is a breakdown of the key directories:
     - `src/Gateway`: Orchestration, project management, and instance allocation.
     - `src/Analysis`: Core logic for model loading and script execution.
     - `src/Workspace`: Model persistence and management.
-- **`Integrations/VS-Code/scriptbee`**: VS Code extension
+- **`Integrations/VS-Code`**: VS Code extension
 - **`MCP`**: MCP Server
 - **`docs/`**: Documentation source files, built with **VitePress**.
 - **`scripts/`**: Utility scripts for building, packing, and maintaining the project.
