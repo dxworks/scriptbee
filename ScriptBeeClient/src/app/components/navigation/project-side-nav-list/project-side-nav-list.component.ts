@@ -21,6 +21,23 @@ export class ProjectSideNavListComponent {
       link: '/model',
       name: 'Model',
       icon: 'model_training',
+      children: [
+        {
+          link: '/upload',
+          name: 'Upload',
+          icon: 'upload',
+        },
+        {
+          link: '/load',
+          name: 'Load',
+          icon: 'autorenew',
+        },
+        {
+          link: '/context',
+          name: 'Context',
+          icon: 'account_tree',
+        },
+      ],
     },
     {
       link: '/analysis',

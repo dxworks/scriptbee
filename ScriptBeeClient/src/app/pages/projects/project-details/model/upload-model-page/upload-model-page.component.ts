@@ -1,24 +1,22 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { ProjectStateService } from '../../../../../services/projects/project-state.service';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { convertError } from '../../../../../utils/api';
 import { LoaderService } from '../../../../../services/loaders/loader.service';
-import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
+import { UploadService } from '../../../../../services/upload/upload.service';
+import { finalize } from 'rxjs';
+import { DragAndDropFilesComponent } from '../../../../../components/drag-and-drop-files/drag-and-drop-files.component';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
+import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { DragAndDropFilesComponent } from '../../../../../components/drag-and-drop-files/drag-and-drop-files.component';
 import { MatButtonModule } from '@angular/material/button';
-import { UploadService } from '../../../../../services/upload/upload.service';
-import { finalize } from 'rxjs';
-import { convertError } from '../../../../../utils/api';
 
 @Component({
-  selector: 'app-upload-models',
-  templateUrl: './upload-models.component.html',
-  styleUrls: ['./upload-models.component.scss'],
+  selector: 'app-upload-model-page',
   imports: [
-    CenteredSpinnerComponent,
     ErrorStateComponent,
     MatFormFieldModule,
     MatSelectModule,
@@ -26,18 +24,23 @@ import { convertError } from '../../../../../utils/api';
     FormsModule,
     DragAndDropFilesComponent,
     MatButtonModule,
+    LoadingProgressBarComponent,
   ],
+  templateUrl: './upload-model-page.component.html',
+  styleUrl: './upload-model-page.component.scss',
 })
-export class UploadModelsComponent {
-  projectId = input.required<string>();
-  instanceId = input.required<string>();
+export class UploadModelPage {
+  private projectStateService = inject(ProjectStateService);
+
+  projectId = computed(() => this.projectStateService.currentProjectId()!);
+  instanceId = computed(() => this.projectStateService.currentInstanceId());
 
   selectedLoaderId = signal<string | undefined>(undefined);
 
   getLoadersResource = rxResource({
     params: () => ({
       projectId: this.projectId(),
-      instanceId: this.instanceId(),
+      instanceId: this.instanceId()!,
     }),
     stream: ({ params }) => this.loaderService.getAllLoaders(params.projectId, params.instanceId),
   });

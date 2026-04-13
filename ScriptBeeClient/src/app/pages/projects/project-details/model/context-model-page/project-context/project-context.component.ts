@@ -1,20 +1,20 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { ProjectContextService } from '../../../../../services/projects/project-context.service';
-import { CenteredSpinnerComponent } from '../../../../../components/centered-spinner/centered-spinner.component';
-import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
+import { ProjectContextService } from '../../../../../../services/projects/project-context.service';
+import { ErrorStateComponent } from '../../../../../../components/error-state/error-state.component';
 import { MatButton } from '@angular/material/button';
-import { SelectableTreeComponent } from '../../../../../components/tree/selectable-tree/selectable-tree.component';
-import { TreeNode } from '../../../../../types/tree-node';
-import { ProjectContext } from '../../../../../types/returned-context-slice';
+import { SelectableTreeComponent } from '../../../../../../components/tree/selectable-tree/selectable-tree.component';
+import { TreeNode } from '../../../../../../types/tree-node';
+import { ProjectContext } from '../../../../../../types/returned-context-slice';
 import { finalize } from 'rxjs';
-import { convertError } from '../../../../../utils/api';
+import { convertError } from '../../../../../../utils/api';
+import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 
 @Component({
   selector: 'app-project-context',
   templateUrl: './project-context.component.html',
   styleUrls: ['./project-context.component.scss'],
-  imports: [CenteredSpinnerComponent, ErrorStateComponent, MatButton, SelectableTreeComponent],
+  imports: [ErrorStateComponent, MatButton, SelectableTreeComponent, LoadingProgressBarComponent],
 })
 export class ProjectContextComponent {
   projectId = input.required<string>();

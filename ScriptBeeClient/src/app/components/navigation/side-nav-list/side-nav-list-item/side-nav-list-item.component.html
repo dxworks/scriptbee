@@ -1,0 +1,45 @@
+<a
+  mat-list-item
+  [routerLink]="navItem().children ? null : getUrl()"
+  (click)="toggleNestedMenu()"
+  routerLinkActive="selected-menu-item"
+  #rla="routerLinkActive"
+  [activated]="rla.isActive"
+  class="nav-list-item">
+  <mat-icon matListItemIcon>{{ navItem().icon }}</mat-icon>
+
+  @if (!isCollapsed()) {
+    <span matListItemTitle> {{ navItem().name }}</span>
+  }
+
+  @if (navItem().children && !isCollapsed()) {
+    <span matListItemMeta>
+      @if (isNestedMenuOpen()) {
+        <mat-icon>expand_less</mat-icon>
+      } @else {
+        <mat-icon>expand_more</mat-icon>
+      }
+    </span>
+  }
+</a>
+
+@if (navItem().children && isNestedMenuOpen()) {
+  <div>
+    @for (childNavItem of navItem().children; track childNavItem.name) {
+      <a
+        mat-list-item
+        [routerLink]="getChildUrl(childNavItem)"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [activated]="rla.isActive"
+        class="nav-list-item"
+        [style.padding-left]="nestedMenuPadding()">
+        <mat-icon matListItemIcon>{{ childNavItem.icon }}</mat-icon>
+
+        @if (!isCollapsed()) {
+          <span matListItemTitle> {{ childNavItem.name }}</span>
+        }
+      </a>
+    }
+  </div>
+}

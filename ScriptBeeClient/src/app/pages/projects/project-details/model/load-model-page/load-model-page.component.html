@@ -1,0 +1,7 @@
+@if (instanceId()) {
+  <app-load-models [project]="project()" [instanceId]="instanceId()!"></app-load-models>
+
+  <mat-divider />
+
+  <app-link-models [projectId]="project().id" [instanceId]="instanceId()!"></app-link-models>
+}

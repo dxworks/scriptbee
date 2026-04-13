@@ -3,7 +3,7 @@
 <app-checkable-tree [data]="savedFiles()" [displayNameAccessor]="displayNameAccessor" (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-checkable-tree>
 
 @if (isLoadModelsLoading()) {
-  <app-centered-spinner text="Loading Models"></app-centered-spinner>
+  <app-loading-progress-bar title="Loading Models..."></app-loading-progress-bar>
 }
 
 <button class="load-button" mat-raised-button [disabled]="checkedFiles().length === 0 || isLoadModelsLoading()" (click)="onLoadFilesClick()">Load Files</button>

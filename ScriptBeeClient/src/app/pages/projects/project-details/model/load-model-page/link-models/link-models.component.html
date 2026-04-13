@@ -1,7 +1,7 @@
 <div class="project-model-section-title project-model-content-after-divider">Link Models</div>
 
 @if (getLinkersResource.isLoading()) {
-  <app-centered-spinner text="Loading Linker"></app-centered-spinner>
+  <app-loading-progress-bar title="Loading linkers..."></app-loading-progress-bar>
 } @else if (getLinkersResourceError()) {
   <app-error-state [error]="getLinkersResourceError()!" (retry)="getLinkersResource.reload()"></app-error-state>
 } @else {
@@ -18,7 +18,7 @@
 }
 
 @if (isLinkLoading()) {
-  <app-centered-spinner text="Linking Models"></app-centered-spinner>
+  <app-loading-progress-bar title="Linking Models..."></app-loading-progress-bar>
 }
 
 <div class="link-models-container">

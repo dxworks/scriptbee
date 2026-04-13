@@ -1,11 +1,5 @@
 <mat-nav-list>
-  @for (navItem of navItems(); track navItem) {
-    <a mat-list-item [routerLink]="getUrl(navItem)" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive" class="nav-list-item">
-      <mat-icon matListItemIcon>{{ navItem.icon }}</mat-icon>
-
-      @if (!isCollapsed()) {
-        <span matListItemTitle> {{ navItem.name }}</span>
-      }
-    </a>
+  @for (navItem of navItems(); track navItem.name) {
+    <app-side-nav-list-item [navItem]="navItem" [linkPrefix]="linkPrefix()" [isCollapsed]="isCollapsed()" />
   }
 </mat-nav-list>

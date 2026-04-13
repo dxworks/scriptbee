@@ -37,7 +37,7 @@ describe('ProjectSideNavListComponent', () => {
 
   it('should render entries', () => {
     const icons = fixture.debugElement.queryAll(By.css('mat-icon'));
-    expect(icons).toHaveLength(4);
+    expect(icons).toHaveLength(5);
 
     const names = fixture.debugElement.queryAll(By.css('span[matListItemTitle]'));
     expect(names).toHaveLength(4);
