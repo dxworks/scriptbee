@@ -7,15 +7,15 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
-  - type: dropdown
+  - type: checkboxes
     id: component
     attributes:
       label: "Component"
       description: "Where did you find the bug?"
       options:
-        - WebApp (Backend)
-        - Client (Frontend)
-        - Both
+        - label: "WebApp (Backend)"
+        - label: "Client (Frontend)"
+        - label: "VS Code Extension"
     validations:
       required: true
   - type: input

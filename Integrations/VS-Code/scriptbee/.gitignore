@@ -1,0 +1,15 @@
+.DS_Store
+npm-debug.log
+Thumbs.db
+node_modules/
+out/
+*/.vs/
+tsconfig.lsif.json
+*.lsif
+*.db
+*.tsbuildinfo
+.vscode-test
+test-results
+coverage
+vscode*.d.ts
+*.vsix
