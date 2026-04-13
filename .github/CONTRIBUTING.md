@@ -37,6 +37,8 @@ To help you navigate the project, here is a breakdown of the key directories:
     - `src/Gateway`: Orchestration, project management, and instance allocation.
     - `src/Analysis`: Core logic for model loading and script execution.
     - `src/Workspace`: Model persistence and management.
+- **`Integrations/VS-Code/scriptbee`**: VS Code extension
+- **`MCP`**: MCP Server
 - **`docs/`**: Documentation source files, built with **VitePress**.
 - **`scripts/`**: Utility scripts for building, packing, and maintaining the project.
 
@@ -91,6 +93,7 @@ ScriptBee uses a namespaced tagging strategy to manage independent component rel
 | `analysis@<version>`   | Analysis Microservice              | Docker: `dxworks/scriptbee-analysis`  | No (Silent)    |
 | `plugin-api@<version>` | Plugin API                         | NuGet: `DxWorks.ScriptBee.Plugin.Api` | **Yes**        |
 | `bundle@<version>`     | Default Plugin Bundle              | Zip Archive                           | **Yes**        |
+| `vs-code@<version>`    | Default Plugin Bundle              | vsix file                             | **Yes**        |
 
 ### Release Process
 
