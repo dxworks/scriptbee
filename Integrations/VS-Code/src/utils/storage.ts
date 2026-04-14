@@ -6,6 +6,7 @@ export interface Connection {
   name: string;
   url: string;
   projectId?: string;
+  instanceId?: string;
 }
 
 export interface ScriptMeta {

@@ -5,6 +5,8 @@ import { editConnection } from './connection/editConnection';
 import { switchConnection } from './connection/switchConnection';
 import { deleteConnection } from './connection/deleteConnection';
 import { selectProject } from './project/selectProject';
+import { selectInstance } from './project/selectInstance';
+import { generateClasses } from './project/generateClasses';
 import { pullScripts } from './project/pullScripts';
 import { pushScripts } from './project/pushScripts';
 import { syncScripts } from './project/syncScripts';
@@ -18,6 +20,8 @@ export function registerCommands(context: vscode.ExtensionContext) {
   const switchConnectionCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SWITCH_CONNECTION, switchConnection);
   const deleteConnectionCmd = vscode.commands.registerCommand(CommandIds.COMMAND_DELETE_CONNECTION, deleteConnection);
   const selectProjectCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SELECT_PROJECT, selectProject);
+  const selectInstanceCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SELECT_INSTANCE, selectInstance);
+  const generateClassesCmd = vscode.commands.registerCommand(CommandIds.COMMAND_GENERATE_CLASSES, generateClasses);
   const pullScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PULL_SCRIPTS, pullScripts);
   const pushScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PUSH_SCRIPTS, pushScripts);
   const syncScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SYNC_SCRIPTS, syncScripts);
@@ -31,6 +35,8 @@ export function registerCommands(context: vscode.ExtensionContext) {
     switchConnectionCmd,
     deleteConnectionCmd,
     selectProjectCmd,
+    selectInstanceCmd,
+    generateClassesCmd,
     pullScriptsCmd,
     pushScriptsCmd,
     syncScriptsCmd,

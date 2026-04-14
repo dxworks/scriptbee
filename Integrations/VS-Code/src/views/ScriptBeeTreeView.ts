@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { connectionService } from '../services/connectionService';
 import { Connection } from '../utils/storage';
 import * as CommandIds from '../commands/commandIds';
+import { getProjectInstances, InstanceResponse } from '../api/instances';
 
 export class ScriptBeeTreeDataProvider implements vscode.TreeDataProvider<ScriptBeeTreeItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<ScriptBeeTreeItem | undefined | void> = new vscode.EventEmitter<ScriptBeeTreeItem | undefined | void>();
@@ -36,6 +37,25 @@ export class ScriptBeeTreeDataProvider implements vscode.TreeDataProvider<Script
       return items;
     }
 
+    if (element instanceof ProjectItem) {
+      const connection = element.connection!;
+      const instances = await getProjectInstances(connection.url, element.projectId);
+      const items: ScriptBeeTreeItem[] = [];
+
+      if (connection.instanceId) {
+        const activeInstance = instances.find((i) => i.id === connection.instanceId);
+        if (activeInstance) {
+          items.push(new InstanceItem(activeInstance, connection, true));
+        } else {
+          items.push(new ActionItem('Select Instance', CommandIds.COMMAND_SELECT_INSTANCE, 'instance', connection));
+        }
+      } else {
+        items.push(new ActionItem('Select Instance', CommandIds.COMMAND_SELECT_INSTANCE, 'instance', connection));
+      }
+
+      return items;
+    }
+
     return [];
   }
 }
@@ -65,11 +85,27 @@ export class ConnectionItem extends ScriptBeeTreeItem {
   }
 }
 
-class ProjectItem extends ScriptBeeTreeItem {
-  constructor(projectId: string, connection: Connection) {
-    super(`Project: ${projectId}`, vscode.TreeItemCollapsibleState.None, connection);
+export class ProjectItem extends ScriptBeeTreeItem {
+  constructor(
+    public readonly projectId: string,
+    connection: Connection
+  ) {
+    super(`Project: ${projectId}`, vscode.TreeItemCollapsibleState.Collapsed, connection);
     this.iconPath = new vscode.ThemeIcon('project');
     this.contextValue = 'project';
+  }
+}
+
+export class InstanceItem extends ScriptBeeTreeItem {
+  constructor(
+    public readonly instance: InstanceResponse,
+    connection: Connection,
+    public readonly isActive: boolean
+  ) {
+    super(`Instance: ${instance.id}`, vscode.TreeItemCollapsibleState.None, connection);
+    this.description = instance.status;
+    this.contextValue = 'instance';
+    this.iconPath = new vscode.ThemeIcon('database');
   }
 }
 
