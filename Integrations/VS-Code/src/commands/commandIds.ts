@@ -7,6 +7,7 @@ export const COMMAND_REFRESH_TREE_VIEW = 'scriptbee.refreshTreeView';
 export const COMMAND_REFRESH_UI = 'scriptbee.refreshUI';
 export const COMMAND_SYNC_SCRIPTS = 'scriptbee.syncScripts';
 export const COMMAND_PULL_SCRIPTS = 'scriptbee.pullScripts';
+export const COMMAND_PULL_SCRIPT = 'scriptbee.pullScript';
 export const COMMAND_PUSH_SCRIPTS = 'scriptbee.pushScripts';
 export const COMMAND_PUSH_SCRIPT = 'scriptbee.pushScript';
 export const COMMAND_OPEN_PROJECT_FOLDER = 'scriptbee.openProjectFolder';

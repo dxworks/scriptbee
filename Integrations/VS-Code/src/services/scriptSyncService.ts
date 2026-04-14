@@ -90,6 +90,30 @@ export class ScriptSyncService {
     }
   }
 
+  public async pullFileByUri(uri: vscode.Uri): Promise<void> {
+    const connectionId = connectionService.getActiveConnectionId();
+    if (!connectionId) {
+      throw new Error('No active connection found');
+    }
+
+    const { url, projectId } = await this.getConnectionOrThrow(connectionId);
+    const srcPath = path.normalize(getProjectSrcPath(projectId!));
+    const localPath = path.normalize(uri.fsPath);
+
+    if (!localPath.toLowerCase().startsWith(srcPath.toLowerCase())) {
+      throw new Error('File is not within the current project source folder');
+    }
+
+    const meta = await storage.getScriptMeta(uri);
+    if (!meta) {
+      throw new Error('This file is not tracked by ScriptBee. Push it first to server to create a remote counterpart.');
+    }
+
+    logger.log(`Pulling single file: ${path.relative(srcPath, localPath)} (ID: ${meta.id}) for project ${projectId}`);
+
+    await this.pullFileContent(url, projectId!, meta.id, localPath);
+  }
+
   private async pullFileContent(baseUrl: string, projectId: string, fileId: string, localPath: string): Promise<void> {
     try {
       const content = await getScriptContent(baseUrl, projectId, fileId);

@@ -50,6 +50,7 @@ This extension can be configured via VS Code settings:
 - `ScriptBee: Refresh Tree View`
 - `ScriptBee: Sync Scripts`
 - `ScriptBee: Pull Scripts`
+- `ScriptBee: Pull Script`
 - `ScriptBee: Push Scripts`
 - `ScriptBee: Push Script`
 - `ScriptBee: Open Project Folder`
