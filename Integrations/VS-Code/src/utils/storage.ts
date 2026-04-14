@@ -14,6 +14,11 @@ export interface ScriptMeta {
   type: 'file' | 'folder';
 }
 
+export interface ScriptMeta {
+  id: string;
+  type: 'file' | 'folder';
+}
+
 export class Storage {
   private static instance: Storage;
   private context: vscode.ExtensionContext | undefined;
