@@ -34,7 +34,6 @@ export class ProjectContextComponent {
 
   isClearContextLoading = signal(false);
   isReloadContextLoading = signal(false);
-  isGenerateClassesLoading = signal(false);
 
   private projectContextService = inject(ProjectContextService);
 
@@ -52,14 +51,6 @@ export class ProjectContextComponent {
       .clearContext(this.projectId(), this.instanceId())
       .pipe(finalize(() => this.isClearContextLoading.set(false)))
       .subscribe({ next: () => this.projectContextResource.reload() });
-  }
-
-  onGenerateClassesClick() {
-    this.isGenerateClassesLoading.set(true);
-    this.projectContextService
-      .generateClasses(this.projectId(), this.instanceId())
-      .pipe(finalize(() => this.isGenerateClassesLoading.set(false)))
-      .subscribe();
   }
 }
 
