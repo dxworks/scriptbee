@@ -4,6 +4,15 @@
   "description": "ScriptBee is a tool that helps the analysis of different models with scripts written in C#, Javascript or Python.",
   "version": "0.0.1",
   "publisher": "dxworks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dxworks/scriptbee"
+  },
+  "bugs": {
+    "url": "https://github.com/dxworks/scriptbee/issues"
+  },
+  "homepage": "https://dxworks.org/scriptbee",
+  "license": "Apache-2.0",
   "icon": "assets/logo_bee.png",
   "engines": {
     "vscode": "^1.115.0"
