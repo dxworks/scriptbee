@@ -18,3 +18,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for opening project folder natively.
 - Compare with Remote native diff viewer.
 - Class generation command support for instances.
+- Context menu item for pushing the currently active or selected script to the server.

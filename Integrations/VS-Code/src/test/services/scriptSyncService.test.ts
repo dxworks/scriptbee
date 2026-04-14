@@ -100,4 +100,23 @@ suite('ScriptSyncService Tests', function () {
 
     assert.strictEqual(deleteProjectFileSpy.callCount, 0, 'No remote deletions should happen during this push');
   });
+
+  test('pushFileByUri should push a single file', async () => {
+    const connectionId = 'conn-single-push';
+    const projectId = 'proj-single-1';
+
+    sinon.stub(connectionService, 'getActiveConnectionId').returns(connectionId);
+    sinon.stub(connectionService, 'getConnections').resolves([{ id: connectionId, name: 'Test', url: 'http://api-single', projectId }]);
+
+    const relativeFilePath = path.join('projects', projectId, 'src', 'script.js');
+    const fileUri = await createLocalFile(relativeFilePath, 'new content');
+    await storage.saveScriptMeta(fileUri, { id: 'existing-remote-id', type: 'file' });
+
+    await scriptSyncService.pushFileByUri(fileUri);
+
+    const updateStub = projectFiles.updateScriptContent as sinon.SinonStub;
+    assert.ok(updateStub.calledOnce, 'updateScriptContent should be called once');
+    assert.strictEqual(updateStub.firstCall.args[2], 'existing-remote-id');
+    assert.strictEqual(updateStub.firstCall.args[3], 'new content');
+  });
 });

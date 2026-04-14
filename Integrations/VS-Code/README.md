@@ -51,6 +51,7 @@ This extension can be configured via VS Code settings:
 - `ScriptBee: Sync Scripts`
 - `ScriptBee: Pull Scripts`
 - `ScriptBee: Push Scripts`
+- `ScriptBee: Push Script`
 - `ScriptBee: Open Project Folder`
 
 ## Requirements
