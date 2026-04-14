@@ -83,6 +83,25 @@ For more detailed information on advanced configuration, check the
 
 ---
 
+## VS Code Extension
+
+The official **ScriptBee VS Code Extension** lets you manage your scripts and connections directly
+from your editor. Key capabilities include:
+
+- 🔌 **Multi-connection management** — connect to local, staging, or production ScriptBee instances.
+- 📂 **Script synchronization** — push, pull, or sync all scripts; or push/pull a single file via right-click.
+- 🔍 **Compare with Remote** — built-in diff view to review server changes before syncing.
+
+### Install
+
+Search for **ScriptBee** in the VS Code Extensions Marketplace, or install from VSIX by downloading
+from the [GitHub Releases](https://github.com/dxworks/scriptbee/releases) page.
+
+For full extension documentation, including configuration options and a complete command reference, see the
+[VS Code Extension Guide](https://dxworks.org/scriptbee/installation/vs_code_extension).
+
+---
+
 ## Documentation
 
 Full documentation is available at [https://dxworks.org/scriptbee/](https://dxworks.org/scriptbee/).
