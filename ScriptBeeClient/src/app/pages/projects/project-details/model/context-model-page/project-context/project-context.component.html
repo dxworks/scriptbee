@@ -17,16 +17,10 @@
     <app-loading-progress-bar title="Reloading Context..."></app-loading-progress-bar>
   }
 
-  @if (isGenerateClassesLoading()) {
-    <app-loading-progress-bar title="Generating Classes..."></app-loading-progress-bar>
-  }
-
   <app-selectable-tree [data]="context()" [displayNameAccessor]="displayNameAccessor"></app-selectable-tree>
 
   <div class="action-buttons-container">
     <button mat-flat-button [disabled]="isReloadContextLoading()" (click)="onReloadModelsClick()">Reload Models</button>
-
-    <button mat-flat-button [disabled]="isGenerateClassesLoading()" (click)="onGenerateClassesClick()">Generate Classes</button>
 
     <button mat-flat-button [disabled]="isClearContextLoading()" (click)="onClearContextButtonClick()">Clear Context</button>
   </div>

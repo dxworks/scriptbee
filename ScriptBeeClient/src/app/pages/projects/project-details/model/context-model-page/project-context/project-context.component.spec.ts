@@ -48,15 +48,8 @@ describe('ProjectContextComponent', () => {
     expect(projectContextService.reloadContext).toHaveBeenCalledWith('proj-1', 'inst-1');
   });
 
-  it('should call generateClasses when generate button is clicked', () => {
-    const generateButton = fixture.debugElement.query(By.css('button:nth-child(2)'));
-    generateButton.nativeElement.click();
-
-    expect(projectContextService.generateClasses).toHaveBeenCalledWith('proj-1', 'inst-1');
-  });
-
   it('should call clearContext when clear button is clicked', () => {
-    const clearButton = fixture.debugElement.query(By.css('button:nth-child(3)'));
+    const clearButton = fixture.debugElement.query(By.css('button:nth-child(2)'));
     clearButton.nativeElement.click();
 
     expect(projectContextService.clearContext).toHaveBeenCalledWith('proj-1', 'inst-1');

@@ -173,30 +173,6 @@ describe('ScriptTreeComponent', () => {
 
       expect(fileSelectedSpy).toHaveBeenCalledWith(file);
     });
-
-    it('should generate classes when generate classes button is clicked', () => {
-      fixture.componentRef.setInput('projectId', 'project-abc');
-      fixture.detectChanges();
-      const generateButton = fixture.debugElement.query(By.css('button[aria-label="generate classes"]'));
-
-      generateButton.nativeElement.click();
-
-      expect(projectContextService.generateClasses).toHaveBeenCalledWith('project-abc', 'instance-123');
-      expect(snackbar.open).toHaveBeenCalledWith('Successfully generated model classes', 'Dismiss', expect.anything());
-    });
-
-    it('should show error when generate classes fails', () => {
-      fixture.componentRef.setInput('projectId', 'project-abc');
-      const httpError = new HttpErrorResponse({ error: { title: 'Unknown Error', status: 500 }, status: 500 });
-      projectContextService.generateClasses.mockReturnValue(throwError(() => httpError));
-      fixture.detectChanges();
-      const generateButton = fixture.debugElement.query(By.css('button[aria-label="generate classes"]'));
-
-      generateButton.nativeElement.click();
-
-      expect(projectContextService.generateClasses).toHaveBeenCalledWith('project-abc', 'instance-123');
-      expect(snackbar.open).toHaveBeenCalledWith(expect.stringContaining('Unknown Error'), 'Dismiss', expect.anything());
-    });
   });
 
   describe('Actions', () => {
