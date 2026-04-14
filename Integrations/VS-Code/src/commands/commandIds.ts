@@ -9,6 +9,7 @@ export const COMMAND_SYNC_SCRIPTS = 'scriptbee.syncScripts';
 export const COMMAND_PULL_SCRIPTS = 'scriptbee.pullScripts';
 export const COMMAND_PUSH_SCRIPTS = 'scriptbee.pushScripts';
 export const COMMAND_OPEN_PROJECT_FOLDER = 'scriptbee.openProjectFolder';
+export const COMMAND_COMPARE_WITH_REMOTE = 'scriptbee.compareWithRemote';
 
 export const VIEW_ID_CONNECTIONS = 'scriptbee-connections';
 export const VIEW_CONTAINER_ID = 'scriptbee-explorer';

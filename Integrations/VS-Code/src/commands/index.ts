@@ -9,6 +9,7 @@ import { pullScripts } from './project/pullScripts';
 import { pushScripts } from './project/pushScripts';
 import { syncScripts } from './project/syncScripts';
 import { openProjectFolder } from './project/openProjectFolder';
+import { compareWithRemote } from './project/compareWithRemote';
 import { refreshUI } from './ui/refreshUI';
 
 export function registerCommands(context: vscode.ExtensionContext) {
@@ -21,6 +22,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
   const pushScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PUSH_SCRIPTS, pushScripts);
   const syncScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SYNC_SCRIPTS, syncScripts);
   const openProjectFolderCmd = vscode.commands.registerCommand(CommandIds.COMMAND_OPEN_PROJECT_FOLDER, openProjectFolder);
+  const compareWithRemoteCmd = vscode.commands.registerCommand(CommandIds.COMMAND_COMPARE_WITH_REMOTE, compareWithRemote);
   const refreshCmd = vscode.commands.registerCommand(CommandIds.COMMAND_REFRESH_UI, refreshUI);
 
   context.subscriptions.push(
@@ -33,6 +35,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
     pushScriptsCmd,
     syncScriptsCmd,
     openProjectFolderCmd,
+    compareWithRemoteCmd,
     refreshCmd
   );
 }

@@ -22,3 +22,24 @@ export function getProjectSrcPath(projectId: string): string {
 export function getProjectGeneratedPath(projectId: string): string {
   return path.join(getWorkspaceRoot(), 'projects', projectId, '.generated');
 }
+
+export async function hideMetaFiles() {
+  const config = vscode.workspace.getConfiguration('files');
+  const exclude = config.get<Record<string, boolean>>('exclude') || {};
+
+  if (exclude['**/*.sb.meta'] === true) {
+    return;
+  }
+
+  const newExclude = { ...exclude, '**/*.sb.meta': true };
+
+  try {
+    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+      await config.update('exclude', newExclude, vscode.ConfigurationTarget.Workspace);
+    } else {
+      await config.update('exclude', newExclude, vscode.ConfigurationTarget.Global);
+    }
+  } catch (error) {
+    console.warn('Failed to update workspace exclude bindings:', error);
+  }
+}

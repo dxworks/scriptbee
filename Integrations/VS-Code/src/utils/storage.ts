@@ -1,10 +1,16 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 export interface Connection {
   id: string;
   name: string;
   url: string;
   projectId?: string;
+}
+
+export interface ScriptMeta {
+  id: string;
+  type: 'file' | 'folder';
 }
 
 export class Storage {
@@ -38,6 +44,48 @@ export class Storage {
 
   public async setActiveConnectionId(connectionId: string | undefined): Promise<void> {
     await this.context?.globalState.update('scriptbee.activeConnectionId', connectionId);
+  }
+
+  public async getScriptMeta(fileUri: vscode.Uri): Promise<ScriptMeta | undefined> {
+    const metaUri = this.getMetaUri(fileUri);
+    if (!metaUri) {
+      return undefined;
+    }
+
+    try {
+      const content = await vscode.workspace.fs.readFile(metaUri);
+      return JSON.parse(new TextDecoder().decode(content));
+    } catch {
+      return undefined;
+    }
+  }
+
+  public async saveScriptMeta(fileUri: vscode.Uri, meta: ScriptMeta): Promise<void> {
+    const metaUri = this.getMetaUri(fileUri);
+    if (!metaUri) {
+      return;
+    }
+
+    const parentUri = vscode.Uri.joinPath(metaUri, '..');
+    await vscode.workspace.fs.createDirectory(parentUri);
+
+    const content = new TextEncoder().encode(JSON.stringify(meta));
+    await vscode.workspace.fs.writeFile(metaUri, content);
+  }
+
+  public async deleteScriptMeta(fileUri: vscode.Uri): Promise<void> {
+    const metaUri = this.getMetaUri(fileUri);
+    if (!metaUri) {
+      return;
+    }
+
+    try {
+      await vscode.workspace.fs.delete(metaUri);
+    } catch {}
+  }
+
+  private getMetaUri(fileUri: vscode.Uri): vscode.Uri {
+    return fileUri.with({ path: `${fileUri.path}.sb.meta` });
   }
 }
 

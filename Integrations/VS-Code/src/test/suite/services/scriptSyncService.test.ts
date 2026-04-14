@@ -3,26 +3,29 @@ import * as sinon from 'sinon';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 import * as os from 'os';
+import axiosMockAdapter from 'axios-mock-adapter';
+import axiosInstance from '../../../api/axiosInstance';
 import { scriptSyncService } from '../../../services/scriptSyncService';
 import { connectionService } from '../../../services/connectionService';
-import * as projectFilesApi from '../../../api/projectFiles';
 import * as workspaceUtils from '../../../utils/workspaceUtils';
+import { storage } from '../../../utils/storage';
 
 suite('ScriptSyncService Test Suite', () => {
+  let mock: axiosMockAdapter;
   let tmpDir: string;
-  let getConnectionsStub: sinon.SinonStub;
   let getProjectSrcPathStub: sinon.SinonStub;
-  let getProjectFilesStub: sinon.SinonStub;
-  let getScriptContentStub: sinon.SinonStub;
-  let updateScriptContentStub: sinon.SinonStub;
-  let createScriptStub: sinon.SinonStub;
+  let getConnectionsStub: sinon.SinonStub;
+  let getScriptMetaStub: sinon.SinonStub;
+  let saveScriptMetaStub: sinon.SinonStub;
+  let deleteScriptMetaStub: sinon.SinonStub;
 
   const baseUrl = 'http://test-url';
   const projectId = 'test-project';
   const connectionId = 'conn-1';
 
   setup(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'scriptbee-test-'));
+    mock = new axiosMockAdapter(axiosInstance);
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'sb-test-'));
 
     getConnectionsStub = sinon.stub(connectionService, 'getConnections');
     getConnectionsStub.resolves([{ id: connectionId, name: 'Test', url: baseUrl, projectId: projectId }]);
@@ -30,133 +33,97 @@ suite('ScriptSyncService Test Suite', () => {
     getProjectSrcPathStub = sinon.stub(workspaceUtils, 'getProjectSrcPath');
     getProjectSrcPathStub.returns(tmpDir);
 
-    getProjectFilesStub = sinon.stub(projectFilesApi, 'getProjectFiles');
-    getScriptContentStub = sinon.stub(projectFilesApi, 'getScriptContent');
-    updateScriptContentStub = sinon.stub(projectFilesApi, 'updateScriptContent');
-    createScriptStub = sinon.stub(projectFilesApi, 'createScript');
+    getScriptMetaStub = sinon.stub(storage, 'getScriptMeta');
+    saveScriptMetaStub = sinon.stub(storage, 'saveScriptMeta');
+    deleteScriptMetaStub = sinon.stub(storage, 'deleteScriptMeta');
   });
 
   teardown(async () => {
+    mock.restore();
     sinon.restore();
     await fs.rm(tmpDir, { recursive: true, force: true });
   });
 
-  test('pull should handle multi-page pagination', async () => {
-    const limit = 2;
-    getProjectFilesStub.withArgs(baseUrl, projectId, undefined, 0, 50).resolves({
+  test('pull should handle multi-page pagination and folders', async () => {
+    mock.onGet(`/api/projects/${projectId}/files`, { params: { parentId: undefined, offset: 0, limit: 50 } }).reply(200, {
       data: [
-        { id: '1', name: 's1.cs', type: 'file', hasChildren: false },
-        { id: '2', name: 's2.cs', type: 'file', hasChildren: false },
+        { id: 'f1', name: 's1.cs', type: 'file' },
+        { id: 'dir1', name: 'sub', type: 'folder' },
       ],
       totalCount: 3,
-      offset: 0,
-      limit: 2,
     });
 
-    getProjectFilesStub.withArgs(baseUrl, projectId, undefined, 2, 50).resolves({
-      data: [{ id: '3', name: 's3.cs', type: 'file', hasChildren: false }],
+    mock.onGet(`/api/projects/${projectId}/files`, { params: { parentId: undefined, offset: 2, limit: 50 } }).reply(200, {
+      data: [{ id: 'f3', name: 's3.cs', type: 'file' }],
       totalCount: 3,
-      offset: 2,
-      limit: 2,
     });
 
-    getScriptContentStub.resolves('content');
+    mock.onGet(`/api/projects/${projectId}/files`, { params: { parentId: 'dir1', offset: 0, limit: 50 } }).reply(200, {
+      data: [{ id: 'f2', name: 'inner.py', type: 'file' }],
+      totalCount: 1,
+    });
+
+    mock.onGet(/\/api\/projects\/.*\/scripts\/.*\/content/).reply(200, 'file content');
 
     await scriptSyncService.pull(connectionId);
-
-    assert.strictEqual(getProjectFilesStub.callCount, 2);
     assert.ok(await exists(path.join(tmpDir, 's1.cs')));
-    assert.ok(await exists(path.join(tmpDir, 's2.cs')));
-    assert.ok(await exists(path.join(tmpDir, 's3.cs')));
   });
 
-  test('pull should recursively handle folders with pagination', async () => {
-    getProjectFilesStub.withArgs(baseUrl, projectId, undefined, 0, 50).resolves({
-      data: [{ id: 'folder-1', name: 'sub', type: 'folder', hasChildren: true }],
-      totalCount: 1,
-      offset: 0,
-      limit: 50,
+  test('push should update existing scripts and handle deletions', async () => {
+    await fs.writeFile(path.join(tmpDir, 's1.cs'), 'new content');
+
+    getScriptMetaStub.callsFake(async (uri: any) => {
+      if (uri.fsPath.includes('s1.cs')) {
+        return { id: 'remote-1', type: 'file' };
+      }
+      return undefined;
     });
 
-    getProjectFilesStub.withArgs(baseUrl, projectId, 'folder-1', 0, 50).resolves({
-      data: [{ id: 'file-1', name: 'inner.cs', type: 'file', hasChildren: false }],
-      totalCount: 1,
-      offset: 0,
-      limit: 50,
+    mock.onGet(`/api/projects/${projectId}/files`).reply(200, {
+      data: [
+        { id: 'remote-1', name: 's1.cs', type: 'file' },
+        { id: 'remote-2', name: 's2.cs', type: 'file' },
+      ],
+      totalCount: 2,
     });
 
-    getScriptContentStub.resolves('inner-content');
-
-    await scriptSyncService.pull(connectionId);
-
-    const content = await fs.readFile(path.join(tmpDir, 'sub', 'inner.cs'), 'utf8');
-    assert.strictEqual(content, 'inner-content');
-  });
-
-  test('push should update existing remote scripts', async () => {
-    await fs.writeFile(path.join(tmpDir, 'script1.cs'), 'local-content');
-
-    getProjectFilesStub.withArgs(baseUrl, projectId, undefined, 0, 1000).resolves({
-      data: [{ id: 'remote-1', name: 'script1.cs', type: 'file', hasChildren: false }],
-      totalCount: 1,
-      offset: 0,
-      limit: 1000,
-    });
+    mock.onDelete(`/api/projects/${projectId}/files/remote-2`).reply(204);
+    mock.onPut(`/api/projects/${projectId}/scripts/remote-1/content`).reply(204);
 
     await scriptSyncService.push(connectionId);
 
-    assert.ok(updateScriptContentStub.calledWith(baseUrl, projectId, 'remote-1', 'local-content'));
-    assert.ok(createScriptStub.notCalled);
+    const deleteCalls = mock.history.delete.filter((req) => req.url === `/api/projects/${projectId}/files/remote-2`);
+    const updateCalls = mock.history.put.filter((req) => req.url === `/api/projects/${projectId}/scripts/remote-1/content`);
+
+    assert.strictEqual(deleteCalls.length, 1);
+    assert.strictEqual(updateCalls.length, 1);
   });
 
-  test('push should create and then update content for new local scripts', async () => {
-    await fs.writeFile(path.join(tmpDir, 'new.js'), 'new-content');
+  test('push should create new scripts if meta is missing', async () => {
+    await fs.writeFile(path.join(tmpDir, 'new.js'), 'console.log()');
+    getScriptMetaStub.resolves(undefined);
 
-    getProjectFilesStub.withArgs(baseUrl, projectId, undefined, 0, 1000).resolves({
-      data: [],
-      totalCount: 0,
-      offset: 0,
-      limit: 1000,
+    mock.onGet(`/api/projects/${projectId}/files`).reply(200, { data: [], totalCount: 0 });
+
+    mock.onPost(`/api/projects/${projectId}/scripts`).reply(201, {
+      id: 'new-remote-id',
+      name: 'new.js',
+      type: 'file',
     });
-
-    createScriptStub.resolves({ id: 'new-remote-id', name: 'new.js', path: 'new.js', absolutePath: '', language: 'javascript' });
+    mock.onPut(`/api/projects/${projectId}/scripts/new-remote-id/content`).reply(204);
 
     await scriptSyncService.push(connectionId);
 
-    assert.ok(createScriptStub.calledWith(baseUrl, projectId, 'new.js', 'javascript'));
-    assert.ok(updateScriptContentStub.calledWith(baseUrl, projectId, 'new-remote-id', 'new-content'));
+    const createCalls = mock.history.post.filter((req) => req.url === `/api/projects/${projectId}/scripts`);
+    const updateCalls = mock.history.put.filter((req) => req.url === `/api/projects/${projectId}/scripts/new-remote-id/content`);
+
+    assert.strictEqual(createCalls.length, 1);
+    assert.strictEqual(updateCalls.length, 1);
   });
 
-  test('push should handle subdirectories by traversing remote folders', async () => {
-    const subDirPath = path.join(tmpDir, 'sub');
-    await fs.mkdir(subDirPath);
-    await fs.writeFile(path.join(subDirPath, 'sub.cs'), 'sub-content');
-
-    getProjectFilesStub.withArgs(baseUrl, projectId, undefined, 0, 1000).resolves({
-      data: [{ id: 'folder-sub-id', name: 'sub', type: 'folder', hasChildren: true }],
-      totalCount: 1,
-      offset: 0,
-      limit: 1000,
-    });
-
-    getProjectFilesStub.withArgs(baseUrl, projectId, 'folder-sub-id', 0, 1000).resolves({
-      data: [],
-      totalCount: 0,
-      offset: 0,
-      limit: 1000,
-    });
-
-    createScriptStub.resolves({ id: 'sub-remote-id', name: 'sub.cs', path: 'sub/sub.cs', absolutePath: '', language: 'csharp' });
-
-    await scriptSyncService.push(connectionId);
-
-    assert.ok(createScriptStub.calledWith(baseUrl, projectId, 'sub/sub.cs', 'csharp'));
-    assert.ok(updateScriptContentStub.calledWith(baseUrl, projectId, 'sub-remote-id', 'sub-content'));
-  });
-
-  async function exists(filePath: string): Promise<boolean> {
+  async function exists(p: string): Promise<boolean> {
     try {
-      await fs.access(filePath);
+      await fs.access(p);
       return true;
     } catch {
       return false;

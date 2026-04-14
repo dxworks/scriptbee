@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { projectService } from '../../services/projectService';
 import { ScriptBeeTreeItem } from '../../views/ScriptBeeTreeView';
+import { logger } from '../../utils/logger';
+import { showErrorWithCopy } from '../../utils/errorUtils';
 
 export async function openProjectFolder(item?: ScriptBeeTreeItem) {
   const connection = item?.connection;
@@ -20,8 +22,10 @@ export async function openProjectFolder(item?: ScriptBeeTreeItem) {
   if (option) {
     try {
       await projectService.openProjectFolder(connection.projectId, option.value);
+      logger.log(`Successfully opened project folder ${connection.projectId} in workspace ${option.value}`);
     } catch (error: any) {
-      vscode.window.showErrorMessage(`Failed to open project folder: ${error.message}`);
+      logger.error(`Failed to open project folder ${connection.projectId}`, error);
+      await showErrorWithCopy('Failed to open project folder', error);
     }
   }
 }

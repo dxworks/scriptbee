@@ -93,6 +93,11 @@
         "command": "scriptbee.openProjectFolder",
         "title": "ScriptBee: Open Project Folder",
         "icon": "$(folder-opened)"
+      },
+      {
+        "command": "scriptbee.compareWithRemote",
+        "title": "ScriptBee: Compare with Remote",
+        "icon": "$(diff)"
       }
     ],
     "menus": {
@@ -149,6 +154,18 @@
           "when": "view == scriptbee-connections && viewItem == project",
           "group": "inline@4"
         }
+      ],
+      "editor/context": [
+        {
+          "command": "scriptbee.compareWithRemote",
+          "group": "scriptbee@1"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "scriptbee.compareWithRemote",
+          "group": "scriptbee@1"
+        }
       ]
     }
   },
@@ -176,7 +193,7 @@
     "mocha": "^11.7.5",
     "sinon": "^21.1.2",
     "typescript": "^6.0.2",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.2",
     "typescript-eslint": "^8.58.1"
   }
 }

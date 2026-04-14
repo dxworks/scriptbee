@@ -13,6 +13,19 @@ This is the Official VS Code extension for [ScriptBee](https://github.com/dxwork
 - **Project Folder Management**: Easily open your project's script folder in VS Code.
 - **Status Bar Indicator**: Quickly see which connection and project you are currently working on.
 
+### Storage
+
+Sync metadata (`.sb.meta` files) is stored directly alongside your scripts within the project folder. This ensures that:
+
+- Metadata is natively tied to your files, making synchronization reliable even in complex multi-root workspaces.
+- **Hidden from VS Code**: These files are automatically added to VS Code's `files.exclude` setting, keeping your sidebar clean.
+- **Important**: You should add `**/*.sb.meta` to your `.gitignore` file. These files are meant for local synchronization only and should not be committed to version control.
+- The metadata maps local files to their remote counterparts on the ScriptBee server, allowing for efficient syncing and change detection.
+
+### Comparison and Diffs
+
+- **Compare with Remote**: Right-click any script in the explorer or editor and select `ScriptBee: Compare with Remote`. This opens a native VS Code diff view, allowing you to see exactly what changed on the server before you decide to pull or push.
+
 ## Configuration
 
 This extension can be configured via VS Code settings:
