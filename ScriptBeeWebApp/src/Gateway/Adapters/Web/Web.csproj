@@ -21,5 +21,6 @@
     <ProjectReference Include="..\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
     <ProjectReference Include="..\..\Application\Service.Project\Service.Project.csproj" />
     <ProjectReference Include="..\..\Application\UseCases.Project\UseCases.Project.csproj" />
+    <ProjectReference Include="..\Notifications.SignalR\Notifications.SignalR.csproj" />
   </ItemGroup>
 </Project>

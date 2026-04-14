@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using NSubstitute;
 using ScriptBee.Adapters.Notifications.SignalR.Hubs;
@@ -19,11 +20,19 @@ public class ProjectNotificationsServiceTests
     public ProjectNotificationsServiceTests()
     {
         var hubContext = Substitute.For<IHubContext<ProjectLiveUpdatesHub>>();
+        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        var httpContext = Substitute.For<HttpContext>();
+        var serviceProvider = Substitute.For<IServiceProvider>();
 
         hubContext.Clients.Returns(_hubClients);
         _hubClients.Group(Arg.Any<string>()).Returns(_clientProxy);
+        _clientIdProvider.ClientId.Returns("test-client");
 
-        _service = new ProjectNotificationsService(hubContext, _clientIdProvider);
+        httpContextAccessor.HttpContext.Returns(httpContext);
+        httpContext.RequestServices.Returns(serviceProvider);
+        serviceProvider.GetService(typeof(IClientIdProvider)).Returns(_clientIdProvider);
+
+        _service = new ProjectNotificationsService(hubContext, httpContextAccessor);
     }
 
     [Fact]
@@ -35,7 +44,7 @@ public class ProjectNotificationsServiceTests
         var ev = new ScriptCreatedEvent(projectId, scriptId);
 
         // Act
-        await _service.NotifyScriptCreated(ev, CancellationToken.None);
+        await _service.NotifyScriptCreated(ev, TestContext.Current.CancellationToken);
 
         // Assert
         _hubClients.Received(1).Group("test-project_scripts");
@@ -43,8 +52,12 @@ public class ProjectNotificationsServiceTests
             .Received(1)
             .SendCoreAsync(
                 "ScriptCreated",
-                Arg.Is<object[]>(args => (ScriptCreatedEvent)args[0] == ev),
-                CancellationToken.None
+                Arg.Is<object[]>(args =>
+                    ((ScriptCreatedEvent)args[0]).ProjectId == ev.ProjectId
+                    && ((ScriptCreatedEvent)args[0]).ScriptId == ev.ScriptId
+                    && ((ScriptCreatedEvent)args[0]).ClientId == "test-client"
+                ),
+                TestContext.Current.CancellationToken
             );
     }
 
@@ -57,7 +70,7 @@ public class ProjectNotificationsServiceTests
         var ev = new ScriptUpdatedEvent(projectId, scriptId);
 
         // Act
-        await _service.NotifyScriptUpdated(ev, CancellationToken.None);
+        await _service.NotifyScriptUpdated(ev, TestContext.Current.CancellationToken);
 
         // Assert
         _hubClients.Received(1).Group("test-project_scripts");
@@ -65,8 +78,12 @@ public class ProjectNotificationsServiceTests
             .Received(1)
             .SendCoreAsync(
                 "ScriptUpdated",
-                Arg.Is<object[]>(args => (ScriptUpdatedEvent)args[0] == ev),
-                CancellationToken.None
+                Arg.Is<object[]>(args =>
+                    ((ScriptUpdatedEvent)args[0]).ProjectId == ev.ProjectId
+                    && ((ScriptUpdatedEvent)args[0]).ScriptId == ev.ScriptId
+                    && ((ScriptUpdatedEvent)args[0]).ClientId == "test-client"
+                ),
+                TestContext.Current.CancellationToken
             );
     }
 
@@ -79,7 +96,7 @@ public class ProjectNotificationsServiceTests
         var ev = new ScriptDeletedEvent(projectId, scriptId);
 
         // Act
-        await _service.NotifyScriptDeleted(ev, CancellationToken.None);
+        await _service.NotifyScriptDeleted(ev, TestContext.Current.CancellationToken);
 
         // Assert
         _hubClients.Received(1).Group("test-project_scripts");
@@ -87,8 +104,12 @@ public class ProjectNotificationsServiceTests
             .Received(1)
             .SendCoreAsync(
                 "ScriptDeleted",
-                Arg.Is<object[]>(args => (ScriptDeletedEvent)args[0] == ev),
-                CancellationToken.None
+                Arg.Is<object[]>(args =>
+                    ((ScriptDeletedEvent)args[0]).ProjectId == ev.ProjectId
+                    && ((ScriptDeletedEvent)args[0]).ScriptId == ev.ScriptId
+                    && ((ScriptDeletedEvent)args[0]).ClientId == "test-client"
+                ),
+                TestContext.Current.CancellationToken
             );
     }
 }

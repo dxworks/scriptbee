@@ -2,6 +2,8 @@ using OneOf;
 using OneOf.Types;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Ports.Notifications;
+using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
@@ -12,7 +14,8 @@ using DeleteResult = OneOf<Success, ProjectDoesNotExistsError>;
 public sealed class DeleteProjectFilesService(
     IGetProject getProject,
     IDeleteScript deleteScript,
-    IDeleteFileOrFolder deleteFileOrFolder
+    IDeleteFileOrFolder deleteFileOrFolder,
+    IProjectNotificationsService projectNotificationsService
 ) : IDeleteProjectFilesUseCase
 {
     public async Task<DeleteResult> Delete(
@@ -38,6 +41,11 @@ public sealed class DeleteProjectFilesService(
         if (projectStructureEntry is not null)
         {
             deleteFileOrFolder.Delete(command.ProjectId, projectStructureEntry.File.Path);
+
+            await projectNotificationsService.NotifyScriptDeleted(
+                new ScriptDeletedEvent(command.ProjectId, command.Id),
+                cancellationToken
+            );
         }
 
         return new Success();

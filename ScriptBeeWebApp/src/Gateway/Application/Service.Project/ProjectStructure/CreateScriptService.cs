@@ -1,4 +1,4 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
+using DxWorks.ScriptBee.Plugin.Api;
 using OneOf;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
@@ -6,6 +6,8 @@ using ScriptBee.Common.CodeGeneration;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Ports.Notifications;
+using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Plugin;
 using ScriptBee.UseCases.Project.ProjectStructure;
@@ -24,6 +26,7 @@ public sealed class CreateScriptService(
     ICreateFile createFile,
     IGuidProvider guidProvider,
     ICreateScript createScript,
+    IProjectNotificationsService projectNotificationsService,
     ScriptGeneratorStrategyFactory scriptGeneratorStrategyFactory
 ) : ICreateScriptUseCase
 {
@@ -105,6 +108,11 @@ public sealed class CreateScriptService(
         );
 
         await createScript.Create(script, cancellationToken);
+
+        await projectNotificationsService.NotifyScriptCreated(
+            new ScriptCreatedEvent(projectDetails.Id, script.Id),
+            cancellationToken
+        );
 
         return script;
     }

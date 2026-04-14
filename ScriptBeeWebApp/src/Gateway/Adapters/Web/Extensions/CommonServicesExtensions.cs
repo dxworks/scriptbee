@@ -1,4 +1,5 @@
-﻿using ScriptBee.Common;
+using ScriptBee.Application.Model.Services;
+using ScriptBee.Common;
 using ScriptBee.Service.Project.Plugin;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
@@ -12,6 +13,7 @@ public static class CommonServicesExtensions
         return services
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
             .AddSingleton<IGuidProvider, GuidProvider>()
+            .AddScoped<IClientIdProvider, ClientIdProvider>()
             .AddSingleton<IGetScriptAbsolutePathUseCase, GetScriptAbsolutePathService>()
             .AddSingleton<ScriptGeneratorStrategyFactory>();
     }

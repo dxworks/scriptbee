@@ -44,10 +44,12 @@
   <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
+  <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Notifications.SignalR/Notifications.SignalR.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance.Allocation/Ports.Instance.Allocation.csproj" />
   <!-- Application Layer -->
   <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
+  <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Notifications/Ports.Notifications.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Plugins.Fetching/Ports.Plugins.Fetching.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Project/Service.Project.csproj" />
   <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Project/UseCases.Project.csproj" />
@@ -76,5 +78,6 @@
   <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
+  <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Notifications.SignalR.Tests/Notifications.SignalR.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Project.Tests/Service.Project.Tests.csproj" />
 </Solution>

@@ -1,4 +1,4 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Model;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Artifacts;
@@ -6,6 +6,8 @@ using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Ports.Notifications;
+using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.Plugin;
 using ScriptBee.Service.Project.ProjectStructure;
@@ -22,6 +24,9 @@ public class CreateScriptServiceTest
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly ICreateScript _createScript = Substitute.For<ICreateScript>();
 
+    private readonly IProjectNotificationsService _projectNotificationsService =
+        Substitute.For<IProjectNotificationsService>();
+
     private readonly CreateScriptService _createScriptService;
 
     public CreateScriptServiceTest()
@@ -31,6 +36,7 @@ public class CreateScriptServiceTest
             _createFile,
             _guidProvider,
             _createScript,
+            _projectNotificationsService,
             new ScriptGeneratorStrategyFactory()
         );
     }
@@ -194,6 +200,13 @@ public class CreateScriptServiceTest
                 Arg.Is<Script>(x => MatchScript(x, script)),
                 TestContext.Current.CancellationToken
             );
+
+        await _projectNotificationsService
+            .Received(1)
+            .NotifyScriptCreated(
+                new ScriptCreatedEvent(projectId, script.Id),
+                TestContext.Current.CancellationToken
+            );
     }
 
     [Fact]
@@ -252,6 +265,13 @@ public class CreateScriptServiceTest
             .Received(1)
             .Create(
                 Arg.Is<Script>(x => MatchScript(x, script)),
+                TestContext.Current.CancellationToken
+            );
+
+        await _projectNotificationsService
+            .Received(1)
+            .NotifyScriptCreated(
+                new ScriptCreatedEvent(projectId, script.Id),
                 TestContext.Current.CancellationToken
             );
     }

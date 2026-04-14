@@ -21,7 +21,7 @@ public class FileBundlerTests
         using var stream = new MemoryStream();
 
         // Act
-        await _fileBundler.WriteToStream(files, stream, CancellationToken.None);
+        await _fileBundler.WriteToStream(files, stream, TestContext.Current.CancellationToken);
         stream.Position = 0;
 
         // Assert
@@ -51,16 +51,15 @@ public class FileBundlerTests
     public async Task WriteToStream_EmptyList_ShouldWriteOnlyEndMarker()
     {
         // Arrange
-        var files = new List<SampleCodeFile>();
         using var stream = new MemoryStream();
 
         // Act
-        await _fileBundler.WriteToStream(files, stream, CancellationToken.None);
+        await _fileBundler.WriteToStream([], stream, TestContext.Current.CancellationToken);
         stream.Position = 0;
 
         // Assert
-        byte[] buffer = new byte[4];
-        var read = await stream.ReadAsync(buffer);
+        var buffer = new byte[4];
+        var read = await stream.ReadAsync(buffer, TestContext.Current.CancellationToken);
         Assert.Equal(4, read);
         Assert.Equal(0, BinaryPrimitives.ReadInt32BigEndian(buffer));
         Assert.Equal(stream.Length, stream.Position);
