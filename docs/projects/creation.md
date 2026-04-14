@@ -5,7 +5,7 @@ Use the "Create Project" Button to create a new project.
 The project id is the slugified name of the project.
 
 When a new project is created, a new folder with the project id is created in the `projects` folder.
-In the project folder, two folders are generated `generated` and `src`. The `generated` folder is used to store the
+In the project folder, two folders are generated `.generated` and `src`. The `.generated` folder is used to store the
 generated files from the scripts. The `src` folder is used to store the scripts.
 
 ## Project Context

@@ -17,4 +17,5 @@ See [User Folder Setup](../installation/installation.md#user-folder-setup) secti
 
 ## Code Generation
 
-ScriptBee will generate classes for the entities of the context. The generated code can be found in the `generated` folder, next to the `src` folder.
+ScriptBee will generate classes for the entities of the context. The generated code can be found in the `.generated`
+folder, next to the `src` folder.

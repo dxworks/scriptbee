@@ -27,6 +27,7 @@ export default defineConfig({
             items: [
               { text: 'Docker Compose', link: '/installation/docker_installation' },
               { text: 'Kubernetes', link: '/installation/kubernetes_installation' },
+              { text: 'VS Code', link: '/installation/vs_code_extension' },
             ],
           },
         ],
@@ -98,6 +99,16 @@ export default defineConfig({
           { text: 'Diagram', link: '/architecture/diagram' },
           { text: 'Overview', link: '/architecture/overview' },
           { text: 'RBAC', link: '/architecture/rbac' },
+          {
+            text: 'Internals',
+            link: '/architecture/internals',
+            items: [
+              {
+                text: 'Generate Model Classes',
+                link: '/architecture/internals/generate_classes_streaming_protocol',
+              },
+            ],
+          },
         ],
       },
     ],
