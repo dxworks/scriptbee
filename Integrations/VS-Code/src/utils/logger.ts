@@ -24,17 +24,31 @@ class Logger {
     }
   }
 
+  public warn(message: string, error?: unknown) {
+    if (this.outputChannel) {
+      const timestamp = new Date().toISOString();
+      this.outputChannel.appendLine(`[${timestamp}] [WARN] ${message}`);
+      if (error) {
+        this.printError(this.outputChannel, timestamp, error);
+      }
+    }
+  }
+
   public error(message: string, error?: unknown) {
     if (this.outputChannel) {
       const timestamp = new Date().toISOString();
       this.outputChannel.appendLine(`[${timestamp}] [ERROR] ${message}`);
       if (error) {
-        if (error instanceof Error) {
-          this.outputChannel.appendLine(`[${timestamp}] [ERROR] Details: ${error.stack || error.message}`);
-        } else {
-          this.outputChannel.appendLine(`[${timestamp}] [ERROR] Details: ${String(error)}`);
-        }
+        this.printError(this.outputChannel, timestamp, error);
       }
+    }
+  }
+
+  private printError(outputChannel: vscode.OutputChannel, timestamp: string, error: any) {
+    if (error instanceof Error) {
+      outputChannel.appendLine(`[${timestamp}] [ERROR] Details: ${error.stack || error.message}`);
+    } else {
+      outputChannel.appendLine(`[${timestamp}] [ERROR] Details: ${String(error)}`);
     }
   }
 

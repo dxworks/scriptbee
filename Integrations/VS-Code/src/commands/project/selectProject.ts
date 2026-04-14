@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { connectionService } from '../../services/connectionService';
 import { projectService } from '../../services/projectService';
 import { Connection } from '../../utils/storage';
-import { COMMAND_ADD_CONNECTION, COMMAND_REFRESH_UI } from '../commandIds';
+import { COMMAND_ADD_CONNECTION, COMMAND_ON_PROJECT_SELECTED, COMMAND_REFRESH_UI } from '../commandIds';
 import { CommandConnectionArg, getConnectionId } from '../commandUtils';
 import { logger } from '../../utils/logger';
 import { showErrorWithCopy } from '../../utils/errorUtils';
@@ -69,6 +69,7 @@ export async function selectProject(connectionArg?: CommandConnectionArg) {
       const message = selected.projectId ? `Selected project: ${selected.label}` : 'Project disassociated.';
       vscode.window.setStatusBarMessage(message, 3000);
       vscode.commands.executeCommand(COMMAND_REFRESH_UI);
+      vscode.commands.executeCommand(COMMAND_ON_PROJECT_SELECTED);
     }
   } catch (error) {
     logger.error(`Failed to fetch projects for ${connection.name}`, error);

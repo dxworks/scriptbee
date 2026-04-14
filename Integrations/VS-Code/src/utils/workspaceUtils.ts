@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as os from 'os';
+import { logger } from './logger';
 
 export function getWorkspaceRoot(): string {
   const config = vscode.workspace.getConfiguration('scriptbee');
@@ -31,7 +32,7 @@ export async function hideMetaFiles() {
   const config = vscode.workspace.getConfiguration('files');
   const exclude = config.get<Record<string, boolean>>('exclude') || {};
 
-  if (exclude['**/*.sb.meta'] === true) {
+  if (exclude['**/*.sb.meta']) {
     return;
   }
 
@@ -44,6 +45,6 @@ export async function hideMetaFiles() {
       await config.update('exclude', newExclude, vscode.ConfigurationTarget.Global);
     }
   } catch (error) {
-    console.warn('Failed to update workspace exclude bindings:', error);
+    logger.warn('Failed to update workspace exclude bindings:', error);
   }
 }

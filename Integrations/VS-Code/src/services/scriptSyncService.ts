@@ -1,13 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { getProjectFiles, getScriptContent, updateScriptContent, createScript, deleteProjectFile, WebProjectFileNode } from '../api/projectFiles';
+import { createScript, deleteProjectFile, getProjectFiles, getScriptContent, updateScriptContent, WebProjectFileNode } from '../api/projectFiles';
 import { connectionService } from './connectionService';
 import { getProjectSrcPath } from '../utils/workspaceUtils';
 import { Dirent } from 'fs';
-import { storage, ScriptMeta } from '../utils/storage';
+import { storage } from '../utils/storage';
 import { showErrorWithCopy } from '../utils/errorUtils';
 import { logger } from '../utils/logger';
+import { liveUpdatesService } from './liveUpdatesService';
 
 export class ScriptSyncService {
   public async sync(connectionId: string): Promise<void> {
@@ -23,7 +24,7 @@ export class ScriptSyncService {
     try {
       await this.pullRecursive(url, projectId!, undefined, srcPath);
     } catch (error) {
-      showErrorWithCopy('Failed to pull scripts', error);
+      await showErrorWithCopy('Failed to pull scripts', error);
       throw error;
     }
   }
@@ -45,6 +46,7 @@ export class ScriptSyncService {
       const localPath = path.join(currentLocalPath, node.name);
       const fileUri = vscode.Uri.file(localPath);
       await storage.saveScriptMeta(fileUri, { id: node.id, type: node.type });
+      liveUpdatesService.updateCacheEntry(node.id, fileUri);
 
       if (node.type === 'folder') {
         await fs.mkdir(localPath, { recursive: true });
@@ -91,18 +93,7 @@ export class ScriptSyncService {
   }
 
   public async pullFileByUri(uri: vscode.Uri): Promise<void> {
-    const connectionId = connectionService.getActiveConnectionId();
-    if (!connectionId) {
-      throw new Error('No active connection found');
-    }
-
-    const { url, projectId } = await this.getConnectionOrThrow(connectionId);
-    const srcPath = path.normalize(getProjectSrcPath(projectId!));
-    const localPath = path.normalize(uri.fsPath);
-
-    if (!localPath.toLowerCase().startsWith(srcPath.toLowerCase())) {
-      throw new Error('File is not within the current project source folder');
-    }
+    const { url, projectId, srcPath, localPath } = await this.getConnectionAndPaths(uri);
 
     const meta = await storage.getScriptMeta(uri);
     if (!meta) {
@@ -114,29 +105,8 @@ export class ScriptSyncService {
     await this.pullFileContent(url, projectId!, meta.id, localPath);
   }
 
-  private async pullFileContent(baseUrl: string, projectId: string, fileId: string, localPath: string): Promise<void> {
-    try {
-      const content = await getScriptContent(baseUrl, projectId, fileId);
-      await fs.writeFile(localPath, content, 'utf8');
-    } catch (error) {
-      logger.error(`Failed to pull script content from ${fileId}`, error);
-      throw error;
-    }
-  }
-
   public async pushFileByUri(uri: vscode.Uri): Promise<void> {
-    const connectionId = connectionService.getActiveConnectionId();
-    if (!connectionId) {
-      throw new Error('No active connection found');
-    }
-
-    const { url, projectId } = await this.getConnectionOrThrow(connectionId);
-    const srcPath = path.normalize(getProjectSrcPath(projectId!));
-    const localPath = path.normalize(uri.fsPath);
-
-    if (!localPath.toLowerCase().startsWith(srcPath.toLowerCase())) {
-      throw new Error('File is not within the current project source folder');
-    }
+    const { url, projectId, srcPath, localPath } = await this.getConnectionAndPaths(uri);
 
     const relativePath = path.relative(srcPath, localPath).replace(/\\/g, '/');
     const fileName = path.basename(localPath);
@@ -160,6 +130,11 @@ export class ScriptSyncService {
     await this.pushFile(url, projectId!, srcPath, relativePath, fileName, remoteNode);
   }
 
+  public async deleteFileByUri(fileUri: vscode.Uri) {
+    await storage.deleteScriptMeta(fileUri);
+    await fs.rm(fileUri.fsPath, { recursive: true, force: true });
+  }
+
   public async push(connectionId: string): Promise<void> {
     const { url, projectId } = await this.getConnectionOrThrow(connectionId);
     const srcPath = getProjectSrcPath(projectId!);
@@ -170,9 +145,35 @@ export class ScriptSyncService {
     try {
       await this.pushRecursive(url, projectId!, srcPath, '', undefined);
     } catch (error) {
-      showErrorWithCopy('Failed to push scripts', error);
+      void showErrorWithCopy('Failed to push scripts', error);
       throw error;
     }
+  }
+
+  private async pullFileContent(baseUrl: string, projectId: string, fileId: string, localPath: string): Promise<void> {
+    try {
+      const content = await getScriptContent(baseUrl, projectId, fileId);
+      await fs.writeFile(localPath, content, 'utf8');
+    } catch (error) {
+      logger.error(`Failed to pull script content from ${fileId}`, error);
+      throw error;
+    }
+  }
+
+  private async getConnectionAndPaths(uri: vscode.Uri) {
+    const connectionId = connectionService.getActiveConnectionId();
+    if (!connectionId) {
+      throw new Error('No active connection found');
+    }
+
+    const { url, projectId } = await this.getConnectionOrThrow(connectionId);
+    const srcPath = path.normalize(getProjectSrcPath(projectId!));
+    const localPath = path.normalize(uri.fsPath);
+
+    if (!localPath.toLowerCase().startsWith(srcPath.toLowerCase())) {
+      throw new Error('File is not within the current project source folder');
+    }
+    return { url, projectId: projectId!, srcPath, localPath };
   }
 
   private async pushRecursive(baseUrl: string, projectId: string, srcRoot: string, relativeDirPath: string, folderId: string | undefined): Promise<void> {
@@ -221,10 +222,10 @@ export class ScriptSyncService {
         try {
           await deleteProjectFile(baseUrl, projectId, remoteNode.id);
           const fileUri = vscode.Uri.file(path.join(localDir, remoteNode.name));
-          await storage.deleteScriptMeta(fileUri);
+          await this.deleteFileByUri(fileUri);
         } catch (error) {
           logger.error(`Failed to delete remote node ${remoteNode.name}`, error);
-          showErrorWithCopy(`Failed to delete remote node ${remoteNode.name}`, error);
+          void showErrorWithCopy(`Failed to delete remote node ${remoteNode.name}`, error);
         }
       }
     }
@@ -270,6 +271,7 @@ export class ScriptSyncService {
         const lang = this.getLanguage(fileName);
         const script = await createScript(baseUrl, projectId, relativePath, lang);
         await storage.saveScriptMeta(fileUri, { id: script.id, type: 'file' });
+        liveUpdatesService.updateCacheEntry(script.id, fileUri);
         await updateScriptContent(baseUrl, projectId, script.id, content);
       }
     } catch (error) {

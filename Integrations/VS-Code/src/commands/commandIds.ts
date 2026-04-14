@@ -14,6 +14,7 @@ export const COMMAND_OPEN_PROJECT_FOLDER = 'scriptbee.openProjectFolder';
 export const COMMAND_COMPARE_WITH_REMOTE = 'scriptbee.compareWithRemote';
 export const COMMAND_SELECT_INSTANCE = 'scriptbee.selectInstance';
 export const COMMAND_GENERATE_CLASSES = 'scriptbee.generateClasses';
+export const COMMAND_ON_PROJECT_SELECTED = 'scriptbee.onProjectSelected';
 
 export const VIEW_ID_CONNECTIONS = 'scriptbee-connections';
 export const VIEW_CONTAINER_ID = 'scriptbee-explorer';

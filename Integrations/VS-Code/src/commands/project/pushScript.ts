@@ -28,7 +28,7 @@ export async function pushScript(uri?: vscode.Uri) {
         vscode.window.setStatusBarMessage(`$(check) Successfully pushed script ${fileName}`, 5000);
       } catch (error: any) {
         logger.error(`Failed to push script ${fileName}`, error);
-        showErrorWithCopy(`Failed to push script ${fileName}`, error).catch(console.error);
+        showErrorWithCopy(`Failed to push script ${fileName}`, error).catch(logger.error);
       }
     }
   );

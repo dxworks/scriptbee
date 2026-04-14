@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import axiosMockAdapter from 'axios-mock-adapter';
 import axiosInstance from '../../../api/axiosInstance';
-import { getProjectFiles, createScript, updateScriptContent, getScriptContent } from '../../../api/projectFiles';
+import { createScript, getProjectFiles, getScriptContent, updateScriptContent } from '../../../api/projectFiles';
 
 suite('Project Files API Test Suite', () => {
   let mock: axiosMockAdapter;

@@ -78,6 +78,14 @@ ScriptBee server. Scripts are stored locally under `~/.scriptbee/projects/<proje
 **Pull Script** and **Push Script** are available via right-click in both the **Explorer sidebar**
 and the **Editor** context menus.
 
+### Live Updates
+
+When enabled, the extension uses SignalR to listen for real-time script lifecycle events from the server.
+
+- **Script Created**: Refreshes the connection tree view automatically.
+- **Script Updated**: Automatically pulls the updated content for scripts already synced locally.
+- **Script Deleted**: Removes the script's local metadata and refreshes the tree view.
+
 ### Compare with Remote
 
 Right-click any script in the Explorer or Editor and select **ScriptBee: Compare with Remote** to
@@ -98,13 +106,13 @@ class files from the loaded project context. Generated files are stored in the `
 
 The extension exposes the following settings via **VS Code Settings** (`Ctrl+,` / `Cmd+,`):
 
-| Setting                   | Description                                                             | Default        |
-| ------------------------- | ----------------------------------------------------------------------- | -------------- |
-| `scriptbee.workspaceRoot` | The root folder where ScriptBee projects and generated code are stored. | `~/.scriptbee` |
+| Setting                       | Description                                                                                    | Default        |
+| ----------------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
+| `scriptbee.workspaceRoot`     | The root folder where ScriptBee projects and generated code are stored.                        | `~/.scriptbee` |
+| `scriptbee.enableLiveUpdates` | Enable real-time updates for script lifecycle events (creation, update, deletion) via SignalR. | `true`         |
 
-To change this setting, open VS Code settings, search for **ScriptBee**, and update the
-**Workspace Root** field. You can set a project-specific path by saving the setting at the
-**Workspace** or **Folder** level.
+To change these settings, open VS Code settings, search for **ScriptBee**, and update the desired fields.
+You can set project-specific paths by saving the setting at the **Workspace** or **Folder** level.
 
 ## Sync Metadata
 

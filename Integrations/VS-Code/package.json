@@ -30,6 +30,11 @@
           "type": "string",
           "default": "~/.scriptbee",
           "description": "The root folder where ScriptBee projects and generated code are stored."
+        },
+        "scriptbee.enableLiveUpdates": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time updates for script lifecycle events (creation, update, deletion)."
         }
       }
     },
@@ -235,6 +240,7 @@
     "prettier:fix": "prettier --write ."
   },
   "dependencies": {
+    "@microsoft/signalr": "^10.0.0",
     "axios": "^1.15.0"
   },
   "devDependencies": {

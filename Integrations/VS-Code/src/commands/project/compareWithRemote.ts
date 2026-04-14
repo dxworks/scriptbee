@@ -36,6 +36,6 @@ export async function compareWithRemote(uri?: vscode.Uri) {
     await vscode.commands.executeCommand('vscode.diff', fileUri, remoteUri, `${fileName} (Local <-> Remote)`);
   } catch (error) {
     logger.error('Failed to open diff view', error);
-    showErrorWithCopy('Failed to open diff view', error).catch(console.error);
+    showErrorWithCopy('Failed to open diff view', error).catch(logger.error);
   }
 }

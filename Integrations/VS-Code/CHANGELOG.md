@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `scriptbee.enableLiveUpdates` to enable live updates for project script events of creation, update, and deletion.
+
 ## [1.0.0]
 
 ### Added

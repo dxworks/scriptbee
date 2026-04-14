@@ -17,6 +17,7 @@ For full documentation, visit [dxworks.org/scriptbee](https://dxworks.org/script
 - **Compare with Remote**: Open a native VS Code diff view to see exactly what changed on the server.
 - **Project Folder Management**: Easily open your project's script folder in VS Code.
 - **Generate Classes**: Trigger model class generation from a running ScriptBee instance.
+- **Live Updates**: Automatically sync changes from the server in real-time.
 
 ### Script Synchronization
 
@@ -35,21 +36,27 @@ For full documentation, visit [dxworks.org/scriptbee](https://dxworks.org/script
 Sync metadata (`.sb.meta` files) is stored directly alongside your scripts within the project folder. This ensures that:
 
 - Metadata is natively tied to your files, making synchronization reliable even in complex multi-root workspaces.
-- **Hidden from VS Code**: These files are automatically added to VS Code's `files.exclude` setting, keeping your sidebar clean.
-- **Important**: You should add `**/*.sb.meta` to your `.gitignore` file. These files are meant for local synchronization only and should not be committed to version control.
-- The metadata maps local files to their remote counterparts on the ScriptBee server, allowing for efficient syncing and change detection.
+- **Hidden from VS Code**: These files are automatically added to VS Code's `files.exclude` setting, keeping your
+  sidebar clean.
+- **Important**: You should add `**/*.sb.meta` to your `.gitignore` file. These files are meant for local
+  synchronization only and should not be committed to version control.
+- The metadata maps local files to their remote counterparts on the ScriptBee server, allowing for efficient syncing and
+  change detection.
 
 ### Comparison and Diffs
 
-**Compare with Remote**: Right-click any script in the explorer or editor and select `ScriptBee: Compare with Remote`. This opens a native VS Code diff view, allowing you to see exactly what changed on the server before you decide to pull or push.
+**Compare with Remote**: Right-click any script in the explorer or editor and select `ScriptBee: Compare with Remote`.
+This opens a native VS Code diff view, allowing you to see exactly what changed on the server before you decide to pull
+or push.
 
 ## Configuration
 
 This extension can be configured via VS Code settings:
 
-| Setting                   | Description                                                             | Default        |
-| ------------------------- | ----------------------------------------------------------------------- | -------------- |
-| `scriptbee.workspaceRoot` | The root folder where ScriptBee projects and generated code are stored. | `~/.scriptbee` |
+| Setting                       | Description                                                                                    | Default        |
+| ----------------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
+| `scriptbee.workspaceRoot`     | The root folder where ScriptBee projects and generated code are stored.                        | `~/.scriptbee` |
+| `scriptbee.enableLiveUpdates` | Enable real-time updates for script lifecycle events (creation, update, deletion) via SignalR. | `true`         |
 
 ## Getting Started
 
@@ -81,7 +88,8 @@ This extension can be configured via VS Code settings:
 
 ## Requirements
 
-You need a running instance of the ScriptBee Backend API. See the [installation guide](https://dxworks.org/scriptbee/installation/installation) for setup instructions.
+You need a running instance of the ScriptBee Backend API. See
+the [installation guide](https://dxworks.org/scriptbee/installation/installation) for setup instructions.
 
 ## Known Issues
 

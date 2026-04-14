@@ -25,7 +25,7 @@ export async function pullScripts(item?: ScriptBeeTreeItem) {
         vscode.window.setStatusBarMessage(`$(check) Successfully pulled scripts for project ${connection.projectId}`, 5000);
       } catch (error: any) {
         logger.error(`Failed to pull scripts for project ${connection.projectId}`, error);
-        showErrorWithCopy('Failed to pull scripts', error).catch(console.error);
+        showErrorWithCopy('Failed to pull scripts', error).catch(logger.error);
       }
     }
   );

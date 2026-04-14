@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { getConnectionId, CommandConnectionArg } from '../../commands/commandUtils';
+import { CommandConnectionArg, getConnectionId } from '../../commands/commandUtils';
 
 suite('getConnectionId()', () => {
   test('should return the string itself when a string is passed', () => {
