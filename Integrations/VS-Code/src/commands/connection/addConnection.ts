@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import { connectionService } from '../../services/connectionService';
 import { COMMAND_REFRESH_UI } from '../commandIds';
+import { showErrorWithCopy } from '../../utils/errorUtils';
+import { logger } from '../../utils/logger';
 
 export async function addConnection() {
   const name = await vscode.window.showInputBox({
@@ -34,8 +36,8 @@ export async function addConnection() {
     await connectionService.addConnection(name, url);
     vscode.window.setStatusBarMessage(`Connection "${name}" added.`, 3000);
     vscode.commands.executeCommand(COMMAND_REFRESH_UI);
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    vscode.window.showErrorMessage(`Failed to add connection: ${message}`);
+  } catch (error) {
+    logger.error(`Failed to add connection "${name}"`, error);
+    await showErrorWithCopy('Failed to add connection', error);
   }
 }

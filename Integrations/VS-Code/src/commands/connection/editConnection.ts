@@ -3,6 +3,8 @@ import { connectionService } from '../../services/connectionService';
 import { Connection } from '../../utils/storage';
 import { COMMAND_REFRESH_UI } from '../commandIds';
 import { CommandConnectionArg, getConnectionId } from '../commandUtils';
+import { showErrorWithCopy } from '../../utils/errorUtils';
+import { logger } from '../../utils/logger';
 
 export async function editConnection(connectionArg: CommandConnectionArg) {
   const connections = await connectionService.getConnections();
@@ -68,8 +70,8 @@ export async function editConnection(connectionArg: CommandConnectionArg) {
     await connectionService.updateConnection(connection);
     vscode.window.setStatusBarMessage(`Connection "${newName}" updated.`, 3000);
     vscode.commands.executeCommand(COMMAND_REFRESH_UI);
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    vscode.window.showErrorMessage(`Failed to update connection: ${message}`);
+  } catch (error) {
+    logger.error(`Failed to update connection "${newName}"`, error);
+    await showErrorWithCopy('Failed to update connection', error);
   }
 }

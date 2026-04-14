@@ -4,6 +4,8 @@ import { projectService } from '../../services/projectService';
 import { Connection } from '../../utils/storage';
 import { COMMAND_ADD_CONNECTION, COMMAND_REFRESH_UI } from '../commandIds';
 import { CommandConnectionArg, getConnectionId } from '../commandUtils';
+import { logger } from '../../utils/logger';
+import { showErrorWithCopy } from '../../utils/errorUtils';
 
 export async function selectProject(connectionArg?: CommandConnectionArg) {
   let connection: Connection | undefined;
@@ -68,8 +70,8 @@ export async function selectProject(connectionArg?: CommandConnectionArg) {
       vscode.window.setStatusBarMessage(message, 3000);
       vscode.commands.executeCommand(COMMAND_REFRESH_UI);
     }
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    vscode.window.showErrorMessage(`Failed to fetch projects for ${connection.name}: ${message}`);
+  } catch (error) {
+    logger.error(`Failed to fetch projects for ${connection.name}`, error);
+    await showErrorWithCopy(`Failed to fetch projects for ${connection.name}`, error);
   }
 }
