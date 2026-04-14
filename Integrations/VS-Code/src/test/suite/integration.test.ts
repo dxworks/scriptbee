@@ -1,5 +1,4 @@
 import * as assert from 'assert';
-import * as vscode from 'vscode';
 import { connectionService } from '../../services/connectionService';
 import { projectService } from '../../services/projectService';
 import { storage } from '../../utils/storage';

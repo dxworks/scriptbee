@@ -1,9 +1,12 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using ScriptBee.Adapters.Notifications.SignalR;
+using ScriptBee.Adapters.Notifications.SignalR.Hubs;
 using ScriptBee.Artifacts.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
+using ScriptBee.Common.Web.Services;
 using ScriptBee.Marketplace.Client.Extensions;
 using ScriptBee.Rest.Extensions;
 using ScriptBee.Web.EndpointDefinitions;
@@ -17,6 +20,7 @@ var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolde
 
 builder
     .Services.AddConfiguredHealthChecks()
+    .AddHttpContextAccessor()
     .AddSerilog()
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
@@ -28,8 +32,7 @@ builder
     .AddAnalysisConfig(builder.Configuration)
     .AddScriptBeeMarketplaceClient()
     .AddInstallPluginsForAllocatedInstancesServices()
-    // .AddFileWatcherServices()
-    .AddSignalR();
+    .AddProjectLiveUpdates();
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),
@@ -54,6 +57,7 @@ if (app.Environment.IsDevelopment())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseMiddleware<ClientIdMiddleware>();
 
 app.MapHealthChecksEndpoint();
 
@@ -63,10 +67,10 @@ app.UseExceptionEndpoint();
 
 app.UseEndpoints(_ => { });
 
+app.MapHub<ProjectLiveUpdatesHub>("/api/projectLiveUpdates");
+
 app.UseEndpointDefinitions();
 
 app.MapFallbackToFile("index.html");
 
 app.Run();
-
-public partial class Program;

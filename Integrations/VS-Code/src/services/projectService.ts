@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
 import { getAllProjects, ProjectResponse } from '../api/projects';
 import { connectionService } from './connectionService';
-import { getProjectSrcPath, getProjectRootPath, getProjectGeneratedPath } from '../utils/workspaceUtils';
+import { getProjectGeneratedPath, getProjectRootPath, getProjectSrcPath } from '../utils/workspaceUtils';
 
 export class ProjectService {
   public async fetchProjects(baseUrl: string): Promise<ProjectResponse[]> {
@@ -33,12 +33,6 @@ export class ProjectService {
       connection.instanceId = instanceId;
       await connectionService.updateConnection(connection);
     }
-  }
-
-  public async getSelectedInstanceId(connectionId: string): Promise<string | undefined> {
-    const connections = await connectionService.getConnections();
-    const connection = connections.find((c) => c.id === connectionId);
-    return connection?.instanceId;
   }
 
   public async openProjectFolder(projectId: string, inWorkspace: boolean = false): Promise<void> {

@@ -25,7 +25,7 @@ export async function syncScripts(item?: ScriptBeeTreeItem) {
         vscode.window.setStatusBarMessage(`$(check) Successfully synced scripts for project ${connection.projectId}`, 5000);
       } catch (error: any) {
         logger.error(`Failed to sync scripts for project ${connection.projectId}`, error);
-        showErrorWithCopy('Failed to sync scripts', error).catch(console.error);
+        showErrorWithCopy('Failed to sync scripts', error).catch(logger.error);
       }
     }
   );

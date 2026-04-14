@@ -8,6 +8,7 @@ import { scriptSyncService } from '../../services/scriptSyncService';
 import * as projectFiles from '../../api/projectFiles';
 import { storage } from '../../utils/storage';
 import { connectionService } from '../../services/connectionService';
+import { liveUpdatesService } from '../../services/liveUpdatesService';
 
 suite('ScriptSyncService Tests', function () {
   this.timeout(10000);
@@ -31,6 +32,7 @@ suite('ScriptSyncService Tests', function () {
     sinon.stub(projectFiles, 'createScript').resolves({ id: 'new-id', name: 'new', path: 'new', absolutePath: '', language: 'javascript' });
     sinon.stub(projectFiles, 'updateScriptContent').resolves();
     deleteProjectFileSpy = sinon.stub(projectFiles, 'deleteProjectFile').resolves();
+    sinon.stub(liveUpdatesService, 'updateCacheEntry');
   });
 
   teardown(async () => {

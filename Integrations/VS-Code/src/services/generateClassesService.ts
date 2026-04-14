@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import axiosInstance from '../api/axiosInstance';
 import { getProjectGeneratedPath } from '../utils/workspaceUtils';
+import { logger } from '../utils/logger';
 
 export class GenerateClassesService {
   public async generate(baseUrl: string, projectId: string, instanceId: string, languages: string[] = []): Promise<void> {
@@ -18,8 +19,8 @@ export class GenerateClassesService {
       }
     );
 
-    console.log(`Received ${response.data.byteLength} bytes from backend for class generation.`);
-    console.log(`Target generated path: ${generatedPath}`);
+    logger.log(`Received ${response.data.byteLength} bytes from backend for class generation.`);
+    logger.log(`Target generated path: ${generatedPath}`);
 
     await this.writeClassesToFiles(Buffer.from(response.data), generatedPath);
   }
@@ -57,7 +58,7 @@ export class GenerateClassesService {
       offset += contentLength;
 
       const fullPath = path.join(generatedPath, relativePath);
-      console.log(`Writing generated class: ${fullPath} (${content.length} bytes)`);
+      logger.log(`Writing generated class: ${fullPath} (${content.length} bytes)`);
       await fs.mkdir(path.dirname(fullPath), { recursive: true });
       await fs.writeFile(fullPath, content);
     }

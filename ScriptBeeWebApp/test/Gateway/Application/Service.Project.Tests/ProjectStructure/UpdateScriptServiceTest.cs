@@ -1,4 +1,4 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Model;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using NSubstitute;
 using OneOf;
 using OneOf.Types;
@@ -6,6 +6,8 @@ using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Ports.Notifications;
+using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
@@ -20,6 +22,8 @@ public class UpdateScriptServiceTest
     private readonly IGetScripts _getScripts = Substitute.For<IGetScripts>();
     private readonly IUpdateScript _updateScript = Substitute.For<IUpdateScript>();
     private readonly IUpdateFile _updateFile = Substitute.For<IUpdateFile>();
+    private readonly IProjectNotificationsService _projectNotificationsService =
+        Substitute.For<IProjectNotificationsService>();
 
     private readonly UpdateScriptService _updateScriptService;
 
@@ -29,7 +33,8 @@ public class UpdateScriptServiceTest
             _getProject,
             _getScripts,
             _updateScript,
-            _updateFile
+            _updateFile,
+            _projectNotificationsService
         );
     }
 
@@ -118,6 +123,9 @@ public class UpdateScriptServiceTest
         await _updateScript
             .Received(0)
             .Update(Arg.Any<Script>(), TestContext.Current.CancellationToken);
+        await _projectNotificationsService
+            .Received(0)
+            .NotifyScriptUpdated(Arg.Any<ScriptUpdatedEvent>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -224,6 +232,12 @@ public class UpdateScriptServiceTest
         _updateFile
             .Received(0)
             .RenameFile(Arg.Any<ProjectId>(), Arg.Any<string>(), Arg.Any<string>());
+        await _projectNotificationsService
+            .Received(1)
+            .NotifyScriptUpdated(
+                new ScriptUpdatedEvent(projectId, scriptId),
+                TestContext.Current.CancellationToken
+            );
     }
 
     private async Task VerifyUpdateScript(
@@ -236,6 +250,12 @@ public class UpdateScriptServiceTest
             .Received(1)
             .Update(
                 Arg.Is<Script>(x => MatchScript(x, updateScript)),
+                TestContext.Current.CancellationToken
+            );
+        await _projectNotificationsService
+            .Received(1)
+            .NotifyScriptUpdated(
+                new ScriptUpdatedEvent(updateScript.ProjectId, updateScript.Id),
                 TestContext.Current.CancellationToken
             );
     }
@@ -371,6 +391,12 @@ public class UpdateScriptServiceTest
                 projectId,
                 script.File.Path,
                 "content",
+                TestContext.Current.CancellationToken
+            );
+        await _projectNotificationsService
+            .Received(1)
+            .NotifyScriptUpdated(
+                Arg.Is<ScriptUpdatedEvent>(e => e.ProjectId == projectId && e.ScriptId == scriptId),
                 TestContext.Current.CancellationToken
             );
     }

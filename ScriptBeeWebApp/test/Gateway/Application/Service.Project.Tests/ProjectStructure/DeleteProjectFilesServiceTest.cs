@@ -1,10 +1,12 @@
-﻿using NSubstitute;
+using NSubstitute;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Ports.Notifications;
+using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
@@ -20,6 +22,9 @@ public class DeleteProjectFilesServiceTest
     private readonly IDeleteFileOrFolder _deleteFileOrFolder =
         Substitute.For<IDeleteFileOrFolder>();
 
+    private readonly IProjectNotificationsService _projectNotificationsService =
+        Substitute.For<IProjectNotificationsService>();
+
     private readonly DeleteProjectFilesService _deleteProjectFilesService;
 
     public DeleteProjectFilesServiceTest()
@@ -27,7 +32,8 @@ public class DeleteProjectFilesServiceTest
         _deleteProjectFilesService = new DeleteProjectFilesService(
             _getProject,
             _deleteScript,
-            _deleteFileOrFolder
+            _deleteFileOrFolder,
+            _projectNotificationsService
         );
     }
 
@@ -73,6 +79,12 @@ public class DeleteProjectFilesServiceTest
         // Assert
         result.ShouldBe(new Success());
         _deleteFileOrFolder.Received(1).Delete(projectId, "path");
+        await _projectNotificationsService
+            .Received(1)
+            .NotifyScriptDeleted(
+                new ScriptDeletedEvent(projectId, scriptId),
+                TestContext.Current.CancellationToken
+            );
     }
 
     [Fact]
@@ -100,5 +112,8 @@ public class DeleteProjectFilesServiceTest
         // Assert
         result.ShouldBe(new Success());
         _deleteFileOrFolder.Received(0).Delete(Arg.Any<ProjectId>(), Arg.Any<string>());
+        await _projectNotificationsService
+            .Received(0)
+            .NotifyScriptDeleted(Arg.Any<ScriptDeletedEvent>(), Arg.Any<CancellationToken>());
     }
 }

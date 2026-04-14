@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { connectionService } from '../../services/connectionService';
-import { COMMAND_ADD_CONNECTION, COMMAND_REFRESH_UI } from '../commandIds';
+import { COMMAND_ADD_CONNECTION, COMMAND_ON_PROJECT_SELECTED, COMMAND_REFRESH_UI } from '../commandIds';
 import { CommandConnectionArg, getConnectionId } from '../commandUtils';
 
 export async function switchConnection(connectionArg: CommandConnectionArg) {
@@ -9,6 +9,7 @@ export async function switchConnection(connectionArg: CommandConnectionArg) {
   if (connectionId) {
     await connectionService.setActiveConnection(connectionId);
     vscode.commands.executeCommand(COMMAND_REFRESH_UI);
+    vscode.commands.executeCommand(COMMAND_ON_PROJECT_SELECTED);
     return;
   }
 
@@ -38,5 +39,6 @@ export async function switchConnection(connectionArg: CommandConnectionArg) {
     await connectionService.setActiveConnection(selected.connectionId);
     vscode.window.setStatusBarMessage(`Switched to connection: ${selected.label}`, 3000);
     vscode.commands.executeCommand(COMMAND_REFRESH_UI);
+    vscode.commands.executeCommand(COMMAND_ON_PROJECT_SELECTED);
   }
 }

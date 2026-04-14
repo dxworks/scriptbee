@@ -25,7 +25,7 @@ export async function pushScripts(item?: ScriptBeeTreeItem) {
         vscode.window.setStatusBarMessage(`$(check) Successfully pushed scripts for project ${connection.projectId}`, 5000);
       } catch (error: any) {
         logger.error(`Failed to push scripts for project ${connection.projectId}`, error);
-        showErrorWithCopy('Failed to push scripts', error).catch(console.error);
+        showErrorWithCopy('Failed to push scripts', error).catch(logger.error);
       }
     }
   );

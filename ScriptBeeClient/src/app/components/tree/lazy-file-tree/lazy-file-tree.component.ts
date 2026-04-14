@@ -159,6 +159,18 @@ export class LazyFileTreeComponent<T> implements OnInit {
     });
   }
 
+  public addNode(parentId: string | null, node: TreeNode<T>) {
+    this.folderStates.update((map) => {
+      const newMap = new Map(map);
+      const state = newMap.get(parentId);
+      if (state) {
+        const updatedData = [...state.data, node];
+        newMap.set(parentId, { ...state, data: updatedData, totalCount: state.totalCount + 1 });
+      }
+      return newMap;
+    });
+  }
+
   public reloadFolder(parentId: string | null = null) {
     this.folderStates.update((map) => {
       const newMap = new Map(map);

@@ -10,13 +10,17 @@ import { storage } from '../utils/storage';
 import { generateClassesService } from '../services/generateClassesService';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import * as workspaceUtils from '../utils/workspaceUtils';
 import { getProjectGeneratedPath } from '../utils/workspaceUtils';
+import { liveUpdatesService } from '../services/liveUpdatesService';
 
 suite('ScriptBee Extension UI Command Integration Tests', () => {
   let showInputBoxStub: sinon.SinonStub;
   let showQuickPickStub: sinon.SinonStub;
   let showInformationMessageStub: sinon.SinonStub;
+  let showErrorMessageStub: sinon.SinonStub;
   let axiosMock: axiosMockAdapter;
+  let liveUpdateStartStub: sinon.SinonStub;
 
   setup(async () => {
     const mockContext: any = {
@@ -36,7 +40,12 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
 
     showInputBoxStub = sinon.stub(vscode.window, 'showInputBox');
     showQuickPickStub = sinon.stub(vscode.window, 'showQuickPick');
-    showInformationMessageStub = sinon.stub(vscode.window, 'showInformationMessage');
+    showInformationMessageStub = sinon.stub(vscode.window, 'showInformationMessage').resolves();
+    showErrorMessageStub = sinon.stub(vscode.window, 'showErrorMessage').resolves();
+
+    liveUpdateStartStub = sinon.stub(liveUpdatesService, 'start').resolves();
+    sinon.stub(liveUpdatesService, 'stop').resolves();
+    sinon.stub(liveUpdatesService, 'updateCacheEntry').returns();
 
     await storage.reset();
 
@@ -69,9 +78,7 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
     const testConnection = await connectionService.addConnection('SelectProjTest', testUrl);
     await connectionService.setActiveConnection(testConnection.id);
 
-    axiosMock.onGet(`${testUrl}/api/projects`).reply(() => {
-      return [200, { data: [{ id: 'proj-a', name: 'Project A' }] }];
-    });
+    axiosMock.onGet(`${testUrl}/api/projects`).reply(200, { data: [{ id: 'proj-a', name: 'Project A' }] });
 
     showQuickPickStub.resolves({ label: 'Project A', projectId: 'proj-a' });
 
@@ -107,15 +114,10 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
     axiosError.response = undefined;
 
     sinon.stub(scriptSyncService, 'pull').rejects(axiosError);
-    const showErrorMessageStub = sinon.stub(vscode.window, 'showErrorMessage').resolves(undefined);
 
     await vscode.commands.executeCommand(CommandIds.COMMAND_PULL_SCRIPTS, { connection: conn });
 
-    assert.ok(
-      showErrorMessageStub.calledWithMatch(sinon.match(/Failed to pull scripts: Network Error/)),
-      'Should display correct network error instead of undefined'
-    );
-    showErrorMessageStub.restore();
+    assert.ok(showErrorMessageStub.calledWithMatch(sinon.match(/Failed to pull scripts: Network Error/)));
   });
 
   test('Command scriptbee.pushScripts should trigger with progress UI', async () => {
@@ -152,7 +154,6 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
   });
 
   test('Command scriptbee.selectInstance should fetch instances and update connection', async function () {
-    this.timeout(10000);
     const conn = await setupTestConnection('SelectInstTest', 'proj-inst-1');
 
     axiosMock.onGet(`${conn.url}/api/projects/proj-inst-1/instances`).reply(200, {
@@ -182,30 +183,42 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
     generateStub.restore();
   });
 
+  test('Command scriptbee.onProjectSelected should restart liveUpdatesService', async () => {
+    await vscode.commands.executeCommand(CommandIds.COMMAND_ON_PROJECT_SELECTED);
+
+    assert.ok(liveUpdateStartStub.calledOnce);
+  });
+
   test('Command scriptbee.generateClasses should write files to disk (Full Flow)', async () => {
-    const conn = await setupTestConnection('FullGenTest', 'proj-full-1');
-    conn.instanceId = 'inst-full-1';
-    await connectionService.updateConnection(conn);
+    const tempGenPath = path.join(__dirname, 'test-output');
+    const pathStub = sinon.stub(workspaceUtils, 'getProjectGeneratedPath').returns(tempGenPath);
 
-    const filePath = 'models/User.cs';
-    const content = 'public class User {}';
-    const buffer = createBinaryResponse([{ path: filePath, content }]);
+    try {
+      const conn = await setupTestConnection('FullGenTest', 'proj-full-1');
+      conn.instanceId = 'inst-full-1';
+      await connectionService.updateConnection(conn);
 
-    axiosMock.onPost(`${conn.url}/api/projects/proj-full-1/instances/inst-full-1/context/generate-classes`).reply(200, buffer);
+      const filePath = 'models/User.cs';
+      const content = 'public class User {}';
+      const buffer = createBinaryResponse([{ path: filePath, content }]);
 
-    await vscode.commands.executeCommand(CommandIds.COMMAND_GENERATE_CLASSES, { connection: conn });
+      axiosMock.onPost(`${conn.url}/api/projects/proj-full-1/instances/inst-full-1/context/generate-classes`).reply(200, buffer);
 
-    const generatedPath = getProjectGeneratedPath('proj-full-1');
-    const fullFilePath = path.join(generatedPath, filePath);
+      await vscode.commands.executeCommand(CommandIds.COMMAND_GENERATE_CLASSES, { connection: conn });
 
-    const exists = await fs
-      .access(fullFilePath)
-      .then(() => true)
-      .catch(() => false);
-    assert.ok(exists, `File should be written to ${fullFilePath}`);
+      const fullFilePath = path.join(tempGenPath, filePath);
+      const exists = await fs
+        .access(fullFilePath)
+        .then(() => true)
+        .catch(() => false);
 
-    const actualContent = await fs.readFile(fullFilePath, 'utf8');
-    assert.strictEqual(actualContent, content);
+      assert.ok(exists, `File should be written to ${fullFilePath}`);
+      const actualContent = await fs.readFile(fullFilePath, 'utf8');
+      assert.strictEqual(actualContent, content);
+    } finally {
+      pathStub.restore();
+      await fs.rm(tempGenPath, { recursive: true, force: true });
+    }
   });
 
   async function setupTestConnection(name: string, projectId: string) {

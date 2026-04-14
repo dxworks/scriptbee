@@ -28,7 +28,7 @@ export async function pullScript(uri?: vscode.Uri) {
         vscode.window.setStatusBarMessage(`$(check) Successfully pulled script ${fileName}`, 5000);
       } catch (error: any) {
         logger.error(`Failed to pull script ${fileName}`, error);
-        showErrorWithCopy(`Failed to pull script ${fileName}`, error).catch(console.error);
+        showErrorWithCopy(`Failed to pull script ${fileName}`, error).catch(logger.error);
       }
     }
   );

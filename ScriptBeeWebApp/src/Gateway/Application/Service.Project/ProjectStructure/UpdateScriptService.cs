@@ -1,8 +1,10 @@
-﻿using OneOf;
+using OneOf;
 using OneOf.Types;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Ports.Notifications;
+using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Project.ProjectStructure;
 
@@ -15,7 +17,8 @@ public class UpdateScriptService(
     IGetProject getProject,
     IGetScripts getScripts,
     IUpdateScript updateScript,
-    IUpdateFile updateFile
+    IUpdateFile updateFile,
+    IProjectNotificationsService projectNotificationsService
 ) : IUpdateScriptUseCase
 {
     public async Task<UpdateResult> Update(
@@ -88,7 +91,14 @@ public class UpdateScriptService(
             updateFile.RenameFile(command.ProjectId, script.File.Path, updatedScript.File.Path);
         }
 
-        return await updateScript.Update(updatedScript, cancellationToken);
+        var result = await updateScript.Update(updatedScript, cancellationToken);
+
+        await projectNotificationsService.NotifyScriptUpdated(
+            new ScriptUpdatedEvent(command.ProjectId, script.Id),
+            cancellationToken
+        );
+
+        return result;
     }
 
     private async Task<UpdateContentResult> UpdateScriptContent(
@@ -107,6 +117,12 @@ public class UpdateScriptService(
                     command.Content,
                     cancellationToken
                 );
+
+                await projectNotificationsService.NotifyScriptUpdated(
+                    new ScriptUpdatedEvent(command.ProjectId, script.Id),
+                    cancellationToken
+                );
+
                 return new Success();
             },
             error => Task.FromResult<UpdateContentResult>(error)
