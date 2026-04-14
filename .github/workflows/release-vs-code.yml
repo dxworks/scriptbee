@@ -89,17 +89,8 @@ jobs:
       - name: Extract changelog for current version
         id: changelog
         run: |
-          VERSION="${{ steps.meta.outputs.version }}"
-          echo "Extracting changelog for version $VERSION"
-
-          awk "/^## \[$VERSION\]/,/^## \[/" Integrations/VS-Code/CHANGELOG.md | sed '$d' > RELEASE_NOTES.md
-
-          if [ ! -s RELEASE_NOTES.md ]; then
-            echo " No changelog entry found for version $VERSION"
-            exit 1
-          fi
-
-          echo " Changelog extracted successfully"
+          chmod +x ./scripts/extract_changelog.sh
+          ./scripts/extract_changelog.sh "${{ steps.meta.outputs.version }}" Integrations/VS-Code/CHANGELOG.md
 
       - name: Create Release
         uses: softprops/action-gh-release@v3

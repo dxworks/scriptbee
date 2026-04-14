@@ -68,9 +68,15 @@ jobs:
           name: default-bundle
           path: dist
 
+      - name: Extract changelog for current version
+        id: changelog
+        run: |
+          chmod +x ./scripts/extract_changelog.sh
+          ./scripts/extract_changelog.sh "${{ steps.meta.outputs.version }}" Plugins/CHANGELOG.md
+
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
-          generate_release_notes: true
           tag_name: ${{ github.ref_name }}
+          body_path: RELEASE_NOTES.md
           files: dist/${{ steps.meta.outputs.zip_name }}
