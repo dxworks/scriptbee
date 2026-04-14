@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using NSubstitute;
+using ScriptBee.Adapters.Notifications.SignalR.Contracts;
 using ScriptBee.Adapters.Notifications.SignalR.Hubs;
 using ScriptBee.Adapters.Notifications.SignalR.Services;
 using ScriptBee.Application.Model.Services;
@@ -53,9 +54,9 @@ public class ProjectNotificationsServiceTests
             .SendCoreAsync(
                 "ScriptCreated",
                 Arg.Is<object[]>(args =>
-                    ((ScriptCreatedEvent)args[0]).ProjectId == ev.ProjectId
-                    && ((ScriptCreatedEvent)args[0]).ScriptId == ev.ScriptId
-                    && ((ScriptCreatedEvent)args[0]).ClientId == "test-client"
+                    ((SignalRScriptCreatedEvent)args[0]).ProjectId == ev.ProjectId.ToString()
+                    && ((SignalRScriptCreatedEvent)args[0]).ScriptId == ev.ScriptId.ToString()
+                    && ((SignalRScriptCreatedEvent)args[0]).ClientId == "test-client"
                 ),
                 TestContext.Current.CancellationToken
             );
@@ -79,9 +80,9 @@ public class ProjectNotificationsServiceTests
             .SendCoreAsync(
                 "ScriptUpdated",
                 Arg.Is<object[]>(args =>
-                    ((ScriptUpdatedEvent)args[0]).ProjectId == ev.ProjectId
-                    && ((ScriptUpdatedEvent)args[0]).ScriptId == ev.ScriptId
-                    && ((ScriptUpdatedEvent)args[0]).ClientId == "test-client"
+                    ((SignalRScriptUpdatedEvent)args[0]).ProjectId == ev.ProjectId.ToString()
+                    && ((SignalRScriptUpdatedEvent)args[0]).ScriptId == ev.ScriptId.ToString()
+                    && ((SignalRScriptUpdatedEvent)args[0]).ClientId == "test-client"
                 ),
                 TestContext.Current.CancellationToken
             );
@@ -105,9 +106,9 @@ public class ProjectNotificationsServiceTests
             .SendCoreAsync(
                 "ScriptDeleted",
                 Arg.Is<object[]>(args =>
-                    ((ScriptDeletedEvent)args[0]).ProjectId == ev.ProjectId
-                    && ((ScriptDeletedEvent)args[0]).ScriptId == ev.ScriptId
-                    && ((ScriptDeletedEvent)args[0]).ClientId == "test-client"
+                    ((SignalRScriptDeletedEvent)args[0]).ProjectId == ev.ProjectId.ToString()
+                    && ((SignalRScriptDeletedEvent)args[0]).ScriptId == ev.ScriptId.ToString()
+                    && ((SignalRScriptDeletedEvent)args[0]).ClientId == "test-client"
                 ),
                 TestContext.Current.CancellationToken
             );

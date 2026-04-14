@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using ScriptBee.Adapters.Notifications.SignalR.Contracts;
 using ScriptBee.Adapters.Notifications.SignalR.Hubs;
 using ScriptBee.Application.Model.Services;
 using ScriptBee.Domain.Model.Project;
@@ -22,7 +23,7 @@ public class ProjectNotificationsService(
     )
     {
         var groupName = GetGroupName(scriptCreatedEvent.ProjectId, ScriptsChannel);
-        var message = scriptCreatedEvent with { ClientId = GetClientId() };
+        var message = SignalRScriptCreatedEvent.Map(scriptCreatedEvent, GetClientId());
         return hubContext
             .Clients.Group(groupName)
             .SendAsync("ScriptCreated", message, cancellationToken);
@@ -34,7 +35,7 @@ public class ProjectNotificationsService(
     )
     {
         var groupName = GetGroupName(scriptUpdatedEvent.ProjectId, ScriptsChannel);
-        var message = scriptUpdatedEvent with { ClientId = GetClientId() };
+        var message = SignalRScriptUpdatedEvent.Map(scriptUpdatedEvent, GetClientId());
         return hubContext
             .Clients.Group(groupName)
             .SendAsync("ScriptUpdated", message, cancellationToken);
@@ -46,7 +47,7 @@ public class ProjectNotificationsService(
     )
     {
         var groupName = GetGroupName(scriptDeletedEvent.ProjectId, ScriptsChannel);
-        var message = scriptDeletedEvent with { ClientId = GetClientId() };
+        var message = SignalRScriptDeletedEvent.Map(scriptDeletedEvent, GetClientId());
         return hubContext
             .Clients.Group(groupName)
             .SendAsync("ScriptDeleted", message, cancellationToken);
@@ -57,7 +58,8 @@ public class ProjectNotificationsService(
 
     private string GetClientId()
     {
-        var clientIdProvider = httpContextAccessor.HttpContext?.RequestServices.GetService<IClientIdProvider>();
+        var clientIdProvider =
+            httpContextAccessor.HttpContext?.RequestServices.GetService<IClientIdProvider>();
         return clientIdProvider?.ClientId ?? "";
     }
 }
