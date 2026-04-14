@@ -1,7 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using NSubstitute;
-using ScriptBee.Artifacts;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.CodeGeneration;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Plugins;
@@ -14,21 +13,11 @@ public class ProjectStructureServiceTest
     private readonly IProjectManager _projectManager = Substitute.For<IProjectManager>();
     private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
 
-    private readonly IDeleteFileOrFolder _deleteFileOrFolder =
-        Substitute.For<IDeleteFileOrFolder>();
-
-    private readonly ICreateFile _createFile = Substitute.For<ICreateFile>();
-
     private readonly ProjectStructureService _projectStructureService;
 
     public ProjectStructureServiceTest()
     {
-        _projectStructureService = new ProjectStructureService(
-            _projectManager,
-            _pluginRepository,
-            _deleteFileOrFolder,
-            _createFile
-        );
+        _projectStructureService = new ProjectStructureService(_projectManager, _pluginRepository);
     }
 
     [Fact]
@@ -61,19 +50,17 @@ public class ProjectStructureServiceTest
         _pluginRepository.GetPlugins<IScriptGeneratorStrategy>().Returns([dummyStrategy]);
 
         // Act
-        await _projectStructureService.GenerateModelClasses(TestContext.Current.CancellationToken);
+        var result = await _projectStructureService.GenerateModelClasses(
+            [],
+            TestContext.Current.CancellationToken
+        );
 
         // Assert
-        _deleteFileOrFolder
-            .Received(1)
-            .Delete(projectId, Path.Combine(ConfigFolders.GeneratedFolder, "language"));
-        await _createFile
-            .Received(1)
-            .Create(
-                projectId,
-                Path.Combine(ConfigFolders.GeneratedFolder, "language", "script.ext"),
-                "",
-                Arg.Any<CancellationToken>()
+        var files = result.ToList();
+        files
+            .Single()
+            .ShouldBe(
+                new SampleCodeFile { Name = Path.Combine("language", "script.ext"), Content = "" }
             );
     }
 }

@@ -98,6 +98,16 @@
         "command": "scriptbee.compareWithRemote",
         "title": "ScriptBee: Compare with Remote",
         "icon": "$(diff)"
+      },
+      {
+        "command": "scriptbee.selectInstance",
+        "title": "ScriptBee: Select Instance",
+        "icon": "$(database)"
+      },
+      {
+        "command": "scriptbee.generateClasses",
+        "title": "ScriptBee: Generate Classes",
+        "icon": "$(symbol-class)"
       }
     ],
     "menus": {
@@ -153,6 +163,16 @@
           "command": "scriptbee.openProjectFolder",
           "when": "view == scriptbee-connections && viewItem == project",
           "group": "inline@4"
+        },
+        {
+          "command": "scriptbee.selectInstance",
+          "when": "view == scriptbee-connections && viewItem == project",
+          "group": "inline@5"
+        },
+        {
+          "command": "scriptbee.generateClasses",
+          "when": "view == scriptbee-connections && viewItem == instance",
+          "group": "inline@1"
         }
       ],
       "editor/context": [

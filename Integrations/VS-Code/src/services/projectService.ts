@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
 import { getAllProjects, ProjectResponse } from '../api/projects';
 import { connectionService } from './connectionService';
-import { getProjectSrcPath } from '../utils/workspaceUtils';
+import { getProjectSrcPath, getProjectRootPath, getProjectGeneratedPath } from '../utils/workspaceUtils';
 
 export class ProjectService {
   public async fetchProjects(baseUrl: string): Promise<ProjectResponse[]> {
@@ -25,11 +25,32 @@ export class ProjectService {
     return connection?.projectId;
   }
 
-  public async openProjectFolder(projectId: string, inWorkspace: boolean = false): Promise<void> {
-    const srcPath = getProjectSrcPath(projectId);
-    await fs.mkdir(srcPath, { recursive: true });
+  public async setSelectedInstance(connectionId: string, instanceId: string | undefined): Promise<void> {
+    const connections = await connectionService.getConnections();
+    const connection = connections.find((c) => c.id === connectionId);
 
-    const uri = vscode.Uri.file(srcPath);
+    if (connection) {
+      connection.instanceId = instanceId;
+      await connectionService.updateConnection(connection);
+    }
+  }
+
+  public async getSelectedInstanceId(connectionId: string): Promise<string | undefined> {
+    const connections = await connectionService.getConnections();
+    const connection = connections.find((c) => c.id === connectionId);
+    return connection?.instanceId;
+  }
+
+  public async openProjectFolder(projectId: string, inWorkspace: boolean = false): Promise<void> {
+    const rootPath = getProjectRootPath(projectId);
+    const srcPath = getProjectSrcPath(projectId);
+    const generatedPath = getProjectGeneratedPath(projectId);
+
+    await fs.mkdir(rootPath, { recursive: true });
+    await fs.mkdir(srcPath, { recursive: true });
+    await fs.mkdir(generatedPath, { recursive: true });
+
+    const uri = vscode.Uri.file(rootPath);
 
     if (inWorkspace) {
       const folderCount = vscode.workspace.workspaceFolders?.length || 0;

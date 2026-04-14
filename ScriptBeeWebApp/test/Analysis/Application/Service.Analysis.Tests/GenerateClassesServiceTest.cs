@@ -18,10 +18,10 @@ public class GenerateClassesServiceTest
     [Fact]
     public async Task GenerateClasses_ShouldCallProjectStructureService()
     {
-        await _generateClassesService.GenerateClasses(TestContext.Current.CancellationToken);
+        await _generateClassesService.GenerateClasses([], TestContext.Current.CancellationToken);
 
         await _projectStructureService
             .Received(1)
-            .GenerateModelClasses(Arg.Any<CancellationToken>());
+            .GenerateModelClasses(Arg.Any<List<string>>(), Arg.Any<CancellationToken>());
     }
 }

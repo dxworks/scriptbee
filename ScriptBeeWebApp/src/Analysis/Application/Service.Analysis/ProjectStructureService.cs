@@ -1,20 +1,18 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
-using ScriptBee.Artifacts;
+using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Common.CodeGeneration;
-using ScriptBee.Domain.Model.Config;
-using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Service.Analysis;
 
 public class ProjectStructureService(
     IProjectManager projectManager,
-    IPluginRepository pluginRepository,
-    IDeleteFileOrFolder deleteFileOrFolder,
-    ICreateFile createFile
+    IPluginRepository pluginRepository
 ) : IProjectStructureService
 {
-    public async Task GenerateModelClasses(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<SampleCodeFile>> GenerateModelClasses(
+        List<string> languages,
+        CancellationToken cancellationToken
+    )
     {
         var project = projectManager.GetProject();
 
@@ -22,43 +20,41 @@ public class ProjectStructureService(
         var acceptedModules = GetAcceptedModules();
 
         var generatorStrategies = pluginRepository.GetPlugins<IScriptGeneratorStrategy>();
+        var allGeneratedFiles = new List<SampleCodeFile>();
+
         foreach (var generatorStrategy in generatorStrategies)
         {
-            var generatedClasses = await new SampleCodeGenerator(
-                generatorStrategy,
-                acceptedModules
-            ).GetSampleCode(classes, cancellationToken);
+            if (
+                languages.Count > 0
+                && !languages.Any(l =>
+                    string.Equals(l, generatorStrategy.Language, StringComparison.OrdinalIgnoreCase)
+                )
+            )
+            {
+                continue;
+            }
 
-            WriteSampleCodeFiles(
-                generatedClasses,
-                ProjectId.FromValue(project.Id),
-                generatorStrategy.Language,
-                generatorStrategy.Extension,
-                cancellationToken
+            var generatedClasses = (
+                await new SampleCodeGenerator(generatorStrategy, acceptedModules).GetSampleCode(
+                    classes,
+                    cancellationToken
+                )
+            ).ToList();
+
+            allGeneratedFiles.AddRange(
+                generatedClasses.Select(f =>
+                    f with
+                    {
+                        Name = Path.Combine(
+                            generatorStrategy.Language,
+                            f.Name + generatorStrategy.Extension
+                        ),
+                    }
+                )
             );
         }
-    }
 
-    private void WriteSampleCodeFiles(
-        IEnumerable<SampleCodeFile> sampleCodeFiles,
-        ProjectId projectId,
-        string folderName,
-        string extension,
-        CancellationToken cancellationToken
-    )
-    {
-        var deleteFolderPath = Path.Combine(ConfigFolders.GeneratedFolder, folderName);
-        deleteFileOrFolder.Delete(projectId, deleteFolderPath);
-
-        foreach (var sampleCodeFile in sampleCodeFiles)
-        {
-            var filePath = Path.Combine(
-                ConfigFolders.GeneratedFolder,
-                folderName,
-                sampleCodeFile.Name + extension
-            );
-            createFile.Create(projectId, filePath, sampleCodeFile.Content, cancellationToken);
-        }
+        return allGeneratedFiles;
     }
 
     private HashSet<string> GetAcceptedModules()

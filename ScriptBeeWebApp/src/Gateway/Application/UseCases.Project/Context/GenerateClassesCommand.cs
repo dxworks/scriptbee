@@ -3,4 +3,9 @@ using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.UseCases.Project.Context;
 
-public sealed record GenerateClassesCommand(ProjectId ProjectId, InstanceId InstanceId);
+public sealed record GenerateClassesCommand(
+    ProjectId ProjectId,
+    InstanceId InstanceId,
+    List<string> Languages,
+    string? TransferFormat = null
+);

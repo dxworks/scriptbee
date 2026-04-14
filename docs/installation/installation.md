@@ -36,7 +36,7 @@ see in the following example how the folder structure looks like
     └── plugin2
 └── projects
     └── project1
-      ├── generated
+      ├── .generated
       └── src
         └── script.cs
 ```

@@ -1,12 +1,11 @@
 using OneOf;
-using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Ports.Instance;
 using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using GenerateClassesResult = OneOf<Unit, InstanceDoesNotExistsError>;
+using GenerateClassesResult = OneOf<Stream, InstanceDoesNotExistsError>;
 
 public class GenerateInstanceClassesService(
     IGetProjectInstance getProjectInstance,
@@ -23,8 +22,13 @@ public class GenerateInstanceClassesService(
         return await result.Match<Task<GenerateClassesResult>>(
             async instanceInfo =>
             {
-                await generateInstanceClasses.Generate(instanceInfo, cancellationToken);
-                return new Unit();
+                var stream = await generateInstanceClasses.Generate(
+                    instanceInfo,
+                    command.Languages,
+                    command.TransferFormat,
+                    cancellationToken
+                );
+                return OneOf<Stream, InstanceDoesNotExistsError>.FromT0(stream);
             },
             error => Task.FromResult<GenerateClassesResult>(error)
         );

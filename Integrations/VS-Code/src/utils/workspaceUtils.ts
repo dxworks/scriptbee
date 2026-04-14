@@ -15,6 +15,10 @@ export function getWorkspaceRoot(): string {
   return path.resolve(root);
 }
 
+export function getProjectRootPath(projectId: string): string {
+  return path.join(getWorkspaceRoot(), 'projects', projectId);
+}
+
 export function getProjectSrcPath(projectId: string): string {
   return path.join(getWorkspaceRoot(), 'projects', projectId, 'src');
 }

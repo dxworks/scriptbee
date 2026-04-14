@@ -1,7 +1,6 @@
 using NSubstitute;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Service.Analysis;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;
 
@@ -10,17 +9,11 @@ public class LoadContextServiceTest
     private readonly ILoadModelFilesService _loadModelFilesService =
         Substitute.For<ILoadModelFilesService>();
 
-    private readonly IGenerateClassesUseCase _generateClassesUseCase =
-        Substitute.For<IGenerateClassesUseCase>();
-
     private readonly LoadContextService _loadContextService;
 
     public LoadContextServiceTest()
     {
-        _loadContextService = new LoadContextService(
-            _loadModelFilesService,
-            _generateClassesUseCase
-        );
+        _loadContextService = new LoadContextService(_loadModelFilesService);
     }
 
     [Fact]
@@ -33,6 +26,5 @@ public class LoadContextServiceTest
         await _loadModelFilesService
             .Received(1)
             .LoadModelFiles(filesToLoad, Arg.Any<CancellationToken>());
-        await _generateClassesUseCase.Received(1).GenerateClasses(Arg.Any<CancellationToken>());
     }
 }
