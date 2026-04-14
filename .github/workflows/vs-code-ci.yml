@@ -1,0 +1,43 @@
+name: VS Code Extension CI
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'Integrations/VS-Code/**'
+      - '.github/workflows/vs-code-ci.yml'
+  pull_request:
+    paths:
+      - 'Integrations/VS-Code/**'
+      - '.github/workflows/vs-code-ci.yml'
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Integrations/VS-Code
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: Integrations/VS-Code/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run compile
+
+      - name: Run Tests
+        run: xvfb-run -a npm test

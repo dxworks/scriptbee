@@ -1,0 +1,109 @@
+name: Release VS Code Extension
+
+on:
+  push:
+    tags:
+      - 'vs-code@*'
+
+jobs:
+  build-and-publish:
+    name: Build and Package
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Integrations/VS-Code
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: Integrations/VS-Code/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run compile
+
+      - name: Extract version from tag
+        id: meta
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#*@}"
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version in package.json
+        run: |
+          NEW_VERSION=${{ steps.meta.outputs.version }}
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+            npm version $NEW_VERSION --no-git-tag-version
+          else
+            echo "Version is already $NEW_VERSION, skipping update."
+          fi
+
+      - name: Package Extension
+        run: npx vsce package
+
+      - name: Publish to VS Code Marketplace
+        run: npx vsce publish -p ${{ secrets.VSCE_PAT }} --no-git-tag-version
+        continue-on-error: true
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scriptbee-vscode-extension-${{ steps.meta.outputs.version }}
+          path: Integrations/VS-Code/*.vsix
+
+  create-release:
+    name: Create GitHub Release
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Extract version from tag
+        id: meta
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#*@}"
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download VSIX artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: scriptbee-vscode-extension-${{ steps.meta.outputs.version }}
+          path: .
+
+      - name: Extract changelog for current version
+        id: changelog
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          echo "Extracting changelog for version $VERSION"
+
+          awk "/^## \[$VERSION\]/,/^## \[/" Integrations/VS-Code/CHANGELOG.md | sed '$d' > RELEASE_NOTES.md
+
+          if [ ! -s RELEASE_NOTES.md ]; then
+            echo " No changelog entry found for version $VERSION"
+            exit 1
+          fi
+
+          echo " Changelog extracted successfully"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          body_path: RELEASE_NOTES.md
+          files: "*.vsix"
