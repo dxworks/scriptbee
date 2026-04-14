@@ -90,6 +90,11 @@
         "icon": "$(cloud-upload)"
       },
       {
+        "command": "scriptbee.pushScript",
+        "title": "ScriptBee: Push Script",
+        "icon": "$(cloud-upload)"
+      },
+      {
         "command": "scriptbee.openProjectFolder",
         "title": "ScriptBee: Open Project Folder",
         "icon": "$(folder-opened)"
@@ -179,12 +184,20 @@
         {
           "command": "scriptbee.compareWithRemote",
           "group": "scriptbee@1"
+        },
+        {
+          "command": "scriptbee.pushScript",
+          "group": "scriptbee@2"
         }
       ],
       "explorer/context": [
         {
           "command": "scriptbee.compareWithRemote",
           "group": "scriptbee@1"
+        },
+        {
+          "command": "scriptbee.pushScript",
+          "group": "scriptbee@2"
         }
       ]
     }

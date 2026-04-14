@@ -100,6 +100,42 @@ export class ScriptSyncService {
     }
   }
 
+  public async pushFileByUri(uri: vscode.Uri): Promise<void> {
+    const connectionId = connectionService.getActiveConnectionId();
+    if (!connectionId) {
+      throw new Error('No active connection found');
+    }
+
+    const { url, projectId } = await this.getConnectionOrThrow(connectionId);
+    const srcPath = path.normalize(getProjectSrcPath(projectId!));
+    const localPath = path.normalize(uri.fsPath);
+
+    if (!localPath.toLowerCase().startsWith(srcPath.toLowerCase())) {
+      throw new Error('File is not within the current project source folder');
+    }
+
+    const relativePath = path.relative(srcPath, localPath).replace(/\\/g, '/');
+    const fileName = path.basename(localPath);
+
+    logger.log(`Pushing single file: ${relativePath} for project ${projectId}`);
+
+    const meta = await storage.getScriptMeta(uri);
+    let remoteNode: WebProjectFileNode | undefined;
+
+    if (meta) {
+      remoteNode = {
+        id: meta.id,
+        name: fileName,
+        type: meta.type,
+        path: relativePath,
+        absolutePath: localPath,
+        hasChildren: meta.type === 'folder',
+      };
+    }
+
+    await this.pushFile(url, projectId!, srcPath, relativePath, fileName, remoteNode);
+  }
+
   public async push(connectionId: string): Promise<void> {
     const { url, projectId } = await this.getConnectionOrThrow(connectionId);
     const srcPath = getProjectSrcPath(projectId!);
