@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Adapters.Notifications.SignalR.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Notifications.SignalR\Notifications.SignalR.csproj" />
+  </ItemGroup>
+</Project>
