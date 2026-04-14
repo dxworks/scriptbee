@@ -8,6 +8,7 @@ import { selectProject } from './project/selectProject';
 import { selectInstance } from './project/selectInstance';
 import { generateClasses } from './project/generateClasses';
 import { pullScripts } from './project/pullScripts';
+import { pullScript } from './project/pullScript';
 import { pushScripts } from './project/pushScripts';
 import { pushScript } from './project/pushScript';
 import { syncScripts } from './project/syncScripts';
@@ -24,6 +25,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
   const selectInstanceCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SELECT_INSTANCE, selectInstance);
   const generateClassesCmd = vscode.commands.registerCommand(CommandIds.COMMAND_GENERATE_CLASSES, generateClasses);
   const pullScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PULL_SCRIPTS, pullScripts);
+  const pullScriptCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PULL_SCRIPT, pullScript);
   const pushScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PUSH_SCRIPTS, pushScripts);
   const pushScriptCmd = vscode.commands.registerCommand(CommandIds.COMMAND_PUSH_SCRIPT, pushScript);
   const syncScriptsCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SYNC_SCRIPTS, syncScripts);
@@ -40,6 +42,7 @@ export function registerCommands(context: vscode.ExtensionContext) {
     selectInstanceCmd,
     generateClassesCmd,
     pullScriptsCmd,
+    pullScriptCmd,
     pushScriptsCmd,
     pushScriptCmd,
     syncScriptsCmd,

@@ -85,6 +85,11 @@
         "icon": "$(cloud-download)"
       },
       {
+        "command": "scriptbee.pullScript",
+        "title": "ScriptBee: Pull Script",
+        "icon": "$(cloud-download)"
+      },
+      {
         "command": "scriptbee.pushScripts",
         "title": "ScriptBee: Push Scripts",
         "icon": "$(cloud-upload)"
@@ -186,8 +191,12 @@
           "group": "scriptbee@1"
         },
         {
-          "command": "scriptbee.pushScript",
+          "command": "scriptbee.pullScript",
           "group": "scriptbee@2"
+        },
+        {
+          "command": "scriptbee.pushScript",
+          "group": "scriptbee@3"
         }
       ],
       "explorer/context": [
@@ -196,8 +205,12 @@
           "group": "scriptbee@1"
         },
         {
-          "command": "scriptbee.pushScript",
+          "command": "scriptbee.pullScript",
           "group": "scriptbee@2"
+        },
+        {
+          "command": "scriptbee.pushScript",
+          "group": "scriptbee@3"
         }
       ]
     }

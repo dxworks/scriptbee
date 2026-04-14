@@ -119,4 +119,24 @@ suite('ScriptSyncService Tests', function () {
     assert.strictEqual(updateStub.firstCall.args[2], 'existing-remote-id');
     assert.strictEqual(updateStub.firstCall.args[3], 'new content');
   });
+
+  test('pullFileByUri should pull a single file', async () => {
+    const connectionId = 'conn-single-pull';
+    const projectId = 'proj-single-pull-1';
+
+    sinon.stub(connectionService, 'getActiveConnectionId').returns(connectionId);
+    sinon.stub(connectionService, 'getConnections').resolves([{ id: connectionId, name: 'Test', url: 'http://api-pull-single', projectId }]);
+
+    const relativeFilePath = path.join('projects', projectId, 'src', 'pull-script.js');
+    const fileUri = await createLocalFile(relativeFilePath, 'old content');
+    await storage.saveScriptMeta(fileUri, { id: 'remote-id', type: 'file' });
+
+    const getScriptContentStub = projectFiles.getScriptContent as sinon.SinonStub;
+    getScriptContentStub.resolves('remote updated content');
+
+    await scriptSyncService.pullFileByUri(fileUri);
+
+    const newContent = await fs.readFile(fileUri.fsPath, 'utf8');
+    assert.strictEqual(newContent, 'remote updated content');
+  });
 });
