@@ -36,6 +36,13 @@ export class Storage {
     this.context = context;
   }
 
+  public async reset(): Promise<void> {
+    if (this.context) {
+      this.context.globalState.update('scriptbee.connections', undefined);
+      this.context.globalState.update('scriptbee.activeConnectionId', undefined);
+    }
+  }
+
   public async getConnections(): Promise<Connection[]> {
     return this.context?.globalState.get<Connection[]>('scriptbee.connections') || [];
   }

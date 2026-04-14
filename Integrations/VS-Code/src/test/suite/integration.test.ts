@@ -6,26 +6,20 @@ import { storage } from '../../utils/storage';
 
 suite('Integration Test Suite', () => {
   setup(async () => {
-    if (!(storage as any).context) {
-      const mockContext: any = {
-        globalState: {
-          _data: new Map<string, any>(),
-          get: function (key: string) {
-            return this._data.get(key);
-          },
-          update: function (key: string, value: any) {
-            this._data.set(key, value);
-            return Promise.resolve();
-          },
+    const mockContext: any = {
+      globalState: {
+        _data: new Map<string, any>(),
+        get: function (key: string) {
+          return this._data.get(key);
         },
-      };
-      storage.setContext(mockContext);
-    }
-
-    const connections = await connectionService.getConnections();
-    for (const conn of connections) {
-      await connectionService.deleteConnection(conn.id);
-    }
+        update: function (key: string, value: any) {
+          this._data.set(key, value);
+          return Promise.resolve();
+        },
+      },
+    };
+    storage.setContext(mockContext);
+    await storage.reset();
   });
 
   test('Adding a connection should persist and show in tree', async () => {

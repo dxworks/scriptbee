@@ -225,10 +225,11 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
+    "vscode:prepublish": "npm run package",
+    "package": "node esbuild.js --production",
+    "compile": "node esbuild.js",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "pretest": "tsc -p ./ && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
     "prettier:fix": "prettier --write ."
@@ -244,11 +245,12 @@
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "axios-mock-adapter": "^2.1.0",
+    "esbuild": "^0.28.0",
     "eslint": "^10.2.0",
     "mocha": "^11.7.5",
+    "prettier": "^3.8.2",
     "sinon": "^21.1.2",
     "typescript": "^6.0.2",
-    "prettier": "^3.8.2",
     "typescript-eslint": "^8.58.1"
   }
 }

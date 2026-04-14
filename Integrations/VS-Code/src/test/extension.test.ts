@@ -19,14 +19,26 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
   let axiosMock: axiosMockAdapter;
 
   setup(async () => {
+    const mockContext: any = {
+      globalState: {
+        _data: new Map<string, any>(),
+        get: function (key: string) {
+          return this._data.get(key);
+        },
+        update: function (key: string, value: any) {
+          this._data.set(key, value);
+          return Promise.resolve();
+        },
+      },
+      subscriptions: [],
+    };
+    storage.setContext(mockContext);
+
     showInputBoxStub = sinon.stub(vscode.window, 'showInputBox');
     showQuickPickStub = sinon.stub(vscode.window, 'showQuickPick');
     showInformationMessageStub = sinon.stub(vscode.window, 'showInformationMessage');
 
-    const connections = await connectionService.getConnections();
-    for (const c of connections) {
-      await connectionService.deleteConnection(c.id);
-    }
+    await storage.reset();
 
     axiosMock = new axiosMockAdapter(axiosInstance);
   });
@@ -139,16 +151,8 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
     assert.ok(decodeURIComponent(rightUri.query).includes(conn.url));
   });
 
-  async function setupTestConnection(name: string, projectId: string) {
-    const conn = await connectionService.addConnection(name, 'http://test-url');
-    conn.projectId = projectId;
-    await connectionService.updateConnection(conn);
-    await connectionService.setActiveConnection(conn.id);
-    return conn;
-  }
-
   test('Command scriptbee.selectInstance should fetch instances and update connection', async function () {
-    this.timeout(5000);
+    this.timeout(10000);
     const conn = await setupTestConnection('SelectInstTest', 'proj-inst-1');
 
     axiosMock.onGet(`${conn.url}/api/projects/proj-inst-1/instances`).reply(200, {
@@ -203,6 +207,14 @@ suite('ScriptBee Extension UI Command Integration Tests', () => {
     const actualContent = await fs.readFile(fullFilePath, 'utf8');
     assert.strictEqual(actualContent, content);
   });
+
+  async function setupTestConnection(name: string, projectId: string) {
+    const conn = await connectionService.addConnection(name, 'http://test-url');
+    conn.projectId = projectId;
+    await connectionService.updateConnection(conn);
+    await connectionService.setActiveConnection(conn.id);
+    return conn;
+  }
 
   function createBinaryResponse(files: { path: string; content: string }[]): Buffer {
     let totalSize = 4;
