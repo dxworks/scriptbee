@@ -1,10 +1,9 @@
 using OneOf;
-using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Errors;
 
 namespace ScriptBee.UseCases.Project.Context;
 
-using GenerateClassesResult = OneOf<Unit, InstanceDoesNotExistsError>;
+using GenerateClassesResult = OneOf<Stream, InstanceDoesNotExistsError>;
 
 public interface IGenerateInstanceClassesUseCase
 {

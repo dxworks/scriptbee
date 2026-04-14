@@ -1,6 +1,11 @@
+using ScriptBee.Common.CodeGeneration;
+
 namespace ScriptBee.UseCases.Analysis;
 
 public interface IGenerateClassesUseCase
 {
-    Task GenerateClasses(CancellationToken cancellationToken);
+    Task<IEnumerable<SampleCodeFile>> GenerateClasses(
+        List<string> languages,
+        CancellationToken cancellationToken
+    );
 }

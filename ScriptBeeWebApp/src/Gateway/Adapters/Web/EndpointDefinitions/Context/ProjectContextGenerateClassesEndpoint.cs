@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
+using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
@@ -25,22 +26,27 @@ public class ProjectContextGenerateClassesEndpoint : IEndpointDefinition
             .WithTags("Instances", "Context");
     }
 
-    private static async Task<Results<NoContent, NotFound<ProblemDetails>>> GenerateClasses(
+    private static async Task<
+        Results<FileStreamHttpResult, NotFound<ProblemDetails>>
+    > GenerateClasses(
         HttpContext context,
         [FromRoute] string projectId,
         [FromRoute] string instanceId,
+        [FromBody] WebProjectContextGenerateClassesRequest request,
         IGenerateInstanceClassesUseCase useCase,
         CancellationToken cancellationToken
     )
     {
         var command = new GenerateClassesCommand(
             ProjectId.FromValue(projectId),
-            new InstanceId(instanceId)
+            new InstanceId(instanceId),
+            request.Languages ?? [],
+            request.TransferFormat
         );
         var result = await useCase.Generate(command, cancellationToken);
 
-        return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
-            _ => TypedResults.NoContent(),
+        return result.Match<Results<FileStreamHttpResult, NotFound<ProblemDetails>>>(
+            stream => TypedResults.Stream(stream, "application/octet-stream", "classes.bin"),
             error => error.ToProblem(context)
         );
     }

@@ -1,6 +1,5 @@
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -34,23 +33,28 @@ public class GenerateInstanceClassesServiceTest
     {
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("2e179101-9195-4bf0-8e06-e171912df595");
-        var command = new GenerateClassesCommand(projectId, instanceId);
+        var languages = new List<string> { "csharp" };
+        var command = new GenerateClassesCommand(projectId, instanceId, languages, "format");
         var instanceInfo = BasicInstanceInfo(projectId);
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
+        using var stream = new MemoryStream();
+        _generateInstanceClasses
+            .Generate(instanceInfo, languages, "format", Arg.Any<CancellationToken>())
+            .Returns(stream);
 
         var result = await _generateInstanceClassesService.Generate(
             command,
             TestContext.Current.CancellationToken
         );
 
-        result.AsT0.ShouldBe(new Unit());
+        result.AsT0.ShouldBe(stream);
         await _generateInstanceClasses
             .Received(1)
-            .Generate(instanceInfo, Arg.Any<CancellationToken>());
+            .Generate(instanceInfo, languages, "format", Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -58,7 +62,7 @@ public class GenerateInstanceClassesServiceTest
     {
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("2e179101-9195-4bf0-8e06-e171912df595");
-        var command = new GenerateClassesCommand(projectId, instanceId);
+        var command = new GenerateClassesCommand(projectId, instanceId, []);
         var instanceDoesNotExistsError = new InstanceDoesNotExistsError(instanceId);
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())

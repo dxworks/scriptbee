@@ -18,5 +18,8 @@ public interface IContextApi
     Task Load([Body] RestContextLoad request, CancellationToken cancellationToken);
 
     [Post("/api/context/generate-classes")]
-    Task GenerateClasses(CancellationToken cancellationToken);
+    Task<Stream> GenerateClasses(
+        [Body] RestGenerateClasses request,
+        CancellationToken cancellationToken
+    );
 }
