@@ -51,9 +51,10 @@ jobs:
       - name: Package Extension
         run: npx vsce package
 
-      - name: Publish to VS Code Marketplace
-        run: npx vsce publish -p ${{ secrets.VSCE_PAT }} --no-git-tag-version
-        continue-on-error: true
+      # TODO(#10): Uncomment when we have a PAT for the marketplace
+      # - name: Publish to VS Code Marketplace
+      #   run: npx vsce publish -p ${{ secrets.VSCE_PAT }} --no-git-tag-version
+      #   continue-on-error: true
 
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
