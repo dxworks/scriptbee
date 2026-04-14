@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, delay, of, Subject, switchMap, tap } from 'rxjs';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
@@ -12,6 +12,7 @@ import { ErrorStateComponent } from '../../../../../../components/error-state/er
 import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { convertError } from '../../../../../../utils/api';
 import { RunScriptLoadingComponent } from './run-script-loading/run-script-loading.component';
+import { ProjectLiveUpdatesService } from '../../../../../../services/projects/project-live-updates.service';
 
 @Component({
   selector: 'app-selected-script',
@@ -40,8 +41,10 @@ export class SelectedScriptComponent {
 
   private themeService = inject(ThemeService);
   private projectStructureService = inject(ProjectStructureService);
+  private projectLiveUpdatesService = inject(ProjectLiveUpdatesService);
 
   private updateContent$ = new Subject<string>();
+  private remoteContent = signal<string | undefined>(undefined);
 
   constructor() {
     this.updateContent$
@@ -66,6 +69,20 @@ export class SelectedScriptComponent {
         takeUntilDestroyed()
       )
       .subscribe();
+
+    effect(() => {
+      const content = this.scriptContentResource.value();
+      if (content !== undefined) {
+        this.remoteContent.set(content);
+      }
+    });
+
+    this.projectLiveUpdatesService.scriptUpdated$.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event.projectId === this.projectId() && event.scriptId === this.scriptId()) {
+        this.scriptResource.reload();
+        this.scriptContentResource.reload();
+      }
+    });
   }
 
   editorOptions = computed(() => {
@@ -106,6 +123,9 @@ export class SelectedScriptComponent {
   }
 
   protected onContentChange(newContent: string) {
+    if (newContent === this.remoteContent()) {
+      return;
+    }
     this.updateContent$.next(newContent);
   }
 }

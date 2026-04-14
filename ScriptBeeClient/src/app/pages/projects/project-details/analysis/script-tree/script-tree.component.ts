@@ -14,6 +14,8 @@ import { TreeAction, TreeNode } from '../../../../../types/tree-node';
 import { RenameFileDialog } from '../../../../../components/dialogs/rename-file-dialog/rename-file-dialog.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectLiveUpdatesService } from '../../../../../services/projects/project-live-updates.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-script-tree',
@@ -52,8 +54,40 @@ export class ScriptTreeComponent {
   selectedAccessor = (node: TreeNode<ProjectFileNode>) => node.data.id === this.selectedFileId();
 
   private projectStructureService = inject(ProjectStructureService);
+  private projectLiveUpdatesService = inject(ProjectLiveUpdatesService);
   private dialog = inject(MatDialog);
   private snackbar = inject(MatSnackBar);
+
+  constructor() {
+    this.projectLiveUpdatesService.scriptUpdated$.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event.projectId === this.projectId()) {
+        this.projectStructureService.getProjectScript(this.projectId(), event.scriptId).subscribe((script) => {
+          this.lazyTree().updateNode(event.scriptId, (oldNode) => ({
+            ...oldNode,
+            data: {
+              ...oldNode.data,
+              name: script.name,
+              path: script.path,
+              absolutePath: script.absolutePath,
+            },
+          }));
+        });
+      }
+    });
+
+    this.projectLiveUpdatesService.scriptDeleted$.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event.projectId === this.projectId()) {
+        this.lazyTree().removeNode(event.scriptId);
+      }
+    });
+
+    this.projectLiveUpdatesService.scriptCreated$.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event.projectId === this.projectId()) {
+        // TODO: here we can call addNode instead of refreshing the entire tree if we know the parentId
+        this.lazyTree().reloadFolder(null);
+      }
+    });
+  }
 
   fetchData = (parentId: string | null, offset: number, limit: number) => {
     return this.projectStructureService.getProjectFiles(this.projectId(), parentId || undefined, offset, limit).pipe(

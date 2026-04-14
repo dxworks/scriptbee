@@ -13,21 +13,35 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnalysisService } from '../../../../../../services/analysis/analysis.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
+import { ProjectLiveUpdatesService } from '../../../../../../services/projects/project-live-updates.service';
+import { ScriptUpdatedEvent } from '../../../../../../types/live-updates';
 
-describe('SelectedScriptComponent', () => {
-  let component: SelectedScriptComponent;
-  let fixture: ComponentFixture<SelectedScriptComponent>;
-  let projectStructureServiceSpy: {
+interface MockServices {
+  projectStructure: {
     getProjectScript: Mock;
     getScriptContent: Mock;
     updateScriptContent: Mock;
   };
+  liveUpdates: {
+    scriptUpdated$: Subject<ScriptUpdatedEvent>;
+  };
+}
+
+describe('SelectedScriptComponent', () => {
+  let component: SelectedScriptComponent;
+  let fixture: ComponentFixture<SelectedScriptComponent>;
+  let mocks: MockServices;
 
   beforeEach(async () => {
-    projectStructureServiceSpy = {
-      getProjectScript: vi.fn().mockReturnValue(of({ scriptLanguage: { name: 'csharp' } })),
-      getScriptContent: vi.fn().mockReturnValue(of('initial content')),
-      updateScriptContent: vi.fn().mockReturnValue(of({})),
+    mocks = {
+      projectStructure: {
+        getProjectScript: vi.fn().mockReturnValue(of({ scriptLanguage: { name: 'csharp' } })),
+        getScriptContent: vi.fn().mockReturnValue(of('initial content')),
+        updateScriptContent: vi.fn().mockReturnValue(of({})),
+      },
+      liveUpdates: {
+        scriptUpdated$: new Subject<ScriptUpdatedEvent>(),
+      },
     };
 
     await TestBed.configureTestingModule({
@@ -36,11 +50,12 @@ describe('SelectedScriptComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideMonacoEditor(),
-        { provide: ProjectStructureService, useValue: projectStructureServiceSpy },
+        { provide: ProjectStructureService, useValue: mocks.projectStructure },
         { provide: ThemeService, useValue: { darkMode: signal(false) } },
         { provide: MatDialog, useValue: { open: vi.fn() } },
         { provide: MatSnackBar, useValue: { open: vi.fn() } },
         { provide: AnalysisService, useValue: { triggerAnalysis: vi.fn() } },
+        { provide: ProjectLiveUpdatesService, useValue: mocks.liveUpdates },
       ],
     }).compileComponents();
 
@@ -67,7 +82,7 @@ describe('SelectedScriptComponent', () => {
 
   it('should show Saving and then Saved after debounce', async () => {
     const updateSubject = new Subject<object>();
-    projectStructureServiceSpy.updateScriptContent.mockReturnValue(updateSubject);
+    mocks.projectStructure.updateScriptContent.mockReturnValue(updateSubject);
     vi.useFakeTimers();
 
     const editor = fixture.debugElement.query(By.css('ngx-monaco-editor'));
@@ -78,12 +93,12 @@ describe('SelectedScriptComponent', () => {
 
     updateSubject.next({});
     expect(component.saveStatus()).toBe('Saved');
-    expect(projectStructureServiceSpy.updateScriptContent).toHaveBeenCalledWith('proj-1', 'script-1', 'new content');
+    expect(mocks.projectStructure.updateScriptContent).toHaveBeenCalledWith('proj-1', 'script-1', 'new content');
   });
 
   it('should handle errors and allow subsequent updates', async () => {
     vi.useFakeTimers();
-    projectStructureServiceSpy.updateScriptContent.mockReturnValue(throwError(() => new Error('failed')));
+    mocks.projectStructure.updateScriptContent.mockReturnValue(throwError(() => new Error('failed')));
 
     const editor = fixture.debugElement.query(By.css('ngx-monaco-editor'));
     editor.triggerEventHandler('ngModelChange', 'bad content');
@@ -91,11 +106,19 @@ describe('SelectedScriptComponent', () => {
     await vi.advanceTimersByTimeAsync(1001);
     expect(component.saveStatus()).toBe('Error');
 
-    projectStructureServiceSpy.updateScriptContent.mockReturnValue(of({}));
+    mocks.projectStructure.updateScriptContent.mockReturnValue(of({}));
     editor.triggerEventHandler('ngModelChange', 'good content');
 
     await vi.advanceTimersByTimeAsync(1001);
     expect(component.saveStatus()).toBe('Saved');
-    expect(projectStructureServiceSpy.updateScriptContent).toHaveBeenCalledWith('proj-1', 'script-1', 'good content');
+    expect(mocks.projectStructure.updateScriptContent).toHaveBeenCalledWith('proj-1', 'script-1', 'good content');
+  });
+
+  it('should reload content when script is updated remotely', async () => {
+    mocks.projectStructure.getScriptContent.mockReturnValue(of('remote content'));
+
+    mocks.liveUpdates.scriptUpdated$.next({ scriptId: 'script-1', projectId: 'proj-1', clientId: 'other' });
+
+    expect(mocks.projectStructure.getScriptContent).toHaveBeenCalledWith('proj-1', 'script-1');
   });
 });
