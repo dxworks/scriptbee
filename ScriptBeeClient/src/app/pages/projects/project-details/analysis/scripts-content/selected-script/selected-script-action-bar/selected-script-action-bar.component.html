@@ -2,10 +2,10 @@
   @if (saveStatus()) {
     <span class="save-status" [class.error]="saveStatus() === 'Error'">{{ saveStatus() }}</span>
   }
-  <button mat-icon-button matTooltip="Copy path to clipboard" [cdkCopyToClipboard]="script().absolutePath" (click)="onCopyToClipboardButtonClick()">
+  <button mat-icon-button matTooltip="Copy path to clipboard" [cdkCopyToClipboard]="absoluteFilePath()" (click)="onCopyToClipboardButtonClick()">
     <mat-icon>content_copy</mat-icon>
   </button>
-  <a mat-icon-button matTooltip="Open in VS Code" [href]="'vscode://file/' + script().absolutePath | safeUrl">
+  <a mat-icon-button matTooltip="Open in VS Code" [href]="'vscode://file/' + absoluteSrcPath() | safeUrl">
     <mat-icon svgIcon="microsoft-visual-studio-code"></mat-icon>
   </a>
   <button mat-icon-button matTooltip="Edit Parameters" (click)="onEditParametersButtonClick()">
