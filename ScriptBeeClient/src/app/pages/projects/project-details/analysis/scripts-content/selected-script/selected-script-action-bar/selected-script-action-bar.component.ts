@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { SafeUrlPipe } from '../../../../../../../pipes/safe-url.pipe';
 import { ProjectScript } from '../../../../../../../types/project';
 import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-parameters-dialog.component';
 import { AnalysisService } from '../../../../../../../services/analysis/analysis.service';
+import { UserFolderPathService } from '../../../../../../../services/common/user-folder-path.service';
 
 @Component({
   selector: 'app-selected-script-action-bar',
@@ -26,8 +27,17 @@ export class SelectedScriptActionBarComponent {
   isLoadingResults = signal<boolean>(false);
   statusUrlChange = output<string | undefined>();
 
-  analysisService = inject(AnalysisService);
+  absoluteSrcPath = computed(() => {
+    const userFolderPath = UserFolderPathService.getUserFolderPath(this.projectId()).replaceAll('\\', '/');
 
+    return `${userFolderPath}/projects/${this.projectId()}/src`;
+  });
+
+  absoluteFilePath = computed(() => {
+    return `${this.absoluteSrcPath()}/${this.script().path}`;
+  });
+
+  private analysisService = inject(AnalysisService);
   private snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
 

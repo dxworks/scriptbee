@@ -9,7 +9,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ProjectStateService } from './services/projects/project-state.service';
 import { ProjectSideNavListComponent } from './components/navigation/project-side-nav-list/project-side-nav-list.component';
-import { ThemeService } from './services/theme/theme.service';
+import { ThemeService } from './services/common/theme.service';
 
 @Component({
   selector: 'app-root',

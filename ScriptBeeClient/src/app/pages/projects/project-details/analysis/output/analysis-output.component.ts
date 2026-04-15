@@ -3,7 +3,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ConsoleOutputComponent } from './console-output/console-output.component';
 import { OutputErrorsComponent } from './output-errors/output-errors.component';
 import { FileOutputComponent } from './file-output/file-output.component';
-import { OutputFilesService } from '../../../../../services/output/output-files.service';
+import { OutputFilesService } from '../../../../../services/analysis/output-files.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../components/loading-progress-bar/loading-progress-bar.component';

@@ -4,7 +4,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { LinkerService } from '../../../../../../services/linkers/linker.service';
+import { LinkerService } from '../../../../../../services/instances/linker.service';
 import { MatButton } from '@angular/material/button';
 import { finalize } from 'rxjs';
 import { convertError } from '../../../../../../utils/api';

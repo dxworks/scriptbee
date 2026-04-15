@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectedScriptComponent } from './selected-script.component';
 import { ProjectStructureService } from '../../../../../../services/projects/project-structure.service';
-import { ThemeService } from '../../../../../../services/theme/theme.service';
+import { ThemeService } from '../../../../../../services/common/theme.service';
 import { of, throwError, Subject } from 'rxjs';
 import { signal } from '@angular/core';
 import { describe, expect, it, beforeEach, vi, Mock, afterEach } from 'vitest';

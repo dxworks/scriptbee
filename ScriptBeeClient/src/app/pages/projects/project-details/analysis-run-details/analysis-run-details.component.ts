@@ -4,7 +4,7 @@ import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { AnalysisService } from '../../../../services/analysis/analysis.service';
 import { ProjectStructureService } from '../../../../services/projects/project-structure.service';
 import { ProjectStateService } from '../../../../services/projects/project-state.service';
-import { ThemeService } from '../../../../services/theme/theme.service';
+import { ThemeService } from '../../../../services/common/theme.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';

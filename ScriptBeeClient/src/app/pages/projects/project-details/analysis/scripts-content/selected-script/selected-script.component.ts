@@ -3,7 +3,7 @@ import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, delay, of, Subject, switchMap, tap } from 'rxjs';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
-import { ThemeService } from '../../../../../../services/theme/theme.service';
+import { ThemeService } from '../../../../../../services/common/theme.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SelectedScriptActionBarComponent } from './selected-script-action-bar/selected-script-action-bar.component';

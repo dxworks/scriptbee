@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
-import { ClientIdService } from '../client-id.service';
+import { ClientIdService } from '../common/client-id.service';
 import { ScriptCreateEvent, ScriptDeletedEvent, ScriptUpdatedEvent } from '../../types/live-updates';
 
 @Injectable({
