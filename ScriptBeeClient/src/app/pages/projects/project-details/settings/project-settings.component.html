@@ -1,13 +1,45 @@
-@if (getProjectResource.isLoading()) {
-  <app-loading-progress-bar title="Loading project..."></app-loading-progress-bar>
-} @else if (getProjectResourceError()) {
-  <div style="margin: 1rem" class="center-column">
-    <app-error-state style="width: 400px" [error]="getProjectResourceError()!" (retry)="getProjectResource.reload()"></app-error-state>
-  </div>
-} @else {
-  <div class="center-column project-settings-container">
-    <app-project-information [project]="getProjectResource.value()!" />
+<div class="center-column project-settings-container">
+  <div>
+    <h4>Project Settings</h4>
 
-    <app-project-danger-zone [project]="getProjectResource.value()!" />
+    <mat-list>
+      <mat-list-item>
+        <span matListItemTitle>Id</span>
+        <span matListItemLine>{{ project().id }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span matListItemTitle>Name</span>
+        <span>{{ project().id }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span matListItemTitle>Creation Date</span>
+        <span>{{ project().creationDate | date }}</span>
+      </mat-list-item>
+    </mat-list>
   </div>
-}
+
+
+  <div>
+    <h4>Danger Zone</h4>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Delete Project</mat-card-title>
+        <mat-card-subtitle> Id: {{ project().id }}</mat-card-subtitle>
+        <mat-card-subtitle> Name: {{ project().name }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>Once project is deleted, all data will be removed</p>
+
+        @if (isDeleteLoading()) {
+          <app-loading-progress-bar title="Deleting project..."></app-loading-progress-bar>
+        }
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-flat-button (click)="openDialog()">DELETE</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+</div>

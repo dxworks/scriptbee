@@ -1,37 +1,73 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ProjectInformationComponent } from './project-information/project-information.component';
-import { ProjectDangerZoneComponent } from './project-danger-zone/project-danger-zone.component';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
-import { ProjectService } from '../../../../services/projects/project.service';
+import { Component, computed, inject, model, signal } from '@angular/core';
+import { ProjectStateService } from '../../../../services/projects/project-state.service';
+import { DatePipe } from '@angular/common';
+import { MatList, MatListItem, MatListItemLine, MatListItemTitle } from '@angular/material/list';
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
-import { ErrorStateComponent } from '../../../../components/error-state/error-state.component';
-import { convertError } from '../../../../utils/api';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
+import { ProjectService } from '../../../../services/projects/project.service';
+import { Router } from '@angular/router';
+import { DeleteProjectDialogComponent } from './delete-project-dialog/delete-project-dialog.component';
+import { finalize } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-project-settings',
-  imports: [ProjectInformationComponent, ProjectDangerZoneComponent, LoadingProgressBarComponent, ErrorStateComponent],
+  imports: [
+    DatePipe,
+    MatList,
+    MatListItem,
+    MatListItemLine,
+    MatListItemTitle,
+    LoadingProgressBarComponent,
+    MatButton,
+    MatCard,
+    MatCardActions,
+    MatCardContent,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardTitle,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './project-settings.component.html',
   styleUrl: './project-settings.component.scss',
 })
 export class ProjectSettingsPage {
-  private projectId = signal<string | undefined>(undefined);
+  private projectStateService = inject(ProjectStateService);
 
-  getProjectResource = rxResource({
-    params: () => this.projectId(),
-    stream: ({ params: projectId }) => this.projectService.getProject(projectId),
-  });
+  project = computed(() => this.projectStateService.currentProject()!);
 
-  getProjectResourceError = computed(() => convertError(this.getProjectResource.error()));
+  userFolderRoot = model<string>('');
 
-  private route = inject(ActivatedRoute);
+  isDeleteLoading = signal(false);
+
+  readonly dialog = inject(MatDialog);
   private projectService = inject(ProjectService);
+  private router = inject(Router);
+  private snackbar = inject(MatSnackBar);
 
-  constructor() {
-    this.route.parent?.paramMap.pipe(takeUntilDestroyed()).subscribe({
-      next: (paramMap) => {
-        this.projectId.set(paramMap.get('id') ?? undefined);
-      },
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DeleteProjectDialogComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.isDeleteLoading.set(true);
+        this.projectService
+          .deleteProject(this.project().id)
+          .pipe(finalize(() => this.isDeleteLoading.set(false)))
+          .subscribe({
+            next: () => this.router.navigate(['/projects']),
+            error: () => {
+              this.snackbar.open(`Could not delete project ${this.project().name}`, 'Dismiss', { duration: 4000 });
+            },
+          });
+      }
     });
   }
 }
