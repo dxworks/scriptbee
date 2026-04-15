@@ -26,6 +26,15 @@
       }
     </mat-form-field>
 
+    <div>
+      <i>This is the path used to copy the path in Analysis tab as well as for the VS Code extension open shortcut</i>
+    </div>
+
+    <mat-form-field class="user-folder">
+      <mat-label>User Folder Root Path</mat-label>
+      <input matInput type="text" placeholder="C:\Users\my-user\.scriptbee" [formControl]="userFolderPathControl" />
+    </mat-form-field>
+
     @if (isCreateLoading()) {
       <app-loading-progress-bar title="Creating project..."></app-loading-progress-bar>
     }

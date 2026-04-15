@@ -1,45 +1,54 @@
-<div class="center-column project-settings-container">
-  <div>
-    <h4>Project Settings</h4>
+<div class="project-settings-container">
+  <h3>Project Settings</h3>
 
-    <mat-list>
-      <mat-list-item>
-        <span matListItemTitle>Id</span>
-        <span matListItemLine>{{ project().id }}</span>
-      </mat-list-item>
-      <mat-list-item>
-        <span matListItemTitle>Name</span>
-        <span>{{ project().id }}</span>
-      </mat-list-item>
-      <mat-list-item>
-        <span matListItemTitle>Creation Date</span>
-        <span>{{ project().creationDate | date }}</span>
-      </mat-list-item>
-    </mat-list>
+  <mat-list>
+    <mat-list-item>
+      <span matListItemTitle>Id</span>
+      <span matListItemLine>{{ project().id }}</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span matListItemTitle>Name</span>
+      <span>{{ project().id }}</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span matListItemTitle>Creation Date</span>
+      <span>{{ project().creationDate | date }}</span>
+    </mat-list-item>
+  </mat-list>
+
+  <mat-divider></mat-divider>
+
+  <h4>User Folder</h4>
+
+  <div class="user-folder-info">
+    <i>This is the path used to copy the path in Analysis tab as well as for the VS Code extension open shortcut</i>
   </div>
 
+  <mat-form-field class="user-folder">
+    <mat-label>User Folder Root Path</mat-label>
+    <input matInput type="text" placeholder="C:\Users\my-user\.scriptbee" [value]="userFolderPath()" (change)="onUserFolderPathChange($event)" />
+  </mat-form-field>
 
-  <div>
-    <h4>Danger Zone</h4>
+  <mat-divider></mat-divider>
 
-    <mat-card appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>Delete Project</mat-card-title>
-        <mat-card-subtitle> Id: {{ project().id }}</mat-card-subtitle>
-        <mat-card-subtitle> Name: {{ project().name }}</mat-card-subtitle>
-      </mat-card-header>
+  <h4>Danger Zone</h4>
 
-      <mat-card-content>
-        <p>Once project is deleted, all data will be removed</p>
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Delete Project</mat-card-title>
+      <mat-card-subtitle> Id: {{ project().id }}</mat-card-subtitle>
+      <mat-card-subtitle> Name: {{ project().name }}</mat-card-subtitle>
+    </mat-card-header>
 
-        @if (isDeleteLoading()) {
-          <app-loading-progress-bar title="Deleting project..."></app-loading-progress-bar>
-        }
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-flat-button (click)="openDialog()">DELETE</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+    <mat-card-content>
+      <p>Once project is deleted, all data will be removed</p>
 
+      @if (isDeleteLoading()) {
+        <app-loading-progress-bar title="Deleting project..."></app-loading-progress-bar>
+      }
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-flat-button (click)="openDialog()">DELETE</button>
+    </mat-card-actions>
+  </mat-card>
 </div>

@@ -1,5 +1,12 @@
 .project-settings-container {
-  flex-wrap: wrap;
-  align-content: center;
-  align-items: flex-start;
+  padding: 2rem;
+}
+
+.user-folder {
+  width: 100%;
+  max-width: 350px;
+}
+
+.user-folder-info {
+  margin: 1rem;
 }
