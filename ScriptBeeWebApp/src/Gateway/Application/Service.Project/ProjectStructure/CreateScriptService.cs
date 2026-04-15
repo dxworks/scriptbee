@@ -69,7 +69,7 @@ public sealed class CreateScriptService(
 
         var sampleCode = await new SampleCodeGenerator(
             strategy,
-            new HashSet<string>() // TODO: add accepted modules
+            new HashSet<string>()
         ).GenerateSampleCode(cancellationToken);
 
         var createFileResult = await createFile.Create(

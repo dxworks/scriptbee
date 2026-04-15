@@ -38,9 +38,6 @@ public class SampleCodeGenerator(
             generatedClasses.AddRange(GenerateClasses(type));
         }
 
-        var generateSampleCode = await GenerateSampleCode(cancellationToken);
-        generatedClasses.Add(new SampleCodeFile { Name = "script", Content = generateSampleCode });
-
         return generatedClasses;
     }
 
@@ -154,7 +151,9 @@ public class SampleCodeGenerator(
             );
 
             foreach (var genericType in receivedGenericTypes)
+            {
                 genericTypes.Add(genericType);
+            }
 
             if (!_generatedClassNames.Contains(propertyInfo.PropertyType.Name))
             {

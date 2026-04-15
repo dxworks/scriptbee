@@ -10,22 +10,28 @@ public class ScriptGeneratorStrategyTests
         new HashSet<string> { new TestModelLoader().GetType().Module.Name }
     );
 
+    [Fact]
+    public async Task GenerateSampleCode_ShouldReturnSampleScript()
+    {
+        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
+            "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt",
+            TestContext.Current.CancellationToken
+        );
+        var sampleCode = await _sampleCodeGenerator.GenerateSampleCode(
+            TestContext.Current.CancellationToken
+        );
+
+        sampleCode.ShouldBe(sampleCodeContent);
+    }
+
     [Theory]
-    [InlineData(
-        "ScriptSampleTestStrings/PythonDummyModel.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
-    )]
+    [InlineData("ScriptSampleTestStrings/PythonDummyModel.txt")]
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModel(
-        string pathToModel,
-        string pathToSampleCode
+        string pathToModel
     )
     {
         var modelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -34,25 +40,19 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(2, sampleCode.Count);
-
-        Assert.Equal(modelContent, sampleCode[0].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-
-        Assert.Equal("DummyModel", sampleCode[0].Name);
-        Assert.Equal("script", sampleCode[1].Name);
+        sampleCode
+            .Single()
+            .ShouldBe(new SampleCodeFile { Content = modelContent, Name = "DummyModel" });
     }
 
     [Theory]
     [InlineData(
         "ScriptSampleTestStrings/PythonDummyModel.txt",
-        "ScriptSampleTestStrings/RecursiveModel/PythonRecursiveModel_RecursiveModel.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
+        "ScriptSampleTestStrings/RecursiveModel/PythonRecursiveModel_RecursiveModel.txt"
     )]
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnRecursiveModel(
         string pathToDummyModel,
-        string pathToMainModel,
-        string pathToSampleCode
+        string pathToMainModel
     )
     {
         var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
@@ -61,10 +61,6 @@ public class ScriptGeneratorStrategyTests
         );
         var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToMainModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -73,27 +69,23 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(3, sampleCode.Count);
+        Assert.Equal(2, sampleCode.Count);
 
         Assert.Equal(dummyModelContent, sampleCode[0].Content);
         Assert.Equal(mainModelContent, sampleCode[1].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[2].Content);
 
         Assert.Equal("DummyModel", sampleCode[0].Name);
         Assert.Equal("RecursiveModel", sampleCode[1].Name);
-        Assert.Equal("script", sampleCode[2].Name);
     }
 
     [Theory]
     [InlineData(
         "ScriptSampleTestStrings/PythonDummyModel.txt",
-        "ScriptSampleTestStrings/DummyModelInheritor/PythonDummyModelInheritor_DummyModelInheritor.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
+        "ScriptSampleTestStrings/DummyModelInheritor/PythonDummyModelInheritor_DummyModelInheritor.txt"
     )]
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDummyModelInheritor(
         string pathToDummyModel,
-        string pathToMainModel,
-        string pathToSampleCode
+        string pathToMainModel
     )
     {
         var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
@@ -102,10 +94,6 @@ public class ScriptGeneratorStrategyTests
         );
         var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToMainModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -114,27 +102,23 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(3, sampleCode.Count);
+        Assert.Equal(2, sampleCode.Count);
 
         Assert.Equal(dummyModelContent, sampleCode[0].Content);
         Assert.Equal(mainModelContent, sampleCode[1].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[2].Content);
 
         Assert.Equal("DummyModel", sampleCode[0].Name);
         Assert.Equal("DummyModelInheritor", sampleCode[1].Name);
-        Assert.Equal("script", sampleCode[2].Name);
     }
 
     [Theory]
     [InlineData(
         "ScriptSampleTestStrings/PythonDummyModel.txt",
-        "ScriptSampleTestStrings/RecursiveModel/PythonRecursiveModel_RecursiveModel.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
+        "ScriptSampleTestStrings/RecursiveModel/PythonRecursiveModel_RecursiveModel.txt"
     )]
     public async Task GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnRecursiveModel(
         string pathToDummyModel,
-        string pathToMainModel,
-        string pathToSampleCode
+        string pathToMainModel
     )
     {
         var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
@@ -143,10 +127,6 @@ public class ScriptGeneratorStrategyTests
         );
         var mainModelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToMainModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -157,15 +137,13 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(3, sampleCode.Count);
+        Assert.Equal(2, sampleCode.Count);
 
         Assert.Equal(dummyModelContent, sampleCode[0].Content);
         Assert.Equal(mainModelContent, sampleCode[1].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[2].Content);
 
         Assert.Equal("DummyModel", sampleCode[0].Name);
         Assert.Equal("RecursiveModel", sampleCode[1].Name);
-        Assert.Equal("script", sampleCode[2].Name);
     }
 
     [Theory]
@@ -174,16 +152,14 @@ public class ScriptGeneratorStrategyTests
         "ScriptSampleTestStrings/DeepModel/PythonDeepModel_EmptyModel.txt",
         "ScriptSampleTestStrings/DeepModel/PythonDeepModel_RecursiveModel.txt",
         "ScriptSampleTestStrings/DeepModel/PythonDeepModel_RecursiveModel2.txt",
-        "ScriptSampleTestStrings/DeepModel/PythonDeepModel_DeepModel.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
+        "ScriptSampleTestStrings/DeepModel/PythonDeepModel_DeepModel.txt"
     )]
     public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnDeepModel(
         string pathToDummyModel,
         string pathToEmptyModel,
         string pathToRecursiveModel,
         string pathToRecursiveModel2,
-        string pathToMainModel,
-        string pathToSampleCode
+        string pathToMainModel
     )
     {
         var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
@@ -204,10 +180,6 @@ public class ScriptGeneratorStrategyTests
         );
         var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToMainModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -216,21 +188,19 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(6, sampleCode.Count);
+        Assert.Equal(5, sampleCode.Count);
 
         Assert.Equal(dummyModelContent, sampleCode[0].Content);
         Assert.Equal(recursiveModelContent, sampleCode[1].Content);
         Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
         Assert.Equal(emptyModelContent, sampleCode[3].Content);
         Assert.Equal(deepModelContent, sampleCode[4].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[5].Content);
 
         Assert.Equal("DummyModel", sampleCode[0].Name);
         Assert.Equal("RecursiveModel", sampleCode[1].Name);
         Assert.Equal("RecursiveModel2", sampleCode[2].Name);
         Assert.Equal("EmptyModel", sampleCode[3].Name);
         Assert.Equal("DeepModel", sampleCode[4].Name);
-        Assert.Equal("script", sampleCode[5].Name);
     }
 
     [Theory]
@@ -239,16 +209,14 @@ public class ScriptGeneratorStrategyTests
         "ScriptSampleTestStrings/DeepModel/PythonDeepModel_EmptyModel.txt",
         "ScriptSampleTestStrings/DeepModel/PythonDeepModel_RecursiveModel.txt",
         "ScriptSampleTestStrings/DeepModel/PythonDeepModel_RecursiveModel2.txt",
-        "ScriptSampleTestStrings/DeepModel/PythonDeepModel_DeepModel.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
+        "ScriptSampleTestStrings/DeepModel/PythonDeepModel_DeepModel.txt"
     )]
     public async Task GenerateSampleCode_ModelsGivenAsListOfObjects_ShouldReturnDeepModel(
         string pathToDummyModel,
         string pathToEmptyModel,
         string pathToRecursiveModel,
         string pathToRecursiveModel2,
-        string pathToMainModel,
-        string pathToSampleCode
+        string pathToMainModel
     )
     {
         var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
@@ -269,10 +237,6 @@ public class ScriptGeneratorStrategyTests
         );
         var deepModelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToMainModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -290,39 +254,29 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(6, sampleCode.Count);
+        Assert.Equal(5, sampleCode.Count);
 
         Assert.Equal(dummyModelContent, sampleCode[0].Content);
         Assert.Equal(recursiveModelContent, sampleCode[1].Content);
         Assert.Equal(recursiveModel2Content, sampleCode[2].Content);
         Assert.Equal(emptyModelContent, sampleCode[3].Content);
         Assert.Equal(deepModelContent, sampleCode[4].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[5].Content);
 
         Assert.Equal("DummyModel", sampleCode[0].Name);
         Assert.Equal("RecursiveModel", sampleCode[1].Name);
         Assert.Equal("RecursiveModel2", sampleCode[2].Name);
         Assert.Equal("EmptyModel", sampleCode[3].Name);
         Assert.Equal("DeepModel", sampleCode[4].Name);
-        Assert.Equal("script", sampleCode[5].Name);
     }
 
     [Theory]
-    [InlineData(
-        "ScriptSampleTestStrings/DummyModelWithMethods/PythonDummyModel_WithMethods.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
-    )]
+    [InlineData("ScriptSampleTestStrings/DummyModelWithMethods/PythonDummyModel_WithMethods.txt")]
     public async Task GenerateSampleCode_DummyModelWithMethods_ShouldReturnDummyModelWithMethods(
-        string pathToModel,
-        string pathToSampleCode
+        string pathToModel
     )
     {
         var modelContent = await RelativeFileContentProvider.GetFileContentAsync(
             pathToModel,
-            TestContext.Current.CancellationToken
-        );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
             TestContext.Current.CancellationToken
         );
 
@@ -331,13 +285,11 @@ public class ScriptGeneratorStrategyTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(2, sampleCode.Count);
-
-        Assert.Equal(modelContent, sampleCode[0].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[1].Content);
-
-        Assert.Equal("DummyModelWithMethods", sampleCode[0].Name);
-        Assert.Equal("script", sampleCode[1].Name);
+        sampleCode
+            .Single()
+            .ShouldBe(
+                new SampleCodeFile { Content = modelContent, Name = "DummyModelWithMethods" }
+            );
     }
 
     [Theory]
@@ -345,15 +297,13 @@ public class ScriptGeneratorStrategyTests
         "ScriptSampleTestStrings/PythonDummyModel.txt",
         "ScriptSampleTestStrings/GenericModel/PythonGenericModel_GenericModel.txt",
         "ScriptSampleTestStrings/GenericModel/PythonGenericModel_GenericModel2.txt",
-        "ScriptSampleTestStrings/GenericModel/PythonGenericModel_NestedGenericModel.txt",
-        "ScriptSampleTestStrings/SampleCode/Python_SampleCode.txt"
+        "ScriptSampleTestStrings/GenericModel/PythonGenericModel_NestedGenericModel.txt"
     )]
     public async Task GenerateSampleCode_NestedGenericModel_ModelGivenAsObject_ShouldReturnGenericModel_Python(
         string pathToDummyModel,
         string pathToGenericModel,
         string pathToGenericModel2,
-        string pathToNestedGenericModel,
-        string pathToSampleCode
+        string pathToNestedGenericModel
     )
     {
         var dummyModelContent = await RelativeFileContentProvider.GetFileContentAsync(
@@ -372,22 +322,17 @@ public class ScriptGeneratorStrategyTests
             pathToNestedGenericModel,
             TestContext.Current.CancellationToken
         );
-        var sampleCodeContent = await RelativeFileContentProvider.GetFileContentAsync(
-            pathToSampleCode,
-            TestContext.Current.CancellationToken
-        );
 
         var sampleCode = await _sampleCodeGenerator.GetSampleCode(
             new List<object> { new NestedGenericModel() },
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal(5, sampleCode.Count);
+        Assert.Equal(4, sampleCode.Count);
 
         Assert.Equal(genericModelContent, sampleCode[0].Content);
         Assert.Equal(genericModel2Content, sampleCode[1].Content);
         Assert.Equal(dummyModelContent, sampleCode[2].Content);
         Assert.Equal(nestedGenericModelContent, sampleCode[3].Content);
-        Assert.Equal(sampleCodeContent, sampleCode[4].Content);
     }
 }

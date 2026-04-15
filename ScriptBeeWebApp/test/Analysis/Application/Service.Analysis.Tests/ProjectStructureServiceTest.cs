@@ -1,6 +1,5 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using NSubstitute;
-using ScriptBee.Common.CodeGeneration;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Plugins;
@@ -34,10 +33,7 @@ public class ProjectStructureServiceTest
                 {
                     {
                         Tuple.Create("loader", "class-name"),
-                        new Dictionary<string, ScriptBeeModel>
-                        {
-                            { "class-id", new ScriptBeeModel() },
-                        }
+                        new Dictionary<string, ScriptBeeModel> { { "class-id", new TestClass() } }
                     },
                 },
             },
@@ -48,6 +44,7 @@ public class ProjectStructureServiceTest
 
         _projectManager.GetProject().Returns(project);
         _pluginRepository.GetPlugins<IScriptGeneratorStrategy>().Returns([dummyStrategy]);
+        _pluginRepository.GetPlugins<IModelLoader>().Returns([new TestModelLoader()]);
 
         // Act
         var result = await _projectStructureService.GenerateModelClasses(
@@ -56,11 +53,21 @@ public class ProjectStructureServiceTest
         );
 
         // Assert
-        var files = result.ToList();
-        files
-            .Single()
-            .ShouldBe(
-                new SampleCodeFile { Name = Path.Combine("language", "script.ext"), Content = "" }
-            );
+        var sampleCodeFile = result.ToList().Single();
+        sampleCodeFile.Name.ShouldBe(Path.Combine("language", "TestClass.ext"));
+        sampleCodeFile.Content.ShouldBeNullOrWhiteSpace();
+    }
+
+    private class TestClass : ScriptBeeModel;
+
+    private class TestModelLoader : IModelLoader
+    {
+        public Task<Dictionary<string, Dictionary<string, ScriptBeeModel>>> LoadModel(
+            List<Stream> fileStreams,
+            Dictionary<string, object>? configuration = null,
+            CancellationToken cancellationToken = default
+        ) => Task.FromResult(new Dictionary<string, Dictionary<string, ScriptBeeModel>>());
+
+        public string GetName() => "test-loader";
     }
 }
