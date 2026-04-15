@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ProjectStateService } from '../../../../../services/projects/project-state.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { convertError } from '../../../../../utils/api';
-import { LoaderService } from '../../../../../services/loaders/loader.service';
+import { LoaderService } from '../../../../../services/instances/loader.service';
 import { UploadService } from '../../../../../services/upload/upload.service';
 import { finalize } from 'rxjs';
 import { DragAndDropFilesComponent } from '../../../../../components/drag-and-drop-files/drag-and-drop-files.component';

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ProjectLiveUpdatesService } from './project-live-updates.service';
-import { ClientIdService } from '../client-id.service';
+import { ClientIdService } from '../common/client-id.service';
 import { beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { BaseScriptEvent } from '../../types/live-updates';
 

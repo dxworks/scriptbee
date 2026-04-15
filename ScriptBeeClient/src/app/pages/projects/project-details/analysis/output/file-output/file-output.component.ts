@@ -2,8 +2,8 @@ import { Component, inject, input } from '@angular/core';
 import { AnalysisFile } from '../../../../../../types/analysis-results';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { OutputFilesService } from '../../../../../../services/output/output-files.service';
-import { DownloadService } from '../../../../../../services/output/download.service';
+import { OutputFilesService } from '../../../../../../services/analysis/output-files.service';
+import { DownloadService } from '../../../../../../services/common/download.service';
 
 @Component({
   selector: 'app-file-output',

@@ -2,7 +2,7 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { TreeNode, TreeNodeWithParent } from '../../../../../../types/tree-node';
 import { MatButtonModule } from '@angular/material/button';
 import { CheckableTreeComponent } from '../../../../../../components/tree/checkable-tree/checkable-tree.component';
-import { LoaderService } from '../../../../../../services/loaders/loader.service';
+import { LoaderService } from '../../../../../../services/instances/loader.service';
 import { finalize } from 'rxjs';
 import { Project, ProjectFile } from '../../../../../../types/project';
 import { MatSnackBar } from '@angular/material/snack-bar';
