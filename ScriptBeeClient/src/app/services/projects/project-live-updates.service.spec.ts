@@ -1,64 +1,51 @@
 import { TestBed } from '@angular/core/testing';
 import { ProjectLiveUpdatesService } from './project-live-updates.service';
 import { ClientIdService } from '../common/client-id.service';
-import { beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
+import { expect, it, describe, vi, beforeEach, type MockInstance } from 'vitest';
 import { BaseScriptEvent } from '../../types/live-updates';
+import * as signalR from '@microsoft/signalr';
 
 interface MockHubConnection {
-  on: MockInstance<(methodName: string, newMethod: (...args: unknown[]) => void) => void>;
+  on: MockInstance<(methodName: string, newMethod: (event: BaseScriptEvent) => void) => void>;
   start: MockInstance<() => Promise<void>>;
   stop: MockInstance<() => Promise<void>>;
-  invoke: MockInstance<(methodName: string, ...args: unknown[]) => Promise<unknown>>;
   state: string;
 }
 
-const hubMocks = vi.hoisted(() => ({
-  instance: {
-    on: vi.fn(),
-    start: vi.fn().mockResolvedValue(undefined),
-    stop: vi.fn().mockResolvedValue(undefined),
-    invoke: vi.fn().mockResolvedValue(undefined),
-    state: 'Disconnected',
-  } as unknown as MockHubConnection,
-}));
-
-vi.mock('@microsoft/signalr', () => {
-  const builderMock = {
-    withUrl: vi.fn().mockReturnThis(),
-    withAutomaticReconnect: vi.fn().mockReturnThis(),
-    build: vi.fn(() => hubMocks.instance),
-  };
-
-  return {
-    HubConnectionBuilder: vi.fn().mockImplementation(function (this: unknown) {
-      return builderMock;
-    }),
-    HubConnectionState: {
-      Connected: 'Connected',
-      Disconnected: 'Disconnected',
-    },
-  };
-});
-
 describe('ProjectLiveUpdatesService', () => {
   let service: ProjectLiveUpdatesService;
-  const mockHubConnection = hubMocks.instance;
-
-  const getHandler = (methodName: string) => {
-    const handler = mockHubConnection.on.mock.calls.find((c) => c[0] === methodName)?.[1];
-    return handler as ((event: BaseScriptEvent) => void) | undefined;
-  };
+  let mockHubConnection: MockHubConnection;
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockHubConnection.state = 'Disconnected';
+    mockHubConnection = {
+      on: vi.fn(),
+      start: vi.fn().mockResolvedValue(undefined),
+      stop: vi.fn().mockResolvedValue(undefined),
+      state: 'Disconnected',
+    };
+
+    vi.spyOn(signalR.HubConnectionBuilder.prototype, 'withUrl').mockReturnThis();
+    vi.spyOn(signalR.HubConnectionBuilder.prototype, 'withAutomaticReconnect').mockReturnThis();
+    vi.spyOn(signalR.HubConnectionBuilder.prototype, 'build').mockReturnValue(mockHubConnection as unknown as signalR.HubConnection);
 
     TestBed.configureTestingModule({
       providers: [ProjectLiveUpdatesService, { provide: ClientIdService, useValue: { clientId: 'test-client-id' } }],
     });
 
     service = TestBed.inject(ProjectLiveUpdatesService);
+
+    const internalService = service as unknown as {
+      currentProjectId: string | null;
+      hubConnection: unknown | null;
+    };
+    internalService.currentProjectId = null;
+    internalService.hubConnection = null;
   });
+
+  const getHandler = (methodName: string): ((event: BaseScriptEvent) => void) | undefined => {
+    const call = mockHubConnection.on.mock.calls.find((c) => c[0] === methodName);
+    return call ? (call[1] as (event: BaseScriptEvent) => void) : undefined;
+  };
 
   it('should establish connection and register handlers on connect', async () => {
     await service.connect('proj-1');
@@ -68,11 +55,20 @@ describe('ProjectLiveUpdatesService', () => {
   });
 
   it('should disconnect on disconnect()', async () => {
-    mockHubConnection.state = 'Connected';
     await service.connect('proj-1');
+
+    const internalService = service as unknown as {
+      hubConnection: MockHubConnection;
+      currentProjectId: string | null;
+    };
+
+    internalService.hubConnection.state = 'Connected';
+
     await service.disconnect();
 
     expect(mockHubConnection.stop).toHaveBeenCalled();
+    expect(internalService.hubConnection).toBeNull();
+    expect(internalService.currentProjectId).toBeNull();
   });
 
   describe('Event Filtering', () => {
@@ -85,7 +81,7 @@ describe('ProjectLiveUpdatesService', () => {
       expect(handler).toBeDefined();
 
       const event: BaseScriptEvent = { scriptId: 's1', projectId: 'p1', clientId: 'other-id' };
-      handler!(event);
+      handler?.(event);
 
       expect(spy).toHaveBeenCalledWith(event);
     });
@@ -98,7 +94,7 @@ describe('ProjectLiveUpdatesService', () => {
       const handler = getHandler('ScriptCreated');
       expect(handler).toBeDefined();
 
-      handler!({ scriptId: 's1', projectId: 'p1', clientId: 'test-client-id' });
+      handler?.({ scriptId: 's1', projectId: 'p1', clientId: 'test-client-id' });
 
       expect(spy).not.toHaveBeenCalled();
     });
