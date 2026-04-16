@@ -12,11 +12,15 @@
 
     <button mat-button routerLink="/projects">Projects</button>
 
-    <span class="flex-spacer"></span>
-
     @if (projectState.currentProjectId()) {
+      <button mat-button [routerLink]="'/projects/' + projectState.currentProjectId()">{{ projectState.currentProject()?.name }}</button>
+      <span class="flex-spacer"></span>
+
       <app-instance-manager></app-instance-manager>
+    } @else {
+      <span class="flex-spacer"></span>
     }
+
     <mat-slide-toggle [checked]="themeService.darkMode()" (toggleChange)="themeService.toggleDarkMode()" labelPosition="before">
       <mat-icon>bedtime</mat-icon>
     </mat-slide-toggle>
