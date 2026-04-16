@@ -72,5 +72,3 @@ var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
 pluginManager.LoadPlugins();
 
 app.Run();
-
-public partial class Program;

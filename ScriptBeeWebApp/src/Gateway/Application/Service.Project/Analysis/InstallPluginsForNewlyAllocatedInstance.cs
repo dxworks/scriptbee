@@ -1,14 +1,17 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Instance.Allocation;
+using ScriptBee.Service.Project.Config;
 
 namespace ScriptBee.Service.Project.Analysis;
 
 public sealed class InstallPluginsForNewlyAllocatedInstance(
     IGetInstanceStatus getInstanceStatus,
     IInstallPlugin installPlugin,
+    IOptions<ScriptBeeInstanceConfig> config,
     ILogger<InstallPluginsForNewlyAllocatedInstance> logger
 )
 {
@@ -21,7 +24,10 @@ public sealed class InstallPluginsForNewlyAllocatedInstance(
         AnalysisInstanceStatus status;
         do
         {
-            await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+            await Task.Delay(
+                TimeSpan.FromMilliseconds(config.Value.PollingDelayMilliseconds),
+                cancellationToken
+            );
 
             status = await getInstanceStatus.GetStatus(instanceInfo.Id, cancellationToken);
         } while (status == AnalysisInstanceStatus.Allocating);

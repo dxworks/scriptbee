@@ -1,6 +1,7 @@
 ﻿using System.Threading.Channels;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Service.Project.Analysis;
+using ScriptBee.Service.Project.Config;
 using ScriptBee.Web.BackgroundServices;
 
 namespace ScriptBee.Web.Extensions;
@@ -11,6 +12,8 @@ public static class InstallPluginsForAllocatedInstancesExtensions
         this IServiceCollection services
     )
     {
+        services.AddOptions<ScriptBeeInstanceConfig>().BindConfiguration("ScriptBee:Instance");
+
         return services
             .AddHostedService<InstallPluginsForAllocatedInstancesBackgroundService>()
             .AddSingleton<Channel<InstanceAllocatedEvent>>(_ =>
