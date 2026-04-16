@@ -1,0 +1,79 @@
+﻿# Gateway Service Configuration
+
+## Database
+
+### `ConnectionStrings__mongodb`
+
+- **Type:** `string`
+- **Default:** `mongodb://root:example@localhost:27017/ScriptBee?authSource=admin`
+- **Description:** The connection string to MongoDB. Must be configured to match the Mongodb server configurations
+
+## User Folder
+
+### `UserFolder__UserFolderPath`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The absolute path of the host machine to the folder where the ScriptBee data is stored.
+
+> [!CAUTION]
+> `UserFolder__UserFolderPath` is obsolete and will be replaced by editing either via UI or via the VS Code Extension so
+> there is no need to expose the internal file system of the webserver
+
+## Analysis Configuration
+
+### `SCRIPTBEE__ANALYSIS__IMAGE`
+
+- **Type:** `string`
+- **Default:** `dxworks/scriptbee-analysis:latest`
+- **Description:** The Docker image used for analysis instances.
+
+### `SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET`
+
+- **Type:** `string`
+- **Default:** `unix:///var/run/docker.sock`
+- **Description:** URI to the Docker daemon socket.
+
+### `SCRIPTBEE__ANALYSIS__DOCKER__PORT`
+
+- **Type:** `int`
+- **Default:** `80`
+- **Description:** The internal port the analysis container listens on.
+
+### `SCRIPTBEE__ANALYSIS__DOCKER__NETWORK`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The Docker network name to attach containers to (required if using a custom network for MongoDB).
+
+### `SCRIPTBEE__ANALYSIS__DOCKER__MONGODBCONNECTIONSTRING`
+
+- **Type:** `string`
+- **Default:** _Inherits Gateway's if omitted_
+- **Description:** MongoDB connection string for the analysis instance.
+
+### `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERVOLUMEPATH`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The mount point for project data **inside** the analysis container.
+
+### `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The absolute path on the **host machine** where project data is stored.
+
+> [!IMPORTANT]
+> The `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH` must be an **absolute path** on your host machine. This is
+> because the Gateway tells the Docker daemon to mount this path into the new analysis containers. If this is incorrect,
+> the analysis service will not be able to find your scripts or models.
+
+## Instance Configuration
+
+### `INSTANCE__POLLINGDELAYMILLISECONDS`
+
+- **Type:** `long`
+- **Default:** `1000`
+- **Description:** The polling interval to check when the analysis instance is ready so that the plugins can be
+  automatically installed there

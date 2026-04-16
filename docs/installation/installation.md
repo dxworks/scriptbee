@@ -11,9 +11,11 @@
 ScriptBee is configured primarily through environment variables. The most critical settings relate to how it manages
 analysis instances.
 
+See [Configuration](../architecture/configuration/gateway_configuration.md) page for full configuration
+
 ### MongoDB
 
-ScriptBee uses MongoDB as a database. In order to run ScriptBee, you need to setup a MongoDB server and set the
+ScriptBee uses MongoDB as a database. In order to run ScriptBee, you need to set up a MongoDB server and set the
 connection string as an environment variable.
 
 For example:
