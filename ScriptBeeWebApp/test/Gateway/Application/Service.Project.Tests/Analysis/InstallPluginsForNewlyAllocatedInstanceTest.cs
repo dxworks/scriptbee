@@ -1,10 +1,12 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Instance.Allocation;
 using ScriptBee.Service.Project.Analysis;
+using ScriptBee.Service.Project.Config;
 using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Service.Project.Tests.Analysis;
@@ -22,9 +24,12 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
 
     public InstallPluginsForNewlyAllocatedInstanceTest()
     {
+        var config = Options.Create(new ScriptBeeInstanceConfig { PollingDelayMilliseconds = 10 });
+
         _installPluginsForNewlyAllocatedInstance = new InstallPluginsForNewlyAllocatedInstance(
             _getInstanceStatus,
             _installPlugin,
+            config,
             _logger
         );
     }

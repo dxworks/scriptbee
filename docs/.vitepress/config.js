@@ -89,6 +89,19 @@ export default defineConfig({
         text: 'Architecture',
         items: [
           {
+            text: 'Configuration',
+            items: [
+              {
+                text: 'Gateway REST API',
+                link: '/architecture/configuration/gateway_configuration',
+              },
+              {
+                text: 'Analysis REST API',
+                link: '/architecture/configuration/analysis_configuration',
+              },
+            ],
+          },
+          {
             text: 'REST API',
             link: '/architecture/rest_api',
             items: [

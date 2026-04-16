@@ -10,8 +10,6 @@ public static class ConfigFolders
 
     public const string SrcFolder = "src";
 
-    public const string GeneratedFolder = "generated";
-
     private static readonly string PathToUserFolder = Environment.GetFolderPath(
         Environment.SpecialFolder.UserProfile
     );

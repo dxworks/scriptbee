@@ -67,51 +67,7 @@ environment:
   - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/database/scriptbee
 ```
 
-### Full Configuration Reference
-
-You can fine-tune the Docker driver behavior using the following environment variables. In .NET, these are mapped from
-the configuration section `ScriptBee:Analysis:Docker`.
-
-| Environment Variable                                   | Description                                                                                       | Default / Example                   |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `SCRIPTBEE__ANALYSIS__IMAGE`                           | The Docker image used for analysis instances.                                                     | `dxworks/scriptbee-analysis:latest` |
-| `SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET`            | URI to the Docker daemon socket.                                                                  | `unix:///var/run/docker.sock`       |
-| `SCRIPTBEE__ANALYSIS__DOCKER__PORT`                    | The internal port the analysis container listens on.                                              | `80`                                |
-| `SCRIPTBEE__ANALYSIS__DOCKER__NETWORK`                 | The Docker network name to attach containers to (required if using a custom network for MongoDB). | _None_                              |
-| `SCRIPTBEE__ANALYSIS__DOCKER__MONGODBCONNECTIONSTRING` | MongoDB connection string for the analysis instance.                                              | _Inherits Gateway's if omitted_     |
-| `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERVOLUMEPATH`    | The mount point for project data _inside_ the analysis container.                                 | `/root/.scriptbee`                  |
-| `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH`      | THE absolute path on the **host machine** where project data is stored.                           | `${PWD}/database/scriptbee`         |
-
-### Minimum Configuration
-
-For a basic setup (e.g., using the default Docker Compose), the minimum environment variables required are:
-
-```yaml
-environment:
-  - SCRIPTBEE__ANALYSIS__DRIVER=docker
-  - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock # or npipe://./pipe/docker_engine on Windows
-  - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/database/scriptbee # Absolute path to SCRIPTBEE_DATA on host
-```
-
-### Full Configuration Reference
-
-You can fine-tune the Docker driver behavior using the following environment variables. In .NET, these are mapped from
-the configuration section `ScriptBee:Analysis:Docker`.
-
-| Environment Variable                                   | Description                                                                                       | Default / Example                   |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ----------------------------------- |
-| `SCRIPTBEE__ANALYSIS__IMAGE`                           | The Docker image used for analysis instances.                                                     | `dxworks/scriptbee-analysis:latest` |
-| `SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET`            | URI to the Docker daemon socket.                                                                  | `unix:///var/run/docker.sock`       |
-| `SCRIPTBEE__ANALYSIS__DOCKER__PORT`                    | The internal port the analysis container listens on.                                              | `80`                                |
-| `SCRIPTBEE__ANALYSIS__DOCKER__NETWORK`                 | The Docker network name to attach containers to (required if using a custom network for MongoDB). | _None_                              |
-| `SCRIPTBEE__ANALYSIS__DOCKER__MONGODBCONNECTIONSTRING` | MongoDB connection string for the analysis instance.                                              | _Inherits Gateway's if omitted_     |
-| `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERVOLUMEPATH`    | The mount point for project data _inside_ the analysis container.                                 | `/root/.scriptbee`                  |
-| `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH`      | The absolute path on the **host machine** where project data is stored.                           | _Inherits Gateway's if omitted_     |
-
-> [!IMPORTANT]
-> The `SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH` must be an **absolute path** on your host machine. This is
-> because the Gateway tells the Docker daemon to mount this path into the new analysis containers. If this is incorrect,
-> the analysis service will not be able to find your scripts or models.
+See [Analysis Configuration](../architecture/configuration/gateway_configuration.md#analysis-configuration) for full configuration variables
 
 ## ScriptBee Data
 
