@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using OneOf;
 using ScriptBee.Artifacts;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Ports.Plugins.Installer;
 
 namespace ScriptBee.Persistence.File.Plugin.Installer;
@@ -10,6 +10,7 @@ public class SimplePluginInstaller(
     IFileService fileService,
     IZipFileService zipFileService,
     IDownloadService downloadService,
+    IPluginPathProvider pluginPathProvider,
     ILogger<SimplePluginInstaller> logger
 ) : ISimplePluginInstaller
 {
@@ -20,7 +21,8 @@ public class SimplePluginInstaller(
         CancellationToken cancellationToken = default
     )
     {
-        fileService.CreateFolder(ConfigFolders.PathToPlugins);
+        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
+        fileService.CreateFolder(pluginFolderPath);
 
         var pluginPath = GetPluginFolderPath(pluginId, version);
         var zipFilePath = $"{pluginPath}.zip";
@@ -59,6 +61,7 @@ public class SimplePluginInstaller(
     private string GetPluginFolderPath(string name, string version)
     {
         var pluginName = PluginNameGenerator.GetPluginName(name, version);
-        return fileService.CombinePaths(ConfigFolders.PathToPlugins, pluginName);
+        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
+        return fileService.CombinePaths(pluginFolderPath, pluginName);
     }
 }

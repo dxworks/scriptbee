@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Logging;
 using OneOf;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.Ports.Plugins;
@@ -25,6 +25,7 @@ public class BundlePluginInstaller(
     ISimplePluginInstaller simplePluginInstaller,
     IPluginUninstaller pluginUninstaller,
     IPluginUrlFetcher pluginUrlFetcher,
+    IPluginPathProvider pluginPathProvider,
     ILogger<BundlePluginInstaller> logger
 ) : IBundlePluginInstaller
 {
@@ -142,8 +143,9 @@ public class BundlePluginInstaller(
         CancellationToken cancellationToken
     )
     {
+        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
         var installedPluginVersions = pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins(pluginFolderPath)
             .Where(p => p.Id == pluginId)
             .ToList();
 

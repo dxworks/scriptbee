@@ -16,6 +16,7 @@
   <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
+  <Project Path="ScriptBeeWebApp/src/Common/Plugins/Plugins.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/CodeGeneration/CodeGeneration.csproj" />
   <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
   <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
@@ -57,6 +58,7 @@
   <!-- Tests - Common Layer -->
   <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
+  <Project Path="ScriptBeeWebApp/test/Common/Plugins.Tests/Plugins.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Application.Model.Tests/Application.Model.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
   <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />

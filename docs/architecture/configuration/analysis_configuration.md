@@ -34,3 +34,11 @@ Most of the variables here are configured automatically by the Gateway Service w
 
 - **Type:** `string`
 - **Description:** Automatically configured but the Gateway Service with the name of project
+
+## Plugins Configuration
+
+### `SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER`
+
+- **Type:** `string`
+- **Default:** `<user_folder_path>/.scriptbee/plugins`
+- **Description:** The path where the plugins will be installed

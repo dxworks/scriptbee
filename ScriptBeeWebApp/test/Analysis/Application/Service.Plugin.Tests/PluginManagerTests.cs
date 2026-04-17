@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.Tests.Common.Plugin;
 
@@ -10,21 +10,29 @@ public class PluginManagerTests
 {
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
     private readonly IPluginLoader _pluginLoader = Substitute.For<IPluginLoader>();
+
+    private readonly IPluginPathProvider _pluginPathProvider =
+        Substitute.For<IPluginPathProvider>();
+
     private readonly ILogger<PluginManager> _logger = Substitute.For<ILogger<PluginManager>>();
 
     private readonly PluginManager _pluginManager;
 
     public PluginManagerTests()
     {
-        _pluginManager = new PluginManager(_pluginReader, _pluginLoader, _logger);
+        _pluginManager = new PluginManager(
+            _pluginReader,
+            _pluginLoader,
+            _pluginPathProvider,
+            _logger
+        );
     }
 
     [Fact]
     public void GivenEmptyPlugins_WhenLoadPlugins_ThenNoPluginsLoaded()
     {
-        _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
-            .Returns(new List<Domain.Model.Plugin.Plugin>());
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(new List<Domain.Model.Plugin.Plugin>());
 
         _pluginManager.LoadPlugins();
 
@@ -34,8 +42,9 @@ public class PluginManagerTests
     [Fact]
     public void GivenAllValidPlugins_WhenLoadPlugins_ThenAllPluginsAreLoaded()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(
                 new List<Domain.Model.Plugin.Plugin>
                 {
@@ -59,8 +68,9 @@ public class PluginManagerTests
         Domain.Model.Plugin.Plugin testPlugin2 = new TestPlugin("id", new Version(0, 0, 1, 1));
         Domain.Model.Plugin.Plugin testPlugin3 = new TestPlugin("id", new Version(0, 0, 2, 1));
 
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(
                 new List<Domain.Model.Plugin.Plugin> { testPlugin1, testPlugin2, testPlugin3 }
             );

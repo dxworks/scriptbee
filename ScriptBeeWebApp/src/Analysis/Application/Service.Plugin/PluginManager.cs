@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Ports.Plugins;
 using ScriptBee.UseCases.Plugin;
 
@@ -8,6 +8,7 @@ namespace ScriptBee.Service.Plugin;
 public class PluginManager(
     IPluginReader pluginReader,
     IPluginLoader pluginLoader,
+    IPluginPathProvider pluginPathProvider,
     ILogger<PluginManager> logger
 ) : IManagePluginsUseCase
 {
@@ -17,7 +18,7 @@ public class PluginManager(
         // todo iterate over all plugin definitions and load them
         logger.LogInformation("Loading plugins");
 
-        var plugins = pluginReader.ReadPlugins(ConfigFolders.PathToPlugins);
+        var plugins = pluginReader.ReadPlugins(pluginPathProvider.GetPathToPlugins());
 
         foreach (var plugin in plugins)
         {
