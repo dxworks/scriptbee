@@ -88,15 +88,17 @@ export default defineConfig({
       {
         text: 'Architecture',
         items: [
+          { text: 'Overview', link: '/architecture/overview' },
+          { text: 'Diagram', link: '/architecture/diagram' },
           {
             text: 'Configuration',
             items: [
               {
-                text: 'Gateway REST API',
+                text: 'Gateway Configuration',
                 link: '/architecture/configuration/gateway_configuration',
               },
               {
-                text: 'Analysis REST API',
+                text: 'Analysis Configuration',
                 link: '/architecture/configuration/analysis_configuration',
               },
             ],
@@ -109,8 +111,6 @@ export default defineConfig({
               { text: 'Analysis REST API', link: '/architecture/analysis_rest_api' },
             ],
           },
-          { text: 'Diagram', link: '/architecture/diagram' },
-          { text: 'Overview', link: '/architecture/overview' },
           { text: 'RBAC', link: '/architecture/rbac' },
           {
             text: 'Internals',
