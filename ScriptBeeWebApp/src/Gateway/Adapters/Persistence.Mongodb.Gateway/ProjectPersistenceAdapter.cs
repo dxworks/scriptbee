@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Entity;
@@ -15,9 +15,9 @@ public class ProjectPersistenceAdapter(
     ILogger<ProjectPersistenceAdapter> logger
 ) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject, IUpdateProject
 {
-    public async Task<OneOf<Unit, ProjectIdAlreadyInUseError>> Create(
+    public async Task<OneOf<Success, ProjectIdAlreadyInUseError>> Create(
         ProjectDetails projectDetails,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         try
@@ -33,7 +33,7 @@ public class ProjectPersistenceAdapter(
             return new ProjectIdAlreadyInUseError(projectDetails.Id);
         }
 
-        return new Unit();
+        return new Success();
     }
 
     public async Task Delete(ProjectId projectId, CancellationToken cancellationToken = default)

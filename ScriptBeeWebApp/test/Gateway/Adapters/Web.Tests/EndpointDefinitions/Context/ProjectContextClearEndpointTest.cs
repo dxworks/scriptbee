@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -27,7 +27,7 @@ public class ProjectContextClearEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IClearInstanceContextUseCase>();
         useCase
             .Clear(new ClearContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(new Unit()));
+            .Returns(Task.FromResult<OneOf<Success, InstanceDoesNotExistsError>>(new Success()));
 
         var response = await _api.PostApi<object>(
             new TestWebApplicationFactory<Program>(
@@ -51,7 +51,7 @@ public class ProjectContextClearEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Clear(new ClearContextCommand(projectId, instanceId), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, InstanceDoesNotExistsError>>(
+                Task.FromResult<OneOf<Success, InstanceDoesNotExistsError>>(
                     new InstanceDoesNotExistsError(instanceId)
                 )
             );

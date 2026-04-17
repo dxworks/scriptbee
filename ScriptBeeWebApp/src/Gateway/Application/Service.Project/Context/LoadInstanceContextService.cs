@@ -1,5 +1,5 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
@@ -10,7 +10,7 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using LoadContextResult = OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
+using LoadContextResult = OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
 
 public class LoadInstanceContextService(
     IGetProject getProject,
@@ -21,7 +21,7 @@ public class LoadInstanceContextService(
 {
     public async Task<LoadContextResult> Load(
         LoadContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var result = await getProject.GetById(command.ProjectId, cancellationToken);
@@ -45,7 +45,7 @@ public class LoadInstanceContextService(
             async instanceInfo =>
             {
                 await Load(projectDetails, instanceInfo, loaderIds, cancellationToken);
-                return new Unit();
+                return new Success();
             },
             error => Task.FromResult<LoadContextResult>(error)
         );

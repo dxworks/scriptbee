@@ -1,13 +1,13 @@
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 
 namespace ScriptBee.UseCases.Project.Context;
 
 public interface ILoadInstanceContextUseCase
 {
-    Task<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>> Load(
+    Task<OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>> Load(
         LoadContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

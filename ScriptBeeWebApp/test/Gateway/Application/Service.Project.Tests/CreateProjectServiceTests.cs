@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
 using OneOf;
+using OneOf.Types;
 using ScriptBee.Common;
-using ScriptBee.Domain.Model;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
@@ -33,7 +33,7 @@ public class CreateProjectServiceTests
                 ),
                 Arg.Any<CancellationToken>()
             )
-            .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(new Unit()));
+            .Returns(Task.FromResult<OneOf<Success, ProjectIdAlreadyInUseError>>(new Success()));
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
@@ -66,7 +66,7 @@ public class CreateProjectServiceTests
                 ),
                 Arg.Any<CancellationToken>()
             )
-            .Returns(Task.FromResult<OneOf<Unit, ProjectIdAlreadyInUseError>>(error));
+            .Returns(Task.FromResult<OneOf<Success, ProjectIdAlreadyInUseError>>(error));
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(

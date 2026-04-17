@@ -1,5 +1,5 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -9,7 +9,7 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using ReloadContextResult = OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
+using ReloadContextResult = OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
 
 public class ReloadInstanceContextService(
     IGetProject getProject,
@@ -21,7 +21,7 @@ public class ReloadInstanceContextService(
 {
     public async Task<ReloadContextResult> Reload(
         ReloadContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var result = await getProject.GetById(command.ProjectId, cancellationToken);
@@ -45,7 +45,7 @@ public class ReloadInstanceContextService(
             async instanceInfo =>
             {
                 await ReloadContext(projectDetails, instanceInfo, cancellationToken);
-                return new Unit();
+                return new Success();
             },
             error => Task.FromResult<ReloadContextResult>(error)
         );

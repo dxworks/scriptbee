@@ -1,13 +1,13 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 
 namespace ScriptBee.UseCases.Project.Context;
 
 public interface IClearInstanceContextUseCase
 {
-    Task<OneOf<Unit, InstanceDoesNotExistsError>> Clear(
+    Task<OneOf<Success, InstanceDoesNotExistsError>> Clear(
         ClearContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }
