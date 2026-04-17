@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Artifacts;
-using ScriptBee.Common.Plugins.Installer;
+using ScriptBee.Plugins.Installer;
 
-namespace ScriptBee.Common.Plugins.Tests.Installer;
+namespace ScriptBee.Plugins.Tests.Installer;
 
 public class PluginUninstallerTests
 {

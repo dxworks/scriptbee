@@ -1,11 +1,11 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.Artifacts.Extensions;
-using ScriptBee.Common.Plugins.Config;
-using ScriptBee.Common.Plugins.Installer;
 using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Plugins.Config;
+using ScriptBee.Plugins.Installer;
 
-namespace ScriptBee.Common.Plugins.Extensions;
+namespace ScriptBee.Plugins.Extensions;
 
 public static class PluginExtensions
 {

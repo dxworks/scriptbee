@@ -2,7 +2,7 @@ using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Common.Plugins;
+namespace ScriptBee.Plugins;
 
 public interface IPluginRepository
 {

@@ -4,12 +4,12 @@ using NSubstitute;
 using OneOf;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
-using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Plugins;
 using ScriptBee.Service.Analysis;
 using ScriptBee.UseCases.Analysis;
 

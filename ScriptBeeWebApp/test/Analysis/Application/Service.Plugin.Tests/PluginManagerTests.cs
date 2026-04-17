@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Common.Plugins;
+using ScriptBee.Plugins;
 using ScriptBee.Tests.Common.Plugin;
 
 namespace ScriptBee.Service.Plugin.Tests;

@@ -3,16 +3,16 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using OneOf;
-using ScriptBee.Common.Plugins.Installer;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.Marketplace.Client.Errors;
+using ScriptBee.Plugins.Installer;
 using ScriptBee.Tests.Common.Plugin;
 using static ScriptBee.Tests.Common.Plugin.PluginUtils;
 
-namespace ScriptBee.Common.Plugins.Tests.Installer;
+namespace ScriptBee.Plugins.Tests.Installer;
 
 public class BundlePluginInstallerTests
 {

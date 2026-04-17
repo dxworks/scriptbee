@@ -2,7 +2,7 @@
 using OneOf;
 using ScriptBee.Artifacts;
 
-namespace ScriptBee.Common.Plugins.Installer;
+namespace ScriptBee.Plugins.Installer;
 
 public class SimplePluginInstaller(
     IFileService fileService,

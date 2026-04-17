@@ -2,7 +2,7 @@
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Common.Plugins.Installer;
+namespace ScriptBee.Plugins.Installer;
 
 public class BundlePluginUninstaller(
     IFileService fileService,

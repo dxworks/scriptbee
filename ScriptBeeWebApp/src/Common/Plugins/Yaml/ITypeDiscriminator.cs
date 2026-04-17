@@ -1,4 +1,4 @@
-namespace ScriptBee.Common.Plugins.Yaml;
+namespace ScriptBee.Plugins.Yaml;
 
 public interface ITypeDiscriminator
 {

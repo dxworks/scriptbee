@@ -1,5 +1,5 @@
-﻿using ScriptBee.Common.Plugins;
-using ScriptBee.Common.Plugins.Installer;
+﻿using ScriptBee.Plugins;
+using ScriptBee.Plugins.Installer;
 using ScriptBee.UseCases.Plugin;
 
 namespace ScriptBee.Service.Plugin;

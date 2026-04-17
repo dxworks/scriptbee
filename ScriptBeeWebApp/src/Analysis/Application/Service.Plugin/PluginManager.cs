@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Common.Plugins;
+using ScriptBee.Plugins;
 using ScriptBee.UseCases.Plugin;
 
 namespace ScriptBee.Service.Plugin;

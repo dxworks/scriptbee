@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
-using ScriptBee.Common.Plugins;
-using ScriptBee.Common.Plugins.Installer;
+using ScriptBee.Plugins;
+using ScriptBee.Plugins.Installer;
 using ScriptBee.UseCases.Plugin;
 using ScriptBee.UseCases.Plugin.Errors;
 using PluginInstallationError = ScriptBee.UseCases.Plugin.Errors.PluginInstallationError;

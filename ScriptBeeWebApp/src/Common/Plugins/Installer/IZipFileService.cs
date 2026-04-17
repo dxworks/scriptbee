@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Common.Plugins.Installer;
+﻿namespace ScriptBee.Plugins.Installer;
 
 public interface IZipFileService
 {

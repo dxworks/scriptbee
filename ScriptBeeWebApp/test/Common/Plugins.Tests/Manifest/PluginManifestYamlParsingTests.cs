@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Tests.Common;
 
-namespace ScriptBee.Common.Plugins.Tests.Manifest;
+namespace ScriptBee.Plugins.Tests.Manifest;
 
 public class PluginManifestYamlParsingTests
 {

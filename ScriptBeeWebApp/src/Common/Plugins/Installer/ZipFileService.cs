@@ -1,6 +1,6 @@
 using System.IO.Compression;
 
-namespace ScriptBee.Common.Plugins.Installer;
+namespace ScriptBee.Plugins.Installer;
 
 public sealed class ZipFileService : IZipFileService
 {

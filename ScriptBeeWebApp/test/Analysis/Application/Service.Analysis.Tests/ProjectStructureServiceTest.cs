@@ -1,8 +1,8 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using NSubstitute;
-using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Plugins;
 using ScriptBee.Service.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;

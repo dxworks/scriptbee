@@ -5,7 +5,7 @@ using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
 
-namespace ScriptBee.Common.Plugins.Installer;
+namespace ScriptBee.Plugins.Installer;
 
 using BundleInstallResult = OneOf<
     InstallBundleResult,

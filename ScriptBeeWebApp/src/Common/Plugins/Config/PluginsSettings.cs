@@ -1,4 +1,4 @@
-namespace ScriptBee.Common.Plugins.Config;
+namespace ScriptBee.Plugins.Config;
 
 public class PluginsSettings
 {

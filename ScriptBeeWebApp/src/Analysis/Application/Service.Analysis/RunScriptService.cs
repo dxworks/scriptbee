@@ -4,10 +4,10 @@ using DxWorks.ScriptBee.Plugin.Api.Services;
 using ScriptBee.Analysis;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
-using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.ProjectStructure;
+using ScriptBee.Plugins;
 
 namespace ScriptBee.Service.Analysis;
 

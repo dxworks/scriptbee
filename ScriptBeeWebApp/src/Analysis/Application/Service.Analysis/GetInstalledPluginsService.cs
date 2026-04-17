@@ -1,5 +1,5 @@
-﻿using ScriptBee.Common.Plugins;
-using ScriptBee.Domain.Model.Plugin;
+﻿using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Plugins;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
