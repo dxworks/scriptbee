@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Rest.Extensions;
 
