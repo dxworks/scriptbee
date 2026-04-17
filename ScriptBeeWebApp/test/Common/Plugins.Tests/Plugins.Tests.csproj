@@ -6,4 +6,9 @@
     <ProjectReference Include="..\..\..\src\Common\Plugins\Plugins.csproj" />
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Manifest\**\TestData\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

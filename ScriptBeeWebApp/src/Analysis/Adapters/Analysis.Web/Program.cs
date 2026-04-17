@@ -2,18 +2,18 @@ using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Analysis.Web.EndpointDefinitions;
 using ScriptBee.Analysis.Web.Extensions;
+using ScriptBee.Common.Plugins.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Marketplace.Client.Extensions;
-using ScriptBee.Persistence.File.Extensions;
+using ScriptBee.Service.Plugin.Extensions;
 using ScriptBee.UseCases.Plugin;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
-var userFolderConfigurationSection = builder.Configuration.GetSection("UserFolder");
 var scriptBeeConfigurationSection = builder.Configuration.GetSection("ScriptBee");
 
 builder
@@ -25,13 +25,12 @@ builder
     .AddCommonServices()
     .AddInstanceConfig(scriptBeeConfigurationSection)
     .AddMongoDb(mongoConnectionString)
-    .AddDownloadService()
-    .AddFileAdapters(userFolderConfigurationSection)
     .AddScriptBeeMarketplaceClient(options =>
     {
         options.HubDownloadFolder = Path.Combine(Path.GetTempPath(), "DxWorksHubDownloads");
     })
-    .AddPluginsConfig()
+    .AddPluginServices()
+    .AddPlugins("ScriptBee:Plugins", "UserFolder")
     .AddRunScriptServices();
 
 builder.Services.AddEndpointDefinitions(

@@ -5,13 +5,13 @@ using NSubstitute.ExceptionExtensions;
 using OneOf;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;

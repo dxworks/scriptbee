@@ -1,8 +1,8 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using ScriptBee.Artifacts;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.File;
-using ScriptBee.Ports.Plugins;
 
 namespace ScriptBee.Service.Analysis;
 

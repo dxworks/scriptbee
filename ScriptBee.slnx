@@ -29,11 +29,8 @@
   <!-- Analysis Bounded Context -->
   <!-- Adapters -->
   <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.File/Persistence.File.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Persistence.InMemory/Persistence.InMemory.csproj" />
   <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis.Mongodb/Analysis.Mongodb.csproj" />
   <!-- Application Layer -->
-  <Project Path="ScriptBeeWebApp/src/Analysis/Application/Ports.Plugins/Ports.Plugins.csproj" />
   <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
   <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
   <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
@@ -69,8 +66,6 @@
 
   <!-- Tests - Analysis Context -->
   <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.File.Tests/Persistence.File.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Persistence.InMemory.Tests/Persistence.InMemory.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
   <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Plugin.Tests/Service.Plugin.Tests.csproj" />
 

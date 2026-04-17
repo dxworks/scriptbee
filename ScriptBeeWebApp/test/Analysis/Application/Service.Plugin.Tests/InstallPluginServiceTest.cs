@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Common.Plugins;
+using ScriptBee.Common.Plugins.Installer;
 using ScriptBee.Domain.Model.Plugin.Manifest;
-using ScriptBee.Ports.Plugins;
-using ScriptBee.Ports.Plugins.Installer;
-using PluginInstallationError = ScriptBee.Ports.Plugins.Installer.PluginInstallationError;
-using PluginVersionExistsError = ScriptBee.Ports.Plugins.Installer.PluginVersionExistsError;
+using PluginInstallationError = ScriptBee.Common.Plugins.Installer.PluginInstallationError;
+using PluginVersionExistsError = ScriptBee.Common.Plugins.Installer.PluginVersionExistsError;
 
 namespace ScriptBee.Service.Plugin.Tests;
 

@@ -6,7 +6,6 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Ports.Plugins;
 using ScriptBee.Service.Project.Context;
 using ScriptBee.UseCases.Project.Context;
 using static ScriptBee.Tests.Common.InstanceInfoFixture;
