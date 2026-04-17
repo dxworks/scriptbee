@@ -8,6 +8,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Ports.Instance\Ports.Instance.csproj" />
-    <ProjectReference Include="..\..\Application\Ports.Plugins.Fetching\Ports.Plugins.Fetching.csproj" />
   </ItemGroup>
 </Project>

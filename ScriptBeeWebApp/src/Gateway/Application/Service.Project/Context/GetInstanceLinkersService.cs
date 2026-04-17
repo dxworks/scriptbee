@@ -2,7 +2,6 @@
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Ports.Plugins;
 using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;

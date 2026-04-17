@@ -11,7 +11,7 @@ using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Ports.Plugins;
+using ScriptBee.Plugins;
 using ScriptBee.Service.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;

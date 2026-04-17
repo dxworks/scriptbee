@@ -1,6 +1,6 @@
 using NSubstitute;
-using ScriptBee.Ports.Plugins;
-using ScriptBee.Ports.Plugins.Installer;
+using ScriptBee.Plugins;
+using ScriptBee.Plugins.Installer;
 
 namespace ScriptBee.Service.Plugin.Tests;
 

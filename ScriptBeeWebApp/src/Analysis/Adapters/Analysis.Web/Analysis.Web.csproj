@@ -15,8 +15,6 @@
     <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj" />
-    <ProjectReference Include="..\Persistence.InMemory\Persistence.InMemory.csproj" />
-    <ProjectReference Include="..\Persistence.File\Persistence.File.csproj" />
     <ProjectReference Include="..\..\Application\Service.Plugin\Service.Plugin.csproj" />
     <ProjectReference Include="..\..\Application\Service.Analysis\Service.Analysis.csproj" />
     <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
