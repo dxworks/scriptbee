@@ -1,6 +1,6 @@
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
@@ -75,7 +75,7 @@ public class LoadInstanceContextServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.AsT0.ShouldBe(new Unit());
+        result.AsT0.ShouldBe(new Success());
         await _loadInstanceContext
             .Received(1)
             .Load(

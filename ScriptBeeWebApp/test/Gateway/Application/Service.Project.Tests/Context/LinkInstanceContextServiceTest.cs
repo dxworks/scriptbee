@@ -1,6 +1,6 @@
 ﻿using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -62,7 +62,7 @@ public class LinkInstanceContextServiceTest
             TestContext.Current.CancellationToken
         );
 
-        result.AsT0.ShouldBe(new Unit());
+        result.AsT0.ShouldBe(new Success());
         await _linkInstanceContext
             .Received(1)
             .Link(

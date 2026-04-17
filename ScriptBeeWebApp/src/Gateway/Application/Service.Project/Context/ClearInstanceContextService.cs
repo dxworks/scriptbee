@@ -1,12 +1,12 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Ports.Instance;
 using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using ClearContextResult = OneOf<Unit, InstanceDoesNotExistsError>;
+using ClearContextResult = OneOf<Success, InstanceDoesNotExistsError>;
 
 public class ClearInstanceContextService(
     IGetProjectInstance getProjectInstance,
@@ -15,7 +15,7 @@ public class ClearInstanceContextService(
 {
     public async Task<ClearContextResult> Clear(
         ClearContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var result = await getProjectInstance.Get(command.InstanceId, cancellationToken);
@@ -24,7 +24,7 @@ public class ClearInstanceContextService(
             async instanceInfo =>
             {
                 await clearInstanceContext.Clear(instanceInfo, cancellationToken);
-                return new Unit();
+                return new Success();
             },
             error => Task.FromResult<ClearContextResult>(error)
         );

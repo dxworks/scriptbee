@@ -1,13 +1,13 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 
 namespace ScriptBee.UseCases.Project.Context;
 
 public interface ILinkInstanceContextUseCase
 {
-    Task<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>> Link(
+    Task<OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>> Link(
         LinkContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

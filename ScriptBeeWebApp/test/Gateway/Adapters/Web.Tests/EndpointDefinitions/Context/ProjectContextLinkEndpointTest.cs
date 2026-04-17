@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -48,7 +48,7 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
     }
 
     [Fact]
-    public async Task ContexLinkSuccessful_ShouldReturnNoContent()
+    public async Task ContextLinkSuccessful_ShouldReturnNoContent()
     {
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("8be03260-c9e4-4597-94b3-c97ba047724e");
@@ -62,9 +62,9 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
-                    new Unit()
-                )
+                Task.FromResult<
+                    OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>
+                >(new Success())
             );
 
         var response = await _api.PostApi(
@@ -89,9 +89,9 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Link(Arg.Any<LinkContextCommand>(), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
-                    new ProjectDoesNotExistsError(projectId)
-                )
+                Task.FromResult<
+                    OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>
+                >(new ProjectDoesNotExistsError(projectId))
             );
 
         var response = await _api.PostApi(
@@ -116,9 +116,9 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Link(Arg.Any<LinkContextCommand>(), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
-                    new InstanceDoesNotExistsError(instanceId)
-                )
+                Task.FromResult<
+                    OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>
+                >(new InstanceDoesNotExistsError(instanceId))
             );
 
         var response = await _api.PostApi(

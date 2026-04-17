@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Project;
@@ -23,7 +23,7 @@ public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
                 new DeleteProjectCommand(ProjectId.FromValue("id")),
                 Arg.Any<CancellationToken>()
             )
-            .Returns(Task.FromResult<OneOf<Unit>>(new Unit()));
+            .Returns(Task.FromResult<OneOf<Success>>(new Success()));
 
         var response = await _api.DeleteApi(
             new TestWebApplicationFactory<Program>(

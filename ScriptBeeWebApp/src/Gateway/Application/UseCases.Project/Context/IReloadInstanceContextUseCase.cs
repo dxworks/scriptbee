@@ -1,13 +1,13 @@
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 
 namespace ScriptBee.UseCases.Project.Context;
 
 public interface IReloadInstanceContextUseCase
 {
-    Task<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>> Reload(
+    Task<OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>> Reload(
         ReloadContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

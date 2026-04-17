@@ -1,5 +1,5 @@
 ﻿using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -9,7 +9,7 @@ using ScriptBee.UseCases.Project.Context;
 
 namespace ScriptBee.Service.Project.Context;
 
-using LinkContextResult = OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
+using LinkContextResult = OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
 
 public class LinkInstanceContextService(
     IGetProject getProject,
@@ -20,7 +20,7 @@ public class LinkInstanceContextService(
 {
     public async Task<LinkContextResult> Link(
         LinkContextCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var result = await getProject.GetById(command.ProjectId, cancellationToken);
@@ -50,7 +50,7 @@ public class LinkInstanceContextService(
             async instanceInfo =>
             {
                 await Link(projectDetails, instanceInfo, linkerIds.ToList(), cancellationToken);
-                return new Unit();
+                return new Success();
             },
             error => Task.FromResult<LinkContextResult>(error)
         );

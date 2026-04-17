@@ -2,7 +2,7 @@ using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Domain.Model;
+using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -62,9 +62,9 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
-                    new Unit()
-                )
+                Task.FromResult<
+                    OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>
+                >(new Success())
             );
 
         var response = await _api.PostApi(
@@ -88,9 +88,9 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Load(Arg.Any<LoadContextCommand>(), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
-                    new ProjectDoesNotExistsError(ProjectId.FromValue("project-id"))
-                )
+                Task.FromResult<
+                    OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>
+                >(new ProjectDoesNotExistsError(ProjectId.FromValue("project-id")))
             );
 
         var response = await _api.PostApi(
@@ -115,9 +115,9 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
         useCase
             .Load(Arg.Any<LoadContextCommand>(), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<Unit, ProjectDoesNotExistsError, InstanceDoesNotExistsError>>(
-                    new InstanceDoesNotExistsError(instanceId)
-                )
+                Task.FromResult<
+                    OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>
+                >(new InstanceDoesNotExistsError(instanceId))
             );
 
         var response = await _api.PostApi(
