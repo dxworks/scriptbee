@@ -77,3 +77,11 @@
 - **Default:** `1000`
 - **Description:** The polling interval to check when the analysis instance is ready so that the plugins can be
   automatically installed there
+
+## Plugins Configuration
+
+### `SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER`
+
+- **Type:** `string`
+- **Default:** `<user_folder_path>/.scriptbee/plugins`
+- **Description:** The path where the plugins will be installed
