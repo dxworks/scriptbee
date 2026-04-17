@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Artifacts;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Persistence.File.Plugin.Installer;
 using ScriptBee.Ports.Plugins;
@@ -14,6 +14,8 @@ public class BundlePluginUninstallerTests
     private readonly IFileService _fileService = Substitute.For<IFileService>();
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
     private readonly IPluginUninstaller _pluginUninstaller = Substitute.For<IPluginUninstaller>();
+    private readonly IPluginPathProvider _pluginPathProvider =
+        Substitute.For<IPluginPathProvider>();
 
     private readonly ILogger<BundlePluginUninstaller> _logger = Substitute.For<
         ILogger<BundlePluginUninstaller>
@@ -27,6 +29,7 @@ public class BundlePluginUninstallerTests
             _fileService,
             _pluginReader,
             _pluginUninstaller,
+            _pluginPathProvider,
             _logger
         );
     }
@@ -34,9 +37,8 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenSimplePlugin_WhenUninstall_ThenPluginIsUninstalled()
     {
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "plugin@1.0.0")
-            .Returns("plugin_path");
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _fileService.CombinePaths("plugin/path", "plugin@1.0.0").Returns("plugin_path");
 
         var versions = _bundlePluginUninstaller.Uninstall("plugin", "1.0.0");
 
@@ -49,9 +51,8 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenPluginWithNoManifest_WhenUninstall_ThenPluginFolderIsDeleted()
     {
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "plugin@1.0.0")
-            .Returns("plugin_path");
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _fileService.CombinePaths("plugin/path", "plugin@1.0.0").Returns("plugin_path");
         _pluginReader.ReadPlugin("plugin_path").Returns((Domain.Model.Plugin.Plugin?)null);
 
         var versions = _bundlePluginUninstaller.Uninstall("plugin", "1.0.0");
@@ -65,12 +66,9 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenBundleWithOnePlugin_WhenUninstall_ThenPluginIsUninstalled()
     {
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
-            .Returns("bundle_path");
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId@1.0.0")
-            .Returns("plugin_path");
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _fileService.CombinePaths("plugin/path", "bundle@1.0.0").Returns("bundle_path");
+        _fileService.CombinePaths("plugin/path", "pluginId@1.0.0").Returns("plugin_path");
         _pluginReader
             .ReadPlugin("bundle_path")
             .Returns(
@@ -95,18 +93,11 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenBundleWithMultiplePlugins_WhenUninstall_ThenPluginsAreUninstalled()
     {
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
-            .Returns("bundle_path");
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId1@1.0.0")
-            .Returns("plugin_path1");
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId2@1.0.0")
-            .Returns("plugin_path2");
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId3@1.0.0")
-            .Returns("plugin_path3");
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _fileService.CombinePaths("plugin/path", "bundle@1.0.0").Returns("bundle_path");
+        _fileService.CombinePaths("plugin/path", "pluginId1@1.0.0").Returns("plugin_path1");
+        _fileService.CombinePaths("plugin/path", "pluginId2@1.0.0").Returns("plugin_path2");
+        _fileService.CombinePaths("plugin/path", "pluginId3@1.0.0").Returns("plugin_path3");
         _pluginReader
             .ReadPlugin("bundle_path")
             .Returns(
@@ -139,15 +130,10 @@ public class BundlePluginUninstallerTests
     [Fact]
     public void GivenBundleOfBundles_WhenUninstall_ThenPluginsAreUninstalled()
     {
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "bundle@1.0.0")
-            .Returns("bundle_path");
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId1@1.0.0")
-            .Returns("plugin_path1");
-        _fileService
-            .CombinePaths(ConfigFolders.PathToPlugins, "pluginId2@1.0.0")
-            .Returns("plugin_path2");
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _fileService.CombinePaths("plugin/path", "bundle@1.0.0").Returns("bundle_path");
+        _fileService.CombinePaths("plugin/path", "pluginId1@1.0.0").Returns("plugin_path1");
+        _fileService.CombinePaths("plugin/path", "pluginId2@1.0.0").Returns("plugin_path2");
         _pluginReader
             .ReadPlugin("bundle_path")
             .Returns(

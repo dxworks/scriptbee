@@ -10,6 +10,7 @@ using ScriptBee.Common.Web.Services;
 using ScriptBee.Marketplace.Client.Extensions;
 using ScriptBee.Rest.Extensions;
 using ScriptBee.Web.EndpointDefinitions;
+using ScriptBee.Web.Exceptions;
 using ScriptBee.Web.Extensions;
 using Serilog;
 
@@ -32,6 +33,7 @@ builder
     .AddAnalysisConfig(builder.Configuration)
     .AddScriptBeeMarketplaceClient()
     .AddInstallPluginsForAllocatedInstancesServices()
+    .AddPluginsServices()
     .AddProjectLiveUpdates();
 
 builder.Services.AddEndpointDefinitions(

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using OneOf;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
@@ -25,6 +25,8 @@ public class BundlePluginInstallerTests
 
     private readonly IPluginUninstaller _pluginUninstaller = Substitute.For<IPluginUninstaller>();
     private readonly IPluginUrlFetcher _pluginFetcher = Substitute.For<IPluginUrlFetcher>();
+    private readonly IPluginPathProvider _pluginPathProvider =
+        Substitute.For<IPluginPathProvider>();
 
     private readonly ILogger<BundlePluginInstaller> _logger = Substitute.For<
         ILogger<BundlePluginInstaller>
@@ -39,6 +41,7 @@ public class BundlePluginInstallerTests
             _simplePluginInstaller,
             _pluginUninstaller,
             _pluginFetcher,
+            _pluginPathProvider,
             _logger
         );
     }
@@ -51,7 +54,8 @@ public class BundlePluginInstallerTests
         PluginList pluginList
     )
     {
-        _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(pluginList.Plugins);
         _pluginFetcher
             .GetPluginUrl("pluginId", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("url");
@@ -75,7 +79,8 @@ public class BundlePluginInstallerTests
         PluginList pluginList
     )
     {
-        _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(pluginList.Plugins);
         _pluginFetcher
             .GetPluginUrl("nonExistentPlugin", "1.0.0", Arg.Any<CancellationToken>())
             .Returns(_ => new PluginNotFoundError("nonExistentPlugin"));
@@ -97,7 +102,8 @@ public class BundlePluginInstallerTests
         PluginList pluginList
     )
     {
-        _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(pluginList.Plugins);
         _pluginFetcher
             .GetPluginUrl("plugin", "1.0.0", Arg.Any<CancellationToken>())
             .Returns(_ => new PluginVersionNotFoundError("plugin", "1.0.0"));
@@ -118,7 +124,8 @@ public class BundlePluginInstallerTests
         PluginList pluginList
     )
     {
-        _pluginReader.ReadPlugins(ConfigFolders.PathToPlugins).Returns(pluginList.Plugins);
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(pluginList.Plugins);
         _pluginFetcher
             .GetPluginUrl("pluginId", "1.0.0", Arg.Any<CancellationToken>())
             .Returns("url");
@@ -149,8 +156,9 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenSimplePluginAlreadyInstalled_WhenInstall_ThenReturnsEmptyList()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "1.0.0") });
         _pluginFetcher
             .GetPluginUrl("pluginName", "1.0.0", Arg.Any<CancellationToken>())
@@ -178,8 +186,9 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenSimplePluginVersionAndExistingNewVersion_WhenInstall_ThenReturnsEmptyList()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(new List<Domain.Model.Plugin.Plugin> { CreatePlugin("pluginName", "10.0.0") });
         _pluginFetcher
             .GetPluginUrl("pluginName", "1.0.0", Arg.Any<CancellationToken>())
@@ -206,8 +215,9 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenSimplePluginAndExistingOldVersion_WhenInstall_ThenOldVersionsAreUninstalled()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(
                 new List<Domain.Model.Plugin.Plugin>
                 {
@@ -279,9 +289,8 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundlePluginThatHasNoPluginInFolder_WhenInstall_ThenOnlyFolderIsInstalled()
     {
-        _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
-            .Returns(new List<Domain.Model.Plugin.Plugin>());
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(new List<Domain.Model.Plugin.Plugin>());
         _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())
@@ -301,8 +310,9 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundlePluginWithOnePlugin_WhenInstall_ThenPluginIsInstalled()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(
                 new List<Domain.Model.Plugin.Plugin>
                 {
@@ -331,8 +341,9 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundlePluginWithMultiplePlugins_WhenInstall_ThenPluginsAreInstalled()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(
                 new List<Domain.Model.Plugin.Plugin>
                 {
@@ -369,9 +380,8 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundleWithBundles_WhenInstall_ThenPluginsAreInstalled()
     {
-        _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
-            .Returns(new List<Domain.Model.Plugin.Plugin>());
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(new List<Domain.Model.Plugin.Plugin>());
         _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())
@@ -426,8 +436,9 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundlePluginWithMultiplePlugins_WhenInstall_ThenOldPluginsAreUninstalled()
     {
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
+            .ReadPlugins("plugin/path")
             .Returns(
                 new List<Domain.Model.Plugin.Plugin>
                 {
@@ -460,9 +471,8 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundlePluginThatFails_WhenInstall_ThenReturnsErrorAndDataIsRemoved()
     {
-        _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
-            .Returns(new List<Domain.Model.Plugin.Plugin>());
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(new List<Domain.Model.Plugin.Plugin>());
         _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _pluginFetcher
             .GetPluginUrl("pluginId", "1.0.0", Arg.Any<CancellationToken>())
@@ -500,9 +510,8 @@ public class BundlePluginInstallerTests
     [Fact]
     public async Task GivenBundleWithMultiplePluginsWhereOneFails_WhenInstall_ThenReturnsErrorAndDataIsRemoved()
     {
-        _pluginReader
-            .ReadPlugins(ConfigFolders.PathToPlugins)
-            .Returns(new List<Domain.Model.Plugin.Plugin>());
+        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginReader.ReadPlugins("plugin/path").Returns(new List<Domain.Model.Plugin.Plugin>());
         _pluginFetcher.GetPluginUrl("bundle", "1.0.0", Arg.Any<CancellationToken>()).Returns("url");
         _simplePluginInstaller
             .Install("url", "bundle", "1.0.0", Arg.Any<CancellationToken>())

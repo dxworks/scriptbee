@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
+    <ProjectReference Include="..\..\..\Common\Plugins\Plugins.csproj" />
     <ProjectReference Include="..\Ports.Plugins\Ports.Plugins.csproj" />
     <ProjectReference Include="..\UseCases.Plugin\UseCases.Plugin.csproj" />
   </ItemGroup>

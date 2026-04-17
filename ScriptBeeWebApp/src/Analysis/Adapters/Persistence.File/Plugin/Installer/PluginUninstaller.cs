@@ -1,11 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using ScriptBee.Artifacts;
-using ScriptBee.Domain.Model.Config;
+using ScriptBee.Common.Plugins;
 
 namespace ScriptBee.Persistence.File.Plugin.Installer;
 
-public class PluginUninstaller(IFileService fileService, ILogger<PluginUninstaller> logger)
-    : IPluginUninstaller
+public class PluginUninstaller(
+    IFileService fileService,
+    IPluginPathProvider pluginPathProvider,
+    ILogger<PluginUninstaller> logger
+) : IPluginUninstaller
 {
     private const string DeletePluginFolderFileName = "__delete.txt";
 
@@ -59,6 +62,7 @@ public class PluginUninstaller(IFileService fileService, ILogger<PluginUninstall
 
     private string GetDeletePluginFolderFilePath()
     {
-        return fileService.CombinePaths(ConfigFolders.PathToPlugins, DeletePluginFolderFileName);
+        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
+        return fileService.CombinePaths(pluginFolderPath, DeletePluginFolderFileName);
     }
 }

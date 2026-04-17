@@ -11,7 +11,7 @@ public static class AnalysisDockerInstanceExtensions
         string dockerConfigSection
     )
     {
-        services.AddOptions<AnalysisDockerConfig>().BindConfiguration("ScriptBee:Analysis:Docker");
+        services.AddOptions<AnalysisDockerConfig>().BindConfiguration(dockerConfigSection);
 
         return services
             .AddSingleton<IFreePortProvider, FreePortProvider>()
