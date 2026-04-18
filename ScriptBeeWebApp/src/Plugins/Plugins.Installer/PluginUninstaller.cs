@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Artifacts;
 
 namespace ScriptBee.Plugins.Installer;
 

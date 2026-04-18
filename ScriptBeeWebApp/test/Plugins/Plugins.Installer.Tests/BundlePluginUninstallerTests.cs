@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
-using ScriptBee.Plugins.Installer;
 using static ScriptBee.Tests.Common.Plugin.PluginUtils;
 
-namespace ScriptBee.Plugins.Tests.Installer;
+namespace ScriptBee.Plugins.Installer.Tests;
 
 public class BundlePluginUninstallerTests
 {

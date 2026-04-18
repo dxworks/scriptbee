@@ -1,4 +1,4 @@
-namespace ScriptBee.Artifacts;
+namespace ScriptBee.Plugins.Installer;
 
 public sealed class FileService : IFileService
 {

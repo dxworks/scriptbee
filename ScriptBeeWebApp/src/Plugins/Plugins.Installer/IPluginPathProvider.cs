@@ -1,4 +1,4 @@
-namespace ScriptBee.Plugins;
+namespace ScriptBee.Plugins.Installer;
 
 public interface IPluginPathProvider
 {

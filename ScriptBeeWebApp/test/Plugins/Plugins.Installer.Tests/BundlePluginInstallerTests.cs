@@ -8,11 +8,10 @@ using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.Marketplace.Client.Errors;
-using ScriptBee.Plugins.Installer;
 using ScriptBee.Tests.Common.Plugin;
 using static ScriptBee.Tests.Common.Plugin.PluginUtils;
 
-namespace ScriptBee.Plugins.Tests.Installer;
+namespace ScriptBee.Plugins.Installer.Tests;
 
 public class BundlePluginInstallerTests
 {

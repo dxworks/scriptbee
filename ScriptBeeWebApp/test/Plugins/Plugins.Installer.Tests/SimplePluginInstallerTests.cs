@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Artifacts;
-using ScriptBee.Plugins.Installer;
 
-namespace ScriptBee.Plugins.Tests.Installer;
+namespace ScriptBee.Plugins.Installer.Tests;
 
 public class SimplePluginInstallerTests
 {
