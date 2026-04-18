@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Service.Plugin;
+﻿namespace ScriptBee.Plugins.Loader;
 
 public interface IDllLoader
 {

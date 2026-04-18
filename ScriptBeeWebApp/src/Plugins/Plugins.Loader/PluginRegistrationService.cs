@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace ScriptBee.Plugins;
+namespace ScriptBee.Plugins.Loader;
 
 public class PluginRegistrationService : IPluginRegistrationService
 {

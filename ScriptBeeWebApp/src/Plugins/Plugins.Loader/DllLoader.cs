@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ScriptBee.Service.Plugin;
+namespace ScriptBee.Plugins.Loader;
 
 public class DllLoader : IDllLoader
 {

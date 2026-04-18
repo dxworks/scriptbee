@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Plugins;
+﻿namespace ScriptBee.Plugins.Loader;
 
 public interface IPluginRegistrationService
 {

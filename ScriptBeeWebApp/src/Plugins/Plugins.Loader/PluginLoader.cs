@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Plugins;
+using ScriptBee.Domain.Model.Plugin;
 
-namespace ScriptBee.Service.Plugin;
+namespace ScriptBee.Plugins.Loader;
 
 public class PluginLoader(
     ILogger<PluginLoader> logger,
@@ -10,7 +10,7 @@ public class PluginLoader(
     IPluginRegistrationService pluginRegistrationService
 ) : IPluginLoader
 {
-    public void Load(Domain.Model.Plugin.Plugin plugin)
+    public void Load(Plugin plugin)
     {
         foreach (var extensionPoint in plugin.Manifest.ExtensionPoints)
         {
@@ -29,7 +29,7 @@ public class PluginLoader(
 
                 var path = Path.Combine(plugin.FolderPath, extensionPoint.EntryPoint);
 
-                var loadDllTypes = dllLoader.LoadDllTypes(path, acceptedPluginTypes!).ToList();
+                var loadDllTypes = dllLoader.LoadDllTypes(path, acceptedPluginTypes).ToList();
 
                 foreach (var (@interface, concrete) in loadDllTypes)
                 {

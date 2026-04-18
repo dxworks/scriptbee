@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Plugins.Tests;
+﻿namespace ScriptBee.Plugins.Loader.Tests;
 
 public class PluginRegistrationServiceTests
 {

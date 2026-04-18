@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 
-namespace ScriptBee.Plugins;
+namespace ScriptBee.Plugins.Loader;
 
 public class PluginRepository : IPluginRepository
 {
