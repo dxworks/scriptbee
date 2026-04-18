@@ -33,6 +33,12 @@ public class AnalysisInstanceDockerAdapter(
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
+        await EnsurePluginVolumeExists(
+            client,
+            analysisDockerConfig.PluginsVolume,
+            cancellationToken
+        );
+
         var hostPort = freePortProvider.GetFreeTcpPort();
 
         var portBindings = new Dictionary<string, IList<PortBinding>>
@@ -54,9 +60,11 @@ public class AnalysisInstanceDockerAdapter(
                 Image = image.ImageName,
                 HostConfig = new HostConfig
                 {
-                    NetworkMode = analysisDockerConfig.Network,
+                    NetworkMode = string.IsNullOrEmpty(analysisDockerConfig.Network)
+                        ? "bridge"
+                        : analysisDockerConfig.Network,
                     PortBindings = portBindings,
-                    Binds = GetBinds(),
+                    Binds = GetBinds(analysisDockerConfig.PluginsVolume),
                 },
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
@@ -95,7 +103,7 @@ public class AnalysisInstanceDockerAdapter(
         var analysisDockerConfig = config.Value;
         using var client = CreateDockerClient(analysisDockerConfig);
 
-        IList<ContainerListResponse> containers = await client.Containers.ListContainersAsync(
+        var containers = await client.Containers.ListContainersAsync(
             new ContainersListParameters
             {
                 All = true,
@@ -208,26 +216,30 @@ public class AnalysisInstanceDockerAdapter(
             $"ASPNETCORE_HTTP_PORTS={config.Value.Port}",
         };
 
-        if (
-            string.IsNullOrEmpty(userFolderSettingsOptions.Value.UserFolderPath)
-            && string.IsNullOrEmpty(config.Value.UserFolderHostPath)
-        )
+        if (!string.IsNullOrEmpty(config.Value.UserFolderVolumePath))
         {
-            return environmentVariables;
+            environmentVariables.Add(
+                $"UserFolder__UserFolderPath={config.Value.UserFolderVolumePath}"
+            );
         }
-
-        environmentVariables.Add($"UserFolder__UserFolderPath={config.Value.UserFolderVolumePath}");
 
         return environmentVariables;
     }
 
-    private List<string> GetBinds()
+    private List<string> GetBinds(string pluginsVolume)
     {
-        var hostPath =
+        var binds = new List<string>();
+
+        var userHostPath =
             config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
-        return string.IsNullOrEmpty(hostPath)
-            ? []
-            : [$"{hostPath}:{config.Value.UserFolderVolumePath}"];
+        if (!string.IsNullOrEmpty(userHostPath))
+        {
+            binds.Add($"{userHostPath}:{config.Value.UserFolderVolumePath}");
+        }
+
+        binds.Add($"{pluginsVolume}:/app/plugins:ro");
+
+        return binds;
     }
 
     private Dictionary<string, EmptyStruct> GetVolumes()
@@ -255,6 +267,23 @@ public class AnalysisInstanceDockerAdapter(
         ).CreateClient();
     }
 
+    private async Task EnsurePluginVolumeExists(
+        DockerClient client,
+        string pluginsVolume,
+        CancellationToken cancellationToken
+    )
+    {
+        var volumes = await client.Volumes.ListAsync(cancellationToken);
+        if (volumes.Volumes == null || volumes.Volumes.All(v => v.Name != pluginsVolume))
+        {
+            logger.LogInformation("Creating named volume: {PluginsVolume}", pluginsVolume);
+            await client.Volumes.CreateAsync(
+                new VolumesCreateParameters { Name = pluginsVolume },
+                cancellationToken
+            );
+        }
+    }
+
     private static async Task<string> GetContainerUrl(
         DockerClient client,
         string containerId,
@@ -269,23 +298,27 @@ public class AnalysisInstanceDockerAdapter(
             cancellationToken
         );
 
-        if (networkName == null)
+        if (
+            !string.IsNullOrEmpty(networkName)
+            && containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
+        )
         {
-            return $"http://localhost:{hostPort}";
+            if (!string.IsNullOrEmpty(network.IPAddress))
+            {
+                return $"http://{network.IPAddress}:{internalPort}";
+            }
         }
 
-        return containerInfo.NetworkSettings.Networks.TryGetValue(networkName, out var network)
-            ? $"http://{network.IPAddress}:{internalPort}"
-            : $"http://localhost:{hostPort}";
+        return $"http://localhost:{hostPort}";
     }
 
     private async Task PullImageIfNeeded(
         DockerClient client,
         string imageName,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
-        var parts = imageName.Split(":");
+        var parts = imageName.Split(':');
         var image = parts[0];
         var tag = parts.Length > 1 ? parts[1] : "latest";
 

@@ -13,4 +13,6 @@ public class AnalysisDockerConfig
     public string? UserFolderVolumePath { get; init; }
 
     public string? UserFolderHostPath { get; init; }
+
+    public string PluginsVolume { get; init; } = "scriptbee-plugins";
 }

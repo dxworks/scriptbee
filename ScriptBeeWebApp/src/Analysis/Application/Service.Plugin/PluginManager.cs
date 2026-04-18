@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using ScriptBee.Plugins;
+using ScriptBee.Plugins.Installer;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Plugin;
 
 namespace ScriptBee.Service.Plugin;

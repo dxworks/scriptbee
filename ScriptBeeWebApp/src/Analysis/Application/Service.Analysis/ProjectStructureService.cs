@@ -1,6 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Common.CodeGeneration;
-using ScriptBee.Plugins;
+using ScriptBee.Plugins.Loader;
 
 namespace ScriptBee.Service.Analysis;
 

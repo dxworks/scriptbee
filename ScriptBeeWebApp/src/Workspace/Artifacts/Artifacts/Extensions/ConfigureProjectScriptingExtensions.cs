@@ -17,7 +17,6 @@ public static class ConfigureProjectScriptingExtensions
             .AddSingleton<ICreateFile, CreateFileAdapter>()
             .AddSingleton<ILoadFile, LoadFileAdapter>()
             .AddSingleton<IUpdateFile, UpdateFileAdapter>()
-            .AddSingleton<IDeleteFileOrFolder, DeleteFileOrFolderAdapter>()
-            .AddSingleton<IFileService, FileService>();
+            .AddSingleton<IDeleteFileOrFolder, DeleteFileOrFolderAdapter>();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
-using ScriptBee.Plugins;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;

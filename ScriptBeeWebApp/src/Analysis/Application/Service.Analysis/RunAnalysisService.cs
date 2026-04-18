@@ -7,7 +7,7 @@ using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Plugins;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;

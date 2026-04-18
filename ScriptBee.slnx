@@ -1,79 +1,113 @@
 <Solution>
-  <!-- Plugin API -->
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+
   <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj" />
 
-  <!--  Plugins  -->
-  <Project Path="Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default/DxWorks.ScriptBee.Plugin.HelperFunctions.Default.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests.csproj" />
-  <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon.csproj" />
+  <Folder Name="/Plugins/src/">
+    <Project Path="Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default/DxWorks.ScriptBee.Plugin.HelperFunctions.Default.csproj" />
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.csproj" />
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" />
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.csproj" />
+  </Folder>
 
-  <!-- Common Layer -->
-  <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/Plugins/Plugins.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/CodeGeneration/CodeGeneration.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
+  <Folder Name="/Plugins/test/">
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon.csproj" />
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.csproj" />
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests.csproj" />
+    <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.Tests.csproj" />
+  </Folder>
 
-  <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts/Artifacts.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts.Mongodb/Artifacts.Mongodb.csproj" />
+  <Folder Name="/src/Common/">
+    <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/CodeGeneration/CodeGeneration.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
+  </Folder>
 
-  <!-- Analysis Bounded Context -->
-  <!-- Adapters -->
-  <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis.Mongodb/Analysis.Mongodb.csproj" />
-  <!-- Application Layer -->
-  <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Plugin/UseCases.Plugin.csproj" />
+  <Folder Name="/src/Workspace/">
+    <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts/Artifacts.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Artifacts/Artifacts.Mongodb/Artifacts.Mongodb.csproj" />
 
-  <!-- Gateway Bounded Context -->
-  <!-- Adapters -->
-  <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Analysis.Instance.Docker/Analysis.Instance.Docker.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Notifications.SignalR/Notifications.SignalR.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance.Allocation/Ports.Instance.Allocation.csproj" />
-  <!-- Application Layer -->
-  <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Notifications/Ports.Notifications.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Project/Service.Project.csproj" />
-  <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Project/UseCases.Project.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis.Mongodb/Analysis.Mongodb.csproj" />
+  </Folder>
 
-  <!-- Tests - Common Layer -->
-  <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Common/Plugins.Tests/Plugins.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Common/Application.Model.Tests/Application.Model.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
+  <Folder Name="/src/Plugins/">
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins/Plugins.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Installer/Plugins.Installer.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Loader/Plugins.Loader.csproj" />
+  </Folder>
 
-  <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Mongodb.Tests/Artifacts.Mongodb.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Workspace/Analysis/Analysis.Mongodb.Tests/Analysis.Mongodb.Tests.csproj" />
+  <Folder Name="/src/Analysis/">
+    <!-- Adapters -->
+    <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj" />
 
-  <!-- Tests - Analysis Context -->
-  <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Plugin.Tests/Service.Plugin.Tests.csproj" />
+    <!-- Application Layer -->
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Plugin/UseCases.Plugin.csproj" />
+  </Folder>
 
-  <!-- Tests - Gateway Context -->
-  <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Analysis.Instance.Docker.Tests/Analysis.Instance.Docker.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Notifications.SignalR.Tests/Notifications.SignalR.Tests.csproj" />
-  <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Project.Tests/Service.Project.Tests.csproj" />
+  <Folder Name="/src/Gateway/">
+    <!-- Adapters -->
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Analysis.Instance.Docker/Analysis.Instance.Docker.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Notifications.SignalR/Notifications.SignalR.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance.Allocation/Ports.Instance.Allocation.csproj" />
+
+    <!-- Application Layer -->
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Notifications/Ports.Notifications.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Project/Service.Project.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Project/UseCases.Project.csproj" />
+  </Folder>
+
+  <Folder Name="/test/Common/">
+    <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Application.Model.Tests/Application.Model.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
+  </Folder>
+
+  <Folder Name="/test/Workspace/">
+    <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Mongodb.Tests/Artifacts.Mongodb.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Workspace/Analysis/Analysis.Mongodb.Tests/Analysis.Mongodb.Tests.csproj" />
+  </Folder>
+
+  <Folder Name="/test/Plugins/">
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Tests/Plugins.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Installer.Tests/Plugins.Installer.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Loader.Tests/Plugins.Loader.Tests.csproj" />
+  </Folder>
+
+  <Folder Name="/test/Analysis/">
+    <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Plugin.Tests/Service.Plugin.Tests.csproj" />
+  </Folder>
+
+  <Folder Name="/test/Gatway/">
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Analysis.Instance.Docker.Tests/Analysis.Instance.Docker.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Notifications.SignalR.Tests/Notifications.SignalR.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Project.Tests/Service.Project.Tests.csproj" />
+  </Folder>
 </Solution>

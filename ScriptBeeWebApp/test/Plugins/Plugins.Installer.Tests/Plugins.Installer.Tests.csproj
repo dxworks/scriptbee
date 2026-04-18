@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.Plugins.Installer.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Plugins\Plugins.Installer\Plugins.Installer.csproj" />
+    <ProjectReference Include="..\..\Common\Tests.Common\Tests.Common.csproj" />
+  </ItemGroup>
+</Project>

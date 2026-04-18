@@ -1,5 +1,5 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api;
-using ScriptBee.Plugins;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
