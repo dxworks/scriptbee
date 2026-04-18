@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 
@@ -7,7 +6,6 @@ namespace ScriptBee.Plugins;
 
 public class PluginReader(
     ILogger<PluginReader> logger,
-    IFileService fileService,
     IPluginManifestYamlFileReader pluginManifestYamlFileReader
 ) : IPluginReader
 {
@@ -23,7 +21,7 @@ public class PluginReader(
 
             if (pluginManifest != null)
             {
-                var folderName = fileService.GetFileName(pluginPath);
+                var folderName = Path.GetFileName(pluginPath);
                 var (id, version) = PluginNameGenerator.GetPluginNameAndVersion(folderName);
 
                 if (id is null || version is null)
@@ -51,7 +49,7 @@ public class PluginReader(
 
     public IEnumerable<Plugin> ReadPlugins(string pluginFolderPath)
     {
-        var pluginDirectories = fileService.GetDirectories(pluginFolderPath).ToList();
+        var pluginDirectories = Directory.GetDirectories(pluginFolderPath).ToList();
 
         logger.LogInformation("Found {PluginCount} plugin directories", pluginDirectories.Count);
 
@@ -63,8 +61,8 @@ public class PluginReader(
 
     private PluginManifest? ReadManifest(string pluginDirectory)
     {
-        var path = fileService.CombinePaths(pluginDirectory, ManifestYaml);
+        var path = Path.Combine(pluginDirectory, ManifestYaml);
 
-        return fileService.FileExists(path) ? pluginManifestYamlFileReader.Read(path) : null;
+        return File.Exists(path) ? pluginManifestYamlFileReader.Read(path) : null;
     }
 }
