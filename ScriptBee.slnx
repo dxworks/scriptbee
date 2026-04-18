@@ -27,7 +27,6 @@
     <Project Path="ScriptBeeWebApp/src/Common/Common/Common.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Common.Web/Common.Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Common/Plugins/Plugins.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/CodeGeneration/CodeGeneration.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
@@ -40,6 +39,12 @@
 
     <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis/Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Workspace/Analysis/Analysis.Mongodb/Analysis.Mongodb.csproj" />
+  </Folder>
+
+  <Folder Name="/src/Plugins/">
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins/Plugins.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Installer/Plugins.Installer.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Loader/Plugins.Loader.csproj" />
   </Folder>
 
   <Folder Name="/src/Analysis/">
@@ -73,7 +78,6 @@
   <Folder Name="/test/Common/">
     <Project Path="ScriptBeeWebApp/test/Common/Common.Tests/Common.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Model.Tests/Model.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Common/Plugins.Tests/Plugins.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Application.Model.Tests/Application.Model.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
@@ -84,6 +88,12 @@
     <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Tests/Artifacts.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Workspace/Artifacts/Artifacts.Mongodb.Tests/Artifacts.Mongodb.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Workspace/Analysis/Analysis.Mongodb.Tests/Analysis.Mongodb.Tests.csproj" />
+  </Folder>
+
+  <Folder Name="/test/Plugins/">
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Tests/Plugins.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Installer.Tests/Plugins.Installer.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Loader.Tests/Plugins.Loader.Tests.csproj" />
   </Folder>
 
   <Folder Name="/test/Analysis/">

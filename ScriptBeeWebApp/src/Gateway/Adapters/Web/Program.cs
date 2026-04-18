@@ -8,7 +8,6 @@ using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Services;
 using ScriptBee.Marketplace.Client.Extensions;
-using ScriptBee.Plugins.Extensions;
 using ScriptBee.Rest.Extensions;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;
@@ -17,7 +16,6 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
-const string userFolderConfigurationSection = "UserFolder";
 
 builder
     .Services.AddConfiguredHealthChecks()
@@ -28,12 +26,12 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
-    .AddArtifactFileAdapters(userFolderConfigurationSection)
+    .AddArtifactFileAdapters("UserFolder")
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
     .AddScriptBeeMarketplaceClient()
     .AddInstallPluginsForAllocatedInstancesServices()
-    .AddPlugins("ScriptBee:Plugins", userFolderConfigurationSection)
+    .AddPluginServices("ScriptBee:Plugins")
     .AddProjectLiveUpdates();
 
 builder.Services.AddEndpointDefinitions(

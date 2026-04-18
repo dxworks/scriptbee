@@ -2,12 +2,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ScriptBee.Analysis.Web.EndpointDefinitions;
 using ScriptBee.Analysis.Web.Extensions;
+using ScriptBee.Artifacts.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Marketplace.Client.Extensions;
-using ScriptBee.Plugins.Extensions;
-using ScriptBee.Service.Plugin.Extensions;
 using ScriptBee.UseCases.Plugin;
 using Serilog;
 
@@ -29,8 +28,8 @@ builder
     {
         options.HubDownloadFolder = Path.Combine(Path.GetTempPath(), "DxWorksHubDownloads");
     })
-    .AddPluginServices()
-    .AddPlugins("ScriptBee:Plugins", "UserFolder")
+    .AddArtifactFileAdapters("UserFolder")
+    .AddPluginServices("ScriptBee:Plugins")
     .AddRunScriptServices();
 
 builder.Services.AddEndpointDefinitions(

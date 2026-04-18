@@ -3,7 +3,7 @@ using DxWorks.ScriptBee.Plugin.Api.Model;
 using NSubstitute;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.File;
-using ScriptBee.Plugins;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;

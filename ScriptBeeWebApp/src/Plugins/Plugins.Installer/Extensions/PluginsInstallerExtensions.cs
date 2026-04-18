@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ScriptBee.Plugins.Extensions;
 
 namespace ScriptBee.Plugins.Installer.Extensions;
 
@@ -6,12 +7,9 @@ public static class PluginsInstallerExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddPluginInstaller(string userFolderConfigurationSection)
+        public IServiceCollection AddPluginInstaller()
         {
-            // TODO FIXIT: this has to go where the configuration of the IFIlePahtProvider lies
-            // services.AddOptions<PluginsSettings>().BindConfiguration(pluginConfigurationSection);
-
-            return services.AddDownloadService().AddServices();
+            return services.AddPluginReader().AddDownloadService().AddServices();
         }
 
         private IServiceCollection AddDownloadService()

@@ -4,6 +4,7 @@ using OneOf;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Installer;
+using ScriptBee.Plugins.Loader;
 using PluginInstallationError = ScriptBee.Plugins.Installer.PluginInstallationError;
 using PluginVersionExistsError = ScriptBee.Plugins.Installer.PluginVersionExistsError;
 

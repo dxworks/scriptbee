@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Options;
-using ScriptBee.Plugins.Config;
+using ScriptBee.Web.Config;
+using ScriptBee.Web.Services;
 
-namespace ScriptBee.Plugins.Tests;
+namespace ScriptBee.Web.Tests.Services;
 
 public class PluginPathProviderTests
 {

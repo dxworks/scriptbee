@@ -7,7 +7,7 @@ using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Plugins;
+using ScriptBee.Plugins.Loader;
 
 namespace ScriptBee.Service.Analysis;
 

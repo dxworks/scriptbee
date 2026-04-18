@@ -33,8 +33,11 @@ public class AnalysisInstanceDockerAdapter(
 
         await PullImageIfNeeded(client, image.ImageName, cancellationToken);
 
-        await EnsurePluginVolumeExists(client, analysisDockerConfig.PluginsVolume,
-            cancellationToken);
+        await EnsurePluginVolumeExists(
+            client,
+            analysisDockerConfig.PluginsVolume,
+            cancellationToken
+        );
 
         var hostPort = freePortProvider.GetFreeTcpPort();
 

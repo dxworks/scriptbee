@@ -5,7 +5,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Common\Plugins\Plugins.csproj" />
+    <ProjectReference Include="..\..\..\Plugins\Plugins.Loader\Plugins.Loader.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
     <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />

@@ -1,8 +1,9 @@
 using Microsoft.Extensions.Options;
+using ScriptBee.Analysis.Web.Config;
 using ScriptBee.Domain.Model.Config;
-using ScriptBee.Plugins.Config;
+using ScriptBee.Plugins.Installer;
 
-namespace ScriptBee.Plugins;
+namespace ScriptBee.Analysis.Web;
 
 public sealed class PluginPathProvider(IOptions<PluginsSettings> pluginSettings)
     : IPluginPathProvider

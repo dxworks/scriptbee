@@ -31,6 +31,7 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             "scriptbee-test-userfolder"
         )
         .Replace("\\", "/");
+
     private static readonly string OverrideHostPath = Path.Combine(
             Path.GetTempPath(),
             "scriptbee-test-override"
@@ -314,7 +315,7 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
-    public async Task Allocate_ShouldNotMountVolumes_WhenNoUserFolderIsConfigured()
+    public async Task Allocate_ShouldHaveScriptBeeVolume_WhenNoUserFolderIsConfigured()
     {
         // Arrange
         var adapter = new AnalysisInstanceDockerAdapter(
@@ -342,7 +343,7 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             TestContext.Current.CancellationToken
         );
 
-        containerInspect.HostConfig.Binds.ShouldBeEmpty();
+        containerInspect.HostConfig.Binds.ShouldContain("scriptbee-plugins:/app/plugins:ro");
     }
 
     [Fact]

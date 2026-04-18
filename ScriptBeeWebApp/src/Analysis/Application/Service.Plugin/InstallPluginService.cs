@@ -3,6 +3,7 @@ using OneOf;
 using OneOf.Types;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Installer;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Plugin;
 using ScriptBee.UseCases.Plugin.Errors;
 using PluginInstallationError = ScriptBee.UseCases.Plugin.Errors.PluginInstallationError;
