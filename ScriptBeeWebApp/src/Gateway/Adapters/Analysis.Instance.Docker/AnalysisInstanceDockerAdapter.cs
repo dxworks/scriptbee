@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Analysis.Instance.Docker.Config;
-using ScriptBee.Application.Model.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -15,7 +14,6 @@ namespace ScriptBee.Analysis.Instance.Docker;
 
 public class AnalysisInstanceDockerAdapter(
     IOptions<AnalysisDockerConfig> config,
-    IOptions<UserFolderSettings> userFolderSettingsOptions,
     IConfiguration configuration,
     ILogger<AnalysisInstanceDockerAdapter> logger,
     IFreePortProvider freePortProvider
@@ -230,8 +228,7 @@ public class AnalysisInstanceDockerAdapter(
     {
         var binds = new List<string>();
 
-        var userHostPath =
-            config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
+        var userHostPath = config.Value.UserFolderHostPath;
         if (!string.IsNullOrEmpty(userHostPath))
         {
             binds.Add($"{userHostPath}:{config.Value.UserFolderVolumePath}");
@@ -244,8 +241,7 @@ public class AnalysisInstanceDockerAdapter(
 
     private Dictionary<string, EmptyStruct> GetVolumes()
     {
-        var hostPath =
-            config.Value.UserFolderHostPath ?? userFolderSettingsOptions.Value.UserFolderPath;
+        var hostPath = config.Value.UserFolderHostPath;
         if (
             string.IsNullOrEmpty(hostPath)
             || string.IsNullOrEmpty(config.Value.UserFolderVolumePath)
