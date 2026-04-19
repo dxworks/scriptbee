@@ -9,7 +9,7 @@ using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Notifications;
 using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
-using ScriptBee.Service.Project.Plugin;
+using ScriptBee.Service.Project.Plugins;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
 using static ScriptBee.Tests.Common.ProjectDetailsFixture;

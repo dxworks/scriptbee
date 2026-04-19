@@ -4,8 +4,8 @@ using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
-using ScriptBee.Service.Plugin;
-using ScriptBee.UseCases.Plugin;
+using ScriptBee.Service.Analysis;
+using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins;
 

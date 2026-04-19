@@ -3,7 +3,7 @@
     <RootNamespace>ScriptBee.Service.Project.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Gateway\Application\Service.Project\Service.Project.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Gateway\Application\Service.Gateway\Service.Gateway.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 </Project>

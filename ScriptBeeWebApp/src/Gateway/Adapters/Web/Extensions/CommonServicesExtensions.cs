@@ -1,6 +1,6 @@
 using ScriptBee.Application.Model.Services;
 using ScriptBee.Common;
-using ScriptBee.Service.Project.Plugin;
+using ScriptBee.Service.Project.Plugins;
 using ScriptBee.Service.Project.ProjectStructure;
 using ScriptBee.UseCases.Project.ProjectStructure;
 

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
-using ScriptBee.Service.Plugin;
-using ScriptBee.Service.Plugin.Config;
+using ScriptBee.Service.Analysis;
+using ScriptBee.Service.Analysis.Config;
 
 namespace ScriptBee.Analysis.Web.Tests;
 

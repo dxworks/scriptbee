@@ -5,6 +5,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\DxWorks.ScriptBee.Plugin.Api\DxWorks.ScriptBee.Plugin.Api.csproj" />
-    <ProjectReference Include="..\..\..\ScriptBeeWebApp\src\Gateway\Application\Service.Project\Service.Project.csproj" />
   </ItemGroup>
 </Project>

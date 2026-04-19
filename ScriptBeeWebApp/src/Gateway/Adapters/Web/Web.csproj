@@ -21,8 +21,8 @@
     <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
     <ProjectReference Include="..\Rest\Rest.csproj" />
     <ProjectReference Include="..\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
-    <ProjectReference Include="..\..\Application\Service.Project\Service.Project.csproj" />
-    <ProjectReference Include="..\..\Application\UseCases.Project\UseCases.Project.csproj" />
+    <ProjectReference Include="..\..\Application\Service.Gateway\Service.Gateway.csproj" />
+    <ProjectReference Include="..\..\Application\UseCases.Gateway\UseCases.Gateway.csproj" />
     <ProjectReference Include="..\Notifications.SignalR\Notifications.SignalR.csproj" />
   </ItemGroup>
 </Project>

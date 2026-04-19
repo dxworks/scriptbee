@@ -8,6 +8,7 @@
   </Folder>
 
   <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj" />
+  <Folder Name="/Plugins/" />
 
   <Folder Name="/Plugins/src/">
     <Project Path="Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default/DxWorks.ScriptBee.Plugin.HelperFunctions.Default.csproj" />
@@ -46,6 +47,7 @@
     <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Installer/Plugins.Installer.csproj" />
     <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Loader/Plugins.Loader.csproj" />
   </Folder>
+  <Folder Name="/src/" />
 
   <Folder Name="/src/Analysis/">
     <!-- Adapters -->
@@ -71,8 +73,8 @@
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Instance/Ports.Instance.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Project/Ports.Project.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Application/Ports.Notifications/Ports.Notifications.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Project/Service.Project.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Project/UseCases.Project.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/Service.Gateway/Service.Gateway.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Application/UseCases.Gateway/UseCases.Gateway.csproj" />
   </Folder>
 
   <Folder Name="/test/Common/">
@@ -95,6 +97,7 @@
     <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Installer.Tests/Plugins.Installer.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Loader.Tests/Plugins.Loader.Tests.csproj" />
   </Folder>
+  <Folder Name="/test/" />
 
   <Folder Name="/test/Analysis/">
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />

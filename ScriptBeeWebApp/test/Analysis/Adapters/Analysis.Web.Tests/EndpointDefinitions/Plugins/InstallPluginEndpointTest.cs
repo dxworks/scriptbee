@@ -4,8 +4,8 @@ using NSubstitute;
 using OneOf.Types;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Plugin;
-using ScriptBee.UseCases.Plugin.Errors;
+using ScriptBee.UseCases.Analysis;
+using ScriptBee.UseCases.Analysis.Errors;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Plugins;
 
