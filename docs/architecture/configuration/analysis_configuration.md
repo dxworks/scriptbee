@@ -10,14 +10,6 @@ Most of the variables here are configured automatically by the Gateway Service w
 - **Description:** The connection string to MongoDB is configured automatically by the Gateway Service with to reference
   the same Mongodb Server
 
-## User Folder
-
-### `UserFolder__UserFolderPath`
-
-- **Type:** `string`
-- **Description:** The absolute path of the host machine to the folder where the ScriptBee data is stored. It is
-  automatically configured by the Gateway Service to reference the same volume
-
 ## Instance Configuration
 
 ### `SCRIPTBEE__INSTANCEID`

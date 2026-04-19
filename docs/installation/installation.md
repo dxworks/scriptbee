@@ -43,16 +43,6 @@ see in the following example how the folder structure looks like
         └── script.cs
 ```
 
-### User Folder Setup
-
-> [!CAUTION]
-> This setup is obsolete and will be replaced by editing either via UI or via the VS Code Extension
-
-In order to open the scripts in Visual Studio Code, you need to set an environment variable to the user folder in the
-following environment variable: `UserFolder__UserFolderPath`.
-
-This should be the absolute path of the host machine to the folder where the ScriptBee data is stored.
-
 ## Driver Configuration
 
 ### Docker Compose
