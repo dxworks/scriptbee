@@ -2,9 +2,9 @@ using OneOf;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Ports.Instance;
-using ScriptBee.UseCases.Project.Context;
+using ScriptBee.UseCases.Gateway.Context;
 
-namespace ScriptBee.Service.Project.Context;
+namespace ScriptBee.Service.Gateway.Context;
 
 using GetInstanceContextResult = OneOf<IEnumerable<ContextSlice>, InstanceDoesNotExistsError>;
 

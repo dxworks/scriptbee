@@ -4,7 +4,7 @@ using NSubstitute;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Plugins;
 

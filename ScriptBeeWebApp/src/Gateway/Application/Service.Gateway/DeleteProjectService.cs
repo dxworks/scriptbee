@@ -1,7 +1,7 @@
 ﻿using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project;
+using ScriptBee.UseCases.Gateway;
 
-namespace ScriptBee.Service.Project;
+namespace ScriptBee.Service.Gateway;
 
 public class DeleteProjectService(IDeleteProject deleteProject) : IDeleteProjectUseCase
 {

@@ -2,8 +2,8 @@ using ScriptBee.Plugins;
 using ScriptBee.Plugins.Extensions;
 using ScriptBee.Plugins.Installer.Extensions;
 using ScriptBee.Plugins.Loader.Extensions;
-using ScriptBee.Service.Project.Plugins;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.Service.Gateway.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.Config;
 using ScriptBee.Web.Services;
 

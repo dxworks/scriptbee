@@ -9,7 +9,7 @@ using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Services;
 using ScriptBee.Marketplace.Client.Extensions;
 using ScriptBee.Rest.Extensions;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;
 using Serilog;

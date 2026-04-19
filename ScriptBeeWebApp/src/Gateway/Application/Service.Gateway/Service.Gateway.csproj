@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>ScriptBee.Service.Project</RootNamespace>
+    <RootNamespace>ScriptBee.Service.Gateway</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp\DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.csproj" />

@@ -5,8 +5,8 @@ using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Service.Project.ProjectStructure;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.Service.Gateway.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 

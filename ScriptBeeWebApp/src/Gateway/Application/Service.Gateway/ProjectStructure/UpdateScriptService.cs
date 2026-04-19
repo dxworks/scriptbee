@@ -6,9 +6,9 @@ using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Notifications;
 using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
-namespace ScriptBee.Service.Project.ProjectStructure;
+namespace ScriptBee.Service.Gateway.ProjectStructure;
 
 using UpdateContentResult = OneOf<Success, ProjectDoesNotExistsError, ScriptDoesNotExistsError>;
 using UpdateResult = OneOf<Script, ProjectDoesNotExistsError, ScriptDoesNotExistsError>;

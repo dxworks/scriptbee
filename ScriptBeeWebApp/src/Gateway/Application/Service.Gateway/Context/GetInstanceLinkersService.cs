@@ -2,9 +2,9 @@
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugin.Manifest;
 using ScriptBee.Ports.Instance;
-using ScriptBee.UseCases.Project.Context;
+using ScriptBee.UseCases.Gateway.Context;
 
-namespace ScriptBee.Service.Project.Context;
+namespace ScriptBee.Service.Gateway.Context;
 
 public class GetInstanceLinkersService(
     IGetPlugins getPlugins,

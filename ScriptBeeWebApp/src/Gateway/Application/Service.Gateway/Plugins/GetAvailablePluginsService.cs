@@ -2,9 +2,9 @@ using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 using ScriptBee.Marketplace.Client;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 
-namespace ScriptBee.Service.Project.Plugins;
+namespace ScriptBee.Service.Gateway.Plugins;
 
 public class GetAvailablePluginsService(IMarketPluginFetcher marketPluginFetcher)
     : IGetAvailablePluginsUseCase

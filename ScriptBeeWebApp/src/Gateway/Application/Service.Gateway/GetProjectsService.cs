@@ -2,9 +2,9 @@
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project;
+using ScriptBee.UseCases.Gateway;
 
-namespace ScriptBee.Service.Project;
+namespace ScriptBee.Service.Gateway;
 
 public class GetProjectsService(IGetAllProjects getAllProjects, IGetProject getProject)
     : IGetProjectsUseCase

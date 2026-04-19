@@ -5,7 +5,7 @@ using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project;
+using ScriptBee.UseCases.Gateway;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
 

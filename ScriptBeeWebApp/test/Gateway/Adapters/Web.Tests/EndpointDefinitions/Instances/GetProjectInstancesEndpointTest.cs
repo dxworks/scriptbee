@@ -4,7 +4,7 @@ using NSubstitute;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Instances;

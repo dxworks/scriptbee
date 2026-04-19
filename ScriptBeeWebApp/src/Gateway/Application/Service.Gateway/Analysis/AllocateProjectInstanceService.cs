@@ -7,9 +7,9 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Instance.Allocation;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
 
-namespace ScriptBee.Service.Project.Analysis;
+namespace ScriptBee.Service.Gateway.Analysis;
 
 using AllocateResult = OneOf<InstanceInfo, ProjectDoesNotExistsError>;
 

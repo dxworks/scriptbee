@@ -1,4 +1,4 @@
-namespace ScriptBee.UseCases.Project.Plugins;
+namespace ScriptBee.UseCases.Gateway.Plugins;
 
 public interface IManagePluginsUseCase
 {

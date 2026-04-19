@@ -1,7 +1,7 @@
 ﻿using System.Threading.Channels;
 using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Service.Project.Analysis;
-using ScriptBee.Service.Project.Config;
+using ScriptBee.Service.Gateway.Analysis;
+using ScriptBee.Service.Gateway.Config;
 using ScriptBee.Web.BackgroundServices;
 
 namespace ScriptBee.Web.Extensions;

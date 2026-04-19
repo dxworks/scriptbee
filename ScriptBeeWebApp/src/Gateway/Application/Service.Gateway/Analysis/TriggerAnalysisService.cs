@@ -2,9 +2,9 @@
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Ports.Instance;
-using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
 
-namespace ScriptBee.Service.Project.Analysis;
+namespace ScriptBee.Service.Gateway.Analysis;
 
 using TriggerAnalysisResult = OneOf<AnalysisInfo, InstanceDoesNotExistsError>;
 

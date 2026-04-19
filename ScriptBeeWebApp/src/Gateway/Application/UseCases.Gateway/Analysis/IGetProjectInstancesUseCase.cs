@@ -3,7 +3,7 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.UseCases.Project.Analysis;
+namespace ScriptBee.UseCases.Gateway.Analysis;
 
 public interface IGetProjectInstancesUseCase
 {

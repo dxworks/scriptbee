@@ -2,7 +2,7 @@
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 
-namespace ScriptBee.UseCases.Project.Context;
+namespace ScriptBee.UseCases.Gateway.Context;
 
 public interface ILinkInstanceContextUseCase
 {

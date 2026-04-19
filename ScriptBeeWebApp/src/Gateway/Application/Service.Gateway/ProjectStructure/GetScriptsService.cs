@@ -3,9 +3,9 @@ using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
-namespace ScriptBee.Service.Project.ProjectStructure;
+namespace ScriptBee.Service.Gateway.ProjectStructure;
 
 public sealed class GetScriptsService(IGetScripts getScripts, ILoadFile loadFile)
     : IGetScriptsUseCase

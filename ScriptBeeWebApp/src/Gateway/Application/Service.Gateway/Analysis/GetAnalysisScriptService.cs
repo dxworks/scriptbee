@@ -4,10 +4,10 @@ using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.UseCases.Project.Analysis;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
-namespace ScriptBee.Service.Project.Analysis;
+namespace ScriptBee.Service.Gateway.Analysis;
 
 using GetScriptContentResult = OneOf<string, AnalysisDoesNotExistsError, ScriptDoesNotExistsError>;
 using GetScriptMetadataResult = OneOf<Script, AnalysisDoesNotExistsError, ScriptDoesNotExistsError>;

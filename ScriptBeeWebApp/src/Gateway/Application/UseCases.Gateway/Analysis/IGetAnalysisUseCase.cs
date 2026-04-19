@@ -2,7 +2,7 @@
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 
-namespace ScriptBee.UseCases.Project.Analysis;
+namespace ScriptBee.UseCases.Gateway.Analysis;
 
 public interface IGetAnalysisUseCase
 {

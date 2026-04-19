@@ -6,7 +6,7 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Plugins;

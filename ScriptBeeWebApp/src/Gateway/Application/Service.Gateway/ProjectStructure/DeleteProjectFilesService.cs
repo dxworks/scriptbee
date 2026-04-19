@@ -5,9 +5,9 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Ports.Notifications;
 using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
-namespace ScriptBee.Service.Project.ProjectStructure;
+namespace ScriptBee.Service.Gateway.ProjectStructure;
 
 using DeleteResult = OneOf<Success, ProjectDoesNotExistsError>;
 

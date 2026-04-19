@@ -4,9 +4,9 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Instance.Allocation;
-using ScriptBee.Service.Project.Config;
+using ScriptBee.Service.Gateway.Config;
 
-namespace ScriptBee.Service.Project.Analysis;
+namespace ScriptBee.Service.Gateway.Analysis;
 
 public sealed class InstallPluginsForNewlyAllocatedInstance(
     IGetInstanceStatus getInstanceStatus,

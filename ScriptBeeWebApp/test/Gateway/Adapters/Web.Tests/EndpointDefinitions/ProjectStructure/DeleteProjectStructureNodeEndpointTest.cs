@@ -7,7 +7,7 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectStructure;

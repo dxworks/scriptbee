@@ -3,9 +3,9 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 
-namespace ScriptBee.Service.Project.Plugins;
+namespace ScriptBee.Service.Gateway.Plugins;
 
 using InstallResult = OneOf<ProjectDetails, ProjectDoesNotExistsError>;
 

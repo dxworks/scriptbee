@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.UseCases.Project;
+﻿namespace ScriptBee.UseCases.Gateway;
 
 public interface IDeleteProjectUseCase
 {

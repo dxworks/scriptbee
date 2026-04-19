@@ -1,4 +1,4 @@
-namespace ScriptBee.Service.Project.Config;
+namespace ScriptBee.Service.Gateway.Config;
 
 public class ScriptBeeInstanceConfig
 {

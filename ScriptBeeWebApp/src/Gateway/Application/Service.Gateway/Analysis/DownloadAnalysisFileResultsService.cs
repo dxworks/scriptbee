@@ -7,9 +7,9 @@ using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
 
-namespace ScriptBee.Service.Project.Analysis;
+namespace ScriptBee.Service.Gateway.Analysis;
 
 using GetAllFilesZipResultStreamType = OneOf<NamedFileStream, AnalysisDoesNotExistsError>;
 using GetFileResultStreamType = OneOf<

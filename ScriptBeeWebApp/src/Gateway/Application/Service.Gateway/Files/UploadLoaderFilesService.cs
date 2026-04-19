@@ -5,9 +5,9 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.Files;
+using ScriptBee.UseCases.Gateway.Files;
 
-namespace ScriptBee.Service.Project.Files;
+namespace ScriptBee.Service.Gateway.Files;
 
 using UploadResult = OneOf<IEnumerable<FileData>, ProjectDoesNotExistsError>;
 

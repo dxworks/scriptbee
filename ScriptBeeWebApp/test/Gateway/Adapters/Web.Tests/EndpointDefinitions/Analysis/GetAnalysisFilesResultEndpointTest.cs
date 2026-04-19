@@ -7,7 +7,7 @@ using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 

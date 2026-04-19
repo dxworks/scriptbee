@@ -1,8 +1,8 @@
 using ScriptBee.Application.Model.Services;
 using ScriptBee.Common;
-using ScriptBee.Service.Project.Plugins;
-using ScriptBee.Service.Project.ProjectStructure;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.Service.Gateway.Plugins;
+using ScriptBee.Service.Gateway.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
 namespace ScriptBee.Web.Extensions;
 

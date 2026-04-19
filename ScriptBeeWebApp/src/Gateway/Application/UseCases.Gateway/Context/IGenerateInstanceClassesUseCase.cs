@@ -1,7 +1,7 @@
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 
-namespace ScriptBee.UseCases.Project.Context;
+namespace ScriptBee.UseCases.Gateway.Context;
 
 using GenerateClassesResult = OneOf<Stream, InstanceDoesNotExistsError>;
 

@@ -5,9 +5,9 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.Context;
+using ScriptBee.UseCases.Gateway.Context;
 
-namespace ScriptBee.Service.Project.Context;
+namespace ScriptBee.Service.Gateway.Context;
 
 using ReloadContextResult = OneOf<Success, ProjectDoesNotExistsError, InstanceDoesNotExistsError>;
 

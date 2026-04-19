@@ -1,7 +1,7 @@
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using ScriptBee.Domain.Model.Project;
 
-namespace ScriptBee.UseCases.Project.ProjectStructure;
+namespace ScriptBee.UseCases.Gateway.ProjectStructure;
 
 public record CreateScriptCommand(
     ProjectId ProjectId,

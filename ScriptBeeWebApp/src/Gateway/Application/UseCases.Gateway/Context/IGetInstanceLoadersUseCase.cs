@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.Context;
 
-namespace ScriptBee.UseCases.Project.Context;
+namespace ScriptBee.UseCases.Gateway.Context;
 
 public interface IGetInstanceLoadersUseCase
 {

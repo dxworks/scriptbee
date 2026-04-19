@@ -9,10 +9,10 @@ using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Notifications;
 using ScriptBee.Ports.Notifications.Events;
 using ScriptBee.Ports.Project;
-using ScriptBee.Service.Project.Plugins;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.Service.Gateway.Plugins;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
-namespace ScriptBee.Service.Project.ProjectStructure;
+namespace ScriptBee.Service.Gateway.ProjectStructure;
 
 using CreateResult = OneOf<
     Script,

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
-using ScriptBee.UseCases.Project.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 
-namespace ScriptBee.Service.Project.Plugins;
+namespace ScriptBee.Service.Gateway.Plugins;
 
 public class PluginManager(
     IPluginReader pluginReader,

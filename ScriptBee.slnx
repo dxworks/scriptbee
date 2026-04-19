@@ -54,10 +54,8 @@
     <Project Path="ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj" />
 
     <!-- Application Layer -->
-    <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Plugin/Service.Plugin.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Plugin/UseCases.Plugin.csproj" />
   </Folder>
 
   <Folder Name="/src/Gateway/">
@@ -102,7 +100,6 @@
   <Folder Name="/test/Analysis/">
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Analysis.Tests/Service.Analysis.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Analysis/Application/Service.Plugin.Tests/Service.Plugin.Tests.csproj" />
   </Folder>
 
   <Folder Name="/test/Gatway/">
@@ -111,6 +108,6 @@
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Notifications.SignalR.Tests/Notifications.SignalR.Tests.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Project.Tests/Service.Project.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Application/Service.Gateway.Tests/Service.Gateway.Tests.csproj" />
   </Folder>
 </Solution>

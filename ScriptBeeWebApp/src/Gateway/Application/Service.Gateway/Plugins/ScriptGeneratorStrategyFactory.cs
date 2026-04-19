@@ -3,7 +3,7 @@ using DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 
-namespace ScriptBee.Service.Project.Plugins;
+namespace ScriptBee.Service.Gateway.Plugins;
 
 using CSharpStrategy = ScriptGeneratorStrategy;
 using JavascriptStrategy = DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.ScriptGeneratorStrategy;

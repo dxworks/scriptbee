@@ -4,9 +4,9 @@ using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Ports.Project;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
-namespace ScriptBee.Service.Project.ProjectStructure;
+namespace ScriptBee.Service.Gateway.ProjectStructure;
 
 using GetResult = OneOf<
     Page<ProjectStructureEntry>,

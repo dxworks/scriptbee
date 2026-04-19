@@ -2,7 +2,7 @@ using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugin.MarketPlace;
 
-namespace ScriptBee.UseCases.Project.Plugins;
+namespace ScriptBee.UseCases.Gateway.Plugins;
 
 public interface IGetAvailablePluginsUseCase
 {

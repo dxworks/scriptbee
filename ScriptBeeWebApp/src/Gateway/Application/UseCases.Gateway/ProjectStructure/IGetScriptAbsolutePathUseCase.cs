@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.ProjectStructure;
 
-namespace ScriptBee.UseCases.Project.ProjectStructure;
+namespace ScriptBee.UseCases.Gateway.ProjectStructure;
 
 public interface IGetScriptAbsolutePathUseCase
 {
