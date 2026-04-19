@@ -29,7 +29,6 @@ export interface ProjectScript {
   id: string;
   name: string;
   path: string;
-  absolutePath: string;
   scriptLanguage: ScriptLanguage;
   parameters: ScriptParameter[];
 }
@@ -38,7 +37,6 @@ export interface ProjectFileNode {
   id: string;
   name: string;
   path: string;
-  absolutePath: string;
   type: string;
   hasChildren: boolean;
 }
