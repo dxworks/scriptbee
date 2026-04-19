@@ -57,7 +57,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnCreated_WhenNoParametersArePassed()
     {
         var useCase = Substitute.For<ICreateScriptUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .Create(
                 new CreateScriptCommand(ProjectId.FromValue("id"), "path", "csharp", []),
@@ -74,7 +73,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
@@ -82,7 +80,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebCreateScriptCommand("path", "csharp", null)
@@ -96,7 +93,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         webScriptData.Id.ShouldBe("7fff649a-bbd8-4570-83fb-0f8441e44999");
         webScriptData.Name.ShouldBe("path");
         webScriptData.Path.ShouldBe("path");
-        webScriptData.AbsolutePath.ShouldBe("absolute");
         webScriptData.ScriptLanguage.ShouldBe(new WebScriptLanguage("csharp", ".cs"));
         webScriptData.Parameters.ShouldBeEmpty();
     }
@@ -109,7 +105,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnCreated_WhenParametersArePassed(string type, object value)
     {
         var useCase = Substitute.For<ICreateScriptUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .Create(
                 Arg.Is<CreateScriptCommand>(command =>
@@ -135,7 +130,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
@@ -143,7 +137,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebCreateScriptCommand(
@@ -161,7 +154,6 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         webScriptData.Id.ShouldBe("5f33bd3b-9756-4344-8747-86afe64729ec");
         webScriptData.Name.ShouldBe("path");
         webScriptData.Path.ShouldBe("path");
-        webScriptData.AbsolutePath.ShouldBe("absolute");
         webScriptData.ScriptLanguage.ShouldBe(new WebScriptLanguage("csharp", ".cs"));
         var webScriptParameter = webScriptData.Parameters.Single();
         webScriptParameter.Name.ShouldBe("parameter");

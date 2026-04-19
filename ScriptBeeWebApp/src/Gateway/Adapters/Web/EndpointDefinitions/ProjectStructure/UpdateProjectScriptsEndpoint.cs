@@ -41,7 +41,6 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
         [FromRoute] string scriptId,
         [FromBody] WebUpdateScriptCommand command,
         IUpdateScriptUseCase useCase,
-        IGetScriptAbsolutePathUseCase absolutePathUseCase,
         CancellationToken cancellationToken
     )
     {
@@ -56,10 +55,7 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
         );
 
         return result.Match<Results<Ok<WebScriptData>, NotFound<ProblemDetails>>>(
-            script =>
-                TypedResults.Ok(
-                    WebScriptData.Map(script, absolutePathUseCase.GetScriptAbsolutePath(script))
-                ),
+            script => TypedResults.Ok(WebScriptData.Map(script)),
             error => error.ToProblem(context),
             error => error.ToProblem(context)
         );

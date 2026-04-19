@@ -36,7 +36,6 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
     > GetProjectFiles(
         HttpContext context,
         IGetProjectFilesUseCase useCase,
-        IGetScriptAbsolutePathUseCase absolutePathUseCase,
         [FromRoute] string projectId,
         [FromQuery] string? parentId = null,
         [FromQuery] int offset = 0,
@@ -69,13 +68,7 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
             page =>
                 TypedResults.Ok(
                     new WebGetProjectFilesResponse(
-                        page.Data.Select(entry =>
-                                WebProjectFileNode.Map(
-                                    entry,
-                                    absolutePathUseCase.GetScriptAbsolutePath(entry)
-                                )
-                            )
-                            .ToList(),
+                        page.Data.Select(WebProjectFileNode.Map).ToList(),
                         page.TotalCount,
                         page.Offset,
                         page.Limit

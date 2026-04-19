@@ -8,7 +8,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Gateway.Analysis;
-using ScriptBee.UseCases.Gateway.ProjectStructure;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Analysis;
@@ -27,7 +26,6 @@ public class GetAnalysisScriptFileEndpointTest(ITestOutputHelper outputHelper)
         var analysisId = new AnalysisId("9be064ff-8844-48b8-9fe6-89a0a6e8ce9b");
         var scriptId = new ScriptId("d6912b05-0297-45a2-8af3-b3541dd8dba7");
         var useCase = Substitute.For<IGetAnalysisScriptUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .GetFileScript(analysisId, scriptId, Arg.Any<CancellationToken>())
             .Returns(
@@ -43,7 +41,6 @@ public class GetAnalysisScriptFileEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.GetApi(
             new TestWebApplicationFactory<Program>(
@@ -51,7 +48,6 @@ public class GetAnalysisScriptFileEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             )
         );
