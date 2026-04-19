@@ -1,7 +1,6 @@
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using OneOf;
 using OneOf.Types;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Tests.Common;
@@ -22,13 +21,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         const string version = "1.0.0";
 
         var useCase = Substitute.For<IInstallPluginUseCase>();
-        useCase
-            .InstallPlugin(pluginId, version, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<Success, InvalidPluginError, PluginInstallationError>>(
-                    new Success()
-                )
-            );
+        useCase.InstallPlugin(pluginId, version).Returns(new Success());
 
         var response = await _api.PostApi(
             new AnalysisTestWebApplicationFactory(
@@ -42,7 +35,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-        await useCase.Received(1).InstallPlugin(pluginId, version, Arg.Any<CancellationToken>());
+        useCase.Received(1).InstallPlugin(pluginId, version);
     }
 
     [Fact]
@@ -91,13 +84,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         var invalidPluginError = new InvalidPluginError(pluginId, version);
         var useCase = Substitute.For<IInstallPluginUseCase>();
-        useCase
-            .InstallPlugin(pluginId, version, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<Success, InvalidPluginError, PluginInstallationError>>(
-                    invalidPluginError
-                )
-            );
+        useCase.InstallPlugin(pluginId, version).Returns(invalidPluginError);
 
         var response = await _api.PostApi(
             new AnalysisTestWebApplicationFactory(
@@ -121,13 +108,7 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         var installError = new PluginInstallationError(pluginId, version);
         var useCase = Substitute.For<IInstallPluginUseCase>();
-        useCase
-            .InstallPlugin(pluginId, version, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<Success, InvalidPluginError, PluginInstallationError>>(
-                    installError
-                )
-            );
+        useCase.InstallPlugin(pluginId, version).Returns(installError);
 
         var response = await _api.PostApi(
             new AnalysisTestWebApplicationFactory(

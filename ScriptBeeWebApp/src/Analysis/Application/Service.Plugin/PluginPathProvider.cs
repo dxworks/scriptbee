@@ -1,15 +1,14 @@
 using Microsoft.Extensions.Options;
-using ScriptBee.Domain.Model.Config;
 using ScriptBee.Plugins;
-using ScriptBee.Web.Config;
+using ScriptBee.Service.Plugin.Config;
 
-namespace ScriptBee.Web.Services;
+namespace ScriptBee.Service.Plugin;
 
 public sealed class PluginPathProvider(IOptions<PluginsSettings> pluginSettings)
     : IPluginPathProvider
 {
     public string GetPathToPlugins()
     {
-        return pluginSettings.Value.InstallationFolder ?? ConfigFolders.PathToPlugins;
+        return pluginSettings.Value.InstallationFolder;
     }
 }

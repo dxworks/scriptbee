@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Plugins.Extensions;
 
 namespace ScriptBee.Plugins.Installer.Extensions;
 
@@ -9,7 +8,7 @@ public static class PluginsInstallerExtensions
     {
         public IServiceCollection AddPluginInstaller()
         {
-            return services.AddPluginReader().AddDownloadService().AddServices();
+            return services.AddDownloadService().AddServices();
         }
 
         private IServiceCollection AddDownloadService()

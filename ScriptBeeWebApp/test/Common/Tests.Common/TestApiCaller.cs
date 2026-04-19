@@ -20,7 +20,11 @@ public class TestApiCaller<TStartup>(string endpoint)
             MediaTypeNames.Application.Json
         );
 
-        var response = await client.PostAsync(endpoint, content);
+        var response = await client.PostAsync(
+            endpoint,
+            content,
+            TestContext.Current.CancellationToken
+        );
         return response;
     }
 
@@ -37,7 +41,11 @@ public class TestApiCaller<TStartup>(string endpoint)
             MediaTypeNames.Application.Json
         );
 
-        var response = await client.PatchAsync(endpoint, content);
+        var response = await client.PatchAsync(
+            endpoint,
+            content,
+            TestContext.Current.CancellationToken
+        );
         return response;
     }
 
@@ -53,7 +61,7 @@ public class TestApiCaller<TStartup>(string endpoint)
     {
         using var client = factory.CreateClient();
 
-        var response = await client.GetAsync(endpoint);
+        var response = await client.GetAsync(endpoint, TestContext.Current.CancellationToken);
         return response;
     }
 
@@ -78,7 +86,11 @@ public class TestApiCaller<TStartup>(string endpoint)
 
         var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, mediaType);
 
-        var response = await client.PutAsync(endpoint, content);
+        var response = await client.PutAsync(
+            endpoint,
+            content,
+            TestContext.Current.CancellationToken
+        );
         return response;
     }
 
@@ -102,7 +114,11 @@ public class TestApiCaller<TStartup>(string endpoint)
             multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
         }
 
-        var response = await client.PutAsync(endpoint, multipartContent);
+        var response = await client.PutAsync(
+            endpoint,
+            multipartContent,
+            TestContext.Current.CancellationToken
+        );
         return response;
     }
 }

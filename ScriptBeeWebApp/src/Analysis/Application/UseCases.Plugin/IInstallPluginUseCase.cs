@@ -6,9 +6,8 @@ namespace ScriptBee.UseCases.Plugin;
 
 public interface IInstallPluginUseCase
 {
-    Task<OneOf<Success, InvalidPluginError, PluginInstallationError>> InstallPlugin(
+    OneOf<Success, InvalidPluginError, PluginInstallationError> InstallPlugin(
         string pluginId,
-        string version,
-        CancellationToken cancellationToken = default
+        string version
     );
 }

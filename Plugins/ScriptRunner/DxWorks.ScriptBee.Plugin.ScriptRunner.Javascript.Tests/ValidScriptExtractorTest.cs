@@ -89,9 +89,9 @@ public class ValidScriptExtractorTest : IAsyncLifetime
             // end script
             """
     )]
-    public void ExtractValidScript_InvalidCases(string script)
+    public void ExtractValidScript_InvalidCases(string? script)
     {
-        var extractedScript = ValidScriptExtractor.ExtractValidScript(script);
+        var extractedScript = ValidScriptExtractor.ExtractValidScript(script!);
 
         Assert.Equal("", extractedScript);
     }

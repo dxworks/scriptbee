@@ -29,18 +29,14 @@ public class InstallPluginEndpoint : IEndpointDefinition
             .WithTags("Plugins");
     }
 
-    private static async Task<InstallResult> InstallPlugin(
+    private static InstallResult InstallPlugin(
         HttpContext context,
         [FromBody] WebInstallPluginCommand command,
-        IInstallPluginUseCase installPluginUseCase,
-        CancellationToken cancellationToken = default
+        IInstallPluginUseCase installPluginUseCase
     )
     {
-        var result = await installPluginUseCase.InstallPlugin(
-            command.PluginId,
-            command.Version,
-            cancellationToken
-        );
+        var result = installPluginUseCase.InstallPlugin(command.PluginId, command.Version);
+
         return result.Match<InstallResult>(
             _ => TypedResults.NoContent(),
             error =>

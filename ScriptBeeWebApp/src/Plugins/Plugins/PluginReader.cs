@@ -11,6 +11,13 @@ public class PluginReader(
 {
     private const string ManifestYaml = "manifest.yaml";
 
+    public Plugin? ReadPlugin(string pluginFolderPath, string pluginId, string version)
+    {
+        var pluginName = PluginNameGenerator.GetPluginName(pluginId, version);
+        var pluginPath = Path.Combine(pluginFolderPath, pluginName);
+        return ReadPlugin(pluginPath);
+    }
+
     public Plugin? ReadPlugin(string pluginPath)
     {
         logger.LogInformation("Reading manifest from {PluginDirectory}", pluginPath);
