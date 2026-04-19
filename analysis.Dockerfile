@@ -9,6 +9,7 @@ COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
 
 COPY ScriptBeeWebApp/src/Common ScriptBeeWebApp/src/Common
 COPY ScriptBeeWebApp/src/Workspace ScriptBeeWebApp/src/Workspace
+COPY ScriptBeeWebApp/src/Plugins ScriptBeeWebApp/src/Plugins
 COPY ScriptBeeWebApp/src/Analysis/Application ScriptBeeWebApp/src/Analysis/Application
 COPY ScriptBeeWebApp/src/Analysis/Adapters ScriptBeeWebApp/src/Analysis/Adapters
 
