@@ -1,9 +1,9 @@
 ﻿using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
-using ScriptBee.Marketplace.Client.Errors;
+using ScriptBee.Plugins.Marketplace.Errors;
 
-namespace ScriptBee.Marketplace.Client;
+namespace ScriptBee.Plugins.Marketplace;
 
 public class PluginUrlFetcher(IMarketPluginFetcher marketPluginFetcher) : IPluginUrlFetcher
 {

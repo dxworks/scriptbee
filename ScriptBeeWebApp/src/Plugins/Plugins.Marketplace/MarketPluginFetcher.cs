@@ -3,7 +3,7 @@ using DxWorks.Hub.Sdk.Project;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
 
-namespace ScriptBee.Marketplace.Client;
+namespace ScriptBee.Plugins.Marketplace;
 
 public sealed class MarketPluginFetcher(IScriptBeeClient hubClient) : IMarketPluginFetcher
 {
