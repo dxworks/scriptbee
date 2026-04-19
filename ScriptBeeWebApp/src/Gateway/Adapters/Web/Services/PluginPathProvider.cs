@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Options;
 using ScriptBee.Domain.Model.Config;
-using ScriptBee.Plugins.Installer;
+using ScriptBee.Plugins;
 using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Services;

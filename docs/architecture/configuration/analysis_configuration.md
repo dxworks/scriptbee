@@ -40,5 +40,6 @@ Most of the variables here are configured automatically by the Gateway Service w
 ### `SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER`
 
 - **Type:** `string`
-- **Default:** `<user_folder_path>/.scriptbee/plugins`
-- **Description:** The path where the plugins will be installed
+- **Default:** `/app/plugins`
+- **Description:** The path where the plugins are installed and from where they weill be loaded from. On this path, the
+  Gateway Service will mount as readonly the volume for the plugin download cache

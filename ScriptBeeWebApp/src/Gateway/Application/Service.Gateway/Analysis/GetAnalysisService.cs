@@ -1,0 +1,27 @@
+﻿using OneOf;
+using ScriptBee.Analysis;
+using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Errors;
+using ScriptBee.UseCases.Gateway.Analysis;
+
+namespace ScriptBee.Service.Gateway.Analysis;
+
+public class GetAnalysisService(IGetAllAnalyses getAllAnalyses, IGetAnalysis getAnalysis)
+    : IGetAnalysisUseCase
+{
+    public async Task<IEnumerable<AnalysisInfo>> GetAll(
+        GetAnalysisQuery query,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await getAllAnalyses.GetAll(query.ProjectId, query.Sort, cancellationToken);
+    }
+
+    public async Task<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>> GetById(
+        AnalysisId analysisId,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await getAnalysis.GetById(analysisId, cancellationToken);
+    }
+}

@@ -13,12 +13,12 @@ public class MongodbPluginInstallationConfig
         return new MongodbPluginInstallationConfig
         {
             PluginId = config.PluginId,
-            Version = config.Version,
+            Version = config.Version.ToString(),
         };
     }
 
     public PluginInstallationConfig ToPluginInstallationConfig()
     {
-        return new PluginInstallationConfig(PluginId, Version);
+        return new PluginInstallationConfig(PluginId, new Version(Version));
     }
 }

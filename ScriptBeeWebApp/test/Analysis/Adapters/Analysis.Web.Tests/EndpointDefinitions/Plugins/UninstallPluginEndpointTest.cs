@@ -2,7 +2,7 @@ using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Plugin;
+using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Plugins;
 

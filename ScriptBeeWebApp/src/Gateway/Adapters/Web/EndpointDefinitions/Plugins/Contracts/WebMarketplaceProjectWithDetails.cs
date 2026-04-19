@@ -1,4 +1,4 @@
-using ScriptBee.Domain.Model.Plugin.MarketPlace;
+using ScriptBee.Domain.Model.Plugins.MarketPlace;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 

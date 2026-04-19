@@ -3,9 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.Plugin;
+using ScriptBee.UseCases.Gateway.Plugins;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Plugins;
@@ -41,7 +42,10 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId);
         useCase
             .UninstallPluginAsync(
-                new UninstallPluginCommand(projectId, "plugin-id", "1.2.3"),
+                new UninstallPluginCommand(
+                    projectId,
+                    new PluginId("plugin-id", new Version("1.2.3"))
+                ),
                 Arg.Any<CancellationToken>()
             )
             .Returns(
@@ -71,7 +75,10 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IUninstallPluginUseCase>();
         useCase
             .UninstallPluginAsync(
-                new UninstallPluginCommand(projectId, "plugin-id", "1.2.3"),
+                new UninstallPluginCommand(
+                    projectId,
+                    new PluginId("plugin-id", new Version("1.2.3"))
+                ),
                 Arg.Any<CancellationToken>()
             )
             .Returns(

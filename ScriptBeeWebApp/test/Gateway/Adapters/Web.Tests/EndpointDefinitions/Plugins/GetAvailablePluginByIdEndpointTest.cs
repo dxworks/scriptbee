@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.MarketPlace;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.MarketPlace;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project.Plugin;
+using ScriptBee.UseCases.Gateway.Plugins;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 
 namespace ScriptBee.Web.Tests.EndpointDefinitions.Plugins;
@@ -63,7 +63,7 @@ public class GetAvailablePluginByIdEndpointTest(ITestOutputHelper outputHelper)
             .GetMarketPlugin("plugin-id", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<MarketPlacePlugin, PluginNotFoundError>>(
-                    new PluginNotFoundError("plugin-id")
+                    new PluginNotFoundError(new PluginId("plugin-id", new Version()))
                 )
             );
 

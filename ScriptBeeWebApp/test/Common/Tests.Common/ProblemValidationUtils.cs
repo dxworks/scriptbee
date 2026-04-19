@@ -68,6 +68,23 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
+    public static async Task AssertInternalServerErrorProblem(
+        HttpContent responseContent,
+        string url,
+        string title,
+        string detail
+    )
+    {
+        var problemDetails = (await responseContent.ReadFromJsonAsync<ProblemDetails>())!;
+
+        problemDetails.Type.ShouldBe("https://tools.ietf.org/html/rfc9110#section-15.6.1");
+        problemDetails.Status.ShouldBe(StatusCodes.Status500InternalServerError);
+        problemDetails.Title.ShouldBe(title);
+        problemDetails.Detail.ShouldBe(detail);
+        problemDetails.Instance.ShouldBe(url);
+        AssertDynamicProblemExtensionsNotNull(problemDetails);
+    }
+
     public static async Task AssertBadRequestProblem(
         HttpContent responseContent,
         string url,

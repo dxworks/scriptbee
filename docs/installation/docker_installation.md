@@ -26,6 +26,7 @@ services:
       - '4201:80'
     volumes:
       - ./database/scriptbee:/root/.scriptbee
+      - scriptbee-plugins:/app/plugins
       - /var/run/docker.sock:/var/run/docker.sock
 
     environment:
@@ -34,8 +35,13 @@ services:
       - SCRIPTBEE__ANALYSIS__DRIVER=docker
       - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
       - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/database/scriptbee
+      - SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER=/app/plugins
     depends_on:
       - mongo
+
+volumes:
+  scriptbee-plugins:
+  mongodb_data:
 ```
 
 ## How to run

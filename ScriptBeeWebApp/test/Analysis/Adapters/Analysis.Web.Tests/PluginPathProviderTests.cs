@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
-using ScriptBee.Analysis.Web.Config;
+using ScriptBee.Service.Analysis;
+using ScriptBee.Service.Analysis.Config;
 
 namespace ScriptBee.Analysis.Web.Tests;
 
@@ -17,19 +18,13 @@ public class PluginPathProviderTests
     }
 
     [Fact]
-    public void GivenNoInstallationFolder_WhenGetPluginPath_ThenReturnUserFolderPath()
+    public void GivenNoInstallationFolder_WhenGetPluginPath_ThenReturnsDefaultPath()
     {
-        var options = Options.Create(new PluginsSettings { InstallationFolder = null });
+        var options = Options.Create(new PluginsSettings());
 
         var pluginPathProvider = new PluginPathProvider(options);
         var path = pluginPathProvider.GetPathToPlugins();
 
-        path.ShouldBe(
-            Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                ".scriptbee",
-                "plugins"
-            )
-        );
+        path.ShouldBe("/app/plugins");
     }
 }

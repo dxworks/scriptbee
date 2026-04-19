@@ -166,7 +166,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
         result.AsT0.Linkers.Single().ShouldBe("linker-id");
         result
             .AsT0.InstalledPlugins.Single()
-            .ShouldBeEquivalentTo(new PluginInstallationConfig("plugin-id", "1.2.3"));
+            .ShouldBeEquivalentTo(new PluginInstallationConfig("plugin-id", new Version("1.2.3")));
     }
 
     [Fact]
@@ -244,7 +244,7 @@ public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFi
                 },
             },
             ["linker-id"],
-            [new PluginInstallationConfig("plugin-id", "1.2.3")]
+            [new PluginInstallationConfig("plugin-id", new Version("1.2.3"))]
         );
 
         var updateProject = await _adapter.Update(project, TestContext.Current.CancellationToken);

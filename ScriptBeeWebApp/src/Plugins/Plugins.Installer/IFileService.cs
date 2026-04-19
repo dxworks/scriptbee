@@ -2,10 +2,6 @@ namespace ScriptBee.Plugins.Installer;
 
 public interface IFileService
 {
-    string GetFileName(string path);
-
-    IEnumerable<string> GetDirectories(string path);
-
     bool DirectoryExists(string path);
 
     bool FileExists(string path);

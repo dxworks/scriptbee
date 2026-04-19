@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugin.Manifest;
+﻿using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 

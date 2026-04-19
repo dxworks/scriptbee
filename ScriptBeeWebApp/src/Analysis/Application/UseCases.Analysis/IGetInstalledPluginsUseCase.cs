@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugin;
+﻿using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.UseCases.Analysis;
 

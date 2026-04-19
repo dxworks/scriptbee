@@ -5,8 +5,8 @@ using ScriptBee.Application.Model.Sorting;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Service.Project.Analysis;
-using ScriptBee.UseCases.Project.Analysis;
+using ScriptBee.Service.Gateway.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 using ScriptBee.Web.Exceptions;
 

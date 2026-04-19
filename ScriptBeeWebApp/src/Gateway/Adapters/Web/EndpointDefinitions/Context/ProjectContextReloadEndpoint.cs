@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Service.Project.Context;
-using ScriptBee.UseCases.Project.Context;
+using ScriptBee.Service.Gateway.Context;
+using ScriptBee.UseCases.Gateway.Context;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;

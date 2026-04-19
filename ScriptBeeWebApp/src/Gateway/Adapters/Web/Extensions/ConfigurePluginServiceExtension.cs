@@ -1,6 +1,9 @@
-using ScriptBee.Plugins.Installer;
+using ScriptBee.Plugins;
+using ScriptBee.Plugins.Extensions;
 using ScriptBee.Plugins.Installer.Extensions;
 using ScriptBee.Plugins.Loader.Extensions;
+using ScriptBee.Service.Gateway.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.Config;
 using ScriptBee.Web.Services;
 
@@ -15,7 +18,9 @@ public static class ConfigurePluginServiceExtension
     {
         services.AddOptions<PluginsSettings>().BindConfiguration(pluginConfigurationSection);
         return services
+            .AddSingleton<IManagePluginsUseCase, PluginManager>()
             .AddSingleton<IPluginPathProvider, PluginPathProvider>()
+            .AddPluginReader()
             .AddPluginInstaller()
             .AddPluginLoader();
     }

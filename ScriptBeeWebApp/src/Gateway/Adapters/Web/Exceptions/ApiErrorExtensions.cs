@@ -110,7 +110,27 @@ public static class ApiErrorExtensions
         return TypedResults.NotFound(
             context.ToProblemDetails(
                 "Plugin Not Found",
-                $"A plugin with the ID '{error.PluginId}' does not exists."
+                $"A plugin with the ID '{error.Id.Name}' does not exists."
+            )
+        );
+    }
+
+    public static InternalServerError<ProblemDetails> ToProblem(
+        this PluginInstallationError error,
+        HttpContext context
+    )
+    {
+        var additionalMessage = error
+            .NestedPluginsThatCouldNotBeInstalled.Select(id =>
+                $"Nested plugin {id.Name} version '{id.Version}' could not be installed."
+            )
+            .Aggregate(" ", (s, s1) => s + s1)
+            .TrimEnd();
+
+        return TypedResults.InternalServerError(
+            context.ToProblemDetails(
+                "Plugin Installation Failed",
+                $"Could not install plugin {error.Id.Name} with version '{error.Id.Version}'.{additionalMessage}"
             )
         );
     }

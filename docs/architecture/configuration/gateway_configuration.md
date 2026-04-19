@@ -69,6 +69,13 @@
 > because the Gateway tells the Docker daemon to mount this path into the new analysis containers. If this is incorrect,
 > the analysis service will not be able to find your scripts or models.
 
+### `SCRIPTBEE__ANALYSIS__DOCKER__PLUGINSVOLUME`
+
+- **Type:** `string`
+- **Default:** `scriptbee-plugins`
+- **Description:** The name of the volume that will be created and shared for installing plugins. This will be mounted
+  in Analysis Service as a readonly path to access the plugins
+
 ## Instance Configuration
 
 ### `INSTANCE__POLLINGDELAYMILLISECONDS`

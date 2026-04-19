@@ -1,4 +1,5 @@
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -46,8 +47,7 @@ public sealed class InstallPluginAdapterTest : IDisposable
                 DateTimeOffset.Now,
                 AnalysisInstanceStatus.NotFound
             ),
-            "plugin-id",
-            "1.2.3",
+            new PluginId("plugin-id", new Version("1.2.3")),
             TestContext.Current.CancellationToken
         );
 

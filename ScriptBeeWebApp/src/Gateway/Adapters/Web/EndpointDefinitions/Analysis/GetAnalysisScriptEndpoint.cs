@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.ProjectStructure;
-using ScriptBee.Service.Project.Analysis;
-using ScriptBee.UseCases.Project.Analysis;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.Service.Gateway.Analysis;
+using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 

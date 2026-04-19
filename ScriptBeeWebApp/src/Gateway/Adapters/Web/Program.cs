@@ -29,8 +29,8 @@ builder
     .AddArtifactFileAdapters("UserFolder")
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
-    .AddScriptBeeMarketplaceClient()
     .AddInstallPluginsForAllocatedInstancesServices()
+    .AddScriptBeeMarketplaceClient()
     .AddPluginServices("ScriptBee:Plugins")
     .AddProjectLiveUpdates();
 
@@ -72,5 +72,10 @@ app.MapHub<ProjectLiveUpdatesHub>("/api/projectLiveUpdates");
 app.UseEndpointDefinitions();
 
 app.MapFallbackToFile("index.html");
+
+// TODO: install only gateway plugins at startup
+// var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
+//
+// pluginManager.LoadPlugins();
 
 app.Run();

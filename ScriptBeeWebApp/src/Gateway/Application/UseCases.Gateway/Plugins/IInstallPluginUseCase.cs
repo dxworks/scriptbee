@@ -1,0 +1,12 @@
+using OneOf;
+using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Project;
+
+namespace ScriptBee.UseCases.Gateway.Plugins;
+
+public interface IInstallPluginUseCase
+{
+    Task<
+        OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>
+    > InstallPluginAsync(InstallPluginCommand command, CancellationToken cancellationToken);
+}

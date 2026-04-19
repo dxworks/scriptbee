@@ -1,5 +1,5 @@
 ﻿using ScriptBee.Domain.Model.Project;
-using ScriptBee.UseCases.Project.ProjectStructure;
+using ScriptBee.UseCases.Gateway.ProjectStructure;
 
 namespace ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 

@@ -2,8 +2,8 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Plugins.Loader;
 
@@ -29,9 +29,9 @@ public class PluginRepository : IPluginRepository
     public void RegisterPlugin(Plugin plugin)
     {
         _plugins.AddOrUpdate(
-            plugin.Id,
+            plugin.Id.Name,
             plugin,
-            (_, manifest) => manifest.Version < plugin.Version ? plugin : manifest
+            (_, manifest) => manifest.Id.Version < plugin.Id.Version ? plugin : manifest
         );
     }
 
@@ -80,7 +80,7 @@ public class PluginRepository : IPluginRepository
 
     public Version? GetInstalledPluginVersion(string pluginId)
     {
-        return _plugins.TryGetValue(pluginId, out var plugin) ? plugin.Version : null;
+        return _plugins.TryGetValue(pluginId, out var plugin) ? plugin.Id.Version : null;
     }
 
     public IEnumerable<Plugin> GetLoadedPlugins()

@@ -1,6 +1,6 @@
 ﻿using NSubstitute;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
 
@@ -22,7 +22,7 @@ public class GetInstalledPluginsServiceTest
     {
         List<Plugin> expectedPlugins =
         [
-            new("folder", "id", new Version(1, 2, 3), new PluginManifest()),
+            new("folder", new PluginId("id", new Version(1, 2, 3)), new PluginManifest()),
         ];
         _pluginRepository.GetLoadedPlugins().Returns(expectedPlugins);
 

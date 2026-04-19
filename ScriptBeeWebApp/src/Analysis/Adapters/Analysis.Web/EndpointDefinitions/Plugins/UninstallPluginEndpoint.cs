@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
-using ScriptBee.Service.Plugin;
-using ScriptBee.UseCases.Plugin;
+using ScriptBee.Service.Analysis;
+using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins;
 

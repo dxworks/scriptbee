@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugin;
+﻿using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Rest.Contracts;
 
@@ -11,6 +11,6 @@ public class RestInstalledPlugin
 
     public Plugin Map()
     {
-        return new Plugin(FolderPath, Id, new Version(Version), Manifest.Map());
+        return new Plugin(FolderPath, new PluginId(Id, new Version(Version)), Manifest.Map());
     }
 }

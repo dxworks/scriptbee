@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
-using ScriptBee.Service.Project.Plugin;
-using ScriptBee.UseCases.Project.Plugin;
+using ScriptBee.Service.Gateway.Plugins;
+using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
@@ -31,7 +32,10 @@ public class UninstallPluginEndpoint : IEndpointDefinition
     )
     {
         var result = await uninstallPluginUseCase.UninstallPluginAsync(
-            new UninstallPluginCommand(ProjectId.FromValue(projectId), pluginId, version),
+            new UninstallPluginCommand(
+                ProjectId.FromValue(projectId),
+                new PluginId(pluginId, new Version(version))
+            ),
             cancellationToken
         );
 

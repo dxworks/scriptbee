@@ -6,8 +6,6 @@ using ScriptBee.Artifacts.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
-using ScriptBee.Marketplace.Client.Extensions;
-using ScriptBee.UseCases.Plugin;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,10 +22,6 @@ builder
     .AddCommonServices()
     .AddInstanceConfig(scriptBeeConfigurationSection)
     .AddMongoDb(mongoConnectionString)
-    .AddScriptBeeMarketplaceClient(options =>
-    {
-        options.HubDownloadFolder = Path.Combine(Path.GetTempPath(), "DxWorksHubDownloads");
-    })
     .AddArtifactFileAdapters("UserFolder")
     .AddPluginServices("ScriptBee:Plugins")
     .AddRunScriptServices();
@@ -64,9 +58,5 @@ app.UseExceptionEndpoint();
 app.UseEndpoints(_ => { });
 
 app.UseEndpointDefinitions();
-
-var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
-
-pluginManager.LoadPlugins();
 
 app.Run();

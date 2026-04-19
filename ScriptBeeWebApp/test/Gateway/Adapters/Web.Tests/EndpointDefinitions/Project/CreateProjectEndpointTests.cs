@@ -5,7 +5,7 @@ using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Project;
+using ScriptBee.UseCases.Gateway;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using static ScriptBee.Tests.Common.ProblemValidationUtils;
 using static ScriptBee.Tests.Common.ProjectDetailsFixture;

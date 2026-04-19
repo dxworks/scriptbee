@@ -1,13 +1,14 @@
 ﻿using OneOf;
+using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Installer;
 
 public interface ISimplePluginInstaller
 {
-    Task<OneOf<string, PluginVersionExistsError, PluginInstallationError>> Install(
+    Task<OneOf<string, PluginInstallationError>> Install(
         string url,
-        string pluginId,
-        string version,
+        PluginId pluginId,
         CancellationToken cancellationToken = default
     );
 }

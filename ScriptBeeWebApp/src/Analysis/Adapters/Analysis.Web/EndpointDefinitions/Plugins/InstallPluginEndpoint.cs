@@ -4,8 +4,9 @@ using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
-using ScriptBee.Service.Plugin;
-using ScriptBee.UseCases.Plugin;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Service.Analysis;
+using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins;
 
@@ -29,32 +30,30 @@ public class InstallPluginEndpoint : IEndpointDefinition
             .WithTags("Plugins");
     }
 
-    private static async Task<InstallResult> InstallPlugin(
+    private static InstallResult InstallPlugin(
         HttpContext context,
         [FromBody] WebInstallPluginCommand command,
-        IInstallPluginUseCase installPluginUseCase,
-        CancellationToken cancellationToken = default
+        IInstallPluginUseCase installPluginUseCase
     )
     {
-        var result = await installPluginUseCase.InstallPlugin(
-            command.PluginId,
-            command.Version,
-            cancellationToken
+        var result = installPluginUseCase.InstallPlugin(
+            new PluginId(command.PluginId, new Version(command.Version))
         );
+
         return result.Match<InstallResult>(
             _ => TypedResults.NoContent(),
             error =>
                 TypedResults.BadRequest(
                     context.ToProblemDetails(
                         "Plugin Installation Failed",
-                        $"Invalid plugin version: {error.Version} for {error.Name}"
+                        $"Invalid plugin version: {error.Id.Version} for {error.Id.Name}"
                     )
                 ),
             error =>
                 TypedResults.InternalServerError(
                     context.ToProblemDetails(
                         "Plugin Installation Failed",
-                        $"An error occurred while installing plugin {error.Name} version {error.Version}"
+                        $"An error occurred while installing plugin {error.Id.Name} version {error.Id.Version}"
                     )
                 )
         );

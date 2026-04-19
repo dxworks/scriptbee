@@ -1,5 +1,6 @@
 using Refit;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Rest.Api;
 
@@ -9,8 +10,7 @@ public class UninstallPluginAdapter(IHttpClientFactory httpClientFactory) : IUni
 {
     public async Task Uninstall(
         InstanceInfo instanceInfo,
-        string pluginId,
-        string pluginVersion,
+        PluginId pluginId,
         CancellationToken cancellationToken = default
     )
     {
@@ -19,6 +19,10 @@ public class UninstallPluginAdapter(IHttpClientFactory httpClientFactory) : IUni
 
         var pluginsApi = RestService.For<IPluginsApi>(client);
 
-        await pluginsApi.UninstallPlugin(pluginId, pluginVersion, cancellationToken);
+        await pluginsApi.UninstallPlugin(
+            pluginId.Name,
+            pluginId.Version.ToString(),
+            cancellationToken
+        );
     }
 }

@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugin;
+﻿using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 
@@ -13,8 +13,8 @@ public record WebInstalledPlugin(
     {
         return new WebInstalledPlugin(
             plugin.FolderPath,
-            plugin.Id,
-            plugin.Version.ToString(),
+            plugin.Id.Name,
+            plugin.Id.Version.ToString(),
             WebInstalledPluginManifest.Map(plugin.Manifest)
         );
     }

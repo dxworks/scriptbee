@@ -1,5 +1,5 @@
 ﻿using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Ports.Instance;
 
