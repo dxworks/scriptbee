@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Domain.Model.Plugin.MarketPlace;
+﻿namespace ScriptBee.Domain.Model.Plugins.MarketPlace;
 
 public record MarketPlacePlugin(
     string Id,

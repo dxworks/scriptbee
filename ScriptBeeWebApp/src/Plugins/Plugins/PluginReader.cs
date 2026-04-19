@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Plugins;
 
@@ -11,10 +11,9 @@ public class PluginReader(
 {
     private const string ManifestYaml = "manifest.yaml";
 
-    public Plugin? ReadPlugin(string pluginFolderPath, string pluginId, string version)
+    public Plugin? ReadPlugin(string pluginFolderPath, PluginId pluginId)
     {
-        var pluginName = PluginNameGenerator.GetPluginName(pluginId, version);
-        var pluginPath = Path.Combine(pluginFolderPath, pluginName);
+        var pluginPath = Path.Combine(pluginFolderPath, pluginId.GetFullyQualifiedName());
         return ReadPlugin(pluginPath);
     }
 
@@ -29,18 +28,16 @@ public class PluginReader(
             if (pluginManifest != null)
             {
                 var folderName = Path.GetFileName(pluginPath);
-                var (id, version) = PluginNameGenerator.GetPluginNameAndVersion(folderName);
-
-                if (id is null || version is null)
+                if (PluginId.TryParse(folderName, out var pluginId))
                 {
-                    logger.LogWarning(
-                        "Plugin {PluginDirectory} has invalid name or version",
-                        pluginPath
-                    );
-                    return null;
+                    return new Plugin(pluginPath, pluginId, pluginManifest);
                 }
 
-                return new Plugin(pluginPath, id, version, pluginManifest);
+                logger.LogWarning(
+                    "Plugin {PluginDirectory} has invalid name or version",
+                    pluginPath
+                );
+                return null;
             }
 
             logger.LogWarning("Manifest not found in {PluginDirectory}", pluginPath);

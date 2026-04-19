@@ -1,8 +1,8 @@
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.MarketPlace;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.MarketPlace;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Gateway.Plugins;
 

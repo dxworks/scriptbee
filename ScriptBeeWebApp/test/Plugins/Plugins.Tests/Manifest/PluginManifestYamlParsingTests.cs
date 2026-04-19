@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugin.Manifest;
+﻿using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Plugins.Tests.Manifest;

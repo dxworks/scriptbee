@@ -2,8 +2,8 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Analysis;
 
@@ -288,8 +288,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
     {
         return new Plugin(
             "folder",
-            "id",
-            new Version(1, 2, 3),
+            new PluginId("id", new Version(1, 2, 3)),
             new PluginManifest
             {
                 ApiVersion = "1.0.0",

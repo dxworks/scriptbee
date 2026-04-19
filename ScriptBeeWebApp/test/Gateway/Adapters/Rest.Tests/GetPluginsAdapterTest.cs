@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Domain.Model.Project;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -308,8 +308,8 @@ public sealed class GetPluginsAdapterTest : IDisposable
     private static void AssertPluginProperties(Plugin plugin)
     {
         plugin.FolderPath.ShouldBe("folder");
-        plugin.Id.ShouldBe("id");
-        plugin.Version.ShouldBe(new Version("1.2.3"));
+        plugin.Id.Name.ShouldBe("id");
+        plugin.Id.Version.ShouldBe(new Version("1.2.3"));
         plugin.Manifest.ApiVersion.ShouldBe("1.0.0");
         plugin.Manifest.Name.ShouldBe("name");
         plugin.Manifest.Author.ShouldBe("author");

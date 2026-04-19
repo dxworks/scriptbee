@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Gateway.Plugins;
@@ -50,9 +50,9 @@ public class PluginManagerTests
             .Returns(
                 new List<Plugin>
                 {
-                    new TestPlugin("id", new Version(0, 0, 0, 1)),
-                    new TestPlugin("id", new Version(0, 0, 0, 2)),
-                    new TestPlugin("id", new Version(0, 0, 0, 3)),
+                    new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1))),
+                    new TestPlugin(new PluginId("id", new Version(0, 0, 0, 2))),
+                    new TestPlugin(new PluginId("id", new Version(0, 0, 0, 3))),
                 }
             );
 
@@ -66,9 +66,9 @@ public class PluginManagerTests
     {
         var expectedException = new Exception("Test exception");
 
-        Plugin testPlugin1 = new TestPlugin("id", new Version(0, 0, 0, 1));
-        Plugin testPlugin2 = new TestPlugin("id", new Version(0, 0, 1, 1));
-        Plugin testPlugin3 = new TestPlugin("id", new Version(0, 0, 2, 1));
+        Plugin testPlugin1 = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
+        Plugin testPlugin2 = new TestPlugin(new PluginId("id", new Version(0, 0, 1, 1)));
+        Plugin testPlugin3 = new TestPlugin(new PluginId("id", new Version(0, 0, 2, 1)));
 
         _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _pluginReader

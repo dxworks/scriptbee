@@ -4,6 +4,7 @@ using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Validation;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Service.Analysis;
 using ScriptBee.UseCases.Analysis;
 
@@ -35,7 +36,9 @@ public class InstallPluginEndpoint : IEndpointDefinition
         IInstallPluginUseCase installPluginUseCase
     )
     {
-        var result = installPluginUseCase.InstallPlugin(command.PluginId, command.Version);
+        var result = installPluginUseCase.InstallPlugin(
+            new PluginId(command.PluginId, new Version(command.Version))
+        );
 
         return result.Match<InstallResult>(
             _ => TypedResults.NoContent(),
@@ -43,14 +46,14 @@ public class InstallPluginEndpoint : IEndpointDefinition
                 TypedResults.BadRequest(
                     context.ToProblemDetails(
                         "Plugin Installation Failed",
-                        $"Invalid plugin version: {error.Version} for {error.Name}"
+                        $"Invalid plugin version: {error.Id.Version} for {error.Id.Name}"
                     )
                 ),
             error =>
                 TypedResults.InternalServerError(
                     context.ToProblemDetails(
                         "Plugin Installation Failed",
-                        $"An error occurred while installing plugin {error.Name} version {error.Version}"
+                        $"An error occurred while installing plugin {error.Id.Name} version {error.Id.Version}"
                     )
                 )
         );

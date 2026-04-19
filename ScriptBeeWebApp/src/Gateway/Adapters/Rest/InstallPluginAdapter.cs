@@ -1,5 +1,6 @@
 using Refit;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Rest.Api;
 using ScriptBee.Rest.Contracts;
@@ -10,8 +11,7 @@ public class InstallPluginAdapter(IHttpClientFactory httpClientFactory) : IInsta
 {
     public async Task Install(
         InstanceInfo instanceInfo,
-        string pluginId,
-        string pluginVersion,
+        PluginId pluginId,
         CancellationToken cancellationToken
     )
     {
@@ -20,7 +20,11 @@ public class InstallPluginAdapter(IHttpClientFactory httpClientFactory) : IInsta
 
         var pluginsApi = RestService.For<IPluginsApi>(client);
 
-        var request = new RestInstallPlugin { PluginId = pluginId, Version = pluginVersion };
+        var request = new RestInstallPlugin
+        {
+            PluginId = pluginId.Name,
+            Version = pluginId.Version.ToString(),
+        };
         await pluginsApi.InstallPlugin(request, cancellationToken);
     }
 }

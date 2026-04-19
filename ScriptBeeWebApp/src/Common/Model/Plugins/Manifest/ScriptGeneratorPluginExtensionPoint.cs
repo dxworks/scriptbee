@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.Domain.Model.Plugin.Manifest;
+﻿namespace ScriptBee.Domain.Model.Plugins.Manifest;
 
 public class ScriptGeneratorPluginExtensionPoint : PluginExtensionPoint
 {

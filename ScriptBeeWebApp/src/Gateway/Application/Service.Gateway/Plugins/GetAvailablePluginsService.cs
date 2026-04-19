@@ -1,6 +1,6 @@
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
-using ScriptBee.Domain.Model.Plugin.MarketPlace;
+using ScriptBee.Domain.Model.Plugins.MarketPlace;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.UseCases.Gateway.Plugins;
 

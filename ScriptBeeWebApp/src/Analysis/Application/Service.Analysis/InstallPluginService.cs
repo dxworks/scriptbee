@@ -1,5 +1,6 @@
 using OneOf;
 using OneOf.Types;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Analysis;
@@ -14,21 +15,16 @@ public class InstallPluginService(
 ) : IInstallPluginUseCase
 {
     public OneOf<Success, InvalidPluginError, PluginInstallationError> InstallPlugin(
-        string pluginId,
-        string version
+        PluginId pluginId
     )
     {
         try
         {
-            var plugin = pluginReader.ReadPlugin(
-                pluginPathProvider.GetPathToPlugins(),
-                pluginId,
-                version
-            );
+            var plugin = pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(), pluginId);
 
             if (plugin is null)
             {
-                return new InvalidPluginError(pluginId, version);
+                return new InvalidPluginError(pluginId);
             }
 
             pluginLoader.Load(plugin);
@@ -36,7 +32,7 @@ public class InstallPluginService(
         }
         catch
         {
-            return new PluginInstallationError(pluginId, version);
+            return new PluginInstallationError(pluginId);
         }
     }
 }

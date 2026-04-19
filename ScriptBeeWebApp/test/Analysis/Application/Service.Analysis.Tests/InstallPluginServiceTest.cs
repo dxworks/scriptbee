@@ -1,8 +1,8 @@
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OneOf.Types;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
@@ -32,13 +32,12 @@ public class InstallPluginServiceTest
     [Fact]
     public void GivenPluginReadSuccessFully_ExpectPluginToBeLoaded()
     {
-        const string pluginId = "testPlugin";
-        const string version = "1.0.0";
-        var plugin = new Plugin("folder", "plugin-1", new Version(), new PluginManifest());
+        var pluginId = new PluginId("testPlugin", new Version("1.0.0"));
+        var plugin = new Plugin("folder", pluginId, new PluginManifest());
         _pluginPathProvider.GetPathToPlugins().Returns("plugins-path");
-        _pluginReader.ReadPlugin("plugins-path", pluginId, version).Returns(plugin);
+        _pluginReader.ReadPlugin("plugins-path", pluginId).Returns(plugin);
 
-        var result = _installPluginService.InstallPlugin(pluginId, version);
+        var result = _installPluginService.InstallPlugin(pluginId);
 
         result.AsT0.ShouldBe(new Success());
         _pluginLoader.Received(1).Load(plugin);
@@ -47,28 +46,26 @@ public class InstallPluginServiceTest
     [Fact]
     public void GivenPluginReadReturnsNull_ExpectInvalidPluginError()
     {
-        const string pluginId = "testPlugin";
-        const string version = "1.0.0";
+        var pluginId = new PluginId("testPlugin", new Version("1.0.0"));
         _pluginPathProvider.GetPathToPlugins().Returns("plugins-path");
-        _pluginReader.ReadPlugin("plugins-path", pluginId, version).Returns((Plugin?)null);
+        _pluginReader.ReadPlugin("plugins-path", pluginId).Returns((Plugin?)null);
 
-        var result = _installPluginService.InstallPlugin(pluginId, version);
+        var result = _installPluginService.InstallPlugin(pluginId);
 
-        result.AsT1.ShouldBe(new InvalidPluginError(pluginId, version));
+        result.AsT1.ShouldBe(new InvalidPluginError(pluginId));
         _pluginLoader.Received(0).Load(Arg.Any<Plugin>());
     }
 
     [Fact]
     public void GivenException_ExpectPluginInstallationError()
     {
-        const string pluginId = "testPlugin";
-        const string version = "1.0.0";
+        var pluginId = new PluginId("testPlugin", new Version("1.0.0"));
         _pluginPathProvider.GetPathToPlugins().Returns("plugins-path");
-        _pluginReader.ReadPlugin("plugins-path", pluginId, version).Throws(new Exception());
+        _pluginReader.ReadPlugin("plugins-path", pluginId).Throws(new Exception());
 
-        var result = _installPluginService.InstallPlugin(pluginId, version);
+        var result = _installPluginService.InstallPlugin(pluginId);
 
-        result.AsT2.ShouldBe(new PluginInstallationError(pluginId, version));
+        result.AsT2.ShouldBe(new PluginInstallationError(pluginId));
         _pluginLoader.Received(0).Load(Arg.Any<Plugin>());
     }
 }

@@ -1,6 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Plugins.Loader.Extensions;
 

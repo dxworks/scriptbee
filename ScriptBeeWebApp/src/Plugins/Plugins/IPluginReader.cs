@@ -1,10 +1,10 @@
-using ScriptBee.Domain.Model.Plugin;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins;
 
 public interface IPluginReader
 {
-    Plugin? ReadPlugin(string pluginFolderPath, string pluginId, string version);
+    Plugin? ReadPlugin(string pluginFolderPath, PluginId pluginId);
 
     Plugin? ReadPlugin(string pluginPath);
 

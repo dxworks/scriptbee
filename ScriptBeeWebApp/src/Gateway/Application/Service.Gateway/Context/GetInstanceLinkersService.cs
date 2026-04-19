@@ -1,6 +1,6 @@
 ﻿using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Ports.Instance;
 using ScriptBee.UseCases.Gateway.Context;
 
@@ -36,6 +36,6 @@ public class GetInstanceLinkersService(
                 point is LinkerPluginExtensionPoint
             )
             where linkerExtensionPoints.Any()
-            select new Linker(plugin.Id, plugin.Manifest.Name);
+            select new Linker(plugin.Id.Name, plugin.Manifest.Name);
     }
 }

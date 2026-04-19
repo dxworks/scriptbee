@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Instance.Allocation;
@@ -62,8 +63,7 @@ public sealed class InstallPluginsForNewlyAllocatedInstance(
 
             await installPlugin.Install(
                 instanceInfo,
-                plugin.PluginId,
-                plugin.Version,
+                new PluginId(plugin.PluginId, new Version(plugin.Version)),
                 cancellationToken
             );
 

@@ -1,3 +1,5 @@
+using ScriptBee.Domain.Model.Plugins;
+
 namespace ScriptBee.UseCases.Analysis.Errors;
 
-public sealed record PluginInstallationError(string Name, string Version);
+public sealed record PluginInstallationError(PluginId Id);

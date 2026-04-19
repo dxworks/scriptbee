@@ -3,8 +3,8 @@ using OneOf;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Service.Gateway.Context;
@@ -70,8 +70,7 @@ public class GetInstanceLoadersServiceTest
                 Task.FromResult<IEnumerable<Plugin>>([
                     new Plugin(
                         "folder",
-                        "loader-id",
-                        new Version(),
+                        new PluginId("loader-id", new Version()),
                         new PluginManifest
                         {
                             Name = "Loader",
@@ -80,8 +79,7 @@ public class GetInstanceLoadersServiceTest
                     ),
                     new Plugin(
                         "folder",
-                        "loader-id-multiple",
-                        new Version(),
+                        new PluginId("loader-id-multiple", new Version()),
                         new PluginManifest
                         {
                             Name = "Multiple Loaders",
@@ -94,8 +92,7 @@ public class GetInstanceLoadersServiceTest
                     ),
                     new Plugin(
                         "folder",
-                        "loader-id-without-extension-point",
-                        new Version(),
+                        new PluginId("loader-id-without-extension-point", new Version()),
                         new PluginManifest
                         {
                             Name = "Linker",

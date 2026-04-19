@@ -1,8 +1,11 @@
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Plugins.Installer;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Gateway.Plugins;
@@ -13,6 +16,9 @@ namespace ScriptBee.Service.Gateway.Tests.Plugins;
 
 public class InstallPluginServiceTests
 {
+    private readonly IBundlePluginInstaller _bundlePluginInstaller =
+        Substitute.For<IBundlePluginInstaller>();
+
     private readonly IInstallPlugin _installPlugin = Substitute.For<IInstallPlugin>();
     private readonly IGetProject _getProject = Substitute.For<IGetProject>();
 
@@ -21,15 +27,21 @@ public class InstallPluginServiceTests
 
     private readonly IUpdateProject _updateProject = Substitute.For<IUpdateProject>();
 
+    private readonly ILogger<InstallPluginService> _logger = Substitute.For<
+        ILogger<InstallPluginService>
+    >();
+
     private readonly InstallPluginService _installPluginService;
 
     public InstallPluginServiceTests()
     {
         _installPluginService = new InstallPluginService(
+            _bundlePluginInstaller,
             _installPlugin,
             _getProject,
             _getAllProjectInstances,
-            _updateProject
+            _updateProject,
+            _logger
         );
     }
 
@@ -76,12 +88,7 @@ public class InstallPluginServiceTests
         result.AsT0.ShouldBe(projectDetails);
         await _installPlugin
             .Received(0)
-            .Install(
-                Arg.Any<InstanceInfo>(),
-                Arg.Any<string>(),
-                Arg.Any<string>(),
-                Arg.Any<CancellationToken>()
-            );
+            .Install(Arg.Any<InstanceInfo>(), Arg.Any<PluginId>(), Arg.Any<CancellationToken>());
         await _updateProject
             .Received(0)
             .Update(Arg.Any<ProjectDetails>(), Arg.Any<CancellationToken>());
@@ -122,7 +129,11 @@ public class InstallPluginServiceTests
         result.AsT0.InstalledPlugins.ShouldBe(updatedProjectDetails.InstalledPlugins);
         await _installPlugin
             .Received(1)
-            .Install(instanceInfo, "pluginId", "1.2.3", Arg.Any<CancellationToken>());
+            .Install(
+                instanceInfo,
+                new PluginId("pluginId", new Version("1.2.3")),
+                Arg.Any<CancellationToken>()
+            );
         await _updateProject
             .Received(1)
             .Update(

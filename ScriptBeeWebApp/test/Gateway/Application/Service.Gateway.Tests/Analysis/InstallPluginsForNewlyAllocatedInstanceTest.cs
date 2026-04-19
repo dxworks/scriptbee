@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Instance.Allocation;
@@ -41,7 +42,7 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
         var projectId = ProjectId.FromValue("project-id");
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId) with
         {
-            InstalledPlugins = [new PluginInstallationConfig("plugin-id", "version")],
+            InstalledPlugins = [new PluginInstallationConfig("plugin-id", "1.2.3")],
         };
         var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(projectId);
 
@@ -59,7 +60,11 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
         // Assert
         await _installPlugin
             .Received(1)
-            .Install(instanceInfo, "plugin-id", "version", Arg.Any<CancellationToken>());
+            .Install(
+                instanceInfo,
+                new PluginId("plugin-id", new Version("1.2.3")),
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -87,11 +92,6 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
         // Assert
         await _installPlugin
             .Received(0)
-            .Install(
-                Arg.Any<InstanceInfo>(),
-                Arg.Any<string>(),
-                Arg.Any<string>(),
-                Arg.Any<CancellationToken>()
-            );
+            .Install(Arg.Any<InstanceInfo>(), Arg.Any<PluginId>(), Arg.Any<CancellationToken>());
     }
 }

@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugin.Manifest;
+﻿using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Tests.Common.Plugin;
 
@@ -6,15 +6,15 @@ public static class PluginUtils
 {
     public sealed record TestBundlePlugin(string Kind, string Id, string Version);
 
-    public static Domain.Model.Plugin.Plugin CreateBundlePlugin(
-        string bundleId,
+    public static Domain.Model.Plugins.Plugin CreateBundlePlugin(
+        string bundleName,
         string bundleVersion,
         params TestBundlePlugin[] plugins
     )
     {
-        var plugin = new TestPlugin(bundleId, new Version(bundleVersion))
+        var plugin = new TestPlugin(new PluginId(bundleName, new Version(bundleVersion)))
         {
-            Manifest = { ExtensionPoints = new List<PluginExtensionPoint>() },
+            Manifest = { ExtensionPoints = [] },
         };
 
         foreach (var (kind, id, version) in plugins)

@@ -1,6 +1,6 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api;
-using ScriptBee.Domain.Model.Plugin;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Plugins.Loader.Tests;
 
