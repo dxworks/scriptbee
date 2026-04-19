@@ -9,7 +9,6 @@ using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Services;
 using ScriptBee.Marketplace.Client.Extensions;
 using ScriptBee.Rest.Extensions;
-using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;
 using Serilog;
@@ -74,8 +73,9 @@ app.UseEndpointDefinitions();
 
 app.MapFallbackToFile("index.html");
 
-var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
-
-pluginManager.LoadPlugins();
+// TODO: install only gateway plugins at startup
+// var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
+//
+// pluginManager.LoadPlugins();
 
 app.Run();
