@@ -1,5 +1,6 @@
 using NSubstitute;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.Service.Gateway.Plugins;
@@ -92,6 +93,6 @@ public class GetAvailablePluginsServiceTest
         );
 
         result.IsT1.ShouldBeTrue();
-        result.AsT1.ShouldBe(new PluginNotFoundError("id2"));
+        result.AsT1.ShouldBe(new PluginNotFoundError(new PluginId("id2", new Version())));
     }
 }

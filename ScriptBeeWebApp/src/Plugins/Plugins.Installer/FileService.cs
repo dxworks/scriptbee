@@ -2,23 +2,6 @@ namespace ScriptBee.Plugins.Installer;
 
 public sealed class FileService : IFileService
 {
-    public string GetFileName(string path)
-    {
-        return Path.GetFileName(path);
-    }
-
-    public IEnumerable<string> GetDirectories(string path)
-    {
-        try
-        {
-            return Directory.GetDirectories(path);
-        }
-        catch
-        {
-            return new List<string>();
-        }
-    }
-
     public bool DirectoryExists(string path)
     {
         return Directory.Exists(path);

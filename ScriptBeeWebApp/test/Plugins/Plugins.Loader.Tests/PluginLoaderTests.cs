@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Tests.Common.Plugin;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Tests.Common.Plugins;
 
 namespace ScriptBee.Plugins.Loader.Tests;
 
@@ -30,7 +31,7 @@ public class PluginLoaderTests
     public void GivenUnregisteredPlugin_WhenLoad_ThenMessageIsLogged()
     {
         HashSet<Type>? nullTypes = null;
-        var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
+        var plugin = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
         plugin.Manifest.ExtensionPoints[0].Kind = "kind";
         plugin.Manifest.ExtensionPoints[0].EntryPoint = "entryPoint";
         _pluginRegistrationService
@@ -57,7 +58,7 @@ public class PluginLoaderTests
     public void GivenRegisteredPluginWithNoAcceptedTypes_WhenLoad_ThenPluginManifestIsLoaded()
     {
         var acceptedTypes = new HashSet<Type>();
-        var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
+        var plugin = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
         var entryPoint = Path.Combine(
             plugin.FolderPath,
             plugin.Manifest.ExtensionPoints[0].EntryPoint
@@ -82,7 +83,7 @@ public class PluginLoaderTests
     public void GivenRegisteredPluginWithMultipleAcceptedTypes_WhenLoad_ThenPluginManifestIsLoaded()
     {
         var acceptedTypes = new HashSet<Type> { typeof(string), typeof(object) };
-        var plugin = new TestPlugin("id", new Version(0, 0, 0, 1));
+        var plugin = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
         var entryPoint = Path.Combine(
             plugin.FolderPath,
             plugin.Manifest.ExtensionPoints[0].EntryPoint

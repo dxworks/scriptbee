@@ -8,7 +8,7 @@ public sealed record WebInstalledPlugin(string Id, string Version)
     {
         return new WebInstalledPlugin(
             pluginInstallationConfig.PluginId,
-            pluginInstallationConfig.Version
+            pluginInstallationConfig.Version.ToString()
         );
     }
 }

@@ -4,7 +4,7 @@ using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Gateway.Plugins;
-using ScriptBee.Tests.Common.Plugin;
+using ScriptBee.Tests.Common.Plugins;
 
 namespace ScriptBee.Service.Gateway.Tests.Plugins;
 

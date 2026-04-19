@@ -1,5 +1,6 @@
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
 using ScriptBee.Marketplace.Client;
 using ScriptBee.UseCases.Gateway.Plugins;
@@ -24,6 +25,8 @@ public class GetAvailablePluginsService(IMarketPluginFetcher marketPluginFetcher
         var plugins = await marketPluginFetcher.GetProjectsAsync(cancellationToken);
         var marketPlacePlugin = plugins.FirstOrDefault(plugin => plugin.Id == pluginId);
 
-        return marketPlacePlugin is null ? new PluginNotFoundError(pluginId) : marketPlacePlugin;
+        return marketPlacePlugin is null
+            ? new PluginNotFoundError(new PluginId(pluginId, new Version()))
+            : marketPlacePlugin;
     }
 }

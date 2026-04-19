@@ -58,7 +58,7 @@ public class InstallPluginServiceTests
             );
 
         var result = await _installPluginService.InstallPluginAsync(
-            new InstallPluginCommand(projectId, "pluginId", "1.2.3"),
+            new InstallPluginCommand(projectId, new PluginId("pluginId", new Version("1.2.3"))),
             TestContext.Current.CancellationToken
         );
 
@@ -71,7 +71,7 @@ public class InstallPluginServiceTests
         var projectId = ProjectId.FromValue("project-id");
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId) with
         {
-            InstalledPlugins = [new PluginInstallationConfig("pluginId", "1.2.3")],
+            InstalledPlugins = [new PluginInstallationConfig("pluginId", new Version("1.2.3"))],
         };
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -80,7 +80,7 @@ public class InstallPluginServiceTests
             );
 
         var result = await _installPluginService.InstallPluginAsync(
-            new InstallPluginCommand(projectId, "pluginId", "1.2.3"),
+            new InstallPluginCommand(projectId, new PluginId("pluginId", new Version("1.2.3"))),
             TestContext.Current.CancellationToken
         );
 
@@ -99,10 +99,16 @@ public class InstallPluginServiceTests
     {
         // Arrange
         var projectId = ProjectId.FromValue("project-id");
+        var pluginId = new PluginId("pluginId", new Version("1.2.3"));
+        var nestedPluginId = new PluginId("nested-pluginId", new Version("1.0.0"));
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId);
         var updatedProjectDetails = projectDetails with
         {
-            InstalledPlugins = [new PluginInstallationConfig("pluginId", "1.2.3")],
+            InstalledPlugins =
+            [
+                new PluginInstallationConfig("pluginId", new Version("1.2.3")),
+                new PluginInstallationConfig("nested-pluginId", new Version("1.0.0")),
+            ],
         };
         var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(projectId);
 
@@ -114,13 +120,16 @@ public class InstallPluginServiceTests
         _getAllProjectInstances
             .GetAll(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<InstanceInfo> { instanceInfo });
+        _bundlePluginInstaller
+            .Install(pluginId, Arg.Any<CancellationToken>())
+            .Returns(new List<PluginId> { pluginId, nestedPluginId });
         _updateProject
             .Update(Arg.Any<ProjectDetails>(), Arg.Any<CancellationToken>())
             .Returns(updatedProjectDetails);
 
         // Act
         var result = await _installPluginService.InstallPluginAsync(
-            new InstallPluginCommand(projectId, "pluginId", "1.2.3"),
+            new InstallPluginCommand(projectId, pluginId),
             TestContext.Current.CancellationToken
         );
 
@@ -129,11 +138,10 @@ public class InstallPluginServiceTests
         result.AsT0.InstalledPlugins.ShouldBe(updatedProjectDetails.InstalledPlugins);
         await _installPlugin
             .Received(1)
-            .Install(
-                instanceInfo,
-                new PluginId("pluginId", new Version("1.2.3")),
-                Arg.Any<CancellationToken>()
-            );
+            .Install(instanceInfo, pluginId, Arg.Any<CancellationToken>());
+        await _installPlugin
+            .Received(1)
+            .Install(instanceInfo, nestedPluginId, Arg.Any<CancellationToken>());
         await _updateProject
             .Received(1)
             .Update(

@@ -63,7 +63,7 @@ public sealed class InstallPluginsForNewlyAllocatedInstance(
 
             await installPlugin.Install(
                 instanceInfo,
-                new PluginId(plugin.PluginId, new Version(plugin.Version)),
+                new PluginId(plugin.PluginId, plugin.Version),
                 cancellationToken
             );
 

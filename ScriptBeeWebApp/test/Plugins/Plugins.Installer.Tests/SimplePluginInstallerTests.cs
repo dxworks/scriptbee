@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Installer.Tests;
 
@@ -7,8 +8,10 @@ public class SimplePluginInstallerTests
 {
     private readonly IDownloadService _downloadService = Substitute.For<IDownloadService>();
     private readonly IFileService _fileService = Substitute.For<IFileService>();
+
     private readonly IPluginPathProvider _pluginPathProvider =
         Substitute.For<IPluginPathProvider>();
+
     private readonly IZipFileService _zipFileService = Substitute.For<IZipFileService>();
 
     private readonly ILogger<SimplePluginInstaller> _logger = Substitute.For<
@@ -34,8 +37,7 @@ public class SimplePluginInstallerTests
         _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
@@ -62,15 +64,14 @@ public class SimplePluginInstallerTests
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBeTrue();
-        var error = result.AsT2;
-        error.Name.ShouldBe("pluginName");
-        error.Version.ShouldBe("1.0.0");
+        result.IsT1.ShouldBeTrue();
+        var error = result.AsT1;
+        error.Id.Name.ShouldBe("pluginName");
+        error.Id.Version.ShouldBe(new Version("1.0.0"));
         _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
         _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
     }
@@ -95,15 +96,14 @@ public class SimplePluginInstallerTests
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBeTrue();
-        var error = result.AsT2;
-        error.Name.ShouldBe("pluginName");
-        error.Version.ShouldBe("1.0.0");
+        result.IsT1.ShouldBeTrue();
+        var error = result.AsT1;
+        error.Id.Name.ShouldBe("pluginName");
+        error.Id.Version.ShouldBe(new Version("1.0.0"));
         _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
         _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
     }
@@ -124,15 +124,14 @@ public class SimplePluginInstallerTests
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
-        result.IsT2.ShouldBeTrue();
-        var error = result.AsT2;
-        error.Name.ShouldBe("pluginName");
-        error.Version.ShouldBe("1.0.0");
+        result.IsT1.ShouldBeTrue();
+        var error = result.AsT1;
+        error.Id.Name.ShouldBe("pluginName");
+        error.Id.Version.ShouldBe(new Version("1.0.0"));
         await _downloadService
             .Received(1)
             .DownloadFileAsync("url", "path/pluginName@1.0.0.zip", Arg.Any<CancellationToken>());
@@ -150,8 +149,7 @@ public class SimplePluginInstallerTests
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
@@ -171,7 +169,7 @@ public class SimplePluginInstallerTests
     }
 
     [Fact]
-    public async Task GivenExistingPluginWithTheSameVersion_WhenInstall_ThenReturnsPluginVersionExistsError()
+    public async Task GivenExistingPluginWithTheSameVersion_WhenInstall_ThenReturnSuccess()
     {
         _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
         _fileService
@@ -181,15 +179,12 @@ public class SimplePluginInstallerTests
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
-        result.IsT1.ShouldBeTrue();
-        var error = result.AsT1;
-        error.Name.ShouldBe("pluginName");
-        error.Version.ShouldBe("1.0.0");
+        result.IsT0.ShouldBeTrue();
+        result.AsT0.ShouldBe("path/pluginName@1.0.0");
         await _downloadService
             .Received(0)
             .DownloadFileAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
@@ -205,8 +200,7 @@ public class SimplePluginInstallerTests
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            "pluginName",
-            "1.0.0",
+            new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 

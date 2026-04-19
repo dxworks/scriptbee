@@ -1,5 +1,6 @@
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
@@ -10,7 +11,7 @@ namespace ScriptBee.Service.Gateway.Plugins;
 using UninstallResult = OneOf<ProjectDetails, ProjectDoesNotExistsError>;
 
 public class UninstallPluginService(
-    IUninstallPlugin installPlugin,
+    IUninstallPlugin uninstallPlugin,
     IGetProject getProject,
     IGetAllProjectInstances getAllProjectInstances,
     IUpdateProject updateProject
@@ -37,19 +38,15 @@ public class UninstallPluginService(
     {
         if (
             !projectDetails.InstalledPlugins.Any(plugin =>
-                plugin.PluginId == command.PluginId && plugin.Version == command.PluginVersion
+                plugin.PluginId == command.PluginId.Name
+                && plugin.Version == command.PluginId.Version
             )
         )
         {
             return projectDetails;
         }
 
-        await UninstallPluginToAllInstances(
-            command.ProjectId,
-            command.PluginId,
-            command.PluginVersion,
-            cancellationToken
-        );
+        await UninstallPluginToAllInstances(command.ProjectId, command.PluginId, cancellationToken);
 
         return await UpdateProjectDetailsWithPlugin(projectDetails, command, cancellationToken);
     }
@@ -63,7 +60,8 @@ public class UninstallPluginService(
         projectDetails = projectDetails with
         {
             InstalledPlugins = projectDetails.InstalledPlugins.Where(config =>
-                config.PluginId != command.PluginId || config.Version != command.PluginVersion
+                config.PluginId != command.PluginId.Name
+                || config.Version != command.PluginId.Version
             ),
         };
 
@@ -72,8 +70,7 @@ public class UninstallPluginService(
 
     private async Task UninstallPluginToAllInstances(
         ProjectId projectId,
-        string pluginId,
-        string pluginVersion,
+        PluginId pluginId,
         CancellationToken cancellationToken
     )
     {
@@ -81,7 +78,7 @@ public class UninstallPluginService(
 
         foreach (var instanceInfo in instances)
         {
-            await installPlugin.Uninstall(instanceInfo, pluginId, pluginVersion, cancellationToken);
+            await uninstallPlugin.Uninstall(instanceInfo, pluginId, cancellationToken);
         }
     }
 }

@@ -2,6 +2,7 @@ using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Project;
@@ -46,7 +47,7 @@ public class UninstallPluginServiceTests
             );
 
         var result = await _uninstallPluginService.UninstallPluginAsync(
-            new UninstallPluginCommand(projectId, "pluginId", "1.2.3"),
+            new UninstallPluginCommand(projectId, new PluginId("pluginId", new Version("1.2.3"))),
             TestContext.Current.CancellationToken
         );
 
@@ -65,7 +66,7 @@ public class UninstallPluginServiceTests
         var projectId = ProjectId.FromValue("project-id");
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId) with
         {
-            InstalledPlugins = [new PluginInstallationConfig(pluginId, pluginVersion)],
+            InstalledPlugins = [new PluginInstallationConfig(pluginId, new Version(pluginVersion))],
         };
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -74,7 +75,7 @@ public class UninstallPluginServiceTests
             );
 
         var result = await _uninstallPluginService.UninstallPluginAsync(
-            new UninstallPluginCommand(projectId, "pluginId", "1.2.3"),
+            new UninstallPluginCommand(projectId, new PluginId("pluginId", new Version("1.2.3"))),
             TestContext.Current.CancellationToken
         );
 
@@ -82,12 +83,7 @@ public class UninstallPluginServiceTests
         result.AsT0.ShouldBe(projectDetails);
         await _uninstallPlugin
             .Received(0)
-            .Uninstall(
-                Arg.Any<InstanceInfo>(),
-                Arg.Any<string>(),
-                Arg.Any<string>(),
-                Arg.Any<CancellationToken>()
-            );
+            .Uninstall(Arg.Any<InstanceInfo>(), Arg.Any<PluginId>(), Arg.Any<CancellationToken>());
         await _updateProject
             .Received(0)
             .Update(Arg.Any<ProjectDetails>(), Arg.Any<CancellationToken>());
@@ -98,17 +94,18 @@ public class UninstallPluginServiceTests
     {
         // Arrange
         var projectId = ProjectId.FromValue("project-id");
+        var pluginId = new PluginId("pluginId", new Version("1.2.3"));
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId) with
         {
             InstalledPlugins =
             [
-                new PluginInstallationConfig("pluginId", "1.2.3"),
-                new PluginInstallationConfig("other", "1.5.1"),
+                new PluginInstallationConfig("pluginId", new Version("1.2.3")),
+                new PluginInstallationConfig("other", new Version("1.5.1")),
             ],
         };
         var updatedProjectDetails = projectDetails with
         {
-            InstalledPlugins = [new PluginInstallationConfig("other", "1.5.1")],
+            InstalledPlugins = [new PluginInstallationConfig("other", new Version("1.5.1"))],
         };
         var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(projectId);
 
@@ -126,7 +123,7 @@ public class UninstallPluginServiceTests
 
         // Act
         var result = await _uninstallPluginService.UninstallPluginAsync(
-            new UninstallPluginCommand(projectId, "pluginId", "1.2.3"),
+            new UninstallPluginCommand(projectId, pluginId),
             TestContext.Current.CancellationToken
         );
 
@@ -135,7 +132,7 @@ public class UninstallPluginServiceTests
         result.AsT0.InstalledPlugins.ShouldBe(updatedProjectDetails.InstalledPlugins);
         await _uninstallPlugin
             .Received(1)
-            .Uninstall(instanceInfo, "pluginId", "1.2.3", Arg.Any<CancellationToken>());
+            .Uninstall(instanceInfo, pluginId, Arg.Any<CancellationToken>());
         await _updateProject
             .Received(1)
             .Update(

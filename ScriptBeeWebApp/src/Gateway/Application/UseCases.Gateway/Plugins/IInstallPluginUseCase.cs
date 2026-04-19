@@ -6,8 +6,7 @@ namespace ScriptBee.UseCases.Gateway.Plugins;
 
 public interface IInstallPluginUseCase
 {
-    Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> InstallPluginAsync(
-        InstallPluginCommand command,
-        CancellationToken cancellationToken = default
-    );
+    Task<
+        OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>
+    > InstallPluginAsync(InstallPluginCommand command, CancellationToken cancellationToken);
 }

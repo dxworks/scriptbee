@@ -13,6 +13,8 @@ public class PluginIdTests
     }
 
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
     [InlineData("pluginId")]
     [InlineData("pluginId@")]
     [InlineData("pluginId@xxaa")]
@@ -21,7 +23,7 @@ public class PluginIdTests
     [InlineData("  @1.0.0")]
     [InlineData("\t@\t")]
     [InlineData("\t@4.2.0.1")]
-    public void GivenInvalidFolderNane_WhenTryParse_ThenNullIsReturned(string folderName)
+    public void GivenInvalidFolderNane_WhenTryParse_ThenNullIsReturned(string? folderName)
     {
         var result = PluginId.TryParse(folderName, out var pluginInfo);
 

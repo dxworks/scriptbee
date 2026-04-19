@@ -128,7 +128,7 @@ public class PluginRepositoryTests
         var plugins = _repository.GetLoadedPlugins("testKind").ToList();
 
         Assert.Single(plugins);
-        Assert.Equal("testId1", plugins.First().Id);
+        Assert.Equal("testId1", plugins.First().Id.Name);
     }
 
     [Fact]
@@ -181,8 +181,7 @@ public class PluginRepositoryTests
     {
         return new Plugin(
             "test/path",
-            id,
-            version,
+            new PluginId(id, version),
             new PluginManifest { Name = id, ExtensionPoints = extensionPoints.ToList() }
         );
     }

@@ -42,7 +42,7 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
         var projectId = ProjectId.FromValue("project-id");
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId) with
         {
-            InstalledPlugins = [new PluginInstallationConfig("plugin-id", "1.2.3")],
+            InstalledPlugins = [new PluginInstallationConfig("plugin-id", new Version("1.2.3"))],
         };
         var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(projectId);
 
@@ -74,7 +74,7 @@ public class InstallPluginsForNewlyAllocatedInstanceTest
         var projectId = ProjectId.FromValue("project-id");
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId) with
         {
-            InstalledPlugins = [new PluginInstallationConfig("plugin-id", "version")],
+            InstalledPlugins = [new PluginInstallationConfig("plugin-id", new Version("4.2.1"))],
         };
         var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(projectId);
 

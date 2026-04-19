@@ -63,7 +63,7 @@ public class GetAvailablePluginByIdEndpointTest(ITestOutputHelper outputHelper)
             .GetMarketPlugin("plugin-id", Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<MarketPlacePlugin, PluginNotFoundError>>(
-                    new PluginNotFoundError("plugin-id")
+                    new PluginNotFoundError(new PluginId("plugin-id", new Version()))
                 )
             );
 

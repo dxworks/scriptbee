@@ -1,6 +1,6 @@
 namespace ScriptBee.Plugins.Installer;
 
-public sealed class DownloadService(HttpClient httpClient) : IDownloadService
+internal sealed class DownloadService(HttpClient httpClient) : IDownloadService
 {
     public Task DownloadFileAsync(
         string url,

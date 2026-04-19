@@ -9,9 +9,14 @@ public record PluginId(string Name, Version Version)
         return $"{Name}@{Version}";
     }
 
-    public static bool TryParse(string folderName, [NotNullWhen(true)] out PluginId? pluginInfo)
+    public static bool TryParse(string? folderName, [NotNullWhen(true)] out PluginId? pluginInfo)
     {
         pluginInfo = null;
+        if (string.IsNullOrWhiteSpace(folderName))
+        {
+            return false;
+        }
+
         var lastIndexOfDelimiter = folderName.LastIndexOf('@');
 
         if (lastIndexOfDelimiter == -1)

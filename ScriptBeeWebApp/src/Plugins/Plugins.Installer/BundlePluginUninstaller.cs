@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using ScriptBee.Domain.Model.Plugin.Manifest;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Installer;
 
@@ -11,26 +11,18 @@ public class BundlePluginUninstaller(
     ILogger<BundlePluginUninstaller> logger
 ) : IBundlePluginUninstaller
 {
-    public List<(string PluginId, string Version)> Uninstall(string pluginId, string version)
+    public List<PluginId> Uninstall(PluginId pluginId)
     {
         logger.LogInformation(
-            "Uninstalling plugin {PluginId} version {Version}",
-            pluginId,
-            version
+            "Uninstalling plugin {PluginName} version {Version}",
+            pluginId.Name,
+            pluginId.Version
         );
 
-        return UninstallBundle(pluginId, version);
-    }
-
-    private List<(string PluginId, string Version)> UninstallBundle(string bundleId, string version)
-    {
-        var bundleFolder = GetPluginPath(bundleId, version);
+        var bundleFolder = GetPluginPath(pluginId);
 
         pluginUninstaller.Uninstall(bundleFolder);
-        var uninstalledVersions = new List<(string PluginId, string Version)>
-        {
-            (bundleId, version),
-        };
+        var uninstalledVersions = new List<PluginId> { pluginId };
 
         var plugin = pluginReader.ReadPlugin(bundleFolder);
         if (plugin is null)
@@ -38,30 +30,23 @@ public class BundlePluginUninstaller(
             return uninstalledVersions;
         }
 
-        foreach (var extensionPoint in GetPluginExtensionPoints(bundleFolder))
+        foreach (
+            var id in BundleExtensionPointUtils.GetPluginExtensionPointsIds(
+                pluginReader,
+                bundleFolder
+            )
+        )
         {
-            var versions = UninstallBundle(extensionPoint.EntryPoint, extensionPoint.Version);
+            var versions = Uninstall(id);
             uninstalledVersions.AddRange(versions);
         }
 
         return uninstalledVersions;
     }
 
-    private string GetPluginPath(string pluginId, string version)
+    private string GetPluginPath(PluginId pluginId)
     {
-        var pluginName = PluginNameGenerator.GetPluginName(pluginId, version);
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        return fileService.CombinePaths(pluginFolderPath, pluginName);
-    }
-
-    private IEnumerable<PluginExtensionPoint> GetPluginExtensionPoints(string bundleFolder)
-    {
-        var installedBundle = pluginReader.ReadPlugin(bundleFolder);
-
-        return installedBundle is null
-            ? []
-            : installedBundle.Manifest.ExtensionPoints.Where(point =>
-                point.Kind == PluginKind.Plugin
-            );
+        return fileService.CombinePaths(pluginFolderPath, pluginId.GetFullyQualifiedName());
     }
 }

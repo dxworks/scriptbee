@@ -1,12 +1,12 @@
 ﻿using ScriptBee.Domain.Model.Plugins;
 
-namespace ScriptBee.Tests.Common.Plugin;
+namespace ScriptBee.Tests.Common.Plugins;
 
 public static class PluginUtils
 {
     public sealed record TestBundlePlugin(string Kind, string Id, string Version);
 
-    public static Domain.Model.Plugins.Plugin CreateBundlePlugin(
+    public static Plugin CreateBundlePlugin(
         string bundleName,
         string bundleVersion,
         params TestBundlePlugin[] plugins

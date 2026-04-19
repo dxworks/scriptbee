@@ -1,4 +1,5 @@
 using ScriptBee.Domain.Model.Instance;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Ports.Instance;
 
@@ -6,8 +7,7 @@ public interface IUninstallPlugin
 {
     Task Uninstall(
         InstanceInfo instanceInfo,
-        string pluginId,
-        string pluginVersion,
+        PluginId pluginId,
         CancellationToken cancellationToken = default
     );
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Gateway.Plugins;
@@ -41,11 +42,16 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId);
         useCase
             .InstallPluginAsync(
-                new InstallPluginCommand(projectId, "plugin-id", "1.2.3"),
+                new InstallPluginCommand(
+                    projectId,
+                    new PluginId("plugin-id", new Version("1.2.3"))
+                ),
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
+                Task.FromResult<
+                    OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>
+                >(projectDetails)
             );
 
         // Act
@@ -71,13 +77,16 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IInstallPluginUseCase>();
         useCase
             .InstallPluginAsync(
-                new InstallPluginCommand(projectId, "plugin-id", "1.2.3"),
+                new InstallPluginCommand(
+                    projectId,
+                    new PluginId("plugin-id", new Version("1.2.3"))
+                ),
                 Arg.Any<CancellationToken>()
             )
             .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    new ProjectDoesNotExistsError(projectId)
-                )
+                Task.FromResult<
+                    OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>
+                >(new ProjectDoesNotExistsError(projectId))
             );
 
         TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
@@ -92,5 +101,93 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl);
+    }
+
+    [Fact]
+    public async Task GivenPluginInstallationError_WithoutAdditionalErrors_ShouldReturnError()
+    {
+        var projectId = ProjectId.FromValue("project-id");
+        var useCase = Substitute.For<IInstallPluginUseCase>();
+        var pluginId = new PluginId("plugin-id", new Version("1.2.3"));
+        useCase
+            .InstallPluginAsync(
+                new InstallPluginCommand(
+                    projectId,
+                    new PluginId("plugin-id", new Version("1.2.3"))
+                ),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<
+                    OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>
+                >(new PluginInstallationError(pluginId, []))
+            );
+
+        TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
+        var response = await api.PutApi<object>(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+        await AssertInternalServerErrorProblem(
+            response.Content,
+            TestUrl,
+            "Plugin Installation Failed",
+            "Could not install plugin plugin-id with version '1.2.3'."
+        );
+    }
+
+    [Fact]
+    public async Task GivenPluginInstallationError_WithAdditionalErrors_ShouldReturnError()
+    {
+        var projectId = ProjectId.FromValue("project-id");
+        var useCase = Substitute.For<IInstallPluginUseCase>();
+        var pluginId = new PluginId("plugin-id", new Version("1.2.3"));
+        useCase
+            .InstallPluginAsync(
+                new InstallPluginCommand(
+                    projectId,
+                    new PluginId("plugin-id", new Version("1.2.3"))
+                ),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult<
+                    OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>
+                >(
+                    new PluginInstallationError(
+                        pluginId,
+                        [
+                            new PluginId("internal-1", new Version("1.0.0")),
+                            new PluginId("internal-2", new Version("1.2.3")),
+                        ]
+                    )
+                )
+            );
+
+        TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
+        var response = await api.PutApi<object>(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+        await AssertInternalServerErrorProblem(
+            response.Content,
+            TestUrl,
+            "Plugin Installation Failed",
+            "Could not install plugin plugin-id with version '1.2.3'. Nested plugin internal-1 version '1.0.0' could not be installed.Nested plugin internal-2 version '1.2.3' could not be installed."
+        );
     }
 }

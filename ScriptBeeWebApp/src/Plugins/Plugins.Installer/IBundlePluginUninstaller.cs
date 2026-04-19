@@ -1,6 +1,8 @@
-﻿namespace ScriptBee.Plugins.Installer;
+﻿using ScriptBee.Domain.Model.Plugins;
+
+namespace ScriptBee.Plugins.Installer;
 
 public interface IBundlePluginUninstaller
 {
-    List<(string PluginId, string Version)> Uninstall(string pluginId, string version);
+    List<PluginId> Uninstall(PluginId pluginId);
 }

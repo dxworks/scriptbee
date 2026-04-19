@@ -1,6 +1,6 @@
 ﻿using DxWorks.ScriptBee.Plugin.Api;
 
-namespace ScriptBee.Tests.Common.Plugin;
+namespace ScriptBee.Tests.Common.Plugins;
 
 internal class TestLinkerPlugin : IModelLinker
 {

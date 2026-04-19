@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using OneOf;
+using ScriptBee.Domain.Model.Errors;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Installer;
 
@@ -11,22 +13,21 @@ public class SimplePluginInstaller(
     ILogger<SimplePluginInstaller> logger
 ) : ISimplePluginInstaller
 {
-    public async Task<OneOf<string, PluginVersionExistsError, PluginInstallationError>> Install(
+    public async Task<OneOf<string, PluginInstallationError>> Install(
         string url,
-        string pluginId,
-        string version,
+        PluginId pluginId,
         CancellationToken cancellationToken = default
     )
     {
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
         fileService.CreateFolder(pluginFolderPath);
 
-        var pluginPath = GetPluginFolderPath(pluginId, version);
+        var pluginPath = GetPluginFolderPath(pluginId);
         var zipFilePath = $"{pluginPath}.zip";
 
         if (fileService.DirectoryExists(pluginPath))
         {
-            return new PluginVersionExistsError(pluginId, version);
+            return pluginPath;
         }
 
         try
@@ -42,12 +43,12 @@ public class SimplePluginInstaller(
             logger.LogError(
                 e,
                 "Error while downloading plugin {Name} {Version}",
-                pluginId,
-                version
+                pluginId.Name,
+                pluginId.Version
             );
 
             fileService.DeleteDirectory(pluginPath);
-            return new PluginInstallationError(pluginId, version);
+            return new PluginInstallationError(pluginId, []);
         }
         finally
         {
@@ -55,10 +56,9 @@ public class SimplePluginInstaller(
         }
     }
 
-    private string GetPluginFolderPath(string name, string version)
+    private string GetPluginFolderPath(PluginId pluginId)
     {
-        var pluginName = PluginNameGenerator.GetPluginName(name, version);
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        return fileService.CombinePaths(pluginFolderPath, pluginName);
+        return fileService.CombinePaths(pluginFolderPath, pluginId.GetFullyQualifiedName());
     }
 }

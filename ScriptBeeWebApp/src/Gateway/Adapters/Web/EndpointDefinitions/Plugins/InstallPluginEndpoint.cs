@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
@@ -21,7 +22,9 @@ public class InstallPluginEndpoint : IEndpointDefinition
             .WithTags("Plugins");
     }
 
-    private static async Task<Results<NoContent, NotFound<ProblemDetails>>> InstallPlugin(
+    private static async Task<
+        Results<NoContent, NotFound<ProblemDetails>, InternalServerError<ProblemDetails>>
+    > InstallPlugin(
         HttpContext context,
         [FromRoute] string projectId,
         [FromRoute] string pluginId,
@@ -31,12 +34,18 @@ public class InstallPluginEndpoint : IEndpointDefinition
     )
     {
         var result = await installPluginUseCase.InstallPluginAsync(
-            new InstallPluginCommand(ProjectId.FromValue(projectId), pluginId, version),
+            new InstallPluginCommand(
+                ProjectId.FromValue(projectId),
+                new PluginId(pluginId, new Version(version))
+            ),
             cancellationToken
         );
 
-        return result.Match<Results<NoContent, NotFound<ProblemDetails>>>(
+        return result.Match<
+            Results<NoContent, NotFound<ProblemDetails>, InternalServerError<ProblemDetails>>
+        >(
             _ => TypedResults.NoContent(),
+            error => error.ToProblem(context),
             error => error.ToProblem(context)
         );
     }

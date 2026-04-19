@@ -1,10 +1,10 @@
 ﻿using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
 
-namespace ScriptBee.Tests.Common.Plugin;
+namespace ScriptBee.Tests.Common.Plugins;
 
 public record TestPlugin(PluginId Id, string FolderPath = "path")
-    : Domain.Model.Plugins.Plugin(
+    : Plugin(
         FolderPath,
         Id,
         new TestPluginManifest { ExtensionPoints = [new TestPluginExtensionPoint()] }
