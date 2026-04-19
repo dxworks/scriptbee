@@ -30,7 +30,6 @@
     <Project Path="ScriptBeeWebApp/src/Common/Model/Model.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/CodeGeneration/CodeGeneration.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Application.Model/Application.Model.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Common/Marketplace.Client/Marketplace.Client.csproj" />
     <Project Path="ScriptBeeWebApp/src/Common/Persistence.Mongodb.Abstractions/Persistence.Mongodb.Abstractions.csproj" />
   </Folder>
 
@@ -44,10 +43,10 @@
 
   <Folder Name="/src/Plugins/">
     <Project Path="ScriptBeeWebApp/src/Plugins/Plugins/Plugins.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Marketplace/Plugins.Marketplace.csproj" />
     <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Installer/Plugins.Installer.csproj" />
     <Project Path="ScriptBeeWebApp/src/Plugins/Plugins.Loader/Plugins.Loader.csproj" />
   </Folder>
-  <Folder Name="/src/" />
 
   <Folder Name="/src/Analysis/">
     <!-- Adapters -->
@@ -81,7 +80,6 @@
     <Project Path="ScriptBeeWebApp/test/Common/Application.Model.Tests/Application.Model.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common/Tests.Common.csproj" />
     <Project Path="ScriptBeeWebApp/test/Common/Tests.Common.Mongodb/Tests.Common.Mongodb.csproj" />
-    <Project Path="ScriptBeeWebApp/test/Common/Marketplace.Client.Tests/Marketplace.Client.Tests.csproj" />
   </Folder>
 
   <Folder Name="/test/Workspace/">
@@ -92,10 +90,10 @@
 
   <Folder Name="/test/Plugins/">
     <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Tests/Plugins.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Marketplace.Tests/Plugins.Marketplace.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Installer.Tests/Plugins.Installer.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Plugins/Plugins.Loader.Tests/Plugins.Loader.Tests.csproj" />
   </Folder>
-  <Folder Name="/test/" />
 
   <Folder Name="/test/Analysis/">
     <Project Path="ScriptBeeWebApp/test/Analysis/Adapters/Analysis.Web.Tests/Analysis.Web.Tests.csproj" />

@@ -2,9 +2,9 @@ using NSubstitute;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
-using ScriptBee.Marketplace.Client.Errors;
+using ScriptBee.Plugins.Marketplace.Errors;
 
-namespace ScriptBee.Marketplace.Client.Tests;
+namespace ScriptBee.Plugins.Marketplace.Tests;
 
 public class PluginUrlFetcherTest
 {

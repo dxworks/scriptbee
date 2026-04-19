@@ -3,7 +3,7 @@ using DxWorks.Hub.Sdk.Project;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
 
-namespace ScriptBee.Marketplace.Client.Tests;
+namespace ScriptBee.Plugins.Marketplace.Tests;
 
 public class MarketPluginFetcherTest
 {
