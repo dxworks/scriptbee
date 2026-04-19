@@ -7,7 +7,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Plugins.Marketplace\Plugins.Marketplace.csproj" />
     <ProjectReference Include="..\Plugins\Plugins.csproj" />
-    <ProjectReference Include="..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
   </ItemGroup>
 </Project>

@@ -5,8 +5,8 @@ using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
-using ScriptBee.Marketplace.Client;
-using ScriptBee.Marketplace.Client.Errors;
+using ScriptBee.Plugins.Marketplace;
+using ScriptBee.Plugins.Marketplace.Errors;
 using ScriptBee.Tests.Common.Plugins;
 using static ScriptBee.Tests.Common.Plugins.PluginUtils;
 

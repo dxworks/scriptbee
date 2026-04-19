@@ -2,7 +2,7 @@
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
-using ScriptBee.Marketplace.Client;
+using ScriptBee.Plugins.Marketplace;
 
 namespace ScriptBee.Plugins.Installer;
 
