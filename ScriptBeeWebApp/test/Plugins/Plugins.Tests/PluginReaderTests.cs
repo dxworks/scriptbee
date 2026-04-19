@@ -23,6 +23,14 @@ public class PluginReaderTests : IClassFixture<TempDirFixture>
     }
 
     [Fact]
+    public void GivenPluginsDoesNotExists_WhenReadPlugins_ThenReturnEmptyList()
+    {
+        var result = _pluginReader.ReadPlugins("non-existing");
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public void GivenNoPluginsInFolder_WhenReadPlugins_ThenReturnEmptyList()
     {
         var pluginsFolder = _tempDirFixture.CreateSubFolder("empty-plugins-folder");

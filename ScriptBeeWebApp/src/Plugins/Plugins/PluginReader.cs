@@ -49,6 +49,11 @@ public class PluginReader(
 
     public IEnumerable<Plugin> ReadPlugins(string pluginFolderPath)
     {
+        if (!Directory.Exists(pluginFolderPath))
+        {
+            return [];
+        }
+
         var pluginDirectories = Directory.GetDirectories(pluginFolderPath).ToList();
 
         logger.LogInformation("Found {PluginCount} plugin directories", pluginDirectories.Count);
