@@ -29,20 +29,13 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
     private static async Task<Ok<WebGetScriptDataResponse>> GetProjectScripts(
         [FromRoute] string projectId,
         IGetScriptsUseCase useCase,
-        IGetScriptAbsolutePathUseCase absolutePathUseCase,
         CancellationToken cancellation
     )
     {
         var scripts = await useCase.GetAll(ProjectId.FromValue(projectId), cancellation);
 
         return TypedResults.Ok(
-            new WebGetScriptDataResponse(
-                scripts
-                    .Select(script =>
-                        WebScriptData.Map(script, absolutePathUseCase.GetScriptAbsolutePath(script))
-                    )
-                    .ToList()
-            )
+            new WebGetScriptDataResponse(scripts.Select(WebScriptData.Map).ToList())
         );
     }
 
@@ -53,7 +46,6 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
         [FromRoute] string projectId,
         [FromRoute] string scriptId,
         IGetScriptsUseCase useCase,
-        IGetScriptAbsolutePathUseCase absolutePathUseCase,
         CancellationToken cancellationToken
     )
     {
@@ -64,10 +56,7 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
         );
 
         return result.Match<Results<Ok<WebScriptData>, NotFound<ProblemDetails>>>(
-            script =>
-                TypedResults.Ok(
-                    WebScriptData.Map(script, absolutePathUseCase.GetScriptAbsolutePath(script))
-                ),
+            script => TypedResults.Ok(WebScriptData.Map(script)),
             error => error.ToProblem(context)
         );
     }

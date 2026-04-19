@@ -21,7 +21,6 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnAllScripts(string responsePath)
     {
         var useCase = Substitute.For<IGetScriptsUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .GetAll(ProjectId.FromValue("id"), Arg.Any<CancellationToken>())
             .Returns([
@@ -40,7 +39,6 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     ]
                 ),
             ]);
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var api = new TestApiCaller<Program>(TestUrl);
         var response = await api.GetApi(
@@ -49,7 +47,6 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             )
         );
@@ -62,7 +59,6 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task GivenScript_ShouldReturnOk(string responsePath)
     {
         var useCase = Substitute.For<IGetScriptsUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .GetById(
                 ProjectId.FromValue("id"),
@@ -87,7 +83,6 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         const string testUrl = $"{TestUrl}/a60eafb2-7f85-432e-891e-863bdfab59fe";
         var api = new TestApiCaller<Program>(testUrl);
@@ -97,7 +92,6 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             )
         );

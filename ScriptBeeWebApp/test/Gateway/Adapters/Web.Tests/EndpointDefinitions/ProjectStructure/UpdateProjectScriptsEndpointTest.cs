@@ -41,7 +41,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnOk_WhenParametersArePassed(string type, object value)
     {
         var useCase = Substitute.For<IUpdateScriptUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .Update(
                 Arg.Is<UpdateScriptCommand>(command =>
@@ -67,7 +66,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PatchApi(
             new TestWebApplicationFactory<Program>(
@@ -75,7 +73,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebUpdateScriptCommand(null, [new WebScriptParameter("parameter", type, value)])
@@ -86,7 +83,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         webScriptData.Id.ShouldBe("3283da02-5710-4b2a-bc45-496ff77be18d");
         webScriptData.Name.ShouldBe("path");
         webScriptData.Path.ShouldBe("path");
-        webScriptData.AbsolutePath.ShouldBe("absolute");
         webScriptData.ScriptLanguage.ShouldBe(new WebScriptLanguage("csharp", ".cs"));
         var webScriptParameter = webScriptData.Parameters.Single();
         webScriptParameter.Name.ShouldBe("parameter");
@@ -101,7 +97,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnOk_WhenNameIsPassed(string responsePath)
     {
         var useCase = Substitute.For<IUpdateScriptUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         var projectId = ProjectId.Create("id");
         useCase
             .Update(
@@ -119,7 +114,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase.GetScriptAbsolutePath(Arg.Any<Script>()).Returns("absolute");
 
         var response = await _api.PatchApi(
             new TestWebApplicationFactory<Program>(
@@ -127,7 +121,6 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             ),
             new WebUpdateScriptCommand("name", null)

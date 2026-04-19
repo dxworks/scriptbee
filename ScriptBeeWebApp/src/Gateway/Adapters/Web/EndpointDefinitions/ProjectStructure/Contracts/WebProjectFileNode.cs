@@ -6,7 +6,6 @@ public sealed record WebProjectFileNode(
     string Id,
     string Name,
     string Path,
-    string AbsolutePath,
     string Type,
     bool HasChildren
 )
@@ -14,7 +13,7 @@ public sealed record WebProjectFileNode(
     private const string File = "file";
     private const string Folder = "folder";
 
-    public static WebProjectFileNode Map(ProjectStructureEntry entry, string absolutePath)
+    public static WebProjectFileNode Map(ProjectStructureEntry entry)
     {
         return entry switch
         {
@@ -22,7 +21,6 @@ public sealed record WebProjectFileNode(
                 script.Id.ToString(),
                 script.File.Name,
                 script.File.Path,
-                absolutePath,
                 File,
                 false
             ),
@@ -30,7 +28,6 @@ public sealed record WebProjectFileNode(
                 scriptFolder.Id.ToString(),
                 scriptFolder.File.Name,
                 scriptFolder.File.Path,
-                absolutePath,
                 Folder,
                 scriptFolder.ChildrenIds.Any()
             ),

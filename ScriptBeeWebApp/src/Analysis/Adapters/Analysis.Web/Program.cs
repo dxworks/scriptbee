@@ -22,7 +22,7 @@ builder
     .AddCommonServices()
     .AddInstanceConfig(scriptBeeConfigurationSection)
     .AddMongoDb(mongoConnectionString)
-    .AddArtifactFileAdapters("UserFolder")
+    .AddArtifactFileAdapters()
     .AddPluginServices("ScriptBee:Plugins")
     .AddRunScriptServices();
 

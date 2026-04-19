@@ -136,7 +136,6 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnOk_WhenParentIdIsNull(string responsePath)
     {
         var useCase = Substitute.For<IGetProjectFilesUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .GetAll(
                 new GetProjectFilesQuery(ProjectId.FromValue("id"), null, 0, 50),
@@ -166,9 +165,6 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase
-            .GetScriptAbsolutePath(Arg.Any<ProjectStructureEntry>())
-            .Returns("absolute");
 
         var response = await _api.GetApi(
             new TestWebApplicationFactory<Program>(
@@ -176,7 +172,6 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             )
         );
@@ -189,7 +184,6 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
     public async Task ShouldReturnOk_WhenParentIdIsNotNull(string responsePath)
     {
         var useCase = Substitute.For<IGetProjectFilesUseCase>();
-        var absolutePathUseCase = Substitute.For<IGetScriptAbsolutePathUseCase>();
         useCase
             .GetAll(
                 new GetProjectFilesQuery(
@@ -223,9 +217,6 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                     )
                 )
             );
-        absolutePathUseCase
-            .GetScriptAbsolutePath(Arg.Any<ProjectStructureEntry>())
-            .Returns("absolute");
 
         TestApiCaller<Program> api = new(
             $"{TestUrl}?parentId=0116d483-9f7a-4038-9da5-ebf98c81ce79&offset={2}&limit={3}"
@@ -236,7 +227,6 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
                 services =>
                 {
                     services.AddSingleton(useCase);
-                    services.AddSingleton(absolutePathUseCase);
                 }
             )
         );

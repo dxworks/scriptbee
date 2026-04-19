@@ -8,12 +8,9 @@ Writing the script is done by updating the file manually. ScriptBee offers a rea
 
 ## Visual Studio Code
 
-ScriptBee has a button that automatically opens the script in Visual Studio Code. Saving the modified script, will
-automatically update the preview.
-
-In order to work properly, the `UserFolder__UserFolderPath` environment variable must be set correctly.
-
-See [User Folder Setup](../installation/installation.md#user-folder-setup) section for more information.
+ScriptBee has a button that automatically opens the script folder in Visual Studio Code. Saving the modified script,
+will
+automatically update the preview. This allows to change the scripts external of the ScriptBee UI.
 
 ## Code Generation
 

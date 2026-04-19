@@ -2,7 +2,6 @@
   "id": "3283da02-5710-4b2a-bc45-496ff77be18d",
   "name": "name",
   "path": "name",
-  "absolutePath": "absolute",
   "scriptLanguage": {
     "name": "csharp",
     "extension": ".cs"

@@ -1,17 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using ScriptBee.Application.Model.Config;
 
 namespace ScriptBee.Artifacts.Extensions;
 
 public static class ConfigureProjectScriptingExtensions
 {
-    public static IServiceCollection AddArtifactFileAdapters(
-        this IServiceCollection services,
-        string userFolderConfigurationSection
-    )
+    public static IServiceCollection AddArtifactFileAdapters(this IServiceCollection services)
     {
-        services.AddOptions<UserFolderSettings>().BindConfiguration(userFolderConfigurationSection);
-
         return services
             .AddSingleton<IConfigFoldersService, ConfigFoldersService>()
             .AddSingleton<ICreateFile, CreateFileAdapter>()

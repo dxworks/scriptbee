@@ -26,7 +26,7 @@ builder
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
-    .AddArtifactFileAdapters("UserFolder")
+    .AddArtifactFileAdapters()
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
     .AddInstallPluginsForAllocatedInstancesServices()

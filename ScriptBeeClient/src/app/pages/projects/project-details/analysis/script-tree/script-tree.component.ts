@@ -68,7 +68,6 @@ export class ScriptTreeComponent {
               ...oldNode.data,
               name: script.name,
               path: script.path,
-              absolutePath: script.absolutePath,
             },
           }));
         });

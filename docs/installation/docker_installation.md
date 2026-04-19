@@ -31,7 +31,6 @@ services:
 
     environment:
       - ConnectionStrings__mongodb=mongodb://root:example@mongo:27017/ScriptBee?authSource=admin
-      - UserFolder__UserFolderPath=/root/.scriptbee
       - SCRIPTBEE__ANALYSIS__DRIVER=docker
       - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
       - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/database/scriptbee
@@ -85,22 +84,6 @@ For example:
 ```yaml
 volumes:
   - ./scriptbee_data:/root/.scriptbee
-```
-
-## User Folder Setup
-
-This should be the absolute path of the host machine to the folder where the ScriptBee data is stored.
-
-```yaml
-scriptbee:
-  image: dxworks/scriptbee:latest
-  user: root
-
-  volumes:
-    - ./database/scriptbee:/root/.scriptbee
-
-  environment:
-    - UserFolder__UserFolderPath=/root/.scriptbee
 ```
 
 ## Docker Hosting Tips

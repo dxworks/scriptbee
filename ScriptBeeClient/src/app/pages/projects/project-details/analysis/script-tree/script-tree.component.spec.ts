@@ -16,7 +16,6 @@ const makeFileNode = (overrides: Partial<ProjectFileNode> = {}): ProjectFileNode
   id: 'file-1',
   name: 'script.cs',
   path: '/scripts/script.cs',
-  absolutePath: '/abs/scripts/script.cs',
   type: 'file',
   hasChildren: false,
   ...overrides,

@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using ScriptBee.Analysis.Instance.Docker.Config;
-using ScriptBee.Application.Model.Config;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -19,18 +18,11 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     private readonly IConfiguration _configuration = Substitute.For<IConfiguration>();
     private readonly ILogger<AnalysisInstanceDockerAdapter> _logger;
     private readonly IOptions<AnalysisDockerConfig> _configOptions;
-    private readonly IOptions<UserFolderSettings> _userFolderOptions;
 
     private readonly int _testPort;
 
     private const string TestMongoConnectionString = "mongodb://test:27017";
     private const string OverrideMongoConnectionString = "mongodb://mongodb-host:27017";
-
-    private static readonly string TestUserFolderPath = Path.Combine(
-            Path.GetTempPath(),
-            "scriptbee-test-userfolder"
-        )
-        .Replace("\\", "/");
 
     private static readonly string OverrideHostPath = Path.Combine(
             Path.GetTempPath(),
@@ -51,9 +43,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             UserFolderVolumePath = "/root/.scriptbee",
         };
         _configOptions = Options.Create(config);
-        _userFolderOptions = Options.Create(
-            new UserFolderSettings { UserFolderPath = TestUserFolderPath }
-        );
 
         _testPort = new FreePortProvider().GetFreeTcpPort();
         _freePortProvider.GetFreeTcpPort().Returns(_testPort);
@@ -74,7 +63,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -118,7 +106,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -170,7 +157,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -197,7 +183,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -240,40 +225,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
-    public async Task Allocate_ShouldMountVolumes_WhenUserFolderIsConfigured()
-    {
-        // Arrange
-        var adapter = new AnalysisInstanceDockerAdapter(
-            _configOptions,
-            _userFolderOptions,
-            _configuration,
-            _logger,
-            _freePortProvider
-        );
-        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
-        var instanceId = new InstanceId(Guid.NewGuid());
-        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
-
-        // Act
-        await adapter.Allocate(
-            projectDetails,
-            instanceId,
-            image,
-            TestContext.Current.CancellationToken
-        );
-
-        // Assert
-        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
-            $"scriptbee-analysis-{instanceId}",
-            TestContext.Current.CancellationToken
-        );
-
-        containerInspect.HostConfig.Binds.ShouldContain(
-            $"{TestUserFolderPath}:{_configOptions.Value.UserFolderVolumePath}"
-        );
-    }
-
-    [Fact]
     public async Task Allocate_ShouldUseUserFolderHostPath_WhenConfigured()
     {
         // Arrange
@@ -286,7 +237,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -320,7 +270,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
-            Options.Create(new UserFolderSettings { UserFolderPath = null }),
             _configuration,
             _logger,
             _freePortProvider
@@ -359,7 +308,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -393,7 +341,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         // Arrange
         var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider
@@ -444,7 +391,6 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     {
         var adapter = new AnalysisInstanceDockerAdapter(
             _configOptions,
-            _userFolderOptions,
             _configuration,
             _logger,
             _freePortProvider

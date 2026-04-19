@@ -5,7 +5,6 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
-using ScriptBee.UseCases.Gateway.ProjectStructure;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -65,7 +64,6 @@ public class GetAnalysisScriptEndpoint : IEndpointDefinition
         [FromRoute] string analysisId,
         [FromRoute] string scriptId,
         IGetAnalysisScriptUseCase useCase,
-        IGetScriptAbsolutePathUseCase absolutePathUseCase,
         CancellationToken cancellationToken
     )
     {
@@ -76,10 +74,7 @@ public class GetAnalysisScriptEndpoint : IEndpointDefinition
         );
 
         return result.Match<Results<Ok<WebScriptData>, NotFound<ProblemDetails>>>(
-            script =>
-                TypedResults.Ok(
-                    WebScriptData.Map(script, absolutePathUseCase.GetScriptAbsolutePath(script))
-                ),
+            script => TypedResults.Ok(WebScriptData.Map(script)),
             error => error.ToProblem(context),
             error => error.ToProblem(context)
         );

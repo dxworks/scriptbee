@@ -8,18 +8,6 @@
 - **Default:** `mongodb://root:example@localhost:27017/ScriptBee?authSource=admin`
 - **Description:** The connection string to MongoDB. Must be configured to match the Mongodb server configurations
 
-## User Folder
-
-### `UserFolder__UserFolderPath`
-
-- **Type:** `string`
-- **Default:** _None_
-- **Description:** The absolute path of the host machine to the folder where the ScriptBee data is stored.
-
-> [!CAUTION]
-> `UserFolder__UserFolderPath` is obsolete and will be replaced by editing either via UI or via the VS Code Extension so
-> there is no need to expose the internal file system of the webserver
-
 ## Analysis Configuration
 
 ### `SCRIPTBEE__ANALYSIS__IMAGE`

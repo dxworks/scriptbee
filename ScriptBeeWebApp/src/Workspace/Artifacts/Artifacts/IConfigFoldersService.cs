@@ -5,6 +5,4 @@ namespace ScriptBee.Artifacts;
 public interface IConfigFoldersService
 {
     string GetPathToSrcFolder(ProjectId projectId, string path);
-
-    string GetAbsolutePathToSrcFolder(ProjectId projectId, string path);
 }
