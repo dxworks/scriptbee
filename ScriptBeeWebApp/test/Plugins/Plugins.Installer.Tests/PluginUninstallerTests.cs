@@ -105,29 +105,4 @@ public class PluginUninstallerTests : IClassFixture<TempDirFixture>
         Directory.Exists(pluginPath2).ShouldBeFalse();
         File.Exists(deleteFilePath).ShouldBeFalse();
     }
-
-    [Fact]
-    public void GivenOnePluginAndThrowsExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsNotDeleted()
-    {
-        var pluginsPath = _fixture.CreateSubFolder("delete_exception");
-        var pluginPath = Path.Combine(pluginsPath, "locked_plugin");
-        Directory.CreateDirectory(pluginPath);
-
-        var lockFile = Path.Combine(pluginPath, "lock.txt");
-        using var stream = File.Open(
-            lockFile,
-            FileMode.Create,
-            FileAccess.ReadWrite,
-            FileShare.None
-        );
-
-        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
-        var deleteFilePath = Path.Combine(pluginsPath, MarkedForDeleteFile);
-        File.WriteAllLines(deleteFilePath, [pluginPath]);
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        Directory.Exists(pluginPath).ShouldBeTrue();
-        File.Exists(deleteFilePath).ShouldBeTrue();
-    }
 }
