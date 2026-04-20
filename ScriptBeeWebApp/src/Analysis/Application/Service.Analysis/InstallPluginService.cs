@@ -1,6 +1,7 @@
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Analysis;
@@ -9,6 +10,7 @@ using ScriptBee.UseCases.Analysis.Errors;
 namespace ScriptBee.Service.Analysis;
 
 public class InstallPluginService(
+    IProjectManager projectManager,
     IPluginReader pluginReader,
     IPluginLoader pluginLoader,
     IPluginPathProvider pluginPathProvider
@@ -20,7 +22,11 @@ public class InstallPluginService(
     {
         try
         {
-            var plugin = pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(), pluginId);
+            var projectId = ProjectId.FromValue(projectManager.GetProject().Id);
+
+            var plugin =
+                pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(projectId), pluginId)
+                ?? pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(), pluginId);
 
             if (plugin is null)
             {
