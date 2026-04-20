@@ -1,5 +1,6 @@
 using DxWorks.Hub.Sdk.Clients;
 using DxWorks.Hub.Sdk.Project;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
 
@@ -8,11 +9,16 @@ namespace ScriptBee.Plugins.Marketplace.Tests;
 public class MarketPluginFetcherTest
 {
     private readonly IScriptBeeClient _hubClient = Substitute.For<IScriptBeeClient>();
+
+    private readonly ILogger<MarketPluginFetcher> _logger = Substitute.For<
+        ILogger<MarketPluginFetcher>
+    >();
+
     private readonly MarketPluginFetcher _pluginFetcher;
 
     public MarketPluginFetcherTest()
     {
-        _pluginFetcher = new MarketPluginFetcher(_hubClient);
+        _pluginFetcher = new MarketPluginFetcher(_hubClient, _logger);
     }
 
     [Fact]
