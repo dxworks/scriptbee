@@ -1,29 +1,28 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Plugins.Installer.Tests;
 
-public class SimplePluginInstallerTests
+public class SimplePluginInstallerTests : IClassFixture<TempDirFixture>
 {
     private readonly IDownloadService _downloadService = Substitute.For<IDownloadService>();
-    private readonly IFileService _fileService = Substitute.For<IFileService>();
-
     private readonly IPluginPathProvider _pluginPathProvider =
         Substitute.For<IPluginPathProvider>();
-
     private readonly IZipFileService _zipFileService = Substitute.For<IZipFileService>();
 
     private readonly ILogger<SimplePluginInstaller> _logger = Substitute.For<
         ILogger<SimplePluginInstaller>
     >();
+    private readonly TempDirFixture _tempDirFixture;
 
     private readonly SimplePluginInstaller _simplePluginInstaller;
 
-    public SimplePluginInstallerTests()
+    public SimplePluginInstallerTests(TempDirFixture tempDirFixture)
     {
+        _tempDirFixture = tempDirFixture;
         _simplePluginInstaller = new SimplePluginInstaller(
-            _fileService,
             _zipFileService,
             _downloadService,
             _pluginPathProvider,
@@ -34,20 +33,26 @@ public class SimplePluginInstallerTests
     [Fact]
     public async Task GivenUrl_WhenInstall_ThenPluginsFolderPathIsCreated()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var subFolder = Path.Combine(pluginsPath, "new-dir");
+
+        _pluginPathProvider.GetPathToPlugins().Returns(subFolder);
+
         await _simplePluginInstaller.Install(
             "url",
             new PluginId("pluginName", new Version("1.0.0")),
             TestContext.Current.CancellationToken
         );
 
-        _fileService.Received(1).CreateFolder("plugin/path");
+        Directory.Exists(subFolder).ShouldBeTrue();
     }
 
     [Fact]
     public async Task GivenUrlDownloadException_WhenInstall_ThenReturnsPluginInstallationError()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var pluginId = new PluginId("pluginName", new Version("1.0.0"));
+
         _downloadService
             .When(x =>
                 x.DownloadFileAsync(
@@ -56,30 +61,27 @@ public class SimplePluginInstallerTests
                     Arg.Any<CancellationToken>()
                 )
             )
-            .Throws(new Exception());
-        _fileService
-            .CombinePaths("plugin/path", "pluginName@1.0.0")
-            .Returns("path/pluginName@1.0.0");
-        _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(true);
+            .Throws(new Exception("Download failed"));
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            new PluginId("pluginName", new Version("1.0.0")),
+            pluginId,
             TestContext.Current.CancellationToken
         );
 
         result.IsT1.ShouldBeTrue();
-        var error = result.AsT1;
-        error.Id.Name.ShouldBe("pluginName");
-        error.Id.Version.ShouldBe(new Version("1.0.0"));
-        _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
-        _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
+        result.AsT1.Id.Name.ShouldBe("pluginName");
+        result.AsT1.Id.Version.ShouldBe(new Version("1.0.0"));
     }
 
     [Fact]
     public async Task GivenUrlDownloadExceptionAndNoZipFileIsDownloaded_WhenInstall_ThenReturnsPluginInstallationError()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var pluginId = new PluginId("pluginName", new Version("1.0.0"));
+
         _downloadService
             .When(x =>
                 x.DownloadFileAsync(
@@ -88,103 +90,100 @@ public class SimplePluginInstallerTests
                     Arg.Any<CancellationToken>()
                 )
             )
-            .Throws(new Exception());
-        _fileService
-            .CombinePaths("plugin/path", "pluginName@1.0.0")
-            .Returns("path/pluginName@1.0.0");
-        _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(false);
+            .Throws(new Exception("Download failed"));
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            new PluginId("pluginName", new Version("1.0.0")),
+            pluginId,
             TestContext.Current.CancellationToken
         );
 
         result.IsT1.ShouldBeTrue();
-        var error = result.AsT1;
-        error.Id.Name.ShouldBe("pluginName");
-        error.Id.Version.ShouldBe(new Version("1.0.0"));
-        _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
-        _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
+        result.AsT1.Id.Name.ShouldBe("pluginName");
+        result.AsT1.Id.Version.ShouldBe(new Version("1.0.0"));
+        File.Exists(Path.Combine(pluginsPath, "pluginName@1.0.0.zip")).ShouldBeFalse();
     }
 
     [Fact]
     public async Task GivenUnzipException_WhenInstall_ThenReturnsPluginInstallationError()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var pluginId = new PluginId("pluginName", new Version("1.0.0"));
+
         _zipFileService
             .When(x =>
                 x.UnzipFileAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             )
-            .Throws(new Exception());
-        _fileService
-            .CombinePaths("plugin/path", "pluginName@1.0.0")
-            .Returns("path/pluginName@1.0.0");
-        _fileService.FileExists("path/pluginName@1.0.0.zip").Returns(true);
+            .Throws(new Exception("Unzip failed"));
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            new PluginId("pluginName", new Version("1.0.0")),
+            pluginId,
             TestContext.Current.CancellationToken
         );
 
         result.IsT1.ShouldBeTrue();
-        var error = result.AsT1;
-        error.Id.Name.ShouldBe("pluginName");
-        error.Id.Version.ShouldBe(new Version("1.0.0"));
+        result.AsT1.Id.Name.ShouldBe("pluginName");
+        result.AsT1.Id.Version.ShouldBe(new Version("1.0.0"));
         await _downloadService
             .Received(1)
-            .DownloadFileAsync("url", "path/pluginName@1.0.0.zip", Arg.Any<CancellationToken>());
-        _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
-        _fileService.Received(1).DeleteDirectory("path/pluginName@1.0.0");
+            .DownloadFileAsync(
+                "url",
+                Path.Combine(pluginsPath, "pluginName@1.0.0.zip"),
+                Arg.Any<CancellationToken>()
+            );
+        File.Exists(Path.Combine(pluginsPath, "pluginName@1.0.0.zip")).ShouldBeFalse();
     }
 
     [Fact]
     public async Task GivenUrlForPluginAndVersion_WhenInstall_ThenZipFileIsDownloadedSuccessfully()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
-        _fileService
-            .CombinePaths("plugin/path", "pluginName@1.0.0")
-            .Returns("path/pluginName@1.0.0");
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var pluginId = new PluginId("pluginName", new Version("1.0.0"));
+        var expectedPluginPath = Path.Combine(pluginsPath, "pluginName@1.0.0");
+        var expectedZipPath = Path.Combine(pluginsPath, "pluginName@1.0.0.zip");
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            new PluginId("pluginName", new Version("1.0.0")),
+            pluginId,
             TestContext.Current.CancellationToken
         );
 
         result.IsT0.ShouldBeTrue();
-        result.AsT0.ShouldBe("path/pluginName@1.0.0");
+        result.AsT0.ShouldBe(expectedPluginPath);
         await _downloadService
             .Received(1)
-            .DownloadFileAsync("url", "path/pluginName@1.0.0.zip", Arg.Any<CancellationToken>());
+            .DownloadFileAsync("url", expectedZipPath, Arg.Any<CancellationToken>());
         await _zipFileService
             .Received(1)
-            .UnzipFileAsync(
-                "path/pluginName@1.0.0.zip",
-                "path/pluginName@1.0.0",
-                Arg.Any<CancellationToken>()
-            );
-        _fileService.Received(1).DeleteFile("path/pluginName@1.0.0.zip");
+            .UnzipFileAsync(expectedZipPath, expectedPluginPath, Arg.Any<CancellationToken>());
+        File.Exists(expectedZipPath).ShouldBeFalse();
     }
 
     [Fact]
     public async Task GivenExistingPluginWithTheSameVersion_WhenInstall_ThenReturnSuccess()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
-        _fileService
-            .CombinePaths("plugin/path", "pluginName@1.0.0")
-            .Returns("path/pluginName@1.0.0");
-        _fileService.DirectoryExists("path/pluginName@1.0.0").Returns(true);
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var pluginId = new PluginId("pluginName", new Version("1.0.0"));
+        var existingPluginPath = Path.Combine(pluginsPath, "pluginName@1.0.0");
+        Directory.CreateDirectory(existingPluginPath);
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            new PluginId("pluginName", new Version("1.0.0")),
+            pluginId,
             TestContext.Current.CancellationToken
         );
 
         result.IsT0.ShouldBeTrue();
-        result.AsT0.ShouldBe("path/pluginName@1.0.0");
+        result.AsT0.ShouldBe(existingPluginPath);
         await _downloadService
             .Received(0)
             .DownloadFileAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
@@ -193,18 +192,19 @@ public class SimplePluginInstallerTests
     [Fact]
     public async Task GivenPluginUrl_WhenInstall_ThenPluginIsInstalledSuccessfully()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
-        _fileService
-            .CombinePaths("plugin/path", "pluginName@1.0.0")
-            .Returns("path/pluginName@1.0.0");
+        var pluginsPath = _tempDirFixture.CreateSubFolder($"plugins_{Guid.NewGuid()}");
+        var pluginId = new PluginId("pluginName", new Version("1.0.0"));
+        var existingPluginPath = Path.Combine(pluginsPath, "pluginName@1.0.0");
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         var result = await _simplePluginInstaller.Install(
             "url",
-            new PluginId("pluginName", new Version("1.0.0")),
+            pluginId,
             TestContext.Current.CancellationToken
         );
 
         result.IsT0.ShouldBeTrue();
-        result.AsT0.ShouldBe("path/pluginName@1.0.0");
+        result.AsT0.ShouldBe(existingPluginPath);
     }
 }

@@ -10,6 +10,13 @@ using ScriptBee.UseCases.Gateway.Plugins;
 
 namespace ScriptBee.Service.Gateway.Plugins;
 
+using InstallPluginFromZipResult = OneOf<
+    ProjectDetails,
+    ProjectDoesNotExistsError,
+    PluginManifestNotFoundError,
+    PluginAlreadyExistsError,
+    PluginInstallationError
+>;
 using InstallResult = OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>;
 
 public class InstallPluginService(
@@ -31,6 +38,26 @@ public class InstallPluginService(
         return await result.Match<Task<InstallResult>>(
             async details => await InstallPluginAsync(details, command, cancellationToken),
             error => Task.FromResult<InstallResult>(error)
+        );
+    }
+
+    public async Task<InstallPluginFromZipResult> InstallPluginAsync(
+        ProjectId projectId,
+        Stream zipStream,
+        CancellationToken cancellationToken
+    )
+    {
+        var projectResult = await getProject.GetById(projectId, cancellationToken);
+
+        return await projectResult.Match<Task<InstallPluginFromZipResult>>(
+            async projectDetails =>
+                await InstallToAllInstances(
+                    projectId,
+                    zipStream,
+                    projectDetails,
+                    cancellationToken
+                ),
+            error => Task.FromResult<InstallPluginFromZipResult>(error)
         );
     }
 
@@ -59,7 +86,7 @@ public class InstallPluginService(
         );
     }
 
-    private async Task<InstallResult> UpdateProjectDetailsWithPlugin(
+    private async Task<ProjectDetails> UpdateProjectDetailsWithPlugin(
         ProjectDetails projectDetails,
         List<PluginId> installedPluginIds,
         CancellationToken cancellationToken
@@ -123,5 +150,34 @@ public class InstallPluginService(
                 }
             }
         }
+    }
+
+    private async Task<InstallPluginFromZipResult> InstallToAllInstances(
+        ProjectId projectId,
+        Stream zipStream,
+        ProjectDetails projectDetails,
+        CancellationToken cancellationToken
+    )
+    {
+        var installResult = await bundlePluginInstaller.Install(
+            projectId,
+            zipStream,
+            cancellationToken
+        );
+
+        return await installResult.Match<Task<InstallPluginFromZipResult>>(
+            async installedPluginIds =>
+            {
+                await InstallPluginToAllInstances(projectId, installedPluginIds, cancellationToken);
+                return await UpdateProjectDetailsWithPlugin(
+                    projectDetails,
+                    installedPluginIds,
+                    cancellationToken
+                );
+            },
+            error => Task.FromResult<InstallPluginFromZipResult>(error),
+            error => Task.FromResult<InstallPluginFromZipResult>(error),
+            error => Task.FromResult<InstallPluginFromZipResult>(error)
+        );
     }
 }

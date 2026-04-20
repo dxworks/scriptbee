@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Installer;
 
 public class BundlePluginUninstaller(
-    IFileService fileService,
     IPluginReader pluginReader,
     IPluginUninstaller pluginUninstaller,
     IPluginPathProvider pluginPathProvider,
@@ -47,6 +46,6 @@ public class BundlePluginUninstaller(
     private string GetPluginPath(PluginId pluginId)
     {
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        return fileService.CombinePaths(pluginFolderPath, pluginId.GetFullyQualifiedName());
+        return Path.Combine(pluginFolderPath, pluginId.GetFullyQualifiedName());
     }
 }

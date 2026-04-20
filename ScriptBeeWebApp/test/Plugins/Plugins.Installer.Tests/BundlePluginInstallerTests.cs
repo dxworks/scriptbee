@@ -1,18 +1,20 @@
-﻿using System.Collections;
+using System.Collections;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Plugins.Marketplace;
 using ScriptBee.Plugins.Marketplace.Errors;
+using ScriptBee.Tests.Common;
 using ScriptBee.Tests.Common.Plugins;
 using static ScriptBee.Tests.Common.Plugins.PluginUtils;
 
 namespace ScriptBee.Plugins.Installer.Tests;
 
-public class BundlePluginInstallerTests
+public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
 {
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
 
@@ -21,18 +23,31 @@ public class BundlePluginInstallerTests
 
     private readonly IPluginUrlFetcher _pluginUrlFetcher = Substitute.For<IPluginUrlFetcher>();
 
+    private readonly IPluginPathProvider _pluginPathProvider =
+        Substitute.For<IPluginPathProvider>();
+
+    private readonly IPluginZipProcessor _pluginZipProcessor =
+        Substitute.For<IPluginZipProcessor>();
+
     private readonly ILogger<BundlePluginInstaller> _logger = Substitute.For<
         ILogger<BundlePluginInstaller>
     >();
 
+    private readonly TempDirFixture _tempDirFixture;
+
+    private readonly ProjectId _projectId = ProjectId.FromValue("project-id");
+
     private readonly BundlePluginInstaller _bundlePluginInstaller;
 
-    public BundlePluginInstallerTests()
+    public BundlePluginInstallerTests(TempDirFixture tempDirFixture)
     {
+        _tempDirFixture = tempDirFixture;
         _bundlePluginInstaller = new BundlePluginInstaller(
             _pluginReader,
             _simplePluginInstaller,
             _pluginUrlFetcher,
+            _pluginPathProvider,
+            _pluginZipProcessor,
             _logger
         );
     }
@@ -312,6 +327,143 @@ public class BundlePluginInstallerTests
             .ToArray();
 
         return CreateBundlePlugin(id.Name, id.Version.ToString(), testBundlePlugins);
+    }
+
+    #endregion
+
+    #region Zip Stream Tests
+
+    [Fact]
+    public async Task GivenZipStream_WhenInstall_AndManifestNotFound_ThenReturnsManifestNotFoundError()
+    {
+        using var stream = new MemoryStream([1, 2, 3]);
+
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, stream, Arg.Any<CancellationToken>())
+            .Returns(new PluginManifestNotFoundError());
+
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            stream,
+            TestContext.Current.CancellationToken
+        );
+
+        result.IsT1.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task GivenZipStream_WhenInstall_AndPluginAlreadyExists_ThenReturnsAlreadyExistsError()
+    {
+        var pluginId = new PluginId("existingPlugin", new Version("1.0.0"));
+        using var stream = new MemoryStream([1, 2, 3]);
+
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, stream, Arg.Any<CancellationToken>())
+            .Returns(new PluginAlreadyExistsError(pluginId));
+
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            stream,
+            TestContext.Current.CancellationToken
+        );
+
+        result.IsT2.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task GivenZipStream_WhenInstall_AndProcessorFails_ThenReturnsInstallationError()
+    {
+        var pluginId = new PluginId("failedPlugin", new Version("1.0.0"));
+        using var stream = new MemoryStream([1, 2, 3]);
+
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, stream, Arg.Any<CancellationToken>())
+            .Returns(new PluginInstallationError(pluginId, []));
+
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            stream,
+            TestContext.Current.CancellationToken
+        );
+
+        result.IsT3.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task GivenZipStream_WhenInstall_AndNoDependencies_ThenReturnsInstalledPlugin()
+    {
+        var pluginId = new PluginId("streamPlugin", new Version("1.0.0"));
+        var projectPluginsPath = _tempDirFixture.CreateSubFolder($"project_{Guid.NewGuid()}");
+        var pluginPath = Path.Combine(projectPluginsPath, pluginId.GetFullyQualifiedName());
+        Directory.CreateDirectory(pluginPath);
+
+        using var stream = new MemoryStream([1, 2, 3]);
+
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, stream, Arg.Any<CancellationToken>())
+            .Returns(pluginId);
+
+        _pluginPathProvider.GetPathToPlugins(_projectId).Returns(projectPluginsPath);
+        _pluginPathProvider
+            .GetPathToPlugins()
+            .Returns(_tempDirFixture.CreateSubFolder($"global_{Guid.NewGuid()}"));
+
+        _pluginReader.ReadPlugin(pluginPath).Returns((Plugin?)null);
+
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            stream,
+            TestContext.Current.CancellationToken
+        );
+
+        result.IsT0.ShouldBeTrue();
+        result.AsT0.Single().ShouldBe(pluginId);
+    }
+
+    [Fact]
+    public async Task GivenZipStream_WhenInstall_AndDependencyFails_ThenLogsErrorAndReturnsInstallationError()
+    {
+        var bundleId = new PluginId("bundlePlugin", new Version("1.0.0"));
+        var depId = new PluginId("failedDep", new Version("2.0.0"));
+        var projectPluginsPath = _tempDirFixture.CreateSubFolder($"project_{Guid.NewGuid()}");
+        var bundlePath = Path.Combine(projectPluginsPath, bundleId.GetFullyQualifiedName());
+        Directory.CreateDirectory(bundlePath);
+
+        using var stream = new MemoryStream([1, 2, 3]);
+
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, stream, Arg.Any<CancellationToken>())
+            .Returns(bundleId);
+
+        _pluginPathProvider.GetPathToPlugins(_projectId).Returns(projectPluginsPath);
+        _pluginPathProvider
+            .GetPathToPlugins()
+            .Returns(_tempDirFixture.CreateSubFolder($"global_{Guid.NewGuid()}"));
+
+        _pluginReader.ReadPlugin(bundlePath).Returns(CreatePluginWithDependencies(bundleId, depId));
+
+        _pluginUrlFetcher
+            .GetPluginUrl(depId, Arg.Any<CancellationToken>())
+            .Returns(new PluginNotFoundError(depId));
+
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            stream,
+            TestContext.Current.CancellationToken
+        );
+
+        result.IsT3.ShouldBeTrue();
+        result.AsT3.NestedPluginsThatCouldNotBeInstalled.ShouldContain(depId);
+
+        _logger
+            .Received()
+            .Log(
+                LogLevel.Error,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(v => v.ToString()!.Contains(depId.Name)),
+                null,
+                Arg.Any<Func<object, Exception?, string>>()
+            );
     }
 
     #endregion

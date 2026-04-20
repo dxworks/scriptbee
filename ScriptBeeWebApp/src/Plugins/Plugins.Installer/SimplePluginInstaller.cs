@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using OneOf;
+using ScriptBee.Common.Extensions;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Installer;
 
 public class SimplePluginInstaller(
-    IFileService fileService,
     IZipFileService zipFileService,
     IDownloadService downloadService,
     IPluginPathProvider pluginPathProvider,
@@ -20,12 +20,12 @@ public class SimplePluginInstaller(
     )
     {
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        fileService.CreateFolder(pluginFolderPath);
+        pluginFolderPath.EnsureDirectoryExists();
 
         var pluginPath = GetPluginFolderPath(pluginId);
         var zipFilePath = $"{pluginPath}.zip";
 
-        if (fileService.DirectoryExists(pluginPath))
+        if (Directory.Exists(pluginPath))
         {
             return pluginPath;
         }
@@ -42,23 +42,24 @@ public class SimplePluginInstaller(
         {
             logger.LogError(
                 e,
-                "Error while downloading plugin {Name} {Version}",
+                "Error installing plugin {Name} with {Version}",
                 pluginId.Name,
                 pluginId.Version
             );
 
-            fileService.DeleteDirectory(pluginPath);
+            new DirectoryInfo(pluginPath).DeleteIfExists();
+
             return new PluginInstallationError(pluginId, []);
         }
         finally
         {
-            fileService.DeleteFile(zipFilePath);
+            new FileInfo(zipFilePath).DeleteIfExists();
         }
     }
 
     private string GetPluginFolderPath(PluginId pluginId)
     {
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        return fileService.CombinePaths(pluginFolderPath, pluginId.GetFullyQualifiedName());
+        return Path.Combine(pluginFolderPath, pluginId.GetFullyQualifiedName());
     }
 }

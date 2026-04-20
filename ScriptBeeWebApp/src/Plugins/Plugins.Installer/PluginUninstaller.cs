@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using ScriptBee.Common.Extensions;
 
 namespace ScriptBee.Plugins.Installer;
 
 public class PluginUninstaller(
-    IFileService fileService,
     IPluginPathProvider pluginPathProvider,
     ILogger<PluginUninstaller> logger
 ) : IPluginUninstaller
@@ -13,7 +13,7 @@ public class PluginUninstaller(
     public void ForceUninstall(string pathToPlugin)
     {
         logger.LogInformation("Force uninstalling plugin from {PathToPlugin}", pathToPlugin);
-        fileService.DeleteDirectory(pathToPlugin);
+        new DirectoryInfo(pathToPlugin).DeleteIfExists();
     }
 
     public void Uninstall(string pathToPlugin)
@@ -22,19 +22,19 @@ public class PluginUninstaller(
 
         var deletePluginFolderFilePath = GetDeletePluginFolderFilePath();
 
-        fileService.AppendTextToFile(deletePluginFolderFilePath, pathToPlugin);
+        File.AppendAllLines(deletePluginFolderFilePath, new[] { pathToPlugin });
     }
 
     public void DeleteMarkedPlugins()
     {
         var deletePluginFolderFilePath = GetDeletePluginFolderFilePath();
 
-        if (!fileService.FileExists(deletePluginFolderFilePath))
+        if (!File.Exists(deletePluginFolderFilePath))
         {
             return;
         }
 
-        var pluginsToDelete = fileService.ReadAllLines(deletePluginFolderFilePath);
+        var pluginsToDelete = File.ReadAllLines(deletePluginFolderFilePath);
         var shouldRemoveMarkedPluginsFile = true;
 
         foreach (var pluginToDelete in pluginsToDelete)
@@ -43,24 +43,24 @@ public class PluginUninstaller(
 
             try
             {
-                fileService.DeleteDirectory(pluginToDelete);
+                new DirectoryInfo(pluginToDelete).DeleteIfExists();
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error deleting plugin '{PluginToDelete};", pluginToDelete);
+                logger.LogError(e, "Error deleting plugin '{PluginToDelete}';", pluginToDelete);
                 shouldRemoveMarkedPluginsFile = false;
             }
         }
 
         if (shouldRemoveMarkedPluginsFile)
         {
-            fileService.DeleteFile(deletePluginFolderFilePath);
+            File.Delete(deletePluginFolderFilePath);
         }
     }
 
     private string GetDeletePluginFolderFilePath()
     {
         var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        return fileService.CombinePaths(pluginFolderPath, DeletePluginFolderFileName);
+        return Path.Combine(pluginFolderPath, DeletePluginFolderFileName);
     }
 }

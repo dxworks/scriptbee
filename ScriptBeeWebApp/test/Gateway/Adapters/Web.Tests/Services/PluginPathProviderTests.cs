@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Options;
+using ScriptBee.Domain.Model.Config;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Web.Config;
 using ScriptBee.Web.Services;
 
@@ -32,5 +34,16 @@ public class PluginPathProviderTests
                 "plugins"
             )
         );
+    }
+
+    [Fact]
+    public void GetPathToPlugins()
+    {
+        var options = Options.Create(new PluginsSettings());
+
+        var pluginPathProvider = new PluginPathProvider(options);
+        var path = pluginPathProvider.GetPathToPlugins(ProjectId.FromValue("project-id"));
+
+        path.ShouldBe(Path.Combine(ConfigFolders.PathToProjects, "project-id", "plugins"));
     }
 }

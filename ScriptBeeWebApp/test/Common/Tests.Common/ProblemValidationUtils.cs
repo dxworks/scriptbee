@@ -34,7 +34,7 @@ public static partial class ProblemValidationUtils
         AssertDynamicProblemExtensionsNotNull(problemDetails);
     }
 
-    private static async Task AssertConflictProblem(
+    public static async Task AssertConflictProblem(
         HttpContent responseContent,
         string url,
         string title,

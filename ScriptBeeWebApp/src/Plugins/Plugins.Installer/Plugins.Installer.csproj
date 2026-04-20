@@ -9,5 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Plugins.Marketplace\Plugins.Marketplace.csproj" />
     <ProjectReference Include="..\Plugins\Plugins.csproj" />
+    <ProjectReference Include="..\..\Common\Common\Common.csproj" />
   </ItemGroup>
 </Project>

@@ -147,4 +147,30 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static BadRequest<ProblemDetails> ToProblem(
+        this PluginManifestNotFoundError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.BadRequest(
+            context.ToProblemDetails(
+                "Plugin Manifest Not Found",
+                "The 'manifest.yaml' file was not found at the root of the plugin."
+            )
+        );
+    }
+
+    public static Conflict<ProblemDetails> ToProblem(
+        this PluginAlreadyExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.Conflict(
+            context.ToProblemDetails(
+                "Plugin Already Exists",
+                $"A plugin with the ID '{error.Id.Name}' and version '{error.Id.Version}' already exists."
+            )
+        );
+    }
 }

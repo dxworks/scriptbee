@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Domain.Model.Errors;
 
