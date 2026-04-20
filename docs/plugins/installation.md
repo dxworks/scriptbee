@@ -1,4 +1,4 @@
-﻿# Plugin Installation
+# Plugin Installation
 
 ScriptBee supports different types of plugins, as well as plugin bundles which are a collection of plugins.
 They are installed in the plugins folder of the ScriptBee data folder. For more information about the ScriptBee data
@@ -22,11 +22,13 @@ like the name, version and others.
 
 ## Manual Installation
 
-Plugins and Bundles can be installed manually by copying the plugin folders into the `plugins` folder of the ScriptBee
-data folder.
+From the project's **Marketplace Dashboard**, you can use the **Upload Plugin** button to upload a `.zip` file of your
+plugin.
 
-The folder of the plugin must be named with the following format: `{PluginName}@{PluginVersion}` and must contain
-a `manifest.yaml` file.
+- The zip file must contain a `manifest.yaml` at its root.
+- Plugins uploaded this way are **project-specific** and will only be available to the project you uploaded them to.
+- They are stored in the `projects/{projectId}/plugins` folder.
+- Conflicts are detected if the same version already exists globally or in the project.
 
 ## Uninstalling Plugins
 
