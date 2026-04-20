@@ -2,7 +2,7 @@ using NSubstitute;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
-using ScriptBee.Marketplace.Client;
+using ScriptBee.Plugins.Marketplace;
 using ScriptBee.Service.Gateway.Plugins;
 
 namespace ScriptBee.Service.Gateway.Tests.Plugins;

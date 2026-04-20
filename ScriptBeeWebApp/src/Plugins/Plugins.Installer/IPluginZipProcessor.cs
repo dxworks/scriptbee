@@ -5,19 +5,14 @@ using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.Plugins.Installer;
 
-public interface IBundlePluginInstaller
+public interface IPluginZipProcessor
 {
-    Task<OneOf<List<PluginId>, PluginInstallationError>> Install(
-        PluginId pluginId,
-        CancellationToken cancellationToken
-    );
-
     Task<
         OneOf<
-            List<PluginId>,
+            PluginId,
             PluginManifestNotFoundError,
             PluginAlreadyExistsError,
             PluginInstallationError
         >
-    > Install(ProjectId projectId, Stream zipStream, CancellationToken cancellationToken);
+    > ProcessZipStream(ProjectId projectId, Stream zipStream, CancellationToken cancellationToken);
 }

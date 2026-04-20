@@ -1,13 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
+using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Plugins.Installer.Tests;
 
-public class PluginUninstallerTests
+public class PluginUninstallerTests : IClassFixture<TempDirFixture>
 {
     private const string MarkedForDeleteFile = "__delete.txt";
-
-    private readonly IFileService _fileService = Substitute.For<IFileService>();
 
     private readonly IPluginPathProvider _pluginPathProvider =
         Substitute.For<IPluginPathProvider>();
@@ -17,144 +16,93 @@ public class PluginUninstallerTests
     >();
 
     private readonly PluginUninstaller _pluginUninstaller;
+    private readonly TempDirFixture _fixture;
 
-    public PluginUninstallerTests()
+    public PluginUninstallerTests(TempDirFixture fixture)
     {
-        _pluginUninstaller = new PluginUninstaller(_fileService, _pluginPathProvider, _logger);
+        _fixture = fixture;
+        _pluginUninstaller = new PluginUninstaller(_pluginPathProvider, _logger);
     }
 
     [Fact]
     public void GivenPath_WhenForceUninstall_TheDirectoryIsDeleted()
     {
-        _pluginUninstaller.ForceUninstall("path");
+        var pluginPath = _fixture.CreateSubFolder("plugin_to_delete");
 
-        _fileService.Received(1).DeleteDirectory("path");
+        _pluginUninstaller.ForceUninstall(pluginPath);
+
+        Directory.Exists(pluginPath).ShouldBeFalse();
     }
 
     [Fact]
     public void GivenPath_WhenUninstall_ThenPathIsMarkedForDelete()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
-        _fileService.CombinePaths("plugin/path", MarkedForDeleteFile).Returns("delete_path");
+        var pluginsPath = _fixture.CreateSubFolder("plugins_root");
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
+        var deleteFilePath = Path.Combine(pluginsPath, MarkedForDeleteFile);
 
         _pluginUninstaller.Uninstall("path_to_plugin");
 
-        _fileService.Received(1).AppendTextToFile("delete_path", "path_to_plugin");
+        File.Exists(deleteFilePath).ShouldBeTrue();
+        File.ReadAllLines(deleteFilePath).ShouldContain("path_to_plugin");
     }
 
     [Fact]
     public void GivenNoDeleteFile_WhenDeleteMarkedPlugins_ThenNoPluginsAreDeleted()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
-        _fileService.CombinePaths("plugin/path", MarkedForDeleteFile).Returns("delete_path");
-        _fileService.FileExists("delete_path").Returns(false);
+        var pluginsPath = _fixture.CreateSubFolder("empty_delete");
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
 
         _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(0).DeleteDirectory(Arg.Any<string>());
-    }
-
-    [Fact]
-    public void GivenNoPluginsToDelete_WhenDeleteMarkedPlugins_ThenNoDirectoryIsDeleted()
-    {
-        SetupPluginsToDelete([]);
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(0).DeleteDirectory(Arg.Any<string>());
-    }
-
-    [Fact]
-    public void GivenOnePluginAndThrowsExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenFolderWithProblemIsNotDeleted()
-    {
-        SetupPluginsToDelete(["path_to_plugin"]);
-        _fileService.When(x => x.DeleteDirectory("path_to_plugin")).Throws(new Exception());
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(1).DeleteDirectory("path_to_plugin");
-    }
-
-    [Fact]
-    public void GivenOnePluginToDelete_WhenDeleteMarkedPlugins_ThenPluginFolderIsDeleted()
-    {
-        SetupPluginsToDelete(["path_to_plugin"]);
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(1).DeleteDirectory("path_to_plugin");
-    }
-
-    [Fact]
-    public void GivenMultiplePluginsAndAllThrowExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenNoFolderIsDeleted()
-    {
-        SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
-        _fileService.When(x => x.DeleteDirectory("path_to_plugin1")).Throws(new Exception());
-        _fileService.When(x => x.DeleteDirectory("path_to_plugin2")).Throws(new Exception());
-        _fileService.When(x => x.DeleteDirectory("path_to_plugin3")).Throws(new Exception());
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
-    }
-
-    [Fact]
-    public void GivenMultiplePluginsAndNoThrowExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenAllFoldersAreDeleted()
-    {
-        SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
-    }
-
-    [Fact]
-    public void GivenMultiplePluginsAndSomeExceptionWhileDeleting_WhenDeleteMarkedPlugins_ThenFolderWithProblemIsNotDeleted()
-    {
-        SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
-        _fileService.When(x => x.DeleteDirectory("path_to_plugin2")).Throws(new Exception());
-
-        _pluginUninstaller.DeleteMarkedPlugins();
-
-        _fileService.Received(3).DeleteDirectory(Arg.Any<string>());
     }
 
     [Fact]
     public void GivenNoPluginsToDelete_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsDeleted()
     {
-        SetupPluginsToDelete([]);
+        var pluginsPath = _fixture.CreateSubFolder("no_plugins_to_delete");
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
+        var deleteFilePath = Path.Combine(pluginsPath, MarkedForDeleteFile);
+        File.WriteAllText(deleteFilePath, "");
 
         _pluginUninstaller.DeleteMarkedPlugins();
 
-        _fileService.Received(1).DeleteFile("delete_path");
+        File.Exists(deleteFilePath).ShouldBeFalse();
     }
 
     [Fact]
-    public void GivenMultiplePluginsWithNoError_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsDeleted()
+    public void GivenOnePluginToDelete_WhenDeleteMarkedPlugins_ThenPluginFolderIsDeleted()
     {
-        SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
+        var pluginsPath = _fixture.CreateSubFolder("delete_one");
+        var pluginPath = Path.Combine(pluginsPath, "plugin1");
+        Directory.CreateDirectory(pluginPath);
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
+
+        var deleteFilePath = Path.Combine(pluginsPath, MarkedForDeleteFile);
+        File.WriteAllLines(deleteFilePath, [pluginPath]);
 
         _pluginUninstaller.DeleteMarkedPlugins();
 
-        _fileService.Received(1).DeleteFile("delete_path");
+        Directory.Exists(pluginPath).ShouldBeFalse();
+        File.Exists(deleteFilePath).ShouldBeFalse();
     }
 
     [Fact]
-    public void GivenMultiplePluginsWithSomeError_WhenDeleteMarkedPlugins_ThenMarkedToDeleteFileIsNotDeleted()
+    public void GivenMultiplePluginsToDelete_WhenDeleteMarkedPlugins_ThenAllFoldersAreDeleted()
     {
-        SetupPluginsToDelete(["path_to_plugin1", "path_to_plugin2", "path_to_plugin3"]);
-        _fileService.When(x => x.DeleteDirectory("path_to_plugin2")).Throws(new Exception());
+        var pluginsPath = _fixture.CreateSubFolder("delete_multiple");
+        var pluginPath1 = Path.Combine(pluginsPath, "plugin1");
+        var pluginPath2 = Path.Combine(pluginsPath, "plugin2");
+        Directory.CreateDirectory(pluginPath1);
+        Directory.CreateDirectory(pluginPath2);
+
+        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
+        var deleteFilePath = Path.Combine(pluginsPath, MarkedForDeleteFile);
+        File.WriteAllLines(deleteFilePath, [pluginPath1, pluginPath2]);
 
         _pluginUninstaller.DeleteMarkedPlugins();
 
-        _fileService.Received(0).DeleteFile("delete_path");
-    }
-
-    private void SetupPluginsToDelete(IEnumerable<string> pluginPaths)
-    {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
-        _fileService.CombinePaths("plugin/path", MarkedForDeleteFile).Returns("delete_path");
-        _fileService.FileExists("delete_path").Returns(true);
-        _fileService.ReadAllLines("delete_path").Returns(pluginPaths);
+        Directory.Exists(pluginPath1).ShouldBeFalse();
+        Directory.Exists(pluginPath2).ShouldBeFalse();
+        File.Exists(deleteFilePath).ShouldBeFalse();
     }
 }

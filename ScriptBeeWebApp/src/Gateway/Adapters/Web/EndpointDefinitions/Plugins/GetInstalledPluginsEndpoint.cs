@@ -15,11 +15,16 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
     public void DefineServices(IServiceCollection services)
     {
         services.AddSingleton<IInstallPluginUseCase, InstallPluginService>();
+        services.AddSingleton<
+            IGetInstalledPluginDetailsUseCase,
+            GetInstalledPluginDetailsService
+        >();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/plugins", GetInstalledPlugins).WithTags("Plugins");
+        app.MapGet("/api/projects/{projectId}/plugins/{pluginId}", GetPlugin).WithTags("Plugins");
     }
 
     private static async Task<
@@ -40,6 +45,24 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
                         details.InstalledPlugins.Select(WebInstalledPlugin.Map)
                     )
                 ),
+            error => error.ToProblem(context)
+        );
+    }
+
+    private static async Task<
+        Results<Ok<WebMarketplacePluginWithDetails>, NotFound<ProblemDetails>>
+    > GetPlugin(
+        HttpContext context,
+        [FromRoute] string projectId,
+        [FromRoute] string pluginId,
+        IGetInstalledPluginDetailsUseCase useCase,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await useCase.Get(ProjectId.FromValue(projectId), pluginId, cancellationToken);
+
+        return result.Match<Results<Ok<WebMarketplacePluginWithDetails>, NotFound<ProblemDetails>>>(
+            plugin => TypedResults.Ok(WebMarketplacePluginWithDetails.Map(plugin)),
             error => error.ToProblem(context)
         );
     }

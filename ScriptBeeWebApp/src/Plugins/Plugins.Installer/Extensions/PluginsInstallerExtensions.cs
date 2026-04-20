@@ -22,7 +22,7 @@ public static class PluginsInstallerExtensions
         private IServiceCollection AddServices()
         {
             return services
-                .AddSingleton<IFileService, FileService>()
+                .AddSingleton<IPluginZipProcessor, PluginZipProcessor>()
                 .AddSingleton<IBundlePluginInstaller, BundlePluginInstaller>()
                 .AddSingleton<ISimplePluginInstaller, SimplePluginInstaller>()
                 .AddSingleton<IZipFileService, ZipFileService>()

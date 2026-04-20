@@ -20,6 +20,10 @@ public class InstallPluginEndpoint : IEndpointDefinition
     {
         app.MapPut("/api/projects/{projectId}/plugins/{pluginId}", InstallPlugin)
             .WithTags("Plugins");
+
+        app.MapPost("/api/projects/{projectId}/plugins", UploadPlugin)
+            .WithTags("Plugins")
+            .DisableAntiforgery();
     }
 
     private static async Task<
@@ -45,6 +49,45 @@ public class InstallPluginEndpoint : IEndpointDefinition
             Results<NoContent, NotFound<ProblemDetails>, InternalServerError<ProblemDetails>>
         >(
             _ => TypedResults.NoContent(),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context)
+        );
+    }
+
+    private static async Task<
+        Results<
+            Ok<ProjectDetails>,
+            NotFound<ProblemDetails>,
+            Conflict<ProblemDetails>,
+            BadRequest<ProblemDetails>,
+            InternalServerError<ProblemDetails>
+        >
+    > UploadPlugin(
+        HttpContext context,
+        [FromRoute] string projectId,
+        [FromForm] IFormFile file,
+        IInstallPluginUseCase installPluginUseCase,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await installPluginUseCase.InstallPluginAsync(
+            ProjectId.FromValue(projectId),
+            file.OpenReadStream(),
+            cancellationToken
+        );
+
+        return result.Match<
+            Results<
+                Ok<ProjectDetails>,
+                NotFound<ProblemDetails>,
+                Conflict<ProblemDetails>,
+                BadRequest<ProblemDetails>,
+                InternalServerError<ProblemDetails>
+            >
+        >(
+            projectDetails => TypedResults.Ok(projectDetails),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context),
             error => error.ToProblem(context),
             error => error.ToProblem(context)
         );

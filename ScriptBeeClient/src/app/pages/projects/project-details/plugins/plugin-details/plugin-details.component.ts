@@ -14,6 +14,8 @@ import { PluginDetailsInfoComponent } from './components/plugin-details-info/plu
 import { PluginDetailsExtensionsComponent } from './components/plugin-details-extensions/plugin-details-extensions.component';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
+import { ErrorStateComponent } from '../../../../../components/error-state/error-state.component';
+import { convertError } from '../../../../../utils/api';
 
 @Component({
   selector: 'app-plugin-details',
@@ -32,6 +34,7 @@ import { finalize } from 'rxjs';
     PluginDetailsBundleNavigatorComponent,
     PluginDetailsInfoComponent,
     PluginDetailsExtensionsComponent,
+    ErrorStateComponent,
   ],
 })
 export class PluginDetailsComponent {
@@ -44,9 +47,10 @@ export class PluginDetailsComponent {
   isActionLoading = signal(false);
 
   pluginResource = rxResource({
-    params: () => this.pluginId(),
-    stream: ({ params: pluginId }) => this.pluginService.getPlugin(pluginId),
+    params: () => ({ pluginId: this.pluginId(), projectId: this.projectId() }),
+    stream: ({ params: { pluginId, projectId } }) => this.pluginService.getPlugin(pluginId!, projectId),
   });
+  pluginResourceError = computed(() => convertError(this.pluginResource.error()));
 
   installedPlugins = rxResource({
     params: () => this.projectId(),

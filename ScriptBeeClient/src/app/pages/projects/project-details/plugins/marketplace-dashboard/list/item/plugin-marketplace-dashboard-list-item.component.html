@@ -8,7 +8,7 @@
         matBadgeSize="small"
         aria-hidden="false"
         [matBadgeDescription]="installedVersion() ? 'installed' : ''"
-        >{{ plugin().type === 'Plugin' ? 'extension' : 'inventory_2' }}
+        >{{ plugin().isCustom ? 'cloud_upload' : plugin().type === 'Plugin' ? 'extension' : 'inventory_2' }}
       </mat-icon>
     </div>
     <mat-card-title style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">

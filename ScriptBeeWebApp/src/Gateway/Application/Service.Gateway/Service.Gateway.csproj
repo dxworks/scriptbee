@@ -7,7 +7,6 @@
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript\DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.csproj" />
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.Python\DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" />
     <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Common\Marketplace.Client\Marketplace.Client.csproj" />
     <ProjectReference Include="..\..\..\Common\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\..\..\Plugins\Plugins.Loader\Plugins.Loader.csproj" />
     <ProjectReference Include="..\..\..\Plugins\Plugins.Installer\Plugins.Installer.csproj" />

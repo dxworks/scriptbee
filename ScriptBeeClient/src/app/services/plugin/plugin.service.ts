@@ -14,7 +14,10 @@ export class PluginService {
     return this.http.get<WebResponse<MarketplacePlugin[]>>('/api/plugins').pipe(map((response) => response.data));
   }
 
-  public getPlugin(pluginId: string): Observable<MarketplacePluginWithDetails> {
+  public getPlugin(pluginId: string, projectId?: string): Observable<MarketplacePluginWithDetails> {
+    if (projectId) {
+      return this.http.get<MarketplacePluginWithDetails>(`/api/projects/${projectId}/plugins/${pluginId}`);
+    }
     return this.http.get<MarketplacePluginWithDetails>(`/api/plugins/${pluginId}`);
   }
 
@@ -24,6 +27,12 @@ export class PluginService {
 
   installPlugin(projectId: string, pluginId: string, version: string | undefined): Observable<void> {
     return this.http.put<void>(`/api/projects/${projectId}/plugins/${pluginId}?version=${version}`, undefined);
+  }
+
+  uploadPlugin(projectId: string, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<void>(`/api/projects/${projectId}/plugins`, formData);
   }
 
   uninstallPlugin(projectId: string, pluginId: string, version: string) {

@@ -7,7 +7,7 @@ using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using ScriptBee.Common.Web.Services;
-using ScriptBee.Marketplace.Client.Extensions;
+using ScriptBee.Plugins.Marketplace.Extensions;
 using ScriptBee.Rest.Extensions;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;

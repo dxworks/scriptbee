@@ -1,11 +1,15 @@
 ﻿using DxWorks.Hub.Sdk.Clients;
 using DxWorks.Hub.Sdk.Project;
+using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.MarketPlace;
 
-namespace ScriptBee.Marketplace.Client;
+namespace ScriptBee.Plugins.Marketplace;
 
-public sealed class MarketPluginFetcher(IScriptBeeClient hubClient) : IMarketPluginFetcher
+public sealed class MarketPluginFetcher(
+    IScriptBeeClient hubClient,
+    ILogger<MarketPluginFetcher> logger
+) : IMarketPluginFetcher
 {
     private readonly SemaphoreSlim _updateRepository = new(1, 1);
 
@@ -17,6 +21,10 @@ public sealed class MarketPluginFetcher(IScriptBeeClient hubClient) : IMarketPlu
         {
             await _updateRepository.WaitAsync(cancellationToken);
             await hubClient.UpdateRepositoryAsync(cancellationToken);
+        }
+        catch (Exception e)
+        {
+            logger.LogWarning(e, "Could not update repository");
         }
         finally
         {

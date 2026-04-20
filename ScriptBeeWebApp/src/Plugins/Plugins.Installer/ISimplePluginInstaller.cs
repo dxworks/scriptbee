@@ -1,4 +1,4 @@
-﻿using OneOf;
+using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 
@@ -9,6 +9,6 @@ public interface ISimplePluginInstaller
     Task<OneOf<string, PluginInstallationError>> Install(
         string url,
         PluginId pluginId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

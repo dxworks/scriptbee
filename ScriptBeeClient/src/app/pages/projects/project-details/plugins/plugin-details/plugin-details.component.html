@@ -8,6 +8,8 @@
     <div class="loading-overlay">
       <mat-spinner></mat-spinner>
     </div>
+  } @else if (pluginResource.error()) {
+    <app-error-state [error]="pluginResourceError()!" (retry)="pluginResource.reload()"></app-error-state>
   } @else if (pluginResource.value()) {
     <app-plugin-details-header
       [plugin]="pluginResource.value()!"

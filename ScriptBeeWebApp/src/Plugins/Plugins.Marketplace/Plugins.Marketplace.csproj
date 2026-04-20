@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>ScriptBee.Marketplace.Client</RootNamespace>
+    <RootNamespace>ScriptBee.Plugins.Marketplace</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DxWorks.Hub.Sdk" />
@@ -8,6 +8,6 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\..\Common\Model\Model.csproj" />
   </ItemGroup>
 </Project>

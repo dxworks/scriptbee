@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 
@@ -115,6 +115,34 @@ public class TestApiCaller<TStartup>(string endpoint)
         }
 
         var response = await client.PutAsync(
+            endpoint,
+            multipartContent,
+            TestContext.Current.CancellationToken
+        );
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> PostApiFormWithFile(
+        TestWebApplicationFactory<TStartup> factory,
+        Dictionary<string, string> formData,
+        Dictionary<string, byte[]> files
+    )
+    {
+        using var client = factory.CreateClient();
+
+        using var multipartContent = new MultipartFormDataContent();
+
+        foreach (var kvp in formData)
+        {
+            multipartContent.Add(new StringContent(kvp.Value), kvp.Key);
+        }
+
+        foreach (var file in files)
+        {
+            multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
+        }
+
+        var response = await client.PostAsync(
             endpoint,
             multipartContent,
             TestContext.Current.CancellationToken

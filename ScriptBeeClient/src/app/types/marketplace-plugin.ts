@@ -29,6 +29,7 @@ export interface MarketplacePlugin {
   description: string;
   authors: string[];
   versions: PluginVersion[];
+  isCustom?: boolean;
 }
 
 export interface MarketplacePluginWithDetails extends MarketplacePlugin {
