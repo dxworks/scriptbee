@@ -9,11 +9,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { PluginMarketplaceDashboardListComponent } from './list/plugin-marketplace-dashboard-list.component';
 import { convertError } from '../../../../../utils/api';
-import { InstalledPlugin } from '../../../../../types/marketplace-plugin';
+import { InstalledPlugin, MarketplacePlugin } from '../../../../../types/marketplace-plugin';
 import { of } from 'rxjs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',
@@ -29,13 +32,17 @@ import { of } from 'rxjs';
     MatIconModule,
     MatChipsModule,
     MatDividerModule,
+    MatButtonModule,
+    MatSnackBarModule,
     FormsModule,
+    MatTooltipModule,
   ],
 })
 export class PluginsMarketplaceDashboardComponent {
   projectId = signal<string>('');
   searchText = signal('');
   selectedFilters = signal<string[]>([]);
+  uploading = signal(false);
 
   getAllAvailablePlugins = rxResource({
     stream: () => this.pluginsService.getAllAvailablePlugins(),
@@ -63,10 +70,27 @@ export class PluginsMarketplaceDashboardComponent {
     const wantNotInstalled = filters.includes('not-installed');
     const typeFilters = filters.filter((f) => f === 'plugins' || f === 'bundles');
 
-    return plugins.filter((plugin) => {
+    const customPlugins: MarketplacePlugin[] = installedPlugins
+      .filter((installed) => !plugins.some((p) => p.id === installed.id))
+      .map(
+        (installed) =>
+          ({
+            id: installed.id,
+            name: installed.id,
+            type: 'Plugin',
+            description: 'Manually uploaded plugin',
+            authors: ['Unknown'],
+            versions: [{ version: installed.version, url: false, manifestUrl: '' }],
+            isCustom: true,
+          }) as MarketplacePlugin
+      );
+
+    const allPlugins = [...plugins, ...customPlugins];
+
+    return allPlugins.filter((plugin) => {
       const matchesSearch = plugin.name.toLowerCase().includes(search) || plugin.description.toLowerCase().includes(search);
 
-      const isInstalled = this.isPluginInInstalled(installedPlugins, plugin.versions[plugin.versions.length - 1].version);
+      const isInstalled = this.isPluginInInstalled(installedPlugins, plugin.id);
 
       if (wantInstalled && !wantNotInstalled && !isInstalled) {
         return false;
@@ -90,6 +114,7 @@ export class PluginsMarketplaceDashboardComponent {
 
   private route = inject(ActivatedRoute);
   private pluginsService = inject(PluginService);
+  private snackBar = inject(MatSnackBar);
 
   constructor() {
     let currentRoute: ActivatedRoute | null = this.route;
@@ -108,7 +133,30 @@ export class PluginsMarketplaceDashboardComponent {
     this.installedPlugins.reload();
   }
 
-  private isPluginInInstalled(plugins: InstalledPlugin[], version: string) {
-    return plugins.some((plugin) => plugin.version === version);
+  handleFileUpload(event: Event) {
+    const element = event.currentTarget as HTMLInputElement;
+    const fileList: FileList | null = element.files;
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      this.uploading.set(true);
+      this.pluginsService.uploadPlugin(this.projectId(), file).subscribe({
+        next: () => {
+          this.uploading.set(false);
+          this.snackBar.open('Plugin uploaded successfully', 'Close', { duration: 3000 });
+          this.onActionCompleted();
+          element.value = '';
+        },
+        error: (err) => {
+          this.uploading.set(false);
+          const errorMessage = err.error?.detail ?? 'Failed to upload plugin';
+          this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
+          element.value = '';
+        },
+      });
+    }
+  }
+
+  private isPluginInInstalled(plugins: InstalledPlugin[], pluginId: string) {
+    return plugins.some((plugin) => plugin.id === pluginId);
   }
 }

@@ -15,6 +15,17 @@
       <mat-chip-option value="bundles">Bundles</mat-chip-option>
     </mat-chip-listbox>
   </div>
+
+  <div class="actions-container">
+    <button mat-icon-button color="primary" matTooltip="Install Plugin Manually" [disabled]="uploading()" (click)="fileInput.click()">
+      @if (uploading()) {
+        <mat-icon>hourglass_empty</mat-icon>
+      } @else {
+        <mat-icon>upload</mat-icon>
+      }
+    </button>
+    <input #fileInput type="file" style="display: none" (change)="handleFileUpload($event)" accept=".zip" />
+  </div>
 </div>
 <mat-divider></mat-divider>
 

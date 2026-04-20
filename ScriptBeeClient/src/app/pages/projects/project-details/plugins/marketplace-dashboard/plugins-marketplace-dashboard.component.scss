@@ -3,7 +3,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -11,6 +12,7 @@
 
   .search-container {
     flex: 1;
+    min-width: 300px;
 
     .search-field {
       width: 100%;
@@ -22,6 +24,11 @@
   }
 
   .filter-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .actions-container {
     display: flex;
     align-items: center;
   }
