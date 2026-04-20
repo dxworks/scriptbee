@@ -27,10 +27,9 @@ public class PluginReader(
 
             if (pluginManifest != null)
             {
-                var folderName = Path.GetFileName(pluginPath);
-                if (PluginId.TryParse(folderName, out var pluginId))
+                if (TryGetPlugin(pluginPath, pluginManifest, out var plugin))
                 {
-                    return new Plugin(pluginPath, pluginId, pluginManifest);
+                    return plugin;
                 }
 
                 logger.LogWarning(
@@ -49,6 +48,36 @@ public class PluginReader(
         }
 
         return null;
+    }
+
+    private static bool TryGetPlugin(
+        string pluginPath,
+        PluginManifest pluginManifest,
+        out Plugin? plugin
+    )
+    {
+        plugin = null;
+        var folderName = Path.GetFileName(pluginPath);
+
+        if (PluginId.TryParse(folderName, out var pluginId))
+        {
+            plugin = new Plugin(pluginPath, pluginId, pluginManifest);
+            return true;
+        }
+
+        if (pluginManifest.ExtensionPoints.Count <= 0)
+        {
+            return false;
+        }
+
+        var name = $"{pluginManifest.Name}@{pluginManifest.ExtensionPoints[0].Version}";
+        if (!PluginId.TryParse(name, out pluginId))
+        {
+            return false;
+        }
+
+        plugin = new Plugin(pluginPath, pluginId, pluginManifest);
+        return true;
     }
 
     public IEnumerable<Plugin> ReadPlugins(string pluginFolderPath)

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Tests.Common;
@@ -99,5 +99,92 @@ public class PluginReaderTests : IClassFixture<TempDirFixture>
 
         // Assert
         Assert.Equal(2, result.Count());
+    }
+
+    [Fact]
+    public void GivenFolderNameIsPluginId_WhenReadPlugin_ThenReturnPluginWithIdFromFolderName()
+    {
+        // Arrange
+        var pluginFolder = _tempDirFixture.CreateSubFolder("TestPlugin@1.2.3");
+        var manifestYaml = Path.Combine(pluginFolder, "manifest.yaml");
+        File.WriteAllText(manifestYaml, "");
+
+        var pluginManifest = new PluginManifest { Name = "OtherName" };
+        _pluginManifestYamlFileReader.Read(manifestYaml).Returns(pluginManifest);
+
+        // Act
+        var result = _pluginReader.ReadPlugin(pluginFolder);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("TestPlugin", result.Id.Name);
+        Assert.Equal("1.2.3", result.Id.Version.ToString());
+    }
+
+    [Fact]
+    public void GivenFolderNameIsNotPluginIdButManifestHasExtensionPoints_WhenReadPlugin_ThenReturnPluginWithIdFromManifest()
+    {
+        // Arrange
+        var pluginFolder = _tempDirFixture.CreateSubFolder("invalid-folder-name");
+        var manifestYaml = Path.Combine(pluginFolder, "manifest.yaml");
+        File.WriteAllText(manifestYaml, "");
+
+        var pluginManifest = new PluginManifest
+        {
+            Name = "ManifestPlugin",
+            ExtensionPoints = [new ScriptGeneratorPluginExtensionPoint { Version = "2.0.0" }],
+        };
+        _pluginManifestYamlFileReader.Read(manifestYaml).Returns(pluginManifest);
+
+        // Act
+        var result = _pluginReader.ReadPlugin(pluginFolder);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("ManifestPlugin", result.Id.Name);
+        Assert.Equal("2.0.0", result.Id.Version.ToString());
+    }
+
+    [Fact]
+    public void GivenInvalidFolderNameAndNoExtensionPoints_WhenReadPlugin_ThenReturnNull()
+    {
+        // Arrange
+        var pluginFolder = _tempDirFixture.CreateSubFolder("invalid-folder-name");
+        var manifestYaml = Path.Combine(pluginFolder, "manifest.yaml");
+        File.WriteAllText(manifestYaml, "");
+
+        var pluginManifest = new PluginManifest { Name = "ManifestPlugin", ExtensionPoints = [] };
+        _pluginManifestYamlFileReader.Read(manifestYaml).Returns(pluginManifest);
+
+        // Act
+        var result = _pluginReader.ReadPlugin(pluginFolder);
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GivenInvalidFolderNameAndInvalidManifestId_WhenReadPlugin_ThenReturnNull()
+    {
+        // Arrange
+        var pluginFolder = _tempDirFixture.CreateSubFolder("invalid-folder-name");
+        var manifestYaml = Path.Combine(pluginFolder, "manifest.yaml");
+        File.WriteAllText(manifestYaml, "");
+
+        var pluginManifest = new PluginManifest
+        {
+            Name = "ManifestPlugin",
+            ExtensionPoints =
+            [
+                new ScriptGeneratorPluginExtensionPoint { Version = "not-a-version" },
+            ],
+        };
+        _pluginManifestYamlFileReader.Read(manifestYaml).Returns(pluginManifest);
+
+        // Act
+        var result = _pluginReader.ReadPlugin(pluginFolder);
+
+        // Assert
+        Assert.Null(result);
     }
 }
