@@ -5,7 +5,9 @@ public class ScriptGeneratorStrategyUnitTests
     private readonly ScriptGeneratorStrategy _strategy = new();
 
     public enum LocalEnum { }
+
     public class LocalClass { }
+
     public class LocalChild : LocalClass { }
 
     [Fact]

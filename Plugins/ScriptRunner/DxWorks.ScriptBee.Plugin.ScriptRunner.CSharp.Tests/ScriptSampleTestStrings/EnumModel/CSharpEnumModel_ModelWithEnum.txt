@@ -1,0 +1,6 @@
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class ModelWithEnum
+{
+    public DummyEnum EnumField { get; set; }
+}

@@ -5,7 +5,9 @@ public class ScriptGeneratorStrategyUnitTests
     private readonly ScriptGeneratorStrategy _strategy = new();
 
     public enum LocalEnum { }
+
     public class LocalClass { }
+
     public class LocalChild : LocalClass { }
 
     [Fact]
@@ -49,25 +51,31 @@ public class ScriptGeneratorStrategyUnitTests
     }
 
     [Fact]
-    public void GenerateField_StringType_InitializesWithNull()
+    public void GenerateField_StringType_InitializesWithEmptyString()
     {
         var result = _strategy.GenerateField("public", typeof(string), "MyStringField", out _);
 
-        Assert.Contains("MyStringField = null;", result);
+        Assert.Contains("MyStringField = '';", result);
     }
 
     [Fact]
-    public void GenerateField_BoolType_InitializesWithFalse()
+    public void GenerateField_BoolType_InitializesWithTrue()
     {
         var result = _strategy.GenerateField("public", typeof(bool), "MyBoolField", out _);
 
-        Assert.Contains("MyBoolField = false;", result);
+        Assert.Contains("MyBoolField = true;", result);
     }
 
     [Fact]
     public void GenerateMethod_EnumReturnType_ReturnsZero()
     {
-        var result = _strategy.GenerateMethod("public", typeof(LocalEnum), "MyEnumMethod", [], out _);
+        var result = _strategy.GenerateMethod(
+            "public",
+            typeof(LocalEnum),
+            "MyEnumMethod",
+            [],
+            out _
+        );
 
         Assert.Contains("return 0;", result);
     }

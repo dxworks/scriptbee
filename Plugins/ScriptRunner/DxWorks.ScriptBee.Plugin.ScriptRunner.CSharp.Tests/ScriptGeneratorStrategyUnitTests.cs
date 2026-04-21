@@ -1,3 +1,6 @@
+using System.Reflection;
+using System.Reflection.Emit;
+
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;
 
 public class ScriptGeneratorStrategyUnitTests
@@ -5,8 +8,11 @@ public class ScriptGeneratorStrategyUnitTests
     private readonly ScriptGeneratorStrategy _strategy = new();
 
     public enum LocalEnum { }
+
     public struct LocalStruct { }
+
     public class LocalClass { }
+
     public class LocalChild : LocalClass { }
 
     [Fact]
@@ -38,7 +44,10 @@ public class ScriptGeneratorStrategyUnitTests
     {
         var result = _strategy.GenerateClassName(typeof(LocalClass));
 
-        Assert.StartsWith($"namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;{Environment.NewLine}{Environment.NewLine}", result);
+        Assert.StartsWith(
+            $"namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;{Environment.NewLine}{Environment.NewLine}",
+            result
+        );
     }
 
     [Fact]
@@ -62,13 +71,21 @@ public class ScriptGeneratorStrategyUnitTests
     {
         var result = _strategy.GenerateClassName(typeof(LocalChild), typeof(LocalClass), out _);
 
-        Assert.StartsWith($"namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;{Environment.NewLine}{Environment.NewLine}", result);
+        Assert.StartsWith(
+            $"namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;{Environment.NewLine}{Environment.NewLine}",
+            result
+        );
     }
 
     [Fact]
     public void GenerateField_WithEnumType_GeneratesCorrectTypeName()
     {
-        var result = _strategy.GenerateField("public", typeof(LocalEnum), "MyField", out var genericTypes);
+        var result = _strategy.GenerateField(
+            "public",
+            typeof(LocalEnum),
+            "MyField",
+            out var genericTypes
+        );
 
         Assert.Contains("LocalEnum MyField", result);
         Assert.Empty(genericTypes);
@@ -77,7 +94,12 @@ public class ScriptGeneratorStrategyUnitTests
     [Fact]
     public void GenerateProperty_WithEnumType_GeneratesCorrectTypeName()
     {
-        var result = _strategy.GenerateProperty("public", typeof(LocalEnum), "MyProp", out var genericTypes);
+        var result = _strategy.GenerateProperty(
+            "public",
+            typeof(LocalEnum),
+            "MyProp",
+            out var genericTypes
+        );
 
         Assert.Contains("LocalEnum MyProp", result);
         Assert.Empty(genericTypes);
@@ -114,5 +136,45 @@ public class ScriptGeneratorStrategyUnitTests
     public void GenerateModelDeclaration_ReturnsEmpty()
     {
         Assert.Equal("", _strategy.GenerateModelDeclaration("SomeModel"));
+    }
+
+    [Fact]
+    public void GenerateClassName_TypeWithNoNamespace_DoesNotIncludeNamespaceDeclaration()
+    {
+        var typeWithoutNamespace = CreateTypeWithoutNamespace(
+            "NoNamespaceClass",
+            TypeAttributes.Public | TypeAttributes.Class
+        );
+
+        var result = _strategy.GenerateClassName(typeWithoutNamespace);
+
+        Assert.DoesNotContain("namespace", result);
+        Assert.Contains("public class NoNamespaceClass", result);
+    }
+
+    [Fact]
+    public void GenerateClassName_TypeWithNoNamespace_WithBaseClass_DoesNotIncludeNamespaceDeclaration()
+    {
+        var typeWithoutNamespace = CreateTypeWithoutNamespace(
+            "NoNamespaceChild",
+            TypeAttributes.Public | TypeAttributes.Class
+        );
+
+        var result = _strategy.GenerateClassName(typeWithoutNamespace, typeof(LocalClass), out _);
+
+        Assert.DoesNotContain("namespace", result);
+        Assert.Contains("public class NoNamespaceChild", result);
+    }
+
+    private static Type CreateTypeWithoutNamespace(string typeName, TypeAttributes typeAttributes)
+    {
+        var assemblyName = new AssemblyName($"DynamicAssembly_{typeName}");
+        var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
+            assemblyName,
+            AssemblyBuilderAccess.Run
+        );
+        var moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
+        var typeBuilder = moduleBuilder.DefineType(typeName, typeAttributes);
+        return typeBuilder.CreateType()!;
     }
 }
