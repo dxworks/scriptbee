@@ -117,51 +117,59 @@ public class SampleCodeGenerator(
             stringBuilder.AppendLine(classStart);
         }
 
-        foreach (var fieldInfo in type.GetFields(BindingFlags))
+        var fieldInfos = type.GetFields(BindingFlags);
+        var propertyInfos = type.GetProperties(BindingFlags);
+
+        if (!type.IsEnum)
         {
-            var modifier = GetFieldModifier(fieldInfo);
-            stringBuilder.AppendLine(
-                scriptGeneratorStrategy.GenerateField(
-                    modifier,
-                    fieldInfo.FieldType,
-                    fieldInfo.Name,
-                    out var receivedGenericTypes
-                )
-            );
-
-            foreach (var genericType in receivedGenericTypes)
-                genericTypes.Add(genericType);
-
-            if (!_generatedClassNames.Contains(fieldInfo.FieldType.Name))
+            foreach (var fieldInfo in fieldInfos)
             {
-                sampleCodeFiles.AddRange(GenerateClasses(fieldInfo.FieldType));
+                var modifier = GetFieldModifier(fieldInfo);
+                stringBuilder.AppendLine(
+                    scriptGeneratorStrategy.GenerateField(
+                        modifier,
+                        fieldInfo.FieldType,
+                        fieldInfo.Name,
+                        out var receivedGenericTypes
+                    )
+                );
+
+                foreach (var genericType in receivedGenericTypes)
+                    genericTypes.Add(genericType);
+
+                if (!_generatedClassNames.Contains(fieldInfo.FieldType.Name))
+                {
+                    sampleCodeFiles.AddRange(GenerateClasses(fieldInfo.FieldType));
+                }
+            }
+
+            foreach (var propertyInfo in propertyInfos)
+            {
+                const string modifier = "public";
+                stringBuilder.AppendLine(
+                    scriptGeneratorStrategy.GenerateProperty(
+                        modifier,
+                        propertyInfo.PropertyType,
+                        propertyInfo.Name,
+                        out var receivedGenericTypes
+                    )
+                );
+
+                foreach (var genericType in receivedGenericTypes)
+                {
+                    genericTypes.Add(genericType);
+                }
+
+                if (!_generatedClassNames.Contains(propertyInfo.PropertyType.Name))
+                {
+                    sampleCodeFiles.AddRange(GenerateClasses(propertyInfo.PropertyType));
+                }
             }
         }
 
-        foreach (var propertyInfo in type.GetProperties(BindingFlags))
-        {
-            const string modifier = "public";
-            stringBuilder.AppendLine(
-                scriptGeneratorStrategy.GenerateProperty(
-                    modifier,
-                    propertyInfo.PropertyType,
-                    propertyInfo.Name,
-                    out var receivedGenericTypes
-                )
-            );
+        var methodInfos = type.GetMethods(BindingFlags);
 
-            foreach (var genericType in receivedGenericTypes)
-            {
-                genericTypes.Add(genericType);
-            }
-
-            if (!_generatedClassNames.Contains(propertyInfo.PropertyType.Name))
-            {
-                sampleCodeFiles.AddRange(GenerateClasses(propertyInfo.PropertyType));
-            }
-        }
-
-        foreach (var methodInfo in type.GetMethods(BindingFlags))
+        foreach (var methodInfo in methodInfos)
         {
             if (methodInfo.IsSpecialName)
             {
@@ -202,12 +210,11 @@ public class SampleCodeGenerator(
             }
         }
 
-        // 4 = default object methods
-        if (
-            type.GetProperties().Length == 0
-            && type.GetFields().Length == 0
-            && type.GetMethods().Length <= 4
-        )
+        var hasNoDeclaredMembers =
+            (type.IsEnum || (fieldInfos.Length == 0 && propertyInfos.Length == 0))
+            && methodInfos.Count(m => !m.IsSpecialName) == 0;
+
+        if (hasNoDeclaredMembers)
         {
             stringBuilder.AppendLine(scriptGeneratorStrategy.GenerateEmptyClass());
         }

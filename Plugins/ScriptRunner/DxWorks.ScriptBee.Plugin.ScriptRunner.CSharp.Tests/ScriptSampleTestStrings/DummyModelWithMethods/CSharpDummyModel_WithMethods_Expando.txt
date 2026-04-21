@@ -1,4 +1,6 @@
-﻿public class DummyModelWithMethodsExpando
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class DummyModelWithMethodsExpando
 {
     public int DummyNumber { get; set; }
     public string DummyString { get; set; }

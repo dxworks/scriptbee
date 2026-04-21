@@ -1,6 +1,6 @@
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
 
-public class GenericModel<T1>
+public enum DummyEnum
 {
 
 }

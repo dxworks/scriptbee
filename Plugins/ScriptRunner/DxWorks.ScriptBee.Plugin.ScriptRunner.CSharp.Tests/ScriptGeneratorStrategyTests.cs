@@ -1,4 +1,4 @@
-﻿using DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+using DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
 using ScriptBee.Common.CodeGeneration;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests;
@@ -366,5 +366,38 @@ public class ScriptGeneratorStrategyTests
         Assert.Equal(dummyModelWithMethodsContent, sampleCode[2].Content);
         Assert.Equal(dummyModelContent, sampleCode[3].Content);
         Assert.Equal(nestedGenericModelContent, sampleCode[4].Content);
+    }
+
+    [Theory]
+    [InlineData(
+        "ScriptSampleTestStrings/EnumModel/CSharpEnumModel_DummyEnum.txt",
+        "ScriptSampleTestStrings/EnumModel/CSharpEnumModel_ModelWithEnum.txt"
+    )]
+    public async Task GenerateSampleCode_MainModelGivenAsObject_ShouldReturnEnumModel(
+        string pathToDummyEnum,
+        string pathToModelWithEnum
+    )
+    {
+        var dummyEnumContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToDummyEnum,
+            TestContext.Current.CancellationToken
+        );
+        var modelWithEnumContent = await RelativeFileContentProvider.GetFileContentAsync(
+            pathToModelWithEnum,
+            TestContext.Current.CancellationToken
+        );
+
+        var sampleCode = await _sampleCodeGenerator.GetSampleCode(
+            new List<object> { new ModelWithEnum() },
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(2, sampleCode.Count);
+
+        Assert.Equal(dummyEnumContent, sampleCode[0].Content);
+        Assert.Equal(modelWithEnumContent, sampleCode[1].Content);
+
+        Assert.Equal("DummyEnum", sampleCode[0].Name);
+        Assert.Equal("ModelWithEnum", sampleCode[1].Name);
     }
 }

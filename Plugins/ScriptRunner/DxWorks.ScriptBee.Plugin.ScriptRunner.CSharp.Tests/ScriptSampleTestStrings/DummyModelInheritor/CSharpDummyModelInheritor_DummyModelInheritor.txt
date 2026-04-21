@@ -1,4 +1,6 @@
-﻿public class DummyModelInheritor : DummyModel
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class DummyModelInheritor : DummyModel
 {
     public bool IsBetter { get; set; }
 

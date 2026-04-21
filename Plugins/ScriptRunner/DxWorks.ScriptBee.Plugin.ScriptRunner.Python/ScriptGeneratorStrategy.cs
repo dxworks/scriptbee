@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.Python;
@@ -16,7 +16,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
     public string GenerateClassName(Type classType)
     {
         var className = GetTypeName(classType);
-        return $"class {className}:";
+        return classType.IsEnum ? $"class {className}(Enum):" : $"class {className}:";
     }
 
     public string GenerateClassName(
@@ -27,18 +27,14 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
     {
         var baseTypeName = GetTypeName(baseClassType, out baseClassGenericTypes);
         var className = GetTypeName(classType);
-        return $"class {className}({baseTypeName}):";
+        return classType.IsEnum
+            ? $"class {className}(Enum):"
+            : $"class {className}({baseTypeName}):";
     }
 
-    public string GenerateClassStart()
-    {
-        return "";
-    }
+    public string GenerateClassStart() => "";
 
-    public string GenerateClassEnd()
-    {
-        return "";
-    }
+    public string GenerateClassEnd() => "";
 
     public string GenerateField(
         string fieldModifier,
@@ -69,7 +65,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         out HashSet<Type> genericTypes
     )
     {
-        genericTypes = new HashSet<Type>();
+        genericTypes = [];
 
         var stringBuilder = new StringBuilder();
         stringBuilder.Append($"    def {methodName}(");
@@ -90,41 +86,24 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return stringBuilder.ToString();
     }
 
-    public string GenerateModelDeclaration(string modelType)
-    {
-        return $"project: {modelType}";
-    }
+    public string GenerateModelDeclaration(string modelType) => $"project: {modelType}";
 
-    public Task<string> GenerateSampleCode()
-    {
-        return RelativeFileContentProvider.GetFileContentAsync("SampleCodes/PythonSampleCode.txt");
-    }
+    public Task<string> GenerateSampleCode() =>
+        RelativeFileContentProvider.GetFileContentAsync("SampleCodes/PythonSampleCode.txt");
 
-    public string GenerateEmptyClass()
-    {
-        return "    pass";
-    }
+    public string GenerateEmptyClass() => "    pass";
 
-    public Task<string> GenerateImports()
-    {
-        return Task.FromResult("");
-    }
+    public Task<string> GenerateImports() => Task.FromResult("");
 
-    public string GetStartComment()
-    {
-        return ValidScriptDelimiters.PythonStartComment;
-    }
+    public string GetStartComment() => ValidScriptDelimiters.PythonStartComment;
 
-    public string GetEndComment()
-    {
-        return ValidScriptDelimiters.PythonEndComment;
-    }
+    public string GetEndComment() => ValidScriptDelimiters.PythonEndComment;
 
-    private string GetPrimitiveTypeName(string typeName)
+    private static string GetPrimitiveTypeName(string typeName)
     {
-        switch (typeName)
+        return typeName switch
         {
-            case "decimal"
+            "decimal"
             or "System.Decimal"
             or "Decimal"
             or "double"
@@ -132,9 +111,8 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
             or "Double"
             or "float"
             or "System.Single"
-            or "Single":
-                return "float";
-            case "byte"
+            or "Single" => "float",
+            "byte"
             or "System.Byte"
             or "Byte"
             or "sbyte"
@@ -151,22 +129,17 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
             or "Int16"
             or "ushort"
             or "System.UInt16"
-            or "UInt16":
-                return "int";
-            case "long" or "System.Int64" or "Int64" or "ulong" or "System.UInt64" or "UInt64":
-                return "long";
-            case "char" or "System.Char" or "Char" or "string" or "System.String" or "String":
-                return "str";
-            case "bool" or "System.Boolean" or "Boolean":
-                return "bool";
-            default:
-                return typeName;
-        }
+            or "UInt16" => "int",
+            "long" or "System.Int64" or "Int64" or "ulong" or "System.UInt64" or "UInt64" => "long",
+            "char" or "System.Char" or "Char" or "string" or "System.String" or "String" => "str",
+            "bool" or "System.Boolean" or "Boolean" => "bool",
+            _ => typeName,
+        };
     }
 
-    private string GetTypeName(Type type, out HashSet<Type> genericTypes)
+    private static string GetTypeName(Type type, out HashSet<Type> genericTypes)
     {
-        genericTypes = new HashSet<Type>();
+        genericTypes = [];
 
         if (!type.IsGenericType)
         {
@@ -176,7 +149,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         StringBuilder stringBuilder = new StringBuilder();
 
         var name = type.Name;
-        name = name[0..^2];
+        name = name[..^2];
 
         stringBuilder.Append(name);
         stringBuilder.Append('[');
@@ -205,17 +178,17 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return stringBuilder.ToString();
     }
 
-    private string GetTypeName(Type type)
+    private static string GetTypeName(Type type)
     {
         if (!type.IsGenericType)
         {
             return GetPrimitiveTypeName(type.Name);
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        var stringBuilder = new StringBuilder();
 
         var name = type.Name;
-        name = name[0..^2];
+        name = name[..^2];
 
         stringBuilder.Append(name);
         stringBuilder.Append('[');

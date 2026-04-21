@@ -1,4 +1,6 @@
-﻿public class DeepModel
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class DeepModel
 {
     public float floatField;
     public RecursiveModel recursiveModel1;
