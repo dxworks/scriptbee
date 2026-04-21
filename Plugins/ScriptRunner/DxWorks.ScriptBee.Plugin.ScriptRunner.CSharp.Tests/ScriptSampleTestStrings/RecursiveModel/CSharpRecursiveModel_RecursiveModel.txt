@@ -1,4 +1,6 @@
-﻿public class RecursiveModel
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class RecursiveModel
 {
     public long longField;
     public DummyModel dummyField1;

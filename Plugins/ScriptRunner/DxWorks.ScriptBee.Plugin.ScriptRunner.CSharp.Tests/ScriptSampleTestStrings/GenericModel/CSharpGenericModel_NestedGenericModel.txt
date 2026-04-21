@@ -1,4 +1,6 @@
-﻿public class NestedGenericModel : GenericModel<int>
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class NestedGenericModel : GenericModel<int>
 {
     public GenericModel<string> generic;
     public GenericModel<GenericModel<int>, DummyModel> generic2 { get; set; }

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 
 namespace DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript;
@@ -26,7 +26,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         out HashSet<Type> baseClassGenericTypes
     )
     {
-        baseClassGenericTypes = new HashSet<Type>();
+        baseClassGenericTypes = [];
 
         var className = GetTypeName(classType);
         var baseClassName = GetTypeName(baseClassType);
@@ -34,15 +34,9 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return $"class {className} extends {baseClassName}";
     }
 
-    public string GenerateClassStart()
-    {
-        return "{";
-    }
+    public string GenerateClassStart() => "{";
 
-    public string GenerateClassEnd()
-    {
-        return "}";
-    }
+    public string GenerateClassEnd() => "}";
 
     public string GenerateField(
         string fieldModifier,
@@ -51,10 +45,12 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         out HashSet<Type> genericTypes
     )
     {
-        genericTypes = new HashSet<Type>();
+        genericTypes = [];
 
         var fieldTypeName = GetTypeName(fieldType);
-        return $"    {fieldName} = {GetFieldInitializationValue(fieldTypeName)};";
+        return fieldType.IsEnum
+            ? $"    {fieldName} = 0;"
+            : $"    {fieldName} = {GetFieldInitializationValue(fieldTypeName)};";
     }
 
     public string GenerateProperty(
@@ -75,7 +71,7 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         out HashSet<Type> genericTypes
     )
     {
-        genericTypes = new HashSet<Type>();
+        genericTypes = [];
 
         var methodTypeName = GetTypeName(methodType);
 
@@ -97,9 +93,16 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
 
         if (methodTypeName != "void" && methodTypeName != "Void")
         {
-            stringBuilder.AppendLine(
-                $"        return {GetFieldInitializationValue(methodTypeName)};"
-            );
+            if (methodType.IsEnum)
+            {
+                stringBuilder.AppendLine("        return 0;");
+            }
+            else
+            {
+                stringBuilder.AppendLine(
+                    $"        return {GetFieldInitializationValue(methodTypeName)};"
+                );
+            }
         }
 
         stringBuilder.AppendLine("    }");
@@ -107,43 +110,26 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
         return stringBuilder.ToString();
     }
 
-    public string GenerateModelDeclaration(string modelType)
-    {
-        return $"let project = new {modelType}();";
-    }
+    public string GenerateModelDeclaration(string modelType) => $"let project = new {modelType}();";
 
-    public async Task<string> GenerateSampleCode()
-    {
-        return await RelativeFileContentProvider.GetFileContentAsync(
+    public async Task<string> GenerateSampleCode() =>
+        await RelativeFileContentProvider.GetFileContentAsync(
             "SampleCodes/JavascriptSampleCode.txt"
         );
-    }
 
-    public string GenerateEmptyClass()
-    {
-        return "";
-    }
+    public string GenerateEmptyClass() => "";
 
-    public Task<string> GenerateImports()
-    {
-        return Task.FromResult("");
-    }
+    public Task<string> GenerateImports() => Task.FromResult("");
 
-    public string GetStartComment()
-    {
-        return ValidScriptDelimiters.JavascriptStartComment;
-    }
+    public string GetStartComment() => ValidScriptDelimiters.JavascriptStartComment;
 
-    public string GetEndComment()
-    {
-        return ValidScriptDelimiters.JavascriptEndComment;
-    }
+    public string GetEndComment() => ValidScriptDelimiters.JavascriptEndComment;
 
-    private string GetFieldInitializationValue(string fieldType)
+    private static string GetFieldInitializationValue(string fieldType)
     {
-        switch (fieldType)
+        return fieldType switch
         {
-            case "byte"
+            "byte"
             or "System.Byte"
             or "Byte"
             or "sbyte"
@@ -175,24 +161,20 @@ public class ScriptGeneratorStrategy : IScriptGeneratorStrategy
             or "Int16"
             or "ushort"
             or "System.UInt16"
-            or "UInt16":
-                return "0";
-            case "char" or "System.Char" or "Char" or "string" or "System.String" or "String":
-                return "\'\'";
-            case "bool" or "System.Boolean" or "Boolean":
-                return "true";
-            default:
-                return $"new {fieldType}()";
-        }
+            or "UInt16" => "0",
+            "char" or "System.Char" or "Char" or "string" or "System.String" or "String" => "\'\'",
+            "bool" or "System.Boolean" or "Boolean" => "true",
+            _ => $"new {fieldType}()",
+        };
     }
 
-    private string GetTypeName(Type type)
+    private static string GetTypeName(Type type)
     {
         var name = type.Name;
 
         if (type.IsGenericType)
         {
-            name = name[0..^2];
+            name = name[..^2];
         }
 
         return name;

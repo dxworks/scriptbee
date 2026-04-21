@@ -1,4 +1,6 @@
-﻿public class GenericModel<T1, T2>
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+public class GenericModel<T1, T2>
 {
 
 }

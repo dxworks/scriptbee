@@ -1,4 +1,6 @@
-﻿using System;
+namespace DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon;
+
+using System;
 
 public class DeepModel
 {
