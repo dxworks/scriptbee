@@ -1,13 +1,13 @@
-﻿using ScriptBee.Plugins.Loader;
+using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Plugins.Loader;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 
-public sealed class UninstallPluginService(IPluginRepository pluginRepository)
-    : IUninstallPluginUseCase
+public sealed class UninstallPluginService(IPluginLoader pluginLoader) : IUninstallPluginUseCase
 {
-    public void UninstallPlugin(string pluginId, string pluginVersion)
+    public void UninstallPlugin(PluginId pluginId)
     {
-        pluginRepository.UnRegisterPlugin(pluginId, pluginVersion);
+        pluginLoader.Unload(pluginId);
     }
 }

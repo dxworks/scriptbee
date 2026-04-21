@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+using System.Runtime.Loader;
+using DxWorks.ScriptBee.Plugin.Api;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Tests.Common.Plugins;
@@ -13,8 +15,7 @@ public class PluginLoaderTests
     private readonly IPluginRegistrationService _pluginRegistrationService =
         Substitute.For<IPluginRegistrationService>();
 
-    private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
-
+    private readonly IPluginRegistry _pluginRegistry = Substitute.For<IPluginRegistry>();
     private readonly PluginLoader _pluginLoader;
 
     public PluginLoaderTests()
@@ -22,47 +23,49 @@ public class PluginLoaderTests
         _pluginLoader = new PluginLoader(
             _logger,
             _dllLoader,
-            _pluginRepository,
+            _pluginRegistry,
             _pluginRegistrationService
         );
     }
 
     [Fact]
-    public void GivenUnregisteredPlugin_WhenLoad_ThenMessageIsLogged()
+    public void GivenUnregisteredPluginKind_WhenLoad_ThenWarningIsLogged()
     {
-        HashSet<Type>? nullTypes = null;
-        var plugin = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
-        plugin.Manifest.ExtensionPoints[0].Kind = "kind";
-        plugin.Manifest.ExtensionPoints[0].EntryPoint = "entryPoint";
-        _pluginRegistrationService
-            .TryGetValue(Arg.Any<string>(), out Arg.Any<HashSet<Type>?>())
-            .Returns(x =>
-            {
-                x[1] = nullTypes;
-                return false;
-            });
+        // Arrange
+        var pluginId = new PluginId("id", new Version(1, 0, 0));
+        var plugin = new TestPlugin(pluginId);
+        plugin.Manifest.ExtensionPoints[0].Kind = "unregisteredKind";
+        plugin.Manifest.ExtensionPoints[0].EntryPoint = "plugin.dll";
 
+        _pluginRegistrationService
+            .TryGetValue("unregisteredKind", out Arg.Any<HashSet<Type>?>())
+            .Returns(false);
+
+        // Act
         _pluginLoader.Load(plugin);
 
+        // Assert
         _logger
             .Received(1)
-            .ReceivedWithAnyArgs()
-            .LogWarning(
-                "Plugin kind '{PluginKind}' from '{EntryPoint}' has no relevant Dlls to load",
-                "kind",
-                "entryPoint"
+            .Log(
+                LogLevel.Warning,
+                Arg.Any<EventId>(),
+                Arg.Is<object>(v =>
+                    v != null && v.ToString()!.Contains("has no relevant Dlls to load")
+                ),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception, string>>()!
             );
     }
 
     [Fact]
-    public void GivenRegisteredPluginWithNoAcceptedTypes_WhenLoad_ThenPluginManifestIsLoaded()
+    public void GivenRegisteredPluginWithNoAcceptedTypes_WhenLoad_ThenOnlyPluginManifestIsRegistered()
     {
+        // Arrange
+        var pluginId = new PluginId("id", new Version(1, 0, 0));
+        var plugin = new TestPlugin(pluginId);
         var acceptedTypes = new HashSet<Type>();
-        var plugin = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
-        var entryPoint = Path.Combine(
-            plugin.FolderPath,
-            plugin.Manifest.ExtensionPoints[0].EntryPoint
-        );
+
         _pluginRegistrationService
             .TryGetValue(Arg.Any<string>(), out Arg.Any<HashSet<Type>?>())
             .Returns(x =>
@@ -70,24 +73,27 @@ public class PluginLoaderTests
                 x[1] = acceptedTypes;
                 return true;
             });
-        _dllLoader
-            .LoadDllTypes(entryPoint, acceptedTypes)
-            .Returns(new List<(Type @interface, Type concrete)>());
 
+        // Act
         _pluginLoader.Load(plugin);
 
-        _pluginRepository.Received(1).ReceivedWithAnyArgs().RegisterPlugin(plugin);
+        // Assert
+        _pluginRegistry.Received(1).RegisterPlugin(plugin);
+        _dllLoader
+            .DidNotReceiveWithAnyArgs()
+            .LoadDllTypes(Arg.Any<string>(), Arg.Any<ISet<Type>>());
     }
 
     [Fact]
-    public void GivenRegisteredPluginWithMultipleAcceptedTypes_WhenLoad_ThenPluginManifestIsLoaded()
+    public void GivenRegisteredPluginWithAcceptedTypes_WhenLoad_ThenPluginAndTypesAreRegistered()
     {
-        var acceptedTypes = new HashSet<Type> { typeof(string), typeof(object) };
-        var plugin = new TestPlugin(new PluginId("id", new Version(0, 0, 0, 1)));
-        var entryPoint = Path.Combine(
-            plugin.FolderPath,
-            plugin.Manifest.ExtensionPoints[0].EntryPoint
-        );
+        // Arrange
+        var pluginId = new PluginId("id", new Version(1, 0, 0));
+        var plugin = new TestPlugin(pluginId);
+        var acceptedTypes = new HashSet<Type> { typeof(IPlugin) };
+        var loadedTypes = new List<(Type, Type)> { (typeof(IPlugin), typeof(TestPlugin)) };
+        var loadedPlugin = new LoadedPlugin(AssemblyLoadContext.Default, loadedTypes);
+
         _pluginRegistrationService
             .TryGetValue(Arg.Any<string>(), out Arg.Any<HashSet<Type>?>())
             .Returns(x =>
@@ -95,21 +101,26 @@ public class PluginLoaderTests
                 x[1] = acceptedTypes;
                 return true;
             });
-        _dllLoader
-            .LoadDllTypes(entryPoint, acceptedTypes)
-            .Returns(
-                new List<(Type @interface, Type concrete)>
-                {
-                    (typeof(string), typeof(string)),
-                    (typeof(object), typeof(object)),
-                }
-            );
 
+        _dllLoader.LoadDllTypes(Arg.Any<string>(), acceptedTypes).Returns(loadedPlugin);
+
+        // Act
         _pluginLoader.Load(plugin);
 
-        _pluginRepository
-            .Received(1)
-            .ReceivedWithAnyArgs()
-            .RegisterPlugin(plugin, typeof(object), typeof(object));
+        // Assert
+        _pluginRegistry.Received(1).RegisterPlugin(plugin, loadedPlugin);
+    }
+
+    [Fact]
+    public void GivenPluginId_WhenUnload_ThenRegistryUnRegisterIsCalled()
+    {
+        // Arrange
+        var pluginId = new PluginId("testPlugin", new Version(1, 0, 0));
+
+        // Act
+        _pluginLoader.Unload(pluginId);
+
+        // Assert
+        _pluginRegistry.Received(1).UnRegisterPlugin(pluginId);
     }
 }

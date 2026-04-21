@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Analysis;
 
@@ -31,7 +32,7 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
-        useCase.Received(1).UninstallPlugin(pluginId, version);
+        useCase.Received(1).UninstallPlugin(new PluginId(pluginId, new Version(version)));
     }
 
     [Fact]

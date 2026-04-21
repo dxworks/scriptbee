@@ -8,4 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Plugins\Plugins.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Plugins.Loader.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
 </Project>

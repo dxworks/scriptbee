@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Service.Analysis;
 using ScriptBee.UseCases.Analysis;
 
@@ -26,7 +27,7 @@ public class UninstallPluginEndpoint : IEndpointDefinition
         CancellationToken cancellationToken = default
     )
     {
-        uninstallPluginUseCase.UninstallPlugin(pluginId, version);
+        uninstallPluginUseCase.UninstallPlugin(new PluginId(pluginId, new Version(version)));
 
         return TypedResults.NoContent();
     }
