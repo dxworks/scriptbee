@@ -1,6 +1,6 @@
-﻿namespace ScriptBee.Plugins.Loader;
+namespace ScriptBee.Plugins.Loader;
 
-public interface IPluginRegistrationService
+internal interface IPluginRegistrationService
 {
     void Add(string pluginKind, HashSet<Type> acceptedTypes);
 

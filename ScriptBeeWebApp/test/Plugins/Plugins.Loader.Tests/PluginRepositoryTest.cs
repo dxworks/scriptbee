@@ -1,4 +1,5 @@
-﻿using DxWorks.ScriptBee.Plugin.Api;
+using System.Runtime.Loader;
+using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
 
@@ -9,168 +10,92 @@ public class PluginRepositoryTests
     private readonly PluginRepository _repository = new();
 
     [Fact]
-    public void RegisterPlugin_AddsPluginToRepository()
+    public void GivenValidPlugin_WhenRegister_ThenServiceIsAdded()
     {
+        // Arrange
         var plugin = CreateTestPlugin("testId", new Version(1, 0, 0));
+        var loadedPlugin = new LoadedPlugin(
+            new AssemblyLoadContext(null, isCollectible: true),
+            new List<(Type, Type)> { (typeof(ITestPlugin), typeof(TestPlugin)) }
+        );
 
-        _repository.RegisterPlugin(plugin);
+        // Act
+        _repository.RegisterPlugin(plugin, loadedPlugin);
 
-        Assert.Single(_repository.GetLoadedPluginsManifests());
-        Assert.Equal("testId", _repository.GetLoadedPluginsManifests().First().Name);
-    }
-
-    [Fact]
-    public void RegisterPlugin_ReplacesOlderVersion()
-    {
-        var plugin1 = CreateTestPlugin("testId", new Version(1, 0, 0));
-        var plugin2 = CreateTestPlugin("testId", new Version(2, 0, 0));
-
-        _repository.RegisterPlugin(plugin1);
-        _repository.RegisterPlugin(plugin2);
-
-        Assert.Single(_repository.GetLoadedPluginsManifests());
-        Assert.Equal(new Version(2, 0, 0), _repository.GetInstalledPluginVersion("testId"));
-    }
-
-    [Fact]
-    public void RegisterPlugin_DoesNotReplaceNewerVersion()
-    {
-        var plugin1 = CreateTestPlugin("testId", new Version(2, 0, 0));
-        var plugin2 = CreateTestPlugin("testId", new Version(1, 0, 0));
-
-        _repository.RegisterPlugin(plugin1);
-        _repository.RegisterPlugin(plugin2);
-
-        Assert.Single(_repository.GetLoadedPluginsManifests());
-        Assert.Equal(new Version(2, 0, 0), _repository.GetInstalledPluginVersion("testId"));
-    }
-
-    [Fact]
-    public void UnRegisterPlugin_RemovesPluginFromRepository()
-    {
-        var plugin = CreateTestPlugin("testId", new Version(1, 0, 0));
-        _repository.RegisterPlugin(plugin);
-
-        _repository.UnRegisterPlugin("testId", "1.0.0");
-
-        Assert.Empty(_repository.GetLoadedPluginsManifests());
-    }
-
-    [Fact]
-    public void RegisterPlugin_WithInterfaceAndConcrete_AddsServiceDescriptor()
-    {
-        var plugin = CreateTestPlugin("testId", new Version(1, 0, 0));
-
-        _repository.RegisterPlugin(plugin, typeof(ITestPlugin), typeof(TestPlugin));
-
+        // Assert
         var services = _repository.GetPlugins<ITestPlugin>();
         Assert.Single(services);
     }
 
     [Fact]
-    public void GetPlugin_ReturnsPluginMatchingFilter()
+    public void GivenMultiplePlugins_WhenGetPluginWithFilter_ThenCorrectPluginIsReturned()
     {
+        // Arrange
         var plugin1 = CreateTestPlugin("testId1", new Version(1, 0, 0));
         var plugin2 = CreateTestPlugin("testId2", new Version(1, 0, 0));
-        _repository.RegisterPlugin(plugin1, typeof(ITestPlugin), typeof(TestPlugin));
-        _repository.RegisterPlugin(plugin2, typeof(ITestPlugin), typeof(TestPlugin2));
+        var loadedPlugin1 = new LoadedPlugin(
+            new AssemblyLoadContext(null, isCollectible: true),
+            new List<(Type, Type)> { (typeof(ITestPlugin), typeof(TestPlugin)) }
+        );
+        var loadedPlugin2 = new LoadedPlugin(
+            new AssemblyLoadContext(null, isCollectible: true),
+            new List<(Type, Type)> { (typeof(ITestPlugin), typeof(TestPlugin2)) }
+        );
+        _repository.RegisterPlugin(plugin1, loadedPlugin1);
+        _repository.RegisterPlugin(plugin2, loadedPlugin2);
 
+        // Act
         var result = _repository.GetPlugin<ITestPlugin>(p => p.GetPluginId() == "testId2");
 
+        // Assert
         Assert.NotNull(result);
         Assert.Equal("testId2", result.GetPluginId());
     }
 
     [Fact]
-    public void GetPlugins_ReturnsAllPluginsOfGivenType()
+    public void GivenMultiplePlugins_WhenGetPlugins_ThenAllAreReturned()
     {
+        // Arrange
         var plugin1 = CreateTestPlugin("testId1", new Version(1, 0, 0));
         var plugin2 = CreateTestPlugin("testId2", new Version(1, 0, 0));
-        _repository.RegisterPlugin(plugin1, typeof(ITestPlugin), typeof(TestPlugin));
-        _repository.RegisterPlugin(plugin2, typeof(ITestPlugin), typeof(TestPlugin2));
+        var loadedPlugin1 = new LoadedPlugin(
+            new AssemblyLoadContext(null, isCollectible: true),
+            new List<(Type, Type)> { (typeof(ITestPlugin), typeof(TestPlugin)) }
+        );
+        var loadedPlugin2 = new LoadedPlugin(
+            new AssemblyLoadContext(null, isCollectible: true),
+            new List<(Type, Type)> { (typeof(ITestPlugin), typeof(TestPlugin2)) }
+        );
+        _repository.RegisterPlugin(plugin1, loadedPlugin1);
+        _repository.RegisterPlugin(plugin2, loadedPlugin2);
 
+        // Act
         var result = _repository.GetPlugins<ITestPlugin>();
 
+        // Assert
         Assert.Equal(2, result.Count());
     }
 
     [Fact]
-    public void GetLoadedPluginsManifests_ReturnsManifestsOfLoadedPlugins()
+    public void GivenRegisteredPlugin_WhenUnRegister_ThenPluginAndServicesAreRemoved()
     {
-        var plugin1 = CreateTestPlugin("testId1", new Version(1, 0, 0));
-        var plugin2 = CreateTestPlugin("testId2", new Version(1, 0, 0));
-        _repository.RegisterPlugin(plugin1);
-        _repository.RegisterPlugin(plugin2);
-
-        var manifests = _repository.GetLoadedPluginsManifests().ToList();
-
-        Assert.Equal(2, manifests.Count);
-        Assert.Contains(manifests, m => m.Name == "testId1");
-        Assert.Contains(manifests, m => m.Name == "testId2");
-    }
-
-    [Fact]
-    public void GetLoadedPlugins_WithKind_ReturnsPluginsWithMatchingKind()
-    {
-        var plugin1 = CreateTestPlugin(
-            "testId1",
-            new Version(1, 0, 0),
-            new TestExtensionPoint { Kind = "testKind" }
+        // Arrange
+        var pluginId = new PluginId("testId", new Version(1, 0, 0));
+        var plugin = CreateTestPlugin(pluginId.Name, pluginId.Version);
+        var loadedPlugin = new LoadedPlugin(
+            new AssemblyLoadContext(null, isCollectible: true),
+            new List<(Type, Type)> { (typeof(ITestPlugin), typeof(TestPlugin)) }
         );
-        var plugin2 = CreateTestPlugin(
-            "testId2",
-            new Version(1, 0, 0),
-            new TestExtensionPoint { Kind = "anotherKind" }
-        );
-        _repository.RegisterPlugin(plugin1);
-        _repository.RegisterPlugin(plugin2);
+        _repository.RegisterPlugin(plugin, loadedPlugin);
 
-        var plugins = _repository.GetLoadedPlugins("testKind").ToList();
+        // Act
+        _repository.UnRegisterPlugin(pluginId);
 
-        Assert.Single(plugins);
-        Assert.Equal("testId1", plugins.First().Id.Name);
-    }
-
-    [Fact]
-    public void GetLoadedPluginExtensionPoints_ReturnsExtensionPointsOfGivenType()
-    {
-        var plugin1 = CreateTestPlugin(
-            "testId1",
-            new Version(1, 0, 0),
-            new TestExtensionPoint { Kind = "testKind" }
-        );
-        var plugin2 = CreateTestPlugin(
-            "testId2",
-            new Version(1, 0, 0),
-            new AnotherTestExtensionPoint { Kind = "anotherKind" }
-        );
-        _repository.RegisterPlugin(plugin1);
-        _repository.RegisterPlugin(plugin2);
-
-        var extensionPoints = _repository
-            .GetLoadedPluginExtensionPoints<TestExtensionPoint>()
-            .ToList();
-
-        Assert.Single(extensionPoints);
-        Assert.Equal("testKind", extensionPoints.First().Kind);
-    }
-
-    [Fact]
-    public void GetInstalledPluginVersion_ReturnsInstalledPluginVersion()
-    {
-        var plugin = CreateTestPlugin("testId", new Version(1, 0, 0));
-        _repository.RegisterPlugin(plugin);
-
-        var version = _repository.GetInstalledPluginVersion("testId");
-        Assert.Equal(new Version(1, 0, 0), version);
-    }
-
-    [Fact]
-    public void GetInstalledPluginVersion_ReturnsNullIfPluginNotInstalled()
-    {
-        var version = _repository.GetInstalledPluginVersion("nonExistentId");
-
-        Assert.Null(version);
+        // Assert
+        var plugins = _repository.GetLoadedPlugins();
+        var services = _repository.GetPlugins<ITestPlugin>();
+        Assert.Empty(plugins);
+        Assert.Empty(services);
     }
 
     private static Plugin CreateTestPlugin(
@@ -186,10 +111,6 @@ public class PluginRepositoryTests
         );
     }
 }
-
-file class TestExtensionPoint : PluginExtensionPoint;
-
-file class AnotherTestExtensionPoint : PluginExtensionPoint;
 
 file interface ITestPlugin : IPlugin
 {

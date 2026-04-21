@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Plugins;
 
 namespace ScriptBee.Plugins.Loader;
 
-public class PluginLoader(
+internal class PluginLoader(
     ILogger<PluginLoader> logger,
     IDllLoader dllLoader,
-    IPluginRepository pluginRepository,
+    IPluginRegistry pluginRegistry,
     IPluginRegistrationService pluginRegistrationService
 ) : IPluginLoader
 {
@@ -23,18 +23,15 @@ public class PluginLoader(
             {
                 if (acceptedPluginTypes!.Count == 0)
                 {
-                    pluginRepository.RegisterPlugin(plugin);
-                    return;
+                    pluginRegistry.RegisterPlugin(plugin);
+                    continue;
                 }
 
                 var path = Path.Combine(plugin.FolderPath, extensionPoint.EntryPoint);
 
-                var loadDllTypes = dllLoader.LoadDllTypes(path, acceptedPluginTypes).ToList();
+                var loadedPlugin = dllLoader.LoadDllTypes(path, acceptedPluginTypes);
 
-                foreach (var (@interface, concrete) in loadDllTypes)
-                {
-                    pluginRepository.RegisterPlugin(plugin, @interface, concrete);
-                }
+                pluginRegistry.RegisterPlugin(plugin, loadedPlugin);
             }
             else
             {
@@ -47,5 +44,11 @@ public class PluginLoader(
         }
 
         logger.LogInformation("Plugin {PluginName} loaded", plugin.Manifest.Name);
+    }
+
+    public void Unload(PluginId pluginId)
+    {
+        pluginRegistry.UnRegisterPlugin(pluginId);
+        logger.LogInformation("Plugin {PluginId} unloaded", pluginId);
     }
 }

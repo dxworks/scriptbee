@@ -1,8 +1,8 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 
 namespace ScriptBee.Plugins.Loader;
 
-public class PluginRegistrationService : IPluginRegistrationService
+internal class PluginRegistrationService : IPluginRegistrationService
 {
     private readonly ConcurrentDictionary<string, HashSet<Type>> _pluginRegistrations = new();
 

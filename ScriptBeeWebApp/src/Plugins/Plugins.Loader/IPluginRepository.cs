@@ -1,17 +1,10 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using ScriptBee.Domain.Model.Plugins;
-using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Plugins.Loader;
 
 public interface IPluginRepository
 {
-    void UnRegisterPlugin(string pluginId, string pluginVersion);
-
-    void RegisterPlugin(Plugin plugin, Type @interface, Type concrete);
-
-    void RegisterPlugin(Plugin plugin);
-
     TService? GetPlugin<TService>(
         Func<TService, bool> filter,
         IEnumerable<(Type @interface, object instance)>? services = null
@@ -22,15 +15,6 @@ public interface IPluginRepository
         IEnumerable<(Type @interface, object instance)>? services = null
     )
         where TService : IPlugin;
-
-    IEnumerable<PluginManifest> GetLoadedPluginsManifests();
-
-    IEnumerable<Plugin> GetLoadedPlugins(string kind);
-
-    IEnumerable<T> GetLoadedPluginExtensionPoints<T>()
-        where T : PluginExtensionPoint;
-
-    Version? GetInstalledPluginVersion(string pluginId);
 
     IEnumerable<Plugin> GetLoadedPlugins();
 }

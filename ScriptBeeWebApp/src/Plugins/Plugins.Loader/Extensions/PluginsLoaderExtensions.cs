@@ -10,6 +10,7 @@ public static class PluginsLoaderExtensions
     {
         return services
             .AddSingleton<IPluginRepository, PluginRepository>()
+            .AddSingleton<IPluginRegistry, PluginRepository>()
             .AddSingleton<IDllLoader, DllLoader>()
             .AddSingleton<IPluginLoader, PluginLoader>()
             .AddSingleton<IPluginRegistrationService>(_ => RegisterPluginTypes());

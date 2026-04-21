@@ -1,40 +1,20 @@
-﻿using System.Reflection;
-
 namespace ScriptBee.Plugins.Loader;
 
-public class DllLoader : IDllLoader
+internal class DllLoader : IDllLoader
 {
-    public IEnumerable<(Type @interface, Type concrete)> LoadDllTypes(
-        string fullPathToDll,
-        ISet<Type> acceptedPluginTypes
-    )
+    public LoadedPlugin LoadDllTypes(string fullPathToDll, ISet<Type> acceptedPluginTypes)
     {
-        AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+        var context = new PluginAssemblyLoadContext(fullPathToDll);
 
-        var pluginDll = Assembly.LoadFrom(fullPathToDll);
+        var pluginDll = context.LoadFromAssemblyPath(fullPathToDll);
 
-        var acceptedTypes = new List<(Type @interface, Type concrete)>();
+        var acceptedTypes = (
+            from exportedType in pluginDll.GetExportedTypes()
+            from acceptedPluginType in acceptedPluginTypes
+            where acceptedPluginType.IsAssignableFrom(exportedType)
+            select (acceptedPluginType, exportedType)
+        ).ToList();
 
-        foreach (var exportedType in pluginDll.GetExportedTypes())
-        {
-            foreach (var acceptedPluginType in acceptedPluginTypes)
-            {
-                if (acceptedPluginType.IsAssignableFrom(exportedType))
-                {
-                    acceptedTypes.Add((acceptedPluginType, exportedType));
-                }
-            }
-        }
-
-        AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomainOnAssemblyResolve;
-
-        return acceptedTypes;
-    }
-
-    private static Assembly CurrentDomainOnAssemblyResolve(object? sender, ResolveEventArgs args)
-    {
-        return ((AppDomain)sender)
-            .GetAssemblies()
-            .FirstOrDefault(assembly => assembly.FullName == args.Name);
+        return new LoadedPlugin(context, acceptedTypes);
     }
 }
