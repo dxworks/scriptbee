@@ -14,8 +14,6 @@ public class PluginManager(
 {
     public void LoadPlugins()
     {
-        // todo filter custom plugin definitions first
-        // todo iterate over all plugin definitions and load them
         logger.LogInformation("Loading plugins");
 
         var plugins = pluginReader.ReadPlugins(pluginPathProvider.GetPathToPlugins());
