@@ -233,4 +233,34 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
     }
+
+    [Theory]
+    [FilePath("TestData/GetProjectStructure/available-script-types.json")]
+    public async Task GetAvailableScriptTypes_ShouldReturnOk(string responsePath)
+    {
+        var useCase = Substitute.For<IGetAvailableScriptTypesUseCase>();
+        useCase
+            .GetAvailableScriptTypes()
+            .Returns(
+                new List<ScriptLanguage>
+                {
+                    new("csharp", ".cs"),
+                    new("python", ".py"),
+                    new("javascript", ".js"),
+                }
+            );
+
+        TestApiCaller<Program> api = new("/api/projects/id/structure/available-script-types");
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
+    }
 }

@@ -15,6 +15,7 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
     public void DefineServices(IServiceCollection services)
     {
         services.AddScoped<IGetProjectFilesUseCase, GetProjectFilesService>();
+        services.AddScoped<IGetAvailableScriptTypesUseCase, GetAvailableScriptTypesService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
@@ -79,19 +80,17 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
         );
     }
 
-    private static async Task<Ok<WebGetAvailableScriptTypesResponse>> GetAvailableScriptTypes(
+    private static Ok<WebGetAvailableScriptTypesResponse> GetAvailableScriptTypes(
+        IGetAvailableScriptTypesUseCase useCase,
         [FromRoute] string projectId
     )
     {
-        await Task.CompletedTask;
-        // TODO FIXIT: remove hardcoded value
+        var scriptTypes = useCase.GetAvailableScriptTypes();
 
         return TypedResults.Ok(
-            new WebGetAvailableScriptTypesResponse([
-                new WebScriptLanguage("csharp", ".cs"),
-                new WebScriptLanguage("python", ".py"),
-                new WebScriptLanguage("javascript", ".js"),
-            ])
+            new WebGetAvailableScriptTypesResponse(
+                scriptTypes.Select(s => new WebScriptLanguage(s.Name, s.Extension)).ToList()
+            )
         );
     }
 }
