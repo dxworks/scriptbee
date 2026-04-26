@@ -7,12 +7,9 @@ namespace ScriptBee.Plugins.Installer;
 
 public interface IPluginZipProcessor
 {
-    Task<
-        OneOf<
-            PluginId,
-            PluginManifestNotFoundError,
-            PluginAlreadyExistsError,
-            PluginInstallationError
-        >
-    > ProcessZipStream(ProjectId projectId, Stream zipStream, CancellationToken cancellationToken);
+    Task<OneOf<PluginId, PluginManifestNotFoundError, PluginInstallationError>> ProcessZipStream(
+        ProjectId projectId,
+        Stream zipStream,
+        CancellationToken cancellationToken
+    );
 }

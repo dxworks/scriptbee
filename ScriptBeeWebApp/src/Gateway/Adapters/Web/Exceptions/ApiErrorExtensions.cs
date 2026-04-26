@@ -160,17 +160,4 @@ public static class ApiErrorExtensions
             )
         );
     }
-
-    public static Conflict<ProblemDetails> ToProblem(
-        this PluginAlreadyExistsError error,
-        HttpContext context
-    )
-    {
-        return TypedResults.Conflict(
-            context.ToProblemDetails(
-                "Plugin Already Exists",
-                $"A plugin with the ID '{error.Id.Name}' and version '{error.Id.Version}' already exists."
-            )
-        );
-    }
 }

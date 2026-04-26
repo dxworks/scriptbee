@@ -51,7 +51,7 @@ public class ProjectPersistenceAdapter(
 
     public async Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> GetById(
         ProjectId projectId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var projectModel = await mongoRepository.GetDocument(projectId.Value, cancellationToken);

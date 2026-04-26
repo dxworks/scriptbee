@@ -18,12 +18,11 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
         app.MapGet("/api/plugins", GetInstalledPlugins).WithTags("Plugins");
     }
 
-    private static async Task<Ok<WebGetInstalledPluginsResponse>> GetInstalledPlugins(
-        IGetInstalledPluginsUseCase useCase,
-        CancellationToken cancellationToken = default
+    private static Ok<WebGetInstalledPluginsResponse> GetInstalledPlugins(
+        IGetInstalledPluginsUseCase useCase
     )
     {
-        var plugins = await useCase.Get(cancellationToken);
+        var plugins = useCase.Get();
 
         return TypedResults.Ok(
             new WebGetInstalledPluginsResponse(plugins.Select(WebInstalledPlugin.Map))

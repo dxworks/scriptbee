@@ -7,8 +7,8 @@ namespace ScriptBee.Service.Analysis;
 public class GetInstalledPluginsService(IPluginRepository pluginRepository)
     : IGetInstalledPluginsUseCase
 {
-    public Task<IEnumerable<Plugin>> Get(CancellationToken cancellationToken = default)
+    public IEnumerable<Plugin> Get()
     {
-        return Task.FromResult(pluginRepository.GetLoadedPlugins());
+        return pluginRepository.GetLoadedPlugins();
     }
 }

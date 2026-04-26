@@ -7,16 +7,10 @@ using ScriptBee.Plugins.Marketplace;
 
 namespace ScriptBee.Plugins.Installer;
 
-using InstallDependencyResult = OneOf<
-    string,
-    PluginManifestNotFoundError,
-    PluginAlreadyExistsError,
-    PluginInstallationError
->;
+using InstallDependencyResult = OneOf<string, PluginManifestNotFoundError, PluginInstallationError>;
 using InstallFromStreamResult = OneOf<
     List<PluginId>,
     PluginManifestNotFoundError,
-    PluginAlreadyExistsError,
     PluginInstallationError
 >;
 
@@ -83,7 +77,6 @@ public class BundlePluginInstaller(
                 );
             },
             error => Task.FromResult<InstallFromStreamResult>(error),
-            error => Task.FromResult<InstallFromStreamResult>(error),
             error => Task.FromResult<InstallFromStreamResult>(error)
         );
     }
@@ -117,7 +110,6 @@ public class BundlePluginInstaller(
                     subBundleResult.Switch(
                         installedPluginIds.AddRange,
                         _ => pluginIdsThatCouldNotBeInstalled.Add(id),
-                        _ => { },
                         _ => pluginIdsThatCouldNotBeInstalled.Add(id)
                     );
                 },
@@ -126,7 +118,6 @@ public class BundlePluginInstaller(
                     pluginIdsThatCouldNotBeInstalled.Add(id);
                     return Task.CompletedTask;
                 },
-                _ => Task.CompletedTask,
                 _ =>
                 {
                     pluginIdsThatCouldNotBeInstalled.Add(id);

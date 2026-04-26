@@ -69,7 +69,7 @@ public class PluginZipProcessorTests : IClassFixture<TempDirFixture>
     }
 
     [Fact]
-    public async Task GivenZipStream_WhenPluginAlreadyExistsInProject_ThenReturnsPluginAlreadyExistsError()
+    public async Task GivenZipStream_WhenPluginAlreadyExistsInProject_ThenReturnsPluginId()
     {
         // Arrange
         var pluginId = new PluginId("plugin-name", new Version("1.0.0"));
@@ -102,12 +102,12 @@ public class PluginZipProcessorTests : IClassFixture<TempDirFixture>
         );
 
         // Assert
-        result.IsT2.ShouldBeTrue();
-        result.AsT2.Id.ShouldBe(pluginId);
+        result.IsT0.ShouldBeTrue();
+        result.AsT0.ShouldBe(pluginId);
     }
 
     [Fact]
-    public async Task GivenZipStream_WhenPluginAlreadyExistsGlobally_ThenReturnsPluginAlreadyExistsError()
+    public async Task GivenZipStream_WhenPluginAlreadyExistsGlobally_ThenReturnsPluginId()
     {
         // Arrange
         var pluginId = new PluginId("plugin-name", new Version("1.0.0"));
@@ -140,8 +140,8 @@ public class PluginZipProcessorTests : IClassFixture<TempDirFixture>
         );
 
         // Assert
-        result.IsT2.ShouldBeTrue();
-        result.AsT2.Id.ShouldBe(pluginId);
+        result.IsT0.ShouldBeTrue();
+        result.AsT0.ShouldBe(pluginId);
     }
 
     [Fact]
@@ -164,9 +164,9 @@ public class PluginZipProcessorTests : IClassFixture<TempDirFixture>
         );
 
         // Assert
-        result.IsT3.ShouldBeTrue();
-        result.AsT3.Id.Name.ShouldBe("Unknown");
-        result.AsT3.Id.Version.ShouldBe(new Version("0.0.0"));
+        result.IsT2.ShouldBeTrue();
+        result.AsT2.Id.Name.ShouldBe("Unknown");
+        result.AsT2.Id.Version.ShouldBe(new Version("0.0.0"));
 
         _logger
             .Received()

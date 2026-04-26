@@ -18,7 +18,7 @@ public class GetInstalledPluginsServiceTest
     }
 
     [Fact]
-    public async Task GetInstalledPluginsService()
+    public void GetInstalledPluginsService()
     {
         List<Plugin> expectedPlugins =
         [
@@ -26,7 +26,7 @@ public class GetInstalledPluginsServiceTest
         ];
         _pluginRepository.GetLoadedPlugins().Returns(expectedPlugins);
 
-        var plugins = await _getInstalledPluginsService.Get(TestContext.Current.CancellationToken);
+        var plugins = _getInstalledPluginsService.Get();
 
         plugins.ToList().ShouldBeEquivalentTo(expectedPlugins);
     }

@@ -12,9 +12,6 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
     private readonly IPluginUninstaller _pluginUninstaller = Substitute.For<IPluginUninstaller>();
 
-    private readonly IPluginPathProvider _pluginPathProvider =
-        Substitute.For<IPluginPathProvider>();
-
     private readonly ILogger<BundlePluginUninstaller> _logger = Substitute.For<
         ILogger<BundlePluginUninstaller>
     >();
@@ -28,7 +25,6 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
         _bundlePluginUninstaller = new BundlePluginUninstaller(
             _pluginReader,
             _pluginUninstaller,
-            _pluginPathProvider,
             _logger
         );
     }
@@ -37,11 +33,11 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
     public void GivenSimplePlugin_WhenUninstall_ThenPluginIsUninstalled()
     {
         var pluginsPath = _fixture.CreateSubFolder("simple_uninstall");
-        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
         var expectedPath = Path.Combine(pluginsPath, "plugin@1.0.0");
 
         var versions = _bundlePluginUninstaller.Uninstall(
-            new PluginId("plugin", new Version("1.0.0"))
+            new PluginId("plugin", new Version("1.0.0")),
+            pluginsPath
         );
 
         versions.Count.ShouldBe(1);
@@ -54,12 +50,12 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
     public void GivenPluginWithNoManifest_WhenUninstall_ThenPluginFolderIsDeleted()
     {
         var pluginsPath = _fixture.CreateSubFolder("no_manifest_uninstall");
-        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
         var expectedPath = Path.Combine(pluginsPath, "plugin@1.0.0");
         _pluginReader.ReadPlugin(expectedPath).Returns((Plugin?)null);
 
         var versions = _bundlePluginUninstaller.Uninstall(
-            new PluginId("plugin", new Version("1.0.0"))
+            new PluginId("plugin", new Version("1.0.0")),
+            pluginsPath
         );
 
         versions.Count.ShouldBe(1);
@@ -72,7 +68,6 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
     public void GivenBundleWithOnePlugin_WhenUninstall_ThenPluginIsUninstalled()
     {
         var pluginsPath = _fixture.CreateSubFolder("bundle_one_uninstall");
-        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
         var bundlePath = Path.Combine(pluginsPath, "bundle@1.0.0");
         var pluginPath = Path.Combine(pluginsPath, "pluginId@1.0.0");
 
@@ -87,7 +82,8 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
             );
 
         var versions = _bundlePluginUninstaller.Uninstall(
-            new PluginId("bundle", new Version("1.0.0"))
+            new PluginId("bundle", new Version("1.0.0")),
+            pluginsPath
         );
 
         versions.Count.ShouldBe(2);
@@ -103,7 +99,6 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
     public void GivenBundleWithMultiplePlugins_WhenUninstall_ThenPluginsAreUninstalled()
     {
         var pluginsPath = _fixture.CreateSubFolder("bundle_multiple_uninstall");
-        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
         var bundlePath = Path.Combine(pluginsPath, "bundle@1.0.0");
         var pluginPath1 = Path.Combine(pluginsPath, "pluginId1@1.0.0");
         var pluginPath2 = Path.Combine(pluginsPath, "pluginId2@1.0.0");
@@ -122,7 +117,8 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
             );
 
         var versions = _bundlePluginUninstaller.Uninstall(
-            new PluginId("bundle", new Version("1.0.0"))
+            new PluginId("bundle", new Version("1.0.0")),
+            pluginsPath
         );
 
         versions.Count.ShouldBe(4);
@@ -144,7 +140,6 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
     public void GivenBundleOfBundles_WhenUninstall_ThenPluginsAreUninstalled()
     {
         var pluginsPath = _fixture.CreateSubFolder("bundle_of_bundles_uninstall");
-        _pluginPathProvider.GetPathToPlugins().Returns(pluginsPath);
         var bundlePath = Path.Combine(pluginsPath, "bundle@1.0.0");
         var pluginPath1 = Path.Combine(pluginsPath, "pluginId1@1.0.0");
         var pluginPath2 = Path.Combine(pluginsPath, "pluginId2@1.0.0");
@@ -169,7 +164,8 @@ public class BundlePluginUninstallerTests : IClassFixture<TempDirFixture>
             );
 
         var versions = _bundlePluginUninstaller.Uninstall(
-            new PluginId("bundle", new Version("1.0.0"))
+            new PluginId("bundle", new Version("1.0.0")),
+            pluginsPath
         );
 
         versions.Count.ShouldBe(3);

@@ -8,7 +8,6 @@ using InstallPluginFromZipResult = OneOf<
     ProjectDetails,
     ProjectDoesNotExistsError,
     PluginManifestNotFoundError,
-    PluginAlreadyExistsError,
     PluginInstallationError
 >;
 

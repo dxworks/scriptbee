@@ -208,34 +208,6 @@ public class InstallPluginServiceTests
     }
 
     [Fact]
-    public async Task GivenZipStream_WhenInstallReturnsPluginAlreadyExists_ThenReturnsAlreadyExistsError()
-    {
-        var projectId = ProjectId.FromValue("project-id");
-        var pluginId = new PluginId("existing", new Version("1.0.0"));
-        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId);
-
-        _getProject
-            .GetById(projectId, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
-            );
-
-        using var stream = new MemoryStream([1, 2, 3]);
-
-        _bundlePluginInstaller
-            .Install(projectId, stream, Arg.Any<CancellationToken>())
-            .Returns(new PluginAlreadyExistsError(pluginId));
-
-        var result = await _installPluginService.InstallPluginAsync(
-            projectId,
-            stream,
-            TestContext.Current.CancellationToken
-        );
-
-        result.IsT3.ShouldBeTrue();
-    }
-
-    [Fact]
     public async Task GivenZipStream_WhenInstallFails_ThenReturnsInstallationError()
     {
         var projectId = ProjectId.FromValue("project-id");
@@ -260,7 +232,7 @@ public class InstallPluginServiceTests
             TestContext.Current.CancellationToken
         );
 
-        result.IsT4.ShouldBeTrue();
+        result.IsT3.ShouldBeTrue();
     }
 
     [Fact]

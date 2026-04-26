@@ -8,9 +8,10 @@ public static class PluginsLoaderExtensions
 {
     public static IServiceCollection AddPluginLoader(this IServiceCollection services)
     {
+        var pluginRepository = new PluginRepository();
         return services
-            .AddSingleton<IPluginRepository, PluginRepository>()
-            .AddSingleton<IPluginRegistry, PluginRepository>()
+            .AddSingleton<IPluginRepository, PluginRepository>(_ => pluginRepository)
+            .AddSingleton<IPluginRegistry, PluginRepository>(_ => pluginRepository)
             .AddSingleton<IDllLoader, DllLoader>()
             .AddSingleton<IPluginLoader, PluginLoader>()
             .AddSingleton<IPluginRegistrationService>(_ => RegisterPluginTypes());

@@ -15,7 +15,6 @@ using InstallPluginResult = OneOf<
     ProjectDetails,
     ProjectDoesNotExistsError,
     PluginManifestNotFoundError,
-    PluginAlreadyExistsError,
     PluginInstallationError
 >;
 
@@ -99,35 +98,6 @@ public class InstallPluginFromUploadEndpointTest(ITestOutputHelper outputHelper)
             TestUrl,
             "Plugin Manifest Not Found",
             "The 'manifest.yaml' file was not found at the root of the plugin."
-        );
-    }
-
-    [Fact]
-    public async Task GivenUploadPlugin_WhenPluginAlreadyExists_ShouldReturnConflict()
-    {
-        var projectId = ProjectId.FromValue("project-id");
-        var pluginId = new PluginId("plugin-id", new Version("1.2.3"));
-        var useCase = Substitute.For<IInstallPluginUseCase>();
-        useCase
-            .InstallPluginAsync(projectId, Arg.Any<Stream>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<InstallPluginResult>(new PluginAlreadyExistsError(pluginId)));
-
-        TestApiCaller<Program> api = new(TestUrl);
-        var response = await api.PostApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
-            ),
-            new Dictionary<string, string>(),
-            new Dictionary<string, byte[]> { { "file", [1, 2, 3] } }
-        );
-
-        response.StatusCode.ShouldBe(HttpStatusCode.Conflict);
-        await AssertConflictProblem(
-            response.Content,
-            TestUrl,
-            "Plugin Already Exists",
-            "A plugin with the ID 'plugin-id' and version '1.2.3' already exists."
         );
     }
 

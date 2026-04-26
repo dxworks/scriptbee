@@ -352,25 +352,6 @@ public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
     }
 
     [Fact]
-    public async Task GivenZipStream_WhenInstall_AndPluginAlreadyExists_ThenReturnsAlreadyExistsError()
-    {
-        var pluginId = new PluginId("existingPlugin", new Version("1.0.0"));
-        using var stream = new MemoryStream([1, 2, 3]);
-
-        _pluginZipProcessor
-            .ProcessZipStream(_projectId, stream, Arg.Any<CancellationToken>())
-            .Returns(new PluginAlreadyExistsError(pluginId));
-
-        var result = await _bundlePluginInstaller.Install(
-            _projectId,
-            stream,
-            TestContext.Current.CancellationToken
-        );
-
-        result.IsT2.ShouldBeTrue();
-    }
-
-    [Fact]
     public async Task GivenZipStream_WhenInstall_AndProcessorFails_ThenReturnsInstallationError()
     {
         var pluginId = new PluginId("failedPlugin", new Version("1.0.0"));
@@ -386,7 +367,7 @@ public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
             TestContext.Current.CancellationToken
         );
 
-        result.IsT3.ShouldBeTrue();
+        result.IsT2.ShouldBeTrue();
     }
 
     [Fact]
@@ -452,8 +433,8 @@ public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
             TestContext.Current.CancellationToken
         );
 
-        result.IsT3.ShouldBeTrue();
-        result.AsT3.NestedPluginsThatCouldNotBeInstalled.ShouldContain(depId);
+        result.IsT2.ShouldBeTrue();
+        result.AsT2.NestedPluginsThatCouldNotBeInstalled.ShouldContain(depId);
 
         _logger
             .Received()

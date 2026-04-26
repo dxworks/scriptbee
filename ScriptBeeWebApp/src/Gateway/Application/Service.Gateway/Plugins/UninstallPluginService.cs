@@ -19,56 +19,55 @@ public class UninstallPluginService(
 {
     public async Task<UninstallResult> UninstallPluginAsync(
         UninstallPluginCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var result = await getProject.GetById(command.ProjectId, cancellationToken);
 
         return await result.Match<Task<UninstallResult>>(
-            async details => await UninstallPluginAsync(details, command, cancellationToken),
+            async details =>
+                await UninstallPluginAsync(details, command.PluginId, cancellationToken),
             error => Task.FromResult<UninstallResult>(error)
         );
     }
 
     private async Task<UninstallResult> UninstallPluginAsync(
         ProjectDetails projectDetails,
-        UninstallPluginCommand command,
+        PluginId pluginId,
         CancellationToken cancellationToken
     )
     {
         if (
             !projectDetails.InstalledPlugins.Any(plugin =>
-                plugin.PluginId == command.PluginId.Name
-                && plugin.Version == command.PluginId.Version
+                plugin.PluginId == pluginId.Name && plugin.Version == pluginId.Version
             )
         )
         {
             return projectDetails;
         }
 
-        await UninstallPluginToAllInstances(command.ProjectId, command.PluginId, cancellationToken);
+        await UninstallPluginFromAllInstances(projectDetails.Id, pluginId, cancellationToken);
 
-        return await UpdateProjectDetailsWithPlugin(projectDetails, command, cancellationToken);
+        return await UpdateProjectDetailsWithPlugin(projectDetails, pluginId, cancellationToken);
     }
 
     private async Task<UninstallResult> UpdateProjectDetailsWithPlugin(
         ProjectDetails projectDetails,
-        UninstallPluginCommand command,
+        PluginId pluginId,
         CancellationToken cancellationToken
     )
     {
         projectDetails = projectDetails with
         {
             InstalledPlugins = projectDetails.InstalledPlugins.Where(config =>
-                config.PluginId != command.PluginId.Name
-                || config.Version != command.PluginId.Version
+                config.PluginId != pluginId.Name || config.Version != pluginId.Version
             ),
         };
 
         return await updateProject.Update(projectDetails, cancellationToken);
     }
 
-    private async Task UninstallPluginToAllInstances(
+    private async Task UninstallPluginFromAllInstances(
         ProjectId projectId,
         PluginId pluginId,
         CancellationToken cancellationToken

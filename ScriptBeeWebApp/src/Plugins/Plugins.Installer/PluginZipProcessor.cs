@@ -15,12 +15,7 @@ public class PluginZipProcessor(
 ) : IPluginZipProcessor
 {
     public async Task<
-        OneOf<
-            PluginId,
-            PluginManifestNotFoundError,
-            PluginAlreadyExistsError,
-            PluginInstallationError
-        >
+        OneOf<PluginId, PluginManifestNotFoundError, PluginInstallationError>
     > ProcessZipStream(ProjectId projectId, Stream zipStream, CancellationToken cancellationToken)
     {
         var projectPluginsPath = pluginPathProvider.GetPathToPlugins(projectId);
@@ -52,7 +47,7 @@ public class PluginZipProcessor(
                 || Directory.Exists(GetGlobalPluginFolderPath(plugin.Id))
             )
             {
-                return new PluginAlreadyExistsError(plugin.Id);
+                return plugin.Id;
             }
 
             Directory.Move(tempFolderPath, finalPluginPath);
