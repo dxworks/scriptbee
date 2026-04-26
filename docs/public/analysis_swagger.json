@@ -106,9 +106,19 @@
     "/api/context/generate-classes": {
       "post": {
         "tags": ["Context"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebGenerateClassesRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -295,6 +305,21 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "WebGenerateClassesRequest": {
+        "required": ["languages"],
+        "type": "object",
+        "properties": {
+          "languages": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "transferFormat": {
+            "type": ["null", "string"]
           }
         }
       },

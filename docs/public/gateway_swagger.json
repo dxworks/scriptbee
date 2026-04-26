@@ -12,9 +12,7 @@
   "paths": {
     "/api/projects": {
       "post": {
-        "tags": [
-          "Projects"
-        ],
+        "tags": ["Projects"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -59,9 +57,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Projects"
-        ],
+        "tags": ["Projects"],
         "responses": {
           "200": {
             "description": "OK",
@@ -78,9 +74,7 @@
     },
     "/api/projects/{projectId}": {
       "delete": {
-        "tags": [
-          "Projects"
-        ],
+        "tags": ["Projects"],
         "parameters": [
           {
             "name": "projectId",
@@ -98,9 +92,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Projects"
-        ],
+        "tags": ["Projects"],
         "parameters": [
           {
             "name": "projectId",
@@ -137,9 +129,7 @@
     },
     "/api/projects/{projectId}/scripts": {
       "post": {
-        "tags": [
-          "Scripts"
-        ],
+        "tags": ["Scripts"],
         "parameters": [
           {
             "name": "projectId",
@@ -204,9 +194,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Scripts"
-        ],
+        "tags": ["Scripts"],
         "parameters": [
           {
             "name": "projectId",
@@ -233,9 +221,7 @@
     },
     "/api/projects/{projectId}/files/{fileId}": {
       "delete": {
-        "tags": [
-          "ProjectStructure"
-        ],
+        "tags": ["ProjectStructure"],
         "parameters": [
           {
             "name": "projectId",
@@ -273,9 +259,7 @@
     },
     "/api/projects/{projectId}/scripts/{scriptId}": {
       "get": {
-        "tags": [
-          "Scripts"
-        ],
+        "tags": ["Scripts"],
         "parameters": [
           {
             "name": "projectId",
@@ -318,9 +302,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "Scripts"
-        ],
+        "tags": ["Scripts"],
         "parameters": [
           {
             "name": "projectId",
@@ -385,9 +367,7 @@
     },
     "/api/projects/{projectId}/scripts/{scriptId}/content": {
       "get": {
-        "tags": [
-          "Scripts"
-        ],
+        "tags": ["Scripts"],
         "parameters": [
           {
             "name": "projectId",
@@ -420,9 +400,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Scripts"
-        ],
+        "tags": ["Scripts"],
         "parameters": [
           {
             "name": "projectId",
@@ -470,9 +448,7 @@
     },
     "/api/projects/{projectId}/files": {
       "get": {
-        "tags": [
-          "ProjectStructure"
-        ],
+        "tags": ["ProjectStructure"],
         "parameters": [
           {
             "name": "projectId",
@@ -494,10 +470,7 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
+              "type": ["integer", "string"],
               "format": "int32",
               "default": 0
             }
@@ -507,10 +480,7 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
+              "type": ["integer", "string"],
               "format": "int32",
               "default": 50
             }
@@ -552,9 +522,7 @@
     },
     "/api/projects/{projectId}/structure/available-script-types": {
       "get": {
-        "tags": [
-          "ProjectStructure"
-        ],
+        "tags": ["ProjectStructure"],
         "parameters": [
           {
             "name": "projectId",
@@ -581,9 +549,7 @@
     },
     "/api/plugins": {
       "get": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "responses": {
           "200": {
             "description": "OK",
@@ -600,9 +566,7 @@
     },
     "/api/plugins/{id}": {
       "get": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "parameters": [
           {
             "name": "id",
@@ -639,9 +603,7 @@
     },
     "/api/projects/{projectId}/plugins": {
       "get": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "parameters": [
           {
             "name": "projectId",
@@ -676,9 +638,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "parameters": [
           {
             "name": "projectId",
@@ -693,9 +653,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "file"
-                ],
+                "required": ["file"],
                 "type": "object",
                 "properties": {
                   "file": {
@@ -728,16 +686,6 @@
               }
             }
           },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -762,10 +710,51 @@
       }
     },
     "/api/projects/{projectId}/plugins/{pluginId}": {
-      "put": {
-        "tags": [
-          "Plugins"
+      "get": {
+        "tags": ["Plugins"],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pluginId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebMarketplacePluginWithDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Plugins"],
         "parameters": [
           {
             "name": "projectId",
@@ -806,26 +795,6 @@
               }
             }
           },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -839,9 +808,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "parameters": [
           {
             "name": "projectId",
@@ -887,9 +854,7 @@
     },
     "/api/projects/{projectId}/loaders/{loaderId}/files": {
       "put": {
-        "tags": [
-          "Loaders"
-        ],
+        "tags": ["Loaders"],
         "parameters": [
           {
             "name": "projectId",
@@ -912,9 +877,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": [
-                  "files"
-                ],
+                "required": ["files"],
                 "type": "object",
                 "properties": {
                   "files": {
@@ -952,9 +915,7 @@
     },
     "/api/projects/{projectId}/instances": {
       "post": {
-        "tags": [
-          "Instances"
-        ],
+        "tags": ["Instances"],
         "parameters": [
           {
             "name": "projectId",
@@ -989,9 +950,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Instances"
-        ],
+        "tags": ["Instances"],
         "parameters": [
           {
             "name": "projectId",
@@ -1018,9 +977,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}": {
       "get": {
-        "tags": [
-          "Instances"
-        ],
+        "tags": ["Instances"],
         "parameters": [
           {
             "name": "projectId",
@@ -1063,9 +1020,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Instances"
-        ],
+        "tags": ["Instances"],
         "parameters": [
           {
             "name": "projectId",
@@ -1103,10 +1058,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/linkers": {
       "get": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1141,10 +1093,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/loaders": {
       "get": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1179,10 +1128,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context": {
       "get": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1227,10 +1173,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/clear": {
       "post": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1268,10 +1211,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/generate-classes": {
       "post": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1316,10 +1256,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/link": {
       "post": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1377,10 +1314,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/load": {
       "post": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1438,10 +1372,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/reload": {
       "post": {
-        "tags": [
-          "Instances",
-          "Context"
-        ],
+        "tags": ["Instances", "Context"],
         "parameters": [
           {
             "name": "projectId",
@@ -1479,9 +1410,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/files/{fileId}": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1524,9 +1453,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/files/download": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1561,9 +1488,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/console": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1608,9 +1533,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/errors": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1655,9 +1578,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/files": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1702,9 +1623,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}/content": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1747,9 +1666,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1802,9 +1719,7 @@
     },
     "/api/projects/{projectId}/analyses": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1849,9 +1764,7 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}": {
       "get": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1906,10 +1819,7 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/analyses": {
       "post": {
-        "tags": [
-          "Instances",
-          "Analysis"
-        ],
+        "tags": ["Instances", "Analysis"],
         "parameters": [
           {
             "name": "projectId",
@@ -1969,10 +1879,7 @@
   "components": {
     "schemas": {
       "FileData": {
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -1996,37 +1903,21 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ],
+            "type": ["null", "integer", "string"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -2050,10 +1941,7 @@
         }
       },
       "PluginInstallationConfig": {
-        "required": [
-          "pluginId",
-          "version"
-        ],
+        "required": ["pluginId", "version"],
         "type": "object",
         "properties": {
           "pluginId": {
@@ -2069,37 +1957,21 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ],
+            "type": ["null", "integer", "string"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
@@ -2161,10 +2033,7 @@
         "type": "object",
         "properties": {
           "value": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
@@ -2173,9 +2042,7 @@
         "format": "binary"
       },
       "WebAllAvailablePluginsResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2187,9 +2054,7 @@
         }
       },
       "WebAnalysisError": {
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "type": "object",
         "properties": {
           "message": {
@@ -2223,27 +2088,18 @@
             "type": "string"
           },
           "scriptFileId": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "creationDate": {
             "type": "string",
             "format": "date-time"
           },
           "finishedDate": {
-            "type": [
-              "null",
-              "string"
-            ],
+            "type": ["null", "string"],
             "format": "date-time"
           },
           "errors": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/WebAnalysisError"
             }
@@ -2251,9 +2107,7 @@
         }
       },
       "WebAnalysisListResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2265,11 +2119,7 @@
         }
       },
       "WebAnalysisResultRunError": {
-        "required": [
-          "title",
-          "message",
-          "severity"
-        ],
+        "required": ["title", "message", "severity"],
         "type": "object",
         "properties": {
           "title": {
@@ -2284,10 +2134,7 @@
         }
       },
       "WebBundleItem": {
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -2299,10 +2146,7 @@
         }
       },
       "WebCreateProjectCommand": {
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -2314,11 +2158,7 @@
         }
       },
       "WebCreateProjectResponse": {
-        "required": [
-          "id",
-          "name",
-          "creationDate"
-        ],
+        "required": ["id", "name", "creationDate"],
         "type": "object",
         "properties": {
           "id": {
@@ -2334,11 +2174,7 @@
         }
       },
       "WebCreateScriptCommand": {
-        "required": [
-          "path",
-          "language",
-          "parameters"
-        ],
+        "required": ["path", "language", "parameters"],
         "type": "object",
         "properties": {
           "path": {
@@ -2348,10 +2184,7 @@
             "type": "string"
           },
           "parameters": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/WebScriptParameter"
             }
@@ -2359,33 +2192,22 @@
         }
       },
       "WebExtensionPoint": {
-        "required": [
-          "kind"
-        ],
+        "required": ["kind"],
         "type": "object",
         "properties": {
           "kind": {
             "type": "string"
           },
           "language": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "extension": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "WebFileData": {
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -2397,9 +2219,7 @@
         }
       },
       "WebGetAnalysisResultConsole": {
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "type": "object",
         "properties": {
           "content": {
@@ -2408,11 +2228,7 @@
         }
       },
       "WebGetAnalysisResultFile": {
-        "required": [
-          "id",
-          "name",
-          "type"
-        ],
+        "required": ["id", "name", "type"],
         "type": "object",
         "properties": {
           "id": {
@@ -2427,9 +2243,7 @@
         }
       },
       "WebGetAnalysisResultFileList": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2441,9 +2255,7 @@
         }
       },
       "WebGetAnalysisResultRunErrors": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2455,9 +2267,7 @@
         }
       },
       "WebGetAvailableScriptTypesResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2469,9 +2279,7 @@
         }
       },
       "WebGetLinkersResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2483,9 +2291,7 @@
         }
       },
       "WebGetLoadersResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2497,9 +2303,7 @@
         }
       },
       "WebGetProjectContextResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2511,12 +2315,7 @@
         }
       },
       "WebGetProjectFilesResponse": {
-        "required": [
-          "data",
-          "totalCount",
-          "offset",
-          "limit"
-        ],
+        "required": ["data", "totalCount", "offset", "limit"],
         "type": "object",
         "properties": {
           "data": {
@@ -2527,26 +2326,17 @@
           },
           "totalCount": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": ["integer", "string"],
             "format": "int64"
           },
           "offset": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": ["integer", "string"],
             "format": "int32"
           },
           "limit": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": ["integer", "string"],
             "format": "int32"
           },
           "hasNextPage": {
@@ -2555,9 +2345,7 @@
         }
       },
       "WebGetProjectInstancesListResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2569,9 +2357,7 @@
         }
       },
       "WebGetProjectListResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2583,9 +2369,7 @@
         }
       },
       "WebGetScriptDataResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2597,10 +2381,7 @@
         }
       },
       "WebInstalledPlugin": {
-        "required": [
-          "id",
-          "version"
-        ],
+        "required": ["id", "version"],
         "type": "object",
         "properties": {
           "id": {
@@ -2612,9 +2393,7 @@
         }
       },
       "WebInstalledPluginsResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -2626,9 +2405,7 @@
         }
       },
       "WebLinkContextCommand": {
-        "required": [
-          "linkerIds"
-        ],
+        "required": ["linkerIds"],
         "type": "object",
         "properties": {
           "linkerIds": {
@@ -2640,10 +2417,7 @@
         }
       },
       "WebLinker": {
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -2655,9 +2429,7 @@
         }
       },
       "WebLoadContextCommand": {
-        "required": [
-          "loaderIds"
-        ],
+        "required": ["loaderIds"],
         "type": "object",
         "properties": {
           "loaderIds": {
@@ -2669,10 +2441,7 @@
         }
       },
       "WebLoader": {
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -2684,14 +2453,7 @@
         }
       },
       "WebMarketplacePlugin": {
-        "required": [
-          "id",
-          "name",
-          "type",
-          "description",
-          "authors",
-          "versions"
-        ],
+        "required": ["id", "name", "type", "description", "authors", "versions"],
         "type": "object",
         "properties": {
           "id": {
@@ -2721,14 +2483,7 @@
         }
       },
       "WebMarketplacePluginWithDetails": {
-        "required": [
-          "id",
-          "name",
-          "type",
-          "description",
-          "authors",
-          "versions"
-        ],
+        "required": ["id", "name", "type", "description", "authors", "versions"],
         "type": "object",
         "properties": {
           "id": {
@@ -2756,61 +2511,37 @@
             }
           },
           "bundleItems": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/WebBundleItem"
             }
           },
           "sourceCode": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "manifest": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "site": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "license": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "tags": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
           },
           "technologies": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
           },
           "extensionPoints": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/WebExtensionPoint"
             }
@@ -2818,11 +2549,7 @@
         }
       },
       "WebPluginVersion": {
-        "required": [
-          "url",
-          "version",
-          "manifestUrl"
-        ],
+        "required": ["url", "version", "manifestUrl"],
         "type": "object",
         "properties": {
           "url": {
@@ -2837,11 +2564,7 @@
         }
       },
       "WebProject": {
-        "required": [
-          "id",
-          "name",
-          "creationDate"
-        ],
+        "required": ["id", "name", "creationDate"],
         "type": "object",
         "properties": {
           "id": {
@@ -2857,33 +2580,22 @@
         }
       },
       "WebProjectContextGenerateClassesRequest": {
-        "required": [
-          "languages"
-        ],
+        "required": ["languages"],
         "type": "object",
         "properties": {
           "languages": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
           },
           "transferFormat": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "WebProjectContextSlice": {
-        "required": [
-          "model",
-          "pluginIds"
-        ],
+        "required": ["model", "pluginIds"],
         "type": "object",
         "properties": {
           "model": {
@@ -2898,14 +2610,7 @@
         }
       },
       "WebProjectDetails": {
-        "required": [
-          "id",
-          "name",
-          "creationDate",
-          "savedFiles",
-          "loadedFiles",
-          "linkers"
-        ],
+        "required": ["id", "name", "creationDate", "savedFiles", "loadedFiles", "linkers"],
         "type": "object",
         "properties": {
           "id": {
@@ -2945,13 +2650,7 @@
         }
       },
       "WebProjectFileNode": {
-        "required": [
-          "id",
-          "name",
-          "path",
-          "type",
-          "hasChildren"
-        ],
+        "required": ["id", "name", "path", "type", "hasChildren"],
         "type": "object",
         "properties": {
           "id": {
@@ -2972,11 +2671,7 @@
         }
       },
       "WebProjectInstance": {
-        "required": [
-          "id",
-          "creationDate",
-          "status"
-        ],
+        "required": ["id", "creationDate", "status"],
         "type": "object",
         "properties": {
           "id": {
@@ -2992,13 +2687,7 @@
         }
       },
       "WebScriptData": {
-        "required": [
-          "id",
-          "name",
-          "path",
-          "scriptLanguage",
-          "parameters"
-        ],
+        "required": ["id", "name", "path", "scriptLanguage", "parameters"],
         "type": "object",
         "properties": {
           "id": {
@@ -3022,10 +2711,7 @@
         }
       },
       "WebScriptLanguage": {
-        "required": [
-          "name",
-          "extension"
-        ],
+        "required": ["name", "extension"],
         "type": "object",
         "properties": {
           "name": {
@@ -3037,11 +2723,7 @@
         }
       },
       "WebScriptParameter": {
-        "required": [
-          "name",
-          "type",
-          "value"
-        ],
+        "required": ["name", "type", "value"],
         "type": "object",
         "properties": {
           "name": {
@@ -3050,13 +2732,11 @@
           "type": {
             "type": "string"
           },
-          "value": { }
+          "value": {}
         }
       },
       "WebTriggerAnalysisCommand": {
-        "required": [
-          "scriptId"
-        ],
+        "required": ["scriptId"],
         "type": "object",
         "properties": {
           "scriptId": {
@@ -3065,23 +2745,14 @@
         }
       },
       "WebUpdateScriptCommand": {
-        "required": [
-          "name",
-          "parameters"
-        ],
+        "required": ["name", "parameters"],
         "type": "object",
         "properties": {
           "name": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "parameters": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "$ref": "#/components/schemas/WebScriptParameter"
             }
@@ -3089,10 +2760,7 @@
         }
       },
       "WebUploadLoaderFilesResponse": {
-        "required": [
-          "loaderId",
-          "fileNames"
-        ],
+        "required": ["loaderId", "fileNames"],
         "type": "object",
         "properties": {
           "loaderId": {

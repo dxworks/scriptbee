@@ -1,7 +1,7 @@
 # Plugin Installation
 
 ScriptBee supports different types of plugins, as well as plugin bundles which are a collection of plugins.
-They are installed in the plugins folder of the ScriptBee data folder. For more information about the ScriptBee data
+They are primarily stored in the **Plugin Cache**, which is part of the ScriptBee data folder. From there, they can be enabled for the Gateway Service to use. For more information about the ScriptBee data
 folder, see [Installation section](../installation/installation.md).
 
 In order for a plugin to be considered valid, the folder must contain a `manifest.yaml` file.
@@ -10,7 +10,8 @@ In order for a plugin to be considered valid, the folder must contain a `manifes
 
 ## Automatic Installation
 
-Plugins and Bundles can be installed automatically using the UI from the `plugins` section.
+Plugins and Bundles can be installed automatically using the dedicated **Marketplace** section in the UI.
+Downloading a plugin from the Marketplace places it in the **Plugin Cache**. To make a plugin available for use in the Gateway (e.g., to use it as a Linker or Script Runner).
 
 The plugin information are fetched from the [DxWorks Hub](https://github.com/dxworks/dxworks-hub).
 ScriptBee uses the [DxWorks Hub SDK](https://github.com/dxworks/dxworks-hub-sdk) to communicate with the Hub.
@@ -33,4 +34,6 @@ plugin.
 ## Uninstalling Plugins
 
 Plugins can be uninstalled from the `plugins` section of the UI.
-When a plugin is uninstalled, the web server will needs to be restarted in order to take effect.
+When a plugin is uninstalled, it is removed from the project and, if no other project is using it, its files are deleted from the disk and it is unloaded from memory.
+
+The uninstallation takes effect **immediately** without requiring a server restart.

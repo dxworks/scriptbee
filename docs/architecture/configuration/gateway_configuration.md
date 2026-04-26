@@ -1,4 +1,4 @@
-﻿# Gateway Service Configuration
+# Gateway Service Configuration
 
 ## Database
 
@@ -9,6 +9,12 @@
 - **Description:** The connection string to MongoDB. Must be configured to match the Mongodb server configurations
 
 ## Analysis Configuration
+
+### `SCRIPTBEE__ANALYSIS__DRIVER`
+
+- **Type:** `string`
+- **Default:** `Docker`
+- **Description:** The driver used to manage analysis instances. Currently only `Docker` is supported.
 
 ### `SCRIPTBEE__ANALYSIS__IMAGE`
 
@@ -78,5 +84,11 @@
 ### `SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER`
 
 - **Type:** `string`
-- **Default:** `<user_folder_path>/.scriptbee/plugins`
-- **Description:** The path where the plugins will be installed
+- **Default:** `[User Profile Folder]/.scriptbee/plugins`
+- **Description:** The folder where all downloaded plugins are stored (the "Cache"). This folder is shared between the Gateway and all Analysis instances.
+
+### `SCRIPTBEE__PLUGINS__GATEWAYINSTALLATIONFOLDER`
+
+- **Type:** `string`
+- **Default:** `[User Profile Folder]/.scriptbee/gateway/plugins`
+- **Description:** The folder for plugins that are actively "Enabled" in the Gateway. When you enable a plugin from the UI, it is copied here so the Gateway can load it.

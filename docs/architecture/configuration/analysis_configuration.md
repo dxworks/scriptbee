@@ -1,4 +1,4 @@
-﻿# Analysis Service Configuration
+# Analysis Service Configuration
 
 Most of the variables here are configured automatically by the Gateway Service when a new instance is allocated
 
@@ -33,5 +33,4 @@ Most of the variables here are configured automatically by the Gateway Service w
 
 - **Type:** `string`
 - **Default:** `/app/plugins`
-- **Description:** The path where the plugins are installed and from where they weill be loaded from. On this path, the
-  Gateway Service will mount as readonly the volume for the plugin download cache
+- **Description:** The folder inside the analysis instance where plugins are accessed. This folder is typically a read-only view of the central Plugin Cache managed by the Gateway.
