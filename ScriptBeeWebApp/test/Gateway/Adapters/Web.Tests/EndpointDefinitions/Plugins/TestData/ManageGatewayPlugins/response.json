@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "id": "plugin1",
+      "version": "1.0.0"
+    },
+    {
+      "id": "plugin2",
+      "version": "2.0.0"
+    }
+  ]
+}

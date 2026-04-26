@@ -1,0 +1,31 @@
+<div class="gateway-plugins-container">
+  <header class="page-header">
+    <div class="header-content">
+      <h1>Gateway Plugin Management</h1>
+      <p class="subtitle mat-body-large">Install and manage plugins globally for the Gateway Service</p>
+    </div>
+  </header>
+
+  <div class="search-bar-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search Marketplace</mat-label>
+      <input matInput [(ngModel)]="searchText" placeholder="Search by name or description..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="list-container">
+    @if (availablePlugins.isLoading() && !availablePlugins.value()) {
+      <app-loading-progress-bar title="Loading plugins..."></app-loading-progress-bar>
+    } @else if (availablePluginsError()) {
+      <app-error-state [error]="availablePluginsError()!" (retry)="availablePlugins.reload()"></app-error-state>
+    } @else {
+      <app-plugin-marketplace-dashboard-list
+        [plugins]="filteredPlugins()"
+        [installedPlugins]="gatewayPlugins.value() ?? []"
+        (actionCompleted)="onActionCompleted()"></app-plugin-marketplace-dashboard-list>
+    }
+  </div>
+</div>

@@ -852,6 +852,69 @@
         }
       }
     },
+    "/api/plugins/gateway": {
+      "get": {
+        "tags": ["Plugins"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebGatewayPluginsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Plugins"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebInstallGatewayPluginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/plugins/gateway/{pluginId}": {
+      "delete": {
+        "tags": ["Plugins"],
+        "parameters": [
+          {
+            "name": "pluginId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/loaders/{loaderId}/files": {
       "put": {
         "tags": ["Loaders"],
@@ -2218,6 +2281,18 @@
           }
         }
       },
+      "WebGatewayPluginsResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebInstalledPlugin"
+            }
+          }
+        }
+      },
       "WebGetAnalysisResultConsole": {
         "required": ["content"],
         "type": "object",
@@ -2401,6 +2476,18 @@
             "items": {
               "$ref": "#/components/schemas/WebInstalledPlugin"
             }
+          }
+        }
+      },
+      "WebInstallGatewayPluginRequest": {
+        "required": ["id", "version"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
           }
         }
       },

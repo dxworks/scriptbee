@@ -11,6 +11,7 @@
     </a>
 
     <button mat-button routerLink="/projects">Projects</button>
+    <button mat-button routerLink="/gateway-plugins">Gateway Plugins</button>
 
     @if (projectState.currentProjectId()) {
       <button mat-button [routerLink]="'/projects/' + projectState.currentProjectId()">{{ projectState.currentProject()?.name }}</button>

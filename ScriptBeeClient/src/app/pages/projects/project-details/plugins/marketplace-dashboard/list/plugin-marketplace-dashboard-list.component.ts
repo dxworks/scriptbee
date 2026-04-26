@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class PluginMarketplaceDashboardListComponent {
   plugins = input.required<MarketplacePlugin[]>();
   installedPlugins = input.required<InstalledPlugin[]>();
-  projectId = input.required<string>();
+  projectId = input<string | undefined>();
   actionCompleted = output<void>();
 
   getInstalledVersion(marketPlacePlugin: MarketplacePlugin): string | undefined {
