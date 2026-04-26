@@ -7,11 +7,6 @@ public class ConfigFoldersService : IConfigFoldersService
 {
     public string GetPathToSrcFolder(ProjectId projectId, string path)
     {
-        return Path.Combine(
-            ConfigFolders.PathToProjects,
-            projectId.ToString(),
-            ConfigFolders.SrcFolder,
-            path
-        );
+        return Path.Combine(ConfigFolders.PathToProjects, projectId.ToString(), "src", path);
     }
 }

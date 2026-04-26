@@ -13,8 +13,8 @@ public class PluginManagerTests
     private readonly IPluginReader _pluginReader = Substitute.For<IPluginReader>();
     private readonly IPluginLoader _pluginLoader = Substitute.For<IPluginLoader>();
 
-    private readonly IPluginPathProvider _pluginPathProvider =
-        Substitute.For<IPluginPathProvider>();
+    private readonly IGatewayPluginPathProvider _pluginPathProvider =
+        Substitute.For<IGatewayPluginPathProvider>();
 
     private readonly ILogger<PluginManager> _logger = Substitute.For<ILogger<PluginManager>>();
 
@@ -33,7 +33,7 @@ public class PluginManagerTests
     [Fact]
     public void GivenEmptyPlugins_WhenLoadPlugins_ThenNoPluginsLoaded()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginPathProvider.GetInstallationFolderPath().Returns("plugin/path");
         _pluginReader.ReadPlugins("plugin/path").Returns(new List<Plugin>());
 
         _pluginManager.LoadPlugins();
@@ -44,7 +44,7 @@ public class PluginManagerTests
     [Fact]
     public void GivenAllValidPlugins_WhenLoadPlugins_ThenAllPluginsAreLoaded()
     {
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginPathProvider.GetInstallationFolderPath().Returns("plugin/path");
         _pluginReader
             .ReadPlugins("plugin/path")
             .Returns(
@@ -70,7 +70,7 @@ public class PluginManagerTests
         Plugin testPlugin2 = new TestPlugin(new PluginId("id", new Version(0, 0, 1, 1)));
         Plugin testPlugin3 = new TestPlugin(new PluginId("id", new Version(0, 0, 2, 1)));
 
-        _pluginPathProvider.GetPathToPlugins().Returns("plugin/path");
+        _pluginPathProvider.GetInstallationFolderPath().Returns("plugin/path");
         _pluginReader
             .ReadPlugins("plugin/path")
             .Returns(new List<Plugin> { testPlugin1, testPlugin2, testPlugin3 });
