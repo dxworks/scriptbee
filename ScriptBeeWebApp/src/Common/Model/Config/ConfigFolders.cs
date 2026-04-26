@@ -1,22 +1,20 @@
-﻿namespace ScriptBee.Domain.Model.Config;
+namespace ScriptBee.Domain.Model.Config;
 
 public static class ConfigFolders
 {
-    private const string Root = ".scriptbee";
-
-    private const string PluginsFolder = "plugins";
-
-    private const string ProjectsFolder = "projects";
-
-    public const string SrcFolder = "src";
-
     private static readonly string PathToUserFolder = Environment.GetFolderPath(
         Environment.SpecialFolder.UserProfile
     );
 
-    public static readonly string PathToRoot = Path.Combine(PathToUserFolder, Root);
+    private static readonly string PathToRoot = Path.Combine(PathToUserFolder, ".scriptbee");
 
-    public static readonly string PathToPlugins = Path.Combine(PathToRoot, PluginsFolder);
+    public static readonly string PathToPlugins = Path.Combine(PathToRoot, "plugins");
 
-    public static readonly string PathToProjects = Path.Combine(PathToRoot, ProjectsFolder);
+    public static readonly string PathToGatewayPlugins = Path.Combine(
+        PathToRoot,
+        "gateway",
+        "plugins"
+    );
+
+    public static readonly string PathToProjects = Path.Combine(PathToRoot, "projects");
 }

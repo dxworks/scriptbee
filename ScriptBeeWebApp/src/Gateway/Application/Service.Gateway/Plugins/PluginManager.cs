@@ -5,16 +5,16 @@ using ScriptBee.UseCases.Gateway.Plugins;
 
 namespace ScriptBee.Service.Gateway.Plugins;
 
-public class PluginManager(
+public sealed class PluginManager(
     IPluginReader pluginReader,
     IPluginLoader pluginLoader,
-    IPluginPathProvider pluginPathProvider,
+    IGatewayPluginPathProvider pluginPathProvider,
     ILogger<PluginManager> logger
 ) : IManagePluginsUseCase
 {
     public void LoadPlugins()
     {
-        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
+        var pluginFolderPath = pluginPathProvider.GetInstallationFolderPath();
         logger.LogInformation("Loading plugins from {Folder}", pluginFolderPath);
 
         var plugins = pluginReader.ReadPlugins(pluginFolderPath);

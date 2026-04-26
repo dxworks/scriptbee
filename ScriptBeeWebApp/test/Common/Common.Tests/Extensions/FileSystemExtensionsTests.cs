@@ -69,4 +69,74 @@ public class FileSystemExtensionsTests(TempDirFixture fixture) : IClassFixture<T
 
         Directory.Exists(path).ShouldBeTrue();
     }
+
+    [Fact]
+    public void CopyTo_ThrowsDirectoryNotFoundException_WhenSourceDoesNotExist()
+    {
+        // Arrange
+        var nonExistentDir = new DirectoryInfo(
+            Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString())
+        );
+
+        // Act & Assert
+        Assert.Throws<DirectoryNotFoundException>(() => nonExistentDir.CopyTo("any_destination"));
+    }
+
+    [Fact]
+    public void CopyTo_CopiesFiles_WhenNotRecursive()
+    {
+        // Arrange
+        var sourcePath = fixture.CreateSubFolder("Source1");
+        var destPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+        File.WriteAllText(Path.Combine(sourcePath, "test.txt"), "hello");
+        var subDir = Directory.CreateDirectory(Path.Combine(sourcePath, "Sub"));
+        File.WriteAllText(Path.Combine(subDir.FullName, "hidden.txt"), "should not copy");
+
+        var sourceDir = new DirectoryInfo(sourcePath);
+
+        // Act
+        sourceDir.CopyTo(destPath, recursive: false);
+
+        // Assert
+        Assert.True(File.Exists(Path.Combine(destPath, "test.txt")));
+        Assert.False(Directory.Exists(Path.Combine(destPath, "Sub")));
+    }
+
+    [Fact]
+    public void CopyTo_CopiesEverything_WhenRecursive()
+    {
+        // Arrange
+        var sourcePath = fixture.CreateSubFolder("Source2");
+        var destPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+
+        var subDirPath = Path.Combine(sourcePath, "Level1");
+        Directory.CreateDirectory(subDirPath);
+        File.WriteAllText(Path.Combine(sourcePath, "root.txt"), "root");
+        File.WriteAllText(Path.Combine(subDirPath, "child.txt"), "child");
+
+        var sourceDir = new DirectoryInfo(sourcePath);
+
+        // Act
+        sourceDir.CopyTo(destPath, recursive: true);
+
+        // Assert
+        Assert.True(File.Exists(Path.Combine(destPath, "root.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "Level1", "child.txt")));
+    }
+
+    [Fact]
+    public void CopyTo_CreatesDestinationDirectory_IfItDoesNotExist()
+    {
+        // Arrange
+        var sourcePath = fixture.CreateSubFolder("Source3");
+        var destPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        var sourceDir = new DirectoryInfo(sourcePath);
+
+        // Act
+        sourceDir.CopyTo(destPath);
+
+        // Assert
+        Assert.True(Directory.Exists(destPath));
+    }
 }
