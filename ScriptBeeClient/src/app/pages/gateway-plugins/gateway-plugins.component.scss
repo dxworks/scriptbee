@@ -1,0 +1,28 @@
+.gateway-plugins-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.search-bar-container {
+  margin-bottom: 2.5rem;
+
+  .search-field {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+.list-container {
+  margin-top: 2rem;
+}

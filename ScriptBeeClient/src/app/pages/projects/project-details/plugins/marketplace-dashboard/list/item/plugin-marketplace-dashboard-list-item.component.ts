@@ -56,45 +56,47 @@ export class PluginMarketplaceDashboardListItemComponent {
     const projectId = this.projectId();
     const project = this.plugin();
     const versionToInstall = this.latestVersion();
-    if (!projectId || !versionToInstall || !project) {
+    if (!versionToInstall || !project) {
       return;
     }
 
     this.loading.set(true);
-    this.pluginService
-      .installPlugin(projectId, project.id, versionToInstall)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: () => {
-          this.actionCompleted.emit();
-          this.snackbar.open(`${project.type} installed successfully`, 'Dismiss', { duration: 4000 });
-        },
-        error: () => {
-          this.snackbar.open(`Could not install ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
-        },
-      });
+    const request = projectId
+      ? this.pluginService.installPlugin(projectId, project.id, versionToInstall)
+      : this.pluginService.installGatewayPlugin(project.id, versionToInstall);
+
+    request.pipe(finalize(() => this.loading.set(false))).subscribe({
+      next: () => {
+        this.actionCompleted.emit();
+        this.snackbar.open(`${project.type} installed successfully`, 'Dismiss', { duration: 4000 });
+      },
+      error: () => {
+        this.snackbar.open(`Could not install ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
+      },
+    });
   }
 
   onUninstallButtonClick() {
     const projectId = this.projectId();
     const project = this.plugin();
     const installedVersion = this.installedVersion();
-    if (!projectId || !project || !installedVersion) {
+    if (!project || !installedVersion) {
       return;
     }
 
     this.loading.set(true);
-    this.pluginService
-      .uninstallPlugin(projectId, project.id, installedVersion)
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: () => {
-          this.actionCompleted.emit();
-          this.snackbar.open(`${project.type} uninstalled successfully`, 'Dismiss', { duration: 4000 });
-        },
-        error: () => {
-          this.snackbar.open(`Could not uninstall ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
-        },
-      });
+    const request = projectId
+      ? this.pluginService.uninstallPlugin(projectId, project.id, installedVersion)
+      : this.pluginService.uninstallGatewayPlugin(project.id, installedVersion);
+
+    request.pipe(finalize(() => this.loading.set(false))).subscribe({
+      next: () => {
+        this.actionCompleted.emit();
+        this.snackbar.open(`${project.type} uninstalled successfully`, 'Dismiss', { duration: 4000 });
+      },
+      error: () => {
+        this.snackbar.open(`Could not uninstall ${project.type.toLowerCase()}`, 'Dismiss', { duration: 4000 });
+      },
+    });
   }
 }

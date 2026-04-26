@@ -11,11 +11,13 @@ import { PluginDetailsComponent } from './pages/projects/project-details/plugins
 import { UploadModelPage } from './pages/projects/project-details/model/upload-model-page/upload-model-page.component';
 import { LoadModelPage } from './pages/projects/project-details/model/load-model-page/load-model-page.component';
 import { ContextModelPage } from './pages/projects/project-details/model/context-model-page/context-model-page.component';
+import { GatewayPluginsComponent } from './pages/gateway-plugins/gateway-plugins.component';
 import { inject } from '@angular/core';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
   { path: 'projects', component: ProjectsPage },
+  { path: 'gateway-plugins', component: GatewayPluginsComponent },
   { path: 'create-project', component: CreateProjectPage },
   {
     path: 'projects/:id',

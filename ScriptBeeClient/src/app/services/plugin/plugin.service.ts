@@ -38,4 +38,16 @@ export class PluginService {
   uninstallPlugin(projectId: string, pluginId: string, version: string) {
     return this.http.delete<void>(`/api/projects/${projectId}/plugins/${pluginId}?version=${version}`);
   }
+
+  getGatewayPlugins(): Observable<InstalledPlugin[]> {
+    return this.http.get<WebResponse<InstalledPlugin[]>>('/api/plugins/gateway').pipe(map((response) => response.data));
+  }
+
+  installGatewayPlugin(pluginId: string, version: string): Observable<void> {
+    return this.http.post<void>('/api/plugins/gateway', { id: pluginId, version });
+  }
+
+  uninstallGatewayPlugin(pluginId: string, version: string): Observable<void> {
+    return this.http.delete<void>(`/api/plugins/gateway/${pluginId}?version=${version}`);
+  }
 }
