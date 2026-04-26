@@ -8,6 +8,6 @@ public interface IGetProject
 {
     Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> GetById(
         ProjectId projectId,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

@@ -14,7 +14,6 @@ using InstallPluginFromZipResult = OneOf<
     ProjectDetails,
     ProjectDoesNotExistsError,
     PluginManifestNotFoundError,
-    PluginAlreadyExistsError,
     PluginInstallationError
 >;
 using InstallResult = OneOf<ProjectDetails, ProjectDoesNotExistsError, PluginInstallationError>;
@@ -175,7 +174,6 @@ public class InstallPluginService(
                     cancellationToken
                 );
             },
-            error => Task.FromResult<InstallPluginFromZipResult>(error),
             error => Task.FromResult<InstallPluginFromZipResult>(error),
             error => Task.FromResult<InstallPluginFromZipResult>(error)
         );

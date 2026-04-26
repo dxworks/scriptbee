@@ -12,12 +12,9 @@ public interface IBundlePluginInstaller
         CancellationToken cancellationToken
     );
 
-    Task<
-        OneOf<
-            List<PluginId>,
-            PluginManifestNotFoundError,
-            PluginAlreadyExistsError,
-            PluginInstallationError
-        >
-    > Install(ProjectId projectId, Stream zipStream, CancellationToken cancellationToken);
+    Task<OneOf<List<PluginId>, PluginManifestNotFoundError, PluginInstallationError>> Install(
+        ProjectId projectId,
+        Stream zipStream,
+        CancellationToken cancellationToken
+    );
 }

@@ -58,7 +58,6 @@ public class InstallPluginEndpoint : IEndpointDefinition
         Results<
             Ok<ProjectDetails>,
             NotFound<ProblemDetails>,
-            Conflict<ProblemDetails>,
             BadRequest<ProblemDetails>,
             InternalServerError<ProblemDetails>
         >
@@ -80,13 +79,11 @@ public class InstallPluginEndpoint : IEndpointDefinition
             Results<
                 Ok<ProjectDetails>,
                 NotFound<ProblemDetails>,
-                Conflict<ProblemDetails>,
                 BadRequest<ProblemDetails>,
                 InternalServerError<ProblemDetails>
             >
         >(
             projectDetails => TypedResults.Ok(projectDetails),
-            error => error.ToProblem(context),
             error => error.ToProblem(context),
             error => error.ToProblem(context),
             error => error.ToProblem(context)

@@ -8,6 +8,6 @@ public interface IUninstallPluginUseCase
 {
     Task<OneOf<ProjectDetails, ProjectDoesNotExistsError>> UninstallPluginAsync(
         UninstallPluginCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }
