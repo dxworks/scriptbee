@@ -13,21 +13,6 @@ internal class PluginRepository : IPluginRepository, IPluginRegistry
     private readonly ConcurrentDictionary<string, List<ServiceDescriptor>> _pluginServices = new();
     private readonly ConcurrentDictionary<string, AssemblyLoadContext> _pluginLoadContexts = new();
 
-    public void UnRegisterPlugin(string pluginId)
-    {
-        if (!_plugins.TryRemove(pluginId, out _))
-        {
-            return;
-        }
-
-        _pluginServices.TryRemove(pluginId, out _);
-
-        if (_pluginLoadContexts.TryRemove(pluginId, out var context))
-        {
-            context.Unload();
-        }
-    }
-
     public void RegisterPlugin(Plugin plugin, LoadedPlugin loadedPlugin)
     {
         RegisterPlugin(plugin);
@@ -67,6 +52,7 @@ internal class PluginRepository : IPluginRepository, IPluginRegistry
         {
             return;
         }
+
         _pluginServices.TryRemove(pluginId.Name, out _);
 
         if (_pluginLoadContexts.TryRemove(pluginId.Name, out var context))

@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using NSubstitute;
 using OneOf;
 using OneOf.Types;
@@ -25,6 +26,11 @@ public class DeallocateProjectInstanceServiceTest
     private readonly IDeleteProjectInstance _deleteProjectInstance =
         Substitute.For<IDeleteProjectInstance>();
 
+    private readonly Channel<InstanceDeallocatedEvent> _eventsChannel =
+        Channel.CreateUnbounded<InstanceDeallocatedEvent>(
+            new UnboundedChannelOptions { SingleReader = true }
+        );
+
     private readonly DeallocateProjectInstanceService _deallocateProjectInstanceService;
 
     public DeallocateProjectInstanceServiceTest()
@@ -33,7 +39,8 @@ public class DeallocateProjectInstanceServiceTest
             _getProject,
             _getProjectInstance,
             _deallocateInstance,
-            _deleteProjectInstance
+            _deleteProjectInstance,
+            _eventsChannel
         );
     }
 
@@ -97,15 +104,15 @@ public class DeallocateProjectInstanceServiceTest
     [Fact]
     public async Task GivenInstance_ExpectSuccess()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId(Guid.NewGuid());
         var instanceInfo = InstanceInfoFixture.BasicInstanceInfo(projectId);
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(
-                    ProjectDetailsFixture.BasicProjectDetails(projectId)
-                )
+                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
             );
         _getProjectInstance
             .Get(instanceId, Arg.Any<CancellationToken>())
@@ -113,16 +120,24 @@ public class DeallocateProjectInstanceServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
+        // Act
         var result = await _deallocateProjectInstanceService.Deallocate(
             projectId,
             instanceId,
             TestContext.Current.CancellationToken
         );
 
+        // Assert
         result.AsT0.ShouldBe(new Success());
         await _deallocateInstance
             .Received(1)
             .Deallocate(instanceInfo, Arg.Any<CancellationToken>());
         await _deleteProjectInstance.Received(1).Delete(instanceInfo, Arg.Any<CancellationToken>());
+        var instanceDeallocatedEvent = await _eventsChannel.Reader.ReadAsync(
+            TestContext.Current.CancellationToken
+        );
+        instanceDeallocatedEvent.ShouldBe(
+            new InstanceDeallocatedEvent(projectDetails, instanceInfo)
+        );
     }
 }

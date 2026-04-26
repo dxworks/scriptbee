@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
@@ -16,7 +17,8 @@ public sealed class DeallocateProjectInstanceService(
     IGetProject getProject,
     IGetProjectInstance getProjectInstance,
     IDeallocateInstance deallocateInstance,
-    IDeleteProjectInstance deleteProjectInstance
+    IDeleteProjectInstance deleteProjectInstance,
+    Channel<InstanceDeallocatedEvent> eventsChannel
 ) : IDeallocateProjectInstanceUseCase
 {
     public async Task<DeallocateResult> Deallocate(
@@ -28,12 +30,14 @@ public sealed class DeallocateProjectInstanceService(
         var result = await getProject.GetById(projectId, cancellationToken);
 
         return await result.Match<Task<DeallocateResult>>(
-            async _ => await FindAndDeallocateInstance(instanceId, cancellationToken),
+            async details =>
+                await FindAndDeallocateInstance(details, instanceId, cancellationToken),
             error => Task.FromResult<DeallocateResult>(error)
         );
     }
 
     private async Task<DeallocateResult> FindAndDeallocateInstance(
+        ProjectDetails projectDetails,
         InstanceId instanceId,
         CancellationToken cancellationToken
     )
@@ -43,7 +47,7 @@ public sealed class DeallocateProjectInstanceService(
         return await result.Match<Task<DeallocateResult>>(
             async info =>
             {
-                await DeallocateInstance(info, cancellationToken);
+                await DeallocateInstance(projectDetails, info, cancellationToken);
                 return new Success();
             },
             _ => Task.FromResult<DeallocateResult>(new Success())
@@ -51,6 +55,7 @@ public sealed class DeallocateProjectInstanceService(
     }
 
     private async Task DeallocateInstance(
+        ProjectDetails projectDetails,
         InstanceInfo instanceInfo,
         CancellationToken cancellationToken
     )
@@ -58,5 +63,10 @@ public sealed class DeallocateProjectInstanceService(
         await deallocateInstance.Deallocate(instanceInfo, cancellationToken);
 
         await deleteProjectInstance.Delete(instanceInfo, cancellationToken);
+
+        await eventsChannel.Writer.WriteAsync(
+            new InstanceDeallocatedEvent(projectDetails, instanceInfo),
+            cancellationToken
+        );
     }
 }

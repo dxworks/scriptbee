@@ -30,8 +30,8 @@ builder
     .AddArtifactFileAdapters()
     .AddRestConfig()
     .AddAnalysisConfig(builder.Configuration)
-    .AddInstallPluginsForAllocatedInstancesServices()
     .AddScriptBeeMarketplaceClient()
+    .AddBackgroundServices("ScriptBee:Instance")
     .AddPluginServices("ScriptBee:Plugins")
     .AddProjectLiveUpdates();
 

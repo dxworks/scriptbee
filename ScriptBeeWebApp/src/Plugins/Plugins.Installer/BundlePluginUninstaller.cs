@@ -6,19 +6,19 @@ namespace ScriptBee.Plugins.Installer;
 public class BundlePluginUninstaller(
     IPluginReader pluginReader,
     IPluginUninstaller pluginUninstaller,
-    IPluginPathProvider pluginPathProvider,
     ILogger<BundlePluginUninstaller> logger
 ) : IBundlePluginUninstaller
 {
-    public List<PluginId> Uninstall(PluginId pluginId)
+    public List<PluginId> Uninstall(PluginId pluginId, string pluginFolderPath)
     {
         logger.LogInformation(
-            "Uninstalling plugin {PluginName} version {Version}",
+            "Uninstalling plugin {PluginName} version {Version} from {PluginFolderPath}",
             pluginId.Name,
-            pluginId.Version
+            pluginId.Version,
+            pluginFolderPath
         );
 
-        var bundleFolder = GetPluginPath(pluginId);
+        var bundleFolder = Path.Combine(pluginFolderPath, pluginId.GetFullyQualifiedName());
 
         pluginUninstaller.Uninstall(bundleFolder);
         var uninstalledVersions = new List<PluginId> { pluginId };
@@ -36,16 +36,10 @@ public class BundlePluginUninstaller(
             )
         )
         {
-            var versions = Uninstall(id);
+            var versions = Uninstall(id, pluginFolderPath);
             uninstalledVersions.AddRange(versions);
         }
 
         return uninstalledVersions;
-    }
-
-    private string GetPluginPath(PluginId pluginId)
-    {
-        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
-        return Path.Combine(pluginFolderPath, pluginId.GetFullyQualifiedName());
     }
 }

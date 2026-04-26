@@ -14,9 +14,10 @@ public class PluginManager(
 {
     public void LoadPlugins()
     {
-        logger.LogInformation("Loading plugins");
+        var pluginFolderPath = pluginPathProvider.GetPathToPlugins();
+        logger.LogInformation("Loading plugins from {Folder}", pluginFolderPath);
 
-        var plugins = pluginReader.ReadPlugins(pluginPathProvider.GetPathToPlugins());
+        var plugins = pluginReader.ReadPlugins(pluginFolderPath);
 
         foreach (var plugin in plugins)
         {
