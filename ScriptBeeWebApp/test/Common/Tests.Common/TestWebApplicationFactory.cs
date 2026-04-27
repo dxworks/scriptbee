@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -20,6 +23,11 @@ public class TestWebApplicationFactory<TStartup>(
             builder.ConfigureServices(configureDelegate);
         }
 
+        builder.ConfigureServices(services =>
+        {
+            services.RemoveAll<IAntiforgery>();
+            services.AddSingleton<IAntiforgery, NoOpAntiforgery>();
+        });
         return base.CreateHost(builder);
     }
 
@@ -58,4 +66,19 @@ public class TestWebApplicationFactory<TStartup>(
                 configurationBuilder.AddInMemoryCollection(configurationValues);
             });
     }
+}
+
+public class NoOpAntiforgery : IAntiforgery
+{
+    public AntiforgeryTokenSet GetAndStoreTokens(HttpContext httpContext) =>
+        new("test", "test", "test", "test");
+
+    public AntiforgeryTokenSet GetTokens(HttpContext httpContext) =>
+        new("test", "test", "test", "test");
+
+    public Task<bool> IsRequestValidAsync(HttpContext httpContext) => Task.FromResult(true);
+
+    public void SetCookieTokenAndHeader(HttpContext httpContext) { }
+
+    public Task ValidateRequestAsync(HttpContext httpContext) => Task.CompletedTask;
 }

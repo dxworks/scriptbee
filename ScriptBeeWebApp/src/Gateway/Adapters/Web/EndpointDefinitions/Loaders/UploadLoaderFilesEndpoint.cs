@@ -22,8 +22,7 @@ public class UploadLoaderFilesEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPut("/api/projects/{projectId}/loaders/{loaderId}/files", UploadLoaderFiles)
-            .WithTags("Loaders")
-            .DisableAntiforgery();
+            .WithTags("Loaders");
     }
 
     private static async Task<UploadResult> UploadLoaderFiles(
