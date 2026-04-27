@@ -22,6 +22,7 @@ builder
     .Services.AddConfiguredHealthChecks()
     .AddHttpContextAccessor()
     .AddSerilog()
+    .AddAntiforgeryHeader()
     .AddOpenApi()
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
@@ -59,6 +60,9 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseMiddleware<ClientIdMiddleware>();
+
+app.UseAntiforgery();
+app.UseAntiforgeryHeader();
 
 app.MapHealthChecksEndpoint();
 

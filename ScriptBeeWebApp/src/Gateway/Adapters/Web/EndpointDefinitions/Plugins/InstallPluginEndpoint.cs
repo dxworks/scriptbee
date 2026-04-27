@@ -21,9 +21,7 @@ public class InstallPluginEndpoint : IEndpointDefinition
         app.MapPut("/api/projects/{projectId}/plugins/{pluginId}", InstallPlugin)
             .WithTags("Plugins");
 
-        app.MapPost("/api/projects/{projectId}/plugins", UploadPlugin)
-            .WithTags("Plugins")
-            .DisableAntiforgery();
+        app.MapPost("/api/projects/{projectId}/plugins", UploadPlugin).WithTags("Plugins");
     }
 
     private static async Task<
