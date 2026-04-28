@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Microsoft.Extensions.Configuration;
@@ -39,14 +40,6 @@ public class AnalysisInstanceDockerAdapter(
 
         var hostPort = freePortProvider.GetFreeTcpPort();
 
-        var portBindings = new Dictionary<string, IList<PortBinding>>
-        {
-            {
-                $"{analysisDockerConfig.Port}/tcp",
-                new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
-            },
-        };
-
         var mongoDbConnectionString =
             analysisDockerConfig.MongoDbConnectionString
             ?? configuration.GetConnectionString("mongodb");
@@ -56,14 +49,7 @@ public class AnalysisInstanceDockerAdapter(
             {
                 Name = $"scriptbee-analysis-{instanceId}",
                 Image = image.ImageName,
-                HostConfig = new HostConfig
-                {
-                    NetworkMode = string.IsNullOrEmpty(analysisDockerConfig.Network)
-                        ? "bridge"
-                        : analysisDockerConfig.Network,
-                    PortBindings = portBindings,
-                    Binds = GetBinds(analysisDockerConfig.PluginsVolume),
-                },
+                HostConfig = GetComputedHostConfig(hostPort),
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
                     { $"{analysisDockerConfig.Port}/tcp", new EmptyStruct() },
@@ -197,6 +183,32 @@ public class AnalysisInstanceDockerAdapter(
             "removing" => AnalysisInstanceStatus.Deallocating,
             _ => AnalysisInstanceStatus.NotFound,
         };
+    }
+
+    private HostConfig GetComputedHostConfig(int hostPort)
+    {
+        var analysisDockerConfig = config.Value;
+        var baseConfig = analysisDockerConfig.HostConfig ?? new HostConfig();
+
+        var json = JsonSerializer.Serialize(baseConfig);
+        var hostConfig = JsonSerializer.Deserialize<HostConfig>(json)!;
+
+        var portBindings = new Dictionary<string, IList<PortBinding>>
+        {
+            {
+                $"{analysisDockerConfig.Port}/tcp",
+                new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
+            },
+        };
+
+        hostConfig.NetworkMode = string.IsNullOrEmpty(analysisDockerConfig.Network)
+            ? "bridge"
+            : analysisDockerConfig.Network;
+        hostConfig.PortBindings = portBindings;
+
+        hostConfig.Binds = GetBinds(analysisDockerConfig.PluginsVolume);
+
+        return hostConfig;
     }
 
     private List<string> GetEnvironmentVariables(

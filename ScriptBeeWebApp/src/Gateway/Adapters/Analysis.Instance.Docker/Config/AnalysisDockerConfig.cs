@@ -1,3 +1,5 @@
+using Docker.DotNet.Models;
+
 namespace ScriptBee.Analysis.Instance.Docker.Config;
 
 public class AnalysisDockerConfig
@@ -15,4 +17,6 @@ public class AnalysisDockerConfig
     public string? UserFolderHostPath { get; init; }
 
     public string PluginsVolume { get; init; } = "scriptbee-plugins";
+
+    public HostConfig? HostConfig { get; init; }
 }

@@ -336,6 +336,44 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
+    public async Task Allocate_ShouldUseOverrideHostConfig_WhenConfigured()
+    {
+        // Arrange
+        var config = new AnalysisDockerConfig
+        {
+            DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
+            Network = DockerFixture.TestNetworkName,
+            HostConfig = new HostConfig { Memory = 512 * 1024 * 1024 },
+        };
+        var adapter = new AnalysisInstanceDockerAdapter(
+            Options.Create(config),
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-analysis-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.HostConfig.NetworkMode.ShouldBe(DockerFixture.TestNetworkName);
+        containerInspect.HostConfig.Memory.ShouldBe(512 * 1024 * 1024);
+    }
+
+    [Fact]
     public async Task Deallocate_ShouldStopAndRemoveExistingContainer()
     {
         // Arrange
