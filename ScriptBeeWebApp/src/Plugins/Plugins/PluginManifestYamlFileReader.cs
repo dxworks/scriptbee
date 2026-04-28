@@ -1,8 +1,6 @@
 using ScriptBee.Domain.Model.Plugins.Manifest;
-using ScriptBee.Plugins.Yaml;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization.NodeDeserializers;
 
 namespace ScriptBee.Plugins;
 
@@ -14,16 +12,13 @@ public class PluginManifestYamlFileReader(IPluginDiscriminatorHolder pluginDiscr
         var namingConvention = CamelCaseNamingConvention.Instance;
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(namingConvention)
-            .WithNodeDeserializer(
-                inner => new AbstractNodeNodeTypeResolver(
-                    inner,
-                    new PluginManifestSpecTypeDiscriminator(
-                        namingConvention,
-                        pluginDiscriminatorHolder.GetDiscriminatedTypes()
-                    )
-                ),
-                s => s.InsteadOf<ObjectNodeDeserializer>()
-            )
+            .WithTypeDiscriminatingNodeDeserializer(o =>
+            {
+                o.AddKeyValueTypeDiscriminator<PluginExtensionPoint>(
+                    namingConvention.Apply(nameof(PluginBundleExtensionPoint.Kind)),
+                    pluginDiscriminatorHolder.GetDiscriminatedTypes()
+                );
+            })
             .Build();
 
         using var reader = new StreamReader(filePath);
