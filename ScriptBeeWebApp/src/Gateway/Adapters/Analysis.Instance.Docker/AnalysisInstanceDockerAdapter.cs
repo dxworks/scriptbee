@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Microsoft.Extensions.Configuration;
@@ -39,14 +40,6 @@ public class AnalysisInstanceDockerAdapter(
 
         var hostPort = freePortProvider.GetFreeTcpPort();
 
-        var portBindings = new Dictionary<string, IList<PortBinding>>
-        {
-            {
-                $"{analysisDockerConfig.Port}/tcp",
-                new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
-            },
-        };
-
         var mongoDbConnectionString =
             analysisDockerConfig.MongoDbConnectionString
             ?? configuration.GetConnectionString("mongodb");
@@ -56,14 +49,7 @@ public class AnalysisInstanceDockerAdapter(
             {
                 Name = $"scriptbee-analysis-{instanceId}",
                 Image = image.ImageName,
-                HostConfig = new HostConfig
-                {
-                    NetworkMode = string.IsNullOrEmpty(analysisDockerConfig.Network)
-                        ? "bridge"
-                        : analysisDockerConfig.Network,
-                    PortBindings = portBindings,
-                    Binds = GetBinds(analysisDockerConfig.PluginsVolume),
-                },
+                HostConfig = GetComputedHostConfig(analysisDockerConfig, hostPort),
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
                     { $"{analysisDockerConfig.Port}/tcp", new EmptyStruct() },
@@ -199,6 +185,34 @@ public class AnalysisInstanceDockerAdapter(
         };
     }
 
+    private static HostConfig GetComputedHostConfig(
+        AnalysisDockerConfig analysisDockerConfig,
+        int hostPort
+    )
+    {
+        var baseConfig = analysisDockerConfig.HostConfig ?? new HostConfig();
+
+        var json = JsonSerializer.Serialize(baseConfig);
+        var hostConfig = JsonSerializer.Deserialize<HostConfig>(json)!;
+
+        var portBindings = new Dictionary<string, IList<PortBinding>>
+        {
+            {
+                $"{analysisDockerConfig.Port}/tcp",
+                new List<PortBinding> { new() { HostPort = hostPort.ToString() } }
+            },
+        };
+
+        hostConfig.NetworkMode = string.IsNullOrEmpty(analysisDockerConfig.Network)
+            ? "bridge"
+            : analysisDockerConfig.Network;
+        hostConfig.PortBindings = portBindings;
+
+        hostConfig.Binds = GetBinds(analysisDockerConfig);
+
+        return hostConfig;
+    }
+
     private List<string> GetEnvironmentVariables(
         ProjectDetails projectDetails,
         InstanceId instanceId,
@@ -224,21 +238,6 @@ public class AnalysisInstanceDockerAdapter(
         return environmentVariables;
     }
 
-    private List<string> GetBinds(string pluginsVolume)
-    {
-        var binds = new List<string>();
-
-        var userHostPath = config.Value.UserFolderHostPath;
-        if (!string.IsNullOrEmpty(userHostPath))
-        {
-            binds.Add($"{userHostPath}:{config.Value.UserFolderVolumePath}");
-        }
-
-        binds.Add($"{pluginsVolume}:/app/plugins:ro");
-
-        return binds;
-    }
-
     private Dictionary<string, EmptyStruct> GetVolumes()
     {
         var hostPath = config.Value.UserFolderHostPath;
@@ -254,6 +253,21 @@ public class AnalysisInstanceDockerAdapter(
         {
             { config.Value.UserFolderVolumePath, new EmptyStruct() },
         };
+    }
+
+    private static List<string> GetBinds(AnalysisDockerConfig analysisDockerConfig)
+    {
+        var binds = new List<string>();
+
+        var userHostPath = analysisDockerConfig.UserFolderHostPath;
+        if (!string.IsNullOrEmpty(userHostPath))
+        {
+            binds.Add($"{userHostPath}:{analysisDockerConfig.UserFolderVolumePath}");
+        }
+
+        binds.Add($"{analysisDockerConfig.PluginsVolume}:/app/plugins:ro");
+
+        return binds;
     }
 
     private static DockerClient CreateDockerClient(AnalysisDockerConfig analysisDockerConfig)

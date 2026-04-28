@@ -70,6 +70,24 @@
 - **Description:** The name of the volume that will be created and shared for installing plugins. This will be mounted
   in Analysis Service as a readonly path to access the plugins
 
+### `SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG`
+
+> [!NOTE]
+> Note that you can configure docker options such as resource limits and environment variables for the analysis
+> containers by using the `SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG` configuration. This allows for advanced users to
+> have
+> full control over the Docker container configuration without the need for the Gateway to explicitly support each
+> option.
+> Please
+> see [Docker Host Config](https://github.com/dotnet/Docker.DotNet/blob/master/src/Docker.DotNet/Models/HostConfig.Generated.cs)
+> for all available options that can be configured through this setting.
+
+For example, you can se the memory limit like this
+
+```
+SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG__MEMORY=536870912
+```
+
 ## Instance Configuration
 
 ### `INSTANCE__POLLINGDELAYMILLISECONDS`
@@ -85,10 +103,12 @@
 
 - **Type:** `string`
 - **Default:** `[User Profile Folder]/.scriptbee/plugins`
-- **Description:** The folder where all downloaded plugins are stored (the "Cache"). This folder is shared between the Gateway and all Analysis instances.
+- **Description:** The folder where all downloaded plugins are stored (the "Cache"). This folder is shared between the
+  Gateway and all Analysis instances.
 
 ### `SCRIPTBEE__PLUGINS__GATEWAYINSTALLATIONFOLDER`
 
 - **Type:** `string`
 - **Default:** `[User Profile Folder]/.scriptbee/gateway/plugins`
-- **Description:** The folder for plugins that are actively "Enabled" in the Gateway. When you enable a plugin from the UI, it is copied here so the Gateway can load it.
+- **Description:** The folder for plugins that are actively "Enabled" in the Gateway. When you enable a plugin from the
+  UI, it is copied here so the Gateway can load it.
