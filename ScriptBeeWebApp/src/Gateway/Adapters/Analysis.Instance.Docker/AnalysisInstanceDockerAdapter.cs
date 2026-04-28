@@ -49,7 +49,7 @@ public class AnalysisInstanceDockerAdapter(
             {
                 Name = $"scriptbee-analysis-{instanceId}",
                 Image = image.ImageName,
-                HostConfig = GetComputedHostConfig(hostPort),
+                HostConfig = GetComputedHostConfig(analysisDockerConfig, hostPort),
                 ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
                     { $"{analysisDockerConfig.Port}/tcp", new EmptyStruct() },
@@ -185,9 +185,11 @@ public class AnalysisInstanceDockerAdapter(
         };
     }
 
-    private HostConfig GetComputedHostConfig(int hostPort)
+    private static HostConfig GetComputedHostConfig(
+        AnalysisDockerConfig analysisDockerConfig,
+        int hostPort
+    )
     {
-        var analysisDockerConfig = config.Value;
         var baseConfig = analysisDockerConfig.HostConfig ?? new HostConfig();
 
         var json = JsonSerializer.Serialize(baseConfig);
@@ -206,7 +208,7 @@ public class AnalysisInstanceDockerAdapter(
             : analysisDockerConfig.Network;
         hostConfig.PortBindings = portBindings;
 
-        hostConfig.Binds = GetBinds(analysisDockerConfig.PluginsVolume);
+        hostConfig.Binds = GetBinds(analysisDockerConfig);
 
         return hostConfig;
     }
@@ -236,21 +238,6 @@ public class AnalysisInstanceDockerAdapter(
         return environmentVariables;
     }
 
-    private List<string> GetBinds(string pluginsVolume)
-    {
-        var binds = new List<string>();
-
-        var userHostPath = config.Value.UserFolderHostPath;
-        if (!string.IsNullOrEmpty(userHostPath))
-        {
-            binds.Add($"{userHostPath}:{config.Value.UserFolderVolumePath}");
-        }
-
-        binds.Add($"{pluginsVolume}:/app/plugins:ro");
-
-        return binds;
-    }
-
     private Dictionary<string, EmptyStruct> GetVolumes()
     {
         var hostPath = config.Value.UserFolderHostPath;
@@ -266,6 +253,21 @@ public class AnalysisInstanceDockerAdapter(
         {
             { config.Value.UserFolderVolumePath, new EmptyStruct() },
         };
+    }
+
+    private static List<string> GetBinds(AnalysisDockerConfig analysisDockerConfig)
+    {
+        var binds = new List<string>();
+
+        var userHostPath = analysisDockerConfig.UserFolderHostPath;
+        if (!string.IsNullOrEmpty(userHostPath))
+        {
+            binds.Add($"{userHostPath}:{analysisDockerConfig.UserFolderVolumePath}");
+        }
+
+        binds.Add($"{analysisDockerConfig.PluginsVolume}:/app/plugins:ro");
+
+        return binds;
     }
 
     private static DockerClient CreateDockerClient(AnalysisDockerConfig analysisDockerConfig)
