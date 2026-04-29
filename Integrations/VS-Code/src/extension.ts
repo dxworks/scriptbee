@@ -7,6 +7,7 @@ import { logger } from './utils/logger';
 import { hideMetaFiles } from './utils/workspaceUtils';
 import { RemoteScriptProvider } from './providers/RemoteScriptProvider';
 import { liveUpdatesService } from './services/liveUpdatesService';
+import { autoPushService } from './services/autoPushService';
 import { COMMAND_ON_PROJECT_SELECTED } from './commands/commandIds';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -22,11 +23,15 @@ export function activate(context: vscode.ExtensionContext) {
   initTreeView(context);
 
   void liveUpdatesService.start();
+  autoPushService.start();
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('scriptbee.enableLiveUpdates')) {
         void liveUpdatesService.start();
+      }
+      if (e.affectsConfiguration('scriptbee.enableAutoPush')) {
+        autoPushService.start();
       }
     }),
     vscode.commands.registerCommand(COMMAND_ON_PROJECT_SELECTED, () => {
@@ -37,4 +42,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
   void liveUpdatesService.stop();
+  autoPushService.stop();
 }

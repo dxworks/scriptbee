@@ -35,6 +35,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable real-time updates for script lifecycle events (creation, update, deletion)."
+        },
+        "scriptbee.enableAutoPush": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically push script changes to the server upon saving."
         }
       }
     },
