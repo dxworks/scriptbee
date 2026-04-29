@@ -20,12 +20,21 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/files", GetProjectFiles).WithTags("ProjectStructure");
+        app.MapGet("/api/projects/{projectId}/files", GetProjectFiles)
+            .WithTags("ProjectStructure")
+            .WithSummary("Get project files")
+            .WithDescription(
+                "Retrieves a paginated list of files and directories within the specified project."
+            );
         app.MapGet(
                 "/api/projects/{projectId}/structure/available-script-types",
                 GetAvailableScriptTypes
             )
-            .WithTags("ProjectStructure");
+            .WithTags("ProjectStructure")
+            .WithSummary("Get available script types")
+            .WithDescription(
+                "Retrieves a list of all script languages and types supported by the project."
+            );
     }
 
     private static async Task<

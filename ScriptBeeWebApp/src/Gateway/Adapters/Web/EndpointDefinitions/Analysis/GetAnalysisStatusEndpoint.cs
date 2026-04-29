@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Application.Model;
 using ScriptBee.Application.Model.Sorting;
@@ -21,9 +21,16 @@ public class GetAnalysisStatusEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/analyses", GetAllAnalysis).WithTags("Analysis");
+        app.MapGet("/api/projects/{projectId}/analyses", GetAllAnalysis)
+            .WithTags("Analysis")
+            .WithSummary("Get all analyses for a project")
+            .WithDescription(
+                "Retrieves a list of all analyses performed within the specified project."
+            );
         app.MapGet("/api/projects/{projectId}/analyses/{analysisId}", GetAnalysisById)
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Get analysis status by ID")
+            .WithDescription("Retrieves the current status and details of a specific analysis.");
     }
 
     private static async Task<

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Common.Web;
@@ -19,8 +19,12 @@ public class LoadContextEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/context/load", LoadContext)
-            .WithRequestValidation<WebLoadContextCommand>()
-            .WithTags("Context");
+            .WithTags("Context")
+            .WithSummary("Load data into analysis context")
+            .WithDescription(
+                "Loads data from files into the current analysis context using the provided loaders."
+            )
+            .WithRequestValidation<WebLoadContextCommand>();
     }
 
     private static async Task<NoContent> LoadContext(

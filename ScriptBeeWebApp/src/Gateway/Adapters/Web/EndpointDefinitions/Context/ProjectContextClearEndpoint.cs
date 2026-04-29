@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
@@ -19,7 +19,11 @@ public class ProjectContextClearEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/clear", ClearContext)
-            .WithTags("Instances", "Context");
+            .WithTags("Instances", "Context")
+            .WithSummary("Clear instance context")
+            .WithDescription(
+                "Clears all loaded data from the current context of the specified project instance."
+            );
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ClearContext(

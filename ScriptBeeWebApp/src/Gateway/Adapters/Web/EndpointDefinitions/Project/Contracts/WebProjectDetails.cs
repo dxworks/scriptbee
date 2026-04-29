@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 
+[Description("Represents detailed project information, including saved and loaded files.")]
 public record WebProjectDetails(
     string Id,
     string Name,

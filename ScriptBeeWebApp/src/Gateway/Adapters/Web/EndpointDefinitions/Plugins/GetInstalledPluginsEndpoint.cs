@@ -23,8 +23,18 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/plugins", GetInstalledPlugins).WithTags("Plugins");
-        app.MapGet("/api/projects/{projectId}/plugins/{pluginId}", GetPlugin).WithTags("Plugins");
+        app.MapGet("/api/projects/{projectId}/plugins", GetInstalledPlugins)
+            .WithTags("Plugins")
+            .WithSummary("Get installed plugins for a project")
+            .WithDescription(
+                "Retrieves a list of all plugins currently installed in the specified project."
+            );
+        app.MapGet("/api/projects/{projectId}/plugins/{pluginId}", GetPlugin)
+            .WithTags("Plugins")
+            .WithSummary("Get installed plugin details")
+            .WithDescription(
+                "Retrieves detailed information about a specific plugin installed in a project."
+            );
     }
 
     private static async Task<

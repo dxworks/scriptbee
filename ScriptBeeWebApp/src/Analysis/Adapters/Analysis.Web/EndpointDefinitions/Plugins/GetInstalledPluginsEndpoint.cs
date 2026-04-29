@@ -15,7 +15,12 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/plugins", GetInstalledPlugins).WithTags("Plugins");
+        app.MapGet("/api/plugins", GetInstalledPlugins)
+            .WithTags("Plugins")
+            .WithSummary("Get installed plugins")
+            .WithDescription(
+                "Retrieves a list of all plugins currently installed in the analysis service."
+            );
     }
 
     private static Ok<WebGetInstalledPluginsResponse> GetInstalledPlugins(

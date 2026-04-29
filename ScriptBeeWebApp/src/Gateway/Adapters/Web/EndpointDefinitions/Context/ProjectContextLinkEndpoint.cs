@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
@@ -22,6 +22,10 @@ public class ProjectContextLinkEndpoint : IEndpointDefinition
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/link", LinkContext)
             .WithTags("Instances", "Context")
+            .WithSummary("Link instance context")
+            .WithDescription(
+                "Links the data context of the specified project instance using the provided linkers."
+            )
             .WithRequestValidation<WebLinkContextCommand>();
     }
 

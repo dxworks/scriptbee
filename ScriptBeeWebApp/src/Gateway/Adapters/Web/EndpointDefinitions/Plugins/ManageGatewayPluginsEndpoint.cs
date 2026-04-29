@@ -11,10 +11,18 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
 {
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/plugins/gateway", GetGatewayPlugins).WithTags("Plugins");
-        app.MapPost("/api/plugins/gateway", InstallGatewayPlugin).WithTags("Plugins");
+        app.MapGet("/api/plugins/gateway", GetGatewayPlugins)
+            .WithTags("Plugins")
+            .WithSummary("Get gateway plugins")
+            .WithDescription("Retrieves a list of all plugins installed at the gateway level.");
+        app.MapPost("/api/plugins/gateway", InstallGatewayPlugin)
+            .WithTags("Plugins")
+            .WithSummary("Install gateway plugin")
+            .WithDescription("Installs a new plugin at the gateway level.");
         app.MapDelete("/api/plugins/gateway/{pluginId}", UninstallGatewayPlugin)
-            .WithTags("Plugins");
+            .WithTags("Plugins")
+            .WithSummary("Uninstall gateway plugin")
+            .WithDescription("Uninstalls a plugin from the gateway level.");
     }
 
     private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(IManagePluginsUseCase useCase)

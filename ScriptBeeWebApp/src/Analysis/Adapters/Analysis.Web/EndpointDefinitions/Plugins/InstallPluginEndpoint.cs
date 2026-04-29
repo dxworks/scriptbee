@@ -26,8 +26,10 @@ public class InstallPluginEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/plugins", InstallPlugin)
-            .WithRequestValidation<WebInstallPluginCommand>()
-            .WithTags("Plugins");
+            .WithTags("Plugins")
+            .WithSummary("Install a plugin")
+            .WithDescription("Installs a specific plugin version into the analysis service.")
+            .WithRequestValidation<WebInstallPluginCommand>();
     }
 
     private static InstallResult InstallPlugin(

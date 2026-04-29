@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
@@ -19,9 +19,16 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/instances", GetAllInstances).WithTags("Instances");
+        app.MapGet("/api/projects/{projectId}/instances", GetAllInstances)
+            .WithTags("Instances")
+            .WithSummary("Get all project instances")
+            .WithDescription(
+                "Retrieves a list of all instances associated with the specified project."
+            );
         app.MapGet("/api/projects/{projectId}/instances/{instanceId}", GetInstance)
-            .WithTags("Instances");
+            .WithTags("Instances")
+            .WithSummary("Get project instance by ID")
+            .WithDescription("Retrieves detailed information about a specific project instance.");
     }
 
     private static async Task<Ok<WebGetProjectInstancesListResponse>> GetAllInstances(

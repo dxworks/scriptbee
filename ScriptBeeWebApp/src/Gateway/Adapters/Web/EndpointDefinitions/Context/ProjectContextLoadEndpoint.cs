@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
@@ -22,6 +22,10 @@ public class ProjectContextLoadEndpoint : IEndpointDefinition
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/context/load", LoadContext)
             .WithTags("Instances", "Context")
+            .WithSummary("Load instance context")
+            .WithDescription(
+                "Loads data into the context of the specified project instance using the provided loaders."
+            )
             .WithRequestValidation<WebLoadContextCommand>();
     }
 

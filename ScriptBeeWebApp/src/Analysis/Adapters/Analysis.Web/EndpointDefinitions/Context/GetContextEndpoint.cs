@@ -15,7 +15,10 @@ public class GetContextEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/context", GetContext).WithTags("Context");
+        app.MapGet("/api/context", GetContext)
+            .WithTags("Context")
+            .WithSummary("Get analysis context")
+            .WithDescription("Retrieves the current data context from the analysis service.");
     }
 
     private static Ok<WebGetContextResponse> GetContext(IGetContextUseCase useCase)

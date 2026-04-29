@@ -19,7 +19,11 @@ public class GetLoadersEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/instances/{instanceId}/loaders", GetInstanceLoaders)
-            .WithTags("Instances", "Context");
+            .WithTags("Instances", "Context")
+            .WithSummary("Get available loaders for an instance")
+            .WithDescription(
+                "Retrieves a list of all loaders available for the specified project instance."
+            );
     }
 
     private static async Task<Ok<WebGetLoadersResponse>> GetInstanceLoaders(

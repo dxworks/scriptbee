@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Analysis;
@@ -23,17 +23,25 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
                 "/api/projects/{projectId}/analyses/{analysisId}/results/console",
                 GetConsoleAnalysisResult
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Get console analysis results")
+            .WithDescription("Retrieves the console output generated during the analysis.");
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/results/errors",
                 GetErrorsAnalysisResult
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Get analysis error results")
+            .WithDescription(
+                "Retrieves a list of errors that occurred during the analysis execution."
+            );
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/results/files",
                 GetFilesAnalysisResult
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Get analysis file results")
+            .WithDescription("Retrieves a list of files generated as a result of the analysis.");
     }
 
     private static async Task<

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
@@ -23,6 +23,10 @@ public class TriggerAnalysisEndpoint : IEndpointDefinition
     {
         app.MapPost("/api/projects/{projectId}/instances/{instanceId}/analyses", TriggerAnalysis)
             .WithTags("Instances", "Analysis")
+            .WithSummary("Trigger a new analysis")
+            .WithDescription(
+                "Triggers a new analysis for a specific project instance using a given script."
+            )
             .WithRequestValidation<WebTriggerAnalysisCommand>();
     }
 

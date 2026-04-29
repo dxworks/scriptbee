@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
@@ -20,7 +20,12 @@ public class AddProjectInstanceEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/projects/{projectId}/instances", AllocateInstance).WithTags("Instances");
+        app.MapPost("/api/projects/{projectId}/instances", AllocateInstance)
+            .WithTags("Instances")
+            .WithSummary("Add a new project instance")
+            .WithDescription(
+                "Allocates and adds a new execution instance for the specified project."
+            );
     }
 
     private static async Task<AllocateInstanceType> AllocateInstance(

@@ -19,7 +19,9 @@ public class UninstallPluginEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapDelete("/api/projects/{projectId}/plugins/{pluginId}", UninstallPlugin)
-            .WithTags("Plugins");
+            .WithTags("Plugins")
+            .WithSummary("Uninstall a plugin from a project")
+            .WithDescription("Uninstalls a specific plugin version from the specified project.");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> UninstallPlugin(
