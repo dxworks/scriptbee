@@ -35,6 +35,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable real-time updates for script lifecycle events (creation, update, deletion)."
+        },
+        "scriptbee.enableAutoPush": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically push script changes to the server upon saving."
         }
       }
     },
@@ -241,22 +246,22 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^10.0.0",
-    "axios": "^1.15.0"
+    "axios": "^1.15.2"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "25.x",
     "@types/sinon": "^21.0.1",
-    "@types/vscode": "^1.115.0",
+    "@types/vscode": "^1.118.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "axios-mock-adapter": "^2.1.0",
     "esbuild": "^0.28.0",
-    "eslint": "^10.2.0",
+    "eslint": "^10.2.1",
     "mocha": "^11.7.5",
-    "prettier": "^3.8.2",
+    "prettier": "^3.8.3",
     "sinon": "^21.1.2",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.1"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.1"
   }
 }

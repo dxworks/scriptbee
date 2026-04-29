@@ -57,6 +57,7 @@ This extension can be configured via VS Code settings:
 | ----------------------------- | ---------------------------------------------------------------------------------------------- | -------------- |
 | `scriptbee.workspaceRoot`     | The root folder where ScriptBee projects and generated code are stored.                        | `~/.scriptbee` |
 | `scriptbee.enableLiveUpdates` | Enable real-time updates for script lifecycle events (creation, update, deletion) via SignalR. | `true`         |
+| `scriptbee.enableAutoPush`    | Automatically push script changes to the server upon saving.                                   | `true`         |
 
 ## Getting Started
 
