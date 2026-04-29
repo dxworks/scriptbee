@@ -90,12 +90,19 @@ SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG__MEMORY=536870912
 
 ## Instance Configuration
 
-### `INSTANCE__POLLINGDELAYMILLISECONDS`
+### `SCRIPTBEE__INSTANCE__POLLINGDELAYMILLISECONDS`
 
 - **Type:** `long`
 - **Default:** `1000`
 - **Description:** The polling interval to check when the analysis instance is ready so that the plugins can be
   automatically installed there
+
+### `SCRIPTBEE__INSTANCE__ANALYSISSTATUSMONITORINTERVALMILLISECONDS`
+
+- **Type:** `int`
+- **Default:** `2000`
+- **Description:** The interval in milliseconds at which the Gateway polls MongoDB for running analyses to push updates via
+  SignalR.
 
 ## Plugins Configuration
 

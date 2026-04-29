@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using MongoDB.Driver;
 using OneOf;
 using ScriptBee.Analysis.Mongodb.Entity;
@@ -14,10 +14,24 @@ namespace ScriptBee.Analysis.Mongodb;
 public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mongoRepository)
     : IGetAnalysis,
         IGetAllAnalyses,
+        IGetRunningAnalyses,
         ICreateAnalysis,
         IUpdateAnalysis,
         IDeleteAnalysis
 {
+    public async Task<IEnumerable<AnalysisInfo>> GetRunning(CancellationToken cancellationToken)
+    {
+        var runningStatuses = new[] { AnalysisStatus.Started.Value, AnalysisStatus.Running.Value };
+
+        var analysisInfos = await mongoRepository.GetAllDocuments(
+            instance => runningStatuses.AsEnumerable().Contains(instance.Status),
+            null,
+            cancellationToken
+        );
+
+        return analysisInfos.Select(analysisInfo => analysisInfo.ToAnalysisInfo());
+    }
+
     public async Task<OneOf<AnalysisInfo, AnalysisDoesNotExistsError>> GetById(
         AnalysisId analysisId,
         CancellationToken cancellationToken = default

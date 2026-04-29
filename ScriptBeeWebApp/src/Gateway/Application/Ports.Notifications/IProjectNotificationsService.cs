@@ -18,4 +18,9 @@ public interface IProjectNotificationsService
         ScriptDeletedEvent scriptDeletedEvent,
         CancellationToken cancellationToken
     );
+
+    Task NotifyAnalysisStatusChanged(
+        AnalysisStatusChangedEvent analysisStatusChangedEvent,
+        CancellationToken cancellationToken
+    );
 }

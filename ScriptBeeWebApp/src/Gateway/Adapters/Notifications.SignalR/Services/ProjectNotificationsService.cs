@@ -16,6 +16,7 @@ public class ProjectNotificationsService(
 ) : IProjectNotificationsService
 {
     private const string ScriptsChannel = "scripts";
+    private const string AnalysesChannel = "analyses";
 
     public Task NotifyScriptCreated(
         ScriptCreatedEvent scriptCreatedEvent,
@@ -51,6 +52,18 @@ public class ProjectNotificationsService(
         return hubContext
             .Clients.Group(groupName)
             .SendAsync("ScriptDeleted", message, cancellationToken);
+    }
+
+    public Task NotifyAnalysisStatusChanged(
+        AnalysisStatusChangedEvent analysisStatusChangedEvent,
+        CancellationToken cancellationToken
+    )
+    {
+        var groupName = GetGroupName(analysisStatusChangedEvent.ProjectId, AnalysesChannel);
+        var message = SignalRAnalysisStatusChangedEvent.Map(analysisStatusChangedEvent);
+        return hubContext
+            .Clients.Group(groupName)
+            .SendAsync("AnalysisStatusChanged", message, cancellationToken);
     }
 
     private static string GetGroupName(ProjectId projectId, string channelName) =>
