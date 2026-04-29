@@ -1,13 +1,9 @@
 @if (!finished() && statusUrl()) {
-  <div class="overlay">
-    <div class="loading-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>Running script...</p>
-      @if (statusResource.isLoading()) {
-        <p class="status-text">Fetching status...</p>
-      } @else if (status(); as currentStatus) {
-        <p class="status-text">Status: {{ currentStatus.status }}</p>
-      }
+  <div class="progress-container">
+    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    <div class="status-info">
+      <span class="status-label">Analysis in progress</span>
+      <span class="status-value">{{ status() }}</span>
     </div>
   </div>
 }

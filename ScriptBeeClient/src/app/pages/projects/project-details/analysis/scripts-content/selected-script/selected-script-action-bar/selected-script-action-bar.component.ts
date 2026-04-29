@@ -12,20 +12,24 @@ import { EditParametersDialogComponent } from '../edit-parameters-dialog/edit-pa
 import { AnalysisService } from '../../../../../../../services/analysis/analysis.service';
 import { UserFolderPathService } from '../../../../../../../services/common/user-folder-path.service';
 
+import { RunScriptLoadingComponent } from '../run-script-loading/run-script-loading.component';
+
 @Component({
   selector: 'app-selected-script-action-bar',
   templateUrl: './selected-script-action-bar.component.html',
   styleUrls: ['./selected-script-action-bar.component.scss'],
-  imports: [MatButtonModule, MatIconModule, MatTooltip, CdkCopyToClipboard, SafeUrlPipe, FormsModule, SafeUrlPipe],
+  imports: [MatButtonModule, MatIconModule, MatTooltip, CdkCopyToClipboard, SafeUrlPipe, FormsModule, SafeUrlPipe, RunScriptLoadingComponent],
 })
 export class SelectedScriptActionBarComponent {
   projectId = input.required<string>();
   instanceId = input.required<string>();
   script = input.required<ProjectScript>();
   saveStatus = input<string | undefined>();
+  statusUrl = input<string | undefined>();
 
   isLoadingResults = signal<boolean>(false);
   statusUrlChange = output<string | undefined>();
+  analysisFinished = output<string>();
 
   absoluteSrcPath = computed(() => {
     const userFolderPath = UserFolderPathService.getUserFolderPath(this.projectId()).replaceAll('\\', '/');

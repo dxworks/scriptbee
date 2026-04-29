@@ -15,12 +15,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^21.2.10",
-    "@angular/cdk": "^21.2.8",
+    "@angular/cdk": "^21.2.9",
     "@angular/common": "^21.2.10",
     "@angular/compiler": "^21.2.10",
     "@angular/core": "^21.2.10",
     "@angular/forms": "^21.2.10",
-    "@angular/material": "^21.2.8",
+    "@angular/material": "^21.2.9",
     "@angular/platform-browser": "^21.2.10",
     "@angular/platform-browser-dynamic": "^21.2.10",
     "@angular/router": "^21.2.10",
@@ -42,11 +42,11 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "jsdom": "^29.0.2",
+    "jsdom": "^29.1.0",
     "prettier": "^3.8.3",
     "prettier-eslint": "^16.4.2",
     "typescript": "~5.9.3",
-    "typescript-eslint": "8.59.0",
+    "typescript-eslint": "8.59.1",
     "vitest": "^4.1.5"
   }
 }

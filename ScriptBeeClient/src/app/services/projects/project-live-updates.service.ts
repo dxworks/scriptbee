@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 import { ClientIdService } from '../common/client-id.service';
-import { ScriptCreateEvent, ScriptDeletedEvent, ScriptUpdatedEvent } from '../../types/live-updates';
+import { AnalysisStatusChangedEvent, ScriptCreateEvent, ScriptDeletedEvent, ScriptUpdatedEvent } from '../../types/live-updates';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,7 @@ export class ProjectLiveUpdatesService {
   public readonly scriptCreated$ = new Subject<ScriptCreateEvent>();
   public readonly scriptUpdated$ = new Subject<ScriptUpdatedEvent>();
   public readonly scriptDeleted$ = new Subject<ScriptDeletedEvent>();
+  public readonly analysisStatusChanged$ = new Subject<AnalysisStatusChangedEvent>();
 
   async connect(projectId: string) {
     if (this.currentProjectId === projectId && this.hubConnection?.state === signalR.HubConnectionState.Connected) {
@@ -46,9 +47,13 @@ export class ProjectLiveUpdatesService {
       }
     });
 
+    this.hubConnection.on('AnalysisStatusChanged', (event: AnalysisStatusChangedEvent) => {
+      this.analysisStatusChanged$.next(event);
+    });
+
     try {
       await this.hubConnection.start();
-      await this.joinChannel(projectId, 'scripts');
+      await Promise.all([this.joinChannel(projectId, 'scripts'), this.joinChannel(projectId, 'analyses')]);
     } catch (err) {
       console.error('Error while starting live updates connection: ', err);
     }
@@ -57,7 +62,7 @@ export class ProjectLiveUpdatesService {
   async disconnect() {
     if (this.hubConnection && this.currentProjectId) {
       try {
-        await this.leaveChannel(this.currentProjectId, 'scripts');
+        await Promise.all([this.leaveChannel(this.currentProjectId, 'scripts'), this.leaveChannel(this.currentProjectId, 'analyses')]);
         await this.hubConnection.stop();
       } catch (err) {
         console.error('Error while stopping live updates connection: ', err);
