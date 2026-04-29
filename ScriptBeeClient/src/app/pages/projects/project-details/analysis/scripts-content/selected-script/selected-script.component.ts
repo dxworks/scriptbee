@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, debounceTime, delay, of, Subject, switchMap, tap } from 'rxjs';
 import { EditorComponent } from 'ngx-monaco-editor-v2';
@@ -11,23 +11,13 @@ import { ProjectStructureService } from '../../../../../../services/projects/pro
 import { ErrorStateComponent } from '../../../../../../components/error-state/error-state.component';
 import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { convertError } from '../../../../../../utils/api';
-import { RunScriptLoadingComponent } from './run-script-loading/run-script-loading.component';
 import { ProjectLiveUpdatesService } from '../../../../../../services/projects/project-live-updates.service';
 
 @Component({
   selector: 'app-selected-script',
   templateUrl: './selected-script.component.html',
   styleUrls: ['./selected-script.component.scss'],
-  imports: [
-    EditorComponent,
-    MatButtonModule,
-    MatIconModule,
-    FormsModule,
-    SelectedScriptActionBarComponent,
-    ErrorStateComponent,
-    LoadingProgressBarComponent,
-    RunScriptLoadingComponent,
-  ],
+  imports: [EditorComponent, MatButtonModule, MatIconModule, FormsModule, SelectedScriptActionBarComponent, ErrorStateComponent, LoadingProgressBarComponent],
 })
 export class SelectedScriptComponent {
   projectId = input.required<string>();
@@ -82,6 +72,11 @@ export class SelectedScriptComponent {
         this.scriptResource.reload();
         this.scriptContentResource.reload();
       }
+    });
+
+    effect(() => {
+      this.scriptId();
+      untracked(() => this.statusUrl.set(undefined));
     });
   }
 

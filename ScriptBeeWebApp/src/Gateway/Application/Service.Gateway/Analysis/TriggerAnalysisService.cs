@@ -1,4 +1,4 @@
-﻿using OneOf;
+using OneOf;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Ports.Instance;
@@ -10,7 +10,8 @@ using TriggerAnalysisResult = OneOf<AnalysisInfo, InstanceDoesNotExistsError>;
 
 public class TriggerAnalysisService(
     IGetProjectInstance getProjectInstance,
-    ITriggerInstanceAnalysis triggerInstanceAnalysis
+    ITriggerInstanceAnalysis triggerInstanceAnalysis,
+    IAnalysisTracker analysisTracker
 ) : ITriggerAnalysisUseCase
 {
     public async Task<TriggerAnalysisResult> Trigger(
@@ -22,11 +23,17 @@ public class TriggerAnalysisService(
 
         return await result.Match<Task<TriggerAnalysisResult>>(
             async instanceInfo =>
-                await triggerInstanceAnalysis.Trigger(
+            {
+                var triggerResult = await triggerInstanceAnalysis.Trigger(
                     instanceInfo,
                     command.ScriptId,
                     cancellationToken
-                ),
+                );
+
+                analysisTracker.Track(triggerResult.Id, triggerResult.ProjectId);
+
+                return triggerResult;
+            },
             error => Task.FromResult<TriggerAnalysisResult>(error)
         );
     }

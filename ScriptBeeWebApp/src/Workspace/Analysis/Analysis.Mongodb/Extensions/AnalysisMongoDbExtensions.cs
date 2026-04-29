@@ -16,6 +16,7 @@ public static class AnalysisMongoDbExtensions
             .AddMongoCollection<MongodbAnalysisInfo>(mongoDatabase, "Analysis")
             .AddSingleton<IGetAnalysis, AnalysisPersistenceAdapter>()
             .AddSingleton<IGetAllAnalyses, AnalysisPersistenceAdapter>()
+            .AddSingleton<IGetRunningAnalyses, AnalysisPersistenceAdapter>()
             .AddSingleton<ICreateAnalysis, AnalysisPersistenceAdapter>()
             .AddSingleton<IUpdateAnalysis, AnalysisPersistenceAdapter>()
             .AddSingleton<IDeleteAnalysis, AnalysisPersistenceAdapter>();

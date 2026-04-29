@@ -1,4 +1,10 @@
 <div class="top-action-buttons">
+  @if (statusUrl()) {
+    <app-run-script-loading [statusUrl]="statusUrl()" (analysisFinished)="analysisFinished.emit($event)" />
+  }
+
+  <div class="spacer"></div>
+
   @if (saveStatus()) {
     <span class="save-status" [class.error]="saveStatus() === 'Error'">{{ saveStatus() }}</span>
   }
@@ -11,7 +17,12 @@
   <button mat-icon-button matTooltip="Edit Parameters" (click)="onEditParametersButtonClick()">
     <mat-icon>tune</mat-icon>
   </button>
-  <button mat-icon-button matTooltip="Run script" (click)="onRunScriptButtonClick()">
-    <mat-icon>play_arrow</mat-icon>
+
+  <button mat-icon-button matTooltip="Run script" (click)="onRunScriptButtonClick()" [disabled]="isLoadingResults()">
+    @if (isLoadingResults()) {
+      <mat-icon class="spinner">sync</mat-icon>
+    } @else {
+      <mat-icon>play_arrow</mat-icon>
+    }
   </button>
 </div>

@@ -1,12 +1,11 @@
-import { Component, computed, effect, inject, input, output } from '@angular/core';
-import { AnalysisService } from '../../../../../../../services/analysis/analysis.service';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { interval, of, startWith, switchMap, takeWhile } from 'rxjs';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { ProjectLiveUpdatesService } from '../../../../../../../services/projects/project-live-updates.service';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-run-script-loading',
-  imports: [MatProgressSpinner],
+  imports: [MatProgressBar, MatChipsModule],
   templateUrl: './run-script-loading.component.html',
   styleUrl: './run-script-loading.component.scss',
 })
@@ -15,37 +14,50 @@ export class RunScriptLoadingComponent {
 
   analysisFinished = output<string>();
 
-  private analysisService = inject(AnalysisService);
+  private liveUpdatesService = inject(ProjectLiveUpdatesService);
 
-  statusResource = rxResource({
-    params: () => ({ statusUrl: this.statusUrl() }),
-    stream: ({ params }) => {
-      const statusUrl = params.statusUrl;
-      if (!statusUrl) {
-        return of(undefined);
-      }
+  private currentStatus = signal<string | undefined>(undefined);
+  private analysisId = signal<string | undefined>(undefined);
 
-      return interval(1000).pipe(
-        startWith(0),
-        switchMap(() => this.analysisService.getAnalysisStatus(statusUrl)),
-        takeWhile((status) => status.status === 'Started' || status.status === 'Running', true)
-      );
-    },
-  });
-
-  status = computed(() => this.statusResource.value());
+  status = computed(() => this.currentStatus());
 
   finished = computed(() => {
-    const currentStatus = this.status();
-    return currentStatus?.status === 'Finished' || currentStatus?.status === 'Cancelled';
+    const s = this.status();
+    return s === 'Finished' || s === 'Cancelled';
   });
 
   constructor() {
     effect(() => {
-      const status = this.status();
-      if (status?.status === 'Finished') {
-        this.analysisFinished.emit(status!.id);
+      const url = this.statusUrl();
+      if (url) {
+        const parts = url.split('/');
+        const id = parts[parts.length - 1];
+        this.analysisId.set(id);
+        this.currentStatus.set('Started');
+      } else {
+        this.analysisId.set(undefined);
+        this.currentStatus.set(undefined);
       }
+    });
+
+    effect((onCleanup) => {
+      const id = this.analysisId();
+      if (!id) {
+        return;
+      }
+
+      const sub = this.liveUpdatesService.analysisStatusChanged$.subscribe((event) => {
+        if (event.analysisId === id) {
+          this.currentStatus.set(event.status);
+          if (event.status === 'Finished') {
+            this.analysisFinished.emit(id);
+          }
+        }
+      });
+
+      onCleanup(() => {
+        sub.unsubscribe();
+      });
     });
   }
 }

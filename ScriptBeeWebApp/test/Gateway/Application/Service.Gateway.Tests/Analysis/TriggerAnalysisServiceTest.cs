@@ -1,4 +1,4 @@
-﻿using NSubstitute;
+using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
@@ -24,13 +24,16 @@ public class TriggerAnalysisServiceTest
     private readonly ITriggerInstanceAnalysis _triggerInstanceAnalysis =
         Substitute.For<ITriggerInstanceAnalysis>();
 
+    private readonly IAnalysisTracker _analysisTracker = Substitute.For<IAnalysisTracker>();
+
     private readonly TriggerAnalysisService _triggerAnalysisService;
 
     public TriggerAnalysisServiceTest()
     {
         _triggerAnalysisService = new TriggerAnalysisService(
             _getProjectInstance,
-            _triggerInstanceAnalysis
+            _triggerInstanceAnalysis,
+            _analysisTracker
         );
     }
 
@@ -110,5 +113,6 @@ public class TriggerAnalysisServiceTest
         );
 
         analysisResult.AsT0.ShouldBe(analysisInfo);
+        _analysisTracker.Received(1).Track(analysisId, projectId);
     }
 }

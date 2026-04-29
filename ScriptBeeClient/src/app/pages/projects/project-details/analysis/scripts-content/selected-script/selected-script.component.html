@@ -5,14 +5,14 @@
 } @else if (scriptContentResourceError()) {
   <app-error-state [error]="scriptContentResourceError()!" (retry)="scriptContentResource.reload()"></app-error-state>
 } @else {
-  <app-run-script-loading [statusUrl]="statusUrl()" (analysisFinished)="onAnalysisFinished($event)" />
-
   <app-selected-script-action-bar
     [projectId]="projectId()"
     [instanceId]="instanceId()"
     [script]="scriptResource.value()!"
     [saveStatus]="saveStatus()"
-    (statusUrlChange)="onStatusUrlChanged($event)" />
+    [statusUrl]="statusUrl()"
+    (statusUrlChange)="onStatusUrlChanged($event)"
+    (analysisFinished)="onAnalysisFinished($event)" />
 
   <ngx-monaco-editor
     style="height: 100%"

@@ -1,7 +1,8 @@
-﻿using System.Threading.Channels;
+using System.Threading.Channels;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.Service.Gateway.Config;
+using ScriptBee.UseCases.Gateway.Analysis;
 using ScriptBee.Web.BackgroundServices;
 
 namespace ScriptBee.Web.Extensions;
@@ -14,7 +15,8 @@ public static class BackgroundServicesExtensions
         {
             return services
                 .AddInstallPluginsForAllocatedInstancesServices(instanceConfiguration)
-                .AddDeleteProjectLevelPluginsServices();
+                .AddDeleteProjectLevelPluginsServices()
+                .AddAnalysisStatusMonitorServices();
         }
 
         private IServiceCollection AddInstallPluginsForAllocatedInstancesServices(
@@ -43,6 +45,16 @@ public static class BackgroundServicesExtensions
                     )
                 )
                 .AddSingleton<DeleteProjectLevelPluginsService>();
+        }
+
+        private IServiceCollection AddAnalysisStatusMonitorServices()
+        {
+            return services
+                .AddSingleton<IAnalysisStatusMonitorService, AnalysisStatusMonitorService>()
+                .AddSingleton<IAnalysisTracker>(sp =>
+                    sp.GetRequiredService<IAnalysisStatusMonitorService>()
+                )
+                .AddHostedService<AnalysisStatusMonitorBackgroundService>();
         }
     }
 }
