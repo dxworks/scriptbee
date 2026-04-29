@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Analysis.Contracts;
 using ScriptBee.Common.Web;
@@ -20,8 +20,10 @@ public class RunAnalysisEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/analyses", TriggerAnalysis)
-            .WithRequestValidation<WebRunAnalysisCommand>()
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Run analysis")
+            .WithDescription("Starts the execution of an analysis script on the analysis service.")
+            .WithRequestValidation<WebRunAnalysisCommand>();
     }
 
     private static async Task<Accepted<WebRunAnalysisResponse>> TriggerAnalysis(

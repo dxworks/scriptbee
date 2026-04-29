@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
@@ -20,6 +20,8 @@ public class CreateProjectEndpoint : IEndpointDefinition
     {
         app.MapPost("/api/projects", CreateProject)
             .WithTags("Projects")
+            .WithSummary("Create a new project")
+            .WithDescription("Creates a new project with the specified name and description.")
             .WithRequestValidation<WebCreateProjectCommand>();
     }
 

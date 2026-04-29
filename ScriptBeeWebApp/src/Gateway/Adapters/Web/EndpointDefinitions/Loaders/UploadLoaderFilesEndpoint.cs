@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.File;
@@ -22,7 +22,11 @@ public class UploadLoaderFilesEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPut("/api/projects/{projectId}/loaders/{loaderId}/files", UploadLoaderFiles)
-            .WithTags("Loaders");
+            .WithTags("Loaders")
+            .WithSummary("Upload files for a loader")
+            .WithDescription(
+                "Uploads one or more files to be used by a specific loader in the project."
+            );
     }
 
     private static async Task<UploadResult> UploadLoaderFiles(

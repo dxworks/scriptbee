@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
@@ -16,7 +16,12 @@ public class DeleteProjectEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/projects/{projectId}", DeleteProject).WithTags("Projects");
+        app.MapDelete("/api/projects/{projectId}", DeleteProject)
+            .WithTags("Projects")
+            .WithSummary("Delete a project")
+            .WithDescription(
+                "Deletes a project and all its associated data, including scripts and artifacts."
+            );
     }
 
     private static async Task<NoContent> DeleteProject(

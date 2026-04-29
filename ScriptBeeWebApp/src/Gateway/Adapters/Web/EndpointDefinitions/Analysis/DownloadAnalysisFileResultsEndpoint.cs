@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
@@ -28,13 +28,19 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
                 "/api/projects/{projectId}/analyses/{analysisId}/results/files/{fileId}",
                 DownloadIndividualFile
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Download individual analysis result file")
+            .WithDescription("Downloads a specific file generated as a result of an analysis.");
 
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/results/files/download",
                 DownloadAllFiles
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Download all analysis result files")
+            .WithDescription(
+                "Downloads a ZIP archive containing all files generated as a result of an analysis."
+            );
     }
 
     private static async Task<DownloadResult> DownloadIndividualFile(

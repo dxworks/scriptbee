@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
@@ -19,11 +19,18 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects/{projectId}/scripts", GetProjectScripts).WithTags("Scripts");
+        app.MapGet("/api/projects/{projectId}/scripts", GetProjectScripts)
+            .WithTags("Scripts")
+            .WithSummary("Get all project scripts")
+            .WithDescription("Retrieves a list of all scripts available in the specified project.");
         app.MapGet("/api/projects/{projectId}/scripts/{scriptId}", GetProjectScriptById)
-            .WithTags("Scripts");
+            .WithTags("Scripts")
+            .WithSummary("Get project script by ID")
+            .WithDescription("Retrieves metadata about a specific project script.");
         app.MapGet("/api/projects/{projectId}/scripts/{scriptId}/content", GetProjectScriptsContent)
-            .WithTags("Scripts");
+            .WithTags("Scripts")
+            .WithSummary("Get project script content")
+            .WithDescription("Retrieves the actual code content of a project script.");
     }
 
     private static async Task<Ok<WebGetScriptDataResponse>> GetProjectScripts(

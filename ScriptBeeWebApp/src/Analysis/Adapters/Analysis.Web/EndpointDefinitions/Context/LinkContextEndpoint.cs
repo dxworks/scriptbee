@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Analysis.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Common.Web;
@@ -18,8 +18,10 @@ public class LinkContextEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/context/link", LinkContext)
-            .WithRequestValidation<WebLinkContextCommand>()
-            .WithTags("Context");
+            .WithTags("Context")
+            .WithSummary("Link analysis context")
+            .WithDescription("Links the current analysis context using the provided linkers.")
+            .WithRequestValidation<WebLinkContextCommand>();
     }
 
     private static async Task<NoContent> LinkContext(

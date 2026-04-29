@@ -1,8 +1,9 @@
 ﻿{
   "openapi": "3.1.1",
   "info": {
-    "title": "Web | v1",
-    "version": "1.0.0"
+    "title": "ScriptBee Gateway API",
+    "description": "API for ScriptBee Gateway service, managing projects, plugins, and analysis.",
+    "version": "v2"
   },
   "servers": [
     {
@@ -13,11 +14,13 @@
     "/api/projects": {
       "post": {
         "tags": ["Projects"],
+        "summary": "Create a new project",
+        "description": "Creates a new project with the specified name and description.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebCreateProjectCommand"
+                "$ref": "#/components/schemas/CreateProjectCommand"
               }
             }
           },
@@ -29,7 +32,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebCreateProjectResponse"
+                  "$ref": "#/components/schemas/CreateProjectResponse"
                 }
               }
             }
@@ -58,13 +61,15 @@
       },
       "get": {
         "tags": ["Projects"],
+        "summary": "Get all projects",
+        "description": "Retrieves a list of all existing projects with their basic details.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetProjectListResponse"
+                  "$ref": "#/components/schemas/GetProjectListResponse"
                 }
               }
             }
@@ -75,6 +80,8 @@
     "/api/projects/{projectId}": {
       "delete": {
         "tags": ["Projects"],
+        "summary": "Delete a project",
+        "description": "Deletes a project and all its associated data, including scripts and artifacts.",
         "parameters": [
           {
             "name": "projectId",
@@ -93,6 +100,8 @@
       },
       "get": {
         "tags": ["Projects"],
+        "summary": "Get project by ID",
+        "description": "Retrieves detailed information about a specific project by its unique identifier.",
         "parameters": [
           {
             "name": "projectId",
@@ -109,7 +118,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebProjectDetails"
+                  "$ref": "#/components/schemas/ProjectDetails"
                 }
               }
             }
@@ -130,6 +139,8 @@
     "/api/projects/{projectId}/scripts": {
       "post": {
         "tags": ["Scripts"],
+        "summary": "Create a new script",
+        "description": "Creates a new script within the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -144,7 +155,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebCreateScriptCommand"
+                "$ref": "#/components/schemas/CreateScriptCommand"
               }
             }
           },
@@ -156,7 +167,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebScriptData"
+                  "$ref": "#/components/schemas/ScriptData"
                 }
               }
             }
@@ -195,6 +206,8 @@
       },
       "get": {
         "tags": ["Scripts"],
+        "summary": "Get all project scripts",
+        "description": "Retrieves a list of all scripts available in the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -211,7 +224,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetScriptDataResponse"
+                  "$ref": "#/components/schemas/GetScriptDataResponse"
                 }
               }
             }
@@ -222,6 +235,8 @@
     "/api/projects/{projectId}/files/{fileId}": {
       "delete": {
         "tags": ["ProjectStructure"],
+        "summary": "Delete a project structure node",
+        "description": "Deletes a file or directory (node) from the project structure.",
         "parameters": [
           {
             "name": "projectId",
@@ -260,6 +275,8 @@
     "/api/projects/{projectId}/scripts/{scriptId}": {
       "get": {
         "tags": ["Scripts"],
+        "summary": "Get project script by ID",
+        "description": "Retrieves metadata about a specific project script.",
         "parameters": [
           {
             "name": "projectId",
@@ -284,7 +301,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebScriptData"
+                  "$ref": "#/components/schemas/ScriptData"
                 }
               }
             }
@@ -303,6 +320,8 @@
       },
       "patch": {
         "tags": ["Scripts"],
+        "summary": "Update project script metadata",
+        "description": "Updates the metadata (name, parameters) of a specific project script.",
         "parameters": [
           {
             "name": "projectId",
@@ -325,7 +344,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebUpdateScriptCommand"
+                "$ref": "#/components/schemas/UpdateScriptCommand"
               }
             }
           },
@@ -337,7 +356,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebScriptData"
+                  "$ref": "#/components/schemas/ScriptData"
                 }
               }
             }
@@ -368,6 +387,8 @@
     "/api/projects/{projectId}/scripts/{scriptId}/content": {
       "get": {
         "tags": ["Scripts"],
+        "summary": "Get project script content",
+        "description": "Retrieves the actual code content of a project script.",
         "parameters": [
           {
             "name": "projectId",
@@ -401,6 +422,8 @@
       },
       "put": {
         "tags": ["Scripts"],
+        "summary": "Update project script content",
+        "description": "Updates the actual code content of a specific project script.",
         "parameters": [
           {
             "name": "projectId",
@@ -449,6 +472,8 @@
     "/api/projects/{projectId}/files": {
       "get": {
         "tags": ["ProjectStructure"],
+        "summary": "Get project files",
+        "description": "Retrieves a paginated list of files and directories within the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -492,7 +517,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetProjectFilesResponse"
+                  "$ref": "#/components/schemas/GetProjectFilesResponse"
                 }
               }
             }
@@ -523,6 +548,8 @@
     "/api/projects/{projectId}/structure/available-script-types": {
       "get": {
         "tags": ["ProjectStructure"],
+        "summary": "Get available script types",
+        "description": "Retrieves a list of all script languages and types supported by the project.",
         "parameters": [
           {
             "name": "projectId",
@@ -539,7 +566,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetAvailableScriptTypesResponse"
+                  "$ref": "#/components/schemas/GetAvailableScriptTypesResponse"
                 }
               }
             }
@@ -550,13 +577,15 @@
     "/api/plugins": {
       "get": {
         "tags": ["Plugins"],
+        "summary": "Get all available plugins",
+        "description": "Retrieves a list of all available plugins from the marketplace.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebAllAvailablePluginsResponse"
+                  "$ref": "#/components/schemas/AllAvailablePluginsResponse"
                 }
               }
             }
@@ -567,6 +596,8 @@
     "/api/plugins/{id}": {
       "get": {
         "tags": ["Plugins"],
+        "summary": "Get plugin by ID",
+        "description": "Retrieves detailed information about a specific plugin from the marketplace by its unique identifier.",
         "parameters": [
           {
             "name": "id",
@@ -583,7 +614,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebMarketplacePluginWithDetails"
+                  "$ref": "#/components/schemas/MarketplacePluginWithDetails"
                 }
               }
             }
@@ -604,6 +635,8 @@
     "/api/projects/{projectId}/plugins": {
       "get": {
         "tags": ["Plugins"],
+        "summary": "Get installed plugins for a project",
+        "description": "Retrieves a list of all plugins currently installed in the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -620,7 +653,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebInstalledPluginsResponse"
+                  "$ref": "#/components/schemas/InstalledPluginsResponse"
                 }
               }
             }
@@ -639,6 +672,8 @@
       },
       "post": {
         "tags": ["Plugins"],
+        "summary": "Upload and install a plugin",
+        "description": "Uploads a plugin ZIP file and installs it into the project.",
         "parameters": [
           {
             "name": "projectId",
@@ -712,6 +747,8 @@
     "/api/projects/{projectId}/plugins/{pluginId}": {
       "get": {
         "tags": ["Plugins"],
+        "summary": "Get installed plugin details",
+        "description": "Retrieves detailed information about a specific plugin installed in a project.",
         "parameters": [
           {
             "name": "projectId",
@@ -736,7 +773,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebMarketplacePluginWithDetails"
+                  "$ref": "#/components/schemas/MarketplacePluginWithDetails"
                 }
               }
             }
@@ -755,6 +792,8 @@
       },
       "put": {
         "tags": ["Plugins"],
+        "summary": "Install a plugin from marketplace",
+        "description": "Installs a specific version of a plugin from the marketplace into the project.",
         "parameters": [
           {
             "name": "projectId",
@@ -809,6 +848,8 @@
       },
       "delete": {
         "tags": ["Plugins"],
+        "summary": "Uninstall a plugin from a project",
+        "description": "Uninstalls a specific plugin version from the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -855,13 +896,15 @@
     "/api/plugins/gateway": {
       "get": {
         "tags": ["Plugins"],
+        "summary": "Get gateway plugins",
+        "description": "Retrieves a list of all plugins installed at the gateway level.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGatewayPluginsResponse"
+                  "$ref": "#/components/schemas/GatewayPluginsResponse"
                 }
               }
             }
@@ -870,11 +913,13 @@
       },
       "post": {
         "tags": ["Plugins"],
+        "summary": "Install gateway plugin",
+        "description": "Installs a new plugin at the gateway level.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebInstallGatewayPluginRequest"
+                "$ref": "#/components/schemas/InstallGatewayPluginRequest"
               }
             }
           },
@@ -890,6 +935,8 @@
     "/api/plugins/gateway/{pluginId}": {
       "delete": {
         "tags": ["Plugins"],
+        "summary": "Uninstall gateway plugin",
+        "description": "Uninstalls a plugin from the gateway level.",
         "parameters": [
           {
             "name": "pluginId",
@@ -918,6 +965,8 @@
     "/api/projects/{projectId}/loaders/{loaderId}/files": {
       "put": {
         "tags": ["Loaders"],
+        "summary": "Upload files for a loader",
+        "description": "Uploads one or more files to be used by a specific loader in the project.",
         "parameters": [
           {
             "name": "projectId",
@@ -958,7 +1007,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebUploadLoaderFilesResponse"
+                  "$ref": "#/components/schemas/UploadLoaderFilesResponse"
                 }
               }
             }
@@ -979,6 +1028,8 @@
     "/api/projects/{projectId}/instances": {
       "post": {
         "tags": ["Instances"],
+        "summary": "Add a new project instance",
+        "description": "Allocates and adds a new execution instance for the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -995,7 +1046,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebProjectInstance"
+                  "$ref": "#/components/schemas/ProjectInstance"
                 }
               }
             }
@@ -1014,6 +1065,8 @@
       },
       "get": {
         "tags": ["Instances"],
+        "summary": "Get all project instances",
+        "description": "Retrieves a list of all instances associated with the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -1030,7 +1083,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetProjectInstancesListResponse"
+                  "$ref": "#/components/schemas/GetProjectInstancesListResponse"
                 }
               }
             }
@@ -1041,6 +1094,8 @@
     "/api/projects/{projectId}/instances/{instanceId}": {
       "get": {
         "tags": ["Instances"],
+        "summary": "Get project instance by ID",
+        "description": "Retrieves detailed information about a specific project instance.",
         "parameters": [
           {
             "name": "projectId",
@@ -1065,7 +1120,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebProjectInstance"
+                  "$ref": "#/components/schemas/ProjectInstance"
                 }
               }
             }
@@ -1084,6 +1139,8 @@
       },
       "delete": {
         "tags": ["Instances"],
+        "summary": "Remove a project instance",
+        "description": "Deallocates and removes a specific project instance.",
         "parameters": [
           {
             "name": "projectId",
@@ -1122,6 +1179,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/linkers": {
       "get": {
         "tags": ["Instances", "Context"],
+        "summary": "Get available linkers for an instance",
+        "description": "Retrieves a list of all linkers available for the specified project instance.",
         "parameters": [
           {
             "name": "projectId",
@@ -1146,7 +1205,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetLinkersResponse"
+                  "$ref": "#/components/schemas/GetLinkersResponse"
                 }
               }
             }
@@ -1157,6 +1216,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/loaders": {
       "get": {
         "tags": ["Instances", "Context"],
+        "summary": "Get available loaders for an instance",
+        "description": "Retrieves a list of all loaders available for the specified project instance.",
         "parameters": [
           {
             "name": "projectId",
@@ -1181,7 +1242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetLoadersResponse"
+                  "$ref": "#/components/schemas/GetLoadersResponse"
                 }
               }
             }
@@ -1192,6 +1253,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/context": {
       "get": {
         "tags": ["Instances", "Context"],
+        "summary": "Get current instance context",
+        "description": "Retrieves the current data context for the specified project instance.",
         "parameters": [
           {
             "name": "projectId",
@@ -1216,7 +1279,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetProjectContextResponse"
+                  "$ref": "#/components/schemas/GetProjectContextResponse"
                 }
               }
             }
@@ -1237,6 +1300,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/context/clear": {
       "post": {
         "tags": ["Instances", "Context"],
+        "summary": "Clear instance context",
+        "description": "Clears all loaded data from the current context of the specified project instance.",
         "parameters": [
           {
             "name": "projectId",
@@ -1275,6 +1340,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/context/generate-classes": {
       "post": {
         "tags": ["Instances", "Context"],
+        "summary": "Generate classes for instance context",
+        "description": "Generates script classes based on the current data context for the specified project instance and returns them as a stream.",
         "parameters": [
           {
             "name": "projectId",
@@ -1297,7 +1364,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebProjectContextGenerateClassesRequest"
+                "$ref": "#/components/schemas/ProjectContextGenerateClassesRequest"
               }
             }
           },
@@ -1320,6 +1387,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/context/link": {
       "post": {
         "tags": ["Instances", "Context"],
+        "summary": "Link instance context",
+        "description": "Links the data context of the specified project instance using the provided linkers.",
         "parameters": [
           {
             "name": "projectId",
@@ -1342,7 +1411,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebLinkContextCommand"
+                "$ref": "#/components/schemas/LinkContextCommand"
               }
             }
           },
@@ -1378,6 +1447,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/context/load": {
       "post": {
         "tags": ["Instances", "Context"],
+        "summary": "Load instance context",
+        "description": "Loads data into the context of the specified project instance using the provided loaders.",
         "parameters": [
           {
             "name": "projectId",
@@ -1400,7 +1471,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebLoadContextCommand"
+                "$ref": "#/components/schemas/LoadContextCommand"
               }
             }
           },
@@ -1436,6 +1507,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/context/reload": {
       "post": {
         "tags": ["Instances", "Context"],
+        "summary": "Reload instance context",
+        "description": "Reloads the data context for the specified project instance, refreshing all linked and loaded data.",
         "parameters": [
           {
             "name": "projectId",
@@ -1474,6 +1547,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/results/files/{fileId}": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Download individual analysis result file",
+        "description": "Downloads a specific file generated as a result of an analysis.",
         "parameters": [
           {
             "name": "projectId",
@@ -1517,6 +1592,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/results/files/download": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Download all analysis result files",
+        "description": "Downloads a ZIP archive containing all files generated as a result of an analysis.",
         "parameters": [
           {
             "name": "projectId",
@@ -1552,6 +1629,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/results/console": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get console analysis results",
+        "description": "Retrieves the console output generated during the analysis.",
         "parameters": [
           {
             "name": "projectId",
@@ -1576,7 +1655,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetAnalysisResultConsole"
+                  "$ref": "#/components/schemas/GetAnalysisResultConsole"
                 }
               }
             }
@@ -1597,6 +1676,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/results/errors": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get analysis error results",
+        "description": "Retrieves a list of errors that occurred during the analysis execution.",
         "parameters": [
           {
             "name": "projectId",
@@ -1621,7 +1702,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetAnalysisResultRunErrors"
+                  "$ref": "#/components/schemas/GetAnalysisResultRunErrors"
                 }
               }
             }
@@ -1642,6 +1723,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/results/files": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get analysis file results",
+        "description": "Retrieves a list of files generated as a result of the analysis.",
         "parameters": [
           {
             "name": "projectId",
@@ -1666,7 +1749,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetAnalysisResultFileList"
+                  "$ref": "#/components/schemas/GetAnalysisResultFileList"
                 }
               }
             }
@@ -1687,6 +1770,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}/content": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get analysis script content",
+        "description": "Retrieves the actual code content of a script used in a specific analysis.",
         "parameters": [
           {
             "name": "projectId",
@@ -1730,6 +1815,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get analysis script metadata",
+        "description": "Retrieves metadata about a script used in a specific analysis, such as its name and type.",
         "parameters": [
           {
             "name": "projectId",
@@ -1762,7 +1849,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebScriptData"
+                  "$ref": "#/components/schemas/ScriptData"
                 }
               }
             }
@@ -1783,6 +1870,8 @@
     "/api/projects/{projectId}/analyses": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get all analyses for a project",
+        "description": "Retrieves a list of all analyses performed within the specified project.",
         "parameters": [
           {
             "name": "projectId",
@@ -1807,7 +1896,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebAnalysisListResponse"
+                  "$ref": "#/components/schemas/AnalysisListResponse"
                 }
               }
             }
@@ -1828,6 +1917,8 @@
     "/api/projects/{projectId}/analyses/{analysisId}": {
       "get": {
         "tags": ["Analysis"],
+        "summary": "Get analysis status by ID",
+        "description": "Retrieves the current status and details of a specific analysis.",
         "parameters": [
           {
             "name": "projectId",
@@ -1852,7 +1943,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebAnalysisInfo"
+                  "$ref": "#/components/schemas/AnalysisInfo"
                 }
               }
             }
@@ -1862,7 +1953,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebAnalysisInfo"
+                  "$ref": "#/components/schemas/AnalysisInfo"
                 }
               }
             }
@@ -1883,6 +1974,8 @@
     "/api/projects/{projectId}/instances/{instanceId}/analyses": {
       "post": {
         "tags": ["Instances", "Analysis"],
+        "summary": "Trigger a new analysis",
+        "description": "Triggers a new analysis for a specific project instance using a given script.",
         "parameters": [
           {
             "name": "projectId",
@@ -1905,7 +1998,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebTriggerAnalysisCommand"
+                "$ref": "#/components/schemas/TriggerAnalysisCommand"
               }
             }
           },
@@ -1941,24 +2034,355 @@
   },
   "components": {
     "schemas": {
-      "FileData": {
+      "AllAvailablePluginsResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarketplacePlugin"
+            }
+          }
+        }
+      },
+      "AnalysisError": {
+        "required": ["message"],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "AnalysisInfo": {
+        "required": [
+          "id",
+          "instanceId",
+          "status",
+          "scriptId",
+          "scriptFileId",
+          "creationDate",
+          "finishedDate",
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "scriptId": {
+            "type": "string"
+          },
+          "scriptFileId": {
+            "type": ["null", "string"]
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finishedDate": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "errors": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/AnalysisError"
+            }
+          }
+        }
+      },
+      "AnalysisListResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisInfo"
+            }
+          }
+        }
+      },
+      "AnalysisResultRunError": {
+        "required": ["title", "message", "severity"],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          }
+        }
+      },
+      "BundleItem": {
         "required": ["id", "name"],
         "type": "object",
         "properties": {
           "id": {
-            "$ref": "#/components/schemas/FileId"
+            "type": "string"
           },
           "name": {
             "type": "string"
           }
         }
       },
-      "FileId": {
+      "CreateProjectCommand": {
+        "required": ["id", "name"],
         "type": "object",
         "properties": {
-          "value": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "description": "Command used to create a new project."
+      },
+      "CreateProjectResponse": {
+        "required": ["id", "name", "creationDate"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationDate": {
             "type": "string",
-            "format": "uuid"
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateScriptCommand": {
+        "required": ["path", "language", "parameters"],
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": ["null", "array"],
+            "items": {
+              "$ref": "#/components/schemas/ScriptParameter"
+            }
+          }
+        }
+      },
+      "ExtensionPoint": {
+        "required": ["kind"],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "language": {
+            "type": ["null", "string"]
+          },
+          "extension": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "FileData": {
+        "required": ["id", "name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GatewayPluginsResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstalledPlugin"
+            }
+          }
+        }
+      },
+      "GetAnalysisResultConsole": {
+        "required": ["content"],
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "GetAnalysisResultFile": {
+        "required": ["id", "name", "type"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "GetAnalysisResultFileList": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAnalysisResultFile"
+            }
+          }
+        }
+      },
+      "GetAnalysisResultRunErrors": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnalysisResultRunError"
+            }
+          }
+        }
+      },
+      "GetAvailableScriptTypesResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScriptLanguage"
+            }
+          }
+        }
+      },
+      "GetLinkersResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Linker"
+            }
+          }
+        }
+      },
+      "GetLoadersResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Loader"
+            }
+          }
+        }
+      },
+      "GetProjectContextResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectContextSlice"
+            }
+          }
+        }
+      },
+      "GetProjectFilesResponse": {
+        "required": ["data", "totalCount", "offset", "limit"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectFileNode"
+            }
+          },
+          "totalCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int64"
+          },
+          "offset": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int32"
+          },
+          "limit": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["integer", "string"],
+            "format": "int32"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetProjectInstancesListResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectInstance"
+            }
+          }
+        }
+      },
+      "GetProjectListResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
+          }
+        }
+      },
+      "GetScriptDataResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScriptData"
+            }
           }
         }
       },
@@ -2003,459 +2427,32 @@
           "$ref": "#/components/schemas/IFormFile"
         }
       },
-      "PluginInstallationConfig": {
-        "required": ["pluginId", "version"],
+      "InstalledPlugin": {
+        "required": ["id", "version"],
         "type": "object",
         "properties": {
-          "pluginId": {
+          "id": {
             "type": "string"
           },
           "version": {
-            "pattern": "^\\d+(\\.\\d+){1,3}$",
             "type": "string"
           }
-        }
+        },
+        "description": "Represents an installed plugin with its ID and version."
       },
-      "ProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": ["null", "string"]
-          },
-          "title": {
-            "type": ["null", "string"]
-          },
-          "status": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["null", "integer", "string"],
-            "format": "int32"
-          },
-          "detail": {
-            "type": ["null", "string"]
-          },
-          "instance": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "ProjectDetails": {
-        "required": [
-          "id",
-          "name",
-          "creationDate",
-          "savedFiles",
-          "loadedFiles",
-          "linkers",
-          "installedPlugins"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/ProjectId"
-          },
-          "name": {
-            "type": "string"
-          },
-          "creationDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "savedFiles": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/FileData"
-              }
-            }
-          },
-          "loadedFiles": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/FileData"
-              }
-            }
-          },
-          "linkers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "installedPlugins": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PluginInstallationConfig"
-            }
-          }
-        }
-      },
-      "ProjectId": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "Stream": {
-        "type": "string",
-        "format": "binary"
-      },
-      "WebAllAvailablePluginsResponse": {
+      "InstalledPluginsResponse": {
         "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WebMarketplacePlugin"
+              "$ref": "#/components/schemas/InstalledPlugin"
             }
           }
         }
       },
-      "WebAnalysisError": {
-        "required": ["message"],
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "WebAnalysisInfo": {
-        "required": [
-          "id",
-          "instanceId",
-          "status",
-          "scriptId",
-          "scriptFileId",
-          "creationDate",
-          "finishedDate",
-          "errors"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "instanceId": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "scriptId": {
-            "type": "string"
-          },
-          "scriptFileId": {
-            "type": ["null", "string"]
-          },
-          "creationDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "finishedDate": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          },
-          "errors": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/WebAnalysisError"
-            }
-          }
-        }
-      },
-      "WebAnalysisListResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebAnalysisInfo"
-            }
-          }
-        }
-      },
-      "WebAnalysisResultRunError": {
-        "required": ["title", "message", "severity"],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "severity": {
-            "type": "string"
-          }
-        }
-      },
-      "WebBundleItem": {
-        "required": ["id", "name"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "WebCreateProjectCommand": {
-        "required": ["id", "name"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "WebCreateProjectResponse": {
-        "required": ["id", "name", "creationDate"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "creationDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "WebCreateScriptCommand": {
-        "required": ["path", "language", "parameters"],
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string"
-          },
-          "language": {
-            "type": "string"
-          },
-          "parameters": {
-            "type": ["null", "array"],
-            "items": {
-              "$ref": "#/components/schemas/WebScriptParameter"
-            }
-          }
-        }
-      },
-      "WebExtensionPoint": {
-        "required": ["kind"],
-        "type": "object",
-        "properties": {
-          "kind": {
-            "type": "string"
-          },
-          "language": {
-            "type": ["null", "string"]
-          },
-          "extension": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "WebFileData": {
-        "required": ["id", "name"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        }
-      },
-      "WebGatewayPluginsResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebInstalledPlugin"
-            }
-          }
-        }
-      },
-      "WebGetAnalysisResultConsole": {
-        "required": ["content"],
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "string"
-          }
-        }
-      },
-      "WebGetAnalysisResultFile": {
-        "required": ["id", "name", "type"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "WebGetAnalysisResultFileList": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebGetAnalysisResultFile"
-            }
-          }
-        }
-      },
-      "WebGetAnalysisResultRunErrors": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebAnalysisResultRunError"
-            }
-          }
-        }
-      },
-      "WebGetAvailableScriptTypesResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebScriptLanguage"
-            }
-          }
-        }
-      },
-      "WebGetLinkersResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebLinker"
-            }
-          }
-        }
-      },
-      "WebGetLoadersResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebLoader"
-            }
-          }
-        }
-      },
-      "WebGetProjectContextResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebProjectContextSlice"
-            }
-          }
-        }
-      },
-      "WebGetProjectFilesResponse": {
-        "required": ["data", "totalCount", "offset", "limit"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebProjectFileNode"
-            }
-          },
-          "totalCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
-            "format": "int64"
-          },
-          "offset": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
-            "format": "int32"
-          },
-          "limit": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
-            "format": "int32"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          }
-        }
-      },
-      "WebGetProjectInstancesListResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebProjectInstance"
-            }
-          }
-        }
-      },
-      "WebGetProjectListResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebProject"
-            }
-          }
-        }
-      },
-      "WebGetScriptDataResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebScriptData"
-            }
-          }
-        }
-      },
-      "WebInstalledPlugin": {
+      "InstallGatewayPluginRequest": {
         "required": ["id", "version"],
         "type": "object",
         "properties": {
@@ -2467,31 +2464,7 @@
           }
         }
       },
-      "WebInstalledPluginsResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebInstalledPlugin"
-            }
-          }
-        }
-      },
-      "WebInstallGatewayPluginRequest": {
-        "required": ["id", "version"],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          }
-        }
-      },
-      "WebLinkContextCommand": {
+      "LinkContextCommand": {
         "required": ["linkerIds"],
         "type": "object",
         "properties": {
@@ -2503,7 +2476,7 @@
           }
         }
       },
-      "WebLinker": {
+      "Linker": {
         "required": ["id", "name"],
         "type": "object",
         "properties": {
@@ -2515,7 +2488,7 @@
           }
         }
       },
-      "WebLoadContextCommand": {
+      "LoadContextCommand": {
         "required": ["loaderIds"],
         "type": "object",
         "properties": {
@@ -2527,7 +2500,7 @@
           }
         }
       },
-      "WebLoader": {
+      "Loader": {
         "required": ["id", "name"],
         "type": "object",
         "properties": {
@@ -2539,7 +2512,7 @@
           }
         }
       },
-      "WebMarketplacePlugin": {
+      "MarketplacePlugin": {
         "required": ["id", "name", "type", "description", "authors", "versions"],
         "type": "object",
         "properties": {
@@ -2564,12 +2537,12 @@
           "versions": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WebPluginVersion"
+              "$ref": "#/components/schemas/PluginVersion"
             }
           }
         }
       },
-      "WebMarketplacePluginWithDetails": {
+      "MarketplacePluginWithDetails": {
         "required": ["id", "name", "type", "description", "authors", "versions"],
         "type": "object",
         "properties": {
@@ -2594,13 +2567,13 @@
           "versions": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WebPluginVersion"
+              "$ref": "#/components/schemas/PluginVersion"
             }
           },
           "bundleItems": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/WebBundleItem"
+              "$ref": "#/components/schemas/BundleItem"
             }
           },
           "sourceCode": {
@@ -2630,12 +2603,12 @@
           "extensionPoints": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/WebExtensionPoint"
+              "$ref": "#/components/schemas/ExtensionPoint"
             }
           }
         }
       },
-      "WebPluginVersion": {
+      "PluginVersion": {
         "required": ["url", "version", "manifestUrl"],
         "type": "object",
         "properties": {
@@ -2650,7 +2623,29 @@
           }
         }
       },
-      "WebProject": {
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": ["null", "string"]
+          },
+          "title": {
+            "type": ["null", "string"]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": ["null", "integer", "string"],
+            "format": "int32"
+          },
+          "detail": {
+            "type": ["null", "string"]
+          },
+          "instance": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "Project": {
         "required": ["id", "name", "creationDate"],
         "type": "object",
         "properties": {
@@ -2664,9 +2659,10 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "description": "Represents basic project information."
       },
-      "WebProjectContextGenerateClassesRequest": {
+      "ProjectContextGenerateClassesRequest": {
         "required": ["languages"],
         "type": "object",
         "properties": {
@@ -2681,7 +2677,7 @@
           }
         }
       },
-      "WebProjectContextSlice": {
+      "ProjectContextSlice": {
         "required": ["model", "pluginIds"],
         "type": "object",
         "properties": {
@@ -2696,7 +2692,7 @@
           }
         }
       },
-      "WebProjectDetails": {
+      "ProjectDetails": {
         "required": ["id", "name", "creationDate", "savedFiles", "loadedFiles", "linkers"],
         "type": "object",
         "properties": {
@@ -2715,7 +2711,7 @@
             "additionalProperties": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/WebFileData"
+                "$ref": "#/components/schemas/FileData"
               }
             }
           },
@@ -2724,7 +2720,7 @@
             "additionalProperties": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/WebFileData"
+                "$ref": "#/components/schemas/FileData"
               }
             }
           },
@@ -2734,9 +2730,10 @@
               "type": "string"
             }
           }
-        }
+        },
+        "description": "Represents detailed project information, including saved and loaded files."
       },
-      "WebProjectFileNode": {
+      "ProjectFileNode": {
         "required": ["id", "name", "path", "type", "hasChildren"],
         "type": "object",
         "properties": {
@@ -2757,7 +2754,7 @@
           }
         }
       },
-      "WebProjectInstance": {
+      "ProjectInstance": {
         "required": ["id", "creationDate", "status"],
         "type": "object",
         "properties": {
@@ -2771,9 +2768,10 @@
           "status": {
             "type": "string"
           }
-        }
+        },
+        "description": "Represents an instance of a project execution."
       },
-      "WebScriptData": {
+      "ScriptData": {
         "required": ["id", "name", "path", "scriptLanguage", "parameters"],
         "type": "object",
         "properties": {
@@ -2787,17 +2785,17 @@
             "type": "string"
           },
           "scriptLanguage": {
-            "$ref": "#/components/schemas/WebScriptLanguage"
+            "$ref": "#/components/schemas/ScriptLanguage"
           },
           "parameters": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/WebScriptParameter"
+              "$ref": "#/components/schemas/ScriptParameter"
             }
           }
         }
       },
-      "WebScriptLanguage": {
+      "ScriptLanguage": {
         "required": ["name", "extension"],
         "type": "object",
         "properties": {
@@ -2809,7 +2807,7 @@
           }
         }
       },
-      "WebScriptParameter": {
+      "ScriptParameter": {
         "required": ["name", "type", "value"],
         "type": "object",
         "properties": {
@@ -2822,16 +2820,21 @@
           "value": {}
         }
       },
-      "WebTriggerAnalysisCommand": {
+      "Stream": {
+        "type": "string",
+        "format": "binary"
+      },
+      "TriggerAnalysisCommand": {
         "required": ["scriptId"],
         "type": "object",
         "properties": {
           "scriptId": {
             "type": "string"
           }
-        }
+        },
+        "description": "Command used to trigger a script analysis."
       },
-      "WebUpdateScriptCommand": {
+      "UpdateScriptCommand": {
         "required": ["name", "parameters"],
         "type": "object",
         "properties": {
@@ -2841,12 +2844,12 @@
           "parameters": {
             "type": ["null", "array"],
             "items": {
-              "$ref": "#/components/schemas/WebScriptParameter"
+              "$ref": "#/components/schemas/ScriptParameter"
             }
           }
         }
       },
-      "WebUploadLoaderFilesResponse": {
+      "UploadLoaderFilesResponse": {
         "required": ["loaderId", "fileNames"],
         "type": "object",
         "properties": {

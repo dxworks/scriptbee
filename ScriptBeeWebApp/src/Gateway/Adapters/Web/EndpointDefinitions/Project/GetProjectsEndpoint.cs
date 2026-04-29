@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
@@ -18,8 +18,16 @@ public class GetProjectsEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/projects", GetAllProjects).WithTags("Projects");
-        app.MapGet("/api/projects/{projectId}", GetProjectById).WithTags("Projects");
+        app.MapGet("/api/projects", GetAllProjects)
+            .WithTags("Projects")
+            .WithSummary("Get all projects")
+            .WithDescription("Retrieves a list of all existing projects with their basic details.");
+        app.MapGet("/api/projects/{projectId}", GetProjectById)
+            .WithTags("Projects")
+            .WithSummary("Get project by ID")
+            .WithDescription(
+                "Retrieves detailed information about a specific project by its unique identifier."
+            );
     }
 
     private static async Task<Ok<WebGetProjectListResponse>> GetAllProjects(

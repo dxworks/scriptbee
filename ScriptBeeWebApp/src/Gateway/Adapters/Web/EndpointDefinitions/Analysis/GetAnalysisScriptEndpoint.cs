@@ -23,13 +23,21 @@ public class GetAnalysisScriptEndpoint : IEndpointDefinition
                 "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}/content",
                 GetScriptContent
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Get analysis script content")
+            .WithDescription(
+                "Retrieves the actual code content of a script used in a specific analysis."
+            );
 
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}",
                 GetScriptMetadata
             )
-            .WithTags("Analysis");
+            .WithTags("Analysis")
+            .WithSummary("Get analysis script metadata")
+            .WithDescription(
+                "Retrieves metadata about a script used in a specific analysis, such as its name and type."
+            );
     }
 
     private static async Task<

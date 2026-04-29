@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
@@ -23,6 +23,10 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
     {
         app.MapPatch("/api/projects/{projectId}/scripts/{scriptId}", UpdateProjectScript)
             .WithTags("Scripts")
+            .WithSummary("Update project script metadata")
+            .WithDescription(
+                "Updates the metadata (name, parameters) of a specific project script."
+            )
             .WithRequestValidation<WebUpdateScriptCommand>();
 
         app.MapPut(
@@ -30,7 +34,9 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
                 UpdateProjectScriptContent
             )
             .Accepts<string>(MediaTypeNames.Text.Plain)
-            .WithTags("Scripts");
+            .WithTags("Scripts")
+            .WithSummary("Update project script content")
+            .WithDescription("Updates the actual code content of a specific project script.");
     }
 
     private static async Task<

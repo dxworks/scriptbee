@@ -23,7 +23,11 @@ public class ProjectContextGenerateClassesEndpoint : IEndpointDefinition
                 "/api/projects/{projectId}/instances/{instanceId}/context/generate-classes",
                 GenerateClasses
             )
-            .WithTags("Instances", "Context");
+            .WithTags("Instances", "Context")
+            .WithSummary("Generate classes for instance context")
+            .WithDescription(
+                "Generates script classes based on the current data context for the specified project instance and returns them as a stream."
+            );
     }
 
     private static async Task<

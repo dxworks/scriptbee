@@ -1,8 +1,9 @@
 ﻿{
   "openapi": "3.1.1",
   "info": {
-    "title": "Analysis.Web | v1",
-    "version": "1.0.0"
+    "title": "ScriptBee Analysis API",
+    "description": "API for ScriptBee Analysis service, responsible for running scripts and processing data.",
+    "version": "v2"
   },
   "servers": [
     {
@@ -13,13 +14,15 @@
     "/api/plugins": {
       "get": {
         "tags": ["Plugins"],
+        "summary": "Get installed plugins",
+        "description": "Retrieves a list of all plugins currently installed in the analysis service.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetInstalledPluginsResponse"
+                  "$ref": "#/components/schemas/GetInstalledPluginsResponse"
                 }
               }
             }
@@ -28,11 +31,13 @@
       },
       "post": {
         "tags": ["Plugins"],
+        "summary": "Install a plugin",
+        "description": "Installs a specific plugin version into the analysis service.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebInstallPluginCommand"
+                "$ref": "#/components/schemas/InstallPluginCommand"
               }
             }
           },
@@ -68,6 +73,8 @@
     "/api/plugins/{pluginId}": {
       "delete": {
         "tags": ["Plugins"],
+        "summary": "Uninstall a plugin",
+        "description": "Uninstalls a specific plugin version from the analysis service.",
         "parameters": [
           {
             "name": "pluginId",
@@ -96,6 +103,8 @@
     "/api/context/clear": {
       "post": {
         "tags": ["Context"],
+        "summary": "Clear analysis context",
+        "description": "Clears all data from the current analysis context.",
         "responses": {
           "204": {
             "description": "No Content"
@@ -106,11 +115,13 @@
     "/api/context/generate-classes": {
       "post": {
         "tags": ["Context"],
+        "summary": "Generate classes for analysis context",
+        "description": "Generates script classes based on the current data context and returns them as a stream.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebGenerateClassesRequest"
+                "$ref": "#/components/schemas/GenerateClassesRequest"
               }
             }
           },
@@ -126,13 +137,15 @@
     "/api/context": {
       "get": {
         "tags": ["Context"],
+        "summary": "Get analysis context",
+        "description": "Retrieves the current data context from the analysis service.",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebGetContextResponse"
+                  "$ref": "#/components/schemas/GetContextResponse"
                 }
               }
             }
@@ -143,11 +156,13 @@
     "/api/context/link": {
       "post": {
         "tags": ["Context"],
+        "summary": "Link analysis context",
+        "description": "Links the current analysis context using the provided linkers.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebLinkContextCommand"
+                "$ref": "#/components/schemas/LinkContextCommand"
               }
             }
           },
@@ -173,11 +188,13 @@
     "/api/context/load": {
       "post": {
         "tags": ["Context"],
+        "summary": "Load data into analysis context",
+        "description": "Loads data from files into the current analysis context using the provided loaders.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebLoadContextCommand"
+                "$ref": "#/components/schemas/LoadContextCommand"
               }
             }
           },
@@ -203,11 +220,13 @@
     "/api/analyses": {
       "post": {
         "tags": ["Analysis"],
+        "summary": "Run analysis",
+        "description": "Starts the execution of an analysis script on the analysis service.",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebRunAnalysisCommand"
+                "$ref": "#/components/schemas/RunAnalysisCommand"
               }
             }
           },
@@ -219,7 +238,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WebRunAnalysisResponse"
+                  "$ref": "#/components/schemas/RunAnalysisResponse"
                 }
               }
             }
@@ -240,6 +259,60 @@
   },
   "components": {
     "schemas": {
+      "ContextSlice": {
+        "required": ["model", "pluginIds"],
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "pluginIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GenerateClassesRequest": {
+        "required": ["languages"],
+        "type": "object",
+        "properties": {
+          "languages": {
+            "type": ["null", "array"],
+            "items": {
+              "type": "string"
+            }
+          },
+          "transferFormat": {
+            "type": ["null", "string"]
+          }
+        }
+      },
+      "GetContextResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextSlice"
+            }
+          }
+        }
+      },
+      "GetInstalledPluginsResponse": {
+        "required": ["data"],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstalledPlugin"
+            }
+          }
+        }
+      },
       "HttpValidationProblemDetails": {
         "type": "object",
         "properties": {
@@ -261,6 +334,84 @@
             "type": ["null", "string"]
           },
           "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "InstalledPlugin": {
+        "required": ["folderPath", "id", "version", "manifest"],
+        "type": "object",
+        "properties": {
+          "folderPath": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "manifest": {
+            "$ref": "#/components/schemas/InstalledPluginManifest"
+          }
+        }
+      },
+      "InstalledPluginManifest": {
+        "required": ["apiVersion", "name", "description", "author", "extensionPoints"],
+        "type": "object",
+        "properties": {
+          "apiVersion": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "author": {
+            "type": ["null", "string"]
+          },
+          "extensionPoints": {
+            "type": "array"
+          }
+        }
+      },
+      "InstallPluginCommand": {
+        "required": ["pluginId", "version"],
+        "type": "object",
+        "properties": {
+          "pluginId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "LinkContextCommand": {
+        "required": ["linkerIds"],
+        "type": "object",
+        "properties": {
+          "linkerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LoadContextCommand": {
+        "required": ["filesToLoad"],
+        "type": "object",
+        "properties": {
+          "filesToLoad": {
             "type": "object",
             "additionalProperties": {
               "type": "array",
@@ -293,139 +444,7 @@
           }
         }
       },
-      "WebContextSlice": {
-        "required": ["model", "pluginIds"],
-        "type": "object",
-        "properties": {
-          "model": {
-            "type": "string"
-          },
-          "pluginIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "WebGenerateClassesRequest": {
-        "required": ["languages"],
-        "type": "object",
-        "properties": {
-          "languages": {
-            "type": ["null", "array"],
-            "items": {
-              "type": "string"
-            }
-          },
-          "transferFormat": {
-            "type": ["null", "string"]
-          }
-        }
-      },
-      "WebGetContextResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebContextSlice"
-            }
-          }
-        }
-      },
-      "WebGetInstalledPluginsResponse": {
-        "required": ["data"],
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WebInstalledPlugin"
-            }
-          }
-        }
-      },
-      "WebInstalledPlugin": {
-        "required": ["folderPath", "id", "version", "manifest"],
-        "type": "object",
-        "properties": {
-          "folderPath": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          },
-          "manifest": {
-            "$ref": "#/components/schemas/WebInstalledPluginManifest"
-          }
-        }
-      },
-      "WebInstalledPluginManifest": {
-        "required": ["apiVersion", "name", "description", "author", "extensionPoints"],
-        "type": "object",
-        "properties": {
-          "apiVersion": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": ["null", "string"]
-          },
-          "author": {
-            "type": ["null", "string"]
-          },
-          "extensionPoints": {
-            "type": "array"
-          }
-        }
-      },
-      "WebInstallPluginCommand": {
-        "required": ["pluginId", "version"],
-        "type": "object",
-        "properties": {
-          "pluginId": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          }
-        }
-      },
-      "WebLinkContextCommand": {
-        "required": ["linkerIds"],
-        "type": "object",
-        "properties": {
-          "linkerIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "WebLoadContextCommand": {
-        "required": ["filesToLoad"],
-        "type": "object",
-        "properties": {
-          "filesToLoad": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "WebRunAnalysisCommand": {
+      "RunAnalysisCommand": {
         "required": ["projectId", "scriptId"],
         "type": "object",
         "properties": {
@@ -435,9 +454,10 @@
           "scriptId": {
             "type": "string"
           }
-        }
+        },
+        "description": "Command used to run an analysis script on the analysis service."
       },
-      "WebRunAnalysisResponse": {
+      "RunAnalysisResponse": {
         "required": ["id", "projectId", "scriptId", "status", "creationDate"],
         "type": "object",
         "properties": {

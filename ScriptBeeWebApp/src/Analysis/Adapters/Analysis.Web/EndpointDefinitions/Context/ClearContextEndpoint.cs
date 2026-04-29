@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using ScriptBee.Common.Web;
 using ScriptBee.Service.Analysis;
 using ScriptBee.UseCases.Analysis;
@@ -14,7 +14,10 @@ public class ClearContextEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/context/clear", ClearContext).WithTags("Context");
+        app.MapPost("/api/context/clear", ClearContext)
+            .WithTags("Context")
+            .WithSummary("Clear analysis context")
+            .WithDescription("Clears all data from the current analysis context.");
     }
 
     private static NoContent ClearContext(IClearContextUseCase useCase)

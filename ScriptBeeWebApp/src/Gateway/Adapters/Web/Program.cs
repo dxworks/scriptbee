@@ -23,7 +23,22 @@ builder
     .AddHttpContextAccessor()
     .AddSerilog()
     .AddAntiforgeryHeader()
-    .AddOpenApi()
+    .AddOpenApi(options =>
+    {
+        options.AddDocumentTransformer(
+            (document, _, _) =>
+            {
+                document.Info.Title = "ScriptBee Gateway API";
+                document.Info.Version = "v2";
+                document.Info.Description =
+                    "API for ScriptBee Gateway service, managing projects, plugins, and analysis.";
+                return Task.CompletedTask;
+            }
+        );
+
+        options.StripWebPrefix();
+        options.AddDescriptionSupport();
+    })
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
     .AddMongoDb(mongoConnectionString)

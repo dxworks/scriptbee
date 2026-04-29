@@ -17,7 +17,12 @@ public class GenerateClassesEndpoint : IEndpointDefinition
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/context/generate-classes", GenerateClasses).WithTags("Context");
+        app.MapPost("/api/context/generate-classes", GenerateClasses)
+            .WithTags("Context")
+            .WithSummary("Generate classes for analysis context")
+            .WithDescription(
+                "Generates script classes based on the current data context and returns them as a stream."
+            );
     }
 
     private static async Task<Results<FileStreamHttpResult, ProblemHttpResult>> GenerateClasses(

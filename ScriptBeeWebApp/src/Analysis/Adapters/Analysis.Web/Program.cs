@@ -16,7 +16,22 @@ var scriptBeeConfigurationSection = builder.Configuration.GetSection("ScriptBee"
 builder
     .Services.AddConfiguredHealthChecks()
     .AddSerilog()
-    .AddOpenApi()
+    .AddOpenApi(options =>
+    {
+        options.AddDocumentTransformer(
+            (document, _, _) =>
+            {
+                document.Info.Title = "ScriptBee Analysis API";
+                document.Info.Version = "v2";
+                document.Info.Description =
+                    "API for ScriptBee Analysis service, responsible for running scripts and processing data.";
+                return Task.CompletedTask;
+            }
+        );
+
+        options.StripWebPrefix();
+        options.AddDescriptionSupport();
+    })
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
     .AddCommonServices()

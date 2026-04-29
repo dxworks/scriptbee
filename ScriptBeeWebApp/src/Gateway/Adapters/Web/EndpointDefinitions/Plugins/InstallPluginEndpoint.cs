@@ -19,9 +19,15 @@ public class InstallPluginEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPut("/api/projects/{projectId}/plugins/{pluginId}", InstallPlugin)
-            .WithTags("Plugins");
-
-        app.MapPost("/api/projects/{projectId}/plugins", UploadPlugin).WithTags("Plugins");
+            .WithTags("Plugins")
+            .WithSummary("Install a plugin from marketplace")
+            .WithDescription(
+                "Installs a specific version of a plugin from the marketplace into the project."
+            );
+        app.MapPost("/api/projects/{projectId}/plugins", UploadPlugin)
+            .WithTags("Plugins")
+            .WithSummary("Upload and install a plugin")
+            .WithDescription("Uploads a plugin ZIP file and installs it into the project.");
     }
 
     private static async Task<

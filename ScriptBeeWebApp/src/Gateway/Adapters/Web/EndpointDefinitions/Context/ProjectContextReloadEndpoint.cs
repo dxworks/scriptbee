@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
@@ -22,7 +22,11 @@ public class ProjectContextReloadEndpoint : IEndpointDefinition
                 "/api/projects/{projectId}/instances/{instanceId}/context/reload",
                 ReloadContext
             )
-            .WithTags("Instances", "Context");
+            .WithTags("Instances", "Context")
+            .WithSummary("Reload instance context")
+            .WithDescription(
+                "Reloads the data context for the specified project instance, refreshing all linked and loaded data."
+            );
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ReloadContext(

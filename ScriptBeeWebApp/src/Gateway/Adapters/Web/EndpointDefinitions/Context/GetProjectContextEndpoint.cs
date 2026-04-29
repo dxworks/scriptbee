@@ -20,7 +20,11 @@ public class GetProjectContextEndpoint : IEndpointDefinition
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/instances/{instanceId}/context", GetCurrentContext)
-            .WithTags("Instances", "Context");
+            .WithTags("Instances", "Context")
+            .WithSummary("Get current instance context")
+            .WithDescription(
+                "Retrieves the current data context for the specified project instance."
+            );
     }
 
     private static async Task<

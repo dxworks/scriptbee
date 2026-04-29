@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
@@ -29,6 +29,8 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
     {
         app.MapPost("/api/projects/{projectId}/scripts", CreateProjectScript)
             .WithTags("Scripts")
+            .WithSummary("Create a new script")
+            .WithDescription("Creates a new script within the specified project.")
             .WithRequestValidation<WebCreateScriptCommand>();
     }
 
