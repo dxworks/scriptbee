@@ -1,0 +1,190 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.graph-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.graph-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 12px 16px;
+}
+
+.search-field {
+  width: 300px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.graph-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.node-counter {
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--mat-sys-surface-container-high);
+  padding: 4px 12px;
+  border-radius: 16px;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+}
+
+.graph-sidenav-container {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cy-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.empty-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  z-index: 5;
+  pointer-events: none;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+
+  .placeholder-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-weight: 500;
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    opacity: 0.7;
+  }
+}
+
+.details-sidenav {
+  width: 500px;
+  overflow: hidden;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 0 4px;
+}
+
+.details-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 12px 16px;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.details-title {
+  font-weight: 500;
+  font-size: 1.1rem;
+  word-break: break-all;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.close-btn {
+  flex-shrink: 0;
+  margin-top: -4px;
+}
+
+.details-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.id-text {
+  font-family: monospace;
+  word-break: break-all;
+  white-space: pre-wrap;
+  font-size: 0.8rem;
+}
+
+.properties-title {
+  padding: 16px;
+  margin: 0;
+}
+
+.property-list-item {
+  height: auto !important;
+  min-height: 48px;
+  padding: 8px 0;
+
+  ::ng-deep .mat-mdc-list-item-link-avatar,
+  ::ng-deep .mat-mdc-list-item-content {
+    height: auto !important;
+    display: block !important;
+    padding: 8px 16px !important;
+  }
+}
+
+.property-value-wrapper {
+  margin-top: 4px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.property-value {
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--mat-sys-surface-container-lowest);
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--mat-sys-outline-variant);
+}

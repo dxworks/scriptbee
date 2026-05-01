@@ -42,14 +42,14 @@ describe('ProjectContextComponent', () => {
   });
 
   it('should call reloadContext when reload button is clicked', () => {
-    const reloadButton = fixture.debugElement.query(By.css('button:nth-child(1)'));
+    const reloadButton = fixture.debugElement.query(By.css('.context-actions-row button:first-of-type'));
     reloadButton.nativeElement.click();
 
     expect(projectContextService.reloadContext).toHaveBeenCalledWith('proj-1', 'inst-1');
   });
 
   it('should call clearContext when clear button is clicked', () => {
-    const clearButton = fixture.debugElement.query(By.css('button:nth-child(2)'));
+    const clearButton = fixture.debugElement.query(By.css('.context-actions-row button:last-of-type'));
     clearButton.nativeElement.click();
 
     expect(projectContextService.clearContext).toHaveBeenCalledWith('proj-1', 'inst-1');

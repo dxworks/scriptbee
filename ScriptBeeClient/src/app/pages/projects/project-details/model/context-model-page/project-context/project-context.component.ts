@@ -2,19 +2,32 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ProjectContextService } from '../../../../../../services/projects/project-context.service';
 import { ErrorStateComponent } from '../../../../../../components/error-state/error-state.component';
-import { MatButton } from '@angular/material/button';
 import { SelectableTreeComponent } from '../../../../../../components/tree/selectable-tree/selectable-tree.component';
 import { TreeNode } from '../../../../../../types/tree-node';
 import { ProjectContext } from '../../../../../../types/returned-context-slice';
 import { finalize } from 'rxjs';
 import { convertError } from '../../../../../../utils/api';
 import { LoadingProgressBarComponent } from '../../../../../../components/loading-progress-bar/loading-progress-bar.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ProjectContextGraphComponent } from '../../../../../../components/project-context-graph/project-context-graph.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-project-context',
   templateUrl: './project-context.component.html',
   styleUrls: ['./project-context.component.scss'],
-  imports: [ErrorStateComponent, MatButton, SelectableTreeComponent, LoadingProgressBarComponent],
+  imports: [
+    ErrorStateComponent,
+    SelectableTreeComponent,
+    LoadingProgressBarComponent,
+    MatTabsModule,
+    ProjectContextGraphComponent,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+  ],
 })
 export class ProjectContextComponent {
   projectId = input.required<string>();

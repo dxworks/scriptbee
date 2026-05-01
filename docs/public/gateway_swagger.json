@@ -1297,6 +1297,135 @@
         }
       }
     },
+    "/api/projects/{projectId}/instances/{instanceId}/context/graph": {
+      "get": {
+        "tags": ["Instances", "Context", "Graph"],
+        "summary": "Search context nodes",
+        "description": "Searches for context nodes based on a query string.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": ["integer", "string"],
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": ["integer", "string"],
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextGraphResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/instances/{instanceId}/context/graph/neighbors": {
+      "get": {
+        "tags": ["Instances", "Context", "Graph"],
+        "summary": "Get node neighbors",
+        "description": "Retrieves the immediate neighbors and edges for a specific context node.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nodeId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextGraphResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/instances/{instanceId}/context/clear": {
       "post": {
         "tags": ["Instances", "Context"],
@@ -2138,6 +2267,60 @@
           }
         }
       },
+      "ContextGraphEdge": {
+        "required": ["source", "target", "label"],
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "ContextGraphNode": {
+        "required": ["id", "label", "type", "loader", "properties"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "loader": {
+            "type": ["null", "string"]
+          },
+          "properties": {
+            "type": "object"
+          }
+        }
+      },
+      "ContextGraphResponse": {
+        "required": ["nodes", "edges"],
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextGraphNode"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextGraphEdge"
+            }
+          }
+        }
+      },
       "CreateProjectCommand": {
         "required": ["id", "name"],
         "type": "object",
@@ -2887,6 +3070,9 @@
     },
     {
       "name": "Context"
+    },
+    {
+      "name": "Graph"
     },
     {
       "name": "Analysis"

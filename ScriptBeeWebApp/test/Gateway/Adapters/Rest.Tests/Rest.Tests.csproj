@@ -9,4 +9,7 @@
     <ProjectReference Include="..\..\..\..\src\Gateway\Adapters\Rest\Rest.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
 </Project>

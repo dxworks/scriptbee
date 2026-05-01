@@ -1,7 +1,3 @@
 @if (instanceId()) {
-  <app-currently-loaded-models [project]="project()" [instanceId]="instanceId()!" />
-
-  <mat-divider />
-
   <app-project-context [projectId]="project().id" [instanceId]="instanceId()!" />
 }

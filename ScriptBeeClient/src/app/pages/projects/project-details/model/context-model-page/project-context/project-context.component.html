@@ -1,27 +1,42 @@
-<div class="project-model-section-title project-model-content-after-divider">Project Context</div>
-
 @if (projectContextResource.isLoading()) {
   <app-loading-progress-bar title="Loading Context..."></app-loading-progress-bar>
 } @else if (projectContextResourceError()) {
   <app-error-state [error]="projectContextResourceError()!" (retry)="projectContextResource.reload()"></app-error-state>
 } @else {
-  @if (projectContextResource.value()!.length === 0) {
-    <div>No context loaded</div>
-  }
+  <div class="context-actions-row">
+    @if (projectContextResource.value()?.length === 0) {
+      <span class="empty-message">No context loaded</span>
+    }
 
-  @if (isClearContextLoading()) {
-    <app-loading-progress-bar title="Clearing Context..."></app-loading-progress-bar>
-  }
+    @if (isClearContextLoading()) {
+      <app-loading-progress-bar title="Clearing Context..."></app-loading-progress-bar>
+    }
 
-  @if (isReloadContextLoading()) {
-    <app-loading-progress-bar title="Reloading Context..."></app-loading-progress-bar>
-  }
+    @if (isReloadContextLoading()) {
+      <app-loading-progress-bar title="Reloading Context..."></app-loading-progress-bar>
+    }
 
-  <app-selectable-tree [data]="context()" [displayNameAccessor]="displayNameAccessor"></app-selectable-tree>
-
-  <div class="action-buttons-container">
-    <button mat-flat-button [disabled]="isReloadContextLoading()" (click)="onReloadModelsClick()">Reload Models</button>
-
-    <button mat-flat-button [disabled]="isClearContextLoading()" (click)="onClearContextButtonClick()">Clear Context</button>
+    <span class="spacer"></span>
+    <button mat-button (click)="onReloadModelsClick()" [disabled]="isReloadContextLoading()" matTooltip="Reload all models for this instance">
+      <mat-icon>refresh</mat-icon>
+      Reload Models
+    </button>
+    <button mat-button color="warn" (click)="onClearContextButtonClick()" [disabled]="isClearContextLoading()" matTooltip="Clear all loaded models">
+      <mat-icon>delete</mat-icon>
+      Clear Context
+    </button>
   </div>
+
+  <mat-tab-group>
+    <mat-tab label="List View">
+      <div class="tab-content">
+        <app-selectable-tree [data]="context()" [displayNameAccessor]="displayNameAccessor"></app-selectable-tree>
+      </div>
+    </mat-tab>
+    <mat-tab label="Graph View">
+      <div class="tab-content graph-tab">
+        <app-project-context-graph [projectId]="projectId()" [instanceId]="instanceId()"></app-project-context-graph>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 }
