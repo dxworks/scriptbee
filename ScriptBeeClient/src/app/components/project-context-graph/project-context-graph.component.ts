@@ -60,8 +60,8 @@ export class ProjectContextGraphComponent implements OnInit, AfterViewInit, OnDe
   edges: ContextGraphEdge[] = [];
   nodeCount = computed(() => this.nodes().length);
 
-  private currentSkip = 0;
-  private readonly currentTake = 100;
+  private currentOffset = 0;
+  private readonly currentLimit = 100;
 
   constructor() {
     effect(() => {
@@ -72,7 +72,7 @@ export class ProjectContextGraphComponent implements OnInit, AfterViewInit, OnDe
         this.controller?.clear();
         this.nodes.set([]);
         this.edges = [];
-        this.currentSkip = 0;
+        this.currentOffset = 0;
         this.isEmpty.set(true);
 
         const query = this.searchControl.value;
@@ -87,14 +87,14 @@ export class ProjectContextGraphComponent implements OnInit, AfterViewInit, OnDe
     this.searchControl.valueChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((query) => {
       this.nodes.set([]);
       this.edges = [];
-      this.currentSkip = 0;
+      this.currentOffset = 0;
       this.controller?.clear();
       this.performSearch(query ?? '');
     });
   }
 
   loadMore() {
-    this.currentSkip += this.currentTake;
+    this.currentOffset += this.currentLimit;
     this.performSearch(this.searchControl.value ?? '');
   }
 
@@ -168,12 +168,12 @@ export class ProjectContextGraphComponent implements OnInit, AfterViewInit, OnDe
     this.isLoading.set(true);
     this.error.set(null);
 
-    this.projectContextService.searchNodes(this.projectId(), this.instanceId(), query, this.currentSkip, this.currentTake).subscribe({
+    this.projectContextService.searchNodes(this.projectId(), this.instanceId(), query, this.currentOffset, this.currentLimit).subscribe({
       next: (result) => {
         this.isLoading.set(false);
         if (result && result.nodes) {
           this.addUniqueData(result.nodes, result.edges ?? []);
-          this.hasMoreResults.set(result.nodes.length === this.currentTake);
+          this.hasMoreResults.set(result.nodes.length === this.currentLimit);
           this.controller?.updateData(result.nodes, result.edges ?? [], this.getNodeColor.bind(this));
         }
       },

@@ -26,8 +26,8 @@ export class ProjectContextService {
     return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/reload`, {});
   }
 
-  searchNodes(projectId: string, instanceId: string, query: string, skip = 0, take = 100): Observable<ContextGraphResult> {
-    return this.http.get<ContextGraphResult>(`/api/projects/${projectId}/instances/${instanceId}/context/graph?query=${query}&skip=${skip}&take=${take}`);
+  searchNodes(projectId: string, instanceId: string, query: string, offset = 0, limit = 100): Observable<ContextGraphResult> {
+    return this.http.get<ContextGraphResult>(`/api/projects/${projectId}/instances/${instanceId}/context/graph?query=${query}&offset=${offset}&limit=${limit}`);
   }
 
   getNeighbors(projectId: string, instanceId: string, nodeId: string): Observable<ContextGraphResult> {
