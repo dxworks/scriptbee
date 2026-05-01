@@ -153,6 +153,83 @@
         }
       }
     },
+    "/api/context/graph-nodes": {
+      "get": {
+        "tags": ["Context", "Graph"],
+        "summary": "Search context nodes",
+        "description": "Searches for context nodes based on a query string.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": ["integer", "string"],
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": ["integer", "string"],
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextGraphResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/context/graph-nodes/{nodeId}/neighbors": {
+      "get": {
+        "tags": ["Context", "Graph"],
+        "summary": "Get node neighbors",
+        "description": "Retrieves the immediate neighbors and edges for a specific context node.",
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextGraphResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/context/link": {
       "post": {
         "tags": ["Context"],
@@ -259,6 +336,60 @@
   },
   "components": {
     "schemas": {
+      "ContextGraphEdge": {
+        "required": ["source", "target", "label"],
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "ContextGraphNode": {
+        "required": ["id", "label", "type", "loader", "properties"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "loader": {
+            "type": ["null", "string"]
+          },
+          "properties": {
+            "type": "object"
+          }
+        }
+      },
+      "ContextGraphResponse": {
+        "required": ["nodes", "edges"],
+        "type": "object",
+        "properties": {
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextGraphNode"
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContextGraphEdge"
+            }
+          }
+        }
+      },
       "ContextSlice": {
         "required": ["model", "pluginIds"],
         "type": "object",
@@ -487,6 +618,9 @@
     },
     {
       "name": "Context"
+    },
+    {
+      "name": "Graph"
     },
     {
       "name": "Analysis"
