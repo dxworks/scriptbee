@@ -9,4 +9,9 @@
     <ProjectReference Include="..\..\..\..\src\Analysis\Adapters\Analysis.Web\Analysis.Web.csproj" />
     <ProjectReference Include="..\..\..\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="EndpointDefinitions\**\TestData\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

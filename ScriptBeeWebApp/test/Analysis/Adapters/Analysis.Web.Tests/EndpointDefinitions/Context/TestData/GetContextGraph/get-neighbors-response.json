@@ -1,0 +1,19 @@
+{
+    "nodes": [
+        {
+            "id": "neighbor-1",
+            "label": "Neighbor 1",
+            "type": "Type2",
+            "properties": {
+                "Prop2": "Value2"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "source": "source-node",
+            "target": "neighbor-1",
+            "label": "NeighborEdge"
+        }
+    ]
+}

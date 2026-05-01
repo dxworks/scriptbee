@@ -13,6 +13,7 @@ public static class RestConfigExtensions
             .AddSingleton<IInstallPlugin, InstallPluginAdapter>()
             .AddSingleton<IUninstallPlugin, UninstallPluginAdapter>()
             .AddSingleton<IGetInstanceContext, GetInstanceContextAdapter>()
+            .AddSingleton<IGetInstanceContextGraph, GetInstanceContextGraphAdapter>()
             .AddSingleton<IClearInstanceContext, ClearInstanceContextAdapter>()
             .AddSingleton<ILinkInstanceContext, LinkInstanceContextAdapter>()
             .AddSingleton<ILoadInstanceContext, LoadInstanceContextAdapter>()

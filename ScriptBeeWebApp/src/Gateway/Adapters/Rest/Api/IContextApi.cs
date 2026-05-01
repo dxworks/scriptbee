@@ -22,4 +22,18 @@ public interface IContextApi
         [Body] RestGenerateClasses request,
         CancellationToken cancellationToken
     );
+
+    [Get("/api/context/graph-nodes")]
+    Task<RestContextGraphResponse> SearchNodes(
+        [Query] string? query,
+        [Query] int offset,
+        [Query] int limit,
+        CancellationToken cancellationToken
+    );
+
+    [Get("/api/context/graph-nodes/{nodeId}/neighbors")]
+    Task<RestContextGraphResponse> GetNeighbors(
+        [AliasAs("nodeId")] string nodeId,
+        CancellationToken cancellationToken
+    );
 }

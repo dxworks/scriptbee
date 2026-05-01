@@ -167,7 +167,7 @@
             }
           },
           {
-            "name": "skip",
+            "name": "offset",
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -177,7 +177,7 @@
             }
           },
           {
-            "name": "take",
+            "name": "limit",
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",

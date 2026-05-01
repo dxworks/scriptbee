@@ -1,15 +1,24 @@
 using System.Reflection;
 using System.Runtime.Loader;
+using DxWorks.ScriptBee.Plugin.Api;
 
 namespace ScriptBee.Plugins.Loader;
 
 internal class PluginAssemblyLoadContext(string pluginPath)
     : AssemblyLoadContext(isCollectible: true)
 {
+    private static readonly string PluginApiAssemblyName =
+        typeof(IPlugin).Assembly.GetName().Name!;
+
     private readonly AssemblyDependencyResolver _resolver = new(pluginPath);
 
     protected override Assembly? Load(AssemblyName assemblyName)
     {
+        if (assemblyName.Name == PluginApiAssemblyName)
+        {
+            return Default.Assemblies.FirstOrDefault(a => a.GetName().Name == PluginApiAssemblyName);
+        }
+
         var assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
         return assemblyPath != null ? LoadFromAssemblyPath(assemblyPath) : null;
     }
