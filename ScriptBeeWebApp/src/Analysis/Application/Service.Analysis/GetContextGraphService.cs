@@ -1,27 +1,23 @@
 using System.Collections;
 using System.Reflection;
+using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
+using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 
-public class GetContextGraphService(IProjectManager projectManager) : IGetContextGraphUseCase
+public class GetContextGraphService(
+    IProjectManager projectManager,
+    ILogger<GetContextGraphService> logger
+) : IGetContextGraphUseCase
 {
     public ContextGraphResult SearchNodes(string query, int offset, int limit)
     {
         var project = projectManager.GetProject();
 
-        var filteredModels = project
-            .Context.Models.SelectMany(entry =>
-                entry.Value.Select(inner =>
-                    (id: $"{entry.Key.Item1}_{entry.Key.Item2}_{inner.Key}", model: inner.Value)
-                )
-            )
-            .Where(x => Matches(x.id, x.model, query))
-            .Skip(offset)
-            .Take(limit)
-            .ToList();
+        var filteredModels = GetFilteredModels(query, offset, limit, project);
 
         var nodes = filteredModels.Select(x => MapToNode(x.id, x.model)).ToList();
 
@@ -29,40 +25,9 @@ public class GetContextGraphService(IProjectManager projectManager) : IGetContex
         var objectToNodeIdMap = BuildObjectToNodeIdMap(project);
         var filteredNodeIds = nodes.Select(n => n.Id).ToHashSet();
 
-        foreach (var x in filteredModels)
+        foreach (var tuple in filteredModels)
         {
-            foreach (var (key, value) in GetAllProperties(x.model))
-            {
-                if (value == null)
-                {
-                    continue;
-                }
-
-                if (objectToNodeIdMap.TryGetValue(value, out var targetId))
-                {
-                    if (filteredNodeIds.Contains(targetId))
-                    {
-                        edges.Add(new ContextGraphEdge(x.id, targetId, key));
-                    }
-                }
-                else if (value is IEnumerable enumerable and not string)
-                {
-                    foreach (var item in enumerable)
-                    {
-                        if (
-                            item == null
-                            || !objectToNodeIdMap.TryGetValue(item, out var listTargetId)
-                        )
-                        {
-                            continue;
-                        }
-                        if (filteredNodeIds.Contains(listTargetId))
-                        {
-                            edges.Add(new ContextGraphEdge(x.id, listTargetId, key));
-                        }
-                    }
-                }
-            }
+            PopulateNodesAndEdges(tuple, objectToNodeIdMap, filteredNodeIds, edges);
         }
 
         return new ContextGraphResult(nodes, edges);
@@ -88,6 +53,77 @@ public class GetContextGraphService(IProjectManager projectManager) : IGetContex
         }
 
         return new ContextGraphResult(nodes.DistinctBy(n => n.Id), edges);
+    }
+
+    private void PopulateNodesAndEdges(
+        (string id, ScriptBeeModel model) tuple,
+        Dictionary<object, string> objectToNodeIdMap,
+        HashSet<string> filteredNodeIds,
+        List<ContextGraphEdge> edges
+    )
+    {
+        foreach (var (key, value) in GetAllProperties(tuple.model))
+        {
+            if (value == null)
+            {
+                continue;
+            }
+
+            if (objectToNodeIdMap.TryGetValue(value, out var targetId))
+            {
+                if (filteredNodeIds.Contains(targetId))
+                {
+                    edges.Add(new ContextGraphEdge(tuple.id, targetId, key));
+                }
+            }
+            else if (value is IEnumerable enumerable and not string)
+            {
+                PopulateEdges(objectToNodeIdMap, filteredNodeIds, edges, enumerable, tuple, key);
+            }
+        }
+    }
+
+    private static void PopulateEdges(
+        Dictionary<object, string> objectToNodeIdMap,
+        HashSet<string> filteredNodeIds,
+        List<ContextGraphEdge> edges,
+        IEnumerable enumerable,
+        (string id, ScriptBeeModel model) x,
+        string key
+    )
+    {
+        foreach (var item in enumerable)
+        {
+            if (item == null || !objectToNodeIdMap.TryGetValue(item, out var listTargetId))
+            {
+                continue;
+            }
+
+            if (filteredNodeIds.Contains(listTargetId))
+            {
+                edges.Add(new ContextGraphEdge(x.id, listTargetId, key));
+            }
+        }
+    }
+
+    private List<(string id, ScriptBeeModel model)> GetFilteredModels(
+        string query,
+        int offset,
+        int limit,
+        IProject project
+    )
+    {
+        var filteredModels = project
+            .Context.Models.SelectMany(entry =>
+                entry.Value.Select(inner =>
+                    (id: $"{entry.Key.Item1}_{entry.Key.Item2}_{inner.Key}", model: inner.Value)
+                )
+            )
+            .Where(x => Matches(x.id, x.model, query))
+            .Skip(offset)
+            .Take(limit)
+            .ToList();
+        return filteredModels;
     }
 
     private bool Matches(string id, object model, string query)
@@ -120,7 +156,7 @@ public class GetContextGraphService(IProjectManager projectManager) : IGetContex
         {
             AddNeighbor(sourceId, propertyName, value, targetId, nodes, edges);
         }
-        else if (value is IEnumerable enumerable && value is not string)
+        else if (value is IEnumerable enumerable and not string)
         {
             foreach (var item in enumerable)
             {
@@ -187,19 +223,21 @@ public class GetContextGraphService(IProjectManager projectManager) : IGetContex
 
     private static void AddDynamicProperties(object model, Dictionary<string, object?> properties)
     {
-        if (model is IDictionary dynamicDict)
+        if (model is not IDictionary dynamicDict)
         {
-            foreach (DictionaryEntry entry in dynamicDict)
+            return;
+        }
+
+        foreach (DictionaryEntry entry in dynamicDict)
+        {
+            if (entry.Key is string key)
             {
-                if (entry.Key is string key)
-                {
-                    properties[key] = entry.Value;
-                }
+                properties[key] = entry.Value;
             }
         }
     }
 
-    private static void AddStaticProperties(object model, Dictionary<string, object?> properties)
+    private void AddStaticProperties(object model, Dictionary<string, object?> properties)
     {
         var type = model.GetType();
         foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -214,7 +252,7 @@ public class GetContextGraphService(IProjectManager projectManager) : IGetContex
     private static bool IsSimpleProperty(PropertyInfo prop) =>
         prop.GetIndexParameters().Length == 0;
 
-    private static void AddPropertyValue(
+    private void AddPropertyValue(
         object model,
         PropertyInfo prop,
         Dictionary<string, object?> properties
@@ -224,7 +262,15 @@ public class GetContextGraphService(IProjectManager projectManager) : IGetContex
         {
             properties[prop.Name] = prop.GetValue(model);
         }
-        catch { }
+        catch (Exception e)
+        {
+            logger.LogError(
+                e,
+                "Failed to get value of property {PropertyName} on model of type {ModelType}",
+                prop.Name,
+                model.GetType().FullName
+            );
+        }
     }
 
     private ContextGraphNode MapToNode(string id, object model)

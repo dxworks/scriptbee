@@ -7,8 +7,7 @@ namespace ScriptBee.Plugins.Loader;
 internal class PluginAssemblyLoadContext(string pluginPath)
     : AssemblyLoadContext(isCollectible: true)
 {
-    private static readonly string PluginApiAssemblyName =
-        typeof(IPlugin).Assembly.GetName().Name!;
+    private static readonly string PluginApiAssemblyName = typeof(IPlugin).Assembly.GetName().Name!;
 
     private readonly AssemblyDependencyResolver _resolver = new(pluginPath);
 
@@ -16,7 +15,9 @@ internal class PluginAssemblyLoadContext(string pluginPath)
     {
         if (assemblyName.Name == PluginApiAssemblyName)
         {
-            return Default.Assemblies.FirstOrDefault(a => a.GetName().Name == PluginApiAssemblyName);
+            return Default.Assemblies.FirstOrDefault(a =>
+                a.GetName().Name == PluginApiAssemblyName
+            );
         }
 
         var assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
