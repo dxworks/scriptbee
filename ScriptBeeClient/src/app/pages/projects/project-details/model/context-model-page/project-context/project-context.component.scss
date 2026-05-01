@@ -1,5 +1,67 @@
-﻿.action-buttons-container {
-  margin: 16px;
+:host {
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.context-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  flex-shrink: 0;
+}
+
+.empty-message {
+  font-style: italic;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+  padding-left: 8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+mat-tab-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  /* Ensure the tab content container fills the height */
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::ng-deep .mat-mdc-tab-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    overflow: hidden !important; /* Prevent double scrollbars at the tab level */
+  }
+}
+
+.tab-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto; /* Allow scrolling only for the specific content */
+}
+
+.graph-tab {
+  padding-top: 0;
+  overflow: hidden; /* Graph handles its own internal layout */
 }

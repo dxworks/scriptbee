@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, retry } from 'rxjs';
+import { map, Observable, retry } from 'rxjs';
 import { ProjectContext } from '../../types/returned-context-slice';
 import { WebResponse } from '../../types/web-response';
+import { ContextGraphResult } from '../../types/context-graph';
 
 @Injectable({
   providedIn: 'root',
@@ -23,5 +24,13 @@ export class ProjectContextService {
 
   reloadContext(projectId: string, instanceId: string) {
     return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/reload`, {});
+  }
+
+  searchNodes(projectId: string, instanceId: string, query: string, skip = 0, take = 100): Observable<ContextGraphResult> {
+    return this.http.get<ContextGraphResult>(`/api/projects/${projectId}/instances/${instanceId}/context/graph?query=${query}&skip=${skip}&take=${take}`);
+  }
+
+  getNeighbors(projectId: string, instanceId: string, nodeId: string): Observable<ContextGraphResult> {
+    return this.http.get<ContextGraphResult>(`/api/projects/${projectId}/instances/${instanceId}/context/graph/neighbors?nodeId=${encodeURIComponent(nodeId)}`);
   }
 }

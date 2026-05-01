@@ -27,6 +27,7 @@
     "@mdi/angular-material": "^7.2.96",
     "@microsoft/signalr": "^10.0.0",
     "angular-split": "^20.0.0",
+    "cytoscape": "^3.33.3",
     "monaco-editor": "^0.55.1",
     "ngx-monaco-editor-v2": "^21.1.4",
     "rxjs": "~7.8.2",

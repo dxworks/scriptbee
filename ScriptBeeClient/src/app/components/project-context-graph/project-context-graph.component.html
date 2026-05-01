@@ -1,0 +1,128 @@
+<div class="graph-container">
+  @if (isLoading()) {
+    <mat-progress-bar mode="indeterminate" class="graph-loader"></mat-progress-bar>
+  }
+
+  <div class="controls-row">
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+      <mat-label>Search Nodes</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="e.g. MyClass" />
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchControl.value) {
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="searchControl.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+
+    <div class="graph-actions">
+      @if (nodeCount() > 0) {
+        <span class="node-counter">{{ nodeCount() }} nodes</span>
+      }
+      @if (hasMoreResults()) {
+        <button mat-flat-button (click)="loadMore()" [disabled]="isLoading()" class="load-more-btn">
+          <mat-icon>add</mat-icon>
+          Load More
+        </button>
+      }
+      <button mat-icon-button (click)="zoomIn()" matTooltip="Zoom In">
+        <mat-icon>zoom_in</mat-icon>
+      </button>
+      <button mat-icon-button (click)="zoomOut()" matTooltip="Zoom Out">
+        <mat-icon>zoom_out</mat-icon>
+      </button>
+      <button mat-icon-button (click)="fitGraph()" matTooltip="Fit Graph">
+        <mat-icon>fit_screen</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <mat-sidenav-container class="graph-sidenav-container">
+    <mat-sidenav-content>
+      @if (isEmpty() && !isLoading()) {
+        <div class="empty-placeholder">
+          <mat-icon class="placeholder-icon">search</mat-icon>
+          <h3>No nodes to display</h3>
+          <p>Search for nodes above to start exploring the project context.</p>
+        </div>
+      }
+      <div #container class="cy-container"></div>
+    </mat-sidenav-content>
+
+    <mat-sidenav mode="side" position="end" [opened]="!!selectedNode()" class="details-sidenav">
+      @if (selectedNode(); as node) {
+        <div class="details-container">
+          <div class="details-header-row">
+            <span class="details-title">{{ node.label }}</span>
+            <button mat-icon-button (click)="selectedNode.set(null)" class="close-btn">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="details-content">
+            <mat-list>
+              <mat-list-item class="property-list-item">
+                <span matListItemTitle>Type</span>
+                <div class="property-value-wrapper">
+                  <pre class="property-value">{{ node.type }}</pre>
+                </div>
+              </mat-list-item>
+              <mat-list-item class="property-list-item">
+                <span matListItemTitle>ID</span>
+                <div class="property-value-wrapper">
+                  <pre class="property-value id-text">{{ node.id }}</pre>
+                </div>
+              </mat-list-item>
+
+              @if (node.loader) {
+                <mat-list-item class="property-list-item">
+                  <span matListItemTitle>Loader</span>
+                  <div class="property-value-wrapper">
+                    <pre class="property-value">{{ node.loader }}</pre>
+                  </div>
+                </mat-list-item>
+              }
+            </mat-list>
+
+            <mat-divider></mat-divider>
+
+            <h4 class="properties-title">Properties</h4>
+            <mat-list>
+              @for (prop of node.properties | keyvalue; track prop.key) {
+                <mat-list-item class="property-list-item">
+                  <span matListItemTitle>{{ prop.key }}</span>
+                  <div class="property-value-wrapper">
+                    <pre class="property-value">{{ formatPropertyValue(prop.value) }}</pre>
+                  </div>
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        </div>
+      }
+    </mat-sidenav>
+  </mat-sidenav-container>
+
+  <div style="visibility: hidden; position: fixed" [style.left]="menuPosition.x" [style.top]="menuPosition.y" [matMenuTriggerFor]="contextMenu"></div>
+  <mat-menu #contextMenu="matMenu">
+    <ng-template matMenuContent let-nodeId="nodeId">
+      <button mat-menu-item (click)="expandNeighbors(nodeId)">
+        <mat-icon>hub</mat-icon>
+        <span>Expand Neighbors</span>
+      </button>
+      <button mat-menu-item (click)="centerOnNode(nodeId)">
+        <mat-icon>center_focus_strong</mat-icon>
+        <span>Center</span>
+      </button>
+    </ng-template>
+  </mat-menu>
+</div>
