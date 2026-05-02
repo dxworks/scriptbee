@@ -7,3 +7,34 @@
 .file-button {
   margin: 8px 4px;
 }
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-high);
+  }
+}
+
+.file-name {
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-preview-button,
+.download-icon-button {
+  flex-shrink: 0;
+}
