@@ -32,7 +32,7 @@
     <PackageVersion Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.1.7" />
     <PackageVersion Include="Westwind.Utilities" Version="5.3.0" />
     <PackageVersion Include="WireMock.Net" Version="2.4.0" />
-    <PackageVersion Include="YamlDotNet" Version="17.0.1" />
+    <PackageVersion Include="YamlDotNet" Version="17.1.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.3.0" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
     <PackageVersion Include="Jint" Version="4.8.0" />
