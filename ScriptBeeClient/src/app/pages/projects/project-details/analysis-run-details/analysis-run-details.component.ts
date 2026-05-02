@@ -26,7 +26,6 @@ import { ProjectStateService } from '../../../../services/projects/project-state
 
 @Component({
   selector: 'app-analysis-run-details',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,

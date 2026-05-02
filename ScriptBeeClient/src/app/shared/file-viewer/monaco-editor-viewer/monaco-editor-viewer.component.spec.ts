@@ -1,18 +1,48 @@
 import { describe, expect, it } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ComponentRef, NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { Component, ComponentRef, forwardRef, input, signal } from '@angular/core';
 import { MonacoEditorViewerComponent } from './monaco-editor-viewer.component';
 import { AnalysisFile } from '../../../types/analysis-results';
 import { ThemeService } from '../../../services/common/theme.service';
-import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
+import { EditorComponent } from 'ngx-monaco-editor-v2';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+@Component({
+  selector: 'ngx-monaco-editor',
+  template: '',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MockEditorComponent),
+      multi: true,
+    },
+  ],
+})
+class MockEditorComponent implements ControlValueAccessor {
+  options = input<EditorComponent['options']>();
+
+  writeValue(): void {
+    // no-op since this is a mock component for testing purposes
+  }
+  registerOnChange(): void {
+    // no-op since this is a mock component for testing purposes
+  }
+  registerOnTouched(): void {
+    // no-op since this is a mock component for testing purposes
+  }
+}
 
 describe('MonacoEditorViewerComponent', () => {
   async function createFixture(file: AnalysisFile): Promise<ComponentFixture<MonacoEditorViewerComponent>> {
     await TestBed.configureTestingModule({
       imports: [MonacoEditorViewerComponent],
-      providers: [{ provide: ThemeService, useValue: { darkMode: signal(false) } }, provideMonacoEditor()],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+      providers: [{ provide: ThemeService, useValue: { darkMode: signal(false) } }],
+    })
+      .overrideComponent(MonacoEditorViewerComponent, {
+        remove: { imports: [EditorComponent] },
+        add: { imports: [MockEditorComponent] },
+      })
+      .compileComponents();
 
     const fixture = TestBed.createComponent(MonacoEditorViewerComponent);
     const componentRef: ComponentRef<MonacoEditorViewerComponent> = fixture.componentRef;
@@ -46,9 +76,13 @@ describe('MonacoEditorViewerComponent', () => {
     const darkMode = signal(false);
     await TestBed.configureTestingModule({
       imports: [MonacoEditorViewerComponent],
-      providers: [{ provide: ThemeService, useValue: { darkMode } }, provideMonacoEditor()],
-      schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+      providers: [{ provide: ThemeService, useValue: { darkMode } }],
+    })
+      .overrideComponent(MonacoEditorViewerComponent, {
+        remove: { imports: [EditorComponent] },
+        add: { imports: [MockEditorComponent] },
+      })
+      .compileComponents();
 
     const fixture = TestBed.createComponent(MonacoEditorViewerComponent);
     fixture.componentRef.setInput('content', 'sample content');

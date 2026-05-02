@@ -9,7 +9,6 @@ import { MarketplacePluginWithDetails } from '../../../../../../../types/marketp
 
 @Component({
   selector: 'app-plugin-details-header',
-  standalone: true,
   imports: [MatButtonModule, MatIconModule, MatChipsModule, MatDividerModule, RouterModule],
   templateUrl: './plugin-details-header.component.html',
   styleUrls: ['./plugin-details-header.component.scss'],

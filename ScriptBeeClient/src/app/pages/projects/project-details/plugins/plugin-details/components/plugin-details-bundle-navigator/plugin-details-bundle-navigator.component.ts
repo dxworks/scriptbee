@@ -7,7 +7,6 @@ import { BundleItem } from '../../../../../../../types/marketplace-plugin';
 
 @Component({
   selector: 'app-plugin-details-bundle-navigator',
-  standalone: true,
   imports: [MatButtonModule, MatIconModule, RouterModule],
   templateUrl: './plugin-details-bundle-navigator.component.html',
   styleUrls: ['./plugin-details-bundle-navigator.component.scss'],

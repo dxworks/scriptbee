@@ -8,7 +8,6 @@ import { PluginVersion } from '../../../../../../../types/marketplace-plugin';
 
 @Component({
   selector: 'app-plugin-details-versions-table',
-  standalone: true,
   imports: [MatTableModule, MatChipsModule, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './plugin-details-versions-table.component.html',
   styleUrls: ['./plugin-details-versions-table.component.scss'],
