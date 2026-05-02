@@ -3,10 +3,22 @@
     <mat-icon svgIcon="arrow-left"></mat-icon>
   </button>
   <h2>Extended Analysis Run Details</h2>
+
+  <span class="spacer"></span>
+
   @if (creationDate()) {
     <mat-chip-set>
       <mat-chip>Run Date: {{ creationDate() | date: 'medium' }}</mat-chip>
     </mat-chip-set>
+  }
+
+  @if (isDeleting()) {
+    <mat-spinner diameter="32"></mat-spinner>
+  } @else {
+    <button mat-flat-button color="warn" (click)="onDeleteClick()" [disabled]="runResource.isLoading() || isDeleting()">
+      <mat-icon>delete</mat-icon>
+      Delete Analysis
+    </button>
   }
 </div>
 
@@ -39,5 +51,5 @@
   </mat-expansion-panel>
 
   <h3>Analysis Results</h3>
-  <app-analysis-output [projectId]="projectId()" [analysisId]="analysisId()" />
+  <app-analysis-output [projectId]="project().id" [analysisId]="analysisId()" />
 }
