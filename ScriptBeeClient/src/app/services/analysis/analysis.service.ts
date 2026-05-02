@@ -44,4 +44,8 @@ export class AnalysisService {
   getAnalysisScriptMetadata(projectId: string, analysisId: string, scriptId: string): Observable<ProjectScript> {
     return this.http.get<ProjectScript>(`/api/projects/${projectId}/analyses/${analysisId}/scripts/${scriptId}`);
   }
+
+  deleteAnalysis(projectId: string, analysisId: string): Observable<void> {
+    return this.http.delete<void>(`/api/projects/${projectId}/analyses/${analysisId}`);
+  }
 }

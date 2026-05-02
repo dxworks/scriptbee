@@ -1,9 +1,8 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { AnalysisService } from '../../../../services/analysis/analysis.service';
 import { ProjectStructureService } from '../../../../services/projects/project-structure.service';
-import { ProjectStateService } from '../../../../services/projects/project-state.service';
 import { ThemeService } from '../../../../services/common/theme.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,14 +15,17 @@ import { AnalysisOutputComponent } from '../analysis/output/analysis-output.comp
 import { DiffEditorComponent, EditorComponent } from 'ngx-monaco-editor-v2';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { ErrorStateComponent } from '../../../../components/error-state/error-state.component';
 import { convertError } from '../../../../utils/api';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../../../components/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProjectStateService } from '../../../../services/projects/project-state.service';
 
 @Component({
   selector: 'app-analysis-run-details',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatIconModule,
@@ -40,30 +42,30 @@ import { convertError } from '../../../../utils/api';
     FormsModule,
     DatePipe,
     RouterLink,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   templateUrl: './analysis-run-details.component.html',
   styleUrls: ['./analysis-run-details.component.scss'],
 })
 export class AnalysisRunDetailsComponent {
-  private route = inject(ActivatedRoute);
+  project = computed(() => this.projectStateService.currentProject()!);
+  analysisId = input.required<string>();
+
+  private projectStateService = inject(ProjectStateService);
   private analysisService = inject(AnalysisService);
   private projectStructureService = inject(ProjectStructureService);
-  private projectStateService = inject(ProjectStateService);
   private themeService = inject(ThemeService);
-
-  private routeParams = toSignal(this.route.paramMap);
-
-  analysisId = computed(() => {
-    const id = this.routeParams()?.get('analysisId');
-    return id ?? '';
-  });
-  projectId = computed(() => this.projectStateService.currentProjectId()!);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   showDiff = signal<boolean>(false);
+  isDeleting = signal<boolean>(false);
 
   runResource = rxResource({
     params: () => {
-      return { projectId: this.projectId(), analysisId: this.analysisId() };
+      return { projectId: this.project().id, analysisId: this.analysisId() };
     },
     stream: ({ params }) => {
       if (!params.projectId || !params.analysisId) {
@@ -74,8 +76,8 @@ export class AnalysisRunDetailsComponent {
         switchMap((analysis) => {
           return forkJoin({
             analysis: of(analysis),
-            content: this.analysisService.getAnalysisScriptContent(params.projectId, params.analysisId, analysis.scriptId),
-            metadata: this.analysisService.getAnalysisScriptMetadata(params.projectId, params.analysisId, analysis.scriptId),
+            content: this.analysisService.getAnalysisScriptContent(params.projectId, params.analysisId, analysis.scriptId).pipe(catchError(() => of(''))),
+            metadata: this.analysisService.getAnalysisScriptMetadata(params.projectId, params.analysisId, analysis.scriptId).pipe(catchError(() => of(null))),
             current: this.projectStructureService.getProjectScript(params.projectId, analysis.scriptId).pipe(
               switchMap((script) => {
                 if (!script) {
@@ -84,9 +86,11 @@ export class AnalysisRunDetailsComponent {
                 return this.projectStructureService.getScriptContent(params.projectId, analysis.scriptId).pipe(
                   map((content) => {
                     return { script, content };
-                  })
+                  }),
+                  catchError(() => of(null))
                 );
-              })
+              }),
+              catchError(() => of(null))
             ),
           });
         })
@@ -94,6 +98,35 @@ export class AnalysisRunDetailsComponent {
     },
   });
   error = computed(() => convertError(this.runResource.error()));
+
+  onDeleteClick() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Delete Analysis',
+        message: 'Are you sure you want to delete this analysis and all its results? This action cannot be undone.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const projectId = this.project().id;
+        this.isDeleting.set(true);
+        this.analysisService.deleteAnalysis(projectId, this.analysisId()).subscribe({
+          next: () => {
+            this.isDeleting.set(false);
+            this.snackBar.open('Analysis deleted successfully', 'Close', { duration: 3000 });
+            void this.router.navigate(['/projects', projectId, 'analysis']);
+          },
+          error: (err) => {
+            this.isDeleting.set(false);
+            this.snackBar.open(`Failed to delete analysis: ${convertError(err)}`, 'Close', { duration: 5000 });
+          },
+        });
+      }
+    });
+  }
 
   creationDate = computed(() => {
     return this.runResource.value()?.analysis?.creationDate ?? null;

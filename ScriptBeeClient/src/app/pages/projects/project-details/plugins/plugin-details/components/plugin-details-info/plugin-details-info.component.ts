@@ -7,7 +7,6 @@ import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-plugin-details-info',
-  standalone: true,
   imports: [MatButtonModule, MatIconModule, MatChipsModule],
   templateUrl: './plugin-details-info.component.html',
   styleUrls: ['./plugin-details-info.component.scss'],

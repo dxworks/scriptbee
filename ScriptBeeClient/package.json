@@ -10,7 +10,8 @@
     "test": "ng test",
     "test:ci": "npm test -- --watch=false",
     "lint": "ng lint",
-    "prettier:fix": "prettier --write ."
+    "prettier:fix": "prettier --write .",
+    "pre-commit": "npm run prettier:fix && npm run lint && npm run test:ci"
   },
   "private": true,
   "dependencies": {

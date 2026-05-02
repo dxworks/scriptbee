@@ -13,7 +13,6 @@ import { PluginMarketplaceDashboardListComponent } from '../projects/project-det
 
 @Component({
   selector: 'app-gateway-plugins',
-  standalone: true,
   imports: [
     ErrorStateComponent,
     LoadingProgressBarComponent,

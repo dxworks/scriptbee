@@ -43,14 +43,13 @@ import { convertError } from '../../../../utils/api';
   styleUrl: './project-settings.component.scss',
 })
 export class ProjectSettingsPage {
-  private projectStateService = inject(ProjectStateService);
-
   project = computed(() => this.projectStateService.currentProject()!);
   userFolderPath = computed(() => UserFolderPathService.getUserFolderPath(this.project().id));
 
   userFolderRoot = model<string>();
   isDeleteLoading = signal(false);
 
+  private projectStateService = inject(ProjectStateService);
   private projectService = inject(ProjectService);
   readonly dialog = inject(MatDialog);
   private router = inject(Router);

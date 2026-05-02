@@ -21,7 +21,6 @@ import { convertError } from '../../../../../utils/api';
   selector: 'app-plugin-details',
   templateUrl: './plugin-details.component.html',
   styleUrls: ['./plugin-details.component.scss'],
-  standalone: true,
   imports: [
     RouterModule,
     MatSnackBarModule,
