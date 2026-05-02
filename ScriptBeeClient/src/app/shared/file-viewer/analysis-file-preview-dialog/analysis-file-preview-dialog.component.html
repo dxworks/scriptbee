@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Preview: {{ data.file.name }}</h2>
+<mat-dialog-content class="preview-dialog-content">
+  @if (isLoading()) {
+    <app-loading-progress-bar title="Loading File Content..."></app-loading-progress-bar>
+  } @else if (errorMessage()) {
+    <app-error-state [error]="errorMessage()!" (retry)="loadFileContent()"></app-error-state>
+  } @else {
+    <div class="viewer-container">
+      <ng-container *ngComponentOutlet="data.pluginComponent; inputs: { content: fileContent(), file: data.file }"></ng-container>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

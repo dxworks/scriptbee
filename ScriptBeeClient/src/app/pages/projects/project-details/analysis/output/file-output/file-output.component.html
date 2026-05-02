@@ -9,9 +9,32 @@
   </button>
 }
 
-@for (file of files(); track file.id) {
-  <button class="file-button" mat-raised-button (click)="onDownloadFileButtonClick(file)">
-    <mat-icon>download</mat-icon>
-    {{ file.name }}
-  </button>
-}
+<div class="file-list">
+  @for (file of files(); track file.id) {
+    <div class="file-item">
+      <span class="file-name" [title]="file.name">{{ file.name }}</span>
+
+      @if (fileViewerService.getAvailablePluginsForFile(file).length > 1) {
+        <button mat-icon-button class="file-preview-button" [matMenuTriggerFor]="pluginMenu" (click)="$event.stopPropagation()" title="Preview">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <mat-menu #pluginMenu="matMenu">
+          @for (plugin of fileViewerService.getAvailablePluginsForFile(file); track plugin.id) {
+            <button mat-menu-item (click)="openWithPlugin(plugin, file)">
+              <mat-icon>{{ plugin.icon }}</mat-icon>
+              <span>{{ plugin.name }}</span>
+            </button>
+          }
+        </mat-menu>
+      } @else {
+        <button mat-icon-button class="file-preview-button" (click)="onPreviewFileClick(file)" title="Preview">
+          <mat-icon>visibility</mat-icon>
+        </button>
+      }
+
+      <button mat-icon-button class="download-icon-button" (click)="onDownloadFileButtonClick(file, $event)" title="Download">
+        <mat-icon>download</mat-icon>
+      </button>
+    </div>
+  }
+</div>
