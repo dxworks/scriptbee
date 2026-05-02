@@ -962,6 +962,28 @@
         }
       }
     },
+    "/api/plugins/gateway/ui/manifest": {
+      "get": {
+        "tags": ["Plugins"],
+        "summary": "Get the manifest for UI plugins",
+        "description": "Retrieves a map with the installed UI plugin remotes and the associated remoteEntry.js file.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/loaders/{loaderId}/files": {
       "put": {
         "tags": ["Loaders"],

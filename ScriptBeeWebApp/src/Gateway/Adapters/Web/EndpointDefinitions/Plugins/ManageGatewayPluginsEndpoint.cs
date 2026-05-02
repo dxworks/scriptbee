@@ -23,6 +23,12 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
             .WithTags("Plugins")
             .WithSummary("Uninstall gateway plugin")
             .WithDescription("Uninstalls a plugin from the gateway level.");
+        app.MapGet("/api/plugins/gateway/ui/manifest", GetUiPluginsManifest)
+            .WithTags("Plugins")
+            .WithSummary("Get the manifest for UI plugins")
+            .WithDescription(
+                "Retrieves a map with the installed UI plugin remotes and the associated remoteEntry.js file."
+            );
     }
 
     private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(IManagePluginsUseCase useCase)
@@ -60,5 +66,10 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
     {
         useCase.Uninstall(new PluginId(pluginId, new Version(version)));
         return TypedResults.NoContent();
+    }
+
+    private static Ok<Dictionary<string, string>> GetUiPluginsManifest()
+    {
+        return TypedResults.Ok(new Dictionary<string, string>());
     }
 }
