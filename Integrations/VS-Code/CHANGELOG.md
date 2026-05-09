@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scriptbee.enableLiveUpdates` to enable live updates for project script events of creation, update, and deletion.
 - `scriptbee.enableAutoPush` to enable auto push to server when script is saved.
 
+### Changes
+
+- upgrade `axios` to 1.15.2 
+
 ## [1.0.0]
 
 ### Added
