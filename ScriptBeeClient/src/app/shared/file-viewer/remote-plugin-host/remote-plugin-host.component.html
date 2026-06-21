@@ -1,0 +1,7 @@
+@if (isLoading()) {
+  <app-loading-progress-bar title="Loading plugin..."></app-loading-progress-bar>
+} @else if (error()) {
+  <app-error-state [error]="{ title: 'Failed to load plugin', status: 500 }"></app-error-state>
+} @else {
+  <ng-container *ngComponentOutlet="loadedComponent(); inputs: { inputs: { content: content(), file: file() } }"></ng-container>
+}

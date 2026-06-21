@@ -52,11 +52,12 @@ interface UIExtensionPoint extends BasicExtensionPoint {
   outlets: UIExtensionPointOutlet[];
 }
 
-export type UIExtensionPointOutlet = TopNavigationBarExtensionPointOutlet | SidePanelExtensionPointOutlet;
+export type UIExtensionPointOutlet = TopNavigationBarExtensionPointOutlet | SidePanelExtensionPointOutlet | FilePreviewExtensionPointOutlet;
 
 interface BaseUIExtensionPointOutlet {
   type: string;
 }
+
 export interface RoutingExtensionPointOutlet extends BaseUIExtensionPointOutlet {
   exposedModule: string;
   label: string;
@@ -72,4 +73,13 @@ export interface TopNavigationBarExtensionPointOutlet extends RoutingExtensionPo
 export interface SidePanelExtensionPointOutlet extends RoutingExtensionPointOutlet {
   type: 'side-panel';
   icon: string;
+}
+
+export interface FilePreviewExtensionPointOutlet extends BaseUIExtensionPointOutlet {
+  type: 'file-previewer';
+  exposedModule: string;
+  label: string;
+  componentName: string | undefined;
+  icon: string;
+  supportedFileExtensions: string[] | undefined;
 }

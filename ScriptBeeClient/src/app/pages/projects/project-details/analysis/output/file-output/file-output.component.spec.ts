@@ -24,6 +24,7 @@ describe('FileOutputComponent', () => {
     name: 'Monaco Editor',
     icon: 'code',
     component: MonacoEditorViewerComponent,
+    supportedFileExtensions: undefined,
   };
 
   beforeEach(async () => {

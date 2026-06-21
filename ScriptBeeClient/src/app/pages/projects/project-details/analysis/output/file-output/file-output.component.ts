@@ -53,6 +53,7 @@ export class FileOutputComponent {
         analysisId: this.analysisId(),
         file,
         pluginComponent: plugin.component,
+        pluginOutlet: plugin.pluginOutlet,
       },
       width: '90vw',
       height: '90vh',

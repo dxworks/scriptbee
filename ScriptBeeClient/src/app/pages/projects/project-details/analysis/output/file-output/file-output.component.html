@@ -21,7 +21,9 @@
         <mat-menu #pluginMenu="matMenu">
           @for (plugin of fileViewerService.getAvailablePluginsForFile(file); track plugin.id) {
             <button mat-menu-item (click)="openWithPlugin(plugin, file)">
-              <mat-icon>{{ plugin.icon }}</mat-icon>
+              @if (plugin.icon) {
+                <mat-icon>{{ plugin.icon }}</mat-icon>
+              }
               <span>{{ plugin.name }}</span>
             </button>
           }
