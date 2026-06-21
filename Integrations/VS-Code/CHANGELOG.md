@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changes
 
-- upgrade `axios` to 1.15.2 
+- upgrade `axios` to 1.18.0
 
 ## [1.0.0]
 
