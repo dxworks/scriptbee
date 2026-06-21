@@ -1,6 +1,7 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { SideNavListComponent } from '../side-nav-list/side-nav-list.component';
 import { NavItem } from '../navItem';
+import { GatewayPluginsService } from '../../../services/plugin/gateway-plugins.service';
 
 @Component({
   selector: 'app-project-side-nav-list',
@@ -12,47 +13,56 @@ export class ProjectSideNavListComponent {
   isCollapsed = input.required<boolean>();
   projectId = input.required<string>();
 
-  linkPrefix = computed(() => {
-    return `/projects/${this.projectId()}`;
-  });
+  linkPrefix = computed(() => `/projects/${this.projectId()}`);
+  navItems = computed(() => [...defaultNavItems, ...this.pluginNavItems()]);
 
-  navItems: NavItem[] = [
-    {
-      link: '/model',
-      name: 'Model',
-      icon: 'model_training',
-      children: [
-        {
-          link: '/upload',
-          name: 'Upload',
-          icon: 'upload',
-        },
-        {
-          link: '/load',
-          name: 'Load',
-          icon: 'autorenew',
-        },
-        {
-          link: '/context',
-          name: 'Context',
-          icon: 'account_tree',
-        },
-      ],
-    },
-    {
-      link: '/analysis',
-      name: 'Analysis',
-      icon: 'query_stats',
-    },
-    {
-      link: '/settings',
-      name: 'Settings',
-      icon: 'settings',
-    },
-    {
-      link: '/plugins',
-      name: 'Plugins',
-      icon: 'extension',
-    },
-  ];
+  private gatewayPluginsService = inject(GatewayPluginsService);
+
+  private pluginNavItems = computed<NavItem[]>(() =>
+    this.gatewayPluginsService.sidePanelOutlets().map((outlet) => ({
+      link: outlet.path,
+      name: outlet.label,
+      icon: outlet.icon,
+    }))
+  );
 }
+
+const defaultNavItems: NavItem[] = [
+  {
+    link: '/model',
+    name: 'Model',
+    icon: 'model_training',
+    children: [
+      {
+        link: '/upload',
+        name: 'Upload',
+        icon: 'upload',
+      },
+      {
+        link: '/load',
+        name: 'Load',
+        icon: 'autorenew',
+      },
+      {
+        link: '/context',
+        name: 'Context',
+        icon: 'account_tree',
+      },
+    ],
+  },
+  {
+    link: '/analysis',
+    name: 'Analysis',
+    icon: 'query_stats',
+  },
+  {
+    link: '/settings',
+    name: 'Settings',
+    icon: 'settings',
+  },
+  {
+    link: '/plugins',
+    name: 'Plugins',
+    icon: 'extension',
+  },
+];

@@ -29,7 +29,6 @@
     "@microsoft/signalr": "^10.0.0",
     "angular-split": "^20.0.0",
     "cytoscape": "^3.34.0",
-    "es-module-shims": "^2.8.1",
     "monaco-editor": "^0.55.1",
     "ngx-monaco-editor-v2": "^21.1.4",
     "rxjs": "~7.8.2",
@@ -37,6 +36,7 @@
   },
   "devDependencies": {
     "@angular-architects/native-federation": "^21.2.3",
+    "es-module-shims": "^2.8.1",
     "@angular-devkit/build-angular": "^21.2.10",
     "@angular/build": "^21.2.10",
     "@angular/cli": "^21.2.10",

@@ -13,6 +13,10 @@
     <button mat-button routerLink="/projects">Projects</button>
     <button mat-button routerLink="/gateway-plugins">Gateway Plugins</button>
 
+    @for (element of navBarsElements(); track element.path) {
+      <button mat-button [routerLink]="element.path">{{ element.label }}</button>
+    }
+
     @if (projectState.currentProjectId()) {
       <button mat-button [routerLink]="'/projects/' + projectState.currentProjectId()">{{ projectState.currentProject()?.name }}</button>
       <span class="flex-spacer"></span>
