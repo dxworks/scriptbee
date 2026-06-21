@@ -6,7 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { OutputFilesService } from '../../../../../../services/analysis/output-files.service';
 import { DownloadService } from '../../../../../../services/common/download.service';
-import { FileViewerService, FileViewerPlugin } from '../../../../../../shared/file-viewer/file-viewer.service';
+import { FilePreviewer, FileViewerService } from '../../../../../../shared/file-viewer/file-viewer.service';
 import { AnalysisFilePreviewDialogComponent } from '../../../../../../shared/file-viewer/analysis-file-preview-dialog/analysis-file-preview-dialog.component';
 
 @Component({
@@ -40,19 +40,20 @@ export class FileOutputComponent {
   }
 
   onPreviewFileClick(file: AnalysisFile) {
-    const plugins = this.fileViewerService.getAvailablePluginsForFile(file);
-    if (plugins.length === 1) {
-      this.openWithPlugin(plugins[0], file);
+    const previewers = this.fileViewerService.getAvailablePreviewersForFile(file);
+    if (previewers.length === 1) {
+      this.openWithPreviewer(previewers[0], file);
     }
   }
 
-  openWithPlugin(plugin: FileViewerPlugin, file: AnalysisFile) {
+  openWithPreviewer(previewer: FilePreviewer, file: AnalysisFile) {
     this.dialog.open(AnalysisFilePreviewDialogComponent, {
       data: {
         projectId: this.projectId(),
         analysisId: this.analysisId(),
         file,
-        pluginComponent: plugin.component,
+        previewerComponent: previewer.component,
+        pluginOutlet: previewer.pluginOutlet,
       },
       width: '90vw',
       height: '90vh',

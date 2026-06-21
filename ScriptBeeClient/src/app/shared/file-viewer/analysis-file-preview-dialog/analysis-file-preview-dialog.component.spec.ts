@@ -18,7 +18,7 @@ describe('AnalysisFilePreviewDialogComponent', () => {
     projectId: 'project-1',
     analysisId: 'analysis-1',
     file: { id: 'file-1', name: 'test.json', type: 'json' },
-    pluginComponent: DummyViewerComponent,
+    previewerComponent: DummyViewerComponent,
   };
 
   beforeEach(async () => {

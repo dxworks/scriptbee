@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { FileOutputComponent } from './file-output.component';
 import { OutputFilesService } from '../../../../../../services/analysis/output-files.service';
 import { DownloadService } from '../../../../../../services/common/download.service';
-import { FileViewerService, FileViewerPlugin } from '../../../../../../shared/file-viewer/file-viewer.service';
+import { FileViewerService, FilePreviewer } from '../../../../../../shared/file-viewer/file-viewer.service';
 import { AnalysisFilePreviewDialogComponent } from '../../../../../../shared/file-viewer/analysis-file-preview-dialog/analysis-file-preview-dialog.component';
 import { MonacoEditorViewerComponent } from '../../../../../../shared/file-viewer/monaco-editor-viewer/monaco-editor-viewer.component';
 
@@ -16,14 +16,15 @@ describe('FileOutputComponent', () => {
   let componentRef: ComponentRef<FileOutputComponent>;
   let mockOutputFilesService: { downloadFile: Mock; downloadAll: Mock };
   let mockDownloadService: { downloadFile: Mock };
-  let mockFileViewerService: { getAvailablePluginsForFile: Mock };
+  let mockFileViewerService: { getAvailablePreviewersForFile: Mock };
   let mockDialog: { open: Mock };
 
-  const defaultPlugin: FileViewerPlugin = {
+  const defaultPlugin: FilePreviewer = {
     id: 'monaco-editor-default',
     name: 'Monaco Editor',
     icon: 'code',
     component: MonacoEditorViewerComponent,
+    supportedFileExtensions: undefined,
   };
 
   beforeEach(async () => {
@@ -33,7 +34,7 @@ describe('FileOutputComponent', () => {
     };
     mockDownloadService = { downloadFile: vi.fn() };
     mockFileViewerService = {
-      getAvailablePluginsForFile: vi.fn().mockReturnValue([defaultPlugin]),
+      getAvailablePreviewersForFile: vi.fn().mockReturnValue([defaultPlugin]),
     };
     mockDialog = { open: vi.fn() };
 
@@ -86,7 +87,7 @@ describe('FileOutputComponent', () => {
         data: expect.objectContaining({
           projectId: 'proj-1',
           analysisId: 'analysis-1',
-          pluginComponent: MonacoEditorViewerComponent,
+          previewerComponent: MonacoEditorViewerComponent,
         }),
       })
     );

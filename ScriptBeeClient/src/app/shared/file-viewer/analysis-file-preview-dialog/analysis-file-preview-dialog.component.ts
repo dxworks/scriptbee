@@ -9,12 +9,14 @@ import { NgComponentOutlet } from '@angular/common';
 import { ErrorResponse } from '../../../types/api';
 import { convertError } from '../../../utils/api';
 import { from, switchMap } from 'rxjs';
+import { FilePreviewExtensionPointOutlet } from '../../../types/plugin';
 
 export interface AnalysisFilePreviewDialogData {
   projectId: string;
   analysisId: string;
   file: AnalysisFile;
-  pluginComponent: Type<unknown>;
+  previewerComponent: Type<unknown>;
+  pluginOutlet?: FilePreviewExtensionPointOutlet;
 }
 
 @Component({
