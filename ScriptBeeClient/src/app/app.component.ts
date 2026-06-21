@@ -10,6 +10,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { ProjectStateService } from './services/projects/project-state.service';
 import { ProjectSideNavListComponent } from './components/navigation/project-side-nav-list/project-side-nav-list.component';
 import { ThemeService } from './services/common/theme.service';
+import { GatewayPluginsService } from './services/plugin/gateway-plugins.service';
 
 @Component({
   selector: 'app-root',
@@ -31,8 +32,12 @@ import { ThemeService } from './services/common/theme.service';
 export class AppComponent {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
+  private gatewayPluginsService = inject(GatewayPluginsService);
+
   themeService = inject(ThemeService);
   projectState = inject(ProjectStateService);
+
+  navBarsElements = this.gatewayPluginsService.topNavigationBarOutlets;
 
   isMenuOpen = signal<boolean>(localStorage.getItem('isMenuOpen') === 'true');
 
