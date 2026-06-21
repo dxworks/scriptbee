@@ -9,13 +9,13 @@ describe('FileViewerService', () => {
 
   const jsonFile: AnalysisFile = { id: '1', name: 'report.json', type: 'json' };
 
-  it('should provide the monaco editor as the default plugin for a file', () => {
+  it('should provide the monaco editor as the default previewer for a file', () => {
     TestBed.configureTestingModule({ providers: [FileViewerService] });
     service = TestBed.inject(FileViewerService);
 
-    const plugins = service.getAvailablePluginsForFile(jsonFile);
-    expect(plugins.length).toBeGreaterThan(0);
-    expect(plugins[0].id).toBe('monaco-editor-default');
-    expect(plugins[0].component).toBe(MonacoEditorViewerComponent);
+    const previewers = service.getAvailablePreviewersForFile(jsonFile);
+    expect(previewers.length).toBeGreaterThan(0);
+    expect(previewers[0].id).toBe('monaco-editor-default');
+    expect(previewers[0].component).toBe(MonacoEditorViewerComponent);
   });
 });

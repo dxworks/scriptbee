@@ -6,8 +6,12 @@
     <app-error-state [error]="errorMessage()!" (retry)="loadFileContent()"></app-error-state>
   } @else {
     <div class="viewer-container">
-      <ng-container
-        *ngComponentOutlet="data.pluginComponent; inputs: { content: fileContent(), file: data.file, pluginOutlet: data.pluginOutlet }"></ng-container>
+      @if (data.pluginOutlet) {
+        <ng-container
+          *ngComponentOutlet="data.previewerComponent; inputs: { content: fileContent(), file: data.file, pluginOutlet: data.pluginOutlet }"></ng-container>
+      } @else {
+        <ng-container *ngComponentOutlet="data.previewerComponent; inputs: { content: fileContent(), file: data.file }"></ng-container>
+      }
     </div>
   }
 </mat-dialog-content>

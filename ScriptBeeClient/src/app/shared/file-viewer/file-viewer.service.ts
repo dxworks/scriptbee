@@ -5,7 +5,7 @@ import { GatewayPluginsService } from '../../services/plugin/gateway-plugins.ser
 import { FilePreviewExtensionPointOutlet } from '../../types/plugin';
 import { RemotePluginHostComponent } from './remote-plugin-host/remote-plugin-host.component';
 
-export interface FileViewerPlugin {
+export interface FilePreviewer {
   id: string;
   name: string;
   icon?: string;
@@ -18,19 +18,20 @@ export interface FileViewerPlugin {
 export class FileViewerService {
   private gatewayPluginsService = inject(GatewayPluginsService);
 
-  private plugins: FileViewerPlugin[] = [
+  private defaultPreviewers: FilePreviewer[] = [
     {
       id: 'monaco-editor-default',
       name: 'Monaco Editor',
       icon: 'code',
       component: MonacoEditorViewerComponent,
       supportedFileExtensions: undefined,
+      pluginOutlet: undefined,
     },
   ];
 
-  getAvailablePluginsForFile(file: AnalysisFile): FileViewerPlugin[] {
-    const fileViewerPlugins: FileViewerPlugin[] = this.gatewayPluginsService.filePreviewOutlets().map((outlet) => ({
-      id: outlet.exposedModule,
+  getAvailablePreviewersForFile(file: AnalysisFile): FilePreviewer[] {
+    const pluginPreviewers: FilePreviewer[] = this.gatewayPluginsService.filePreviewOutlets().map((outlet) => ({
+      id: `${outlet.remoteEntry}-${outlet.exposedModule}`,
       name: outlet.label,
       icon: outlet.icon,
       supportedFileExtensions: outlet.supportedFileExtensions,
@@ -39,13 +40,13 @@ export class FileViewerService {
     }));
 
     const extension = file.name.split('.').pop()?.toLowerCase();
-    const allPlugins = [...this.plugins, ...fileViewerPlugins];
+    const allPreviewers = [...this.defaultPreviewers, ...pluginPreviewers];
 
     if (!extension) {
-      return allPlugins;
+      return allPreviewers;
     }
 
-    return allPlugins.filter((plugin) => {
+    return allPreviewers.filter((plugin) => {
       return !plugin.supportedFileExtensions || plugin.supportedFileExtensions.includes(extension);
     });
   }
