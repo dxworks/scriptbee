@@ -16,7 +16,8 @@
       <app-loading-progress-bar title="Reloading Context..."></app-loading-progress-bar>
     }
 
-    <span class="spacer"></span>
+    <span class="flex-spacer"></span>
+
     <button mat-button (click)="onReloadModelsClick()" [disabled]="isReloadContextLoading()" matTooltip="Reload all models for this instance">
       <mat-icon>refresh</mat-icon>
       Reload Models

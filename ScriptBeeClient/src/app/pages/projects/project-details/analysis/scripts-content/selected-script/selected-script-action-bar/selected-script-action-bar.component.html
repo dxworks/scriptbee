@@ -3,7 +3,7 @@
     <app-run-script-loading [statusUrl]="statusUrl()" (analysisFinished)="analysisFinished.emit($event)" />
   }
 
-  <div class="spacer"></div>
+  <div class="flex-spacer"></div>
 
   @if (saveStatus()) {
     <span class="save-status" [class.error]="saveStatus() === 'Error'">{{ saveStatus() }}</span>
