@@ -1,12 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { Component, input } from '@angular/core';
+import { Component, input, Type } from '@angular/core';
 import { RemotePluginHostComponent } from './remote-plugin-host.component';
-
-const mockLoadRemoteModule = vi.fn();
+import { loadRemoteModule } from '@angular-architects/native-federation';
 
 vi.mock('@angular-architects/native-federation', () => ({
-  loadRemoteModule: (...args: unknown[]) => mockLoadRemoteModule(...args),
+  loadRemoteModule: vi.fn(),
 }));
 
 @Component({
@@ -24,19 +23,30 @@ describe('RemotePluginHostComponent', () => {
       imports: [RemotePluginHostComponent, TestRemoteComponent],
     }).compileComponents();
 
-    mockLoadRemoteModule.mockReset();
+    vi.mocked(loadRemoteModule).mockReset();
   });
 
   it('should render the remote component content on success', async () => {
-    mockLoadRemoteModule.mockResolvedValue({ App: TestRemoteComponent });
-    const fixture = TestBed.createComponent(RemotePluginHostComponent);
+    let resolvePromise: (value: Record<string, Type<unknown>>) => void = () => {
+      // Intentional empty block to handle assignment before promise creation
+    };
+    const promise = new Promise<Record<string, Type<unknown>>>((resolve) => {
+      resolvePromise = resolve;
+    });
+    vi.mocked(loadRemoteModule).mockReturnValue(promise);
 
+    const fixture = TestBed.createComponent(RemotePluginHostComponent);
     const plugin = {
       remoteName: 'test',
       exposedModule: './Component',
       componentName: 'App',
     };
     fixture.componentRef.setInput('pluginOutlet', plugin);
+
+    fixture.detectChanges();
+
+    resolvePromise({ App: TestRemoteComponent });
+    await promise;
 
     fixture.detectChanges();
     await new Promise((resolve) => setTimeout(resolve));
@@ -46,15 +56,28 @@ describe('RemotePluginHostComponent', () => {
   });
 
   it('should display an error message if the plugin fails to load', async () => {
-    mockLoadRemoteModule.mockRejectedValue(new Error('Network error'));
-    const fixture = TestBed.createComponent(RemotePluginHostComponent);
+    let rejectPromise: (reason: Error) => void = () => {
+      // Intentional empty block to handle assignment before promise creation
+    };
+    const promise = new Promise<Record<string, Type<unknown>>>((_, reject) => {
+      rejectPromise = reject;
+    });
+    vi.mocked(loadRemoteModule).mockReturnValue(promise);
 
+    const fixture = TestBed.createComponent(RemotePluginHostComponent);
     const plugin = {
       remoteName: 'test',
       exposedModule: './Component',
       componentName: 'App',
     };
     fixture.componentRef.setInput('pluginOutlet', plugin);
+
+    fixture.detectChanges();
+
+    rejectPromise(new Error('Network error'));
+    await promise.catch(() => {
+      // Intentional catch block suppression for testing rejection flow
+    });
 
     fixture.detectChanges();
     await new Promise((resolve) => setTimeout(resolve));
