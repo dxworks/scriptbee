@@ -87,7 +87,15 @@ public class PluginReaderTests : IClassFixture<TempDirFixture>
         File.WriteAllText(path2ManifestYaml, "");
 
         var pluginExtensionPoint1 = new ScriptGeneratorPluginExtensionPoint();
-        var pluginExtensionPoint2 = new UiPluginExtensionPoint();
+        var pluginExtensionPoint2 = new UiPluginExtensionPoint
+        {
+            Kind = "UI",
+            EntryPoint = "entry-point",
+            Version = "1.0.0",
+            RemoteName = "name",
+            RemoteEntry = "entry",
+            Outlets = [],
+        };
         var pluginManifest1 = new PluginManifest { ExtensionPoints = [pluginExtensionPoint1] };
         var pluginManifest2 = new PluginManifest { ExtensionPoints = [pluginExtensionPoint2] };
 

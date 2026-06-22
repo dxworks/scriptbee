@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugins.Manifest;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Tests.Common;
 
 namespace ScriptBee.Plugins.Tests.Manifest;
@@ -120,11 +120,11 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("UI", extensionPoint.Kind);
         Assert.Equal("Plugin.dll", extensionPoint.EntryPoint);
         Assert.Equal("0.0.1", extensionPoint.Version);
-        Assert.Equal(8080, extensionPoint.Port);
+        Assert.Equal("scriptbee-ui-plugin-example", extensionPoint.RemoteName);
         Assert.Equal("http://localhost:8080/remoteEntry.js", extensionPoint.RemoteEntry);
-        Assert.Equal("./Plugin", extensionPoint.ExposedModule);
-        Assert.Equal("Plugin", extensionPoint.ComponentName);
-        Assert.Equal("Result", extensionPoint.UiPluginType);
+        Assert.NotNull(extensionPoint.Outlets);
+        var outlet = Assert.Single(extensionPoint.Outlets);
+        Assert.Equal("top-navigation-bar", outlet.Type);
     }
 
     [Theory]

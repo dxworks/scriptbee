@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ScriptBee.Common.Extensions;
 using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Installer;
 using ScriptBee.Plugins.Loader;
@@ -91,12 +92,31 @@ public sealed class PluginManager(
         new DirectoryInfo(activePath).DeleteIfExists();
     }
 
-    public IEnumerable<PluginId> GetInstalledPlugins()
+    public IEnumerable<Plugin> GetInstalledPlugins()
     {
         var activePath = pluginPathProvider.GetInstallationFolderPath();
 
-        var plugins = pluginReader.ReadPlugins(activePath);
+        return pluginReader.ReadPlugins(activePath);
+    }
 
-        return plugins.Select(plugin => plugin.Id);
+    public Dictionary<string, string> GetUiPluginsManifest()
+    {
+        var manifest = new Dictionary<string, string>();
+
+        var uiPlugins = GetInstalledPlugins()
+            .Where(p => p.Manifest.ExtensionPoints.Any(ep => ep is UiPluginExtensionPoint));
+
+        foreach (var plugin in uiPlugins)
+        {
+            foreach (var ep in plugin.Manifest.ExtensionPoints)
+            {
+                if (ep is UiPluginExtensionPoint uiEp)
+                {
+                    manifest[uiEp.RemoteName] = uiEp.RemoteEntry;
+                }
+            }
+        }
+
+        return manifest;
     }
 }

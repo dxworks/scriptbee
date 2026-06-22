@@ -6,7 +6,9 @@ public interface IManagePluginsUseCase
 {
     void LoadPlugins();
 
-    IEnumerable<PluginId> GetInstalledPlugins();
+    IEnumerable<Plugin> GetInstalledPlugins();
+
+    Dictionary<string, string> GetUiPluginsManifest();
 
     Task Install(PluginId pluginId, CancellationToken cancellationToken);
 

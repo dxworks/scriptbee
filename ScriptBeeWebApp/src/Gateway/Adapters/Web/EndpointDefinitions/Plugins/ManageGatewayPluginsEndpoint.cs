@@ -31,17 +31,24 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
             );
     }
 
-    private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(IManagePluginsUseCase useCase)
+    private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(
+        IManagePluginsUseCase useCase,
+        [FromQuery] string? kind
+    )
     {
         var installedPlugins = useCase.GetInstalledPlugins();
 
+        if (!string.IsNullOrEmpty(kind))
+        {
+            installedPlugins = installedPlugins.Where(p =>
+                p.Manifest.ExtensionPoints.Any(ep =>
+                    string.Equals(ep.Kind, kind, StringComparison.OrdinalIgnoreCase)
+                )
+            );
+        }
+
         return TypedResults.Ok(
-            new WebGatewayPluginsResponse(
-                installedPlugins.Select(id => new WebInstalledPlugin(
-                    id.Name,
-                    id.Version.ToString()
-                ))
-            )
+            new WebGatewayPluginsResponse(installedPlugins.Select(WebInstalledGatewayPlugin.Map))
         );
     }
 
@@ -68,8 +75,11 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
         return TypedResults.NoContent();
     }
 
-    private static Ok<Dictionary<string, string>> GetUiPluginsManifest()
+    private static Ok<Dictionary<string, string>> GetUiPluginsManifest(
+        IManagePluginsUseCase useCase
+    )
     {
-        return TypedResults.Ok(new Dictionary<string, string>());
+        var manifest = useCase.GetUiPluginsManifest();
+        return TypedResults.Ok(manifest);
     }
 }

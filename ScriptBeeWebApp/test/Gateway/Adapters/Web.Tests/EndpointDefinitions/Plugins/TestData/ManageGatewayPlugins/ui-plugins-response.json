@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "id": "scriptbee-ui-plugin-example",
+      "version": "1.0.0",
+      "extensionPoints": [
+        {
+          "kind": "UI",
+          "remoteName": "scriptbee-ui-plugin-example",
+          "remoteEntry": "http://localhost:4201/remoteEntry.json",
+          "outlets": [
+            {
+              "type": "top-navigation-bar",
+              "exposedModule": "./routes",
+              "label": "Flights",
+              "path": "/my-plugin",
+              "nested": true,
+              "componentName": null
+            },
+            {
+              "type": "side-panel",
+              "exposedModule": "./Component",
+              "label": "My Plugin",
+              "path": "/my-plugin",
+              "nested": null,
+              "componentName": null,
+              "icon": "favorite"
+            },
+            {
+              "type": "file-previewer",
+              "exposedModule": "./Component",
+              "label": "My Plugin",
+              "componentName": null,
+              "icon": null,
+              "supportedFileExtensions": [
+                "json"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugins.Manifest;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 
@@ -48,11 +48,19 @@ public record WebInstalledPluginManifest(
                 EntryPoint = uiPluginExtensionPoint.EntryPoint,
                 Kind = uiPluginExtensionPoint.Kind,
                 Version = uiPluginExtensionPoint.Version,
-                ComponentName = uiPluginExtensionPoint.ComponentName,
-                ExposedModule = uiPluginExtensionPoint.ExposedModule,
-                Port = uiPluginExtensionPoint.Port,
+                RemoteName = uiPluginExtensionPoint.RemoteName,
                 RemoteEntry = uiPluginExtensionPoint.RemoteEntry,
-                UiPluginType = uiPluginExtensionPoint.UiPluginType,
+                Outlets = uiPluginExtensionPoint.Outlets.Select(o => new WebUiPluginOutlet
+                {
+                    Type = o.Type,
+                    ExposedModule = (o as RoutingOutlet)?.ExposedModule ?? string.Empty,
+                    Path = (o as RoutingOutlet)?.Path,
+                    Label = (o as RoutingOutlet)?.Label,
+                    Nested = (o as RoutingOutlet)?.Nested,
+                    ComponentName = (o as RoutingOutlet)?.ComponentName,
+                    Icon = (o as SidePanelOutlet)?.Icon,
+                    SupportedFileExtensions = (o as FilePreviewerOutlet)?.SupportedFileExtensions,
+                }),
             },
             _ => new WebPluginExtensionPoint
             {

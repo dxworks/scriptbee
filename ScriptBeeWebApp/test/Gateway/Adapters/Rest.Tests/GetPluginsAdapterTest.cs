@@ -206,11 +206,17 @@ public sealed class GetPluginsAdapterTest : IDisposable
                 "entryPoint": "entry-point",
                 "kind": "UI",
                 "version": "1.2.3",
-                "port": 1234,
-                "componentName": "component",
-                "exposedModule": "module",
+                "remoteName": "scriptbee-ui-plugin-example",
                 "remoteEntry": "remote-entry",
-                "uiPluginType": "type"
+                "outlets": [
+                    {
+                        "type": "top-navigation-bar",
+                        "exposedModule": "./routes",
+                        "path": "/my-plugin",
+                        "label": "Flights",
+                        "nested": true
+                    }
+                ]
             }
             """
         );
@@ -234,11 +240,10 @@ public sealed class GetPluginsAdapterTest : IDisposable
         pluginExtensionPoint.EntryPoint.ShouldBe("entry-point");
         pluginExtensionPoint.Kind.ShouldBe(PluginKind.Ui);
         pluginExtensionPoint.Version.ShouldBe("1.2.3");
-        pluginExtensionPoint.Port.ShouldBe(1234);
-        pluginExtensionPoint.ComponentName.ShouldBe("component");
-        pluginExtensionPoint.ExposedModule.ShouldBe("module");
+        pluginExtensionPoint.RemoteName.ShouldBe("scriptbee-ui-plugin-example");
         pluginExtensionPoint.RemoteEntry.ShouldBe("remote-entry");
-        pluginExtensionPoint.UiPluginType.ShouldBe("type");
+        var outlet = pluginExtensionPoint.Outlets.Single();
+        outlet.Type.ShouldBe("top-navigation-bar");
     }
 
     [Fact]
