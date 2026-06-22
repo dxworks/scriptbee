@@ -23,7 +23,10 @@ describe('RemotePluginHostComponent', () => {
       imports: [RemotePluginHostComponent, TestRemoteComponent],
     }).compileComponents();
 
-    vi.mocked(loadRemoteModule).mockReset();
+    const mockedLoad = loadRemoteModule as unknown as MockInstance;
+    if (mockedLoad.mockReset) {
+      mockedLoad.mockReset();
+    }
   });
 
   it('should render the remote component content on success', async () => {
@@ -31,7 +34,7 @@ describe('RemotePluginHostComponent', () => {
     const promise = new Promise<Record<string, Type<unknown>>>((resolve) => {
       resolvePromise = resolve;
     });
-    vi.mocked(loadRemoteModule).mockReturnValue(promise);
+    (loadRemoteModule as unknown as MockInstance).mockReturnValue(promise);
 
     const fixture = TestBed.createComponent(RemotePluginHostComponent);
     const plugin = {
@@ -58,7 +61,7 @@ describe('RemotePluginHostComponent', () => {
     const promise = new Promise<Record<string, Type<unknown>>>((_, reject) => {
       rejectPromise = reject;
     });
-    vi.mocked(loadRemoteModule).mockReturnValue(promise);
+    (loadRemoteModule as unknown as MockInstance).mockReturnValue(promise);
 
     const fixture = TestBed.createComponent(RemotePluginHostComponent);
     const plugin = {
@@ -80,3 +83,8 @@ describe('RemotePluginHostComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('Failed to load plugin');
   });
 });
+
+interface MockInstance {
+  mockReset?: () => void;
+  mockReturnValue: (val: unknown) => void;
+}
