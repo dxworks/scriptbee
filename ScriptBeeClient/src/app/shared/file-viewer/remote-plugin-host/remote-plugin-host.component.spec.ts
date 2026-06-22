@@ -27,9 +27,7 @@ describe('RemotePluginHostComponent', () => {
   });
 
   it('should render the remote component content on success', async () => {
-    let resolvePromise: (value: Record<string, Type<unknown>>) => void = () => {
-      // Intentional empty block to handle assignment before promise creation
-    };
+    let resolvePromise: (value: Record<string, Type<unknown>>) => void = vi.fn();
     const promise = new Promise<Record<string, Type<unknown>>>((resolve) => {
       resolvePromise = resolve;
     });
@@ -56,9 +54,7 @@ describe('RemotePluginHostComponent', () => {
   });
 
   it('should display an error message if the plugin fails to load', async () => {
-    let rejectPromise: (reason: Error) => void = () => {
-      // Intentional empty block to handle assignment before promise creation
-    };
+    let rejectPromise: (reason: Error) => void = vi.fn();
     const promise = new Promise<Record<string, Type<unknown>>>((_, reject) => {
       rejectPromise = reject;
     });
@@ -75,9 +71,7 @@ describe('RemotePluginHostComponent', () => {
     fixture.detectChanges();
 
     rejectPromise(new Error('Network error'));
-    await promise.catch(() => {
-      // Intentional catch block suppression for testing rejection flow
-    });
+    await promise.catch(vi.fn());
 
     fixture.detectChanges();
     await new Promise((resolve) => setTimeout(resolve));
