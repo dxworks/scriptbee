@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0]
+
 ### Changed
 
 - update Jint to 4.10.1
 
-### Added 
+### Added
 
 - generate namespaces for C# Script Generator
 - generate enums for C# Script Generator
