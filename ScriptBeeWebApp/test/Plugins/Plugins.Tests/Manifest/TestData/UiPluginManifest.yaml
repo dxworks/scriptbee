@@ -6,8 +6,11 @@ extensionPoints:
   - kind: UI
     entryPoint: Plugin.dll
     version: "0.0.1"
-    port: 8080
+    remoteName: "scriptbee-ui-plugin-example"
     remoteEntry: "http://localhost:8080/remoteEntry.js"
-    exposedModule: "./Plugin"
-    componentName: "Plugin"
-    uiPluginType: "Result"
+    outlets:
+      - type: "top-navigation-bar"
+        exposedModule: "./routes"
+        path: "/my-plugin"
+        label: "Flights"
+        nested: true

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Tests.Common;
+using ScriptBee.Tests.Common.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 
@@ -22,10 +23,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
         useCase
             .GetInstalledPlugins()
             .Returns(
-                new List<PluginId>
+                new List<Plugin>
                 {
-                    new("plugin1", new Version(1, 0, 0)),
-                    new("plugin2", new Version(2, 0, 0)),
+                    new TestPlugin(new PluginId("plugin1", new Version(1, 0, 0))),
+                    new TestPlugin(new PluginId("plugin2", new Version(2, 0, 0))),
                 }
             );
 
@@ -87,5 +88,72 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         useCase.Received(1).Uninstall(new PluginId("plugin1", new Version(1, 0, 0)));
+    }
+
+    [Theory]
+    [FilePath("TestData/ManageGatewayPlugins/ui-plugins-response.json")]
+    public async Task GivenUiPlugins_WhenGetGatewayPluginsWithKindUI_ThenReturnOnlyUiPlugins(
+        string responsePath
+    )
+    {
+        var useCase = Substitute.For<IManagePluginsUseCase>();
+
+        var uiPlugin = new TestUiPlugin(
+            new PluginId("scriptbee-ui-plugin-example", new Version(1, 0, 0))
+        );
+
+        useCase
+            .GetInstalledPlugins()
+            .Returns(
+                new List<Plugin>
+                {
+                    new TestPlugin(new PluginId("plugin1", new Version(1, 0, 0))),
+                    uiPlugin,
+                }
+            );
+        useCase.GetInstalledPlugins().Returns(new List<Plugin> { uiPlugin });
+
+        TestApiCaller<Program> api = new($"{TestUrl}?kind=UI");
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
+    }
+
+    [Theory]
+    [FilePath("TestData/ManageGatewayPlugins/ui-manifest-response.json")]
+    public async Task GivenUiPlugins_WhenGetUiPluginsManifest_ThenReturnCorrectManifestMap(
+        string responsePath
+    )
+    {
+        var useCase = Substitute.For<IManagePluginsUseCase>();
+        useCase
+            .GetUiPluginsManifest()
+            .Returns(
+                new Dictionary<string, string>
+                {
+                    { "scriptbee-ui-plugin-example", "http://localhost:4201/remoteEntry.json" },
+                }
+            );
+
+        TestApiCaller<Program> api = new("/api/plugins/gateway/ui/manifest");
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
     }
 }

@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugins.Manifest;
+using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Rest.Contracts;
 
@@ -11,11 +11,9 @@ public class RestPluginExtensionPoint
     public string? Language { get; set; }
     public string? Extension { get; set; }
 
-    public int? Port { get; set; }
     public string? RemoteEntry { get; set; }
-    public string? ExposedModule { get; set; }
-    public string? ComponentName { get; set; }
-    public string? UiPluginType { get; set; }
+    public string? RemoteName { get; set; }
+    public IEnumerable<RestUiPluginExtensionPointOutlet>? Outlets { get; set; }
 
     public PluginExtensionPoint? Map()
     {
@@ -60,13 +58,59 @@ public class RestPluginExtensionPoint
                 Kind = Kind,
                 EntryPoint = EntryPoint,
                 Version = Version,
-                Port = Port!.Value,
-                ComponentName = ComponentName!,
-                ExposedModule = ExposedModule!,
+                RemoteName = RemoteName!,
                 RemoteEntry = RemoteEntry!,
-                UiPluginType = UiPluginType!,
+                Outlets = (Outlets ?? []).Select(MapOutlet),
             },
             _ => null,
         };
     }
+
+    private static UiPluginExtensionPointOutlet MapOutlet(RestUiPluginExtensionPointOutlet outlet)
+    {
+        return outlet.Type switch
+        {
+            "top-navigation-bar" => new TopNavigationBarOutlet
+            {
+                Type = outlet.Type,
+                ExposedModule = outlet.ExposedModule,
+                Path = outlet.Path ?? "",
+                Label = outlet.Label ?? "",
+                Nested = outlet.Nested,
+                ComponentName = outlet.ComponentName,
+            },
+            "side-panel" => new SidePanelOutlet
+            {
+                Type = outlet.Type,
+                ExposedModule = outlet.ExposedModule,
+                Path = outlet.Path ?? "",
+                Label = outlet.Label ?? "",
+                Nested = outlet.Nested,
+                ComponentName = outlet.ComponentName,
+                Icon = outlet.Icon ?? "",
+            },
+            "file-previewer" => new FilePreviewerOutlet
+            {
+                Type = outlet.Type,
+                ExposedModule = outlet.ExposedModule,
+                Label = outlet.Label ?? "",
+                ComponentName = outlet.ComponentName,
+                Icon = outlet.Icon,
+                SupportedFileExtensions = outlet.SupportedFileExtensions,
+            },
+            _ => new UiPluginExtensionPointOutlet { Type = outlet.Type },
+        };
+    }
+}
+
+public class RestUiPluginExtensionPointOutlet
+{
+    public required string Type { get; set; }
+    public required string ExposedModule { get; set; }
+    public string? Path { get; set; }
+    public string? Label { get; set; }
+    public bool? Nested { get; set; }
+    public string? ComponentName { get; set; }
+    public string? Icon { get; set; }
+    public List<string>? SupportedFileExtensions { get; set; }
 }

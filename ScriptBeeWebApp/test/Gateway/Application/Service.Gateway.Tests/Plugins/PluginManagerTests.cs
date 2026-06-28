@@ -107,13 +107,35 @@ public class PluginManagerTests : IClassFixture<TempDirFixture>
 
         var result = _pluginManager.GetInstalledPlugins();
 
-        result.ShouldBe(
-            new List<PluginId>
-            {
-                new("id1", new Version(1, 0, 0)),
-                new("id2", new Version(2, 0, 0)),
-            }
-        );
+        result
+            .Select(p => p.Id)
+            .ShouldBe(
+                new List<PluginId>
+                {
+                    new("id1", new Version(1, 0, 0)),
+                    new("id2", new Version(2, 0, 0)),
+                }
+            );
+    }
+
+    [Fact]
+    public void GivenInstalledPluginsWithUiExtensionPoints_WhenGetUiPluginsManifest_ThenReturnCorrectManifestMap()
+    {
+        _pluginPathProvider.GetInstallationFolderPath().Returns("active/path");
+        _pluginReader
+            .ReadPlugins("active/path")
+            .Returns(
+                new List<Plugin>
+                {
+                    new TestPlugin(new PluginId("id1", new Version(1, 0, 0))),
+                    new TestUiPlugin(new PluginId("id2", new Version(2, 0, 0))),
+                }
+            );
+
+        var result = _pluginManager.GetUiPluginsManifest();
+
+        result.Count.ShouldBe(1);
+        result["scriptbee-ui-plugin-example"].ShouldBe("http://localhost:4201/remoteEntry.json");
     }
 
     [Fact]

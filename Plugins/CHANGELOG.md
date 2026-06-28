@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- update Jint to 4.10.0
+- update Jint to 4.10.1
 
 ### Added 
 

@@ -235,11 +235,20 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
                         EntryPoint = "entry-point",
                         Kind = PluginKind.Ui,
                         Version = "1.2.3",
-                        Port = 1234,
-                        ComponentName = "component",
-                        ExposedModule = "module",
+                        RemoteName = "scriptbee-ui-plugin-example",
                         RemoteEntry = "remote-entry",
-                        UiPluginType = "type",
+                        Outlets = new List<UiPluginExtensionPointOutlet>
+                        {
+                            new TopNavigationBarOutlet
+                            {
+                                Type = "top-navigation-bar",
+                                ExposedModule = "./routes",
+                                Path = "/my-plugin",
+                                Label = "Flights",
+                                Nested = true,
+                                ComponentName = null,
+                            },
+                        },
                     }
                 ),
             ]);
@@ -265,11 +274,14 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
             .EnumerateArray()
             .Single();
         AssertBasicExtensionPointProperties(extensionPoint, PluginKind.Ui);
-        extensionPoint.GetProperty("port").GetInt32().ShouldBe(1234);
-        extensionPoint.GetProperty("componentName").GetString().ShouldBe("component");
-        extensionPoint.GetProperty("exposedModule").GetString().ShouldBe("module");
+        extensionPoint
+            .GetProperty("remoteName")
+            .GetString()
+            .ShouldBe("scriptbee-ui-plugin-example");
         extensionPoint.GetProperty("remoteEntry").GetString().ShouldBe("remote-entry");
-        extensionPoint.GetProperty("uiPluginType").GetString().ShouldBe("type");
+        var outlets = extensionPoint.GetProperty("outlets").EnumerateArray();
+        var outlet = outlets.Single();
+        outlet.GetProperty("type").GetString().ShouldBe("top-navigation-bar");
     }
 
     private static Plugin CreatePlugin(PluginExtensionPoint extensionPoint)
