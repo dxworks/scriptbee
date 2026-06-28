@@ -4,6 +4,11 @@ on:
   push:
     tags:
       - 'v[0-9]*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag (e.g. v1.2.3)"
+        required: false
 
 jobs:
   # ------------------------------------------------------------------
@@ -108,8 +113,20 @@ jobs:
 
       - name: Extract version from tag
         id: meta
+        shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          INPUT_TAG="${{ github.event.inputs.tag }}"
+          if [ -n "$INPUT_TAG" ]; then
+            REF_NAME="$INPUT_TAG"
+          else
+            REF_NAME="$GITHUB_REF_NAME"
+          fi
+          if [[ "$REF_NAME" == *"@"* ]]; then
+            VERSION="${REF_NAME#*@}"
+          else
+            VERSION="${REF_NAME#v}"
+          fi
+          VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build and push Server Docker image
@@ -143,5 +160,5 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           draft: true

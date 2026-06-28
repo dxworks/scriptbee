@@ -4,6 +4,11 @@ on:
   push:
     tags:
       - 'plugin-api@*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag (e.g. plugin-api@1.2.3 or v1.2.3)"
+        required: false
 
 jobs:
   build-and-publish:
@@ -21,8 +26,19 @@ jobs:
 
       - name: Extract version from tag
         id: meta
+        shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#*@}"
+          INPUT_TAG="${{ github.event.inputs.tag }}"
+          if [ -n "$INPUT_TAG" ]; then
+            REF_NAME="$INPUT_TAG"
+          else
+            REF_NAME="$GITHUB_REF_NAME"
+          fi
+          if [[ "$REF_NAME" == *"@"* ]]; then
+            VERSION="${REF_NAME#*@}"
+          else
+            VERSION="${REF_NAME#v}"
+          fi
           VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -66,7 +82,17 @@ jobs:
         id: meta
         shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#*@}"
+          INPUT_TAG="${{ github.event.inputs.tag }}"
+          if [ -n "$INPUT_TAG" ]; then
+            REF_NAME="$INPUT_TAG"
+          else
+            REF_NAME="$GITHUB_REF_NAME"
+          fi
+          if [[ "$REF_NAME" == *"@"* ]]; then
+            VERSION="${REF_NAME#*@}"
+          else
+            VERSION="${REF_NAME#v}"
+          fi
           VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
@@ -79,5 +105,5 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           body_path: RELEASE_NOTES.md

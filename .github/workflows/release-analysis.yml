@@ -4,6 +4,11 @@ on:
   push:
     tags:
       - 'analysis@*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag (e.g. analysis@1.2.3 or v1.2.3)"
+        required: false
 
 jobs:
   backend-test:
@@ -55,8 +60,19 @@ jobs:
 
       - name: Extract version from tag
         id: meta
+        shell: bash
         run: |
-          VERSION="${GITHUB_REF_NAME#*@}"
+          INPUT_TAG="${{ github.event.inputs.tag }}"
+          if [ -n "$INPUT_TAG" ]; then
+            REF_NAME="$INPUT_TAG"
+          else
+            REF_NAME="$GITHUB_REF_NAME"
+          fi
+          if [[ "$REF_NAME" == *"@"* ]]; then
+            VERSION="${REF_NAME#*@}"
+          else
+            VERSION="${REF_NAME#v}"
+          fi
           VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
