@@ -18,6 +18,10 @@ public class PluginManifestYamlFileReader(IPluginDiscriminatorHolder pluginDiscr
                     namingConvention.Apply(nameof(PluginBundleExtensionPoint.Kind)),
                     pluginDiscriminatorHolder.GetDiscriminatedTypes()
                 );
+                o.AddKeyValueTypeDiscriminator<UiPluginExtensionPointOutlet>(
+                    namingConvention.Apply(nameof(UiPluginExtensionPointOutlet.Type)),
+                    UiPluginOutletDiscriminator.GetDiscriminatedTypes()
+                );
             })
             .Build();
 

@@ -7,41 +7,32 @@ public class UiPluginExtensionPoint : PluginExtensionPoint
     public required IEnumerable<UiPluginExtensionPointOutlet> Outlets { get; set; }
 }
 
-public record UiPluginExtensionPointOutlet(string Type);
+public class UiPluginExtensionPointOutlet
+{
+    public string Type { get; set; } = "";
+}
 
-public record RoutingOutlet(
-    string Type,
-    string ExposedModule,
-    string Path,
-    string Label,
-    bool? Nested,
-    string? ComponentName
-) : UiPluginExtensionPointOutlet(Type);
+public class RoutingOutlet : UiPluginExtensionPointOutlet
+{
+    public string ExposedModule { get; set; } = "";
+    public string Path { get; set; } = "";
+    public string Label { get; set; } = "";
+    public bool? Nested { get; set; }
+    public string? ComponentName { get; set; }
+}
 
-public record TopNavigationBarOutlet(
-    string Type,
-    string ExposedModule,
-    string Path,
-    string Label,
-    bool? Nested,
-    string? ComponentName
-) : RoutingOutlet(Type, ExposedModule, Path, Label, Nested, ComponentName);
+public class TopNavigationBarOutlet : RoutingOutlet;
 
-public record SidePanelOutlet(
-    string Type,
-    string ExposedModule,
-    string Path,
-    string Label,
-    bool? Nested,
-    string? ComponentName,
-    string Icon
-) : RoutingOutlet(Type, ExposedModule, Path, Label, Nested, ComponentName);
+public class SidePanelOutlet : RoutingOutlet
+{
+    public string Icon { get; set; } = "";
+}
 
-public record FilePreviewerOutlet(
-    string Type,
-    string ExposedModule,
-    string Label,
-    string? ComponentName,
-    string? Icon,
-    List<string>? SupportedFileExtensions
-) : UiPluginExtensionPointOutlet(Type);
+public class FilePreviewerOutlet : UiPluginExtensionPointOutlet
+{
+    public string ExposedModule { get; set; } = "";
+    public string Label { get; set; } = "";
+    public string? ComponentName { get; set; }
+    public string? Icon { get; set; }
+    public List<string>? SupportedFileExtensions { get; set; }
+}

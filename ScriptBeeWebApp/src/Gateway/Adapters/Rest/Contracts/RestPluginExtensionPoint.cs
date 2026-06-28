@@ -70,32 +70,35 @@ public class RestPluginExtensionPoint
     {
         return outlet.Type switch
         {
-            "top-navigation-bar" => new TopNavigationBarOutlet(
-                outlet.Type,
-                outlet.ExposedModule,
-                outlet.Path ?? "",
-                outlet.Label ?? "",
-                outlet.Nested,
-                outlet.ComponentName
-            ),
-            "side-panel" => new SidePanelOutlet(
-                outlet.Type,
-                outlet.ExposedModule,
-                outlet.Path ?? "",
-                outlet.Label ?? "",
-                outlet.Nested,
-                outlet.ComponentName,
-                outlet.Icon ?? ""
-            ),
-            "file-previewer" => new FilePreviewerOutlet(
-                outlet.Type,
-                outlet.ExposedModule,
-                outlet.Label ?? "",
-                outlet.ComponentName,
-                outlet.Icon,
-                outlet.SupportedFileExtensions
-            ),
-            _ => new UiPluginExtensionPointOutlet(outlet.Type),
+            "top-navigation-bar" => new TopNavigationBarOutlet
+            {
+                Type = outlet.Type,
+                ExposedModule = outlet.ExposedModule,
+                Path = outlet.Path ?? "",
+                Label = outlet.Label ?? "",
+                Nested = outlet.Nested,
+                ComponentName = outlet.ComponentName,
+            },
+            "side-panel" => new SidePanelOutlet
+            {
+                Type = outlet.Type,
+                ExposedModule = outlet.ExposedModule,
+                Path = outlet.Path ?? "",
+                Label = outlet.Label ?? "",
+                Nested = outlet.Nested,
+                ComponentName = outlet.ComponentName,
+                Icon = outlet.Icon ?? "",
+            },
+            "file-previewer" => new FilePreviewerOutlet
+            {
+                Type = outlet.Type,
+                ExposedModule = outlet.ExposedModule,
+                Label = outlet.Label ?? "",
+                ComponentName = outlet.ComponentName,
+                Icon = outlet.Icon,
+                SupportedFileExtensions = outlet.SupportedFileExtensions,
+            },
+            _ => new UiPluginExtensionPointOutlet { Type = outlet.Type },
         };
     }
 }

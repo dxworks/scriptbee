@@ -1,4 +1,4 @@
-﻿using ScriptBee.Domain.Model.Plugins;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
 
 namespace ScriptBee.Tests.Common.Plugins;
@@ -29,31 +29,34 @@ public record TestUiPlugin(PluginId Id, string FolderPath = "path")
                     RemoteEntry = "http://localhost:4201/remoteEntry.json",
                     Outlets = new List<UiPluginExtensionPointOutlet>
                     {
-                        new TopNavigationBarOutlet(
-                            "top-navigation-bar",
-                            "./routes",
-                            "/my-plugin",
-                            "Flights",
-                            true,
-                            null
-                        ),
-                        new SidePanelOutlet(
-                            "side-panel",
-                            "./Component",
-                            "/my-plugin",
-                            "My Plugin",
-                            null,
-                            null,
-                            "favorite"
-                        ),
-                        new FilePreviewerOutlet(
-                            "file-previewer",
-                            "./Component",
-                            "My Plugin",
-                            null,
-                            null,
-                            ["json"]
-                        ),
+                        new TopNavigationBarOutlet
+                        {
+                            Type = "top-navigation-bar",
+                            ExposedModule = "./routes",
+                            Path = "/my-plugin",
+                            Label = "Flights",
+                            Nested = true,
+                            ComponentName = null,
+                        },
+                        new SidePanelOutlet
+                        {
+                            Type = "side-panel",
+                            ExposedModule = "./Component",
+                            Path = "/my-plugin",
+                            Label = "My Plugin",
+                            Nested = null,
+                            ComponentName = null,
+                            Icon = "favorite",
+                        },
+                        new FilePreviewerOutlet
+                        {
+                            Type = "file-previewer",
+                            ExposedModule = "./Component",
+                            Label = "My Plugin",
+                            ComponentName = null,
+                            Icon = null,
+                            SupportedFileExtensions = ["json"],
+                        },
                     },
                 },
             ],

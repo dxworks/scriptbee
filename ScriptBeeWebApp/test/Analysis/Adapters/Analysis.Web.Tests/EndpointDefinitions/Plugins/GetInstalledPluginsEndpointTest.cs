@@ -239,14 +239,15 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
                         RemoteEntry = "remote-entry",
                         Outlets = new List<UiPluginExtensionPointOutlet>
                         {
-                            new TopNavigationBarOutlet(
-                                "top-navigation-bar",
-                                "./routes",
-                                "/my-plugin",
-                                "Flights",
-                                true,
-                                null
-                            ),
+                            new TopNavigationBarOutlet
+                            {
+                                Type = "top-navigation-bar",
+                                ExposedModule = "./routes",
+                                Path = "/my-plugin",
+                                Label = "Flights",
+                                Nested = true,
+                                ComponentName = null,
+                            },
                         },
                     }
                 ),
