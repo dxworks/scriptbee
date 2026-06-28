@@ -2,7 +2,8 @@
 
 ## DxWorks.ScriptBee.Plugin.Api
 
-ScriptBee's plugin API provides a way to extend the functionality of the system. Plugins can be used to add custom loaders, linkers, script generators, script runners, and helper functions.
+ScriptBee's plugin API provides a way to extend the functionality of the system. Plugins can be used to add custom
+loaders, linkers, script generators, script runners, and helper functions.
 
 Currently, ScriptBee supports the following types of plugins:
 
@@ -12,8 +13,10 @@ Currently, ScriptBee supports the following types of plugins:
 - [Script Generator Plugins](script_generator.md)
 - [Script Runner Plugins](script_runner.md)
 - [Bundle Plugins](bundle.md)
+- [UI Plugin](ui_plugin.md)
 
-Every plugin must have a `manifest.yaml` file in its root directory. More information about the manifest can be found in the [manifest section](manifest.md).
+Every plugin must have a `manifest.yaml` file in its root directory. More information about the manifest can be found in
+the [manifest section](manifest.md).
 
 ## Services
 
