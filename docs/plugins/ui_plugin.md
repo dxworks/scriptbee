@@ -17,7 +17,6 @@ extensionPoints:
         exposedModule: './RemoteComponent'
         path: /my-plugin
         label: My Plugin
-
 ```
 
 ## Anatomy of a UI Plugin

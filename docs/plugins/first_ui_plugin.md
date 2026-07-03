@@ -15,11 +15,11 @@ There are three types of UI plugin outlets you can implement:
 
 To successfully develop a modern UI plugin, familiarize yourself with these concepts:
 
-*   **Angular Native Federation:** This is the underlying technology that allows micro-frontends to work together seamlessly.
-    *   [Combining Native Federation and Module Federation](https://www.angulararchitects.io/en/blog/combining-native-federation-and-module-federation/)
-    *   [Native Federation: Just Got Better Performance DX and Simplicity](https://www.angulararchitects.io/en/blog/native-federation-just-got-better-performance-dx-and-simplicity/)
-    *   [Micro-Frontends with Angular and Native Federation (Part 1)](https://blog.angular.dev/micro-frontends-with-angular-and-native-federation-7623cfc5f413)
-    *   [Micro-Frontends with Modern Angular (Standalone and Esbuild)](https://www.angulararchitects.io/en/blog/micro-frontends-with-modern-angular-part-1-standalone-and-esbuild)
+- **Angular Native Federation:** This is the underlying technology that allows micro-frontends to work together seamlessly.
+  - [Combining Native Federation and Module Federation](https://www.angulararchitects.io/en/blog/combining-native-federation-and-module-federation/)
+  - [Native Federation: Just Got Better Performance DX and Simplicity](https://www.angulararchitects.io/en/blog/native-federation-just-got-better-performance-dx-and-simplicity/)
+  - [Micro-Frontends with Angular and Native Federation (Part 1)](https://blog.angular.dev/micro-frontends-with-angular-and-native-federation-7623cfc5f413)
+  - [Micro-Frontends with Modern Angular (Standalone and Esbuild)](https://www.angulararchitects.io/en/blog/micro-frontends-with-modern-angular-part-1-standalone-and-esbuild)
 
 ---
 
@@ -55,12 +55,7 @@ module.exports = withNativeFederation({
   shared: {
     ...shareAll({ singleton: true, strictVersion: false, requiredVersion: 'auto' }),
   },
-  skip: [
-    'rxjs/ajax',
-    'rxjs/fetch',
-    'rxjs/testing',
-    'rxjs/webSocket',
-  ],
+  skip: ['rxjs/ajax', 'rxjs/fetch', 'rxjs/testing', 'rxjs/webSocket'],
   features: {
     ignoreUnusedDeps: true,
   },
@@ -90,8 +85,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+bootstrapApplication(App, appConfig).catch(err => console.error(err));
 ```
 
 ### 5. Plugin Manifest
@@ -147,14 +141,14 @@ outlets:
     nested: true
 ```
 
-| Field | Required | Description |
-|---|---|---|
-| `type` | yes | Must be `top-navigation-bar` |
-| `exposedModule` | yes | Key from `federation.config.js` `exposes` map, e.g. `'./routes'` |
-| `path` | yes | URL path ScriptBee will register, e.g. `/my-plugin` |
-| `label` | yes | Text shown in the navigation bar |
-| `nested` | no | If `true`, the exposed module's routes are mounted as children. If `false`, a single component is loaded. Default: `false` |
-| `componentName` | no | Name of the exported component when `nested` is `false`. Default: `App` |
+| Field           | Required | Description                                                                                                                |
+| --------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `type`          | yes      | Must be `top-navigation-bar`                                                                                               |
+| `exposedModule` | yes      | Key from `federation.config.js` `exposes` map, e.g. `'./routes'`                                                           |
+| `path`          | yes      | URL path ScriptBee will register, e.g. `/my-plugin`                                                                        |
+| `label`         | yes      | Text shown in the navigation bar                                                                                           |
+| `nested`        | no       | If `true`, the exposed module's routes are mounted as children. If `false`, a single component is loaded. Default: `false` |
+| `componentName` | no       | Name of the exported component when `nested` is `false`. Default: `App`                                                    |
 
 ### Angular Route Setup
 
@@ -165,9 +159,7 @@ When `nested: true`, the `exposedModule` must point to a file exporting a `Route
 import { Routes } from '@angular/router';
 import { MyPluginComponent } from './my-plugin/my-plugin';
 
-export const routes: Routes = [
-  { path: '', component: MyPluginComponent },
-];
+export const routes: Routes = [{ path: '', component: MyPluginComponent }];
 ```
 
 When `nested: false`, ScriptBee dynamically loads the component referenced by `componentName` (default `App`)
@@ -205,15 +197,15 @@ outlets:
     componentName: App
 ```
 
-| Field | Required | Description |
-|---|---|---|
-| `type` | yes | Must be `side-panel` |
-| `exposedModule` | yes | Key from `federation.config.js` `exposes` map, e.g. `'./Component'` |
-| `path` | yes | URL path ScriptBee will register |
-| `label` | yes | Text shown in the side panel tooltip |
-| `icon` | yes | A [Google Material Icon](https://fonts.google.com/icons) short name, e.g. `favorite`, `settings`, `add` |
-| `nested` | no | If `true`, the exposed module's routes are mounted as children. Default: `false` |
-| `componentName` | no | Exported component name when `nested` is `false`. Default: `App` |
+| Field           | Required | Description                                                                                             |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| `type`          | yes      | Must be `side-panel`                                                                                    |
+| `exposedModule` | yes      | Key from `federation.config.js` `exposes` map, e.g. `'./Component'`                                     |
+| `path`          | yes      | URL path ScriptBee will register                                                                        |
+| `label`         | yes      | Text shown in the side panel tooltip                                                                    |
+| `icon`          | yes      | A [Google Material Icon](https://fonts.google.com/icons) short name, e.g. `favorite`, `settings`, `add` |
+| `nested`        | no       | If `true`, the exposed module's routes are mounted as children. Default: `false`                        |
+| `componentName` | no       | Exported component name when `nested` is `false`. Default: `App`                                        |
 
 ### Angular Component Setup
 
@@ -259,14 +251,14 @@ outlets:
     componentName: App
 ```
 
-| Field | Required | Description |
-|---|---|---|
-| `type` | yes | Must be `file-previewer` |
-| `exposedModule` | yes | Key from `federation.config.js` `exposes` map, e.g. `'./Component'` |
-| `label` | yes | Text shown in the file preview tab header |
-| `icon` | no | A [Google Material Icon](https://fonts.google.com/icons) short name |
-| `supportedFileExtensions` | no | List of file extensions (without `.`) this previewer handles. If empty, shown for all files |
-| `componentName` | no | Exported component name. Default: `App` |
+| Field                     | Required | Description                                                                                 |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------- |
+| `type`                    | yes      | Must be `file-previewer`                                                                    |
+| `exposedModule`           | yes      | Key from `federation.config.js` `exposes` map, e.g. `'./Component'`                         |
+| `label`                   | yes      | Text shown in the file preview tab header                                                   |
+| `icon`                    | no       | A [Google Material Icon](https://fonts.google.com/icons) short name                         |
+| `supportedFileExtensions` | no       | List of file extensions (without `.`) this previewer handles. If empty, shown for all files |
+| `componentName`           | no       | Exported component name. Default: `App`                                                     |
 
 ### Receiving File Content
 
