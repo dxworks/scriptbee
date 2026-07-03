@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-architects/native-federation:build",
           "options": {
-            "entryPoints": ["src\\main.ts"],
+            "entryPoints": ["src/main.ts"],
             "projectName": "ScriptBeeUI"
           },
           "configurations": {
@@ -39,7 +39,7 @@
             "dev": true,
             "cacheExternalArtifacts": false,
             "port": 0,
-            "entryPoints": ["src\\main.ts"],
+            "entryPoints": ["src/main.ts"],
             "projectName": "ScriptBeeUI"
           }
         },
