@@ -11,7 +11,7 @@ COPY ScriptBeeClient/public ./public
 COPY ScriptBeeClient/angular.json .
 COPY ScriptBeeClient/tsconfig.json .
 COPY ScriptBeeClient/tsconfig.app.json .
-COPY ScriptBeeClient/federation.config.js .
+COPY ScriptBeeClient/federation.config.mjs .
 
 RUN npm run build-prod
 

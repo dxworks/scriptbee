@@ -16,7 +16,10 @@
       "architect": {
         "build": {
           "builder": "@angular-architects/native-federation:build",
-          "options": {},
+          "options": {
+            "entryPoints": ["src\\main.ts"],
+            "projectName": "ScriptBeeUI"
+          },
           "configurations": {
             "production": {
               "target": "ScriptBeeUI:esbuild:production"
@@ -35,7 +38,9 @@
             "rebuildDelay": 500,
             "dev": true,
             "cacheExternalArtifacts": false,
-            "port": 0
+            "port": 0,
+            "entryPoints": ["src\\main.ts"],
+            "projectName": "ScriptBeeUI"
           }
         },
         "extract-i18n": {

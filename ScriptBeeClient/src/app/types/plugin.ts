@@ -9,12 +9,7 @@ export interface Plugin {
 }
 
 type ExtensionPoint =
-  | HelperFunctionsExtensionPoint
-  | ScriptGeneratorExtensionPoint
-  | ScriptRunnerExtensionPoint
-  | LoaderExtensionPoint
-  | LinkerExtensionPoint
-  | UIExtensionPoint;
+  HelperFunctionsExtensionPoint | ScriptGeneratorExtensionPoint | ScriptRunnerExtensionPoint | LoaderExtensionPoint | LinkerExtensionPoint | UIExtensionPoint;
 
 interface BasicExtensionPoint {
   kind: PluginKind;
