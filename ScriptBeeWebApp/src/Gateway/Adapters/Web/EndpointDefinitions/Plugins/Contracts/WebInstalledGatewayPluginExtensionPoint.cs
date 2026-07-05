@@ -19,7 +19,9 @@ public sealed record WebInstalledGatewayPluginExtensionPoint(
                 uiExtensionPoint.Kind,
                 uiExtensionPoint.RemoteName,
                 uiExtensionPoint.RemoteEntry,
-                uiExtensionPoint.Outlets.Select(WebInstalledGatewayPluginExtensionPointOutlet.Map)
+                uiExtensionPoint.Outlets.Select(
+                    WebInstalledGatewayPluginExtensionPointOutletBase.Map
+                )
             ),
             _ => new WebInstalledGatewayPluginExtensionPoint(
                 extensionPoint.Kind,

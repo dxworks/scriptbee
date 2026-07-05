@@ -1,0 +1,22 @@
+{
+  "openApiPath": "../../../../../docs/public/analysis_swagger.json",
+  "namespace": "ScriptBee.Rest.Api.Generated",
+  "contractsNamespace": "ScriptBee.Rest.Api.Generated.Contracts",
+  "propertyNamingPolicy": "PascalCase",
+  "naming": {
+    "useOpenApiTitle": false,
+    "interfaceName": "AnalysisApi"
+  },
+  "generateContracts": true,
+  "generateClients": true,
+  "useCancellationTokens": true,
+  "immutableRecords": true,
+  "generateNullableReferenceTypes": true,
+  "generateNativeRecords": true,
+  "outputFolder": "./Generated",
+  "outputFilename": "AnalysisApi.g.cs",
+  "responseTypeOverride": {
+    "GenerateClasses": "System.IO.Stream",
+    "Analyses": "ScriptBee.Rest.Api.Generated.Contracts.RunAnalysisResponse"
+  }
+}

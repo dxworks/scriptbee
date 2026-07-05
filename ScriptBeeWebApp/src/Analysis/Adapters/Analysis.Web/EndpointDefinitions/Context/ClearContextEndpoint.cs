@@ -17,7 +17,8 @@ public class ClearContextEndpoint : IEndpointDefinition
         app.MapPost("/api/context/clear", ClearContext)
             .WithTags("Context")
             .WithSummary("Clear analysis context")
-            .WithDescription("Clears all data from the current analysis context.");
+            .WithDescription("Clears all data from the current analysis context.")
+            .WithName("Clear");
     }
 
     private static NoContent ClearContext(IClearContextUseCase useCase)

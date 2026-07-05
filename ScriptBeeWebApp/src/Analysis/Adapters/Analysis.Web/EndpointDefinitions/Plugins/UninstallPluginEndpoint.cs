@@ -19,7 +19,8 @@ public class UninstallPluginEndpoint : IEndpointDefinition
         app.MapDelete("/api/plugins/{pluginId}", UninstallPlugin)
             .WithTags("Plugins")
             .WithSummary("Uninstall a plugin")
-            .WithDescription("Uninstalls a specific plugin version from the analysis service.");
+            .WithDescription("Uninstalls a specific plugin version from the analysis service.")
+            .WithName("PluginsDelete");
     }
 
     private static NoContent UninstallPlugin(

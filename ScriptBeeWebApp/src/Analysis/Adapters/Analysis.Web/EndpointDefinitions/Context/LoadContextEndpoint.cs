@@ -24,7 +24,8 @@ public class LoadContextEndpoint : IEndpointDefinition
             .WithDescription(
                 "Loads data from files into the current analysis context using the provided loaders."
             )
-            .WithRequestValidation<WebLoadContextCommand>();
+            .WithRequestValidation<WebLoadContextCommand>()
+            .WithName("Load");
     }
 
     private static async Task<NoContent> LoadContext(

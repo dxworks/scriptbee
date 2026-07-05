@@ -31,7 +31,7 @@ public record TestUiPlugin(PluginId Id, string FolderPath = "path")
                     {
                         new TopNavigationBarOutlet
                         {
-                            Type = "top-navigation-bar",
+                            Type = OutletTypes.TopNavigationBar,
                             ExposedModule = "./routes",
                             Path = "/my-plugin",
                             Label = "Flights",
@@ -40,7 +40,7 @@ public record TestUiPlugin(PluginId Id, string FolderPath = "path")
                         },
                         new SidePanelOutlet
                         {
-                            Type = "side-panel",
+                            Type = OutletTypes.SidePanel,
                             ExposedModule = "./Component",
                             Path = "/my-plugin",
                             Label = "My Plugin",
@@ -50,7 +50,7 @@ public record TestUiPlugin(PluginId Id, string FolderPath = "path")
                         },
                         new FilePreviewerOutlet
                         {
-                            Type = "file-previewer",
+                            Type = OutletTypes.FilePreviewer,
                             ExposedModule = "./Component",
                             Label = "My Plugin",
                             ComponentName = null,

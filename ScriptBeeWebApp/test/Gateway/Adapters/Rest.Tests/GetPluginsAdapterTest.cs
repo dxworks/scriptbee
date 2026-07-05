@@ -1,3 +1,4 @@
+using Refit;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
@@ -243,11 +244,11 @@ public sealed class GetPluginsAdapterTest : IDisposable
         pluginExtensionPoint.RemoteName.ShouldBe("scriptbee-ui-plugin-example");
         pluginExtensionPoint.RemoteEntry.ShouldBe("remote-entry");
         var outlet = pluginExtensionPoint.Outlets.Single();
-        outlet.Type.ShouldBe("top-navigation-bar");
+        outlet.Type.ShouldBe(OutletTypes.TopNavigationBar);
     }
 
     [Fact]
-    public async Task GivenUnknownKind_ShouldReturnPluginWithoutExtensionPoints()
+    public async Task GivenUnknownKind_ShouldThrowException()
     {
         MockGetPlugins(
             """
@@ -259,20 +260,18 @@ public sealed class GetPluginsAdapterTest : IDisposable
             """
         );
 
-        var response = await _getPluginsAdapter.GetLoadedPlugins(
-            new InstanceInfo(
-                new InstanceId(Guid.Empty),
-                ProjectId.FromValue("id"),
-                _server.Urls[0],
-                DateTimeOffset.Now,
-                AnalysisInstanceStatus.NotFound
-            ),
-            TestContext.Current.CancellationToken
+        await Assert.ThrowsAsync<ApiException>(() =>
+            _getPluginsAdapter.GetLoadedPlugins(
+                new InstanceInfo(
+                    new InstanceId(Guid.Empty),
+                    ProjectId.FromValue("id"),
+                    _server.Urls[0],
+                    DateTimeOffset.Now,
+                    AnalysisInstanceStatus.NotFound
+                ),
+                TestContext.Current.CancellationToken
+            )
         );
-
-        var plugin = response.Single();
-        AssertPluginProperties(plugin);
-        plugin.Manifest.ExtensionPoints.ShouldBeEmpty();
     }
 
     private void MockGetPlugins(string extensionPoint)

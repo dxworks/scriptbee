@@ -20,7 +20,8 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
             .WithSummary("Get installed plugins")
             .WithDescription(
                 "Retrieves a list of all plugins currently installed in the analysis service."
-            );
+            )
+            .WithName("PluginsGet");
     }
 
     private static Ok<WebGetInstalledPluginsResponse> GetInstalledPlugins(
