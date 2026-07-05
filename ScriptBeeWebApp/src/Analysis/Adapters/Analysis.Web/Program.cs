@@ -23,7 +23,8 @@ builder
             {
                 document.Info.Title = "ScriptBee Analysis API";
                 document.Info.Version = "v2";
-                document.Info.Description = "API for ScriptBee Analysis service.";
+                document.Info.Description =
+                    "API for ScriptBee Analysis service, responsible for running scripts and processing data.";
                 return Task.CompletedTask;
             }
         );

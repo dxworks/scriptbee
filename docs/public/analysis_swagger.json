@@ -2,7 +2,7 @@
   "openapi": "3.1.1",
   "info": {
     "title": "ScriptBee Analysis API",
-    "description": "API for ScriptBee Analysis service.",
+    "description": "API for ScriptBee Analysis service, responsible for running scripts and processing data.",
     "version": "v2"
   },
   "servers": [
