@@ -7,7 +7,7 @@ public record WebInstalledPluginManifest(
     string Name,
     string? Description,
     string? Author,
-    IEnumerable<object> ExtensionPoints
+    IEnumerable<WebPluginExtensionPoint> ExtensionPoints
 )
 {
     public static WebInstalledPluginManifest Map(PluginManifest pluginManifest)
@@ -21,53 +21,66 @@ public record WebInstalledPluginManifest(
         );
     }
 
-    private static object MapExtensionPoint(PluginExtensionPoint extensionPoint)
+    private static WebPluginExtensionPoint MapExtensionPoint(PluginExtensionPoint extensionPoint)
     {
         return extensionPoint switch
         {
+            HelperFunctionsPluginExtensionPoint helperFunctionsPluginExtensionPoint =>
+                new WebHelperFunctionsPluginExtensionPoint(
+                    helperFunctionsPluginExtensionPoint.Kind,
+                    helperFunctionsPluginExtensionPoint.EntryPoint,
+                    helperFunctionsPluginExtensionPoint.Version
+                ),
+            LinkerPluginExtensionPoint linkerPluginExtensionPoint =>
+                new WebLinkerPluginExtensionPoint(
+                    linkerPluginExtensionPoint.Kind,
+                    linkerPluginExtensionPoint.EntryPoint,
+                    linkerPluginExtensionPoint.Version
+                ),
+            LoaderPluginExtensionPoint loaderPluginExtensionPoint =>
+                new WebLoaderPluginExtensionPoint(
+                    loaderPluginExtensionPoint.Kind,
+                    loaderPluginExtensionPoint.EntryPoint,
+                    loaderPluginExtensionPoint.Version
+                ),
+
+            PluginBundleExtensionPoint pluginBundleExtensionPoint =>
+                new WebNestedPluginExtensionPoint(
+                    pluginBundleExtensionPoint.Kind,
+                    pluginBundleExtensionPoint.EntryPoint,
+                    pluginBundleExtensionPoint.Version
+                ),
             ScriptGeneratorPluginExtensionPoint scriptGeneratorPluginExtensionPoint =>
-                new WebScriptGeneratorPluginExtensionPoint
-                {
-                    EntryPoint = scriptGeneratorPluginExtensionPoint.EntryPoint,
-                    Kind = scriptGeneratorPluginExtensionPoint.Kind,
-                    Version = scriptGeneratorPluginExtensionPoint.Version,
-                    Extension = scriptGeneratorPluginExtensionPoint.Extension,
-                    Language = scriptGeneratorPluginExtensionPoint.Language,
-                },
+                new WebScriptGeneratorPluginExtensionPoint(
+                    scriptGeneratorPluginExtensionPoint.Kind,
+                    scriptGeneratorPluginExtensionPoint.EntryPoint,
+                    scriptGeneratorPluginExtensionPoint.Version,
+                    scriptGeneratorPluginExtensionPoint.Language,
+                    scriptGeneratorPluginExtensionPoint.Extension
+                ),
             ScriptRunnerPluginExtensionPoint scriptRunnerPluginExtensionPoint =>
-                new WebScriptRunnerPluginExtensionPoint
-                {
-                    Kind = scriptRunnerPluginExtensionPoint.Kind,
-                    EntryPoint = scriptRunnerPluginExtensionPoint.EntryPoint,
-                    Version = scriptRunnerPluginExtensionPoint.Version,
-                    Language = scriptRunnerPluginExtensionPoint.Language,
-                    Extension = scriptRunnerPluginExtensionPoint.Extension,
-                },
-            UiPluginExtensionPoint uiPluginExtensionPoint => new WebUiPluginExtensionPoint
-            {
-                EntryPoint = uiPluginExtensionPoint.EntryPoint,
-                Kind = uiPluginExtensionPoint.Kind,
-                Version = uiPluginExtensionPoint.Version,
-                RemoteName = uiPluginExtensionPoint.RemoteName,
-                RemoteEntry = uiPluginExtensionPoint.RemoteEntry,
-                Outlets = uiPluginExtensionPoint.Outlets.Select(o => new WebUiPluginOutlet
-                {
-                    Type = o.Type,
-                    ExposedModule = (o as RoutingOutlet)?.ExposedModule ?? string.Empty,
-                    Path = (o as RoutingOutlet)?.Path,
-                    Label = (o as RoutingOutlet)?.Label,
-                    Nested = (o as RoutingOutlet)?.Nested,
-                    ComponentName = (o as RoutingOutlet)?.ComponentName,
-                    Icon = (o as SidePanelOutlet)?.Icon,
-                    SupportedFileExtensions = (o as FilePreviewerOutlet)?.SupportedFileExtensions,
-                }),
-            },
-            _ => new WebPluginExtensionPoint
-            {
-                EntryPoint = extensionPoint.EntryPoint,
-                Kind = extensionPoint.Kind,
-                Version = extensionPoint.Version,
-            },
+                new WebScriptRunnerPluginExtensionPoint(
+                    scriptRunnerPluginExtensionPoint.Kind,
+                    scriptRunnerPluginExtensionPoint.EntryPoint,
+                    scriptRunnerPluginExtensionPoint.Version,
+                    scriptRunnerPluginExtensionPoint.Language,
+                    scriptRunnerPluginExtensionPoint.Extension
+                ),
+            UiPluginExtensionPoint uiPluginExtensionPoint => new WebUiPluginExtensionPoint(
+                uiPluginExtensionPoint.Kind,
+                uiPluginExtensionPoint.EntryPoint,
+                uiPluginExtensionPoint.Version,
+                uiPluginExtensionPoint.RemoteName,
+                uiPluginExtensionPoint.RemoteEntry,
+                uiPluginExtensionPoint.Outlets.Select(
+                    WebInstalledPluginExtensionPointOutletBase.Map
+                )
+            ),
+            _ => new WebPluginExtensionPoint(
+                extensionPoint.Kind,
+                extensionPoint.EntryPoint,
+                extensionPoint.Version
+            ),
         };
     }
 }

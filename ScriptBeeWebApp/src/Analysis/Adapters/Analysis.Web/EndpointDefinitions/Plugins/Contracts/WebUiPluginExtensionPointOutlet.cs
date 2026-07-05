@@ -2,30 +2,30 @@ using System.ComponentModel;
 using System.Text.Json.Serialization;
 using ScriptBee.Domain.Model.Plugins.Manifest;
 
-namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
+namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(
-    typeof(WebInstalledGatewayPluginTopNavigationBarOutlet),
+    typeof(WebInstalledPluginTopNavigationBarOutlet),
     typeDiscriminator: "top-navigation-bar"
 )]
-[JsonDerivedType(typeof(WebInstalledGatewayPluginSidePanelOutlet), typeDiscriminator: "side-panel")]
+[JsonDerivedType(typeof(WebInstalledPluginSidePanelOutlet), typeDiscriminator: "side-panel")]
 [JsonDerivedType(
-    typeof(WebInstalledGatewayPluginFilePreviewerOutlet),
+    typeof(WebInstalledPluginFilePreviewerOutlet),
     typeDiscriminator: "file-previewer"
 )]
-[Description("Base class for outlets of an installed gateway plugin extension point.")]
-public abstract record WebInstalledGatewayPluginExtensionPointOutletBase(
+[Description("Base class for outlets of a plugin extension point.")]
+public abstract record WebInstalledPluginExtensionPointOutletBase(
     [property: JsonIgnore] string Type
 )
 {
-    public static WebInstalledGatewayPluginExtensionPointOutletBase Map(
+    public static WebInstalledPluginExtensionPointOutletBase Map(
         UiPluginExtensionPointOutlet outlet
     ) =>
         outlet switch
         {
             TopNavigationBarOutlet topNavigationBarOutlet =>
-                new WebInstalledGatewayPluginTopNavigationBarOutlet(
+                new WebInstalledPluginTopNavigationBarOutlet(
                     topNavigationBarOutlet.Type,
                     topNavigationBarOutlet.ExposedModule,
                     topNavigationBarOutlet.Label,
@@ -33,7 +33,7 @@ public abstract record WebInstalledGatewayPluginExtensionPointOutletBase(
                     topNavigationBarOutlet.Nested,
                     topNavigationBarOutlet.ComponentName
                 ),
-            SidePanelOutlet sidePanelOutlet => new WebInstalledGatewayPluginSidePanelOutlet(
+            SidePanelOutlet sidePanelOutlet => new WebInstalledPluginSidePanelOutlet(
                 sidePanelOutlet.Type,
                 sidePanelOutlet.ExposedModule,
                 sidePanelOutlet.Label,
@@ -42,31 +42,30 @@ public abstract record WebInstalledGatewayPluginExtensionPointOutletBase(
                 sidePanelOutlet.ComponentName,
                 sidePanelOutlet.Icon
             ),
-            FilePreviewerOutlet filePreviewerOutlet =>
-                new WebInstalledGatewayPluginFilePreviewerOutlet(
-                    filePreviewerOutlet.Type,
-                    filePreviewerOutlet.ExposedModule,
-                    filePreviewerOutlet.Label,
-                    filePreviewerOutlet.ComponentName,
-                    filePreviewerOutlet.Icon,
-                    filePreviewerOutlet.SupportedFileExtensions
-                ),
+            FilePreviewerOutlet filePreviewerOutlet => new WebInstalledPluginFilePreviewerOutlet(
+                filePreviewerOutlet.Type,
+                filePreviewerOutlet.ExposedModule,
+                filePreviewerOutlet.Label,
+                filePreviewerOutlet.ComponentName,
+                filePreviewerOutlet.Icon,
+                filePreviewerOutlet.SupportedFileExtensions
+            ),
             _ => throw new ArgumentOutOfRangeException(nameof(outlet), outlet, null),
         };
 }
 
 [Description("Represents an element from the Top Navigation Bar with route.")]
-public record WebInstalledGatewayPluginTopNavigationBarOutlet(
+public record WebInstalledPluginTopNavigationBarOutlet(
     string Type,
     string ExposedModule,
     string Label,
     string Path,
     bool? Nested,
     string? ComponentName
-) : WebInstalledGatewayPluginExtensionPointOutletBase(Type);
+) : WebInstalledPluginExtensionPointOutletBase(Type);
 
 [Description("Represents an element from the Side Hamburger Panel with route.")]
-public record WebInstalledGatewayPluginSidePanelOutlet(
+public record WebInstalledPluginSidePanelOutlet(
     string Type,
     string ExposedModule,
     string Label,
@@ -74,14 +73,14 @@ public record WebInstalledGatewayPluginSidePanelOutlet(
     bool? Nested,
     string? ComponentName,
     string Icon
-) : WebInstalledGatewayPluginExtensionPointOutletBase(Type);
+) : WebInstalledPluginExtensionPointOutletBase(Type);
 
 [Description("Represents a component for file previewer of output results.")]
-public record WebInstalledGatewayPluginFilePreviewerOutlet(
+public record WebInstalledPluginFilePreviewerOutlet(
     string Type,
     string ExposedModule,
     string Label,
     string? ComponentName,
     string? Icon,
     List<string>? SupportedFileExtensions
-) : WebInstalledGatewayPluginExtensionPointOutletBase(Type);
+) : WebInstalledPluginExtensionPointOutletBase(Type);

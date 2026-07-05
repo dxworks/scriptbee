@@ -21,7 +21,8 @@ public class LinkContextEndpoint : IEndpointDefinition
             .WithTags("Context")
             .WithSummary("Link analysis context")
             .WithDescription("Links the current analysis context using the provided linkers.")
-            .WithRequestValidation<WebLinkContextCommand>();
+            .WithRequestValidation<WebLinkContextCommand>()
+            .WithName("Link");
     }
 
     private static async Task<NoContent> LinkContext(

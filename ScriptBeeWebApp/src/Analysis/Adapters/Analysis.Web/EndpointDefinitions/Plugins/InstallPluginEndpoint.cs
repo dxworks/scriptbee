@@ -29,7 +29,8 @@ public class InstallPluginEndpoint : IEndpointDefinition
             .WithTags("Plugins")
             .WithSummary("Install a plugin")
             .WithDescription("Installs a specific plugin version into the analysis service.")
-            .WithRequestValidation<WebInstallPluginCommand>();
+            .WithRequestValidation<WebInstallPluginCommand>()
+            .WithName("PluginsPost");
     }
 
     private static InstallResult InstallPlugin(

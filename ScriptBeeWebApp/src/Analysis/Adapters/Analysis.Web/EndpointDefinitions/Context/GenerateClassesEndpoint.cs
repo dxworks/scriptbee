@@ -22,7 +22,8 @@ public class GenerateClassesEndpoint : IEndpointDefinition
             .WithSummary("Generate classes for analysis context")
             .WithDescription(
                 "Generates script classes based on the current data context and returns them as a stream."
-            );
+            )
+            .WithName("GenerateClasses");
     }
 
     private static async Task<Results<FileStreamHttpResult, ProblemHttpResult>> GenerateClasses(

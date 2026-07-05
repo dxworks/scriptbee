@@ -23,7 +23,8 @@ public class RunAnalysisEndpoint : IEndpointDefinition
             .WithTags("Analysis")
             .WithSummary("Run analysis")
             .WithDescription("Starts the execution of an analysis script on the analysis service.")
-            .WithRequestValidation<WebRunAnalysisCommand>();
+            .WithRequestValidation<WebRunAnalysisCommand>()
+            .WithName("Analyses");
     }
 
     private static async Task<Accepted<WebRunAnalysisResponse>> TriggerAnalysis(

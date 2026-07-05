@@ -2,8 +2,8 @@ using Refit;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Rest.Api;
-using ScriptBee.Rest.Contracts;
+using ScriptBee.Rest.Api.Generated;
+using ScriptBee.Rest.Api.Generated.Contracts;
 
 namespace ScriptBee.Rest;
 
@@ -18,13 +18,9 @@ public class InstallPluginAdapter(IHttpClientFactory httpClientFactory) : IInsta
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var pluginsApi = RestService.For<IPluginsApi>(client);
+        var analysisApi = RestService.For<IAnalysisApi>(client);
 
-        var request = new RestInstallPlugin
-        {
-            PluginId = pluginId.Name,
-            Version = pluginId.Version.ToString(),
-        };
-        await pluginsApi.InstallPlugin(request, cancellationToken);
+        var request = new InstallPluginCommand(pluginId.Name, pluginId.Version.ToString());
+        await analysisApi.PluginsPost(request, cancellationToken);
     }
 }
