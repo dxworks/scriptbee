@@ -17,11 +17,14 @@ public record WebInstalledPluginManifest(
             pluginManifest.Name,
             pluginManifest.Description,
             pluginManifest.Author,
-            pluginManifest.ExtensionPoints.Select(MapExtensionPoint)
+            pluginManifest
+                .ExtensionPoints.Select(MapExtensionPoint)
+                .Where(extensionPoint => extensionPoint is not null)
+                .Cast<WebPluginExtensionPoint>()
         );
     }
 
-    private static WebPluginExtensionPoint MapExtensionPoint(PluginExtensionPoint extensionPoint)
+    private static WebPluginExtensionPoint? MapExtensionPoint(PluginExtensionPoint extensionPoint)
     {
         return extensionPoint switch
         {
@@ -76,11 +79,7 @@ public record WebInstalledPluginManifest(
                     WebInstalledPluginExtensionPointOutletBase.Map
                 )
             ),
-            _ => new WebPluginExtensionPoint(
-                extensionPoint.Kind,
-                extensionPoint.EntryPoint,
-                extensionPoint.Version
-            ),
+            _ => null,
         };
     }
 }

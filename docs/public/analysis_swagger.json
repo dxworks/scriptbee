@@ -605,7 +605,12 @@
         ],
         "description": "Base class for outlets of a plugin extension point.",
         "discriminator": {
-          "propertyName": "type"
+          "propertyName": "type",
+          "mapping": {
+            "top-navigation-bar": "#/components/schemas/InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOutlet",
+            "side-panel": "#/components/schemas/InstalledPluginExtensionPointOutletBaseInstalledPluginSidePanelOutlet",
+            "file-previewer": "#/components/schemas/InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet"
+          }
         }
       },
       "InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet": {
@@ -818,6 +823,9 @@
         }
       },
       "PluginExtensionPoint": {
+        "required": [
+          "kind"
+        ],
         "type": "object",
         "anyOf": [
           {
@@ -840,34 +848,24 @@
           },
           {
             "$ref": "#/components/schemas/PluginExtensionPointUiPluginExtensionPoint"
-          },
-          {
-            "$ref": "#/components/schemas/PluginExtensionPointBase"
           }
         ],
         "description": "Base class for plugin extension points",
         "discriminator": {
-          "propertyName": "kind"
-        }
-      },
-      "PluginExtensionPointBase": {
-        "required": [
-          "entryPoint",
-          "version"
-        ],
-        "properties": {
-          "entryPoint": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
+          "propertyName": "kind",
+          "mapping": {
+            "Plugin": "#/components/schemas/PluginExtensionPointNestedPluginExtensionPoint",
+            "Loader": "#/components/schemas/PluginExtensionPointLoaderPluginExtensionPoint",
+            "Linker": "#/components/schemas/PluginExtensionPointLinkerPluginExtensionPoint",
+            "ScriptGenerator": "#/components/schemas/PluginExtensionPointScriptGeneratorPluginExtensionPoint",
+            "ScriptRunner": "#/components/schemas/PluginExtensionPointScriptRunnerPluginExtensionPoint",
+            "HelperFunctions": "#/components/schemas/PluginExtensionPointHelperFunctionsPluginExtensionPoint",
+            "UI": "#/components/schemas/PluginExtensionPointUiPluginExtensionPoint"
           }
-        },
-        "description": "Base class for plugin extension points"
+        }
       },
       "PluginExtensionPointHelperFunctionsPluginExtensionPoint": {
         "required": [
-          "kind",
           "entryPoint",
           "version"
         ],
@@ -889,7 +887,6 @@
       },
       "PluginExtensionPointLinkerPluginExtensionPoint": {
         "required": [
-          "kind",
           "entryPoint",
           "version"
         ],
@@ -911,7 +908,6 @@
       },
       "PluginExtensionPointLoaderPluginExtensionPoint": {
         "required": [
-          "kind",
           "entryPoint",
           "version"
         ],
@@ -933,7 +929,6 @@
       },
       "PluginExtensionPointNestedPluginExtensionPoint": {
         "required": [
-          "kind",
           "entryPoint",
           "version"
         ],
@@ -955,7 +950,6 @@
       },
       "PluginExtensionPointScriptGeneratorPluginExtensionPoint": {
         "required": [
-          "kind",
           "language",
           "extension",
           "entryPoint",
@@ -985,7 +979,6 @@
       },
       "PluginExtensionPointScriptRunnerPluginExtensionPoint": {
         "required": [
-          "kind",
           "language",
           "extension",
           "entryPoint",
@@ -1015,7 +1008,6 @@
       },
       "PluginExtensionPointUiPluginExtensionPoint": {
         "required": [
-          "kind",
           "remoteName",
           "remoteEntry",
           "outlets",

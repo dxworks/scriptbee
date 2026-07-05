@@ -508,9 +508,9 @@ namespace ScriptBee.Rest.Api.Generated.Contracts
     /// Base class for outlets of a plugin extension point.
     /// </summary>
     [JsonInheritanceConverter(typeof(InstalledPluginExtensionPointOutletBase), "type")]
-    [JsonInheritanceAttribute("InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet", typeof(InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet))]
-    [JsonInheritanceAttribute("InstalledPluginExtensionPointOutletBaseInstalledPluginSidePanelOutlet", typeof(InstalledPluginExtensionPointOutletBaseInstalledPluginSidePanelOutlet))]
-    [JsonInheritanceAttribute("InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOutlet", typeof(InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOutlet))]
+    [JsonInheritanceAttribute("top-navigation-bar", typeof(InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOutlet))]
+    [JsonInheritanceAttribute("side-panel", typeof(InstalledPluginExtensionPointOutletBaseInstalledPluginSidePanelOutlet))]
+    [JsonInheritanceAttribute("file-previewer", typeof(InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet))]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial record InstalledPluginExtensionPointOutletBase
     {
@@ -780,14 +780,13 @@ public InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOut
     /// Base class for plugin extension points
     /// </summary>
     [JsonInheritanceConverter(typeof(PluginExtensionPoint), "kind")]
-    [JsonInheritanceAttribute("PluginExtensionPointBase", typeof(PluginExtensionPointBase))]
-    [JsonInheritanceAttribute("PluginExtensionPointHelperFunctionsPluginExtensionPoint", typeof(PluginExtensionPointHelperFunctionsPluginExtensionPoint))]
-    [JsonInheritanceAttribute("PluginExtensionPointLinkerPluginExtensionPoint", typeof(PluginExtensionPointLinkerPluginExtensionPoint))]
-    [JsonInheritanceAttribute("PluginExtensionPointLoaderPluginExtensionPoint", typeof(PluginExtensionPointLoaderPluginExtensionPoint))]
-    [JsonInheritanceAttribute("PluginExtensionPointNestedPluginExtensionPoint", typeof(PluginExtensionPointNestedPluginExtensionPoint))]
-    [JsonInheritanceAttribute("PluginExtensionPointScriptGeneratorPluginExtensionPoint", typeof(PluginExtensionPointScriptGeneratorPluginExtensionPoint))]
-    [JsonInheritanceAttribute("PluginExtensionPointScriptRunnerPluginExtensionPoint", typeof(PluginExtensionPointScriptRunnerPluginExtensionPoint))]
-    [JsonInheritanceAttribute("PluginExtensionPointUiPluginExtensionPoint", typeof(PluginExtensionPointUiPluginExtensionPoint))]
+    [JsonInheritanceAttribute("Plugin", typeof(PluginExtensionPointNestedPluginExtensionPoint))]
+    [JsonInheritanceAttribute("Loader", typeof(PluginExtensionPointLoaderPluginExtensionPoint))]
+    [JsonInheritanceAttribute("Linker", typeof(PluginExtensionPointLinkerPluginExtensionPoint))]
+    [JsonInheritanceAttribute("ScriptGenerator", typeof(PluginExtensionPointScriptGeneratorPluginExtensionPoint))]
+    [JsonInheritanceAttribute("ScriptRunner", typeof(PluginExtensionPointScriptRunnerPluginExtensionPoint))]
+    [JsonInheritanceAttribute("HelperFunctions", typeof(PluginExtensionPointHelperFunctionsPluginExtensionPoint))]
+    [JsonInheritanceAttribute("UI", typeof(PluginExtensionPointUiPluginExtensionPoint))]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial record PluginExtensionPoint
     {
@@ -808,30 +807,6 @@ public InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOut
     }
 
     /// <summary>
-    /// Base class for plugin extension points
-    /// </summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial record PluginExtensionPointBase : PluginExtensionPoint
-    {
-        [JsonConstructor]
-        public PluginExtensionPointBase(string @entryPoint, string @version)
-            : base()
-        {
-            this.EntryPoint = @entryPoint;
-            this.Version = @version;
-        }
-
-        [JsonPropertyName("entryPoint")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string EntryPoint { get; init; }
-
-        [JsonPropertyName("version")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string Version { get; init; }
-
-    }
-
-    /// <summary>
     /// Represents a helper functions plugin extension point.
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -847,7 +822,6 @@ public InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOut
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointHelperFunctionsPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("entryPoint")]
@@ -876,7 +850,6 @@ public PluginExtensionPointHelperFunctionsPluginExtensionPointKind Kind { get; i
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointLinkerPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("entryPoint")]
@@ -905,7 +878,6 @@ public PluginExtensionPointLinkerPluginExtensionPointKind Kind { get; init; }
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointLoaderPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("entryPoint")]
@@ -934,7 +906,6 @@ public PluginExtensionPointLoaderPluginExtensionPointKind Kind { get; init; }
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointNestedPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("entryPoint")]
@@ -965,7 +936,6 @@ public PluginExtensionPointNestedPluginExtensionPointKind Kind { get; init; }
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointScriptGeneratorPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("language")]
@@ -1004,7 +974,6 @@ public PluginExtensionPointScriptGeneratorPluginExtensionPointKind Kind { get; i
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointScriptRunnerPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("language")]
@@ -1044,7 +1013,6 @@ public PluginExtensionPointScriptRunnerPluginExtensionPointKind Kind { get; init
         }
 
         [JsonPropertyName("kind")]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
 public PluginExtensionPointUiPluginExtensionPointKind Kind { get; init; }
 
         [JsonPropertyName("remoteName")]

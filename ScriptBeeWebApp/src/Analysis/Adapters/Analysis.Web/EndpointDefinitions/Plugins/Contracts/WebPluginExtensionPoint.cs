@@ -22,7 +22,7 @@ namespace ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
     typeDiscriminator: PluginKind.HelperFunctions
 )]
 [JsonDerivedType(typeof(WebUiPluginExtensionPoint), typeDiscriminator: PluginKind.Ui)]
-public record WebPluginExtensionPoint(
+public abstract record WebPluginExtensionPoint(
     [property: JsonIgnore] string Kind,
     string EntryPoint,
     string Version

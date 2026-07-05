@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Refit;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugins;
@@ -5,6 +6,7 @@ using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Rest.Api.Generated;
 using ScriptBee.Rest.Api.Generated.Contracts;
+using ScriptBee.Rest.Converters;
 using PluginExtensionPoint = ScriptBee.Domain.Model.Plugins.Manifest.PluginExtensionPoint;
 using RestPluginExtensionPoint = ScriptBee.Rest.Api.Generated.Contracts.PluginExtensionPoint;
 
@@ -20,11 +22,25 @@ public class GetPluginsAdapter(IHttpClientFactory httpClientFactory) : IGetPlugi
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var pluginsApi = RestService.For<IAnalysisApi>(client);
+        var pluginsApi = GetAnalysisApiWithCustomConverter(client);
 
         var response = await pluginsApi.PluginsGet(cancellationToken);
 
         return response.Data.Select(MapPlugin);
+    }
+
+    private static IAnalysisApi GetAnalysisApiWithCustomConverter(HttpClient client)
+    {
+        var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+
+        options.Converters.Insert(0, new JsonStringEnumMemberConverterFactory());
+
+        var settings = new RefitSettings
+        {
+            ContentSerializer = new SystemTextJsonContentSerializer(options),
+        };
+        var pluginsApi = RestService.For<IAnalysisApi>(client, settings);
+        return pluginsApi;
     }
 
     private static Plugin MapPlugin(InstalledPlugin plugin)
@@ -129,7 +145,7 @@ public class GetPluginsAdapter(IHttpClientFactory httpClientFactory) : IGetPlugi
             InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOutlet topNavigationBarOutlet =>
                 new TopNavigationBarOutlet
                 {
-                    Type = "top-navigation-bar",
+                    Type = OutletTypes.TopNavigationBar,
                     ExposedModule = topNavigationBarOutlet.ExposedModule,
                     Path = topNavigationBarOutlet.Path,
                     Label = topNavigationBarOutlet.Label,
@@ -139,7 +155,7 @@ public class GetPluginsAdapter(IHttpClientFactory httpClientFactory) : IGetPlugi
             InstalledPluginExtensionPointOutletBaseInstalledPluginSidePanelOutlet sidePanelOutlet =>
                 new SidePanelOutlet
                 {
-                    Type = "side-panel",
+                    Type = OutletTypes.SidePanel,
                     ExposedModule = sidePanelOutlet.ExposedModule,
                     Path = sidePanelOutlet.Path,
                     Label = sidePanelOutlet.Label,
@@ -150,7 +166,7 @@ public class GetPluginsAdapter(IHttpClientFactory httpClientFactory) : IGetPlugi
             InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet filePreviewerOutlet =>
                 new FilePreviewerOutlet
                 {
-                    Type = "file-previewer",
+                    Type = OutletTypes.FilePreviewer,
                     ExposedModule = filePreviewerOutlet.ExposedModule,
                     Label = filePreviewerOutlet.Label,
                     ComponentName = filePreviewerOutlet.ComponentName,

@@ -7,12 +7,15 @@ namespace ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(
     typeof(WebInstalledGatewayPluginTopNavigationBarOutlet),
-    typeDiscriminator: "top-navigation-bar"
+    typeDiscriminator: OutletTypes.TopNavigationBar
 )]
-[JsonDerivedType(typeof(WebInstalledGatewayPluginSidePanelOutlet), typeDiscriminator: "side-panel")]
+[JsonDerivedType(
+    typeof(WebInstalledGatewayPluginSidePanelOutlet),
+    typeDiscriminator: OutletTypes.SidePanel
+)]
 [JsonDerivedType(
     typeof(WebInstalledGatewayPluginFilePreviewerOutlet),
-    typeDiscriminator: "file-previewer"
+    typeDiscriminator: OutletTypes.FilePreviewer
 )]
 [Description("Base class for outlets of an installed gateway plugin extension point.")]
 public abstract record WebInstalledGatewayPluginExtensionPointOutletBase(

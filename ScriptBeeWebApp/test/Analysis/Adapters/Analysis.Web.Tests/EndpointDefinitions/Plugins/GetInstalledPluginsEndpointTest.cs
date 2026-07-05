@@ -241,7 +241,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
                         {
                             new TopNavigationBarOutlet
                             {
-                                Type = "top-navigation-bar",
+                                Type = OutletTypes.TopNavigationBar,
                                 ExposedModule = "./routes",
                                 Path = "/my-plugin",
                                 Label = "Flights",
@@ -281,7 +281,7 @@ public class GetInstalledPluginsEndpointTest(ITestOutputHelper outputHelper)
         extensionPoint.GetProperty("remoteEntry").GetString().ShouldBe("remote-entry");
         var outlets = extensionPoint.GetProperty("outlets").EnumerateArray();
         var outlet = outlets.Single();
-        outlet.GetProperty("type").GetString().ShouldBe("top-navigation-bar");
+        outlet.GetProperty("type").GetString().ShouldBe(OutletTypes.TopNavigationBar);
     }
 
     private static Plugin CreatePlugin(PluginExtensionPoint extensionPoint)

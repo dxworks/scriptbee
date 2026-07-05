@@ -124,7 +124,7 @@ public class PluginManifestYamlParsingTests
         Assert.Equal("http://localhost:8080/remoteEntry.js", extensionPoint.RemoteEntry);
         Assert.NotNull(extensionPoint.Outlets);
         var outlet = Assert.Single(extensionPoint.Outlets);
-        Assert.Equal("top-navigation-bar", outlet.Type);
+        Assert.Equal(OutletTypes.TopNavigationBar, outlet.Type);
     }
 
     [Theory]
