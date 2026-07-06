@@ -13,9 +13,7 @@
   "paths": {
     "/api/plugins": {
       "get": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "summary": "Get installed plugins",
         "description": "Retrieves a list of all plugins currently installed in the analysis service.",
         "operationId": "PluginsGet",
@@ -33,9 +31,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "summary": "Install a plugin",
         "description": "Installs a specific plugin version into the analysis service.",
         "operationId": "PluginsPost",
@@ -78,9 +74,7 @@
     },
     "/api/plugins/{pluginId}": {
       "delete": {
-        "tags": [
-          "Plugins"
-        ],
+        "tags": ["Plugins"],
         "summary": "Uninstall a plugin",
         "description": "Uninstalls a specific plugin version from the analysis service.",
         "operationId": "PluginsDelete",
@@ -111,9 +105,7 @@
     },
     "/api/context/clear": {
       "post": {
-        "tags": [
-          "Context"
-        ],
+        "tags": ["Context"],
         "summary": "Clear analysis context",
         "description": "Clears all data from the current analysis context.",
         "operationId": "Clear",
@@ -126,9 +118,7 @@
     },
     "/api/context/generate-classes": {
       "post": {
-        "tags": [
-          "Context"
-        ],
+        "tags": ["Context"],
         "summary": "Generate classes for analysis context",
         "description": "Generates script classes based on the current data context and returns them as a stream.",
         "operationId": "GenerateClasses",
@@ -151,9 +141,7 @@
     },
     "/api/context": {
       "get": {
-        "tags": [
-          "Context"
-        ],
+        "tags": ["Context"],
         "summary": "Get analysis context",
         "description": "Retrieves the current data context from the analysis service.",
         "operationId": "Context",
@@ -173,10 +161,7 @@
     },
     "/api/context/graph-nodes": {
       "get": {
-        "tags": [
-          "Context",
-          "Graph"
-        ],
+        "tags": ["Context", "Graph"],
         "summary": "Search context nodes",
         "description": "Searches for context nodes based on a query string.",
         "operationId": "GraphNodes",
@@ -194,10 +179,7 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
+              "type": ["integer", "string"],
               "format": "int32",
               "default": 0
             }
@@ -207,10 +189,7 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
+              "type": ["integer", "string"],
               "format": "int32",
               "default": 10
             }
@@ -232,10 +211,7 @@
     },
     "/api/context/graph-nodes/{nodeId}/neighbors": {
       "get": {
-        "tags": [
-          "Context",
-          "Graph"
-        ],
+        "tags": ["Context", "Graph"],
         "summary": "Get node neighbors",
         "description": "Retrieves the immediate neighbors and edges for a specific context node.",
         "operationId": "Neighbors",
@@ -265,9 +241,7 @@
     },
     "/api/context/link": {
       "post": {
-        "tags": [
-          "Context"
-        ],
+        "tags": ["Context"],
         "summary": "Link analysis context",
         "description": "Links the current analysis context using the provided linkers.",
         "operationId": "Link",
@@ -300,9 +274,7 @@
     },
     "/api/context/load": {
       "post": {
-        "tags": [
-          "Context"
-        ],
+        "tags": ["Context"],
         "summary": "Load data into analysis context",
         "description": "Loads data from files into the current analysis context using the provided loaders.",
         "operationId": "Load",
@@ -335,9 +307,7 @@
     },
     "/api/analyses": {
       "post": {
-        "tags": [
-          "Analysis"
-        ],
+        "tags": ["Analysis"],
         "summary": "Run analysis",
         "description": "Starts the execution of an analysis script on the analysis service.",
         "operationId": "Analyses",
@@ -379,11 +349,7 @@
   "components": {
     "schemas": {
       "ContextGraphEdge": {
-        "required": [
-          "source",
-          "target",
-          "label"
-        ],
+        "required": ["source", "target", "label"],
         "type": "object",
         "properties": {
           "source": {
@@ -398,13 +364,7 @@
         }
       },
       "ContextGraphNode": {
-        "required": [
-          "id",
-          "label",
-          "type",
-          "loader",
-          "properties"
-        ],
+        "required": ["id", "label", "type", "loader", "properties"],
         "type": "object",
         "properties": {
           "id": {
@@ -417,10 +377,7 @@
             "type": "string"
           },
           "loader": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "properties": {
             "type": "object"
@@ -428,10 +385,7 @@
         }
       },
       "ContextGraphResponse": {
-        "required": [
-          "nodes",
-          "edges"
-        ],
+        "required": ["nodes", "edges"],
         "type": "object",
         "properties": {
           "nodes": {
@@ -449,10 +403,7 @@
         }
       },
       "ContextSlice": {
-        "required": [
-          "model",
-          "pluginIds"
-        ],
+        "required": ["model", "pluginIds"],
         "type": "object",
         "properties": {
           "model": {
@@ -467,32 +418,22 @@
         }
       },
       "GenerateClassesRequest": {
-        "required": [
-          "languages"
-        ],
+        "required": ["languages"],
         "type": "object",
         "properties": {
           "languages": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
           },
           "transferFormat": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "GetContextResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -504,9 +445,7 @@
         }
       },
       "GetInstalledPluginsResponse": {
-        "required": [
-          "data"
-        ],
+        "required": ["data"],
         "type": "object",
         "properties": {
           "data": {
@@ -521,37 +460,21 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ],
+            "type": ["null", "integer", "string"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "errors": {
             "type": "object",
@@ -565,12 +488,7 @@
         }
       },
       "InstalledPlugin": {
-        "required": [
-          "folderPath",
-          "id",
-          "version",
-          "manifest"
-        ],
+        "required": ["folderPath", "id", "version", "manifest"],
         "type": "object",
         "properties": {
           "folderPath": {
@@ -588,9 +506,7 @@
         }
       },
       "InstalledPluginExtensionPointOutletBase": {
-        "required": [
-          "type"
-        ],
+        "required": ["type"],
         "type": "object",
         "anyOf": [
           {
@@ -614,18 +530,10 @@
         }
       },
       "InstalledPluginExtensionPointOutletBaseInstalledPluginFilePreviewerOutlet": {
-        "required": [
-          "exposedModule",
-          "label",
-          "componentName",
-          "icon",
-          "supportedFileExtensions"
-        ],
+        "required": ["exposedModule", "label", "componentName", "icon", "supportedFileExtensions"],
         "properties": {
           "type": {
-            "enum": [
-              "file-previewer"
-            ],
+            "enum": ["file-previewer"],
             "type": "string"
           },
           "exposedModule": {
@@ -635,22 +543,13 @@
             "type": "string"
           },
           "componentName": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "icon": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "supportedFileExtensions": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
@@ -659,19 +558,10 @@
         "description": "Represents a component for file previewer of output results."
       },
       "InstalledPluginExtensionPointOutletBaseInstalledPluginSidePanelOutlet": {
-        "required": [
-          "exposedModule",
-          "label",
-          "path",
-          "nested",
-          "componentName",
-          "icon"
-        ],
+        "required": ["exposedModule", "label", "path", "nested", "componentName", "icon"],
         "properties": {
           "type": {
-            "enum": [
-              "side-panel"
-            ],
+            "enum": ["side-panel"],
             "type": "string"
           },
           "exposedModule": {
@@ -684,16 +574,10 @@
             "type": "string"
           },
           "nested": {
-            "type": [
-              "null",
-              "boolean"
-            ]
+            "type": ["null", "boolean"]
           },
           "componentName": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "icon": {
             "type": "string"
@@ -702,18 +586,10 @@
         "description": "Represents an element from the Side Hamburger Panel with route."
       },
       "InstalledPluginExtensionPointOutletBaseInstalledPluginTopNavigationBarOutlet": {
-        "required": [
-          "exposedModule",
-          "label",
-          "path",
-          "nested",
-          "componentName"
-        ],
+        "required": ["exposedModule", "label", "path", "nested", "componentName"],
         "properties": {
           "type": {
-            "enum": [
-              "top-navigation-bar"
-            ],
+            "enum": ["top-navigation-bar"],
             "type": "string"
           },
           "exposedModule": {
@@ -726,28 +602,16 @@
             "type": "string"
           },
           "nested": {
-            "type": [
-              "null",
-              "boolean"
-            ]
+            "type": ["null", "boolean"]
           },
           "componentName": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         },
         "description": "Represents an element from the Top Navigation Bar with route."
       },
       "InstalledPluginManifest": {
-        "required": [
-          "apiVersion",
-          "name",
-          "description",
-          "author",
-          "extensionPoints"
-        ],
+        "required": ["apiVersion", "name", "description", "author", "extensionPoints"],
         "type": "object",
         "properties": {
           "apiVersion": {
@@ -757,16 +621,10 @@
             "type": "string"
           },
           "description": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "author": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "extensionPoints": {
             "type": "array",
@@ -777,10 +635,7 @@
         }
       },
       "InstallPluginCommand": {
-        "required": [
-          "pluginId",
-          "version"
-        ],
+        "required": ["pluginId", "version"],
         "type": "object",
         "properties": {
           "pluginId": {
@@ -792,9 +647,7 @@
         }
       },
       "LinkContextCommand": {
-        "required": [
-          "linkerIds"
-        ],
+        "required": ["linkerIds"],
         "type": "object",
         "properties": {
           "linkerIds": {
@@ -806,9 +659,7 @@
         }
       },
       "LoadContextCommand": {
-        "required": [
-          "filesToLoad"
-        ],
+        "required": ["filesToLoad"],
         "type": "object",
         "properties": {
           "filesToLoad": {
@@ -823,9 +674,7 @@
         }
       },
       "PluginExtensionPoint": {
-        "required": [
-          "kind"
-        ],
+        "required": ["kind"],
         "type": "object",
         "anyOf": [
           {
@@ -865,15 +714,10 @@
         }
       },
       "PluginExtensionPointHelperFunctionsPluginExtensionPoint": {
-        "required": [
-          "entryPoint",
-          "version"
-        ],
+        "required": ["entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "HelperFunctions"
-            ],
+            "enum": ["HelperFunctions"],
             "type": "string"
           },
           "entryPoint": {
@@ -886,15 +730,10 @@
         "description": "Represents a helper functions plugin extension point."
       },
       "PluginExtensionPointLinkerPluginExtensionPoint": {
-        "required": [
-          "entryPoint",
-          "version"
-        ],
+        "required": ["entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "Linker"
-            ],
+            "enum": ["Linker"],
             "type": "string"
           },
           "entryPoint": {
@@ -907,15 +746,10 @@
         "description": "Represents a linker plugin extension point."
       },
       "PluginExtensionPointLoaderPluginExtensionPoint": {
-        "required": [
-          "entryPoint",
-          "version"
-        ],
+        "required": ["entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "Loader"
-            ],
+            "enum": ["Loader"],
             "type": "string"
           },
           "entryPoint": {
@@ -928,15 +762,10 @@
         "description": "Represents a loader plugin extension point."
       },
       "PluginExtensionPointNestedPluginExtensionPoint": {
-        "required": [
-          "entryPoint",
-          "version"
-        ],
+        "required": ["entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "Plugin"
-            ],
+            "enum": ["Plugin"],
             "type": "string"
           },
           "entryPoint": {
@@ -949,17 +778,10 @@
         "description": "Represents a plugin from a bundle."
       },
       "PluginExtensionPointScriptGeneratorPluginExtensionPoint": {
-        "required": [
-          "language",
-          "extension",
-          "entryPoint",
-          "version"
-        ],
+        "required": ["language", "extension", "entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "ScriptGenerator"
-            ],
+            "enum": ["ScriptGenerator"],
             "type": "string"
           },
           "language": {
@@ -978,17 +800,10 @@
         "description": "Represents a script generator plugin extension point."
       },
       "PluginExtensionPointScriptRunnerPluginExtensionPoint": {
-        "required": [
-          "language",
-          "extension",
-          "entryPoint",
-          "version"
-        ],
+        "required": ["language", "extension", "entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "ScriptRunner"
-            ],
+            "enum": ["ScriptRunner"],
             "type": "string"
           },
           "language": {
@@ -1007,18 +822,10 @@
         "description": "Represents a script runner plugin extension point."
       },
       "PluginExtensionPointUiPluginExtensionPoint": {
-        "required": [
-          "remoteName",
-          "remoteEntry",
-          "outlets",
-          "entryPoint",
-          "version"
-        ],
+        "required": ["remoteName", "remoteEntry", "outlets", "entryPoint", "version"],
         "properties": {
           "kind": {
-            "enum": [
-              "UI"
-            ],
+            "enum": ["UI"],
             "type": "string"
           },
           "remoteName": {
@@ -1046,45 +853,26 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "title": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "status": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer",
-              "string"
-            ],
+            "type": ["null", "integer", "string"],
             "format": "int32"
           },
           "detail": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           },
           "instance": {
-            "type": [
-              "null",
-              "string"
-            ]
+            "type": ["null", "string"]
           }
         }
       },
       "RunAnalysisCommand": {
-        "required": [
-          "projectId",
-          "scriptId"
-        ],
+        "required": ["projectId", "scriptId"],
         "type": "object",
         "properties": {
           "projectId": {
@@ -1097,13 +885,7 @@
         "description": "Command used to run an analysis script on the analysis service."
       },
       "RunAnalysisResponse": {
-        "required": [
-          "id",
-          "projectId",
-          "scriptId",
-          "status",
-          "creationDate"
-        ],
+        "required": ["id", "projectId", "scriptId", "status", "creationDate"],
         "type": "object",
         "properties": {
           "id": {

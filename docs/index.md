@@ -15,3 +15,7 @@ To get ScriptBee up and running quickly with Docker, use the following command:
 ```shell
 docker-compose up
 ```
+
+## AI Integrations
+
+ScriptBee exposes a Model Context Protocol (MCP) server for integration with tools like Claude Code and VS Code. See the [MCP Integration Guide](installation/mcp.md) for details.
