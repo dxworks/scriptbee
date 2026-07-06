@@ -13,7 +13,9 @@
   "paths": {
     "/api/projects": {
       "post": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "summary": "Create a new project",
         "description": "Creates a new project with the specified name and description.",
         "requestBody": {
@@ -60,7 +62,9 @@
         }
       },
       "get": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "summary": "Get all projects",
         "description": "Retrieves a list of all existing projects with their basic details.",
         "responses": {
@@ -79,7 +83,9 @@
     },
     "/api/projects/{projectId}": {
       "delete": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "summary": "Delete a project",
         "description": "Deletes a project and all its associated data, including scripts and artifacts.",
         "parameters": [
@@ -99,7 +105,9 @@
         }
       },
       "get": {
-        "tags": ["Projects"],
+        "tags": [
+          "Projects"
+        ],
         "summary": "Get project by ID",
         "description": "Retrieves detailed information about a specific project by its unique identifier.",
         "parameters": [
@@ -138,7 +146,9 @@
     },
     "/api/projects/{projectId}/scripts": {
       "post": {
-        "tags": ["Scripts"],
+        "tags": [
+          "Scripts"
+        ],
         "summary": "Create a new script",
         "description": "Creates a new script within the specified project.",
         "parameters": [
@@ -205,7 +215,9 @@
         }
       },
       "get": {
-        "tags": ["Scripts"],
+        "tags": [
+          "Scripts"
+        ],
         "summary": "Get all project scripts",
         "description": "Retrieves a list of all scripts available in the specified project.",
         "parameters": [
@@ -234,7 +246,9 @@
     },
     "/api/projects/{projectId}/files/{fileId}": {
       "delete": {
-        "tags": ["ProjectStructure"],
+        "tags": [
+          "ProjectStructure"
+        ],
         "summary": "Delete a project structure node",
         "description": "Deletes a file or directory (node) from the project structure.",
         "parameters": [
@@ -274,7 +288,9 @@
     },
     "/api/projects/{projectId}/scripts/{scriptId}": {
       "get": {
-        "tags": ["Scripts"],
+        "tags": [
+          "Scripts"
+        ],
         "summary": "Get project script by ID",
         "description": "Retrieves metadata about a specific project script.",
         "parameters": [
@@ -319,7 +335,9 @@
         }
       },
       "patch": {
-        "tags": ["Scripts"],
+        "tags": [
+          "Scripts"
+        ],
         "summary": "Update project script metadata",
         "description": "Updates the metadata (name, parameters) of a specific project script.",
         "parameters": [
@@ -386,9 +404,12 @@
     },
     "/api/projects/{projectId}/scripts/{scriptId}/content": {
       "get": {
-        "tags": ["Scripts"],
+        "tags": [
+          "Scripts"
+        ],
         "summary": "Get project script content",
         "description": "Retrieves the actual code content of a project script.",
+        "operationId": "GetScriptContent",
         "parameters": [
           {
             "name": "projectId",
@@ -417,11 +438,23 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
       "put": {
-        "tags": ["Scripts"],
+        "tags": [
+          "Scripts"
+        ],
         "summary": "Update project script content",
         "description": "Updates the actual code content of a specific project script.",
         "parameters": [
@@ -471,7 +504,9 @@
     },
     "/api/projects/{projectId}/files": {
       "get": {
-        "tags": ["ProjectStructure"],
+        "tags": [
+          "ProjectStructure"
+        ],
         "summary": "Get project files",
         "description": "Retrieves a paginated list of files and directories within the specified project.",
         "parameters": [
@@ -495,7 +530,10 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": ["integer", "string"],
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 0
             }
@@ -505,7 +543,10 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": ["integer", "string"],
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 50
             }
@@ -547,7 +588,9 @@
     },
     "/api/projects/{projectId}/structure/available-script-types": {
       "get": {
-        "tags": ["ProjectStructure"],
+        "tags": [
+          "ProjectStructure"
+        ],
         "summary": "Get available script types",
         "description": "Retrieves a list of all script languages and types supported by the project.",
         "parameters": [
@@ -576,7 +619,9 @@
     },
     "/api/plugins": {
       "get": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Get all available plugins",
         "description": "Retrieves a list of all available plugins from the marketplace.",
         "responses": {
@@ -595,7 +640,9 @@
     },
     "/api/plugins/{id}": {
       "get": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Get plugin by ID",
         "description": "Retrieves detailed information about a specific plugin from the marketplace by its unique identifier.",
         "parameters": [
@@ -634,7 +681,9 @@
     },
     "/api/projects/{projectId}/plugins": {
       "get": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Get installed plugins for a project",
         "description": "Retrieves a list of all plugins currently installed in the specified project.",
         "parameters": [
@@ -671,7 +720,9 @@
         }
       },
       "post": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Upload and install a plugin",
         "description": "Uploads a plugin ZIP file and installs it into the project.",
         "parameters": [
@@ -688,7 +739,9 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["file"],
+                "required": [
+                  "file"
+                ],
                 "type": "object",
                 "properties": {
                   "file": {
@@ -746,7 +799,9 @@
     },
     "/api/projects/{projectId}/plugins/{pluginId}": {
       "get": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Get installed plugin details",
         "description": "Retrieves detailed information about a specific plugin installed in a project.",
         "parameters": [
@@ -791,7 +846,9 @@
         }
       },
       "put": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Install a plugin from marketplace",
         "description": "Installs a specific version of a plugin from the marketplace into the project.",
         "parameters": [
@@ -847,7 +904,9 @@
         }
       },
       "delete": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Uninstall a plugin from a project",
         "description": "Uninstalls a specific plugin version from the specified project.",
         "parameters": [
@@ -895,9 +954,20 @@
     },
     "/api/plugins/gateway": {
       "get": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Get gateway plugins",
         "description": "Retrieves a list of all plugins installed at the gateway level.",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -912,7 +982,9 @@
         }
       },
       "post": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Install gateway plugin",
         "description": "Installs a new plugin at the gateway level.",
         "requestBody": {
@@ -934,7 +1006,9 @@
     },
     "/api/plugins/gateway/{pluginId}": {
       "delete": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Uninstall gateway plugin",
         "description": "Uninstalls a plugin from the gateway level.",
         "parameters": [
@@ -964,7 +1038,9 @@
     },
     "/api/plugins/gateway/ui/manifest": {
       "get": {
-        "tags": ["Plugins"],
+        "tags": [
+          "Plugins"
+        ],
         "summary": "Get the manifest for UI plugins",
         "description": "Retrieves a map with the installed UI plugin remotes and the associated remoteEntry.js file.",
         "responses": {
@@ -986,7 +1062,9 @@
     },
     "/api/projects/{projectId}/loaders/{loaderId}/files": {
       "put": {
-        "tags": ["Loaders"],
+        "tags": [
+          "Loaders"
+        ],
         "summary": "Upload files for a loader",
         "description": "Uploads one or more files to be used by a specific loader in the project.",
         "parameters": [
@@ -1011,7 +1089,9 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "required": ["files"],
+                "required": [
+                  "files"
+                ],
                 "type": "object",
                 "properties": {
                   "files": {
@@ -1049,7 +1129,9 @@
     },
     "/api/projects/{projectId}/instances": {
       "post": {
-        "tags": ["Instances"],
+        "tags": [
+          "Instances"
+        ],
         "summary": "Add a new project instance",
         "description": "Allocates and adds a new execution instance for the specified project.",
         "parameters": [
@@ -1086,7 +1168,9 @@
         }
       },
       "get": {
-        "tags": ["Instances"],
+        "tags": [
+          "Instances"
+        ],
         "summary": "Get all project instances",
         "description": "Retrieves a list of all instances associated with the specified project.",
         "parameters": [
@@ -1115,7 +1199,9 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}": {
       "get": {
-        "tags": ["Instances"],
+        "tags": [
+          "Instances"
+        ],
         "summary": "Get project instance by ID",
         "description": "Retrieves detailed information about a specific project instance.",
         "parameters": [
@@ -1160,7 +1246,9 @@
         }
       },
       "delete": {
-        "tags": ["Instances"],
+        "tags": [
+          "Instances"
+        ],
         "summary": "Remove a project instance",
         "description": "Deallocates and removes a specific project instance.",
         "parameters": [
@@ -1200,7 +1288,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/linkers": {
       "get": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Get available linkers for an instance",
         "description": "Retrieves a list of all linkers available for the specified project instance.",
         "parameters": [
@@ -1237,7 +1328,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/loaders": {
       "get": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Get available loaders for an instance",
         "description": "Retrieves a list of all loaders available for the specified project instance.",
         "parameters": [
@@ -1274,7 +1368,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context": {
       "get": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Get current instance context",
         "description": "Retrieves the current data context for the specified project instance.",
         "parameters": [
@@ -1321,7 +1418,11 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/graph": {
       "get": {
-        "tags": ["Instances", "Context", "Graph"],
+        "tags": [
+          "Instances",
+          "Context",
+          "Graph"
+        ],
         "summary": "Search context nodes",
         "description": "Searches for context nodes based on a query string.",
         "parameters": [
@@ -1353,7 +1454,10 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": ["integer", "string"],
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 0
             }
@@ -1363,7 +1467,10 @@
             "in": "query",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": ["integer", "string"],
+              "type": [
+                "integer",
+                "string"
+              ],
               "format": "int32",
               "default": 10
             }
@@ -1395,7 +1502,11 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/graph/neighbors": {
       "get": {
-        "tags": ["Instances", "Context", "Graph"],
+        "tags": [
+          "Instances",
+          "Context",
+          "Graph"
+        ],
         "summary": "Get node neighbors",
         "description": "Retrieves the immediate neighbors and edges for a specific context node.",
         "parameters": [
@@ -1450,7 +1561,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/clear": {
       "post": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Clear instance context",
         "description": "Clears all loaded data from the current context of the specified project instance.",
         "parameters": [
@@ -1490,7 +1604,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/generate-classes": {
       "post": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Generate classes for instance context",
         "description": "Generates script classes based on the current data context for the specified project instance and returns them as a stream.",
         "parameters": [
@@ -1537,7 +1654,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/link": {
       "post": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Link instance context",
         "description": "Links the data context of the specified project instance using the provided linkers.",
         "parameters": [
@@ -1597,7 +1717,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/load": {
       "post": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Load instance context",
         "description": "Loads data into the context of the specified project instance using the provided loaders.",
         "parameters": [
@@ -1657,7 +1780,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/context/reload": {
       "post": {
-        "tags": ["Instances", "Context"],
+        "tags": [
+          "Instances",
+          "Context"
+        ],
         "summary": "Reload instance context",
         "description": "Reloads the data context for the specified project instance, refreshing all linked and loaded data.",
         "parameters": [
@@ -1697,7 +1823,9 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}": {
       "delete": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Delete analysis",
         "description": "Deletes a specific analysis and all its associated artifacts.",
         "parameters": [
@@ -1725,7 +1853,9 @@
         }
       },
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get analysis status by ID",
         "description": "Retrieves the current status and details of a specific analysis.",
         "parameters": [
@@ -1782,7 +1912,9 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/files/{fileId}": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Download individual analysis result file",
         "description": "Downloads a specific file generated as a result of an analysis.",
         "parameters": [
@@ -1827,7 +1959,9 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/files/download": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Download all analysis result files",
         "description": "Downloads a ZIP archive containing all files generated as a result of an analysis.",
         "parameters": [
@@ -1864,7 +1998,9 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/console": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get console analysis results",
         "description": "Retrieves the console output generated during the analysis.",
         "parameters": [
@@ -1911,7 +2047,9 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/errors": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get analysis error results",
         "description": "Retrieves a list of errors that occurred during the analysis execution.",
         "parameters": [
@@ -1958,7 +2096,9 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/results/files": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get analysis file results",
         "description": "Retrieves a list of files generated as a result of the analysis.",
         "parameters": [
@@ -2005,9 +2145,12 @@
     },
     "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}/content": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get analysis script content",
         "description": "Retrieves the actual code content of a script used in a specific analysis.",
+        "operationId": "GetAnalysisScriptContent",
         "parameters": [
           {
             "name": "projectId",
@@ -2044,13 +2187,25 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get analysis script metadata",
         "description": "Retrieves metadata about a script used in a specific analysis, such as its name and type.",
         "parameters": [
@@ -2105,7 +2260,9 @@
     },
     "/api/projects/{projectId}/analyses": {
       "get": {
-        "tags": ["Analysis"],
+        "tags": [
+          "Analysis"
+        ],
         "summary": "Get all analyses for a project",
         "description": "Retrieves a list of all analyses performed within the specified project.",
         "parameters": [
@@ -2152,7 +2309,10 @@
     },
     "/api/projects/{projectId}/instances/{instanceId}/analyses": {
       "post": {
-        "tags": ["Instances", "Analysis"],
+        "tags": [
+          "Instances",
+          "Analysis"
+        ],
         "summary": "Trigger a new analysis",
         "description": "Triggers a new analysis for a specific project instance using a given script.",
         "parameters": [
@@ -2214,7 +2374,9 @@
   "components": {
     "schemas": {
       "AllAvailablePluginsResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2226,7 +2388,9 @@
         }
       },
       "AnalysisError": {
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "type": "object",
         "properties": {
           "message": {
@@ -2260,18 +2424,27 @@
             "type": "string"
           },
           "scriptFileId": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "creationDate": {
             "type": "string",
             "format": "date-time"
           },
           "finishedDate": {
-            "type": ["null", "string"],
+            "type": [
+              "null",
+              "string"
+            ],
             "format": "date-time"
           },
           "errors": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/AnalysisError"
             }
@@ -2279,7 +2452,9 @@
         }
       },
       "AnalysisListResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2291,7 +2466,11 @@
         }
       },
       "AnalysisResultRunError": {
-        "required": ["title", "message", "severity"],
+        "required": [
+          "title",
+          "message",
+          "severity"
+        ],
         "type": "object",
         "properties": {
           "title": {
@@ -2306,7 +2485,10 @@
         }
       },
       "BundleItem": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2318,7 +2500,11 @@
         }
       },
       "ContextGraphEdge": {
-        "required": ["source", "target", "label"],
+        "required": [
+          "source",
+          "target",
+          "label"
+        ],
         "type": "object",
         "properties": {
           "source": {
@@ -2333,7 +2519,13 @@
         }
       },
       "ContextGraphNode": {
-        "required": ["id", "label", "type", "loader", "properties"],
+        "required": [
+          "id",
+          "label",
+          "type",
+          "loader",
+          "properties"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2346,7 +2538,10 @@
             "type": "string"
           },
           "loader": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "properties": {
             "type": "object"
@@ -2354,7 +2549,10 @@
         }
       },
       "ContextGraphResponse": {
-        "required": ["nodes", "edges"],
+        "required": [
+          "nodes",
+          "edges"
+        ],
         "type": "object",
         "properties": {
           "nodes": {
@@ -2372,7 +2570,10 @@
         }
       },
       "CreateProjectCommand": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2385,7 +2586,11 @@
         "description": "Command used to create a new project."
       },
       "CreateProjectResponse": {
-        "required": ["id", "name", "creationDate"],
+        "required": [
+          "id",
+          "name",
+          "creationDate"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2401,7 +2606,11 @@
         }
       },
       "CreateScriptCommand": {
-        "required": ["path", "language", "parameters"],
+        "required": [
+          "path",
+          "language",
+          "parameters"
+        ],
         "type": "object",
         "properties": {
           "path": {
@@ -2411,7 +2620,10 @@
             "type": "string"
           },
           "parameters": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/ScriptParameter"
             }
@@ -2419,22 +2631,33 @@
         }
       },
       "ExtensionPoint": {
-        "required": ["kind"],
+        "required": [
+          "kind"
+        ],
         "type": "object",
         "properties": {
           "kind": {
             "type": "string"
           },
           "language": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "extension": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "FileData": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2446,19 +2669,23 @@
         }
       },
       "GatewayPluginsResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InstalledPlugin"
+              "$ref": "#/components/schemas/InstalledGatewayPlugin"
             }
           }
         }
       },
       "GetAnalysisResultConsole": {
-        "required": ["content"],
+        "required": [
+          "content"
+        ],
         "type": "object",
         "properties": {
           "content": {
@@ -2467,7 +2694,11 @@
         }
       },
       "GetAnalysisResultFile": {
-        "required": ["id", "name", "type"],
+        "required": [
+          "id",
+          "name",
+          "type"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2482,7 +2713,9 @@
         }
       },
       "GetAnalysisResultFileList": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2494,7 +2727,9 @@
         }
       },
       "GetAnalysisResultRunErrors": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2506,7 +2741,9 @@
         }
       },
       "GetAvailableScriptTypesResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2518,7 +2755,9 @@
         }
       },
       "GetLinkersResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2530,7 +2769,9 @@
         }
       },
       "GetLoadersResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2542,7 +2783,9 @@
         }
       },
       "GetProjectContextResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2554,7 +2797,12 @@
         }
       },
       "GetProjectFilesResponse": {
-        "required": ["data", "totalCount", "offset", "limit"],
+        "required": [
+          "data",
+          "totalCount",
+          "offset",
+          "limit"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2565,17 +2813,26 @@
           },
           "totalCount": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int64"
           },
           "offset": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "limit": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["integer", "string"],
+            "type": [
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "hasNextPage": {
@@ -2584,7 +2841,9 @@
         }
       },
       "GetProjectInstancesListResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2596,7 +2855,9 @@
         }
       },
       "GetProjectListResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2608,7 +2869,9 @@
         }
       },
       "GetScriptDataResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2623,21 +2886,37 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["null", "integer", "string"],
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "errors": {
             "type": "object",
@@ -2660,8 +2939,223 @@
           "$ref": "#/components/schemas/IFormFile"
         }
       },
+      "InstalledGatewayPlugin": {
+        "required": [
+          "id",
+          "version",
+          "extensionPoints"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "extensionPoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstalledGatewayPluginExtensionPoint"
+            }
+          }
+        },
+        "description": "Represents an installed gateway plugin with its ID and version."
+      },
+      "InstalledGatewayPluginExtensionPoint": {
+        "required": [
+          "kind",
+          "remoteName",
+          "remoteEntry",
+          "outlets"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "remoteName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "remoteEntry": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "outlets": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBase"
+            }
+          }
+        },
+        "description": "Represents the extension points of an installed gateway plugin."
+      },
+      "InstalledGatewayPluginExtensionPointOutletBase": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNavigationBarOutlet"
+          },
+          {
+            "$ref": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginSidePanelOutlet"
+          },
+          {
+            "$ref": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginFilePreviewerOutlet"
+          }
+        ],
+        "description": "Base class for outlets of an installed gateway plugin extension point.",
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "top-navigation-bar": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNavigationBarOutlet",
+            "side-panel": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginSidePanelOutlet",
+            "file-previewer": "#/components/schemas/InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginFilePreviewerOutlet"
+          }
+        }
+      },
+      "InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginFilePreviewerOutlet": {
+        "required": [
+          "exposedModule",
+          "label",
+          "componentName",
+          "icon",
+          "supportedFileExtensions"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "file-previewer"
+            ],
+            "type": "string"
+          },
+          "exposedModule": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "componentName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "icon": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "supportedFileExtensions": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "Represents a component for file previewer of output results."
+      },
+      "InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginSidePanelOutlet": {
+        "required": [
+          "exposedModule",
+          "label",
+          "path",
+          "nested",
+          "componentName",
+          "icon"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "side-panel"
+            ],
+            "type": "string"
+          },
+          "exposedModule": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "nested": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "componentName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "icon": {
+            "type": "string"
+          }
+        },
+        "description": "Represents an element from the Side Hamburger Panel with route."
+      },
+      "InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNavigationBarOutlet": {
+        "required": [
+          "exposedModule",
+          "label",
+          "path",
+          "nested",
+          "componentName"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "top-navigation-bar"
+            ],
+            "type": "string"
+          },
+          "exposedModule": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "nested": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "componentName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "description": "Represents an element from the Top Navigation Bar with route."
+      },
       "InstalledPlugin": {
-        "required": ["id", "version"],
+        "required": [
+          "id",
+          "version"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2674,7 +3168,9 @@
         "description": "Represents an installed plugin with its ID and version."
       },
       "InstalledPluginsResponse": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2686,7 +3182,10 @@
         }
       },
       "InstallGatewayPluginRequest": {
-        "required": ["id", "version"],
+        "required": [
+          "id",
+          "version"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2698,7 +3197,9 @@
         }
       },
       "LinkContextCommand": {
-        "required": ["linkerIds"],
+        "required": [
+          "linkerIds"
+        ],
         "type": "object",
         "properties": {
           "linkerIds": {
@@ -2710,7 +3211,10 @@
         }
       },
       "Linker": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2722,7 +3226,9 @@
         }
       },
       "LoadContextCommand": {
-        "required": ["loaderIds"],
+        "required": [
+          "loaderIds"
+        ],
         "type": "object",
         "properties": {
           "loaderIds": {
@@ -2734,7 +3240,10 @@
         }
       },
       "Loader": {
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2746,7 +3255,14 @@
         }
       },
       "MarketplacePlugin": {
-        "required": ["id", "name", "type", "description", "authors", "versions"],
+        "required": [
+          "id",
+          "name",
+          "type",
+          "description",
+          "authors",
+          "versions"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2776,7 +3292,14 @@
         }
       },
       "MarketplacePluginWithDetails": {
-        "required": ["id", "name", "type", "description", "authors", "versions"],
+        "required": [
+          "id",
+          "name",
+          "type",
+          "description",
+          "authors",
+          "versions"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2804,37 +3327,61 @@
             }
           },
           "bundleItems": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/BundleItem"
             }
           },
           "sourceCode": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "manifest": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "site": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "license": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "tags": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
           "technologies": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
           "extensionPoints": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/ExtensionPoint"
             }
@@ -2842,7 +3389,11 @@
         }
       },
       "PluginVersion": {
-        "required": ["url", "version", "manifestUrl"],
+        "required": [
+          "url",
+          "version",
+          "manifestUrl"
+        ],
         "type": "object",
         "properties": {
           "url": {
@@ -2860,26 +3411,46 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "title": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "status": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": ["null", "integer", "string"],
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
             "format": "int32"
           },
           "detail": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "instance": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "Project": {
-        "required": ["id", "name", "creationDate"],
+        "required": [
+          "id",
+          "name",
+          "creationDate"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2896,22 +3467,33 @@
         "description": "Represents basic project information."
       },
       "ProjectContextGenerateClassesRequest": {
-        "required": ["languages"],
+        "required": [
+          "languages"
+        ],
         "type": "object",
         "properties": {
           "languages": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "type": "string"
             }
           },
           "transferFormat": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
       "ProjectContextSlice": {
-        "required": ["model", "pluginIds"],
+        "required": [
+          "model",
+          "pluginIds"
+        ],
         "type": "object",
         "properties": {
           "model": {
@@ -2926,7 +3508,14 @@
         }
       },
       "ProjectDetails": {
-        "required": ["id", "name", "creationDate", "savedFiles", "loadedFiles", "linkers"],
+        "required": [
+          "id",
+          "name",
+          "creationDate",
+          "savedFiles",
+          "loadedFiles",
+          "linkers"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2967,7 +3556,13 @@
         "description": "Represents detailed project information, including saved and loaded files."
       },
       "ProjectFileNode": {
-        "required": ["id", "name", "path", "type", "hasChildren"],
+        "required": [
+          "id",
+          "name",
+          "path",
+          "type",
+          "hasChildren"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2988,7 +3583,11 @@
         }
       },
       "ProjectInstance": {
-        "required": ["id", "creationDate", "status"],
+        "required": [
+          "id",
+          "creationDate",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -3005,7 +3604,13 @@
         "description": "Represents an instance of a project execution."
       },
       "ScriptData": {
-        "required": ["id", "name", "path", "scriptLanguage", "parameters"],
+        "required": [
+          "id",
+          "name",
+          "path",
+          "scriptLanguage",
+          "parameters"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -3029,7 +3634,10 @@
         }
       },
       "ScriptLanguage": {
-        "required": ["name", "extension"],
+        "required": [
+          "name",
+          "extension"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -3041,7 +3649,11 @@
         }
       },
       "ScriptParameter": {
-        "required": ["name", "type", "value"],
+        "required": [
+          "name",
+          "type",
+          "value"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -3050,7 +3662,7 @@
           "type": {
             "type": "string"
           },
-          "value": {}
+          "value": { }
         }
       },
       "Stream": {
@@ -3058,7 +3670,9 @@
         "format": "binary"
       },
       "TriggerAnalysisCommand": {
-        "required": ["scriptId"],
+        "required": [
+          "scriptId"
+        ],
         "type": "object",
         "properties": {
           "scriptId": {
@@ -3068,14 +3682,23 @@
         "description": "Command used to trigger a script analysis."
       },
       "UpdateScriptCommand": {
-        "required": ["name", "parameters"],
+        "required": [
+          "name",
+          "parameters"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": ["null", "string"]
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "parameters": {
-            "type": ["null", "array"],
+            "type": [
+              "null",
+              "array"
+            ],
             "items": {
               "$ref": "#/components/schemas/ScriptParameter"
             }
@@ -3083,7 +3706,10 @@
         }
       },
       "UploadLoaderFilesResponse": {
-        "required": ["loaderId", "fileNames"],
+        "required": [
+          "loaderId",
+          "fileNames"
+        ],
         "type": "object",
         "properties": {
           "loaderId": {

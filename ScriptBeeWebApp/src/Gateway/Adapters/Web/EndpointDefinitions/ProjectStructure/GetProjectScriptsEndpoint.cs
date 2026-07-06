@@ -29,8 +29,10 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
             .WithDescription("Retrieves metadata about a specific project script.");
         app.MapGet("/api/projects/{projectId}/scripts/{scriptId}/content", GetProjectScriptsContent)
             .WithTags("Scripts")
+            .WithName("GetScriptContent")
             .WithSummary("Get project script content")
-            .WithDescription("Retrieves the actual code content of a project script.");
+            .WithDescription("Retrieves the actual code content of a project script.")
+            .Produces<string>(200, "text/plain");
     }
 
     private static async Task<Ok<WebGetScriptDataResponse>> GetProjectScripts(
