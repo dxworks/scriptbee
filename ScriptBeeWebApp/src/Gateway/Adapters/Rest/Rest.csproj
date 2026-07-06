@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Refit" />
+    <PackageReference Include="Refitter.MSBuild" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Ports.Instance\Ports.Instance.csproj" />

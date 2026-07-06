@@ -30,6 +30,25 @@ public class SidePanelOutlet : RoutingOutlet
 
 public class FilePreviewerOutlet : UiPluginExtensionPointOutlet
 {
+    public FilePreviewerOutlet() { }
+
+    public FilePreviewerOutlet(
+        string type,
+        string exposedModule,
+        string label,
+        string? componentName,
+        string? icon,
+        List<string>? supportedFileExtensions
+    )
+    {
+        Type = type;
+        ExposedModule = exposedModule;
+        Label = label;
+        ComponentName = componentName;
+        Icon = icon;
+        SupportedFileExtensions = supportedFileExtensions;
+    }
+
     public string ExposedModule { get; set; } = "";
     public string Label { get; set; } = "";
     public string? ComponentName { get; set; }

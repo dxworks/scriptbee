@@ -2,7 +2,7 @@ using Refit;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Ports.Instance;
-using ScriptBee.Rest.Api;
+using ScriptBee.Rest.Api.Generated;
 
 namespace ScriptBee.Rest;
 
@@ -17,9 +17,9 @@ public class UninstallPluginAdapter(IHttpClientFactory httpClientFactory) : IUni
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var pluginsApi = RestService.For<IPluginsApi>(client);
+        var analysisApi = RestService.For<IAnalysisApi>(client);
 
-        await pluginsApi.UninstallPlugin(
+        await analysisApi.PluginsDelete(
             pluginId.Name,
             pluginId.Version.ToString(),
             cancellationToken
