@@ -1,0 +1,25 @@
+{
+  "openApiPath": "../../../docs/public/gateway_swagger.json",
+  "namespace": "ScriptBee.MCP.Gateway.Generated",
+  "contractsNamespace": "ScriptBee.MCP.Gateway.Generated.Contracts",
+  "propertyNamingPolicy": "PascalCase",
+  "naming": {
+    "useOpenApiTitle": false,
+    "interfaceName": "GatewayApi"
+  },
+  "generateContracts": true,
+  "generateClients": true,
+  "useCancellationTokens": true,
+  "immutableRecords": false,
+  "generateNullableReferenceTypes": true,
+  "generateNativeRecords": false,
+  "outputFolder": "./Generated",
+  "outputFilename": "GatewayApi.g.cs",
+  "responseTypeOverride": {
+    "GetScriptContent": "string",
+    "GetAnalysisScriptContent": "string",
+    "FilesGet2": "System.IO.Stream",
+    "Download": "System.IO.Stream",
+    "GenerateClasses": "System.IO.Stream"
+  }
+}

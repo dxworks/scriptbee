@@ -24,10 +24,12 @@ public class GetAnalysisScriptEndpoint : IEndpointDefinition
                 GetScriptContent
             )
             .WithTags("Analysis")
+            .WithName("GetAnalysisScriptContent")
             .WithSummary("Get analysis script content")
             .WithDescription(
                 "Retrieves the actual code content of a script used in a specific analysis."
-            );
+            )
+            .Produces<string>(200, "text/plain");
 
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}",
