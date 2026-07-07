@@ -23,6 +23,8 @@ WORKDIR /app
 COPY Directory.Packages.props Directory.Packages.props
 COPY Directory.Build.props Directory.Build.props
 
+COPY docs/public/analysis_swagger.json docs/public/analysis_swagger.json
+
 COPY DxWorks.ScriptBee.Plugin.Api ./DxWorks.ScriptBee.Plugin.Api
 
 COPY ScriptBeeWebApp/src/Common ScriptBeeWebApp/src/Common

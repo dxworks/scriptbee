@@ -11,8 +11,4 @@
     <PackageReference Include="Refitter.SourceGenerator" />
     <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="ScriptBee.MCP.refitter" />
-  </ItemGroup>
 </Project>
