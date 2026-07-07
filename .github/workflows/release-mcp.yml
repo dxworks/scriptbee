@@ -89,8 +89,43 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  create-release:
+    name: Create GitHub Release
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Extract version from tag
+        id: meta
+        shell: bash
+        run: |
+          INPUT_TAG="${{ github.event.inputs.tag }}"
+          if [ -n "$INPUT_TAG" ]; then
+            REF_NAME="$INPUT_TAG"
+          else
+            REF_NAME="$GITHUB_REF_NAME"
+          fi
+          if [[ "$REF_NAME" == *"@"* ]]; then
+            VERSION="${REF_NAME#*@}"
+          else
+            VERSION="${REF_NAME#v}"
+          fi
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog for current version
+        id: changelog
+        run: |
+          chmod +x ./scripts/extract_changelog.sh
+          ./scripts/extract_changelog.sh "${{ steps.meta.outputs.version }}" Integrations/MCP/CHANGELOG.md
+
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          body_path: Integrations/MCP/CHANGELOG.md
+          body_path: CHANGELOG.md
