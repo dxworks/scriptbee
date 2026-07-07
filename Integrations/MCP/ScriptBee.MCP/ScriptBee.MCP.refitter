@@ -13,7 +13,6 @@
   "immutableRecords": false,
   "generateNullableReferenceTypes": true,
   "generateNativeRecords": false,
-  "outputFolder": "./Generated",
   "outputFilename": "GatewayApi.g.cs",
   "responseTypeOverride": {
     "GetScriptContent": "string",
