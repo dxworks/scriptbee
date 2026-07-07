@@ -88,3 +88,9 @@ jobs:
             dxworks/scriptbee-mcp:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          body_path: Integrations/MCP/CHANGELOG.md
