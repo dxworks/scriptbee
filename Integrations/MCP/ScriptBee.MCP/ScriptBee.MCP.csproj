@@ -1,8 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ScriptBee.MCP</RootNamespace>
     <RefitterNoLogging>true</RefitterNoLogging>
   </PropertyGroup>
@@ -11,7 +8,7 @@
     <PackageReference Include="ModelContextProtocol.AspNetCore" />
     <PackageReference Include="Refit" />
     <PackageReference Include="Refit.HttpClientFactory" />
-    <PackageReference Include="Refitter.MSBuild" />
+    <PackageReference Include="Refitter.SourceGenerator" />
     <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
 

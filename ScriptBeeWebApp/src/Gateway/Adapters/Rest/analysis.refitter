@@ -13,7 +13,6 @@
   "immutableRecords": true,
   "generateNullableReferenceTypes": true,
   "generateNativeRecords": true,
-  "outputFolder": "./Generated",
   "outputFilename": "AnalysisApi.g.cs",
   "responseTypeOverride": {
     "GenerateClasses": "System.IO.Stream",
