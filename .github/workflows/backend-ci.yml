@@ -6,12 +6,14 @@ on:
     paths:
       - 'ScriptBeeWebApp/**'
       - 'Plugins/**'
+      - '!Plugins/UI/**'
       - 'Integrations/MCP/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     paths:
       - 'ScriptBeeWebApp/**'
       - 'Plugins/**'
+      - '!Plugins/UI/**'
       - 'Integrations/MCP/**'
       - '.github/workflows/backend-ci.yml'
 
