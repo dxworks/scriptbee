@@ -1,1 +1,8 @@
 <div>Hello, default-scriptbee-chart!</div>
+
+<div>
+  Mode: {{ themeService.echartsTheme() }}
+  <button (click)="themeService.toggle()">Toggle Mode</button>
+</div>
+
+<app-bar-chart [parameters]="barChartParameters()"></app-bar-chart>
