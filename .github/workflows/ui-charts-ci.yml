@@ -1,4 +1,4 @@
-name: UI CI
+name: UI Charts CI
 
 on:
   push:
