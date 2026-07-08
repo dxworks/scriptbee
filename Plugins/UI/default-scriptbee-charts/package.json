@@ -33,6 +33,7 @@
     "@angular/compiler-cli": "^22.0.5",
     "@eslint/js": "^10.0.1",
     "@softarc/native-federation-orchestrator": "^4.4.1",
+    "@vitest/browser-playwright": "^4.1.10",
     "angular-eslint": "^22.0.0",
     "es-module-shims": "^2.8.2",
     "eslint": "^10.6.0",
@@ -43,7 +44,7 @@
     "prettier": "^3.9.4",
     "prettier-eslint": "^17.1.1",
     "typescript": "~6.0.3",
-    "typescript-eslint": "8.60.1",
+    "typescript-eslint": "8.63.0",
     "vitest": "^4.1.10"
   }
 }
