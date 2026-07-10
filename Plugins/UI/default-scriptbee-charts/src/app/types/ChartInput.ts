@@ -1,6 +1,5 @@
 ﻿import { EChartsCoreOption } from 'echarts/types/dist/echarts';
-import { EChartsOption } from 'echarts/types/dist/shared';
-import { BarSeriesOption, TreemapSeriesOption } from 'echarts';
+import { BarSeriesOption, ScatterSeriesOption, TreemapSeriesOption } from 'echarts';
 
 export type Theme = 'light' | 'dark';
 
@@ -9,18 +8,17 @@ export interface ChartParameters<T> {
   input: T;
 }
 
-interface ChartInputBase {
-  xAxis: EChartsOption['xAxis'];
-  yAxis: EChartsOption['yAxis'];
-  legend: EChartsOption['legend'];
-  tooltip: EChartsOption['tooltip'];
-  options: EChartsCoreOption;
-}
-
-export interface BarChartInput extends Partial<ChartInputBase> {
+export interface BarChartInput {
   series: Omit<BarSeriesOption, 'type'>[];
+  options?: EChartsCoreOption;
 }
 
-export interface TreeMapInput extends Partial<ChartInputBase> {
+export interface TreeMapInput {
   series: Omit<TreemapSeriesOption, 'type'>[];
+  options?: EChartsCoreOption;
+}
+
+export interface ScatterPlotInput {
+  series: Omit<ScatterSeriesOption, 'type'>[];
+  options?: EChartsCoreOption;
 }

@@ -5,6 +5,7 @@ export default withNativeFederation({
   exposes: {
     './BarChart': './src/app/components/bar-chart/bar-chart.ts',
     './TreeMap': './src/app/components/tree-map/tree-map.ts',
+    './ScatterPlot': './src/app/components/scatter-plot/scatter-plot.ts',
   },
   shared: {
     ...shareAll({ singleton: true, strictVersion: false, requiredVersion: 'auto' }),
