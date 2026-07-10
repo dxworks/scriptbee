@@ -8,6 +8,7 @@
 <select [(ngModel)]="selectedChartType">
   <option value="bar">Bar Chart</option>
   <option value="tree-map">Tree Map</option>
+  <option value="scatter-plot">Scatter Plot</option>
 </select>
 
 @switch (selectedChartType()) {
@@ -16,6 +17,9 @@
   }
   @case ('tree-map') {
     <app-tree-map [parameters]="treeMapParameters()"></app-tree-map>
+  }
+  @case ('scatter-plot') {
+    <app-scatter-plot [parameters]="scatterPlotParameters()"></app-scatter-plot>
   }
   @default {
     <p>Please select a chart type.</p>

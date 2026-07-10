@@ -24,10 +24,6 @@ export class TreeMap {
 
     return {
       ...(input.options ?? {}),
-      legend: input.legend,
-      tooltip: input.tooltip,
-      xAxis: input.xAxis,
-      yAxis: input.yAxis,
       series: (input.series ?? []).map((s) => ({ ...s, type: 'treemap' })),
     };
   });
