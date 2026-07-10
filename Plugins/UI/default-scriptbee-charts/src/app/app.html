@@ -5,4 +5,19 @@
   <button (click)="themeService.toggle()">Toggle Mode</button>
 </div>
 
-<app-bar-chart [parameters]="barChartParameters()"></app-bar-chart>
+<select [(ngModel)]="selectedChartType">
+  <option value="bar">Bar Chart</option>
+  <option value="tree-map">Tree Map</option>
+</select>
+
+@switch (selectedChartType()) {
+  @case ('bar') {
+    <app-bar-chart [parameters]="barChartParameters()"></app-bar-chart>
+  }
+  @case ('tree-map') {
+    <app-tree-map [parameters]="treeMapParameters()"></app-tree-map>
+  }
+  @default {
+    <p>Please select a chart type.</p>
+  }
+}
