@@ -5,7 +5,7 @@ import { TreemapChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { ChartParameters, TreeMapInput } from '../../types/ChartInput';
-import { EChartsCoreOption } from 'echarts/types/dist/echarts';
+import { EChartsCoreOption } from 'echarts';
 
 echarts.use([TreemapChart, GridComponent, CanvasRenderer, LegendComponent, TooltipComponent]);
 

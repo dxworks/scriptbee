@@ -1,30 +1,30 @@
 import { Component, computed, input } from '@angular/core';
 import * as echarts from 'echarts/core';
-import { ScatterChart } from 'echarts/charts';
+import { HeatmapChart as HeatMapComponent } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
-import { ChartParameters, ScatterPlotInput } from '../../types/ChartInput';
+import { ChartParameters, HeatmapChartInput } from '../../types/ChartInput';
 import { EChartsCoreOption } from 'echarts';
 
-echarts.use([ScatterChart, GridComponent, CanvasRenderer, LegendComponent, TooltipComponent]);
+echarts.use([HeatMapComponent, GridComponent, CanvasRenderer, LegendComponent, TooltipComponent]);
 
 @Component({
-  selector: 'app-scatter-plot',
+  selector: 'app-heatmap-chart',
   imports: [NgxEchartsDirective],
-  templateUrl: './scatter-plot.html',
-  styleUrl: './scatter-plot.scss',
+  templateUrl: './heatmap-chart.html',
+  styleUrl: './heatmap-chart.scss',
   providers: [provideEchartsCore({ echarts })],
 })
-export class ScatterPlot {
-  parameters = input.required<ChartParameters<ScatterPlotInput>>();
+export class HeatmapChart {
+  parameters = input.required<ChartParameters<HeatmapChartInput>>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.parameters().input;
 
     return {
       ...(input.options ?? {}),
-      series: (input.series ?? []).map((s) => ({ ...s, type: 'scatter' })),
+      series: (input.series ?? []).map((s) => ({ ...s, type: 'heatmap' })),
     };
   });
 }
