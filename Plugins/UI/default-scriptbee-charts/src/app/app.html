@@ -9,6 +9,7 @@
   <option value="bar">Bar Chart</option>
   <option value="tree-map">Tree Map</option>
   <option value="scatter-plot">Scatter Plot</option>
+  <option value="heatmap-chart">Heatmap Chart</option>
   <option value="generic-echarts">Generic ECharts</option>
 </select>
 
@@ -21,6 +22,9 @@
   }
   @case ('scatter-plot') {
     <app-scatter-plot [parameters]="scatterPlotParameters()"></app-scatter-plot>
+  }
+  @case ('heatmap-chart') {
+    <app-heatmap-chart [parameters]="heatmapChartParameters()"></app-heatmap-chart>
   }
   @case ('generic-echarts') {
     <app-echarts-chart [parameters]="genericEChartsParameters()"></app-echarts-chart>

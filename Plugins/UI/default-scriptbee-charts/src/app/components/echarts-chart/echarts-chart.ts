@@ -3,9 +3,19 @@ import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { EChartsCoreOption } from 'echarts';
 import { ChartParameters, EChartsChartInput } from '../../types/ChartInput';
-import * as ecStat from 'echarts-stat';
+import * as ecStatImport from 'echarts-stat';
 
-// @ts-expect-error update when types ever available
+type TransformParam = Parameters<typeof echarts.registerTransform>[0];
+interface EcStatModule {
+  transform: {
+    histogram: TransformParam;
+    regression: TransformParam;
+    clustering: TransformParam;
+  };
+}
+
+const ecStat = (ecStatImport as unknown as { default?: EcStatModule } & EcStatModule).default || (ecStatImport as unknown as EcStatModule);
+
 echarts.registerTransform(ecStat.transform.histogram);
 
 @Component({

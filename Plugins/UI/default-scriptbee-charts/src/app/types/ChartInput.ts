@@ -1,5 +1,5 @@
 ﻿import { EChartsCoreOption, RegisteredSeriesOption } from 'echarts/types/dist/echarts';
-import { BarSeriesOption, ScatterSeriesOption, TreemapSeriesOption } from 'echarts';
+import { BarSeriesOption, HeatmapSeriesOption, ScatterSeriesOption, TreemapSeriesOption } from 'echarts';
 
 export type Theme = 'light' | 'dark';
 
@@ -27,5 +27,10 @@ export interface TreeMapInput {
 
 export interface ScatterPlotInput {
   series: Omit<ScatterSeriesOption, 'type'>[];
+  options?: EChartsCoreOption;
+}
+
+export interface HeatmapChartInput {
+  series: Omit<HeatmapSeriesOption, 'type'>[];
   options?: EChartsCoreOption;
 }
