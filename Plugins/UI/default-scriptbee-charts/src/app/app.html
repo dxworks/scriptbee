@@ -9,6 +9,7 @@
   <option value="bar">Bar Chart</option>
   <option value="tree-map">Tree Map</option>
   <option value="scatter-plot">Scatter Plot</option>
+  <option value="generic-echarts">Generic ECharts</option>
 </select>
 
 @switch (selectedChartType()) {
@@ -20,6 +21,9 @@
   }
   @case ('scatter-plot') {
     <app-scatter-plot [parameters]="scatterPlotParameters()"></app-scatter-plot>
+  }
+  @case ('generic-echarts') {
+    <app-echarts-chart [parameters]="genericEChartsParameters()"></app-echarts-chart>
   }
   @default {
     <p>Please select a chart type.</p>

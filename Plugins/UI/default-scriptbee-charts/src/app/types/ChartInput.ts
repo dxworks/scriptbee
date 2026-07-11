@@ -1,4 +1,4 @@
-﻿import { EChartsCoreOption } from 'echarts/types/dist/echarts';
+﻿import { EChartsCoreOption, RegisteredSeriesOption } from 'echarts/types/dist/echarts';
 import { BarSeriesOption, ScatterSeriesOption, TreemapSeriesOption } from 'echarts';
 
 export type Theme = 'light' | 'dark';
@@ -6,6 +6,13 @@ export type Theme = 'light' | 'dark';
 export interface ChartParameters<T> {
   theme: Theme;
   input: T;
+}
+
+type AllSeriesOptions = RegisteredSeriesOption[keyof RegisteredSeriesOption];
+
+export interface EChartsChartInput {
+  series: AllSeriesOptions[];
+  options?: EChartsCoreOption;
 }
 
 export interface BarChartInput {
