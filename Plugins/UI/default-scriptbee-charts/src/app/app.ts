@@ -1,16 +1,17 @@
 import { Component, computed, inject, model } from '@angular/core';
 import { BarChart } from './components/bar-chart/bar-chart';
 import { ThemeService } from './services/theme.service';
-import { BarChartInput, ChartParameters, EChartsChartInput, HeatmapChartInput, ScatterPlotInput, TreeMapInput } from './types/ChartInput';
+import { BarChartInput, BubbleChartInput, ChartParameters, EChartsChartInput, HeatmapChartInput, ScatterPlotInput, TreeMapInput } from './types/ChartInput';
 import { FormsModule } from '@angular/forms';
 import { TreeMap } from './components/tree-map/tree-map';
 import { ScatterPlot } from './components/scatter-plot/scatter-plot';
 import { EchartsChart } from './components/echarts-chart/echarts-chart';
 import { HeatmapChart } from './components/heatmap-chart/heatmap-chart';
+import { BubbleChart } from './components/bubble-chart/bubble-chart';
 
 @Component({
   selector: 'app-root',
-  imports: [BarChart, FormsModule, TreeMap, ScatterPlot, EchartsChart, HeatmapChart],
+  imports: [BarChart, FormsModule, TreeMap, ScatterPlot, EchartsChart, HeatmapChart, BubbleChart],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -72,90 +73,64 @@ export class App {
     };
   });
 
-  treeMapParameters = computed<ChartParameters<TreeMapInput>>(() => {
-    const series: ChartParameters<TreeMapInput>['input']['series'] = [
-      {
-        name: 'bar',
-        data: [
-          {
-            name: 'nodeA',
-            value: 10,
-            children: [
-              {
-                name: 'nodeAa',
-                value: 9,
-              },
-              {
-                name: 'nodeAb',
-                value: 1,
-              },
-            ],
-          },
-          {
-            name: 'nodeB',
-            value: 20,
-            children: [
-              {
-                name: 'nodeBa',
-                value: 20,
-                children: [
-                  {
-                    name: 'nodeBa1',
-                    value: 20,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
+  bubbleChartParameters = computed<ChartParameters<BubbleChartInput>>(() => {
+    const data = [
+      [
+        [28604, 77, 17096869, 'Australia', 1990],
+        [31163, 77.4, 27662440, 'Canada', 1990],
+      ],
+      [
+        [44056, 81.8, 23968973, 'Australia', 2015],
+        [43294, 81.7, 35939927, 'Canada', 2015],
+      ],
     ];
 
     return {
       theme: this.themeService.echartsTheme(),
       input: {
-        series: series,
-      },
-    };
-  });
-
-  scatterPlotParameters = computed<ChartParameters<ScatterPlotInput>>(() => {
-    return {
-      theme: this.themeService.echartsTheme(),
-      input: {
+        options: {
+          title: {
+            text: 'Life Expectancy and GDP by Country',
+            left: '5%',
+            top: '3%',
+          },
+          legend: {
+            right: '10%',
+            top: '3%',
+            data: ['1990', '2015'],
+          },
+          grid: {
+            left: '8%',
+            top: '10%',
+          },
+          xAxis: {
+            splitLine: {
+              lineStyle: {
+                type: 'dashed',
+              },
+            },
+          },
+          yAxis: {
+            splitLine: {
+              lineStyle: {
+                type: 'dashed',
+              },
+            },
+            scale: true,
+          },
+        },
         series: [
           {
-            symbolSize: 20,
-            data: [
-              [10.0, 8.04],
-              [8.07, 6.95],
-              [13.0, 7.58],
-              [9.05, 8.81],
-              [11.0, 8.33],
-              [14.0, 7.66],
-              [13.4, 6.81],
-              [10.0, 6.33],
-              [14.0, 8.96],
-              [12.5, 6.82],
-              [9.15, 7.2],
-              [11.5, 7.2],
-              [3.03, 4.23],
-              [12.2, 7.83],
-              [2.02, 4.47],
-              [1.05, 3.33],
-              [4.05, 4.96],
-              [6.03, 7.24],
-              [12.0, 6.26],
-              [12.0, 8.84],
-              [7.08, 5.82],
-              [5.02, 5.68],
-            ],
+            name: '1990',
+            data: data[0],
+            symbolSize: [50, 24,70],
+          },
+          {
+            name: '2015',
+            data: data[1],
+            symbolSize: 60,
           },
         ],
-        options: {
-          xAxis: {},
-          yAxis: {},
-        },
       },
     };
   });
@@ -412,6 +387,94 @@ export class App {
             },
           },
         ],
+      },
+    };
+  });
+
+  scatterPlotParameters = computed<ChartParameters<ScatterPlotInput>>(() => {
+    return {
+      theme: this.themeService.echartsTheme(),
+      input: {
+        series: [
+          {
+            symbolSize: 20,
+            data: [
+              [10.0, 8.04],
+              [8.07, 6.95],
+              [13.0, 7.58],
+              [9.05, 8.81],
+              [11.0, 8.33],
+              [14.0, 7.66],
+              [13.4, 6.81],
+              [10.0, 6.33],
+              [14.0, 8.96],
+              [12.5, 6.82],
+              [9.15, 7.2],
+              [11.5, 7.2],
+              [3.03, 4.23],
+              [12.2, 7.83],
+              [2.02, 4.47],
+              [1.05, 3.33],
+              [4.05, 4.96],
+              [6.03, 7.24],
+              [12.0, 6.26],
+              [12.0, 8.84],
+              [7.08, 5.82],
+              [5.02, 5.68],
+            ],
+          },
+        ],
+        options: {
+          xAxis: {},
+          yAxis: {},
+        },
+      },
+    };
+  });
+
+  treeMapParameters = computed<ChartParameters<TreeMapInput>>(() => {
+    const series: ChartParameters<TreeMapInput>['input']['series'] = [
+      {
+        name: 'bar',
+        data: [
+          {
+            name: 'nodeA',
+            value: 10,
+            children: [
+              {
+                name: 'nodeAa',
+                value: 9,
+              },
+              {
+                name: 'nodeAb',
+                value: 1,
+              },
+            ],
+          },
+          {
+            name: 'nodeB',
+            value: 20,
+            children: [
+              {
+                name: 'nodeBa',
+                value: 20,
+                children: [
+                  {
+                    name: 'nodeBa1',
+                    value: 20,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    return {
+      theme: this.themeService.echartsTheme(),
+      input: {
+        series: series,
       },
     };
   });

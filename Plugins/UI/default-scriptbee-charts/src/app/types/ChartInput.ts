@@ -20,8 +20,13 @@ export interface BarChartInput {
   options?: EChartsCoreOption;
 }
 
-export interface TreeMapInput {
-  series: Omit<TreemapSeriesOption, 'type'>[];
+export interface BubbleChartInput {
+  series: Omit<ScatterSeriesOption, 'type'>[];
+  options?: EChartsCoreOption;
+}
+
+export interface HeatmapChartInput {
+  series: Omit<HeatmapSeriesOption, 'type'>[];
   options?: EChartsCoreOption;
 }
 
@@ -30,7 +35,7 @@ export interface ScatterPlotInput {
   options?: EChartsCoreOption;
 }
 
-export interface HeatmapChartInput {
-  series: Omit<HeatmapSeriesOption, 'type'>[];
+export interface TreeMapInput {
+  series: Omit<TreemapSeriesOption, 'type'>[];
   options?: EChartsCoreOption;
 }

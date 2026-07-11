@@ -5,9 +5,10 @@ export default withNativeFederation({
   exposes: {
     './EChartsChart': './src/app/components/echarts-chart/echarts-chart.ts',
     './BarChart': './src/app/components/bar-chart/bar-chart.ts',
-    './TreeMap': './src/app/components/tree-map/tree-map.ts',
-    './ScatterPlot': './src/app/components/scatter-plot/scatter-plot.ts',
+    './BubbleChart': './src/app/components/bubble-chart/bubble-chart.ts',
     './HeatmapChart': './src/app/components/heatmap-chart/heatmap-chart.ts',
+    './ScatterPlot': './src/app/components/scatter-plot/scatter-plot.ts',
+    './TreeMap': './src/app/components/tree-map/tree-map.ts',
   },
   shared: {
     ...shareAll({ singleton: true, strictVersion: false, requiredVersion: 'auto' }),
