@@ -8,22 +8,22 @@ internal class ScriptExecutionLoadContext(AssemblyLoadContext pluginContext)
 {
     protected override Assembly? Load(AssemblyName assemblyName)
     {
-        var loadedInPlugin = pluginContext.Assemblies.FirstOrDefault(a =>
-            a.GetName().Name == assemblyName.Name
-        );
-
-        if (loadedInPlugin != null)
+        if (pluginContext.IsCollectible && !pluginContext.Assemblies.Any())
         {
-            return loadedInPlugin;
+            return Default.LoadFromAssemblyName(assemblyName);
         }
-
         try
         {
-            return pluginContext.LoadFromAssemblyName(assemblyName);
+            var loadedInPlugin = pluginContext.Assemblies.FirstOrDefault(a =>
+                a.GetName().Name == assemblyName.Name
+            );
+
+            return loadedInPlugin != null
+                ? loadedInPlugin
+                : pluginContext.LoadFromAssemblyName(assemblyName);
         }
-        catch
-        {
-            return null;
-        }
+        catch (InvalidOperationException) { }
+
+        return Default.LoadFromAssemblyName(assemblyName);
     }
 }
