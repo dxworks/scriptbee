@@ -17,4 +17,10 @@ public interface IBundlePluginInstaller
         Stream zipStream,
         CancellationToken cancellationToken
     );
+
+    Task<OneOf<List<PluginId>, PluginManifestNotFoundError, PluginInstallationError>> Install(
+        ProjectId projectId,
+        string zipUrl,
+        CancellationToken cancellationToken
+    );
 }

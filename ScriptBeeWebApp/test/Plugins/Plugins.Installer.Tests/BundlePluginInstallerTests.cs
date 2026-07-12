@@ -2,6 +2,7 @@ using System.Collections;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
+using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
@@ -29,6 +30,10 @@ public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
     private readonly IPluginZipProcessor _pluginZipProcessor =
         Substitute.For<IPluginZipProcessor>();
 
+    private readonly IDownloadService _downloadService = Substitute.For<IDownloadService>();
+
+    private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
+
     private readonly ILogger<BundlePluginInstaller> _logger = Substitute.For<
         ILogger<BundlePluginInstaller>
     >();
@@ -48,6 +53,8 @@ public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
             _pluginUrlFetcher,
             _pluginPathProvider,
             _pluginZipProcessor,
+            _downloadService,
+            _guidProvider,
             _logger
         );
     }
@@ -445,6 +452,151 @@ public class BundlePluginInstallerTests : IClassFixture<TempDirFixture>
                 null,
                 Arg.Any<Func<object, Exception?, string>>()
             );
+    }
+
+    #endregion
+
+    #region URL Install Tests
+
+    [Fact]
+    public async Task GivenUrl_WhenDownloadFails_ThenReturnsInstallationError()
+    {
+        // Arrange
+        const string zipUrl = "https://example.com/plugin.zip";
+        _downloadService
+            .DownloadFileAsync(zipUrl, Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new HttpRequestException("Connection failed")));
+
+        // Act
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            zipUrl,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        result.IsT2.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task GivenUrl_WhenZipHasNoManifest_ThenReturnsManifestNotFoundError()
+    {
+        // Arrange
+        const string zipUrl = "https://example.com/plugin.zip";
+        var tempGuid = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000001");
+        var expectedTempZipPath = Path.Combine(Path.GetTempPath(), $"{tempGuid}.zip");
+
+        _guidProvider.NewGuid().Returns(tempGuid);
+        _downloadService
+            .DownloadFileAsync(zipUrl, expectedTempZipPath, Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                File.WriteAllBytes(callInfo.ArgAt<string>(1), []);
+                return Task.CompletedTask;
+            });
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, Arg.Any<Stream>(), Arg.Any<CancellationToken>())
+            .Returns(new PluginManifestNotFoundError());
+
+        // Act
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            zipUrl,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        result.IsT1.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task GivenUrl_WhenInstallSucceedsWithNoDependencies_ThenReturnsInstalledPlugin()
+    {
+        // Arrange
+        const string zipUrl = "https://example.com/plugin.zip";
+        var tempGuid = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000002");
+        var expectedTempZipPath = Path.Combine(Path.GetTempPath(), $"{tempGuid}.zip");
+        var pluginId = new PluginId("urlPlugin", new Version("1.0.0"));
+        var projectPluginsPath = _tempDirFixture.CreateSubFolder($"project_{Guid.NewGuid()}");
+        var pluginPath = Path.Combine(projectPluginsPath, pluginId.GetFullyQualifiedName());
+        Directory.CreateDirectory(pluginPath);
+
+        _guidProvider.NewGuid().Returns(tempGuid);
+        _downloadService
+            .DownloadFileAsync(zipUrl, expectedTempZipPath, Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                File.WriteAllBytes(callInfo.ArgAt<string>(1), []);
+                return Task.CompletedTask;
+            });
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, Arg.Any<Stream>(), Arg.Any<CancellationToken>())
+            .Returns(pluginId);
+        _pluginPathProvider.GetPathToPlugins(_projectId).Returns(projectPluginsPath);
+        _pluginPathProvider
+            .GetPathToPlugins()
+            .Returns(_tempDirFixture.CreateSubFolder($"global_{Guid.NewGuid()}"));
+        _pluginReader.ReadPlugin(pluginPath).Returns((Plugin?)null);
+
+        // Act
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            zipUrl,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        result.IsT0.ShouldBeTrue();
+        result.AsT0.Single().ShouldBe(pluginId);
+    }
+
+    [Fact]
+    public async Task GivenUrl_WhenInstallSucceedsWithDependency_ThenReturnsBothPlugins()
+    {
+        // Arrange
+        const string zipUrl = "https://example.com/bundle.zip";
+        var tempGuid = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000003");
+        var expectedTempZipPath = Path.Combine(Path.GetTempPath(), $"{tempGuid}.zip");
+        var bundleId = new PluginId("urlBundle", new Version("1.0.0"));
+        var depId = new PluginId("dep", new Version("2.0.0"));
+        var projectPluginsPath = _tempDirFixture.CreateSubFolder($"project_{Guid.NewGuid()}");
+        var bundlePath = Path.Combine(projectPluginsPath, bundleId.GetFullyQualifiedName());
+        Directory.CreateDirectory(bundlePath);
+
+        _guidProvider.NewGuid().Returns(tempGuid);
+        _downloadService
+            .DownloadFileAsync(zipUrl, expectedTempZipPath, Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                File.WriteAllBytes(callInfo.ArgAt<string>(1), []);
+                return Task.CompletedTask;
+            });
+        _pluginZipProcessor
+            .ProcessZipStream(_projectId, Arg.Any<Stream>(), Arg.Any<CancellationToken>())
+            .Returns(bundleId);
+        _pluginPathProvider.GetPathToPlugins(_projectId).Returns(projectPluginsPath);
+        _pluginPathProvider
+            .GetPathToPlugins()
+            .Returns(_tempDirFixture.CreateSubFolder($"global_{Guid.NewGuid()}"));
+        _pluginReader.ReadPlugin(bundlePath).Returns(CreatePluginWithDependencies(bundleId, depId));
+        _pluginUrlFetcher.GetPluginUrl(depId, Arg.Any<CancellationToken>()).Returns("url-dep");
+        _simplePluginInstaller
+            .Install("url-dep", depId, Arg.Any<CancellationToken>())
+            .Returns("dep@2.0.0");
+        _pluginReader.ReadPlugin("dep@2.0.0").Returns((Plugin?)null);
+
+        // Act
+        var result = await _bundlePluginInstaller.Install(
+            _projectId,
+            zipUrl,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        result.IsT0.ShouldBeTrue();
+        result.AsT0.Count.ShouldBe(2);
+        result.AsT0.ShouldContain(bundleId);
+        result.AsT0.ShouldContain(depId);
     }
 
     #endregion

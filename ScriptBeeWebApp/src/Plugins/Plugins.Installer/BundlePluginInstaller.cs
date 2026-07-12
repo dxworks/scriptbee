@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using OneOf;
+using ScriptBee.Common;
+using ScriptBee.Common.Extensions;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
@@ -20,6 +22,8 @@ public class BundlePluginInstaller(
     IPluginUrlFetcher pluginUrlFetcher,
     IPluginPathProvider pluginPathProvider,
     IPluginZipProcessor pluginZipProcessor,
+    IDownloadService downloadService,
+    IGuidProvider guidProvider,
     ILogger<BundlePluginInstaller> logger
 ) : IBundlePluginInstaller
 {
@@ -56,6 +60,7 @@ public class BundlePluginInstaller(
         CancellationToken cancellationToken
     )
     {
+        logger.LogInformation("Processing plugin ZIP stream for project {ProjectId}", projectId);
         var result = await pluginZipProcessor.ProcessZipStream(
             projectId,
             zipStream,
@@ -65,6 +70,11 @@ public class BundlePluginInstaller(
         return await result.Match<Task<InstallFromStreamResult>>(
             async pluginId =>
             {
+                logger.LogInformation(
+                    "Successfully processed plugin ZIP. Installing plugin bundle: {PluginId} for project {ProjectId}",
+                    pluginId,
+                    projectId
+                );
                 var pluginPath = Path.Combine(
                     pluginPathProvider.GetPathToPlugins(projectId),
                     pluginId.GetFullyQualifiedName()
@@ -79,6 +89,41 @@ public class BundlePluginInstaller(
             error => Task.FromResult<InstallFromStreamResult>(error),
             error => Task.FromResult<InstallFromStreamResult>(error)
         );
+    }
+
+    public async Task<InstallFromStreamResult> Install(
+        ProjectId projectId,
+        string zipUrl,
+        CancellationToken cancellationToken
+    )
+    {
+        logger.LogInformation(
+            "Downloading and installing plugin ZIP from {Url} for project {ProjectId}",
+            zipUrl,
+            projectId
+        );
+        var tempZipPath = Path.Combine(Path.GetTempPath(), $"{guidProvider.NewGuid()}.zip");
+
+        try
+        {
+            await downloadService.DownloadFileAsync(zipUrl, tempZipPath, cancellationToken);
+            logger.LogInformation(
+                "Download complete. Opening downloaded ZIP file: {TempPath}",
+                tempZipPath
+            );
+
+            await using var fileStream = File.OpenRead(tempZipPath);
+            return await Install(projectId, fileStream, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error downloading plugin zip from url {Url}", zipUrl);
+            return new PluginInstallationError(new PluginId("Unknown", new Version("0.0.0")), []);
+        }
+        finally
+        {
+            new FileInfo(tempZipPath).DeleteIfExists();
+        }
     }
 
     private async Task<InstallFromStreamResult> InstallProjectPluginBundle(

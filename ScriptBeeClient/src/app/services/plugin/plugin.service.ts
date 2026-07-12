@@ -35,6 +35,10 @@ export class PluginService {
     return this.http.post<void>(`/api/projects/${projectId}/plugins`, formData);
   }
 
+  installPluginFromUrl(projectId: string, url: string): Observable<void> {
+    return this.http.post<void>(`/api/projects/${projectId}/plugins/url`, { url });
+  }
+
   uninstallPlugin(projectId: string, pluginId: string, version: string) {
     return this.http.delete<void>(`/api/projects/${projectId}/plugins/${pluginId}?version=${version}`);
   }

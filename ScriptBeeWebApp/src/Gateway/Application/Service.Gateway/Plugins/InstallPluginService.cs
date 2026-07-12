@@ -60,6 +60,21 @@ public class InstallPluginService(
         );
     }
 
+    public async Task<InstallPluginFromZipResult> InstallPluginAsync(
+        ProjectId projectId,
+        string zipUrl,
+        CancellationToken cancellationToken
+    )
+    {
+        var projectResult = await getProject.GetById(projectId, cancellationToken);
+
+        return await projectResult.Match<Task<InstallPluginFromZipResult>>(
+            async projectDetails =>
+                await InstallToAllInstances(projectId, zipUrl, projectDetails, cancellationToken),
+            error => Task.FromResult<InstallPluginFromZipResult>(error)
+        );
+    }
+
     private async Task<InstallResult> InstallPluginAsync(
         ProjectDetails projectDetails,
         InstallPluginCommand command,
@@ -161,6 +176,34 @@ public class InstallPluginService(
         var installResult = await bundlePluginInstaller.Install(
             projectId,
             zipStream,
+            cancellationToken
+        );
+
+        return await installResult.Match<Task<InstallPluginFromZipResult>>(
+            async installedPluginIds =>
+            {
+                await InstallPluginToAllInstances(projectId, installedPluginIds, cancellationToken);
+                return await UpdateProjectDetailsWithPlugin(
+                    projectDetails,
+                    installedPluginIds,
+                    cancellationToken
+                );
+            },
+            error => Task.FromResult<InstallPluginFromZipResult>(error),
+            error => Task.FromResult<InstallPluginFromZipResult>(error)
+        );
+    }
+
+    private async Task<InstallPluginFromZipResult> InstallToAllInstances(
+        ProjectId projectId,
+        string zipUrl,
+        ProjectDetails projectDetails,
+        CancellationToken cancellationToken
+    )
+    {
+        var installResult = await bundlePluginInstaller.Install(
+            projectId,
+            zipUrl,
             cancellationToken
         );
 

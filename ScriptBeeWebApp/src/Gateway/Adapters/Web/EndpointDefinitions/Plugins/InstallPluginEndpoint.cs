@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
+using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
@@ -28,6 +29,12 @@ public class InstallPluginEndpoint : IEndpointDefinition
             .WithTags("Plugins")
             .WithSummary("Upload and install a plugin")
             .WithDescription("Uploads a plugin ZIP file and installs it into the project.");
+        app.MapPost("/api/projects/{projectId}/plugins/url", InstallPluginFromUrl)
+            .WithTags("Plugins")
+            .WithSummary("Install a plugin from a URL")
+            .WithDescription(
+                "Downloads a plugin ZIP file from the provided URL and installs it into the project. The ZIP must contain a manifest.yaml in its root folder."
+            );
     }
 
     private static async Task<
@@ -76,6 +83,42 @@ public class InstallPluginEndpoint : IEndpointDefinition
         var result = await installPluginUseCase.InstallPluginAsync(
             ProjectId.FromValue(projectId),
             file.OpenReadStream(),
+            cancellationToken
+        );
+
+        return result.Match<
+            Results<
+                Ok<ProjectDetails>,
+                NotFound<ProblemDetails>,
+                BadRequest<ProblemDetails>,
+                InternalServerError<ProblemDetails>
+            >
+        >(
+            projectDetails => TypedResults.Ok(projectDetails),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context),
+            error => error.ToProblem(context)
+        );
+    }
+
+    private static async Task<
+        Results<
+            Ok<ProjectDetails>,
+            NotFound<ProblemDetails>,
+            BadRequest<ProblemDetails>,
+            InternalServerError<ProblemDetails>
+        >
+    > InstallPluginFromUrl(
+        HttpContext context,
+        [FromRoute] string projectId,
+        [FromBody] WebInstallPluginFromUrlRequest request,
+        IInstallPluginUseCase installPluginUseCase,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await installPluginUseCase.InstallPluginAsync(
+            ProjectId.FromValue(projectId),
+            request.Url,
             cancellationToken
         );
 
