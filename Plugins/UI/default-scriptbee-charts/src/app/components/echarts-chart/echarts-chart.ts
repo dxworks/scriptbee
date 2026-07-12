@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { EChartsCoreOption } from 'echarts';
-import { ChartParameters, EChartsChartInput } from '../../types/ChartInput';
+import { EChartsChartInput, Theme } from '../../types/ChartInput';
 import * as ecStatImport from 'echarts-stat';
 
 type TransformParam = Parameters<typeof echarts.registerTransform>[0];
@@ -26,10 +26,11 @@ echarts.registerTransform(ecStat.transform.histogram);
   providers: [provideEchartsCore({ echarts })],
 })
 export class EchartsChart {
-  parameters = input.required<ChartParameters<EChartsChartInput>>();
+  theme = input.required<Theme>();
+  input = input.required<EChartsChartInput>();
 
   options = computed<EChartsCoreOption>(() => {
-    const input = this.parameters().input;
+    const input = this.input();
 
     return {
       ...(input.options ?? {}),
