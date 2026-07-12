@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Install Plugin from URL</h2>
+<mat-dialog-content>
+  <p class="dialog-description">
+    Provide a direct URL to a ZIP file. The archive must contain a
+    <code>manifest.yaml</code> in its root folder.
+  </p>
+  <mat-form-field appearance="outline" class="url-field">
+    <mat-label>Plugin ZIP URL</mat-label>
+    <mat-icon matPrefix>link</mat-icon>
+    <input matInput type="url" placeholder="https://example.com/plugin.zip" [ngModel]="url()" (ngModelChange)="url.set($event)" (keyup.enter)="confirm()" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="!url().trim()" (click)="confirm()">Install</button>
+</mat-dialog-actions>

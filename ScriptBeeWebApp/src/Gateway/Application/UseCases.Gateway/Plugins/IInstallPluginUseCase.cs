@@ -22,4 +22,10 @@ public interface IInstallPluginUseCase
         Stream zipStream,
         CancellationToken cancellationToken
     );
+
+    Task<InstallPluginFromZipResult> InstallPluginAsync(
+        ProjectId projectId,
+        string zipUrl,
+        CancellationToken cancellationToken
+    );
 }

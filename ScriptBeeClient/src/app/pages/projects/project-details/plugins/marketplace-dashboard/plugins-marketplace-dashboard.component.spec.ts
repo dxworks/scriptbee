@@ -3,6 +3,7 @@ import { PluginsMarketplaceDashboardComponent } from './plugins-marketplace-dash
 import { PluginService } from '../../../../../services/plugin/plugin.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -17,8 +18,10 @@ describe('PluginsMarketplaceDashboardComponent', () => {
     getInstalledPlugins: Mock;
     uploadPlugin: Mock;
     uninstallPlugin: Mock;
+    installPluginFromUrl: Mock;
   };
   let snackBarSpy: { open: Mock };
+  let dialogSpy: { open: Mock };
 
   beforeEach(async () => {
     pluginServiceSpy = {
@@ -26,9 +29,11 @@ describe('PluginsMarketplaceDashboardComponent', () => {
       getInstalledPlugins: vi.fn().mockReturnValue(of([])),
       uploadPlugin: vi.fn().mockReturnValue(of(undefined)),
       uninstallPlugin: vi.fn().mockReturnValue(of(undefined)),
+      installPluginFromUrl: vi.fn().mockReturnValue(of(undefined)),
     };
 
     snackBarSpy = { open: vi.fn() };
+    dialogSpy = { open: vi.fn() };
 
     const mockParamMap = new Map<string, string>();
     mockParamMap.set('id', 'test-project-id');
@@ -52,6 +57,7 @@ describe('PluginsMarketplaceDashboardComponent', () => {
             { provide: PluginService, useValue: pluginServiceSpy },
             { provide: MatSnackBar, useValue: snackBarSpy },
             { provide: ActivatedRoute, useValue: activatedRouteMock },
+            { provide: MatDialog, useValue: dialogSpy },
           ],
         },
       })
@@ -144,6 +150,40 @@ describe('PluginsMarketplaceDashboardComponent', () => {
 
       // Assert
       expect(pluginServiceSpy.uninstallPlugin).toHaveBeenCalledWith('test-project-id', 'Custom.Plugin', '1.0.0');
+    });
+  });
+
+  describe('Install Plugin from URL', () => {
+    it('should open dialog and install plugin when URL is provided', async () => {
+      const url = 'https://example.com/plugin.zip';
+      dialogSpy.open.mockReturnValue({ afterClosed: () => of(url) });
+
+      component.openInstallFromUrlDialog();
+      await fixture.whenStable();
+
+      expect(pluginServiceSpy.installPluginFromUrl).toHaveBeenCalledWith('test-project-id', url);
+      expect(snackBarSpy.open).toHaveBeenCalledWith('Plugin installed successfully', 'Close', { duration: 3000 });
+    });
+
+    it('should show error notification when install from URL fails', async () => {
+      const url = 'https://example.com/broken.zip';
+      const errorMessage = 'manifest.yaml not found';
+      dialogSpy.open.mockReturnValue({ afterClosed: () => of(url) });
+      pluginServiceSpy.installPluginFromUrl.mockReturnValueOnce(throwError(() => ({ error: { detail: errorMessage } })));
+
+      component.openInstallFromUrlDialog();
+      await fixture.whenStable();
+
+      expect(snackBarSpy.open).toHaveBeenCalledWith(errorMessage, 'Close', { duration: 5000 });
+    });
+
+    it('should do nothing when dialog is closed without a URL', async () => {
+      dialogSpy.open.mockReturnValue({ afterClosed: () => of(undefined) });
+
+      component.openInstallFromUrlDialog();
+      await fixture.whenStable();
+
+      expect(pluginServiceSpy.installPluginFromUrl).not.toHaveBeenCalled();
     });
   });
 });

@@ -17,7 +17,19 @@
   </div>
 
   <div class="actions-container">
-    <button mat-icon-button color="primary" matTooltip="Install Plugin Manually" [disabled]="uploading()" (click)="fileInput.click()">
+    <button
+      mat-icon-button
+      color="primary"
+      matTooltip="Install Plugin from URL"
+      [disabled]="uploading() || installingFromUrl()"
+      (click)="openInstallFromUrlDialog()">
+      @if (installingFromUrl()) {
+        <mat-icon>hourglass_empty</mat-icon>
+      } @else {
+        <mat-icon>link</mat-icon>
+      }
+    </button>
+    <button mat-icon-button color="primary" matTooltip="Install Plugin Manually" [disabled]="uploading() || installingFromUrl()" (click)="fileInput.click()">
       @if (uploading()) {
         <mat-icon>hourglass_empty</mat-icon>
       } @else {
@@ -34,7 +46,14 @@
 }
 @if (installedPlugins.isLoading()) {
   <app-loading-progress-bar title="Loading installed plugins..."></app-loading-progress-bar>
-} @else if (getAllAvailablePluginsError()) {
+}
+@if (uploading()) {
+  <app-loading-progress-bar title="Uploading and installing plugin..."></app-loading-progress-bar>
+}
+@if (installingFromUrl()) {
+  <app-loading-progress-bar title="Downloading and installing plugin from URL..."></app-loading-progress-bar>
+}
+@if (getAllAvailablePluginsError()) {
   <div style="margin: 1rem" class="center-column">
     <app-error-state style="width: 400px" [error]="getAllAvailablePluginsError()!" (retry)="getAllAvailablePlugins.reload()"></app-error-state>
   </div>

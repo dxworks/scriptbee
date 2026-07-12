@@ -17,6 +17,8 @@ import { convertError } from '../../../../../utils/api';
 import { InstalledPlugin, MarketplacePlugin } from '../../../../../types/marketplace-plugin';
 import { of } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { InstallPluginFromUrlDialogComponent } from './install-plugin-from-url-dialog/install-plugin-from-url-dialog.component';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',
@@ -36,6 +38,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSnackBarModule,
     FormsModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
 })
 export class PluginsMarketplaceDashboardComponent {
@@ -43,6 +46,7 @@ export class PluginsMarketplaceDashboardComponent {
   searchText = signal('');
   selectedFilters = signal<string[]>([]);
   uploading = signal(false);
+  installingFromUrl = signal(false);
 
   getAllAvailablePlugins = rxResource({
     stream: () => this.pluginsService.getAllAvailablePlugins(),
@@ -115,6 +119,7 @@ export class PluginsMarketplaceDashboardComponent {
   private route = inject(ActivatedRoute);
   private pluginsService = inject(PluginService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   constructor() {
     let currentRoute: ActivatedRoute | null = this.route;
@@ -154,6 +159,29 @@ export class PluginsMarketplaceDashboardComponent {
         },
       });
     }
+  }
+
+  openInstallFromUrlDialog() {
+    const dialogRef: MatDialogRef<InstallPluginFromUrlDialogComponent, string> = this.dialog.open(InstallPluginFromUrlDialogComponent, { width: '480px' });
+
+    dialogRef.afterClosed().subscribe((url) => {
+      if (!url) {
+        return;
+      }
+      this.installingFromUrl.set(true);
+      this.pluginsService.installPluginFromUrl(this.projectId(), url).subscribe({
+        next: () => {
+          this.installingFromUrl.set(false);
+          this.snackBar.open('Plugin installed successfully', 'Close', { duration: 3000 });
+          this.onActionCompleted();
+        },
+        error: (err) => {
+          this.installingFromUrl.set(false);
+          const errorMessage = err.error?.detail ?? 'Failed to install plugin from URL';
+          this.snackBar.open(errorMessage, 'Close', { duration: 5000 });
+        },
+      });
+    });
   }
 
   private isPluginInInstalled(plugins: InstalledPlugin[], pluginId: string) {
