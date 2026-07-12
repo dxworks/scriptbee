@@ -5,7 +5,7 @@ import * as echarts from 'echarts/core';
 import { BarChart as EchartsBarChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { BarChartInput, ChartParameters } from '../../types/ChartInput';
+import { BarChartInput, Theme } from '../../types/ChartInput';
 
 echarts.use([EchartsBarChart, GridComponent, CanvasRenderer, LegendComponent, TooltipComponent]);
 
@@ -17,10 +17,11 @@ echarts.use([EchartsBarChart, GridComponent, CanvasRenderer, LegendComponent, To
   providers: [provideEchartsCore({ echarts })],
 })
 export class BarChart {
-  parameters = input.required<ChartParameters<BarChartInput>>();
+  theme = input.required<Theme>();
+  input = input.required<BarChartInput>();
 
   options = computed<EChartsCoreOption>(() => {
-    const input = this.parameters().input;
+    const input = this.input();
 
     return {
       ...(input.options ?? {}),

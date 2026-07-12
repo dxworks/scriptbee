@@ -1,0 +1,17 @@
+@switch (input().type) {
+  @case ('bar') {
+    <app-bar-chart [theme]="theme()" [input]="input()"></app-bar-chart>
+  }
+  @case ('tree-map') {
+    <app-tree-map [theme]="theme()" [input]="input()"></app-tree-map>
+  }
+  @case ('scatter-plot') {
+    <app-scatter-plot [theme]="theme()" [input]="input()"></app-scatter-plot>
+  }
+  @case ('heatmap') {
+    <app-heatmap-chart [theme]="theme()" [input]="input()"></app-heatmap-chart>
+  }
+  @default {
+    <app-echarts-chart [theme]="theme()" [input]="input()"></app-echarts-chart>
+  }
+}

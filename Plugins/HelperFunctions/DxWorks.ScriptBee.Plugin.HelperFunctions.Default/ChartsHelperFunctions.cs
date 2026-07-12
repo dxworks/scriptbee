@@ -17,6 +17,33 @@ public class ChartsHelperFunctions(IHelperFunctionsResultService helperFunctions
         ExportChart(name, "bar", series, options);
     }
 
+    public void ExportTreeMap(
+        string name,
+        List<Dictionary<string, object>> series,
+        Dictionary<string, object>? options = null
+    )
+    {
+        ExportChart(name, "tree-map", series, options);
+    }
+
+    public void ExportScatterPlot(
+        string name,
+        List<Dictionary<string, object>> series,
+        Dictionary<string, object>? options = null
+    )
+    {
+        ExportChart(name, "scatter-plot", series, options);
+    }
+
+    public void ExportHeatmap(
+        string name,
+        List<Dictionary<string, object>> series,
+        Dictionary<string, object>? options = null
+    )
+    {
+        ExportChart(name, "heatmap", series, options);
+    }
+
     public void ExportEChartsChart(
         string name,
         List<Dictionary<string, object>> series,

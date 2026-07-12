@@ -4,7 +4,7 @@ import { ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
-import { ChartParameters, ScatterPlotInput } from '../../types/ChartInput';
+import { ScatterPlotInput, Theme } from '../../types/ChartInput';
 import { EChartsCoreOption } from 'echarts';
 
 echarts.use([ScatterChart, GridComponent, CanvasRenderer, LegendComponent, TooltipComponent]);
@@ -17,10 +17,11 @@ echarts.use([ScatterChart, GridComponent, CanvasRenderer, LegendComponent, Toolt
   providers: [provideEchartsCore({ echarts })],
 })
 export class ScatterPlot {
-  parameters = input.required<ChartParameters<ScatterPlotInput>>();
+  theme = input.required<Theme>();
+  input = input.required<ScatterPlotInput>();
 
   options = computed<EChartsCoreOption>(() => {
-    const input = this.parameters().input;
+    const input = this.input();
 
     return {
       ...(input.options ?? {}),
