@@ -107,10 +107,10 @@ description: A short description of what your plugin does
 author: Your Name
 extensionPoints:
   - kind: UI
-    entryPoint: Plugin.dll
+    entryPoint: dist
     version: 0.0.1
     remoteName: my-scriptbee-plugin
-    remoteEntry: http://localhost:4201/remoteEntry.json
+    remoteEntry: remoteEntry.json
     outlets:
       - type: top-navigation-bar
         exposedModule: './routes'
@@ -120,6 +120,9 @@ extensionPoints:
 ```
 
 Replace the `outlets` block with the configuration for your chosen outlet type (see the sections below).
+
+> [!TIP]
+> Setting `entryPoint: dist` and just the file name `remoteEntry: remoteEntry.json` tells the ScriptBee Gateway Service to serve your built static Angular files directly from the plugin's `dist` folder. You do not need a separate web server for production! However, during development, you can point `remoteEntry` to your local dev server (e.g. `http://localhost:4201/remoteEntry.json`) and omit `entryPoint`.
 
 ### 6. Build and serve
 

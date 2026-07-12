@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
@@ -29,6 +30,13 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
             .WithDescription(
                 "Retrieves a map with the installed UI plugin remotes and the associated remoteEntry.js file."
             );
+        app.MapGet(
+                "/api/plugins/gateway/ui/files/{pluginId}/{version}/{*filePath}",
+                ServeUiPluginFile
+            )
+            .WithTags("Plugins")
+            .WithSummary("Serve UI plugin file")
+            .WithDescription("Serves static files associated with UI plugins.");
     }
 
     private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(
@@ -81,5 +89,35 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
     {
         var manifest = useCase.GetUiPluginsManifest();
         return TypedResults.Ok(manifest);
+    }
+
+    private static IResult ServeUiPluginFile(
+        [FromRoute] string pluginId,
+        [FromRoute] string version,
+        [FromRoute] string filePath,
+        IManagePluginsUseCase useCase
+    )
+    {
+        var fullFilePath = useCase.GetUiPluginFilePath(
+            new PluginId(pluginId, new Version(version)),
+            filePath
+        );
+
+        if (fullFilePath == null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        if (
+            new FileExtensionContentTypeProvider().TryGetContentType(
+                fullFilePath,
+                out var contentType
+            )
+        )
+        {
+            return TypedResults.PhysicalFile(fullFilePath, contentType);
+        }
+
+        return TypedResults.PhysicalFile(fullFilePath, "application/octet-stream");
     }
 }
