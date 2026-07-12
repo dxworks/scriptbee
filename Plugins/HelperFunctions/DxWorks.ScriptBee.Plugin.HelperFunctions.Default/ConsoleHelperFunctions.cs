@@ -5,21 +5,16 @@ using DxWorks.ScriptBee.Plugin.Api.Services;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
-public class ConsoleHelperFunctions : IHelperFunctions
+public class ConsoleHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
+    : IHelperFunctions
 {
     private readonly StringBuilder _consoleStringBuilder = new();
-    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
-
-    public ConsoleHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
-    {
-        _helperFunctionsResultService = helperFunctionsResultService;
-    }
 
     public async Task OnUnloadAsync(CancellationToken cancellationToken = default)
     {
         var consoleOutput = _consoleStringBuilder.ToString();
 
-        await _helperFunctionsResultService.UploadResultAsync(
+        await helperFunctionsResultService.UploadResultAsync(
             "ConsoleOutput",
             RunResultDefaultTypes.ConsoleType,
             consoleOutput,

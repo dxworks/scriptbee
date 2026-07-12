@@ -54,7 +54,7 @@ public class RunAnalysisService(
         var scriptRunnerResult = GetScriptRunner(script.ScriptLanguage);
 
         return await scriptRunnerResult.Match(
-            runner => Run(runner, script, cancellationToken),
+            async runner => await Run(runner, script, cancellationToken),
             async error =>
                 await createAnalysis.Create(
                     AnalysisInfo.FailedToStart(

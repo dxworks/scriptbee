@@ -3,18 +3,12 @@ using DxWorks.ScriptBee.Plugin.Api.Services;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
-public class FileHelperFunctions : IHelperFunctions
+public class FileHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
+    : IHelperFunctions
 {
-    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
-
-    public FileHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
-    {
-        _helperFunctionsResultService = helperFunctionsResultService;
-    }
-
     public void FileWrite(string fileName, string fileContent)
     {
-        _helperFunctionsResultService.UploadResult(
+        helperFunctionsResultService.UploadResult(
             fileName,
             RunResultDefaultTypes.FileType,
             fileContent
@@ -27,7 +21,7 @@ public class FileHelperFunctions : IHelperFunctions
         CancellationToken cancellationToken = default
     )
     {
-        await _helperFunctionsResultService.UploadResultAsync(
+        await helperFunctionsResultService.UploadResultAsync(
             fileName,
             RunResultDefaultTypes.FileType,
             fileContent,
@@ -41,7 +35,7 @@ public class FileHelperFunctions : IHelperFunctions
         CancellationToken cancellationToken = default
     )
     {
-        await _helperFunctionsResultService.UploadResultAsync(
+        await helperFunctionsResultService.UploadResultAsync(
             fileName,
             RunResultDefaultTypes.FileType,
             stream,
@@ -51,10 +45,6 @@ public class FileHelperFunctions : IHelperFunctions
 
     public void FileWriteStream(string fileName, Stream stream)
     {
-        _helperFunctionsResultService.UploadResult(
-            fileName,
-            RunResultDefaultTypes.FileType,
-            stream
-        );
+        helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }
 }

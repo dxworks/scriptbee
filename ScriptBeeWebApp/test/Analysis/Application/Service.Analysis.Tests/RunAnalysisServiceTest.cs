@@ -203,27 +203,30 @@ public class RunAnalysisServiceTest
 
 public static class AnalysisAssertionsExtensions
 {
-    public static void AssertAnalysisResult(this AnalysisInfo actual, AnalysisInfo expected)
+    extension(AnalysisInfo actual)
     {
-        actual.Id.ShouldBeEquivalentTo(expected.Id);
-        actual.ProjectId.ShouldBe(expected.ProjectId);
-        actual.ScriptId.ShouldBe(expected.ScriptId);
-        actual.Status.ShouldBe(expected.Status);
-        actual.Results.ToList().ShouldBe(expected.Results.ToList());
-        actual.Errors.ToList().ShouldBe(expected.Errors.ToList());
-        actual.CreationDate.ShouldBe(expected.CreationDate);
-        actual.FinishedDate.ShouldBe(expected.FinishedDate);
-    }
+        public void AssertAnalysisResult(AnalysisInfo expected)
+        {
+            actual.Id.ShouldBeEquivalentTo(expected.Id);
+            actual.ProjectId.ShouldBe(expected.ProjectId);
+            actual.ScriptId.ShouldBe(expected.ScriptId);
+            actual.Status.ShouldBe(expected.Status);
+            actual.Results.ToList().ShouldBe(expected.Results.ToList());
+            actual.Errors.ToList().ShouldBe(expected.Errors.ToList());
+            actual.CreationDate.ShouldBe(expected.CreationDate);
+            actual.FinishedDate.ShouldBe(expected.FinishedDate);
+        }
 
-    public static bool MatchAnalysisResult(this AnalysisInfo actual, AnalysisInfo expected)
-    {
-        return actual.Id.Equals(expected.Id)
-            && actual.ProjectId.Equals(expected.ProjectId)
-            && actual.ScriptId.Equals(expected.ScriptId)
-            && actual.Status.Equals(expected.Status)
-            && actual.Results.SequenceEqual(expected.Results)
-            && actual.Errors.SequenceEqual(expected.Errors)
-            && actual.CreationDate.Equals(expected.CreationDate)
-            && actual.FinishedDate.Equals(expected.FinishedDate);
+        public bool MatchAnalysisResult(AnalysisInfo expected)
+        {
+            return actual.Id.Equals(expected.Id)
+                && actual.ProjectId.Equals(expected.ProjectId)
+                && actual.ScriptId.Equals(expected.ScriptId)
+                && actual.Status.Equals(expected.Status)
+                && actual.Results.SequenceEqual(expected.Results)
+                && actual.Errors.SequenceEqual(expected.Errors)
+                && actual.CreationDate.Equals(expected.CreationDate)
+                && actual.FinishedDate.Equals(expected.FinishedDate);
+        }
     }
 }

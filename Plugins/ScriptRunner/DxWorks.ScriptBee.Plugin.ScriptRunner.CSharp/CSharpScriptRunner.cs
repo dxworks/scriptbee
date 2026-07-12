@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.Loader;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using DxWorks.ScriptBee.Plugin.Api.Services;
@@ -22,16 +23,41 @@ public class CSharpScriptRunner : IScriptRunner
     {
         var validScript = new ScriptGeneratorStrategy().ExtractValidScript(scriptContent);
 
-        var compiledScript = await Task.Run(
-            () =>
-                CompileScript(validScript, parameters, helperFunctionsContainer, cancellationToken),
-            cancellationToken
-        );
+        var firstPluginAssembly = helperFunctionsContainer
+            .GetFunctions()
+            .FirstOrDefault()
+            ?.GetType()
+            .Assembly;
+        var pluginContext =
+            firstPluginAssembly != null
+                ? AssemblyLoadContext.GetLoadContext(firstPluginAssembly)
+                : AssemblyLoadContext.Default;
 
-        await Task.Run(
-            () => ExecuteScript(project, compiledScript, helperFunctionsContainer),
-            cancellationToken
-        );
+        var scriptContext = new ScriptExecutionLoadContext(pluginContext);
+
+        try
+        {
+            var compiledScript = await Task.Run(
+                () =>
+                    CompileScript(
+                        validScript,
+                        parameters,
+                        helperFunctionsContainer,
+                        scriptContext,
+                        cancellationToken
+                    ),
+                cancellationToken
+            );
+
+            await Task.Run(
+                () => ExecuteScript(project, compiledScript, helperFunctionsContainer),
+                cancellationToken
+            );
+        }
+        finally
+        {
+            scriptContext.Unload();
+        }
     }
 
     private static void ExecuteScript(
@@ -129,6 +155,7 @@ public class CSharpScriptRunner : IScriptRunner
         string script,
         IEnumerable<ScriptParameter> parameters,
         IHelperFunctionsContainer helperFunctionsContainer,
+        AssemblyLoadContext targetContext,
         CancellationToken cancellationToken
     )
     {
@@ -169,7 +196,8 @@ public class CSharpScriptRunner : IScriptRunner
             throw new CompilationErrorException(errorMessage);
         }
 
-        return Assembly.Load(stream.ToArray());
+        stream.Seek(0, SeekOrigin.Begin);
+        return targetContext.LoadFromStream(stream);
     }
 
     private static void CheckErrors(SyntaxTree syntaxTree, CancellationToken cancellationToken)

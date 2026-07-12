@@ -5,15 +5,9 @@ using DxWorks.ScriptBee.Plugin.Api.Services;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
-public class CsvHelperFunctions : IHelperFunctions
+public class CsvHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
+    : IHelperFunctions
 {
-    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
-
-    public CsvHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
-    {
-        _helperFunctionsResultService = helperFunctionsResultService;
-    }
-
     public async Task ExportCsvAsync<T>(
         string fileName,
         IEnumerable<T> records,
@@ -27,7 +21,7 @@ public class CsvHelperFunctions : IHelperFunctions
 
         await csv.WriteRecordsAsync(records, cancellationToken);
 
-        await _helperFunctionsResultService.UploadResultAsync(
+        await helperFunctionsResultService.UploadResultAsync(
             fileName,
             RunResultDefaultTypes.FileType,
             stream,
@@ -44,10 +38,6 @@ public class CsvHelperFunctions : IHelperFunctions
 
         csv.WriteRecords(records);
 
-        _helperFunctionsResultService.UploadResult(
-            fileName,
-            RunResultDefaultTypes.FileType,
-            stream
-        );
+        helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }
 }
