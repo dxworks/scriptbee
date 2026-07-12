@@ -5,17 +5,20 @@
   @case ('bubble') {
     <app-bubble-chart [theme]="theme()" [input]="input()"></app-bubble-chart>
   }
-  @case ('tree-map') {
-    <app-tree-map [theme]="theme()" [input]="input()"></app-tree-map>
+  @case ('gantt') {
+    <app-gantt-chart [theme]="theme()" [input]="input()"></app-gantt-chart>
   }
-  @case ('scatter-plot') {
-    <app-scatter-plot [theme]="theme()" [input]="input()"></app-scatter-plot>
+  @case ('graph') {
+    <app-graph-chart [input]="input()" [theme]="theme()"></app-graph-chart>
   }
   @case ('heatmap') {
     <app-heatmap-chart [theme]="theme()" [input]="input()"></app-heatmap-chart>
   }
-  @case ('gantt') {
-    <app-gantt-chart [theme]="theme()" [input]="input()"></app-gantt-chart>
+  @case ('scatter-plot') {
+    <app-scatter-plot [theme]="theme()" [input]="input()"></app-scatter-plot>
+  }
+  @case ('tree-map') {
+    <app-tree-map [theme]="theme()" [input]="input()"></app-tree-map>
   }
   @default {
     <app-echarts-chart [theme]="theme()" [input]="input()"></app-echarts-chart>

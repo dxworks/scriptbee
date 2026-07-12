@@ -9,6 +9,7 @@
   <option value="bar">Bar Chart</option>
   <option value="bubble-chart">Bubble Chart</option>
   <option value="gantt-chart">Gantt Chart</option>
+  <option value="graph-chart">Graph Chart</option>
   <option value="heatmap-chart">Heatmap Chart</option>
   <option value="scatter-plot">Scatter Plot</option>
   <option value="tree-map">Tree Map</option>
@@ -25,16 +26,19 @@
   @case ('heatmap-chart') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="heatmapChartParameters()"></app-charts-previewer>
   }
+  @case ('gantt-chart') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="ganttChartParameters()"></app-charts-previewer>
+  }
+  @case ('graph-chart') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="graphChartParameters()"></app-charts-previewer>
+  }
+  @case ('generic-echarts') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="genericEChartsParameters()"></app-charts-previewer>
+  }
   @case ('scatter-plot') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="scatterPlotParameters()"></app-charts-previewer>
   }
   @case ('tree-map') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="treeMapParameters()"></app-charts-previewer>
-  }
-  @case ('gantt-chart') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="ganttChartParameters()"></app-charts-previewer>
-  }
-  @case ('generic-echarts') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="genericEChartsParameters()"></app-charts-previewer>
   }
 }
