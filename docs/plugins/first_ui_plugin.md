@@ -18,10 +18,10 @@ To successfully develop a modern UI plugin, familiarize yourself with these conc
 
 - **Angular Native Federation:** This is the underlying technology that allows micro-frontends to work together
   seamlessly.
-    - [Combining Native Federation and Module Federation](https://www.angulararchitects.io/en/blog/combining-native-federation-and-module-federation/)
-    - [Native Federation: Just Got Better Performance DX and Simplicity](https://www.angulararchitects.io/en/blog/native-federation-just-got-better-performance-dx-and-simplicity/)
-    - [Micro-Frontends with Angular and Native Federation (Part 1)](https://blog.angular.dev/micro-frontends-with-angular-and-native-federation-7623cfc5f413)
-    - [Micro-Frontends with Modern Angular (Standalone and Esbuild)](https://www.angulararchitects.io/en/blog/micro-frontends-with-modern-angular-part-1-standalone-and-esbuild)
+  - [Combining Native Federation and Module Federation](https://www.angulararchitects.io/en/blog/combining-native-federation-and-module-federation/)
+  - [Native Federation: Just Got Better Performance DX and Simplicity](https://www.angulararchitects.io/en/blog/native-federation-just-got-better-performance-dx-and-simplicity/)
+  - [Micro-Frontends with Angular and Native Federation (Part 1)](https://blog.angular.dev/micro-frontends-with-angular-and-native-federation-7623cfc5f413)
+  - [Micro-Frontends with Modern Angular (Standalone and Esbuild)](https://www.angulararchitects.io/en/blog/micro-frontends-with-modern-angular-part-1-standalone-and-esbuild)
 
 ---
 
@@ -50,21 +50,21 @@ Replace the generated `federation.config.js` at the project root with the follow
 entries for your plugin:
 
 ```js
-const {withNativeFederation, shareAll} = require('@angular-architects/native-federation/config');
+const { withNativeFederation, shareAll } = require('@angular-architects/native-federation/config');
 
 module.exports = withNativeFederation({
-    name: 'my-scriptbee-plugin',
-    exposes: {
-        './Component': './src/app/my-plugin/my-plugin.ts',
-        './routes': './src/app/app.routes.ts',
-    },
-    shared: {
-        ...shareAll({singleton: true, strictVersion: false, requiredVersion: 'auto'}),
-    },
-    skip: ['rxjs/ajax', 'rxjs/fetch', 'rxjs/testing', 'rxjs/webSocket'],
-    features: {
-        ignoreUnusedDeps: true,
-    },
+  name: 'my-scriptbee-plugin',
+  exposes: {
+    './Component': './src/app/my-plugin/my-plugin.ts',
+    './routes': './src/app/app.routes.ts',
+  },
+  shared: {
+    ...shareAll({ singleton: true, strictVersion: false, requiredVersion: 'auto' }),
+  },
+  skip: ['rxjs/ajax', 'rxjs/fetch', 'rxjs/testing', 'rxjs/webSocket'],
+  features: {
+    ignoreUnusedDeps: true,
+  },
 });
 ```
 
@@ -77,12 +77,12 @@ module.exports = withNativeFederation({
 Native Federation requires deferring the application bootstrap:
 
 ```typescript
-import {initFederation} from '@angular-architects/native-federation';
+import { initFederation } from '@angular-architects/native-federation';
 
 initFederation()
-    .catch(err => console.error(err))
-    .then(_ => import('./bootstrap'))
-    .catch(err => console.error(err));
+  .catch(err => console.error(err))
+  .then(_ => import('./bootstrap'))
+  .catch(err => console.error(err));
 ```
 
 Create `src/bootstrap.ts` to bootstrap the application:
@@ -150,7 +150,7 @@ outlets:
 ```
 
 | Field           | Required | Description                                                                                                                |
-|-----------------|----------|----------------------------------------------------------------------------------------------------------------------------|
+| --------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `type`          | yes      | Must be `top-navigation-bar`                                                                                               |
 | `exposedModule` | yes      | Key from `federation.config.js` `exposes` map, e.g. `'./routes'`                                                           |
 | `path`          | yes      | URL path ScriptBee will register, e.g. `/my-plugin`                                                                        |
@@ -206,7 +206,7 @@ outlets:
 ```
 
 | Field           | Required | Description                                                                                             |
-|-----------------|----------|---------------------------------------------------------------------------------------------------------|
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------- |
 | `type`          | yes      | Must be `side-panel`                                                                                    |
 | `exposedModule` | yes      | Key from `federation.config.js` `exposes` map, e.g. `'./Component'`                                     |
 | `path`          | yes      | URL path ScriptBee will register                                                                        |
@@ -219,15 +219,14 @@ outlets:
 
 ```typescript
 // src/app/my-plugin/my-plugin.ts
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-my-plugin',
-    imports: [],
-    template: `<p>Side panel plugin content</p>`,
+  selector: 'app-my-plugin',
+  imports: [],
+  template: `<p>Side panel plugin content</p>`,
 })
-export class App {
-}
+export class App {}
 ```
 
 Expose it in `federation.config.js`:
@@ -261,7 +260,7 @@ outlets:
 ```
 
 | Field                     | Required | Description                                                                                 |
-|---------------------------|----------|---------------------------------------------------------------------------------------------|
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------- |
 | `type`                    | yes      | Must be `file-previewer`                                                                    |
 | `exposedModule`           | yes      | Key from `federation.config.js` `exposes` map, e.g. `'./Component'`                         |
 | `label`                   | yes      | Text shown in the file preview tab header                                                   |
@@ -275,9 +274,9 @@ ScriptBee passes data to your component using Angular's `*ngComponentOutlet` `in
 
 ```typescript
 inputs: {
-    content: string;
-    file: AnalysisFile;
-    theme: 'light' | 'dark';
+  content: string;
+  file: AnalysisFile;
+  theme: 'light' | 'dark';
 }
 ```
 
@@ -285,26 +284,26 @@ Your component **must** declare inputs with the same names and compatible types.
 
 ```typescript
 // src/app/my-plugin/my-plugin.ts
-import {Component, input} from '@angular/core';
+import { Component, input } from '@angular/core';
 
 interface AnalysisFile {
-    id: string;
-    name: string;
-    type: string;
+  id: string;
+  name: string;
+  type: string;
 }
 
 @Component({
-    selector: 'app-my-plugin',
-    imports: [],
-    template: `
+  selector: 'app-my-plugin',
+  imports: [],
+  template: `
     <h3>{{ file()?.name }}</h3>
     <pre>{{ content() }}</pre>
   `,
 })
 export class App {
-    content = input.required<string>();
-    file = input<AnalysisFile>();
-    theme = input<string>();
+  content = input.required<string>();
+  file = input<AnalysisFile>();
+  theme = input<string>();
 }
 ```
 
