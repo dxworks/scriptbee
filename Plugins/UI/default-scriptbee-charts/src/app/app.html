@@ -8,6 +8,7 @@
 <select [(ngModel)]="selectedChartType">
   <option value="bar">Bar Chart</option>
   <option value="bubble-chart">Bubble Chart</option>
+  <option value="gantt-chart">Gantt Chart</option>
   <option value="heatmap-chart">Heatmap Chart</option>
   <option value="scatter-plot">Scatter Plot</option>
   <option value="tree-map">Tree Map</option>
@@ -29,6 +30,9 @@
   }
   @case ('tree-map') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="treeMapParameters()"></app-charts-previewer>
+  }
+  @case ('gantt-chart') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="ganttChartParameters()"></app-charts-previewer>
   }
   @case ('generic-echarts') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="genericEChartsParameters()"></app-charts-previewer>

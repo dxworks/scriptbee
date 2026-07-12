@@ -14,6 +14,9 @@
   @case ('heatmap') {
     <app-heatmap-chart [theme]="theme()" [input]="input()"></app-heatmap-chart>
   }
+  @case ('gantt') {
+    <app-gantt-chart [theme]="theme()" [input]="input()"></app-gantt-chart>
+  }
   @default {
     <app-echarts-chart [theme]="theme()" [input]="input()"></app-echarts-chart>
   }

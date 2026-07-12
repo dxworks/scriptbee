@@ -607,4 +607,44 @@ export class App {
       ],
     };
   });
+
+  ganttChartParameters = computed<ChartsPreviewerInput>(() => {
+    // [Start, End, CategoryIndex, TaskName]
+    const data = [
+      [1655647200000, 1657980000000, 0, 'Requirements'],
+      [1657980000000, 1658980000000, 1, 'Architecture'],
+      [1658980000000, 1662980000000, 2, 'Development'],
+      [1661000000000, 1664080000000, 3, 'Testing'],
+      [1664080000000, 1665080000000, 4, 'Deployment'],
+      [1665080000000, 1669080000000, 5, 'Maintenance'],
+    ];
+
+    return {
+      type: 'gantt',
+      options: {
+        tooltip: {},
+        grid: { left: '15%', right: '5%', top: '10%', bottom: '15%' },
+        xAxis: {
+          type: 'time',
+          splitLine: { lineStyle: { type: 'dashed' } },
+        },
+        yAxis: {
+          type: 'category',
+          data: ['Analysis', 'Design', 'Engineering', 'QA', 'Ops', 'Support'],
+          axisLine: { show: false },
+          axisTick: { show: false },
+        },
+      },
+      series: [
+        {
+          name: 'Project Timeline',
+          data: data,
+          startIndex: 0,
+          endIndex: 1,
+          categoryIndex: 2,
+          colorBy: 'data',
+        },
+      ],
+    };
+  });
 }
