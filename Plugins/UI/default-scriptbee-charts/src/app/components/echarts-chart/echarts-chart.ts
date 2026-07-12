@@ -3,7 +3,7 @@ import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { EChartsCoreOption } from 'echarts';
 import { EChartsChartInput, Theme } from '../../types/ChartInput';
-import * as ecStatImport from 'echarts-stat';
+import { default as ecStat } from 'echarts-stat';
 
 type TransformParam = Parameters<typeof echarts.registerTransform>[0];
 interface EcStatModule {
@@ -14,9 +14,7 @@ interface EcStatModule {
   };
 }
 
-const ecStat = (ecStatImport as unknown as { default?: EcStatModule } & EcStatModule).default || (ecStatImport as unknown as EcStatModule);
-
-echarts.registerTransform(ecStat.transform.histogram);
+echarts.registerTransform((ecStat as unknown as EcStatModule).transform.histogram);
 
 @Component({
   selector: 'app-echarts-chart',

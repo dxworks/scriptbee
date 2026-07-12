@@ -21,16 +21,13 @@
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="treeMapParameters()"></app-charts-previewer>
   }
   @case ('scatter-plot') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()"
-                          [content]="scatterPlotParameters()"></app-charts-previewer>
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="scatterPlotParameters()"></app-charts-previewer>
   }
   @case ('heatmap-chart') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()"
-                          [content]="heatmapChartParameters()"></app-charts-previewer>
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="heatmapChartParameters()"></app-charts-previewer>
   }
   @case ('generic-echarts') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()"
-                          [content]="genericEChartsParameters()"></app-charts-previewer>
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="genericEChartsParameters()"></app-charts-previewer>
   }
   @default {
     <p>Please select a chart type.</p>
