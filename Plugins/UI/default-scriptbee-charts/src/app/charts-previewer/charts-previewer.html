@@ -1,26 +1,38 @@
-@switch (input().type) {
-  @case ('bar') {
-    <app-bar-chart [theme]="theme()" [input]="input()"></app-bar-chart>
+<div class="chart-previewer-container" [class.dark-theme]="theme() === 'dark'">
+  <div class="chart-wrapper">
+    @switch (input().type) {
+      @case ('bar') {
+        <app-bar-chart [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-bar-chart>
+      }
+      @case ('bubble') {
+        <app-bubble-chart [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-bubble-chart>
+      }
+      @case ('gantt') {
+        <app-gantt-chart [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-gantt-chart>
+      }
+      @case ('graph') {
+        <app-graph-chart [input]="input()" [theme]="theme()" (chartInit)="onChartInit($event)"></app-graph-chart>
+      }
+      @case ('heatmap') {
+        <app-heatmap-chart [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-heatmap-chart>
+      }
+      @case ('scatter-plot') {
+        <app-scatter-plot [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-scatter-plot>
+      }
+      @case ('tree-map') {
+        <app-tree-map [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-tree-map>
+      }
+      @default {
+        <app-echarts-chart [theme]="theme()" [input]="input()" (chartInit)="onChartInit($event)"></app-echarts-chart>
+      }
+    }
+  </div>
+
+  @if (chartInstance()) {
+    <button class="download-btn" (click)="saveAsPNG()" title="Download to PNG">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M5 20h14v-2H5v2zm7-18L5.33 8.67h4V14h5.33V8.67h4L12 2z" />
+      </svg>
+    </button>
   }
-  @case ('bubble') {
-    <app-bubble-chart [theme]="theme()" [input]="input()"></app-bubble-chart>
-  }
-  @case ('gantt') {
-    <app-gantt-chart [theme]="theme()" [input]="input()"></app-gantt-chart>
-  }
-  @case ('graph') {
-    <app-graph-chart [input]="input()" [theme]="theme()"></app-graph-chart>
-  }
-  @case ('heatmap') {
-    <app-heatmap-chart [theme]="theme()" [input]="input()"></app-heatmap-chart>
-  }
-  @case ('scatter-plot') {
-    <app-scatter-plot [theme]="theme()" [input]="input()"></app-scatter-plot>
-  }
-  @case ('tree-map') {
-    <app-tree-map [theme]="theme()" [input]="input()"></app-tree-map>
-  }
-  @default {
-    <app-echarts-chart [theme]="theme()" [input]="input()"></app-echarts-chart>
-  }
-}
+</div>

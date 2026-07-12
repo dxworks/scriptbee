@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { EChartsCoreOption } from 'echarts';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
@@ -19,10 +19,10 @@ echarts.use([EchartsBarChart, GridComponent, CanvasRenderer, LegendComponent, To
 export class BarChart {
   theme = input.required<Theme>();
   input = input.required<BarChartInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();
-
     return {
       ...(input.options ?? {}),
       series: (input.series ?? []).map((s) => ({ ...s, type: 'bar' })),

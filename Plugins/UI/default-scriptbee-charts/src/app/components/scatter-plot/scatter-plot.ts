@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import * as echarts from 'echarts/core';
 import { ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
@@ -19,6 +19,7 @@ echarts.use([ScatterChart, GridComponent, CanvasRenderer, LegendComponent, Toolt
 export class ScatterPlot {
   theme = input.required<Theme>();
   input = input.required<ScatterPlotInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();

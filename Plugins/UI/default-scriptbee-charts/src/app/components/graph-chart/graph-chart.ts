@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { EChartsCoreOption } from 'echarts';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
@@ -19,6 +19,7 @@ echarts.use([EchartsGraphChart, GridComponent, CanvasRenderer, LegendComponent, 
 export class GraphChart {
   theme = input.required<Theme>();
   input = input.required<GraphChartInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();

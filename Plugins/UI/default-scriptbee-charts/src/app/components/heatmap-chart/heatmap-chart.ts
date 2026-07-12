@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import * as echarts from 'echarts/core';
 import { HeatmapChart as HeatMapComponent } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
@@ -19,6 +19,7 @@ echarts.use([HeatMapComponent, GridComponent, CanvasRenderer, LegendComponent, T
 export class HeatmapChart {
   theme = input.required<Theme>();
   input = input.required<HeatmapChartInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();
