@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { EChartsCoreOption } from 'echarts';
@@ -26,6 +26,7 @@ echarts.registerTransform((ecStat as unknown as EcStatModule).transform.histogra
 export class EchartsChart {
   theme = input.required<Theme>();
   input = input.required<EChartsChartInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();

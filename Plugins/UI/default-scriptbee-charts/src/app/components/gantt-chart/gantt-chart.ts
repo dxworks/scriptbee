@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import * as echarts from 'echarts/core';
 import { CustomChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent, DataZoomComponent } from 'echarts/components';
@@ -32,6 +32,7 @@ interface GanttSeriesConfig {
 export class GanttChart {
   theme = input.required<Theme>();
   input = input.required<GanttChartInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();

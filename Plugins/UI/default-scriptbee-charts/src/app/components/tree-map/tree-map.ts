@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
 import { TreemapChart } from 'echarts/charts';
@@ -19,6 +19,7 @@ echarts.use([TreemapChart, GridComponent, CanvasRenderer, LegendComponent, Toolt
 export class TreeMap {
   theme = input.required<Theme>();
   input = input.required<TreeMapInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();

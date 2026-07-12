@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import * as echarts from 'echarts/core';
 import { ScatterChart } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
@@ -28,6 +28,7 @@ interface BubbleSeriesConfig {
 export class BubbleChart {
   theme = input.required<Theme>();
   input = input.required<BubbleChartInput>();
+  chartInit = output<echarts.ECharts>();
 
   options = computed<EChartsCoreOption>(() => {
     const input = this.input();
