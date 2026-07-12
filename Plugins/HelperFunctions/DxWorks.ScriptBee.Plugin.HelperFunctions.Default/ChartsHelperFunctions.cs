@@ -26,6 +26,15 @@ public class ChartsHelperFunctions(IHelperFunctionsResultService helperFunctions
         ExportChart(name, "bubble", series, options);
     }
 
+    public void ExportGanttChart(
+        string name,
+        List<Dictionary<string, object>> series,
+        Dictionary<string, object>? options = null
+    )
+    {
+        ExportChart(name, "gantt", series, options);
+    }
+
     public void ExportTreeMap(
         string name,
         List<Dictionary<string, object>> series,

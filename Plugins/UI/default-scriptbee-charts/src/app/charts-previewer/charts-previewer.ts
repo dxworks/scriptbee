@@ -6,10 +6,11 @@ import { HeatmapChart } from '../components/heatmap-chart/heatmap-chart';
 import { ScatterPlot } from '../components/scatter-plot/scatter-plot';
 import { TreeMap } from '../components/tree-map/tree-map';
 import { BubbleChart } from '../components/bubble-chart/bubble-chart';
+import { GanttChart } from '../components/gantt-chart/gantt-chart';
 
 @Component({
   selector: 'app-charts-previewer',
-  imports: [BarChart, EchartsChart, HeatmapChart, ScatterPlot, TreeMap, BubbleChart],
+  imports: [BarChart, EchartsChart, HeatmapChart, ScatterPlot, TreeMap, BubbleChart, GanttChart],
   templateUrl: './charts-previewer.html',
   styleUrl: './charts-previewer.scss',
 })
