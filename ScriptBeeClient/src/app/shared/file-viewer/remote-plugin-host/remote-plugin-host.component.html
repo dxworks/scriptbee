@@ -3,5 +3,5 @@
 } @else if (error()) {
   <app-error-state [error]="{ title: 'Failed to load plugin', status: 500 }"></app-error-state>
 } @else {
-  <ng-container *ngComponentOutlet="loadedComponent(); inputs: { inputs: { content: content(), file: file() } }"></ng-container>
+  <ng-container *ngComponentOutlet="loadedComponent(); inputs: { content: content(), file: file(), theme: themeService.theme }"></ng-container>
 }

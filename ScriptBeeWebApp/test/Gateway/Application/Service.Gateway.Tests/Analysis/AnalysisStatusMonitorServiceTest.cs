@@ -58,16 +58,17 @@ public class AnalysisStatusMonitorServiceTest
         await _service.SeedRunningAnalyses(TestContext.Current.CancellationToken);
         _ = _service.Monitor(TestContext.Current.CancellationToken);
 
-        await Task.Delay(100, TestContext.Current.CancellationToken);
-
-        await _projectNotificationsService
-            .Received(1)
-            .NotifyAnalysisStatusChanged(
-                Arg.Is<AnalysisStatusChangedEvent>(e =>
-                    e.AnalysisId == analysisInfoStarted.Id && e.Status == "Finished"
-                ),
-                Arg.Any<CancellationToken>()
-            );
+        await AssertEventually(async () =>
+        {
+            await _projectNotificationsService
+                .Received(1)
+                .NotifyAnalysisStatusChanged(
+                    Arg.Is<AnalysisStatusChangedEvent>(e =>
+                        e.AnalysisId == analysisInfoStarted.Id && e.Status == "Finished"
+                    ),
+                    Arg.Any<CancellationToken>()
+                );
+        });
     }
 
     [Fact]
@@ -76,9 +77,7 @@ public class AnalysisStatusMonitorServiceTest
         var projectId = ProjectId.FromValue("project-id");
         var analysisInfoRunning = BasicAnalysisInfo(projectId, AnalysisStatus.Running);
 
-        _getRunningAnalyses
-            .GetRunning(Arg.Any<CancellationToken>())
-            .Returns(Enumerable.Empty<AnalysisInfo>());
+        _getRunningAnalyses.GetRunning(Arg.Any<CancellationToken>()).Returns([]);
         _getAnalysis
             .GetById(analysisInfoRunning.Id, Arg.Any<CancellationToken>())
             .Returns(analysisInfoRunning);
@@ -87,15 +86,42 @@ public class AnalysisStatusMonitorServiceTest
 
         _ = _service.Monitor(TestContext.Current.CancellationToken);
 
-        await Task.Delay(100, TestContext.Current.CancellationToken);
+        await AssertEventually(async () =>
+        {
+            await _projectNotificationsService
+                .Received(1)
+                .NotifyAnalysisStatusChanged(
+                    Arg.Is<AnalysisStatusChangedEvent>(e =>
+                        e.AnalysisId == analysisInfoRunning.Id && e.Status == "Running"
+                    ),
+                    Arg.Any<CancellationToken>()
+                );
+        });
+    }
 
-        await _projectNotificationsService
-            .Received(1)
-            .NotifyAnalysisStatusChanged(
-                Arg.Is<AnalysisStatusChangedEvent>(e =>
-                    e.AnalysisId == analysisInfoRunning.Id && e.Status == "Running"
-                ),
-                Arg.Any<CancellationToken>()
-            );
+    private static async Task AssertEventually(
+        Func<Task> assertion,
+        int timeoutMs = 3000,
+        int intervalMs = 50
+    )
+    {
+        var startTime = DateTime.UtcNow;
+        while (true)
+        {
+            try
+            {
+                await assertion();
+                return;
+            }
+            catch (Exception)
+            {
+                if ((DateTime.UtcNow - startTime).TotalMilliseconds > timeoutMs)
+                {
+                    throw;
+                }
+
+                await Task.Delay(intervalMs);
+            }
+        }
     }
 }

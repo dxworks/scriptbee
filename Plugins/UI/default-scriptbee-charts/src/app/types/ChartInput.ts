@@ -1,41 +1,20 @@
 ﻿import { EChartsCoreOption, RegisteredSeriesOption } from 'echarts/types/dist/echarts';
-import { BarSeriesOption, HeatmapSeriesOption, ScatterSeriesOption, TreemapSeriesOption } from 'echarts';
 
 export type Theme = 'light' | 'dark';
 
-export interface ChartParameters<T> {
-  theme: Theme;
-  input: T;
-}
-
 type AllSeriesOptions = RegisteredSeriesOption[keyof RegisteredSeriesOption];
 
-export interface EChartsChartInput {
+export interface ChartsPreviewerInput {
+  type: string;
   series: AllSeriesOptions[];
   options?: EChartsCoreOption;
 }
 
-export interface BarChartInput {
-  series: Omit<BarSeriesOption, 'type'>[];
-  options?: EChartsCoreOption;
-}
+export type ChartInput = Omit<ChartsPreviewerInput, 'type'>;
 
-export interface BubbleChartInput {
-  series: Omit<ScatterSeriesOption, 'type'>[];
-  options?: EChartsCoreOption;
-}
-
-export interface HeatmapChartInput {
-  series: Omit<HeatmapSeriesOption, 'type'>[];
-  options?: EChartsCoreOption;
-}
-
-export interface ScatterPlotInput {
-  series: Omit<ScatterSeriesOption, 'type'>[];
-  options?: EChartsCoreOption;
-}
-
-export interface TreeMapInput {
-  series: Omit<TreemapSeriesOption, 'type'>[];
-  options?: EChartsCoreOption;
-}
+export type EChartsChartInput = ChartInput;
+export type BarChartInput = ChartInput;
+export type BubbleChartInput = ChartInput;
+export type TreeMapInput = ChartInput;
+export type ScatterPlotInput = ChartInput;
+export type HeatmapChartInput = ChartInput;

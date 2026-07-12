@@ -4,7 +4,7 @@ import { HeatmapChart as HeatMapComponent } from 'echarts/charts';
 import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
-import { ChartParameters, HeatmapChartInput } from '../../types/ChartInput';
+import { HeatmapChartInput, Theme } from '../../types/ChartInput';
 import { EChartsCoreOption } from 'echarts';
 
 echarts.use([HeatMapComponent, GridComponent, CanvasRenderer, LegendComponent, TooltipComponent]);
@@ -17,10 +17,11 @@ echarts.use([HeatMapComponent, GridComponent, CanvasRenderer, LegendComponent, T
   providers: [provideEchartsCore({ echarts })],
 })
 export class HeatmapChart {
-  parameters = input.required<ChartParameters<HeatmapChartInput>>();
+  theme = input.required<Theme>();
+  input = input.required<HeatmapChartInput>();
 
   options = computed<EChartsCoreOption>(() => {
-    const input = this.parameters().input;
+    const input = this.input();
 
     return {
       ...(input.options ?? {}),
