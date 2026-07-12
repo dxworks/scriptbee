@@ -13,4 +13,6 @@ public interface IManagePluginsUseCase
     Task Install(PluginId pluginId, CancellationToken cancellationToken);
 
     void Uninstall(PluginId pluginId);
+
+    string? GetUiPluginFilePath(PluginId pluginId, string filePath);
 }

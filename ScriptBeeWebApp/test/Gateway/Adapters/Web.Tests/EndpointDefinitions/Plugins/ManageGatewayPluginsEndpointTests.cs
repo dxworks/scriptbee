@@ -156,4 +156,63 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
     }
+
+    [Fact]
+    public async Task GivenValidFilePath_WhenServeUiPluginFile_ThenReturnFile()
+    {
+        var tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.js");
+        await File.WriteAllTextAsync(tempFile, "test content");
+
+        var useCase = Substitute.For<IManagePluginsUseCase>();
+        useCase
+            .GetUiPluginFilePath(new PluginId("id", new Version("1.0.0")), "test.js")
+            .Returns(tempFile);
+
+        TestApiCaller<Program> api = new("/api/plugins/gateway/ui/files/id/1.0.0/test.js");
+        try
+        {
+            var response = await api.GetApi(
+                new TestWebApplicationFactory<Program>(
+                    outputHelper,
+                    services =>
+                    {
+                        services.AddSingleton(useCase);
+                    }
+                )
+            );
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var content = await response.Content.ReadAsStringAsync();
+            content.ShouldBe("test content");
+        }
+        finally
+        {
+            if (File.Exists(tempFile))
+            {
+                File.Delete(tempFile);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task GivenInvalidFilePath_WhenServeUiPluginFile_ThenReturnNotFound()
+    {
+        var useCase = Substitute.For<IManagePluginsUseCase>();
+        useCase
+            .GetUiPluginFilePath(new PluginId("id", new Version("1.0.0")), "invalid.js")
+            .Returns((string?)null);
+
+        TestApiCaller<Program> api = new("/api/plugins/gateway/ui/files/id/1.0.0/invalid.js");
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services =>
+                {
+                    services.AddSingleton(useCase);
+                }
+            )
+        );
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+    }
 }

@@ -110,7 +110,17 @@ public sealed class PluginManager(
         {
             foreach (var ep in plugin.Manifest.ExtensionPoints)
             {
-                if (ep is UiPluginExtensionPoint uiEp)
+                if (ep is not UiPluginExtensionPoint uiEp)
+                {
+                    continue;
+                }
+
+                if (!string.IsNullOrWhiteSpace(uiEp.EntryPoint))
+                {
+                    manifest[uiEp.RemoteName] =
+                        $"/api/plugins/gateway/ui/files/{plugin.Id.Name}/{plugin.Id.Version}/{uiEp.RemoteEntry}";
+                }
+                else
                 {
                     manifest[uiEp.RemoteName] = uiEp.RemoteEntry;
                 }
@@ -118,5 +128,32 @@ public sealed class PluginManager(
         }
 
         return manifest;
+    }
+
+    public string? GetUiPluginFilePath(PluginId pluginId, string filePath)
+    {
+        var activePath = pluginPathProvider.GetInstallationFolderPath();
+        var pluginFolder = Path.Combine(activePath, pluginId.GetFullyQualifiedName());
+
+        var installedPlugin = GetInstalledPlugins().FirstOrDefault(p => p.Id == pluginId);
+
+        var uiEp = installedPlugin
+            ?.Manifest.ExtensionPoints.OfType<UiPluginExtensionPoint>()
+            .FirstOrDefault();
+
+        if (uiEp == null || string.IsNullOrWhiteSpace(uiEp.EntryPoint))
+        {
+            return null;
+        }
+
+        var entryPointFolder = Path.Combine(pluginFolder, uiEp.EntryPoint);
+        var fullFilePath = Path.GetFullPath(Path.Combine(entryPointFolder, filePath));
+
+        if (!fullFilePath.StartsWith(Path.GetFullPath(entryPointFolder)))
+        {
+            return null;
+        }
+
+        return !File.Exists(fullFilePath) ? null : fullFilePath;
     }
 }

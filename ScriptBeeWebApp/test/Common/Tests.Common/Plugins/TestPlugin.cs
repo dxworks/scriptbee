@@ -14,7 +14,7 @@ public class TestPluginManifest : PluginManifest;
 
 public class TestPluginExtensionPoint : PluginExtensionPoint;
 
-public record TestUiPlugin(PluginId Id, string FolderPath = "path")
+public record TestUiPlugin(PluginId Id, string FolderPath = "path", string EntryPoint = "")
     : Plugin(
         FolderPath,
         Id,
@@ -25,6 +25,7 @@ public record TestUiPlugin(PluginId Id, string FolderPath = "path")
                 new UiPluginExtensionPoint
                 {
                     Kind = "UI",
+                    EntryPoint = EntryPoint,
                     RemoteName = "scriptbee-ui-plugin-example",
                     RemoteEntry = "http://localhost:4201/remoteEntry.json",
                     Outlets = new List<UiPluginExtensionPointOutlet>

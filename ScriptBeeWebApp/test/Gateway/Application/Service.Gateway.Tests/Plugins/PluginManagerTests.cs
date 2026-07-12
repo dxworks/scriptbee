@@ -119,7 +119,7 @@ public class PluginManagerTests : IClassFixture<TempDirFixture>
     }
 
     [Fact]
-    public void GivenInstalledPluginsWithUiExtensionPoints_WhenGetUiPluginsManifest_ThenReturnCorrectManifestMap()
+    public void GivenInstalledPluginsWithUiExtensionPointsAndNoEntryPoint_WhenGetUiPluginsManifest_ThenReturnRemoteEntry()
     {
         _pluginPathProvider.GetInstallationFolderPath().Returns("active/path");
         _pluginReader
@@ -128,7 +128,7 @@ public class PluginManagerTests : IClassFixture<TempDirFixture>
                 new List<Plugin>
                 {
                     new TestPlugin(new PluginId("id1", new Version(1, 0, 0))),
-                    new TestUiPlugin(new PluginId("id2", new Version(2, 0, 0))),
+                    new TestUiPlugin(new PluginId("id2", new Version(2, 0, 0)), EntryPoint: ""),
                 }
             );
 
@@ -136,6 +136,28 @@ public class PluginManagerTests : IClassFixture<TempDirFixture>
 
         result.Count.ShouldBe(1);
         result["scriptbee-ui-plugin-example"].ShouldBe("http://localhost:4201/remoteEntry.json");
+    }
+
+    [Fact]
+    public void GivenInstalledPluginsWithUiExtensionPointsAndEntryPoint_WhenGetUiPluginsManifest_ThenReturnInternalGatewayPath()
+    {
+        _pluginPathProvider.GetInstallationFolderPath().Returns("active/path");
+        _pluginReader
+            .ReadPlugins("active/path")
+            .Returns(
+                new List<Plugin>
+                {
+                    new TestUiPlugin(new PluginId("id2", new Version(2, 0, 0)), EntryPoint: "dist"),
+                }
+            );
+
+        var result = _pluginManager.GetUiPluginsManifest();
+
+        result.Count.ShouldBe(1);
+        result["scriptbee-ui-plugin-example"]
+            .ShouldBe(
+                "/api/plugins/gateway/ui/files/id2/2.0.0/http://localhost:4201/remoteEntry.json"
+            );
     }
 
     [Fact]
@@ -192,5 +214,47 @@ public class PluginManagerTests : IClassFixture<TempDirFixture>
         await _pluginManager.Install(pluginId, TestContext.Current.CancellationToken);
 
         _pluginLoader.Received(0).Load(Arg.Any<Plugin>());
+    }
+
+    [Fact]
+    public void GivenUiPluginWithEntryPoint_WhenGetUiPluginFilePath_ThenReturnsCorrectPath()
+    {
+        var activePath = _tempDirFixture.CreateSubFolder("active");
+        var pluginId = new PluginId("id1", new Version(1, 0, 0));
+        var pluginFolder = Path.Combine(activePath, pluginId.GetFullyQualifiedName());
+        var distFolder = Path.Combine(pluginFolder, "dist");
+        Directory.CreateDirectory(distFolder);
+        var filePath = Path.Combine(distFolder, "remoteEntry.js");
+        File.WriteAllText(filePath, "test");
+
+        _pluginPathProvider.GetInstallationFolderPath().Returns(activePath);
+        _pluginReader
+            .ReadPlugins(activePath)
+            .Returns(new List<Plugin> { new TestUiPlugin(pluginId, EntryPoint: "dist") });
+
+        var result = _pluginManager.GetUiPluginFilePath(pluginId, "remoteEntry.js");
+
+        result.ShouldBe(filePath);
+    }
+
+    [Fact]
+    public void GivenUiPluginWithEntryPoint_WhenGetUiPluginFilePathWithDirectoryTraversal_ThenReturnsNull()
+    {
+        var activePath = _tempDirFixture.CreateSubFolder("active");
+        var pluginId = new PluginId("id1", new Version(1, 0, 0));
+        var pluginFolder = Path.Combine(activePath, pluginId.GetFullyQualifiedName());
+        var distFolder = Path.Combine(pluginFolder, "dist");
+        Directory.CreateDirectory(distFolder);
+        var outsideFilePath = Path.Combine(pluginFolder, "secret.txt");
+        File.WriteAllText(outsideFilePath, "test");
+
+        _pluginPathProvider.GetInstallationFolderPath().Returns(activePath);
+        _pluginReader
+            .ReadPlugins(activePath)
+            .Returns(new List<Plugin> { new TestUiPlugin(pluginId, EntryPoint: "dist") });
+
+        var result = _pluginManager.GetUiPluginFilePath(pluginId, "../secret.txt");
+
+        result.ShouldBeNull();
     }
 }
