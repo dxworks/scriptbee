@@ -647,4 +647,34 @@ export class App {
       ],
     };
   });
+
+  graphChartParameters = computed<ChartsPreviewerInput>(() => {
+    return {
+      type: 'graph',
+      options: {
+        title: { text: 'Graph Chart Example' },
+        tooltip: {},
+      },
+      series: [
+        {
+          name: 'Network',
+          layout: 'force',
+          roam: true,
+          label: { show: true },
+          force: { repulsion: 200, edgeLength: 50 },
+          data: [
+            { name: 'Node 1', symbolSize: 50 },
+            { name: 'Node 2', symbolSize: 30 },
+            { name: 'Node 3', symbolSize: 40 },
+            { name: 'Node 4', symbolSize: 20 },
+          ],
+          links: [
+            { source: 'Node 1', target: 'Node 2' },
+            { source: 'Node 1', target: 'Node 3' },
+            { source: 'Node 2', target: 'Node 4' },
+          ],
+        },
+      ],
+    };
+  });
 }

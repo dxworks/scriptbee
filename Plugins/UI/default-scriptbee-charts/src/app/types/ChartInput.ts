@@ -16,6 +16,7 @@ export type EChartsChartInput = ChartInput;
 export type BarChartInput = ChartInput;
 export type BubbleChartInput = ChartInput;
 export type GanttChartInput = ChartInput;
+export type GraphChartInput = ChartInput;
 export type HeatmapChartInput = ChartInput;
 export type ScatterPlotInput = ChartInput;
 export type TreeMapInput = ChartInput;
