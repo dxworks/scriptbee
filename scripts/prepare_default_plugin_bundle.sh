@@ -28,4 +28,7 @@ sh ./scripts/prepare_plugin_folder.sh "$version" "$plugins_folder/HelperFunction
 
 sh ./scripts/prepare_plugin_folder.sh "$version" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.csproj" "$output_path/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp/SampleCodes" && \
 sh ./scripts/prepare_plugin_folder.sh "$version" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.csproj" "$output_path/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript/SampleCodes" && \
-sh ./scripts/prepare_plugin_folder.sh "$version" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" "$output_path/DxWorks.ScriptBee.Plugin.ScriptRunner.Python" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/SampleCodes"
+sh ./scripts/prepare_plugin_folder.sh "$version" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" "$output_path/DxWorks.ScriptBee.Plugin.ScriptRunner.Python" "$plugins_folder/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python/SampleCodes" && \
+
+sh ./scripts/prepare_ui_charts_plugin.sh "$plugins_folder/UI/default-scriptbee-charts" "$output_path/DxWorks.ScriptBee.Plugin.UI.Charts"
+
