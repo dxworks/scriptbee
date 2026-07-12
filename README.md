@@ -10,63 +10,59 @@ ScriptBee is a tool that helps the analysis of different models. Different tools
 loaders, ScriptBee can load the data and create a model. The model can then be analyzed by running different scripts
 written in C#, Javascript and Python on it.
 
+## Documentation
+
+Full documentation is available at [https://dxworks.org/scriptbee/](https://dxworks.org/scriptbee/).
+
 ## Quick Start
 
-The fastest way to get started with ScriptBee is using Docker Compose.
+The only prerequisite is [Docker Desktop](https://docs.docker.com/get-docker/).
 
-### Run with Docker
+Open a terminal in any folder and run the command for your OS — it handles everything else.
 
-The fastest way to get started is by using Docker Compose. Create a `docker-compose.yaml` file with the following
-configuration and run `docker compose up -d`:
+**Linux / macOS:**
 
-```yaml
-services:
-  mongo:
-    image: mongo:8.0.4
-    container_name: mongo
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-
-  scriptbee:
-    image: dxworks/scriptbee:latest
-    user: root
-    ports:
-      - "4201:80"
-    volumes:
-      - ./database/scriptbee:/root/.scriptbee
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - ConnectionStrings__mongodb=mongodb://root:example@mongo:27017/ScriptBee?authSource=admin
-      - UserFolder__UserFolderPath=/root/.scriptbee
-      - SCRIPTBEE__ANALYSIS__DRIVER=docker
-      - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
-      - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/database/scriptbee
-      - SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER=/app/plugins
-    depends_on:
-      - mongo
-
-volumes:
-  scriptbee-plugins:
-  mongodb_data:
+```bash
+curl -fsSL https://raw.githubusercontent.com/dxworks/scriptbee/main/quickstart/start.sh | bash
 ```
 
-#### Docker Hosting Tips
+**Windows (PowerShell):**
 
-| Setting                           | Importance                                                                       |
-|:----------------------------------|:---------------------------------------------------------------------------------|
-| **`user: root`**                  | Allows the ScriptBee container to communicate with the host's Docker engine.     |
-| **`${PWD}`**                      | Ensures absolute path resolution on the host machine for analysis volume mounts. |
-| **`unix:///var/run/docker.sock`** | The standard socket for Docker-out-of-Docker communication.                      |
+```powershell
+irm https://raw.githubusercontent.com/dxworks/scriptbee/main/quickstart/start.ps1 | iex
+```
 
-### Accessing the UI
+The script will:
 
-Once the containers are running, open your browser and navigate to **[http://localhost:4201](http://localhost:4201)**.
+1. Create a `scriptbee/` folder in your current directory
+2. Download the latest default plugin bundle into `scriptbee/plugins/scriptbee-default-bundle@<version>/`
+3. Start ScriptBee and MongoDB via Docker
+
+Once running, open your browser and navigate to **[http://localhost:4201](http://localhost:4201)**.
+
+To stop all services:
+
+```bash
+docker compose -f scriptbee/docker-compose.yaml down
+```
+
+### Skip the default bundle
+
+If you want to start without downloading the default plugin bundle, pass the `--no-bundle` flag:
+
+**Linux / macOS (cloned repo):**
+
+```bash
+bash quickstart/start.sh --no-bundle
+```
+
+**Windows (cloned repo):**
+
+```powershell
+.\quickstart\start.ps1 -NoBundle
+```
+
+> **Already cloned the repo?** Run `bash quickstart/start.sh` (or `.\quickstart\start.ps1`) directly from the repo root
 
 ---
 
@@ -104,9 +100,53 @@ For full extension documentation, including configuration options and a complete
 
 ---
 
-## Documentation
+## MCP Server
 
-Full documentation is available at [https://dxworks.org/scriptbee/](https://dxworks.org/scriptbee/).
+ScriptBee ships an official **Model Context Protocol (MCP) server** that exposes its capabilities — project management,
+context loading, script execution, and analysis — to AI clients such as Claude Desktop, Claude Code, GitHub Copilot, and
+VS Code.
+
+The server is available on Docker Hub: [**dxworks/scriptbee-mcp**](https://hub.docker.com/r/dxworks/scriptbee-mcp).
+
+### Configure in VS Code
+
+Add the MCP server to your `.vscode/mcp.json` using one of the two supported transport modes.
+
+**HTTP transport** — connect to an already-running MCP server:
+
+```json
+{
+  "mcpServers": {
+    "scriptbee": {
+      "url": "http://localhost:5094/mcp",
+      "type": "http"
+    }
+  }
+}
+```
+
+**Stdio transport** — VS Code launches the server as a local process:
+
+```json
+{
+  "mcpServers": {
+    "scriptbee": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "C:/Absolute/Path/To/ScriptBee.MCP.csproj",
+        "--",
+        "--stdio"
+      ]
+    }
+  }
+}
+```
+
+For the full configuration reference, see the [MCP Server README](Integrations/MCP/README.md).
+
+---
 
 ## Contributing
 

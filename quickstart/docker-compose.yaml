@@ -1,0 +1,35 @@
+name: scriptbee-quickstart
+
+services:
+  mongo:
+    image: mongo:8.0.4
+    container_name: scriptbee-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb_data:/data/db
+
+  scriptbee:
+    image: dxworks/scriptbee:latest
+    user: root
+    ports:
+      - "4201:80"
+    volumes:
+      - ./data:/root/.scriptbee
+      - ./plugins:/app/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - ConnectionStrings__mongodb=mongodb://root:example@scriptbee-mongo:27017/ScriptBee?authSource=admin
+      - UserFolder__UserFolderPath=/root/.scriptbee
+      - SCRIPTBEE__ANALYSIS__DRIVER=docker
+      - SCRIPTBEE__ANALYSIS__DOCKER__NETWORK=scriptbee-quickstart_default
+      - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
+      - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/data
+      - SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER=/app/plugins
+    depends_on:
+      - mongo
+
+volumes:
+  mongodb_data:
