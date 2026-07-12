@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using DxWorks.ScriptBee.Plugin.HelperFunctions.Default.Charts;
@@ -15,6 +15,15 @@ public class ChartsHelperFunctions(IHelperFunctionsResultService helperFunctions
     )
     {
         ExportChart(name, "bar", series, options);
+    }
+
+    public void ExportBubbleChart(
+        string name,
+        List<Dictionary<string, object>> series,
+        Dictionary<string, object>? options = null
+    )
+    {
+        ExportChart(name, "bubble", series, options);
     }
 
     public void ExportTreeMap(

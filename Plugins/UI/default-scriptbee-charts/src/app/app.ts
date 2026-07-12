@@ -1,8 +1,8 @@
-import {Component, computed, inject, model} from '@angular/core';
-import {ThemeService} from './services/theme.service';
-import {ChartsPreviewerInput} from './types/ChartInput';
-import {FormsModule} from '@angular/forms';
-import {ChartsPreviewer} from './charts-previewer/charts-previewer';
+import { Component, computed, inject, model } from '@angular/core';
+import { ThemeService } from './services/theme.service';
+import { ChartsPreviewerInput } from './types/ChartInput';
+import { FormsModule } from '@angular/forms';
+import { ChartsPreviewer } from './charts-previewer/charts-previewer';
 
 @Component({
   selector: 'app-root',
@@ -79,6 +79,7 @@ export class App {
     ];
 
     return {
+      type: 'bubble',
       options: {
         title: {
           text: 'Life Expectancy and GDP by Country',
@@ -515,7 +516,7 @@ export class App {
           {
             transform: {
               type: 'ecStat:histogram',
-              config: {dimensions: [1]},
+              config: { dimensions: [1] },
             },
           },
         ],
@@ -542,9 +543,9 @@ export class App {
           {
             type: 'category',
             scale: true,
-            axisTick: {show: false},
-            axisLabel: {show: false},
-            axisLine: {show: false},
+            axisTick: { show: false },
+            axisLabel: { show: false },
+            axisLine: { show: false },
             gridIndex: 1,
           },
           {
@@ -561,9 +562,9 @@ export class App {
           },
           {
             type: 'category',
-            axisTick: {show: false},
-            axisLabel: {show: false},
-            axisLine: {show: false},
+            axisTick: { show: false },
+            axisLabel: { show: false },
+            axisLine: { show: false },
             gridIndex: 2,
           },
         ],
@@ -574,7 +575,7 @@ export class App {
           type: 'scatter',
           xAxisIndex: 0,
           yAxisIndex: 0,
-          encode: {tooltip: [0, 1]},
+          encode: { tooltip: [0, 1] },
           datasetIndex: 0,
         },
         {
@@ -587,7 +588,7 @@ export class App {
             show: true,
             position: 'top',
           },
-          encode: {x: 0, y: 1, itemName: 4},
+          encode: { x: 0, y: 1, itemName: 4 },
           datasetIndex: 1,
         },
         {
@@ -600,7 +601,7 @@ export class App {
             show: true,
             position: 'right',
           },
-          encode: {x: 1, y: 0, itemName: 4},
+          encode: { x: 1, y: 0, itemName: 4 },
           datasetIndex: 2,
         },
       ],

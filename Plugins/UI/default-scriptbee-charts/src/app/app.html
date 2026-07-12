@@ -19,7 +19,7 @@
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="barChartParameters()"></app-charts-previewer>
   }
   @case ('bubble-chart') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="bubbleChartParameters()"></app-bubble-chart>
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="bubbleChartParameters()"></app-charts-previewer>
   }
   @case ('heatmap-chart') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="heatmapChartParameters()"></app-charts-previewer>
@@ -32,8 +32,5 @@
   }
   @case ('generic-echarts') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="genericEChartsParameters()"></app-charts-previewer>
-  }
-  @default {
-    <p>Please select a chart type.</p>
   }
 }
