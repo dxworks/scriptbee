@@ -66,6 +66,66 @@ export class App {
     };
   });
 
+  bubbleChartParameters = computed<ChartsPreviewerInput>(() => {
+    const data = [
+      [
+        [28604, 77, 17096869, 'Australia', 1990],
+        [31163, 77.4, 27662440, 'Canada', 1990],
+      ],
+      [
+        [44056, 81.8, 23968973, 'Australia', 2015],
+        [43294, 81.7, 35939927, 'Canada', 2015],
+      ],
+    ];
+
+    return {
+      type: 'bubble',
+      options: {
+        title: {
+          text: 'Life Expectancy and GDP by Country',
+          left: '5%',
+          top: '3%',
+        },
+        legend: {
+          right: '10%',
+          top: '3%',
+          data: ['1990', '2015'],
+        },
+        grid: {
+          left: '8%',
+          top: '10%',
+        },
+        xAxis: {
+          splitLine: {
+            lineStyle: {
+              type: 'dashed',
+            },
+          },
+        },
+        yAxis: {
+          splitLine: {
+            lineStyle: {
+              type: 'dashed',
+            },
+          },
+          scale: true,
+        },
+      },
+      series: [
+        {
+          name: '1990',
+          data: data[0],
+          symbolSize: [50, 24, 70],
+        },
+        {
+          name: '2015',
+          data: data[1],
+          symbolSize: 60,
+        },
+      ],
+    };
+  });
+
   treeMapParameters = computed<ChartsPreviewerInput>(() => {
     const series: ChartsPreviewerInput['series'] = [
       {

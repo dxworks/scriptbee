@@ -7,9 +7,10 @@
 
 <select [(ngModel)]="selectedChartType">
   <option value="bar">Bar Chart</option>
-  <option value="tree-map">Tree Map</option>
-  <option value="scatter-plot">Scatter Plot</option>
+  <option value="bubble-chart">Bubble Chart</option>
   <option value="heatmap-chart">Heatmap Chart</option>
+  <option value="scatter-plot">Scatter Plot</option>
+  <option value="tree-map">Tree Map</option>
   <option value="generic-echarts">Generic ECharts</option>
 </select>
 
@@ -17,19 +18,19 @@
   @case ('bar') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="barChartParameters()"></app-charts-previewer>
   }
-  @case ('tree-map') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="treeMapParameters()"></app-charts-previewer>
-  }
-  @case ('scatter-plot') {
-    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="scatterPlotParameters()"></app-charts-previewer>
+  @case ('bubble-chart') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="bubbleChartParameters()"></app-charts-previewer>
   }
   @case ('heatmap-chart') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="heatmapChartParameters()"></app-charts-previewer>
   }
+  @case ('scatter-plot') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="scatterPlotParameters()"></app-charts-previewer>
+  }
+  @case ('tree-map') {
+    <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="treeMapParameters()"></app-charts-previewer>
+  }
   @case ('generic-echarts') {
     <app-charts-previewer [theme]="themeService.echartsTheme()" [content]="genericEChartsParameters()"></app-charts-previewer>
-  }
-  @default {
-    <p>Please select a chart type.</p>
   }
 }

@@ -14,6 +14,7 @@ export type ChartInput = Omit<ChartsPreviewerInput, 'type'>;
 
 export type EChartsChartInput = ChartInput;
 export type BarChartInput = ChartInput;
+export type BubbleChartInput = ChartInput;
 export type TreeMapInput = ChartInput;
 export type ScatterPlotInput = ChartInput;
 export type HeatmapChartInput = ChartInput;
