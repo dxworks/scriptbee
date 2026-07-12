@@ -45,7 +45,6 @@ export default defineConfig({
         items: [
           { text: 'Installation', link: '/plugins/installation' },
           { text: 'Manifest', link: '/plugins/manifest' },
-          { text: 'Writing Your First UI Plugin', link: '/plugins/first_ui_plugin' },
           {
             text: 'Plugin Api',
             items: [
@@ -66,8 +65,10 @@ export default defineConfig({
                 ],
               },
               { text: 'Bundle', link: '/plugins/bundle' },
+              { text: 'UI', link: '/plugins/ui' },
             ],
           },
+          { text: 'Writing Your First UI Plugin', link: '/plugins/first_ui_plugin' },
         ],
       },
       {

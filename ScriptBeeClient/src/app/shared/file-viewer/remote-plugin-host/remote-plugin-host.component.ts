@@ -1,4 +1,4 @@
-import { Component, input, OnInit, signal, Type } from '@angular/core';
+import { Component, inject, input, OnInit, signal, Type } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { loadRemoteModule } from '@angular-architects/native-federation';
 import { AnalysisFile } from '../../../types/analysis-results';
@@ -6,6 +6,7 @@ import { LoadingProgressBarComponent } from '../../../components/loading-progres
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 import { FilePreviewExtensionPointOutlet } from '../../../types/plugin';
 import { RemoteMeta } from '../../../services/plugin/gateway-plugins.service';
+import { ThemeService } from '../../../services/common/theme.service';
 
 @Component({
   selector: 'app-remote-plugin-host',
@@ -18,6 +19,8 @@ export class RemotePluginHostComponent implements OnInit {
   content = input<string | undefined>();
   file = input<AnalysisFile | undefined>();
   pluginOutlet = input.required<FilePreviewExtensionPointOutlet & RemoteMeta>();
+
+  themeService = inject(ThemeService);
 
   protected isLoading = signal(true);
   protected error = signal<string | null>(null);
