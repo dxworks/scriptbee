@@ -4,19 +4,13 @@ using Newtonsoft.Json;
 
 namespace DxWorks.ScriptBee.Plugin.HelperFunctions.Default;
 
-public class JsonHelperFunctions : IHelperFunctions
+public class JsonHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
+    : IHelperFunctions
 {
-    private readonly IHelperFunctionsResultService _helperFunctionsResultService;
-
-    public JsonHelperFunctions(IHelperFunctionsResultService helperFunctionsResultService)
-    {
-        _helperFunctionsResultService = helperFunctionsResultService;
-    }
-
     public async Task ExportJsonAsync<T>(
         string fileName,
         T obj,
-        JsonSerializerSettings? settings = default,
+        JsonSerializerSettings? settings = null,
         CancellationToken cancellationToken = default
     )
     {
@@ -29,7 +23,7 @@ public class JsonHelperFunctions : IHelperFunctions
 
         await jsonWriter.FlushAsync(cancellationToken);
         stream.Position = 0;
-        await _helperFunctionsResultService.UploadResultAsync(
+        await helperFunctionsResultService.UploadResultAsync(
             fileName,
             RunResultDefaultTypes.FileType,
             stream,
@@ -48,11 +42,7 @@ public class JsonHelperFunctions : IHelperFunctions
 
         jsonWriter.Flush();
         stream.Position = 0;
-        _helperFunctionsResultService.UploadResult(
-            fileName,
-            RunResultDefaultTypes.FileType,
-            stream
-        );
+        helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
     }
 
     public string ConvertJson(object obj)

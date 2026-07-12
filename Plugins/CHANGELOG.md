@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- added Charts Helper Functions
+
 ### Changed
 
 - update Jint to 4.11.0
+- update C# Script Runner to use Assembly Load Context
 
 ## [2.1.0]
 
