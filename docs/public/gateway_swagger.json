@@ -904,6 +904,75 @@
         }
       }
     },
+    "/api/projects/{projectId}/plugins/url": {
+      "post": {
+        "tags": ["Plugins"],
+        "summary": "Install a plugin from a URL",
+        "description": "Downloads a plugin ZIP file from the provided URL and installs it into the project. The ZIP must contain a manifest.yaml in its root folder.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstallPluginFromUrlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/plugins/gateway": {
       "get": {
         "tags": ["Plugins"],
@@ -1000,6 +1069,44 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/plugins/gateway/ui/files/{pluginId}/{version}/{filePath}": {
+      "get": {
+        "tags": ["Plugins"],
+        "summary": "Serve UI plugin file",
+        "description": "Serves static files associated with UI plugins.",
+        "parameters": [
+          {
+            "name": "pluginId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filePath",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2870,6 +2977,15 @@
             "type": "string"
           },
           "version": {
+            "type": "string"
+          }
+        }
+      },
+      "InstallPluginFromUrlRequest": {
+        "required": ["url"],
+        "type": "object",
+        "properties": {
+          "url": {
             "type": "string"
           }
         }
