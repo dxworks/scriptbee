@@ -35,8 +35,7 @@ irm https://raw.githubusercontent.com/dxworks/scriptbee/main/quickstart/start.ps
 The script will:
 
 1. Create a `scriptbee/` folder in your current directory
-2. Download the latest default plugin bundle into `scriptbee/plugins/scriptbee-default-bundle@<version>/`
-3. Start ScriptBee and MongoDB via Docker
+2. Start ScriptBee and MongoDB via Docker using Docker Compose
 
 Once running, open your browser and navigate to **[http://localhost:4201](http://localhost:4201)**.
 
@@ -44,22 +43,6 @@ To stop all services:
 
 ```bash
 docker compose -f scriptbee/docker-compose.yaml down
-```
-
-### Skip the default bundle
-
-If you want to start without downloading the default plugin bundle, pass the `--no-bundle` flag:
-
-**Linux / macOS (cloned repo):**
-
-```bash
-bash quickstart/start.sh --no-bundle
-```
-
-**Windows (cloned repo):**
-
-```powershell
-.\quickstart\start.ps1 -NoBundle
 ```
 
 > **Already cloned the repo?** Run `bash quickstart/start.sh` (or `.\quickstart\start.ps1`) directly from the repo root
@@ -76,8 +59,8 @@ ScriptBee can be configured using environment variables. Below are the most impo
 | `UserFolder__UserFolderPath` | Host path for storing project data and shared files.             |                            |
 | `SCRIPTBEE_ANALYSIS__DRIVER` | How analysis instances are managed: `docker` or `kubernetes`.    | `docker`                   |
 
-For more detailed information on advanced configuration, check the
-*[Deployment Features](docs/architecture/features.md)* documentation.
+Check the [Configuration Reference](https://dxworks.org/scriptbee/architecture/configuration/gateway_configuration.html)
+for a complete list of configuration options.
 
 ---
 
@@ -130,13 +113,15 @@ Add the MCP server to your `.vscode/mcp.json` using one of the two supported tra
 ```json
 {
   "mcpServers": {
-    "scriptbee": {
-      "command": "dotnet",
+    "scriptbee-docker": {
+      "command": "docker",
       "args": [
         "run",
-        "--project",
-        "C:/Absolute/Path/To/ScriptBee.MCP.csproj",
-        "--",
+        "-i",
+        "--rm",
+        "-e",
+        "GatewayApiUrl=http://host.docker.internal:5117",
+        "scriptbee-mcp",
         "--stdio"
       ]
     }

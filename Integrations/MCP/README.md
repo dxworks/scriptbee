@@ -1,20 +1,25 @@
 # ScriptBee MCP Server
 
 This is the official Model Context Protocol (MCP) server for ScriptBee, built using the standard `.NET` MCP SDK.
-It exposes ScriptBee capabilities (project management, context loading, script execution, and analysis) to AI clients like Claude Desktop, Claude Code, GitHub Copilot, or VS Code.
+It exposes ScriptBee capabilities (project management, context loading, script execution, and analysis) to AI clients
+like Claude Desktop, Claude Code, GitHub Copilot, or VS Code.
 
 ## Running the Server
 
 You can run the server in two modes:
 
 ### HTTP Transport
+
 ```bash
 cd src/ScriptBee.MCP
 dotnet run
 ```
-The server will start on `http://localhost:5094` (or the configured port) and expose the `/mcp` endpoint for SSE connections.
 
-For clients that support connecting to a remote MCP server natively via a URL (such as GitHub Copilot / VS Code via its MCP extension), you can configure the connection directly in your `mcp.json` like this:
+The server will start on `http://localhost:5094` (or the configured port) and expose the `/mcp` endpoint for SSE
+connections.
+
+For clients that support connecting to a remote MCP server natively via a URL (such as GitHub Copilot / VS Code via its
+MCP extension), you can configure the connection directly in your `mcp.json` like this:
 
 ```json
 {
@@ -26,9 +31,11 @@ For clients that support connecting to a remote MCP server natively via a URL (s
   }
 }
 ```
+
 *(Replace `5094` with the actual port the MCP server is running on)*
 
 ### Stdio Transport (for IDEs and Claude Desktop)
+
 ```bash
 cd src/ScriptBee.MCP
 dotnet run -- --stdio
@@ -38,19 +45,26 @@ dotnet run -- --stdio
 
 ### VS Code, Claude Code, or GitHub Copilot
 
-You can add this server to your local tools using an `mcp.json` configuration file (or the IDE's corresponding settings file).
+You can add this server to your local tools using an `mcp.json` configuration file (or the IDE's corresponding settings
+file).
 
-Create or update your `mcp.json` with the following. You can either point to the compiled executable (recommended) or run it from source using `dotnet run`.
+Create or update your `mcp.json` with the following.
 
-**Option 1: Using the compiled executable (Recommended)**
+**Option 1: Using the Dockerfile (Recommended)**
 After building or publishing the project, point directly to the output executable.
 
 ```json
 {
   "mcpServers": {
-    "scriptbee": {
-      "command": "C:/Absolute/Path/To/ScriptBee.MCP.exe",
+    "scriptbee-docker": {
+      "command": "docker",
       "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GatewayApiUrl=http://host.docker.internal:5117",
+        "scriptbee-mcp",
         "--stdio"
       ]
     }
@@ -59,6 +73,7 @@ After building or publishing the project, point directly to the output executabl
 ```
 
 **Option 2: Running from source (Development)**
+
 ```json
 {
   "mcpServers": {
@@ -76,26 +91,10 @@ After building or publishing the project, point directly to the output executabl
 }
 ```
 
-### Claude Desktop
-
-Add the following to your Claude Desktop `claude_desktop_config.json` file (usually located at `%APPDATA%\Claude\claude_desktop_config.json` on Windows):
-
-```json
-{
-  "mcpServers": {
-    "scriptbee": {
-      "command": "C:/Absolute/Path/To/ScriptBee.MCP.exe",
-      "args": [
-        "--stdio"
-      ]
-    }
-  }
-}
-```
-
 ## Exposed Capabilities
 
 ### Tools
+
 - **ProjectTools**: Manage projects (`GetProjects`, `CreateProject`, etc.)
 - **ScriptTools**: Manage scripts and project files
 - **InstanceTools**: Manage execution instances
@@ -103,19 +102,23 @@ Add the following to your Claude Desktop `claude_desktop_config.json` file (usua
 - **AnalysisTools**: Trigger script analyses and fetch results/logs
 
 ### Resources
+
 - **Script Source Code**: Read script contents (`scriptbee://projects/{projectId}/scripts/{scriptId}/content`)
 - **Analysis Console Output**: Read analysis logs (`scriptbee://projects/{projectId}/analyses/{analysisId}/console`)
-- **Instance Context**: View the loaded context graph summary (`scriptbee://projects/{projectId}/instances/{instanceId}/context`)
+- **Instance Context**: View the loaded context graph summary (
+  `scriptbee://projects/{projectId}/instances/{instanceId}/context`)
 
 ### Prompts
+
 - **explore-project**: Guides the AI to give an overview of a project.
 - **load-and-link-context**: Guides the AI through the context ingestion workflow.
 - **run-analysis**: A workflow for the AI to run an analysis and monitor it until completion.
 
 ## Configuration
 
-The ScriptBee MCP server can be configured via command-line arguments or environment variables. Below are the available options:
+The ScriptBee MCP server can be configured via command-line arguments or environment variables. Below are the available
+options:
 
 | Option        | Description                           | Default                 |
-| ------------- | ------------------------------------- | ----------------------- |
+|---------------|---------------------------------------|-------------------------|
 | GatewayApiUrl | The URL of the ScriptBee Gateway API. | `http://localhost:5117` |

@@ -413,3 +413,6 @@ FodyWeavers.xsd
 
 coverageresult/
 .angular/
+
+quickstart/data
+quickstart/plugins
