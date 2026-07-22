@@ -257,11 +257,11 @@
     "@vscode/test-electron": "^3.0.0",
     "axios-mock-adapter": "^2.1.0",
     "esbuild": "^0.28.1",
-    "eslint": "^10.6.0",
+    "eslint": "^10.7.0",
     "mocha": "^11.7.6",
-    "prettier": "^3.9.4",
-    "sinon": "^22.0.0",
+    "prettier": "^3.9.6",
+    "sinon": "^22.1.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.62.1"
+    "typescript-eslint": "^8.65.0"
   }
 }

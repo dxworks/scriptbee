@@ -445,6 +445,37 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Delete("/api/projects/{projectId}/plugins/{pluginId}")]
         Task PluginsDelete(string projectId, string pluginId, [Query] string version, CancellationToken cancellationToken = default);
 
+        /// <summary>Install a plugin from a URL</summary>
+        /// <remarks>Downloads a plugin ZIP file from the provided URL and installs it into the project. The ZIP must contain a manifest.yaml in its root folder.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="body">body parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>400</term>
+        /// <description>Bad Request</description>
+        /// </item>
+        /// <item>
+        /// <term>404</term>
+        /// <description>Not Found</description>
+        /// </item>
+        /// <item>
+        /// <term>500</term>
+        /// <description>Internal Server Error</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/json", "Content-Type: application/json")]
+        [Post("/api/projects/{projectId}/plugins/url")]
+        Task<ProjectDetails> Url(string projectId, [Body] InstallPluginFromUrlRequest body, CancellationToken cancellationToken = default);
+
         /// <summary>Get gateway plugins</summary>
         /// <remarks>Retrieves a list of all plugins installed at the gateway level.</remarks>
         /// <param name="kind">kind parameter</param>
@@ -484,6 +515,17 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Get("/api/plugins/gateway/ui/manifest")]
         Task<IDictionary<string, string>> Manifest(CancellationToken cancellationToken = default);
 
+        /// <summary>Serve UI plugin file</summary>
+        /// <remarks>Serves static files associated with UI plugins.</remarks>
+        /// <param name="pluginId">pluginId parameter</param>
+        /// <param name="version">version parameter</param>
+        /// <param name="filePath">filePath parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Get("/api/plugins/gateway/ui/files/{pluginId}/{version}/{filePath}")]
+        Task Files(string pluginId, string version, string filePath, CancellationToken cancellationToken = default);
+
         /// <summary>Upload files for a loader</summary>
         /// <remarks>Uploads one or more files to be used by a specific loader in the project.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -507,7 +549,7 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Multipart]
         [Headers("Accept: application/json")]
         [Put("/api/projects/{projectId}/loaders/{loaderId}/files")]
-        Task<UploadLoaderFilesResponse> Files(string projectId, string loaderId, IEnumerable<byte[]> files, CancellationToken cancellationToken = default);
+        Task<UploadLoaderFilesResponse> Files2(string projectId, string loaderId, IEnumerable<byte[]> files, CancellationToken cancellationToken = default);
 
         /// <summary>Add a new project instance</summary>
         /// <remarks>Allocates and adds a new execution instance for the specified project.</remarks>
@@ -1996,6 +2038,25 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
         [JsonPropertyName("version")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Version { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class InstallPluginFromUrlRequest
+    {
+
+        [JsonPropertyName("url")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Url { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 
