@@ -56,6 +56,7 @@ public class AnalysisInstanceDockerAdapter(
                 },
                 Env = GetEnvironmentVariables(projectDetails, instanceId, mongoDbConnectionString),
                 Volumes = GetVolumes(),
+                Labels = analysisDockerConfig.Labels,
             },
             cancellationToken
         );

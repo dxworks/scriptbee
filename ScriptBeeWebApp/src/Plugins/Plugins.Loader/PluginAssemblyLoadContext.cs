@@ -5,7 +5,7 @@ using DxWorks.ScriptBee.Plugin.Api;
 namespace ScriptBee.Plugins.Loader;
 
 internal class PluginAssemblyLoadContext(string pluginPath)
-    : AssemblyLoadContext(isCollectible: true)
+    : AssemblyLoadContext(isCollectible: false)
 {
     private static readonly string PluginApiAssemblyName = typeof(IPlugin).Assembly.GetName().Name!;
 

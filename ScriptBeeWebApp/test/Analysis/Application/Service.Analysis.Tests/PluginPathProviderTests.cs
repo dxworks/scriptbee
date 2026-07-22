@@ -22,7 +22,7 @@ public class PluginPathProviderTests
     [Fact]
     public void GivenNoInstallationFolder_WhenGetPluginPath_ThenReturnsDefaultPath()
     {
-        var options = Options.Create(new PluginsSettings());
+        var options = Options.Create(new PluginsSettings { InstallationFolder = "/app/plugins" });
 
         var pluginPathProvider = new PluginPathProvider(options);
         var path = pluginPathProvider.GetPathToPlugins();
@@ -33,7 +33,7 @@ public class PluginPathProviderTests
     [Fact]
     public void GetPathToPlugins()
     {
-        var options = Options.Create(new PluginsSettings());
+        var options = Options.Create(new PluginsSettings { InstallationFolder = "/app/plugins" });
 
         var pluginPathProvider = new PluginPathProvider(options);
         var path = pluginPathProvider.GetPathToPlugins(ProjectId.FromValue("project-id"));

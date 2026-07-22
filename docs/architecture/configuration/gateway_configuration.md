@@ -70,6 +70,18 @@
 - **Description:** The name of the volume that will be created and shared for installing plugins. This will be mounted
   in Analysis Service as a readonly path to access the plugins
 
+### `SCRIPTBEE__ANALYSIS__DOCKER__LABELS`
+
+- **Type:** `Dictionary<string, string>`
+- **Default:** _None_
+- **Description:** A map of Docker labels to attach to the analysis container when created.
+
+For example, to configure container labels:
+
+```
+SCRIPTBEE__ANALYSIS__DOCKER__LABELS__com.docker.compose.project=scriptbee-quickstart
+```
+
 ### `SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG`
 
 > [!NOTE]

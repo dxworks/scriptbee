@@ -6,7 +6,7 @@ public class AnalysisDockerConfig
 {
     public required string DockerSocket { get; init; }
 
-    public int Port { get; init; } = 80;
+    public int Port { get; init; }
 
     public string? Network { get; init; }
 
@@ -16,7 +16,9 @@ public class AnalysisDockerConfig
 
     public string? UserFolderHostPath { get; init; }
 
-    public string PluginsVolume { get; init; } = "scriptbee-plugins";
+    public string PluginsVolume { get; init; } = null!;
 
     public HostConfig? HostConfig { get; init; }
+
+    public Dictionary<string, string> Labels { get; init; } = new();
 }
