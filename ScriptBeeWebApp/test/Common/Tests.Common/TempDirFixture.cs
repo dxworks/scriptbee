@@ -20,10 +20,18 @@ public class TempDirFixture : IAsyncLifetime
 
     public ValueTask DisposeAsync()
     {
-        if (Directory.Exists(FullPath))
+        try
         {
-            Directory.Delete(FullPath, true);
+            if (Directory.Exists(FullPath))
+            {
+                Directory.Delete(FullPath, true);
+            }
         }
+        catch
+        {
+            // Ignore exceptions during cleanup
+        }
+
         return ValueTask.CompletedTask;
     }
 }

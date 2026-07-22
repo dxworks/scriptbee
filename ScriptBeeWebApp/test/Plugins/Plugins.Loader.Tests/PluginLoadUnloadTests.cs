@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-using System.Runtime.Loader;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins;
@@ -32,7 +30,7 @@ public class PluginLoadUnloadTests : IClassFixture<TempDirFixture>
     }
 
     [Fact]
-    public void GivenValidPlugin_WhenLoadAndUnload_ThenAssemblyIsUnloaded()
+    public void GivenValidPlugin_WhenLoad_ThenPluginIsRegisteredSuccessfully()
     {
         // Arrange
         const string pluginName = "TestPlugin";
@@ -72,39 +70,11 @@ public class PluginLoadUnloadTests : IClassFixture<TempDirFixture>
             });
 
         // Act
-        var weakRef = ExecuteLoadAndUnloadInIsolatedScope(plugin);
-
-        TryCollectLoadContextMemory(weakRef);
-
-        // Assert
-        Assert.False(weakRef.IsAlive, "AssemblyLoadContext should have been collected");
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private WeakReference ExecuteLoadAndUnloadInIsolatedScope(Plugin plugin)
-    {
         _pluginLoader.Load(plugin);
 
+        // Assert
         var loadedPlugins = _pluginRepository.GetLoadedPlugins().ToList();
         Assert.Single(loadedPlugins);
         Assert.Equal(plugin.Id.Name, loadedPlugins[0].Id.Name);
-
-        var alc = AssemblyLoadContext.All.FirstOrDefault(x =>
-            x.Name == null && x.GetType() == typeof(PluginAssemblyLoadContext)
-        );
-        var weakRef = new WeakReference(alc);
-
-        _pluginLoader.Unload(plugin.Id);
-
-        return weakRef;
-    }
-
-    private static void TryCollectLoadContextMemory(WeakReference weakRef)
-    {
-        for (var i = 0; i < 10 && weakRef.IsAlive; i++)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
     }
 }

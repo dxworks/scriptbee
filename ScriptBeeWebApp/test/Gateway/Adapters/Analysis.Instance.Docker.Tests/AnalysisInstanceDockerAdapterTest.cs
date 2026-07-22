@@ -41,6 +41,8 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             DockerSocket = dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
             Network = DockerFixture.TestNetworkName,
             UserFolderVolumePath = "/root/.scriptbee",
+            Port = 80,
+            PluginsVolume = "scriptbee-plugins",
         };
         _configOptions = Options.Create(config);
 
@@ -154,6 +156,8 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
             Network = null,
             UserFolderVolumePath = "/root/.scriptbee",
+            Port = 80,
+            PluginsVolume = "scriptbee-plugins",
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
@@ -234,6 +238,8 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             Network = DockerFixture.TestNetworkName,
             UserFolderVolumePath = "/root/.scriptbee",
             UserFolderHostPath = OverrideHostPath,
+            Port = 80,
+            PluginsVolume = "scriptbee-plugins",
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
@@ -305,6 +311,8 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             Network = DockerFixture.TestNetworkName,
             UserFolderVolumePath = "/root/.scriptbee",
             MongoDbConnectionString = OverrideMongoConnectionString,
+            Port = 80,
+            PluginsVolume = "scriptbee-plugins",
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
@@ -344,6 +352,8 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
             DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
             Network = DockerFixture.TestNetworkName,
             HostConfig = new HostConfig { Memory = 512 * 1024 * 1024 },
+            Port = 80,
+            PluginsVolume = "scriptbee-plugins",
         };
         var adapter = new AnalysisInstanceDockerAdapter(
             Options.Create(config),
@@ -371,6 +381,54 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
 
         containerInspect.HostConfig.NetworkMode.ShouldBe(DockerFixture.TestNetworkName);
         containerInspect.HostConfig.Memory.ShouldBe(512 * 1024 * 1024);
+    }
+
+    [Fact]
+    public async Task Allocate_ShouldPassLabels_WhenConfigured()
+    {
+        // Arrange
+        var config = new AnalysisDockerConfig
+        {
+            DockerSocket = _dockerFixture.DockerClient.Configuration.EndpointBaseUri.ToString(),
+            Network = DockerFixture.TestNetworkName,
+            UserFolderVolumePath = "/root/.scriptbee",
+            Port = 80,
+            PluginsVolume = "scriptbee-plugins",
+            Labels = new Dictionary<string, string>
+            {
+                { "com.docker.compose.project", "scriptbee-quickstart" },
+                { "custom.label", "test-value" },
+            },
+        };
+        var adapter = new AnalysisInstanceDockerAdapter(
+            Options.Create(config),
+            _configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-analysis-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.Config.Labels.ShouldContainKeyAndValue(
+            "com.docker.compose.project",
+            "scriptbee-quickstart"
+        );
+        containerInspect.Config.Labels.ShouldContainKeyAndValue("custom.label", "test-value");
     }
 
     [Fact]
@@ -447,5 +505,38 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
         );
 
         exception.ShouldBeNull();
+    }
+
+    [Fact]
+    public void ConfigurationBinding_ShouldBindLabelsFromConfiguration()
+    {
+        // Arrange
+        var inMemorySettings = new Dictionary<string, string?>
+        {
+            { "ScriptBee:Analysis:Docker:DockerSocket", "unix:///var/run/docker.sock" },
+            {
+                "ScriptBee:Analysis:Docker:Labels:com.docker.compose.project",
+                "scriptbee-quickstart"
+            },
+            { "ScriptBee:Analysis:Docker:Labels:custom.label", "test-value" },
+        };
+
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        // Act
+        var config = configuration
+            .GetSection("ScriptBee:Analysis:Docker")
+            .Get<AnalysisDockerConfig>();
+
+        // Assert
+        config.ShouldNotBeNull();
+        config.Labels.ShouldNotBeNull();
+        config.Labels.ShouldContainKeyAndValue(
+            "com.docker.compose.project",
+            "scriptbee-quickstart"
+        );
+        config.Labels.ShouldContainKeyAndValue("custom.label", "test-value");
     }
 }

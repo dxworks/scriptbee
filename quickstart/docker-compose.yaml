@@ -27,6 +27,7 @@ services:
       - SCRIPTBEE__ANALYSIS__DOCKER__NETWORK=scriptbee-quickstart_default
       - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
       - SCRIPTBEE__ANALYSIS__DOCKER__USERFOLDERHOSTPATH=${PWD}/data
+      - SCRIPTBEE__ANALYSIS__DOCKER__LABELS__com.docker.compose.project=scriptbee-quickstart
       - SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER=/app/plugins
     depends_on:
       - mongo
