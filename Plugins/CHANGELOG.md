@@ -2,8 +2,8 @@
 
 All notable changes to the "ScriptBee Default Plugin Bundle" will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
+to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - update `Jint` to 4.16.0
 - update `Microsoft.CodeAnalysis` to 5.9.0
+- update `@angular/common` to 22.1.2
+- update `@angular/compiler` to 22.1.2
+- update `@angular/core` to 22.1.2
+- update `@angular/forms` to 22.1.2
+- update `@angular/platform-browser` to 22.1.2
+- update `@angular/router` to 22.1.2
 
 ## [2.2.0]
 
