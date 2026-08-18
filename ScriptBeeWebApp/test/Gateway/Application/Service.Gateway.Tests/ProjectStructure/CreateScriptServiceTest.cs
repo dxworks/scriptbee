@@ -161,6 +161,9 @@ public class CreateScriptServiceTest
                 )
             );
         _guidProvider.NewGuid().Returns(Guid.Parse("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"));
+        _createScript
+            .Create(Arg.Any<Script>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<ScriptId?>(null));
 
         var result = await _createScriptService.Create(
             new CreateScriptCommand(
@@ -204,7 +207,7 @@ public class CreateScriptServiceTest
         await _projectNotificationsService
             .Received(1)
             .NotifyScriptCreated(
-                new ScriptCreatedEvent(projectId, script.Id),
+                new ScriptCreatedEvent(projectId, script.Id, null, "path.cs"),
                 TestContext.Current.CancellationToken
             );
     }
@@ -228,6 +231,9 @@ public class CreateScriptServiceTest
                 )
             );
         _guidProvider.NewGuid().Returns(Guid.Parse("3554c7c6-0fd8-4556-af5b-c23d92ea05b1"));
+        _createScript
+            .Create(Arg.Any<Script>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<ScriptId?>(null));
 
         var result = await _createScriptService.Create(
             new CreateScriptCommand(
@@ -271,7 +277,7 @@ public class CreateScriptServiceTest
         await _projectNotificationsService
             .Received(1)
             .NotifyScriptCreated(
-                new ScriptCreatedEvent(projectId, script.Id),
+                new ScriptCreatedEvent(projectId, script.Id, null, "path.ext.cs"),
                 TestContext.Current.CancellationToken
             );
     }

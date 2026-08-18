@@ -6,7 +6,10 @@ export interface BaseScriptEvent {
 
 export type ScriptUpdatedEvent = BaseScriptEvent;
 export type ScriptDeletedEvent = BaseScriptEvent;
-export type ScriptCreateEvent = BaseScriptEvent;
+export interface ScriptCreateEvent extends BaseScriptEvent {
+  parentId: string | null;
+  path: string;
+}
 
 export interface AnalysisStatusChangedEvent {
   projectId: string;

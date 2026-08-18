@@ -1,4 +1,4 @@
-﻿using DxWorks.ScriptBee.Plugin.Api.Model;
+using DxWorks.ScriptBee.Plugin.Api.Model;
 using MongoDB.Driver;
 using NSubstitute;
 using ScriptBee.Artifacts.Mongodb.Entity.Script;
@@ -132,6 +132,73 @@ public partial class ScriptPersistenceAdapterIntegrationTests
         await _adapter.Create(script, TestContext.Current.CancellationToken);
 
         await AssertMongodbScript(scriptId, ScriptParameter.TypeFloat, 12.2);
+    }
+
+    [Fact]
+    public async Task CreateRootScript_ShouldReturnNullParentId()
+    {
+        // Arrange
+        var scriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(new ScriptId(scriptId), []);
+
+        // Act
+        var parentId = await _adapter.Create(script, TestContext.Current.CancellationToken);
+
+        // Assert
+        parentId.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task CreateScriptInNewFolder_ShouldReturnNewFolderParentId()
+    {
+        // Arrange
+        var scriptId = Guid.NewGuid();
+        var folderId = Guid.NewGuid();
+        var script = CreateScript(new ScriptId(scriptId), []) with
+        {
+            File = new ProjectStructureFile("folder/script.cs"),
+        };
+        _guidProvider.NewGuid().Returns(folderId, scriptId);
+
+        // Act
+        var parentId = await _adapter.Create(script, TestContext.Current.CancellationToken);
+
+        // Assert
+        parentId.ShouldNotBeNull();
+        parentId.ShouldBe(new ScriptId(folderId));
+    }
+
+    [Fact]
+    public async Task CreateScriptInExistingFolder_ShouldReturnExistingFolderParentId()
+    {
+        // Arrange
+        var firstScriptId = Guid.NewGuid().ToString();
+        var firstFolderId = Guid.NewGuid();
+        _guidProvider.NewGuid().Returns(firstFolderId);
+        await _adapter.Create(
+            CreateScript(new ScriptId(firstScriptId), []) with
+            {
+                File = new ProjectStructureFile("folder/first.cs"),
+            },
+            TestContext.Current.CancellationToken
+        );
+
+        var secondScriptId = Guid.NewGuid().ToString();
+        var script = CreateScript(new ScriptId(secondScriptId), []) with
+        {
+            File = new ProjectStructureFile("folder/second.cs"),
+        };
+
+        // Act
+        var parentId = await _adapter.Create(script, TestContext.Current.CancellationToken);
+
+        // Assert
+        parentId.ShouldNotBeNull();
+        var folder = await _mongoCollection
+            .Find(p => p.FilePath == "folder" && p.Type == MongodbScriptType.Folder)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        folder.ShouldNotBeNull();
+        parentId.ShouldBe(new ScriptId(folder.Id));
     }
 
     private async Task AssertMongodbScript(string scriptId, string type, object? value)

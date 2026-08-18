@@ -102,10 +102,24 @@ describe('ScriptTreeComponent', () => {
   });
 
   describe('Live Updates', () => {
-    it('should reload root on ScriptCreated event', () => {
+    it('should reload parent folder on ScriptCreated event when parentId is provided', () => {
       const reloadFolderSpy = vi.spyOn(component.lazyTree(), 'reloadFolder');
 
-      mocks.liveUpdates.scriptCreated$.next({ scriptId: 'new-id', projectId: 'proj-1', clientId: 'other' });
+      mocks.liveUpdates.scriptCreated$.next({
+        scriptId: 'new-id',
+        projectId: 'proj-1',
+        clientId: 'other',
+        parentId: 'parent-folder-id',
+        path: 'folder/script.cs',
+      });
+
+      expect(reloadFolderSpy).toHaveBeenCalledWith('parent-folder-id');
+    });
+
+    it('should reload root on ScriptCreated event when parentId is null', () => {
+      const reloadFolderSpy = vi.spyOn(component.lazyTree(), 'reloadFolder');
+
+      mocks.liveUpdates.scriptCreated$.next({ scriptId: 'new-id', projectId: 'proj-1', clientId: 'other', parentId: null, path: 'script.cs' });
 
       expect(reloadFolderSpy).toHaveBeenCalledWith(null);
     });

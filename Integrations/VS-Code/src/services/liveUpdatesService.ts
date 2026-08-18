@@ -9,6 +9,8 @@ import * as CommandIds from '../commands/commandIds';
 export interface ScriptLiveUpdateEvent {
   projectId: string;
   scriptId: string;
+  parentId: string | null;
+  path: string;
   clientId?: string;
 }
 
@@ -55,8 +57,7 @@ export class LiveUpdatesService {
         return;
       }
       logger.log(`Live Update: Script Created ${event.scriptId}`);
-      // TODO: here we can call addNode instead of refreshing the entire tree if we know the parentId
-      await vscode.commands.executeCommand(CommandIds.COMMAND_REFRESH_TREE_VIEW);
+      await vscode.commands.executeCommand(CommandIds.COMMAND_REFRESH_TREE_VIEW, event.parentId);
     });
 
     this.hubConnection.on('ScriptUpdated', async (event: ScriptLiveUpdateEvent) => {

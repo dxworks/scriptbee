@@ -44,7 +44,14 @@ suite('LiveUpdatesService Tests', () => {
     } as unknown as vscode.WorkspaceConfiguration;
     sinon.stub(vscode.workspace, 'getConfiguration').returns(mockConfig);
 
-    sinon.stub(LiveUpdatesService.prototype as unknown as { populateCache: () => Promise<void> }, 'populateCache').resolves();
+    sinon
+      .stub(
+        LiveUpdatesService.prototype as unknown as {
+          populateCache: () => Promise<void>;
+        },
+        'populateCache'
+      )
+      .resolves();
   });
 
   teardown(async () => {
@@ -80,7 +87,7 @@ suite('LiveUpdatesService Tests', () => {
     const uri = vscode.Uri.file('/p/s.js');
     liveUpdatesService.updateCacheEntry('s1', uri);
 
-    await callback({ scriptId: 's1', clientId: 'other', projectId: 'p1' });
+    await callback({ scriptId: 's1', clientId: 'other', projectId: 'p1', parentId: 'parent-id', path: 'path' });
 
     assert.strictEqual(pullStub.calledWith(uri), true);
   });
@@ -99,8 +106,46 @@ suite('LiveUpdatesService Tests', () => {
       scriptId: 's1',
       clientId: ClientIdService.clientId,
       projectId: 'p1',
+      parentId: null,
+      path: 'script.cs',
     });
 
     assert.strictEqual(pullStub.notCalled, true);
+  });
+
+  test('should execute refresh tree view command with parentId on ScriptCreated event', async () => {
+    getActiveConnectionStub.resolves({ id: 'c1', name: 'T', url: 'http://loc', projectId: 'p1' });
+    const executeCommandStub = vscode.commands.executeCommand as sinon.SinonStub;
+
+    await liveUpdatesService.start();
+
+    const call = mockHubConnection.on.getCalls().find((c) => c.args[0] === 'ScriptCreated');
+    assert.ok(call);
+
+    const callback = call.args[1];
+    await callback({
+      scriptId: 's1',
+      clientId: 'other',
+      projectId: 'p1',
+      parentId: 'parent-id',
+      path: 'folder/script.cs',
+    });
+
+    assert.strictEqual(executeCommandStub.calledWith('scriptbee.refreshTreeView', 'parent-id'), true);
+  });
+
+  test('should execute refresh tree view command with null parentId on ScriptCreated event for root script', async () => {
+    getActiveConnectionStub.resolves({ id: 'c1', name: 'T', url: 'http://loc', projectId: 'p1' });
+    const executeCommandStub = vscode.commands.executeCommand as sinon.SinonStub;
+
+    await liveUpdatesService.start();
+
+    const call = mockHubConnection.on.getCalls().find((c) => c.args[0] === 'ScriptCreated');
+    assert.ok(call);
+
+    const callback = call.args[1];
+    await callback({ scriptId: 's1', clientId: 'other', projectId: 'p1', parentId: null, path: 'script.cs' });
+
+    assert.strictEqual(executeCommandStub.calledWith('scriptbee.refreshTreeView', null), true);
   });
 });

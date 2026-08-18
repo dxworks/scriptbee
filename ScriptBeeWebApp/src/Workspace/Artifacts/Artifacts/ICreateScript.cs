@@ -4,5 +4,5 @@ namespace ScriptBee.Artifacts;
 
 public interface ICreateScript
 {
-    Task Create(Script script, CancellationToken cancellationToken);
+    Task<ScriptId?> Create(Script script, CancellationToken cancellationToken);
 }
