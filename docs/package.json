@@ -27,6 +27,6 @@
   "devDependencies": {
     "prettier": "^3.9.6",
     "redoc": "^2.5.3",
-    "vitepress": "^2.0.0-alpha.17"
+    "vitepress": "^2.0.0-alpha.19"
   }
 }

@@ -5,7 +5,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Refit" />
-    <PackageReference Include="Refitter.SourceGenerator" />
+    <PackageReference Include="Refitter.SourceGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Ports.Instance\Ports.Instance.csproj" />
