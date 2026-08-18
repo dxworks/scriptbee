@@ -21,7 +21,7 @@ public sealed class InstanceTools(IGatewayApi gatewayApi)
         [Description("The unique identifier of the project.")] string projectId,
         [Description("The unique identifier of the instance.")] string instanceId,
         CancellationToken cancellationToken
-    ) => await gatewayApi.InstancesGet2(projectId, instanceId, cancellationToken);
+    ) => await gatewayApi.InstancesGet(projectId, instanceId, cancellationToken);
 
     [McpServerTool]
     [Description("Allocates and adds a new execution instance for the specified project.")]

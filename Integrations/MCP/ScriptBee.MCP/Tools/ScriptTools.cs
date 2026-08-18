@@ -21,7 +21,7 @@ public sealed class ScriptTools(IGatewayApi gatewayApi)
         [Description("The unique identifier of the project.")] string projectId,
         [Description("The unique identifier of the script.")] string scriptId,
         CancellationToken cancellationToken
-    ) => await gatewayApi.ScriptsGet2(projectId, scriptId, cancellationToken);
+    ) => await gatewayApi.ScriptsGet(projectId, scriptId, cancellationToken);
 
     [McpServerTool]
     [Description("Creates a new script within the specified project.")]

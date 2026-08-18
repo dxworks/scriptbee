@@ -72,7 +72,7 @@ public sealed class AnalysisTools(IGatewayApi gatewayApi)
         [Description("The unique identifier of the project.")] string projectId,
         [Description("The unique identifier of the analysis.")] string analysisId,
         CancellationToken cancellationToken
-    ) => await gatewayApi.FilesGet3(projectId, analysisId, cancellationToken);
+    ) => await gatewayApi.FilesGet(projectId, analysisId, cancellationToken);
 
     [McpServerTool]
     [Description("Retrieves metadata about a script used in a specific analysis.")]

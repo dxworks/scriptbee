@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
-using Refit;
 using ScriptBee.MCP.Gateway.Generated;
 using ScriptBee.MCP.Gateway.Generated.Contracts;
 
@@ -19,7 +18,7 @@ public sealed class ProjectTools(IGatewayApi gatewayApi)
     public async Task<ProjectDetails> GetProject(
         [Description("The unique identifier of the project.")] string projectId,
         CancellationToken cancellationToken
-    ) => await gatewayApi.ProjectsGet2(projectId, cancellationToken);
+    ) => await gatewayApi.ProjectsGet(projectId, cancellationToken);
 
     [McpServerTool]
     [Description("Creates a new ScriptBee project with the specified ID and name.")]
