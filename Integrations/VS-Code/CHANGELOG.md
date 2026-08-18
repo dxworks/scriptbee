@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- enhance create script with parent id and path in #296
+
 ## [1.1.0]
 
 ### Added
