@@ -82,8 +82,7 @@ export class ScriptTreeComponent {
 
     this.projectLiveUpdatesService.scriptCreated$.pipe(takeUntilDestroyed()).subscribe((event) => {
       if (event.projectId === this.projectId()) {
-        // TODO: here we can call addNode instead of refreshing the entire tree if we know the parentId
-        this.lazyTree().reloadFolder(null);
+        this.lazyTree().reloadFolder(event.parentId);
       }
     });
   }
