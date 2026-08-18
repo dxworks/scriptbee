@@ -131,44 +131,79 @@ public class ScriptsPersistenceAdapter(
         CancellationToken cancellationToken
     )
     {
+        var scriptFile = new ProjectStructureFile(mongodbScript.FilePath);
+        var parentPath = scriptFile.ParentPath;
+        if (string.IsNullOrEmpty(parentPath))
+        {
+            return null;
+        }
+
+        var childId = mongodbScript.Id;
+        var immediateParentPath = parentPath;
+        string? createdImmediateParentId = null;
+
         for (var i = 0; i < MaxDepth; i++)
         {
-            var scriptFile = new ProjectStructureFile(mongodbScript.FilePath);
-            var parentFolder = scriptFile.ParentPath;
-            if (string.IsNullOrEmpty(parentFolder))
-            {
-                return null;
-            }
-
             var existingFolder = await mongoRepository.GetDocument(
-                script => script.FilePath == parentFolder,
+                script => script.FilePath == parentPath,
                 cancellationToken
             );
 
             if (existingFolder is not null)
             {
-                var children = existingFolder.ChildrenIds ?? [];
-                existingFolder.ChildrenIds = [.. children, mongodbScript.Id];
-                await mongoRepository.UpdateDocument(existingFolder, cancellationToken);
-                return new ScriptId(existingFolder.Id);
+                var children = (existingFolder.ChildrenIds ?? []).ToList();
+                if (!children.Contains(childId))
+                {
+                    existingFolder.ChildrenIds = [.. children, childId];
+                    await mongoRepository.UpdateDocument(existingFolder, cancellationToken);
+                }
+
+                if (parentPath == immediateParentPath)
+                {
+                    return new ScriptId(existingFolder.Id);
+                }
+
+                childId = existingFolder.Id;
+                parentPath = new ProjectStructureFile(parentPath).ParentPath;
+                if (string.IsNullOrEmpty(parentPath))
+                {
+                    return createdImmediateParentId is null
+                        ? new ScriptId(childId)
+                        : new ScriptId(createdImmediateParentId);
+                }
+
+                continue;
             }
 
+            var newFolderId = guidProvider.NewGuid().ToString();
             var newFolder = new MongodbScript
             {
-                Id = guidProvider.NewGuid().ToString(),
+                Id = newFolderId,
                 ProjectId = mongodbScript.ProjectId,
                 Type = MongodbScriptType.Folder,
-                FilePath = parentFolder,
+                FilePath = parentPath,
                 ScriptLanguage = null,
                 Parameters = null,
-                ChildrenIds = [mongodbScript.Id],
+                ChildrenIds = [childId],
             };
             await mongoRepository.CreateDocument(newFolder, cancellationToken);
 
-            return new ScriptId(newFolder.Id);
+            if (parentPath == immediateParentPath)
+            {
+                createdImmediateParentId = newFolderId;
+            }
+
+            childId = newFolderId;
+            parentPath = new ProjectStructureFile(parentPath).ParentPath;
+            if (string.IsNullOrEmpty(parentPath))
+            {
+                return createdImmediateParentId is null
+                    ? new ScriptId(newFolderId)
+                    : new ScriptId(createdImmediateParentId);
+            }
         }
 
-        return null;
+        return createdImmediateParentId is null ? null : new ScriptId(createdImmediateParentId);
     }
 
     private async Task<OneOf<MongodbScript, ScriptDoesNotExistsError>> GetMongoFileEntry(

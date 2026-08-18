@@ -18,7 +18,9 @@ public partial class ScriptPersistenceAdapterIntegrationTests : IClassFixture<Mo
 
     public ScriptPersistenceAdapterIntegrationTests(MongoDbFixture fixture)
     {
-        _mongoCollection = fixture.GetCollection<MongodbScript>("Scripts");
+        var collectionName = $"Scripts_{Guid.NewGuid()}";
+        _mongoCollection = fixture.GetCollection<MongodbScript>(collectionName);
+
         _adapter = new ScriptsPersistenceAdapter(
             new MongoRepository<MongodbScript>(_mongoCollection),
             _guidProvider

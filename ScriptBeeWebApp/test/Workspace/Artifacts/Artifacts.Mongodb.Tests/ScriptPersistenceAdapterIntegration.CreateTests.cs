@@ -152,13 +152,13 @@ public partial class ScriptPersistenceAdapterIntegrationTests
     public async Task CreateScriptInNewFolder_ShouldReturnNewFolderParentId()
     {
         // Arrange
-        var scriptId = Guid.NewGuid().ToString();
+        var scriptId = Guid.NewGuid();
         var folderId = Guid.NewGuid();
         var script = CreateScript(new ScriptId(scriptId), []) with
         {
             File = new ProjectStructureFile("folder/script.cs"),
         };
-        _guidProvider.NewGuid().Returns(folderId);
+        _guidProvider.NewGuid().Returns(folderId, scriptId);
 
         // Act
         var parentId = await _adapter.Create(script, TestContext.Current.CancellationToken);
