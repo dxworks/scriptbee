@@ -38,7 +38,7 @@
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.6.0" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
-    <PackageVersion Include="Jint" Version="4.14.0" />
+    <PackageVersion Include="Jint" Version="4.16.0" />
     <PackageVersion Include="IronPython" Version="3.4.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(ProjectName.ToLower().Contains(`test`))' == 'true'">
