@@ -2,6 +2,7 @@
   <PropertyGroup>
     <RootNamespace>ScriptBee.Tests.Common.Mongodb</RootNamespace>
     <IsTestProject>false</IsTestProject>
+    <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" />
