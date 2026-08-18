@@ -107,10 +107,10 @@ public sealed class CreateScriptService(
             command.Parameters
         );
 
-        await createScript.Create(script, cancellationToken);
+        var parentId = await createScript.Create(script, cancellationToken);
 
         await projectNotificationsService.NotifyScriptCreated(
-            new ScriptCreatedEvent(projectDetails.Id, script.Id),
+            new ScriptCreatedEvent(projectDetails.Id, script.Id, parentId, script.File.Path),
             cancellationToken
         );
 

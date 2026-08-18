@@ -18,12 +18,12 @@ public class ScriptsPersistenceAdapter(
 {
     private const int MaxDepth = 10_000;
 
-    public async Task Create(Script script, CancellationToken cancellationToken)
+    public async Task<ScriptId?> Create(Script script, CancellationToken cancellationToken)
     {
         var mongodbScript = MongodbScript.From(script);
         await mongoRepository.CreateDocument(mongodbScript, cancellationToken);
 
-        await CreateParentFolder(mongodbScript, cancellationToken);
+        return await CreateParentFolder(mongodbScript, cancellationToken);
     }
 
     public async Task<IEnumerable<Script>> GetAll(
@@ -126,7 +126,7 @@ public class ScriptsPersistenceAdapter(
         return mongodbScript.ToProjectStructureEntry();
     }
 
-    private async Task CreateParentFolder(
+    private async Task<ScriptId?> CreateParentFolder(
         MongodbScript mongodbScript,
         CancellationToken cancellationToken
     )
@@ -137,7 +137,7 @@ public class ScriptsPersistenceAdapter(
             var parentFolder = scriptFile.ParentPath;
             if (string.IsNullOrEmpty(parentFolder))
             {
-                return;
+                return null;
             }
 
             var existingFolder = await mongoRepository.GetDocument(
@@ -150,7 +150,7 @@ public class ScriptsPersistenceAdapter(
                 var children = existingFolder.ChildrenIds ?? [];
                 existingFolder.ChildrenIds = [.. children, mongodbScript.Id];
                 await mongoRepository.UpdateDocument(existingFolder, cancellationToken);
-                return;
+                return new ScriptId(existingFolder.Id);
             }
 
             var newFolder = new MongodbScript
@@ -165,8 +165,10 @@ public class ScriptsPersistenceAdapter(
             };
             await mongoRepository.CreateDocument(newFolder, cancellationToken);
 
-            mongodbScript = newFolder;
+            return new ScriptId(newFolder.Id);
         }
+
+        return null;
     }
 
     private async Task<OneOf<MongodbScript, ScriptDoesNotExistsError>> GetMongoFileEntry(

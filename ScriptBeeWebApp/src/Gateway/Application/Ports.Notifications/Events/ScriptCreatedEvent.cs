@@ -3,4 +3,9 @@ using ScriptBee.Domain.Model.ProjectStructure;
 
 namespace ScriptBee.Ports.Notifications.Events;
 
-public record ScriptCreatedEvent(ProjectId ProjectId, ScriptId ScriptId);
+public record ScriptCreatedEvent(
+    ProjectId ProjectId,
+    ScriptId ScriptId,
+    ScriptId? ParentId,
+    string Path
+);

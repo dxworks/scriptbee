@@ -42,7 +42,7 @@ public class ProjectNotificationsServiceTests
         // Arrange
         var projectId = ProjectId.FromValue("test-project");
         var scriptId = new ScriptId(Guid.NewGuid());
-        var ev = new ScriptCreatedEvent(projectId, scriptId);
+        var ev = new ScriptCreatedEvent(projectId, scriptId, null, "test/script.cs");
 
         // Act
         await _service.NotifyScriptCreated(ev, TestContext.Current.CancellationToken);
@@ -56,6 +56,9 @@ public class ProjectNotificationsServiceTests
                 Arg.Is<object[]>(args =>
                     ((SignalRScriptCreatedEvent)args[0]).ProjectId == ev.ProjectId.ToString()
                     && ((SignalRScriptCreatedEvent)args[0]).ScriptId == ev.ScriptId.ToString()
+                    && ((SignalRScriptCreatedEvent)args[0]).ParentId
+                        == (ev.ParentId == null ? null : ev.ParentId.ToString())
+                    && ((SignalRScriptCreatedEvent)args[0]).Path == ev.Path
                     && ((SignalRScriptCreatedEvent)args[0]).ClientId == "test-client"
                 ),
                 TestContext.Current.CancellationToken
