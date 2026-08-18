@@ -1,4 +1,4 @@
-﻿using Slugify;
+using Slugify;
 
 namespace ScriptBee.Domain.Model.Project;
 
