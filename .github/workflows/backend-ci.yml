@@ -8,6 +8,8 @@ on:
       - 'Plugins/**'
       - '!Plugins/UI/**'
       - 'Integrations/MCP/**'
+      - 'Directory.Build.props'
+      - 'Directory.Packages.props'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     paths:
@@ -15,6 +17,8 @@ on:
       - 'Plugins/**'
       - '!Plugins/UI/**'
       - 'Integrations/MCP/**'
+      - 'Directory.Build.props'
+      - 'Directory.Packages.props'
       - '.github/workflows/backend-ci.yml'
 
 jobs:
