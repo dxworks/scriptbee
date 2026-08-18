@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update ModelContextProtocol.AspNetCore to 1.4.1
+- update `ModelContextProtocol.AspNetCore` to 2.2.0
+- update `Refit` to 15.1.0
+- update `Refit.HttpClientFactory` to 15.1.0
+- update `Refitter.SourceGenerator` to 2.1.3
 
 ## [1.0.0]
 

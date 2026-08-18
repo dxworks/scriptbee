@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- update Jint to 4.14.0
+- update `Jint` to 4.16.0
+- update `Microsoft.CodeAnalysis` to 5.9.0
 
 ## [2.2.0]
 
@@ -20,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- update Jint to 4.11.0
+- update `Jint` to 4.11.0
 - update C# Script Runner to use Assembly Load Context
 
 ## [2.1.0]
@@ -41,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - upgrade to dotnet 10
-- upgrade DxWorks.ScriptBee.Plugin.Api to v2.0.0
+- upgrade `DxWorks.ScriptBee.Plugin.Api` to v2.0.0
 
 ## [1.1.0]
 
