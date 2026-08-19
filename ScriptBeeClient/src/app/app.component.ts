@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
   private gatewayPluginsService = inject(GatewayPluginsService);
+  private router = inject(Router);
 
   authService = inject(AuthService);
   themeService = inject(ThemeService);
@@ -71,5 +72,10 @@ export class AppComponent implements OnInit {
 
   onMenuButtonClick() {
     this.isMenuOpen.update((value) => !value);
+  }
+
+  logout() {
+    this.authService.logout();
+    void this.router.navigate(['/login']);
   }
 }

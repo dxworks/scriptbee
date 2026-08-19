@@ -9,6 +9,7 @@ import { LoginResponse } from 'angular-auth-oidc-client';
 export class DevAuthService implements AuthService {
   isAuthenticated$: Observable<boolean> = new BehaviorSubject<boolean>(true).asObservable();
   userData$: Observable<unknown> = new BehaviorSubject(null).asObservable();
+  accessToken$: Observable<string | null> = new BehaviorSubject<string | null>('dev-access-token').asObservable();
 
   checkAuth(): Observable<LoginResponse> {
     return of({
