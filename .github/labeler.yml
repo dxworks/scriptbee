@@ -1,0 +1,38 @@
+"area/analysis":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ScriptBeeWebApp/src/Analysis/**
+          - ScriptBeeWebApp/test/Analysis/**
+
+"area/mcp-server":
+  - changed-files:
+      - any-glob-to-any-file: Integrations/MCP/**
+
+"area/plugins":
+  - changed-files:
+      - any-glob-to-any-file: Plugins/**
+
+"area/ui":
+  - changed-files:
+      - any-glob-to-any-file: ScriptBeeClient/**
+
+"area/vs-code-extension":
+  - changed-files:
+      - any-glob-to-any-file: Integrations/VS-Code/**
+
+"area/webapp":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ScriptBeeWebApp/src/Gateway/**
+          - ScriptBeeWebApp/test/Gateway/**
+
+"devops":
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/workflows/**
+          - scripts/**
+          - quickstart/**
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: docs/**
