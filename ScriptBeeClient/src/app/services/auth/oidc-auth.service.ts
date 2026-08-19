@@ -13,6 +13,8 @@ export class OidcAuthService implements AuthService {
 
   userData$ = this.oidcSecurityService.userData$.pipe(map((result) => result.userData));
 
+  accessToken$ = this.oidcSecurityService.getAccessToken();
+
   login(): void {
     this.oidcSecurityService.authorize();
   }

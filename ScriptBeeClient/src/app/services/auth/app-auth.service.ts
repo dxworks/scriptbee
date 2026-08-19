@@ -19,6 +19,10 @@ export class AppAuthService implements AuthService {
     switchMap((config) => (this.isDevAuth(config) ? this.devAuthService.userData$ : this.oidcAuthService.userData$))
   );
 
+  accessToken$: Observable<string | null> = this.configService.config$.pipe(
+    switchMap((config) => (this.isDevAuth(config) ? this.devAuthService.accessToken$ : this.oidcAuthService.accessToken$))
+  );
+
   checkAuth() {
     return this.configService.config$.pipe(
       switchMap((config) => {
