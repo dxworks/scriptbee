@@ -1,0 +1,18 @@
+<main class="login-page">
+  <mat-card class="login-card" appearance="outlined">
+    <div class="brand-row">
+      <div class="brand-mark" aria-hidden="true">S</div>
+      <div>
+        <p class="eyebrow">Secure access</p>
+        <h1>Welcome to ScriptBee</h1>
+      </div>
+    </div>
+
+    <p class="subtitle">Use your organization account to continue to single sign-on via OpenID Connect.</p>
+
+    <button mat-raised-button color="primary" class="login-button" type="button" (click)="loginWithOidc()">
+      <mat-icon>login</mat-icon>
+      Continue with OIDC
+    </button>
+  </mat-card>
+</main>

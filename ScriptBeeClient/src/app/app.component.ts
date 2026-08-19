@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -11,6 +11,8 @@ import { ProjectStateService } from './services/projects/project-state.service';
 import { ProjectSideNavListComponent } from './components/navigation/project-side-nav-list/project-side-nav-list.component';
 import { ThemeService } from './services/common/theme.service';
 import { GatewayPluginsService } from './services/plugin/gateway-plugins.service';
+import { AsyncPipe } from '@angular/common';
+import { AuthService } from './services/auth/AuthService';
 
 @Component({
   selector: 'app-root',
@@ -25,15 +27,17 @@ import { GatewayPluginsService } from './services/plugin/gateway-plugins.service
     MatToolbar,
     RouterLink,
     ProjectSideNavListComponent,
+    AsyncPipe,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
   private gatewayPluginsService = inject(GatewayPluginsService);
 
+  authService = inject(AuthService);
   themeService = inject(ThemeService);
   projectState = inject(ProjectStateService);
 
@@ -59,6 +63,10 @@ export class AppComponent {
     effect(() => {
       localStorage.setItem('isMenuOpen', String(this.isMenuOpen()));
     });
+  }
+
+  ngOnInit(): void {
+    this.authService.checkAuth().subscribe();
   }
 
   onMenuButtonClick() {

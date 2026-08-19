@@ -13,9 +13,11 @@ import { LoadModelPage } from './pages/projects/project-details/model/load-model
 import { ContextModelPage } from './pages/projects/project-details/model/context-model-page/context-model-page.component';
 import { GatewayPluginsComponent } from './pages/gateway-plugins/gateway-plugins.component';
 import { inject } from '@angular/core';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   { path: 'projects', component: ProjectsPage },
   { path: 'gateway-plugins', component: GatewayPluginsComponent },
   { path: 'create-project', component: CreateProjectPage },

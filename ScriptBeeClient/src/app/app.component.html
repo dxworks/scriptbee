@@ -10,18 +10,26 @@
       <img src="/images/logo.svg" alt="logo" height="48" width="112" />
     </a>
 
-    <button mat-button routerLink="/projects">Projects</button>
-    <button mat-button routerLink="/gateway-plugins">Gateway Plugins</button>
+    @if (authService.isAuthenticated$ | async) {
+      <button mat-button routerLink="/projects">Projects</button>
+      <button mat-button routerLink="/gateway-plugins">Gateway Plugins</button>
 
-    @for (element of navBarsElements(); track element.path) {
-      <button mat-button [routerLink]="element.path">{{ element.label }}</button>
-    }
+      @for (element of navBarsElements(); track element.path) {
+        <button mat-button [routerLink]="element.path">{{ element.label }}</button>
+      }
 
-    @if (projectState.currentProjectId()) {
-      <button mat-button [routerLink]="'/projects/' + projectState.currentProjectId()">{{ projectState.currentProject()?.name }}</button>
-      <span class="flex-spacer"></span>
+      @if (projectState.currentProjectId()) {
+        <button mat-button [routerLink]="'/projects/' + projectState.currentProjectId()">{{ projectState.currentProject()?.name }}</button>
+        <span class="flex-spacer"></span>
 
-      <app-instance-manager></app-instance-manager>
+        <app-instance-manager></app-instance-manager>
+      } @else {
+        <span class="flex-spacer"></span>
+      }
+
+      <button mat-icon-button (click)="authService.logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
     } @else {
       <span class="flex-spacer"></span>
     }
