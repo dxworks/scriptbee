@@ -8,6 +8,35 @@
 - **Default:** `mongodb://root:example@localhost:27017/ScriptBee?authSource=admin`
 - **Description:** The connection string to MongoDB. Must be configured to match the Mongodb server configurations
 
+## Authentication
+
+### `AUTHENTICATION__AUTHORITY`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The URL of the OpenID Connect authority (e.g., `https://login.microsoftonline.com/{tenantId}/v2.0`
+  for Azure AD).
+
+### `AUTHENTICATION__CLIENTID`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The client ID for the OpenID Connect application.
+
+### `AUTHENTICATION__SCOPE`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The scope for the OpenID Connect application. (e.g.
+  `openid profile email api://my-app-backend/access_as_user`)
+
+### `AUTHENTICATION__AUTHMODE`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** Set to "Development" to disable authentication for development purposes. It most not be set in
+  production.
+
 ## Analysis Configuration
 
 ### `SCRIPTBEE__ANALYSIS__DRIVER`
@@ -91,7 +120,9 @@ SCRIPTBEE__ANALYSIS__DOCKER__LABELS__com.docker.compose.project=scriptbee-quicks
 > full control over the Docker container configuration without the need for the Gateway to explicitly support each
 > option.
 > Please
-> see [Docker Host Config](https://github.com/dotnet/Docker.DotNet/blob/master/src/Docker.DotNet/Models/HostConfig.Generated.cs)
+
+see [Docker Host Config](https://github.com/dotnet/Docker.DotNet/blob/master/src/Docker.DotNet/Models/HostConfig.Generated.cs)
+
 > for all available options that can be configured through this setting.
 
 For example, you can se the memory limit like this
@@ -113,8 +144,8 @@ SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG__MEMORY=536870912
 
 - **Type:** `int`
 - **Default:** `2000`
-- **Description:** The interval in milliseconds at which the Gateway polls MongoDB for running analyses to push updates via
-  SignalR.
+- **Description:** The interval in milliseconds at which the Gateway polls MongoDB for running analyses to push updates
+  via SignalR.
 
 ## Plugins Configuration
 
