@@ -10,7 +10,7 @@ public class AuthConfigEndpoint : IEndpointDefinition
 {
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/config", GetAuthConfig)
+        app.MapGet("/api/config/auth", GetAuthConfig)
             .WithTags("Config")
             .WithName("GetAuthConfig")
             .WithSummary("Get authentication configuration")
