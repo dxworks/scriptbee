@@ -1822,6 +1822,26 @@
         }
       }
     },
+    "/api/config": {
+      "get": {
+        "tags": ["Config"],
+        "summary": "Get authentication configuration",
+        "description": "Retrieves the authentication configuration for the application.",
+        "operationId": "GetAuthConfig",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthConfig"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/analyses/{analysisId}": {
       "delete": {
         "tags": ["Analysis"],
@@ -2440,6 +2460,23 @@
           },
           "severity": {
             "type": "string"
+          }
+        }
+      },
+      "AuthConfig": {
+        "type": "object",
+        "properties": {
+          "authMode": {
+            "type": ["null", "string"]
+          },
+          "authority": {
+            "type": ["null", "string"]
+          },
+          "clientId": {
+            "type": ["null", "string"]
+          },
+          "scope": {
+            "type": ["null", "string"]
           }
         }
       },
@@ -3416,6 +3453,9 @@
     },
     {
       "name": "Graph"
+    },
+    {
+      "name": "Config"
     },
     {
       "name": "Analysis"

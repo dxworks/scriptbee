@@ -850,6 +850,15 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Post("/api/projects/{projectId}/instances/{instanceId}/context/reload")]
         Task Reload(string projectId, string instanceId, CancellationToken cancellationToken = default);
 
+        /// <summary>Get authentication configuration</summary>
+        /// <remarks>Retrieves the authentication configuration for the application.</remarks>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/config")]
+        Task<AuthConfig> Config(CancellationToken cancellationToken = default);
+
         /// <summary>Delete analysis</summary>
         /// <remarks>Deletes a specific analysis and all its associated artifacts.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -1247,6 +1256,33 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
         [JsonPropertyName("severity")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Severity { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class AuthConfig
+    {
+
+        [JsonPropertyName("authMode")]
+        public string AuthMode { get; set; }
+
+        [JsonPropertyName("authority")]
+        public string Authority { get; set; }
+
+        [JsonPropertyName("clientId")]
+        public string ClientId { get; set; }
+
+        [JsonPropertyName("scope")]
+        public string Scope { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 

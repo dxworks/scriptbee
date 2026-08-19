@@ -161,7 +161,11 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
     public async Task GivenValidFilePath_WhenServeUiPluginFile_ThenReturnFile()
     {
         var tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.js");
-        await File.WriteAllTextAsync(tempFile, "test content");
+        await File.WriteAllTextAsync(
+            tempFile,
+            "test content",
+            TestContext.Current.CancellationToken
+        );
 
         var useCase = Substitute.For<IManagePluginsUseCase>();
         useCase
@@ -182,7 +186,9 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
             );
 
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync(
+                TestContext.Current.CancellationToken
+            );
             content.ShouldBe("test content");
         }
         finally

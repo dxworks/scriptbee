@@ -41,6 +41,7 @@ builder
     })
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
+    .AddAuthenticationConfig()
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
     .AddArtifactFileAdapters()
