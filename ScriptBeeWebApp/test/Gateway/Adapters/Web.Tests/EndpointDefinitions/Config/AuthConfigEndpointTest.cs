@@ -5,7 +5,7 @@ namespace ScriptBee.Web.Tests.EndpointDefinitions.Config;
 
 public class AuthConfigEndpointTest(ITestOutputHelper outputHelper)
 {
-    private const string TestUrl = "/api/config";
+    private const string TestUrl = "/api/config/auth";
     private readonly TestApiCaller<Program> _api = new(TestUrl);
 
     [Theory]

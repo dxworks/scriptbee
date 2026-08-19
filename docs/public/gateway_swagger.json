@@ -1822,7 +1822,7 @@
         }
       }
     },
-    "/api/config": {
+    "/api/config/auth": {
       "get": {
         "tags": ["Config"],
         "summary": "Get authentication configuration",

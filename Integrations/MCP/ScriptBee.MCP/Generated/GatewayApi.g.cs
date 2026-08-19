@@ -856,7 +856,7 @@ namespace ScriptBee.MCP.Gateway.Generated
         /// <returns>OK</returns>
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: application/json")]
-        [Get("/api/config")]
+        [Get("/api/config/auth")]
         Task<AuthConfig> Config(CancellationToken cancellationToken = default);
 
         /// <summary>Delete analysis</summary>
@@ -1138,7 +1138,7 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
 {
     using System = global::System;
 
-    
+
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class AllAvailablePluginsResponse
