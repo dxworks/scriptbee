@@ -11,6 +11,6 @@ internal class HelperFunctionsWithGenericMethods : IHelperFunctions
 
     public Something Method<T1, T2, T3>(T1? arg1, T2 arg2, T3 arg3)
     {
-        return new Something(arg1.ToString(), arg2.ToString().Length, arg3.ToString()[0]);
+        return new Something(arg1!.ToString()!, arg2!.ToString()!.Length, arg3!.ToString()![0]);
     }
 }
