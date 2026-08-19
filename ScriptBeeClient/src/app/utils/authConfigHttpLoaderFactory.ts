@@ -1,21 +1,18 @@
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs';
-import { StsConfigHttpLoader } from 'angular-auth-oidc-client';
+import { map, Observable } from 'rxjs';
+import { OpenIdConfiguration, StsConfigHttpLoader } from 'angular-auth-oidc-client';
+import { ConfigService } from '../services/auth/config-auth.service';
+import { inject } from '@angular/core';
 
-interface AuthConfig {
-  authMode?: string;
-  authority: string;
-  clientId: string;
-  scope: string;
-}
+export const httpLoaderFactory = () => {
+  const configService = inject(ConfigService);
 
-export const httpLoaderFactory = (httpClient: HttpClient) => {
-  const config$ = httpClient.get<AuthConfig>('/api/config/auth').pipe(
+  const config$: Observable<OpenIdConfiguration> = configService.config$.pipe(
     map((config) => ({
       authority: config.authority,
+      authWellknownEndpointUrl: config.authWellknownEndpointUrl,
       clientId: config.clientId,
       scope: config.scope,
-      redirectUrl: window.location.origin,
+      redirectUrl: window.location.href.split('?')[0],
       postLogoutRedirectUri: window.location.origin,
       responseType: 'code',
       silentRenew: true,

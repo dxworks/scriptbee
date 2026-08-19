@@ -1,12 +1,14 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes, withErrorNavigation } from './app.routes';
-import { HttpClient, provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXsrfConfiguration } from '@angular/common/http';
 import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
 import { clientIdInterceptor } from './utils/client-id.interceptor';
 import { GatewayPluginsService } from './services/plugin/gateway-plugins.service';
 import { provideAuth, StsConfigLoader } from 'angular-auth-oidc-client';
 import { httpLoaderFactory } from './utils/authConfigHttpLoaderFactory';
+import { AuthService } from './services/auth/AuthService';
+import { AppAuthService } from './services/auth/app-auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,8 +27,11 @@ export const appConfig: ApplicationConfig = {
       loader: {
         provide: StsConfigLoader,
         useFactory: httpLoaderFactory,
-        deps: [HttpClient],
       },
     }),
+    {
+      provide: AuthService,
+      useClass: AppAuthService,
+    },
   ],
 };
