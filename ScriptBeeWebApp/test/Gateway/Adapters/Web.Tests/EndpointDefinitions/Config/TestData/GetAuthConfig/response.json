@@ -1,6 +1,6 @@
 {
   "authMode": "Development",
-  "authority": null,
-  "clientId": null,
-  "scope": null
+  "authority": "http://localhost:8080/default",
+  "clientId": "test-client-id",
+  "scope": "openid profile email"
 }

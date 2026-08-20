@@ -857,7 +857,7 @@ namespace ScriptBee.MCP.Gateway.Generated
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: application/json")]
         [Get("/api/config/auth")]
-        Task<AuthConfig> Config(CancellationToken cancellationToken = default);
+        Task<AuthConfig> Auth(CancellationToken cancellationToken = default);
 
         /// <summary>Delete analysis</summary>
         /// <remarks>Deletes a specific analysis and all its associated artifacts.</remarks>
@@ -1138,7 +1138,7 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
 {
     using System = global::System;
 
-
+    
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class AllAvailablePluginsResponse
@@ -1277,6 +1277,9 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
 
         [JsonPropertyName("authority")]
         public string Authority { get; set; }
+
+        [JsonPropertyName("authWellknownEndpointUrl")]
+        public string AuthWellknownEndpointUrl { get; set; }
 
         [JsonPropertyName("clientId")]
         public string ClientId { get; set; }

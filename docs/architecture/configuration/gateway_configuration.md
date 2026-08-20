@@ -10,12 +10,33 @@
 
 ## Authentication
 
+### `AUTHENTICATION__REQUIREHTTPSSECUREMETADATA`
+
+- **Type:** `bool`
+- **Default:** `true`
+- **Description:** Whether to require HTTPS for the OpenID Connect metadata endpoint. This should be set to `true` in
+  production.
+
 ### `AUTHENTICATION__AUTHORITY`
 
 - **Type:** `string`
 - **Default:** _None_
 - **Description:** The URL of the OpenID Connect authority (e.g., `https://login.microsoftonline.com/{tenantId}/v2.0`
   for Azure AD).
+
+### `AUTHENTICATION__AUDIENCE`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The audience for the OpenID Connect application. (e.g. `api://my-app-backend`)
+
+### `AUTHENTICATION__AUTHWELLKNOWNENDPOINTURL`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** An optional URL of the OpenID Connect well-known endpoint (e.g.,
+  `https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration` for Azure AD). Normally the
+  authority URL is used to discover the well-known endpoint, but in some cases, you may want to override it.
 
 ### `AUTHENTICATION__CLIENTID`
 
@@ -29,6 +50,12 @@
 - **Default:** _None_
 - **Description:** The scope for the OpenID Connect application. (e.g.
   `openid profile email api://my-app-backend/access_as_user`)
+
+### `AUTHENTICATION__OPAURL`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The URL of the Open Policy Agent (OPA) server for authorization.
 
 ### `AUTHENTICATION__AUTHMODE`
 

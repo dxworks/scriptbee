@@ -41,7 +41,7 @@ builder
     })
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
-    .AddAuthenticationConfig()
+    .AddAuthenticationConfig(builder.Configuration)
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
     .AddArtifactFileAdapters()
@@ -79,6 +79,9 @@ app.UseMiddleware<ClientIdMiddleware>();
 
 app.UseAntiforgery();
 app.UseAntiforgeryHeader();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapHealthChecksEndpoint();
 

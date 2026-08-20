@@ -28,6 +28,7 @@ public class AuthConfigEndpoint : IEndpointDefinition
             {
                 AuthMode = config.AuthMode,
                 Authority = config.Authority,
+                AuthWellknownEndpointUrl = config.AuthWellknownEndpointUrl,
                 ClientId = config.ClientId,
                 Scope = config.Scope,
             }
