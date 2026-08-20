@@ -2472,6 +2472,9 @@
           "authority": {
             "type": ["null", "string"]
           },
+          "authWellknownEndpointUrl": {
+            "type": ["null", "string"]
+          },
           "clientId": {
             "type": ["null", "string"]
           },
