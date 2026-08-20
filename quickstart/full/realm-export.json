@@ -6,9 +6,14 @@
     {
       "clientId": "scriptbee-client",
       "publicClient": true,
-      "redirectUris": ["*"],
       "directAccessGrantsEnabled": true,
       "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:4201/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4201"
+      ],
       "protocolMappers": [
         {
           "name": "audience",
@@ -23,14 +28,28 @@
           }
         }
       ]
+    },
+    {
+      "clientId": "scriptbee-api",
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "serviceAccountsEnabled": true,
+      "bearerOnly": false
     }
   ],
   "users": [
     {
       "username": "test",
       "enabled": true,
+      "email": "test@scriptbee.local",
+      "firstName": "Test",
+      "lastName": "User",
+      "emailVerified": true,
       "credentials": [
-        {"type": "password", "value": "test"}
+        {
+          "type": "password",
+          "value": "test"
+        }
       ]
     }
   ]

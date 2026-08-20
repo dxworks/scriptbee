@@ -24,12 +24,14 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm.json
-    command: ["start-dev"]
+      KC_HOSTNAME: http://localhost:8082
+      KC_HOSTNAME_STRICT: "false"
+    command: ["start-dev", "--import-realm"]
     volumes:
       - ./full/realm-export.json:/opt/keycloak/data/import/realm.json:ro
     ports:
-      - "8080:8080"
+      - "8082:8080"
+    restart: unless-stopped
 
   scriptbee:
     image: dxworks/scriptbee:latest
@@ -43,7 +45,7 @@ services:
     environment:
       - ConnectionStrings__mongodb=mongodb://root:example@scriptbee-mongo:27017/ScriptBee?authSource=admin
       - UserFolder__UserFolderPath=/root/.scriptbee
-      - AUTHENTICATION__AUTHORITY=http://keycloak:8080/realms/scriptbee
+      - AUTHENTICATION__AUTHORITY=http://localhost:8082/realms/scriptbee
       - AUTHENTICATION__AUDIENCE=scriptbee-api
       - AUTHENTICATION__CLIENTID=scriptbee-client
       - AUTHENTICATION__REQUIREHTTPSMETADATA=false
