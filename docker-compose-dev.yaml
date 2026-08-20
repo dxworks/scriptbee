@@ -24,6 +24,25 @@ services:
     depends_on:
       - mongo
 
+  mock-oauth2-server:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.10
+    container_name: mock-oauth2-server
+    ports:
+      - "8080:8080"
+
+  opa:
+    image: openpolicyagent/opa:1.19.1-static
+    container_name: opa
+    ports:
+      - "8181:8181"
+    command:
+      - "run"
+      - "--server"
+      - "--addr=:8181"
+      - "--log-level=info"
+      - "/etc/opa/policy.rego"
+    volumes:
+      - ./quickstart/full/policy.rego:/etc/opa/policy.rego:ro
 
 volumes:
   mongodb_data:

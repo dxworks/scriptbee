@@ -2,8 +2,21 @@
 
 > [!IMPORTANT]
 > Role-Based Access Control (RBAC) and Authentication features are handled by a **separate, external service**. The
-> implementation details here represent how ScriptBee interacts with that service. The implementation is not yet fully
-> finalized and may be subject to change.
+> implementation details here represent how ScriptBee interacts with that service.
+
+ScriptBee uses OPA (Open Policy Agent) for RBAC and authentication, determining their roles and permissions.
+
+See [Authentication](https://dxworks.org/scriptbee/architecture/configuration/gateway_configuration.html#authentication)
+for more information on how to configure the authentication and authorization service.
+
+See [Architecture Diagram](https://dxworks.org/scriptbee/architecture/diagram.html) to understand the interaction
+between ScriptBee and the authentication and authorization service.
+
+An example of the default rules can be found in
+the [OPA rules](https://github.com/dxworks/scriptbee/blob/master/quickstart/full/policy.rego) file.
+
+The following sections describe the roles and permissions that are used in ScriptBee. The roles can be defined in the
+OPA server and assigned to users. The permissions are used to determine what actions a user can perform in ScriptBee.
 
 ## Roles
 

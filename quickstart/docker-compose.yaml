@@ -23,6 +23,7 @@ services:
     environment:
       - ConnectionStrings__mongodb=mongodb://root:example@scriptbee-mongo:27017/ScriptBee?authSource=admin
       - UserFolder__UserFolderPath=/root/.scriptbee
+      - AUTHENTICATION__AUTHMODE=Development
       - SCRIPTBEE__ANALYSIS__DRIVER=docker
       - SCRIPTBEE__ANALYSIS__DOCKER__NETWORK=scriptbee-quickstart_default
       - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
