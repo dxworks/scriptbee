@@ -10,7 +10,7 @@
 
 ## Authentication
 
-### `AUTHENTICATION__REQUIREHTTPSSECUREMETADATA`
+### `AUTHENTICATION__REQUIREHTTPSMETADATA`
 
 - **Type:** `bool`
 - **Default:** `true`
