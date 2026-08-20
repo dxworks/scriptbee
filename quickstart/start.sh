@@ -37,8 +37,16 @@ if releases_json=$(curl -sf "https://api.github.com/repos/dxworks/scriptbee/rele
 fi
 
 echo ""
+
+COMPOSE_FILE="$WORK_DIR/docker-compose.yaml"
+if [ "${1-}" = "full" ]; then
+  COMPOSE_FILE="$WORK_DIR/docker-compose-full.yaml"
+elif [ -n "${1-}" ] && [ -f "$WORK_DIR/${1}" ]; then
+  COMPOSE_FILE="$WORK_DIR/${1}"
+fi
+
 echo "Starting ScriptBee..."
-docker compose -f "$WORK_DIR/docker-compose.yaml" up -d
+docker compose -f "$COMPOSE_FILE" up -d
 
 echo ""
 echo "ScriptBee is starting up!"

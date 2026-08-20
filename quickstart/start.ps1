@@ -37,8 +37,18 @@ try {
 }
 
 Write-Host ""
+
+$composeFile = Join-Path $WorkDir "docker-compose.yaml"
+if ($args.Count -gt 0) {
+    if ($args[0] -eq 'full') {
+        $composeFile = Join-Path $WorkDir "docker-compose-full.yaml"
+    } elseif (Test-Path (Join-Path $WorkDir $args[0])) {
+        $composeFile = Join-Path $WorkDir $args[0]
+    }
+}
+
 Write-Host "Starting ScriptBee..." -ForegroundColor Cyan
-docker compose -f "$WorkDir\docker-compose.yaml" up -d
+docker compose -f "$composeFile" up -d
 
 Write-Host ""
 Write-Host "ScriptBee is starting up!" -ForegroundColor Green
@@ -49,4 +59,4 @@ Write-Host ""
 Write-Host "Default plugin bundle (download and install manually if needed):"
 Write-Host "  $bundleUrl" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "To stop ScriptBee run: docker compose -f `"$WorkDir\docker-compose.yaml`" down"
+Write-Host "To stop ScriptBee run: docker compose -f `"$composeFile`" down"
