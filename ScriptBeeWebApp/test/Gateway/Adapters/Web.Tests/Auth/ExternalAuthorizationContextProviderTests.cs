@@ -42,7 +42,7 @@ public class ExternalAuthorizationContextProviderTests
                 ProjectId.FromValue(projectIdValue),
                 Arg.Any<CancellationToken>()
             )
-            .Returns(Task.FromResult(role));
+            .Returns(Task.FromResult<UserRole?>(role));
 
         var httpContext = new DefaultHttpContext
         {
