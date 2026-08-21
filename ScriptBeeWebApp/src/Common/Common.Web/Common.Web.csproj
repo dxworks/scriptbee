@@ -3,8 +3,8 @@
     <RootNamespace>ScriptBee.Common.Web</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+    <PackageReference Include="DotNetDiag.HealthChecks.MongoDb" />
+    <PackageReference Include="DotNetDiag.HealthChecks.UI.Client" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Polly" />
