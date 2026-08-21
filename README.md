@@ -20,7 +20,7 @@ The only prerequisite is [Docker Desktop](https://docs.docker.com/get-docker/).
 
 Open a terminal in any folder and run the command for your OS — it handles everything else.
 
-If you cloned the repo, run the quickstart from the repo root: `bash quickstart/start.sh` (default insecure) or `bash quickstart/start.sh full` to run Keycloak+OPA. On Windows use `./quickstart/start.ps1 [full]`.
+If you cloned the repo, run the quickstart from the repo root: `bash quickstart/start.sh` (default insecure) or `bash quickstart/start.sh full` to run Keycloak+OPA. On Windows use `./quickstart/start.ps1 full`.
 
 **Linux / macOS:**
 
