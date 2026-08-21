@@ -18,6 +18,7 @@ services:
       - "8181:8181"
     volumes:
       - ./full/policy.rego:/policies/policy.rego:ro
+      - ./full/roles.rego:/policies/roles.rego:ro
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.7.2

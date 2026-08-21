@@ -31,29 +31,29 @@ Detailed here are the possible roles a user can have in ScriptBee.
 
 ### Project
 
-| Permission      | Admin   | Manager | Analyst | Auditor |
-| --------------- | ------- | ------- | ------- | ------- |
-| view_project    | &check; | &check; | &check; | &check; |
-| edit_project    | &check; | &check; |         |         |
-| remove_project  | &check; | &check; |         |         |
-| load_model      | &check; | &check; | &check; |         |
-| link_model      | &check; | &check; | &check; |         |
-| generate_script | &check; | &check; | &check; |         |
-| create_script   | &check; | &check; | &check; |         |
-| edit_script     | &check; | &check; | &check; |         |
-| delete_script   | &check; | &check; | &check; |         |
+| Permission              | Admin   | Manager | Analyst | Auditor |
+| ----------------------- | ------- | ------- | ------- | ------- |
+| project:view            | &check; | &check; | &check; | &check; |
+| project:edit            | &check; | &check; |         |         |
+| project:remove          | &check; | &check; |         |         |
+| project:load_model      | &check; | &check; | &check; |         |
+| project:link_model      | &check; | &check; | &check; |         |
+| project:generate_script | &check; | &check; | &check; |         |
+| project:create_script   | &check; | &check; | &check; |         |
+| project:edit_script     | &check; | &check; | &check; |         |
+| project:delete_script   | &check; | &check; | &check; |         |
 
 ### Analysis
 
 | Permission      | Admin   | Manager | Analyst | Auditor |
 | --------------- | ------- | ------- | ------- | ------- |
-| view_analysis   | &check; | &check; | &check; | &check; |
-| run_analysis    |         | &check; | &check; | &check; |
-| remove_analysis |         | &check; | &check; | &check; |
+| analysis:view   | &check; | &check; | &check; | &check; |
+| analysis:run    |         | &check; | &check; | &check; |
+| analysis:remove |         | &check; | &check; | &check; |
 
 ### Token management
 
 | Permission            | Admin | Manager | Analyst | Auditor |
 | --------------------- | ----- | ------- | ------- | ------- |
-| create_analysis_token |       |         | &check; | &check; |
-| delete_analysis_token |       |         | &check; | &check; |
+| analysis_token:create |       |         | &check; | &check; |
+| analysis_token:delete |       |         | &check; | &check; |
