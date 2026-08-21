@@ -16,6 +16,7 @@ public static class MongoDbExtensions
         return services
             .AddProjectAdapters(mongoDatabase)
             .AddProjectInstancesAdapters(mongoDatabase)
+            .AddResourceMembers(mongoDatabase)
             .AddAnalysisAdapters(mongoDatabase)
             .AddScriptAdapters(mongoDatabase);
     }

@@ -18,6 +18,61 @@ the [OPA rules](https://github.com/dxworks/scriptbee/blob/master/quickstart/full
 The following sections describe the roles and permissions that are used in ScriptBee. The roles can be defined in the
 OPA server and assigned to users. The permissions are used to determine what actions a user can perform in ScriptBee.
 
+## Authorization Contracts
+
+ScriptBee uses the following authorization contracts to determine what actions a user can perform.
+
+Request body example:
+
+```json
+{
+  "input": {
+    "subject": {
+      "user_id": "user-123",
+      "groups": ["admins"]
+    },
+    "action": "project:view",
+    "resource": {
+      "type": "project",
+      "id": "project-123",
+      "role": "Administrator"
+    }
+  }
+}
+```
+
+Or
+
+```json
+{
+  "input": {
+    "subject": {
+      "user_id": "user-123",
+      "groups": ["admins"]
+    },
+    "action": "plugins:view",
+    "resource": {
+      "type": "global"
+    }
+  }
+}
+```
+
+The possible values for the `action` field are defined in the [Permissions](#permissions) section.
+
+The possible values for the `resource.type` are:
+
+- global
+- project
+
+The response is expected to be in the format:
+
+```json
+{
+  "allow": true
+}
+```
+
 ## Roles
 
 Detailed here are the possible roles a user can have in ScriptBee.
@@ -26,6 +81,11 @@ Detailed here are the possible roles a user can have in ScriptBee.
 - Manager - user that can perform project management on project they belong to
 - Analyst - user that can perform different analysis tasks on allowed projects
 - Auditor - user that can view only allowed projects
+
+> Note: The roles are only as examples, and can be defined in the OPA server. The roles can be assigned to users in the
+> OPA server. The permissions are the ones that are actually used in ScriptBee to determine what actions a user can
+> perform. The roles can be defined in the OPA server and assigned to users. The permissions are used to determine what
+> actions a user can perform in ScriptBee.
 
 ## Permissions
 

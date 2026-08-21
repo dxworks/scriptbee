@@ -8,5 +8,5 @@ public class AuthorizeActionAttribute(string action)
         IAuthorizationRequirementData
 {
     public IEnumerable<IAuthorizationRequirement> GetRequirements() =>
-        [new OpaActionRequirement(action)];
+        [new PermissionActionRequirement(action)];
 }

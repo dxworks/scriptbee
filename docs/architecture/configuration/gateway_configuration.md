@@ -51,11 +51,12 @@
 - **Description:** The scope for the OpenID Connect application. (e.g.
   `openid profile email api://my-app-backend/access_as_user`)
 
-### `AUTHENTICATION__OPAURL`
+### `AUTHENTICATION__EXTERNALAUTHORIZATIONURL`
 
 - **Type:** `string`
 - **Default:** _None_
-- **Description:** The URL of the Open Policy Agent (OPA) server for authorization.
+- **Description:** The authorization URL for the external authorization service (e.g., OPA). This is used to validate
+  user permissions.
 
 ### `AUTHENTICATION__AUTHMODE`
 

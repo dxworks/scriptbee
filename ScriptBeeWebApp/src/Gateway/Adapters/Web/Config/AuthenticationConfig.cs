@@ -9,7 +9,7 @@ public class AuthenticationConfig
     public string? AuthWellknownEndpointUrl { get; init; }
     public string? ClientId { get; init; }
     public string? Scope { get; init; }
-    public string? OpaUrl { get; init; }
+    public string? ExternalAuthorizationUrl { get; init; }
 
     public bool IsDevelopment =>
         AuthMode?.Equals("Development", StringComparison.OrdinalIgnoreCase) ?? false;
