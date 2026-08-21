@@ -10,7 +10,7 @@ using ScriptBee.Ports.Project;
 
 namespace ScriptBee.Persistence.Mongodb;
 
-public class ProjectPersistenceAdapter(
+public sealed class ProjectPersistenceAdapter(
     IMongoRepository<MongodbProjectModel> mongoRepository,
     ILogger<ProjectPersistenceAdapter> logger
 ) : ICreateProject, IDeleteProject, IGetAllProjects, IGetProject, IUpdateProject

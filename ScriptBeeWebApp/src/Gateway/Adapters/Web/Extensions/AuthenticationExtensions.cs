@@ -10,82 +10,98 @@ public static class AuthenticationExtensions
 {
     private const string AuthenticationConfigSectionName = "Authentication";
 
-    public static IServiceCollection AddAuthenticationConfig(
-        this IServiceCollection services,
-        ConfigurationManager configurationManager
-    )
+    extension(IServiceCollection services)
     {
-        services
-            .AddOptions<AuthenticationConfig>()
-            .BindConfiguration(AuthenticationConfigSectionName);
+        public IServiceCollection AddAuthenticationConfig(ConfigurationManager configurationManager)
+        {
+            services
+                .AddOptions<AuthenticationConfig>()
+                .BindConfiguration(AuthenticationConfigSectionName);
 
-        var authConfig = configurationManager
-            .GetSection(AuthenticationConfigSectionName)
-            .Get<AuthenticationConfig>()!;
+            var authConfig = configurationManager
+                .GetSection(AuthenticationConfigSectionName)
+                .Get<AuthenticationConfig>()!;
 
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            return services
+                .AddAuthentication(authConfig)
+                .AddAuthorizationServices(authConfig)
+                .AddAuthorization();
+        }
+
+        private IServiceCollection AddAuthentication(AuthenticationConfig authConfig)
+        {
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = authConfig.Authority;
+                    options.Audience = authConfig.Audience;
+                    options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
+
+                    if (authConfig.IsDevelopment)
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                        };
+                    }
+                    else
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidIssuer = authConfig.Authority,
+                            ValidAudience = authConfig.Audience,
+                        };
+                    }
+                });
+            return services;
+        }
+
+        private IServiceCollection AddAuthorizationServices(AuthenticationConfig config)
+        {
+            if (config.IsDevelopment)
             {
-                options.Authority = authConfig.Authority;
-                options.Audience = authConfig.Audience;
-                options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
+                services.AddSingleton<IAuthorizationHandler, AllowAllAuthorizationHandler>();
+            }
+            else
+            {
+                services.AddSingleton<
+                    IAuthorizationHandler,
+                    ExternalAuthorizationActionAuthorizationHandler
+                >();
+            }
 
-                if (authConfig.IsDevelopment)
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                    };
-                }
-                else
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = authConfig.Authority,
-                        ValidAudience = authConfig.Audience,
-                    };
-                }
-            });
+            services.AddHttpContextAccessor();
+            services.AddHttpClient(
+                "ExternalAuthorizationClient",
+                client => client.BaseAddress = new Uri(GetAuthorizationUrl(config))
+            );
 
-        services.AddHttpContextAccessor();
-        services.AddHttpClient(
-            "OpaClient",
-            client => client.BaseAddress = new Uri(GetOpaUrl(authConfig))
-        );
-
-        if (authConfig.IsDevelopment)
-        {
-            services.AddSingleton<IAuthorizationHandler, AllowAllAuthorizationHandler>();
+            return services
+                .AddScoped<
+                    IExternalAuthorizationContextProvider,
+                    ExternalAuthorizationContextProvider
+                >()
+                .AddScoped<IAuthorizeExternally, AuthorizeExternally>();
         }
-        else
-        {
-            services.AddSingleton<IAuthorizationHandler, AllowAllAuthorizationHandler>();
-            // TODO FIXIT(#332): Add OPA authorization handler
-            // services.AddSingleton<IAuthorizationHandler, OpaActionAuthorizationHandler>();
-        }
-
-        services.AddAuthorization();
-
-        return services;
     }
 
-    private static string GetOpaUrl(AuthenticationConfig config)
+    private static string GetAuthorizationUrl(AuthenticationConfig config)
     {
         if (config.IsDevelopment)
         {
             return "";
         }
 
-        return string.IsNullOrEmpty(config.OpaUrl)
+        return string.IsNullOrEmpty(config.ExternalAuthorizationUrl)
             ? throw new InvalidOperationException(
-                "OpaUrl is not configured and is mandatory. Please set Authentication:OpaUrl in your configuration."
+                "AuthorizationUrl is not configured and is mandatory. Please set Authentication:AuthorizationUrl in your configuration."
             )
-            : config.OpaUrl;
+            : config.ExternalAuthorizationUrl;
     }
 }

@@ -2,36 +2,41 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using ScriptBee.Persistence.Mongodb.Entity;
 using ScriptBee.Ports.Instance;
+using ScriptBee.Ports.Permissions;
 using ScriptBee.Ports.Project;
 
 namespace ScriptBee.Persistence.Mongodb.Extensions;
 
 public static class GatewayMongoDbExtensions
 {
-    public static IServiceCollection AddProjectAdapters(
-        this IServiceCollection services,
-        IMongoDatabase mongoDatabase
-    )
+    extension(IServiceCollection services)
     {
-        return services
-            .AddMongoCollection<MongodbProjectModel>(mongoDatabase, "Projects")
-            .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
-            .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
-            .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
-            .AddSingleton<IGetProject, ProjectPersistenceAdapter>()
-            .AddSingleton<IUpdateProject, ProjectPersistenceAdapter>();
-    }
+        public IServiceCollection AddProjectAdapters(IMongoDatabase mongoDatabase)
+        {
+            return services
+                .AddMongoCollection<MongodbProjectModel>(mongoDatabase, "Projects")
+                .AddSingleton<ICreateProject, ProjectPersistenceAdapter>()
+                .AddSingleton<IDeleteProject, ProjectPersistenceAdapter>()
+                .AddSingleton<IGetAllProjects, ProjectPersistenceAdapter>()
+                .AddSingleton<IGetProject, ProjectPersistenceAdapter>()
+                .AddSingleton<IUpdateProject, ProjectPersistenceAdapter>();
+        }
 
-    public static IServiceCollection AddProjectInstancesAdapters(
-        this IServiceCollection services,
-        IMongoDatabase mongoDatabase
-    )
-    {
-        return services
-            .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "Instances")
-            .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
-            .AddSingleton<IDeleteProjectInstance, ProjectInstancesPersistenceAdapter>()
-            .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>()
-            .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
+        public IServiceCollection AddProjectInstancesAdapters(IMongoDatabase mongoDatabase)
+        {
+            return services
+                .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "Instances")
+                .AddSingleton<ICreateProjectInstance, ProjectInstancesPersistenceAdapter>()
+                .AddSingleton<IDeleteProjectInstance, ProjectInstancesPersistenceAdapter>()
+                .AddSingleton<IGetAllProjectInstances, ProjectInstancesPersistenceAdapter>()
+                .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
+        }
+
+        public IServiceCollection AddResourceMembers(IMongoDatabase mongoDatabase)
+        {
+            return services
+                .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "ResourceMembers")
+                .AddSingleton<IResourceMemberService, ResourceMembersPersistenceAdapter>();
+        }
     }
 }
