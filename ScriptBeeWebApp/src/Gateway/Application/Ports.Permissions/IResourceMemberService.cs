@@ -6,7 +6,7 @@ namespace ScriptBee.Ports.Permissions;
 
 public interface IResourceMemberService
 {
-    Task<UserRole> GetResourceRole(
+    Task<UserRole?> GetResourceRole(
         UserId userId,
         List<UserGroup> groups,
         OneOf<ProjectId> resourceId,

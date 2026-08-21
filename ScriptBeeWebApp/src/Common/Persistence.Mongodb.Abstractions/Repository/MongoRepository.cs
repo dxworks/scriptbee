@@ -24,6 +24,14 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         return await mongoCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<T?> GetDocument(
+        FilterDefinition<T> filter,
+        CancellationToken cancellationToken
+    )
+    {
+        return await mongoCollection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken)
     {
         return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken);

@@ -15,6 +15,8 @@ public interface IMongoRepository<T>
         CancellationToken cancellationToken
     );
 
+    public Task<T?> GetDocument(FilterDefinition<T> filter, CancellationToken cancellationToken);
+
     public Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken);
 
     public Task<IEnumerable<T>> GetAllDocuments(

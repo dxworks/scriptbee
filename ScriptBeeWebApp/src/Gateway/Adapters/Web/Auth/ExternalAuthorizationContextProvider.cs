@@ -40,7 +40,7 @@ public sealed class ExternalAuthorizationContextProvider(
         HttpContext httpContext
     )
     {
-        // TODO FIXIT(#328): normalize userid and groups from claims
+        // TODO FIXIT(#328): normalize userid and groups from claims and obtain user id from sub
         var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
         var groups = httpContext.User.FindAll("groups").Select(c => c.Value).ToList();
 
@@ -79,7 +79,7 @@ public sealed class ExternalAuthorizationContextProvider(
                 {
                     Type = "project",
                     Id = projectId.Value,
-                    Role = resourceRole.Value,
+                    Role = resourceRole?.Value,
                 },
             },
         };
