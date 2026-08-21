@@ -35,7 +35,7 @@ public static class GatewayMongoDbExtensions
         public IServiceCollection AddResourceMembers(IMongoDatabase mongoDatabase)
         {
             return services
-                .AddMongoCollection<MongodbProjectInstance>(mongoDatabase, "ResourceMembers")
+                .AddMongoCollection<MongodbResourceMember>(mongoDatabase, "ResourceMembers")
                 .AddSingleton<IResourceMemberService, ResourceMembersPersistenceAdapter>();
         }
     }
