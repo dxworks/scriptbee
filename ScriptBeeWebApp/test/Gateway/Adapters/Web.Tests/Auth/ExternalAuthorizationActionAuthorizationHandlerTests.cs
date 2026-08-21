@@ -58,7 +58,7 @@ public class ExternalAuthorizationActionAuthorizationHandlerTests
             new ClaimsPrincipal(),
             new DefaultHttpContext()
         );
-        var request = new ExternalAuthorizationRequest();
+        var request = GetExternalAuthorizationRequest();
 
         _externalAuthorizationContextProvider
             .BuildRequestAsync(
@@ -86,7 +86,7 @@ public class ExternalAuthorizationActionAuthorizationHandlerTests
             new ClaimsPrincipal(),
             new DefaultHttpContext()
         );
-        var request = new ExternalAuthorizationRequest();
+        var request = GetExternalAuthorizationRequest();
 
         _externalAuthorizationContextProvider
             .BuildRequestAsync(
@@ -102,5 +102,27 @@ public class ExternalAuthorizationActionAuthorizationHandlerTests
 
         // Assert
         Assert.True(context.HasSucceeded);
+    }
+
+    private static ExternalAuthorizationRequest GetExternalAuthorizationRequest()
+    {
+        return new ExternalAuthorizationRequest
+        {
+            Input = new ExternalAuthorizationRequestInput
+            {
+                Subject = new ExternalAuthorizationRequestSubject
+                {
+                    UserId = "user-id",
+                    Groups = ["group"],
+                },
+                Action = "TestAction",
+                Resource = new ExternalAuthorizationResource
+                {
+                    Type = "resource-type",
+                    Id = "resource-id",
+                    Role = "resource-role",
+                },
+            },
+        };
     }
 }

@@ -31,11 +31,14 @@ public class ExternalAuthorizationRequestSubject
 
 public class ExternalAuthorizationResource
 {
-    [JsonPropertyName("project_id")]
-    public required string ProjectId { get; init; }
+    [JsonPropertyName("type")]
+    public required string Type { get; init; }
+
+    [JsonPropertyName("id")]
+    public string? Id { get; init; }
 
     [JsonPropertyName("role")]
-    public required string Role { get; init; }
+    public string? Role { get; init; }
 }
 
 public class ExternalAuthorizationResponse
