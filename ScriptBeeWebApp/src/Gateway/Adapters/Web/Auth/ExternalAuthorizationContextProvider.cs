@@ -1,13 +1,16 @@
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
 using OneOf;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
 using ScriptBee.Ports.Permissions;
+using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Auth;
 
 public sealed class ExternalAuthorizationContextProvider(
-    IResourceMemberService resourceMemberService
+    IResourceMemberService resourceMemberService,
+    IOptions<AuthenticationConfig> authConfigOptions
 ) : IExternalAuthorizationContextProvider
 {
     public async Task<ExternalAuthorizationRequest> BuildRequestAsync(
@@ -36,13 +39,21 @@ public sealed class ExternalAuthorizationContextProvider(
         return GetGlobalRequest(action, userId, groups);
     }
 
-    private static (UserId userId, List<UserGroup> groups) ExtractFromClaims(
-        HttpContext httpContext
-    )
+    private (UserId userId, List<UserGroup> groups) ExtractFromClaims(HttpContext httpContext)
     {
-        // TODO FIXIT(#328): normalize userid and groups from claims and obtain user id from sub
-        var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        var groups = httpContext.User.FindAll("groups").Select(c => c.Value).ToList();
+        var authConfig = authConfigOptions.Value;
+        var claimsPrincipal = httpContext.User;
+
+        var userId =
+            authConfig.UserIdClaim != null
+                ? claimsPrincipal.FindFirst(authConfig.UserIdClaim)?.Value
+                : claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        userId ??= "";
+
+        var groups =
+            authConfig.GroupsClaim == null
+                ? []
+                : claimsPrincipal.FindAll(authConfig.GroupsClaim).Select(c => c.Value).ToList();
 
         return new ValueTuple<UserId, List<UserGroup>>(
             new UserId(userId),

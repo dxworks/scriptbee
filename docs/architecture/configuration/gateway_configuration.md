@@ -58,6 +58,19 @@
 - **Description:** The authorization URL for the external authorization service (e.g., OPA). This is used to validate
   user permissions.
 
+### `AUTHENTICATION__USERIDCLAIM`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The claim type used to extract from JWT for the user id (e.g. "sub", "oid"). Leave unset so that the
+  Name Identifier claim (sub) is taken
+
+### `AUTHENTICATION__GROUPSCLAIM`
+
+- **Type:** `string`
+- **Default:** `groups`
+- **Description:** The claim type use to extract from JWT for the groups
+
 ### `AUTHENTICATION__AUTHMODE`
 
 - **Type:** `string`
