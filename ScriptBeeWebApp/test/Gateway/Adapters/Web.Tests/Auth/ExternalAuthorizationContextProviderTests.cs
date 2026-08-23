@@ -6,6 +6,7 @@ using NSubstitute;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
 using ScriptBee.Ports.Permissions;
+using ScriptBee.UseCases.Gateway;
 using ScriptBee.Web.Auth;
 using ScriptBee.Web.Config;
 
@@ -19,11 +20,18 @@ public class ExternalAuthorizationContextProviderTests
         IOptions<AuthenticationConfig>
     >();
 
+    private readonly IManageUsersUseCase _manageUsersUseCase =
+        Substitute.For<IManageUsersUseCase>();
+
     private readonly ExternalAuthorizationContextProvider _provider;
 
     public ExternalAuthorizationContextProviderTests()
     {
-        _provider = new ExternalAuthorizationContextProvider(_getResourceRole, _authConfigOptions);
+        _provider = new ExternalAuthorizationContextProvider(
+            _getResourceRole,
+            _authConfigOptions,
+            _manageUsersUseCase
+        );
     }
 
     [Fact]
@@ -36,6 +44,9 @@ public class ExternalAuthorizationContextProviderTests
         const string expectedRoleValue = "project-admin";
         var role = new UserRole(expectedRoleValue);
 
+        _manageUsersUseCase
+            .GetUserId(userIdValue, "", Arg.Any<CancellationToken>())
+            .Returns(new UserId(userIdValue));
         _getResourceRole
             .GetRole(
                 new UserId(userIdValue),
@@ -96,6 +107,9 @@ public class ExternalAuthorizationContextProviderTests
         const string expectedRoleValue = "project-admin";
         var role = new UserRole(expectedRoleValue);
 
+        _manageUsersUseCase
+            .GetUserId(userIdValue, "", Arg.Any<CancellationToken>())
+            .Returns(new UserId(userIdValue));
         _getResourceRole
             .GetRole(
                 new UserId(userIdValue),
@@ -157,6 +171,9 @@ public class ExternalAuthorizationContextProviderTests
         const string action = "write";
         var expectedGroups = new[] { "admins", "ops" };
 
+        _manageUsersUseCase
+            .GetUserId(userIdValue, "", Arg.Any<CancellationToken>())
+            .Returns(new UserId(userIdValue));
         var httpContext = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(

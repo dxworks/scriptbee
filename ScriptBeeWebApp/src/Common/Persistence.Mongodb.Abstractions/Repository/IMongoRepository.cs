@@ -6,6 +6,8 @@ namespace ScriptBee.Persistence.Mongodb.Repository;
 public interface IMongoRepository<T>
     where T : IDocument
 {
+    public IMongoCollection<T> MongoCollection { get; }
+
     public Task CreateDocument(T model, CancellationToken cancellationToken);
 
     public Task<T?> GetDocument(string id, CancellationToken cancellationToken);
@@ -15,8 +17,6 @@ public interface IMongoRepository<T>
         CancellationToken cancellationToken
     );
 
-    public Task<T?> GetDocument(FilterDefinition<T> filter, CancellationToken cancellationToken);
-
     public Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken);
 
     public Task<IEnumerable<T>> GetAllDocuments(
@@ -25,19 +25,9 @@ public interface IMongoRepository<T>
     );
 
     public Task<IEnumerable<T>> GetAllDocuments(
-        FilterDefinition<T> filter,
-        CancellationToken cancellationToken
-    );
-
-    public Task<IEnumerable<T>> GetAllDocuments(
         Expression<Func<T, bool>> predicate,
         int offset,
         int limit,
-        CancellationToken cancellationToken
-    );
-
-    public Task<long> CountDocuments(
-        Expression<Func<T, bool>> predicate,
         CancellationToken cancellationToken
     );
 
@@ -50,9 +40,4 @@ public interface IMongoRepository<T>
     public Task UpdateDocument(T model, CancellationToken cancellationToken);
 
     public Task<T?> DeleteDocument(string id, CancellationToken cancellationToken);
-
-    public Task DeleteDocument(
-        Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken
-    );
 }

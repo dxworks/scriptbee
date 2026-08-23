@@ -3,6 +3,7 @@ using OneOf;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
 using ScriptBee.Ports.Permissions;
+using ScriptBee.UseCases.Gateway;
 using ScriptBee.Web.Auth.Contracts;
 using ScriptBee.Web.Config;
 
@@ -10,7 +11,8 @@ namespace ScriptBee.Web.Auth;
 
 public sealed class ExternalAuthorizationContextProvider(
     IGetResourceRole getResourceRole,
-    IOptions<AuthenticationConfig> authConfigOptions
+    IOptions<AuthenticationConfig> authConfigOptions,
+    IManageUsersUseCase manageUsersUseCase
 ) : IExternalAuthorizationContextProvider
 {
     public async Task<ExternalAuthorizationRequest> BuildRequestAsync(
@@ -22,7 +24,14 @@ public sealed class ExternalAuthorizationContextProvider(
         var routeData = httpContext.GetRouteData();
         var authConfig = authConfigOptions.Value;
         var claimsPrincipal = httpContext.User;
-        var userId = CurrentUser.ExtractUserIdFromClaims(claimsPrincipal, authConfig);
+        var userId = (
+            await CurrentUser.ExtractUserIdFromClaims(
+                claimsPrincipal,
+                authConfig,
+                manageUsersUseCase,
+                httpContext.RequestAborted
+            )
+        )!.Value;
         var groups = CurrentUser.ExtractGroupsFromClaims(claimsPrincipal, authConfig);
 
         if (

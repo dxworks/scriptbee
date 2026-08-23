@@ -5,12 +5,12 @@ using ScriptBee.UseCases.Gateway;
 
 namespace ScriptBee.Service.Gateway.Tests;
 
-public class DeleteProjectServiceTest
+public class DeleteProjectServiceTests
 {
     private readonly IDeleteProject _deleteProject = Substitute.For<IDeleteProject>();
     private readonly DeleteProjectService _deleteProjectService;
 
-    public DeleteProjectServiceTest()
+    public DeleteProjectServiceTests()
     {
         _deleteProjectService = new DeleteProjectService(_deleteProject);
     }

@@ -209,3 +209,11 @@ SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG__MEMORY=536870912
 - **Default:** `[User Profile Folder]/.scriptbee/gateway/plugins`
 - **Description:** The folder for plugins that are actively "Enabled" in the Gateway. When you enable a plugin from the
   UI, it is copied here so the Gateway can load it.
+
+## User Management Configuration
+
+### `SCRIPTBEE__USERMANAGEMENT__USERINFOCACHETIMESECONDS`
+
+- **Type:** `long`
+- **Default:** `3600`
+- **Description:** The amount of time to cache the user information before loading it from the database.

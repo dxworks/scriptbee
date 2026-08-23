@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using ScriptBee.Persistence.Mongodb.Entity;
+using ScriptBee.Persistence.Mongodb.Indexes;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Ports.Permissions;
 using ScriptBee.Ports.Project;
@@ -32,12 +33,20 @@ public static class GatewayMongoDbExtensions
                 .AddSingleton<IGetProjectInstance, ProjectInstancesPersistenceAdapter>();
         }
 
-        public IServiceCollection AddResourceMembers(IMongoDatabase mongoDatabase)
+        public IServiceCollection AddResourceMembersAdapters(IMongoDatabase mongoDatabase)
         {
             return services
                 .AddMongoCollection<MongodbResourceMember>(mongoDatabase, "ResourceMembers")
                 .AddSingleton<IGetResourceRole, ResourceMembersPersistenceAdapter>()
                 .AddSingleton<ISetResourceRole, ResourceMembersPersistenceAdapter>();
+        }
+
+        public IServiceCollection AddUserManagementAdaptersAdapters(IMongoDatabase mongoDatabase)
+        {
+            return services
+                .AddMongoCollection<MongodbUser>(mongoDatabase, "Users")
+                .AddSingleton<UserManagementIndexes>()
+                .AddSingleton<IGetOrAddUser, UserManagementPersistenceAdapter>();
         }
     }
 }

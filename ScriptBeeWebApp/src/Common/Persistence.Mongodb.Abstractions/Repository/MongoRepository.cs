@@ -6,6 +6,8 @@ namespace ScriptBee.Persistence.Mongodb.Repository;
 public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRepository<T>
     where T : IDocument
 {
+    public IMongoCollection<T> MongoCollection => mongoCollection;
+
     public Task CreateDocument(T model, CancellationToken cancellationToken)
     {
         return mongoCollection.InsertOneAsync(model, cancellationToken: cancellationToken);
@@ -24,14 +26,6 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
         return await mongoCollection.Find(predicate).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<T?> GetDocument(
-        FilterDefinition<T> filter,
-        CancellationToken cancellationToken
-    )
-    {
-        return await mongoCollection.Find(filter).FirstOrDefaultAsync(cancellationToken);
-    }
-
     public async Task<IEnumerable<T>> GetAllDocuments(CancellationToken cancellationToken)
     {
         return await mongoCollection.Find(_ => true).ToListAsync(cancellationToken);
@@ -46,14 +40,6 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
     }
 
     public async Task<IEnumerable<T>> GetAllDocuments(
-        FilterDefinition<T> filter,
-        CancellationToken cancellationToken
-    )
-    {
-        return await mongoCollection.Find(filter).ToListAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<T>> GetAllDocuments(
         Expression<Func<T, bool>> predicate,
         int offset,
         int limit,
@@ -65,14 +51,6 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
             .Skip(offset)
             .Limit(limit)
             .ToListAsync(cancellationToken);
-    }
-
-    public async Task<long> CountDocuments(
-        Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken
-    )
-    {
-        return await mongoCollection.CountDocumentsAsync(predicate, null, cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAllDocuments(
@@ -108,13 +86,5 @@ public class MongoRepository<T>(IMongoCollection<T> mongoCollection) : IMongoRep
             new FindOneAndDeleteOptions<T, T>(),
             cancellationToken
         );
-    }
-
-    public async Task DeleteDocument(
-        Expression<Func<T, bool>> predicate,
-        CancellationToken cancellationToken
-    )
-    {
-        await mongoCollection.DeleteOneAsync(predicate, cancellationToken);
     }
 }

@@ -46,9 +46,10 @@ builder
     .AddCommonServices()
     .AddArtifactFileAdapters()
     .AddRestConfig()
-    .AddAnalysisConfig(builder.Configuration)
+    .AddAnalysisConfig("ScriptBee:Analysis", builder.Configuration)
     .AddScriptBeeMarketplaceClient()
-    .AddBackgroundServices("ScriptBee:Instance")
+    .AddUserManagementServices("ScriptBee:UserManagement")
+    .AddInstanceManagementServices("ScriptBee:Instance")
     .AddPluginServices("ScriptBee:Plugins")
     .AddProjectLiveUpdates();
 
@@ -97,8 +98,10 @@ app.UseEndpointDefinitions();
 
 app.MapFallbackToFile("index.html");
 
+await MongoDbExtensions.CreateMongodbIndexes(app.Services, app.Lifetime.ApplicationStopping);
+
 var pluginManager = app.Services.GetRequiredService<IManagePluginsUseCase>();
 
 pluginManager.LoadPlugins();
 
-app.Run();
+await app.RunAsync(app.Lifetime.ApplicationStopping);

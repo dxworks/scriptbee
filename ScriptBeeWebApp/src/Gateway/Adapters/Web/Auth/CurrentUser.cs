@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using ScriptBee.Domain.Model.User;
+using ScriptBee.UseCases.Gateway;
 using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Auth;
@@ -9,7 +10,7 @@ public sealed class CurrentUser(UserId id)
 {
     public UserId Id => id;
 
-    public static ValueTask<CurrentUser?> BindAsync(HttpContext context)
+    public static async ValueTask<CurrentUser?> BindAsync(HttpContext context)
     {
         var user = context.User;
 
@@ -17,33 +18,52 @@ public sealed class CurrentUser(UserId id)
             IOptions<AuthenticationConfig>
         >();
         var authConfig = authConfigOptions.Value;
+        var useCase = context.RequestServices.GetRequiredService<IManageUsersUseCase>();
 
         if (authConfig.IsDevelopment)
         {
-            return ValueTask.FromResult<CurrentUser?>(new CurrentUser(new UserId("")));
+            return new CurrentUser(new UserId(""));
         }
 
         if (user.Identity?.IsAuthenticated != true)
         {
-            return ValueTask.FromResult<CurrentUser?>(null);
+            return null;
         }
 
-        var userId = ExtractUserIdFromClaims(user, authConfig);
-        return ValueTask.FromResult<CurrentUser?>(new CurrentUser(userId));
+        var userId = await ExtractUserIdFromClaims(
+            user,
+            authConfig,
+            useCase,
+            context.RequestAborted
+        );
+
+        return !userId.HasValue ? null : new CurrentUser(userId.Value);
     }
 
-    public static UserId ExtractUserIdFromClaims(
+    public static async Task<UserId?> ExtractUserIdFromClaims(
         ClaimsPrincipal claimsPrincipal,
-        AuthenticationConfig authConfig
+        AuthenticationConfig authConfig,
+        IManageUsersUseCase useCase,
+        CancellationToken cancellationToken
     )
     {
         var userId =
             authConfig.UserIdClaim != null
                 ? claimsPrincipal.FindFirst(authConfig.UserIdClaim)?.Value
                 : claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        userId ??= "";
+        var userName =
+            claimsPrincipal.FindFirst(ClaimTypes.GivenName)?.Value
+            ?? claimsPrincipal.FindFirst(ClaimTypes.Surname)?.Value
+            ?? claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value
+            ?? claimsPrincipal.FindFirst(ClaimTypes.WindowsAccountName)?.Value
+            ?? "";
 
-        return new UserId(userId);
+        if (userId == null)
+        {
+            return null;
+        }
+
+        return await useCase.GetUserId(userId, userName, cancellationToken);
     }
 
     public static List<UserGroup> ExtractGroupsFromClaims(
