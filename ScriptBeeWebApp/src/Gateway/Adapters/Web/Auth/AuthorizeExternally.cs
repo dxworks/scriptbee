@@ -1,4 +1,5 @@
 using System.Net;
+using ScriptBee.Web.Auth.Contracts;
 
 namespace ScriptBee.Web.Auth;
 
@@ -7,9 +8,9 @@ public partial class AuthorizeExternally(
     ILogger<ExternalAuthorizationActionAuthorizationHandler> logger
 ) : IAuthorizeExternally
 {
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(
-        "ExternalAuthorizationClient"
-    );
+    public const string ClientName = "ExternalAuthorizationClient";
+
+    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(ClientName);
 
     public async Task<bool> IsAllowed(
         ExternalAuthorizationRequest request,
@@ -36,7 +37,7 @@ public partial class AuthorizeExternally(
             cancellationToken: cancellationToken
         );
 
-        return result is { Allow: true };
+        return result is { Result: true };
     }
 
     [LoggerMessage(

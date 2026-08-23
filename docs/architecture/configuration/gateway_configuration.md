@@ -51,13 +51,6 @@
 - **Description:** The scope for the OpenID Connect application. (e.g.
   `openid profile email api://my-app-backend/access_as_user`)
 
-### `AUTHENTICATION__EXTERNALAUTHORIZATIONURL`
-
-- **Type:** `string`
-- **Default:** _None_
-- **Description:** The authorization URL for the external authorization service (e.g., OPA). This is used to validate
-  user permissions.
-
 ### `AUTHENTICATION__USERIDCLAIM`
 
 - **Type:** `string`
@@ -70,6 +63,19 @@
 - **Type:** `string`
 - **Default:** `groups`
 - **Description:** The claim type use to extract from JWT for the groups
+
+### `AUTHENTICATION__EXTERNALAUTHORIZATIONURL`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The authorization URL for the external authorization service (e.g., OPA). This is used to validate
+  user permissions.
+
+### `AUTHENTICATION__DEFAULTCREATORROLEURL`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The URL to obtain the role that is assigned to the user when creating a project
 
 ### `AUTHENTICATION__AUTHMODE`
 

@@ -51,6 +51,7 @@ public class TestWebApplicationFactory<TStartup>(
     {
         var configurationValues = new Dictionary<string, string?>
         {
+            { "Authentication:AuthMode", "Development" },
             { "ScriptBee:Analysis:Driver", "Docker" },
             { "ScriptBee:Analysis:Image", "test-image" },
             { "ScriptBee:Analysis:Docker:DockerSocket", "unix:///var/run/docker.sock" },

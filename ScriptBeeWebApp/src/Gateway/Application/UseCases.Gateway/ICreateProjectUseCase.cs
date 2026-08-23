@@ -8,6 +8,6 @@ public interface ICreateProjectUseCase
 {
     Task<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>> CreateProject(
         CreateProjectCommand command,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     );
 }

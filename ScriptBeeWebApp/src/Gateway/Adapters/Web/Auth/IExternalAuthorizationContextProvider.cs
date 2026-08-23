@@ -1,3 +1,5 @@
+using ScriptBee.Web.Auth.Contracts;
+
 namespace ScriptBee.Web.Auth;
 
 public interface IExternalAuthorizationContextProvider

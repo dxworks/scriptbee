@@ -2,61 +2,81 @@ package scriptbee.auth
 
 default allow = false
 
-allow {
-    role := input.resource.userRole
-    
-    allowed_permissions := role_permissions[role]
-    
-    allowed_permissions[input.action]
+allow if {
+    role := input.resource.role
+    project_permissions[role][input.action]
 }
 
-role_permissions := {
-    "Administrator": {
+allow if {
+    input.action == "project:create"
+}
+
+project_permissions := {
+    "Admin": {
         "project:view",
         "project:edit",
-        "project:remove",
-        "project:load_model",
-        "project:link_model",
-        "project:generate_script",
-        "project:create_script",
-        "project:edit_script",
-        "project:delete_script",
-        "analysis:view"
-    },
-    "Manager": {
-        "project:view",
-        "project:edit",
-        "project:remove",
-        "project:load_model",
-        "project:link_model",
-        "project:generate_script",
-        "project:create_script",
-        "project:edit_script",
-        "project:delete_script",
+        "project:delete",
+        "script:view",
+        "script:create",
+        "script:edit",
+        "script:delete",
+        "model:view",
+        "model:upload",
+        "model:load",
+        "model:link",
+        "model:clear",
         "analysis:view",
         "analysis:run",
-        "analysis:remove"
+        "analysis:delete",
+        "plugin:view",
+        "plugin:install",
+        "plugin:uninstall",
+        "plugin:configure",
+        "token:create",
+        "token:delete",
+        "gateway_plugin:view",
+        "gateway_plugin:install",
+        "gateway_plugin:uninstall",
+        "gateway_plugin:configure"
+    },
+    "Editor": {
+        "project:view",
+        "project:edit",
+        "project:delete",
+        "script:view",
+        "script:create",
+        "script:edit",
+        "script:delete",
+        "model:view",
+        "model:upload",
+        "model:load",
+        "model:link",
+        "model:clear",
+        "analysis:view",
+        "analysis:run",
+        "analysis:delete",
+        "plugin:view",
+        "plugin:install",
+        "plugin:uninstall",
+        "plugin:configure",
+        "token:create",
+        "token:delete"
     },
     "Analyst": {
         "project:view",
-        "project:load_model",
-        "project:link_model",
-        "project:generate_script",
-        "project:create_script",
-        "project:edit_script",
-        "project:delete_script",
+        "script:view",
+        "model:view",
+        "model:upload",
+        "model:load",
+        "model:link",
+        "model:clear",
         "analysis:view",
         "analysis:run",
-        "analysis:remove",
-        "analysis_token:create",
-        "analysis_token:delete"
+        "plugin:view"
     },
-    "Auditor": {
+    "Viewer": {
         "project:view",
-        "analysis:view",
-        "analysis:run",
-        "analysis:remove",
-        "analysis_token:create",
-        "analysis_token:delete"
+        "script:view",
+        "analysis:view"
     }
 }

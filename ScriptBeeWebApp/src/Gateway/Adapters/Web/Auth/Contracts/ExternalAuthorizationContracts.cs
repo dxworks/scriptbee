@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ScriptBee.Web.Auth;
+namespace ScriptBee.Web.Auth.Contracts;
 
 public class ExternalAuthorizationRequest
 {
@@ -43,6 +43,6 @@ public class ExternalAuthorizationResource
 
 public class ExternalAuthorizationResponse
 {
-    [JsonPropertyName("allow")]
-    public required bool Allow { get; init; }
+    [JsonPropertyName("result")]
+    public required bool Result { get; init; }
 }

@@ -4,6 +4,7 @@ using NSubstitute;
 using OneOf;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.User;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Gateway;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
@@ -51,7 +52,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
         var creationDate = DateTimeOffset.Parse("2024-02-08");
         useCase
             .CreateProject(
-                new CreateProjectCommand("id", "project name"),
+                new CreateProjectCommand("id", "project name", new UserId("")),
                 Arg.Any<CancellationToken>()
             )
             .Returns(
@@ -85,7 +86,7 @@ public class CreateProjectEndpointTests(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<ICreateProjectUseCase>();
         useCase
             .CreateProject(
-                new CreateProjectCommand("id", "project name"),
+                new CreateProjectCommand("id", "project name", new UserId("")),
                 Arg.Any<CancellationToken>()
             )
             .Returns(

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using ScriptBee.Ports.Permissions;
 using ScriptBee.Web.Auth;
 using ScriptBee.Web.Config;
 
@@ -78,20 +79,33 @@ public static class AuthenticationExtensions
 
             services.AddHttpContextAccessor();
             services.AddHttpClient(
-                "ExternalAuthorizationClient",
-                client => client.BaseAddress = new Uri(GetAuthorizationUrl(config))
+                AuthorizeExternally.ClientName,
+                client => client.BaseAddress = new Uri(GetExternalAuthorizationUrl(config))
+            );
+            services.AddHttpClient(
+                GetDefaultCreatorRole.ClientName,
+                client => client.BaseAddress = new Uri(GetDefaultCreatorRoleUrl(config))
             );
 
+            if (config.IsDevelopment)
+            {
+                services.AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>();
+            }
+            else
+            {
+                services.AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>();
+            }
+
             return services
-                .AddScoped<
+                .AddSingleton<
                     IExternalAuthorizationContextProvider,
                     ExternalAuthorizationContextProvider
                 >()
-                .AddScoped<IAuthorizeExternally, AuthorizeExternally>();
+                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>();
         }
     }
 
-    private static string GetAuthorizationUrl(AuthenticationConfig config)
+    private static string GetExternalAuthorizationUrl(AuthenticationConfig config)
     {
         if (config.IsDevelopment)
         {
@@ -100,8 +114,22 @@ public static class AuthenticationExtensions
 
         return string.IsNullOrEmpty(config.ExternalAuthorizationUrl)
             ? throw new InvalidOperationException(
-                "AuthorizationUrl is not configured and is mandatory. Please set Authentication:AuthorizationUrl in your configuration."
+                $"{nameof(config.ExternalAuthorizationUrl)} is not configured and is mandatory. Please set {AuthenticationConfigSectionName}:{nameof(config.ExternalAuthorizationUrl)} in your configuration."
             )
             : config.ExternalAuthorizationUrl;
+    }
+
+    private static string GetDefaultCreatorRoleUrl(AuthenticationConfig config)
+    {
+        if (config.IsDevelopment)
+        {
+            return "";
+        }
+
+        return string.IsNullOrEmpty(config.DefaultCreatorRoleUrl)
+            ? throw new InvalidOperationException(
+                $"{nameof(config.DefaultCreatorRoleUrl)} is not configured and is mandatory. Please set {AuthenticationConfigSectionName}:{nameof(config.DefaultCreatorRoleUrl)} in your configuration."
+            )
+            : config.DefaultCreatorRoleUrl;
     }
 }

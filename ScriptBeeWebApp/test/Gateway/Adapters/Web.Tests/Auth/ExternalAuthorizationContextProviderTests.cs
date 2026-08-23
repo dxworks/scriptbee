@@ -13,8 +13,7 @@ namespace ScriptBee.Web.Tests.Auth;
 
 public class ExternalAuthorizationContextProviderTests
 {
-    private readonly IResourceMemberService _resourceMemberService =
-        Substitute.For<IResourceMemberService>();
+    private readonly IGetResourceRole _getResourceRole = Substitute.For<IGetResourceRole>();
 
     private readonly IOptions<AuthenticationConfig> _authConfigOptions = Substitute.For<
         IOptions<AuthenticationConfig>
@@ -24,10 +23,7 @@ public class ExternalAuthorizationContextProviderTests
 
     public ExternalAuthorizationContextProviderTests()
     {
-        _provider = new ExternalAuthorizationContextProvider(
-            _resourceMemberService,
-            _authConfigOptions
-        );
+        _provider = new ExternalAuthorizationContextProvider(_getResourceRole, _authConfigOptions);
     }
 
     [Fact]
@@ -40,8 +36,8 @@ public class ExternalAuthorizationContextProviderTests
         const string expectedRoleValue = "project-admin";
         var role = new UserRole(expectedRoleValue);
 
-        _resourceMemberService
-            .GetResourceRole(
+        _getResourceRole
+            .GetRole(
                 new UserId(userIdValue),
                 Arg.Is<List<UserGroup>>(groups => groups.Count == 0),
                 ProjectId.FromValue(projectIdValue),
@@ -100,8 +96,8 @@ public class ExternalAuthorizationContextProviderTests
         const string expectedRoleValue = "project-admin";
         var role = new UserRole(expectedRoleValue);
 
-        _resourceMemberService
-            .GetResourceRole(
+        _getResourceRole
+            .GetRole(
                 new UserId(userIdValue),
                 Arg.Is<List<UserGroup>>(groups =>
                     groups.Count == 1 && groups[0] == new UserGroup("admins")
@@ -198,8 +194,8 @@ public class ExternalAuthorizationContextProviderTests
         Assert.Null(result.Input.Resource.Id);
         Assert.Null(result.Input.Resource.Role);
 
-        await _resourceMemberService
+        await _getResourceRole
             .DidNotReceiveWithAnyArgs()
-            .GetResourceRole(default!, null!, default!, TestContext.Current.CancellationToken);
+            .GetRole(default!, null!, default!, TestContext.Current.CancellationToken);
     }
 }

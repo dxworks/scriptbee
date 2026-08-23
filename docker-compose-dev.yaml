@@ -40,9 +40,10 @@ services:
       - "--server"
       - "--addr=:8181"
       - "--log-level=info"
-      - "/etc/opa/policy.rego"
+      - "/policies"
     volumes:
-      - ./quickstart/full/policy.rego:/etc/opa/policy.rego:ro
+      - ./quickstart/full/policy.rego:/policies/policy.rego:ro
+      - ./quickstart/full/roles.rego:/policies/roles.rego:ro
 
 volumes:
   mongodb_data:
