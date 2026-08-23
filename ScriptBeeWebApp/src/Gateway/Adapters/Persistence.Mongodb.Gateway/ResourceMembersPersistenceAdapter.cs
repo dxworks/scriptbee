@@ -41,7 +41,9 @@ public sealed class ResourceMembersPersistenceAdapter(
             )
         );
 
-        var resourceMember = await mongoRepository.GetDocument(filter, cancellationToken);
+        var resourceMember = await mongoRepository
+            .MongoCollection.Find(filter)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (resourceMember == null)
         {

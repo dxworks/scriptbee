@@ -9,15 +9,12 @@ using ScriptBee.Tests.Common.Mongodb;
 
 namespace ScriptBee.Persistence.Mongodb.Tests;
 
-public class ProjectPersistenceAdapterIntegrationTests : IClassFixture<MongoDbFixture>
+public class ProjectPersistenceAdapterTests : IClassFixture<MongoDbFixture>
 {
     private readonly ProjectPersistenceAdapter _adapter;
     private readonly IMongoCollection<MongodbProjectModel> _mongoCollection;
 
-    public ProjectPersistenceAdapterIntegrationTests(
-        MongoDbFixture fixture,
-        ITestOutputHelper outputHelper
-    )
+    public ProjectPersistenceAdapterTests(MongoDbFixture fixture, ITestOutputHelper outputHelper)
     {
         _mongoCollection = fixture.GetCollection<MongodbProjectModel>("Projects");
         _adapter = new ProjectPersistenceAdapter(

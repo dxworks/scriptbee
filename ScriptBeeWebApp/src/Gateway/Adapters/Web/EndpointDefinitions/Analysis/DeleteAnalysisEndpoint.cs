@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis;
 
@@ -20,7 +21,8 @@ public class DeleteAnalysisEndpoint : IEndpointDefinition
         app.MapDelete("/api/projects/{projectId}/analyses/{analysisId}", DeleteAnalysis)
             .WithTags("Analysis")
             .WithSummary("Delete analysis")
-            .WithDescription("Deletes a specific analysis and all its associated artifacts.");
+            .WithDescription("Deletes a specific analysis and all its associated artifacts.")
+            .RequireAction("analysis:delete");
     }
 
     private static async Task<NoContent> DeleteAnalysis(

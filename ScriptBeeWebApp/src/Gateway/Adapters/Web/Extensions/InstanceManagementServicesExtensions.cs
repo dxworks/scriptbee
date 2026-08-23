@@ -7,11 +7,11 @@ using ScriptBee.Web.BackgroundServices;
 
 namespace ScriptBee.Web.Extensions;
 
-public static class BackgroundServicesExtensions
+public static class InstanceManagementServicesExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddBackgroundServices(string instanceConfiguration)
+        public IServiceCollection AddInstanceManagementServices(string instanceConfiguration)
         {
             return services
                 .AddInstallPluginsForAllocatedInstancesServices(instanceConfiguration)

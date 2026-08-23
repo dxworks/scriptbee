@@ -104,7 +104,7 @@ public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mo
         CancellationToken cancellationToken = default
     )
     {
-        await mongoRepository.DeleteDocument(
+        await mongoRepository.MongoCollection.DeleteOneAsync(
             d => d.ProjectId == projectId.ToString(),
             cancellationToken
         );

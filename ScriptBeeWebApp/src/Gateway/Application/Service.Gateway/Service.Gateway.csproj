@@ -3,6 +3,9 @@
     <RootNamespace>ScriptBee.Service.Gateway</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp\DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.csproj" />
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript\DxWorks.ScriptBee.Plugin.ScriptRunner.Javascript.csproj" />
     <ProjectReference Include="..\..\..\..\..\Plugins\ScriptRunner\DxWorks.ScriptBee.Plugin.ScriptRunner.Python\DxWorks.ScriptBee.Plugin.ScriptRunner.Python.csproj" />

@@ -4,6 +4,7 @@ using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway;
 using ScriptBee.UseCases.Gateway;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -22,15 +23,18 @@ public class GetProjectsEndpoint : IEndpointDefinition
             .WithTags("Projects")
             .WithSummary("Get all projects")
             .WithDescription("Retrieves a list of all existing projects with their basic details.");
+
         app.MapGet("/api/projects/{projectId}", GetProjectById)
             .WithTags("Projects")
             .WithSummary("Get project by ID")
             .WithDescription(
                 "Retrieves detailed information about a specific project by its unique identifier."
-            );
+            )
+            .RequireAction("project:view");
     }
 
     private static async Task<Ok<WebGetProjectListResponse>> GetAllProjects(
+        CurrentUser currentUser,
         IGetProjectsUseCase useCase,
         CancellationToken cancellationToken = default
     )

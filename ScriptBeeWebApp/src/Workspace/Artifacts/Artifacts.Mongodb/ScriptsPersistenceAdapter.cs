@@ -62,7 +62,12 @@ public class ScriptsPersistenceAdapter(
         Expression<Func<MongodbScript, bool>> expression = script =>
             script.ProjectId == projectId.Value && !script.FilePath.Contains('/');
 
-        var totalCount = await mongoRepository.CountDocuments(expression, cancellationToken);
+        var totalCount = await mongoRepository.MongoCollection.CountDocumentsAsync(
+            expression,
+            null,
+            cancellationToken
+        );
+
         var mongodbScripts = await mongoRepository.GetAllDocuments(
             expression,
             offset,
@@ -236,7 +241,9 @@ public class ScriptsPersistenceAdapter(
 
         var filter = Builders<MongodbScript>.Filter.In(x => x.Id, filteredIds);
 
-        var mongodbScripts = await mongoRepository.GetAllDocuments(filter, cancellationToken);
+        var mongodbScripts = await mongoRepository
+            .MongoCollection.Find(filter)
+            .ToListAsync(cancellationToken);
 
         return new Page<ProjectStructureEntry>(
             mongodbScripts.Select(s => s.ToProjectStructureEntry()),

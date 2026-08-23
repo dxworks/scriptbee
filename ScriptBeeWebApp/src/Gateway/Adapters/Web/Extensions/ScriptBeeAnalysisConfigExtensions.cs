@@ -11,16 +11,17 @@ public static class ScriptBeeAnalysisConfigExtensions
 {
     public static IServiceCollection AddAnalysisConfig(
         this IServiceCollection services,
+        string analysisConfiguration,
         ConfigurationManager configurationManager
     )
     {
         var scriptBeeAnalysisConfig = configurationManager
-            .GetSection("ScriptBee:Analysis")
+            .GetSection(analysisConfiguration)
             .Get<ScriptBeeAnalysisConfig>()!;
 
         if (
             !scriptBeeAnalysisConfig.Driver.Equals(
-                "Docker",
+                nameof(scriptBeeAnalysisConfig.Docker),
                 StringComparison.InvariantCultureIgnoreCase
             )
         )
@@ -34,6 +35,8 @@ public static class ScriptBeeAnalysisConfigExtensions
             )
         );
 
-        return services.AddDockerInstanceAdapter("ScriptBee:Analysis:Docker");
+        return services.AddDockerInstanceAdapter(
+            $"{analysisConfiguration}:${nameof(scriptBeeAnalysisConfig.Docker)}"
+        );
     }
 }
