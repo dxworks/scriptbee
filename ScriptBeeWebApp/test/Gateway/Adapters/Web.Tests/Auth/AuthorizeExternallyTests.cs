@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Web.Auth;
+using ScriptBee.Web.Auth.Contracts;
 using VeriJson;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -28,7 +29,7 @@ public class AuthorizeExternallyTests : IDisposable
                 Response
                     .Create()
                     .WithStatusCode(HttpStatusCode.OK)
-                    .WithBodyAsJson(new { allow = true })
+                    .WithBodyAsJson(new { result = true })
             );
 
         var httpClientFactory = Substitute.For<IHttpClientFactory>();
@@ -67,8 +68,8 @@ public class AuthorizeExternallyTests : IDisposable
         );
 
         // Assert
-        Assert.Single(_server.LogEntries);
-        Assert.Equal("/api/authorize", _server.LogEntries[0].RequestMessage?.Path);
+        var item = Assert.Single(_server.LogEntries);
+        Assert.Equal("/api/authorize", item.RequestMessage?.Path);
         var body = _server.LogEntries[0].RequestMessage?.Body!;
         body.Should()
             .BeEquivalentTo(

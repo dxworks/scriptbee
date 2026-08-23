@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using ScriptBee.Web.Auth;
+using ScriptBee.Web.Auth.Contracts;
 
 namespace ScriptBee.Web.Tests.Auth;
 

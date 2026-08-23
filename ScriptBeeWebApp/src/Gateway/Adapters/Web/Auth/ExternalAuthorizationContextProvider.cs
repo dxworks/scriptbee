@@ -4,6 +4,7 @@ using OneOf;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
 using ScriptBee.Ports.Permissions;
+using ScriptBee.Web.Auth.Contracts;
 using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Auth;
