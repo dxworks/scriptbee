@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.User;
 
-namespace ScriptBee.Web.Auth;
+namespace ScriptBee.Ports.Permissions;
 
 public interface IGetDefaultCreatorRole
 {

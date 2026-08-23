@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using ScriptBee.Ports.Permissions;
 using ScriptBee.Web.Auth;
 using ScriptBee.Web.Config;
 
@@ -86,13 +87,21 @@ public static class AuthenticationExtensions
                 client => client.BaseAddress = new Uri(GetDefaultCreatorRoleUrl(config))
             );
 
+            if (config.IsDevelopment)
+            {
+                services.AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>();
+            }
+            else
+            {
+                services.AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>();
+            }
+
             return services
                 .AddSingleton<
                     IExternalAuthorizationContextProvider,
                     ExternalAuthorizationContextProvider
                 >()
-                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>()
-                .AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>();
+                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>();
         }
     }
 

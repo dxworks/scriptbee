@@ -22,7 +22,14 @@ OPA server and assigned to users. The permissions are used to determine what act
 
 ScriptBee uses the following authorization contracts to determine what actions a user can perform.
 
-Request body example:
+### External Authorization Url
+
+See [ExternalAuthorizationUrl Config](./configuration/gateway_configuration.md#authentication__externalauthorizationurl)
+for more details
+
+#### Request
+
+POST request with body example:
 
 ```json
 {
@@ -50,7 +57,7 @@ Or
       "user_id": "user-123",
       "groups": ["admins"]
     },
-    "action": "plugins:view",
+    "action": "gateway_plugins:view",
     "resource": {
       "type": "global"
     }
@@ -65,11 +72,30 @@ The possible values for the `resource.type` are:
 - global
 - project
 
+#### Response
+
 The response is expected to be in the format:
 
 ```json
 {
-  "allow": true
+  "result": true
+}
+```
+
+#### Request
+
+See [DefaultCreatorRoleUrl Config](./configuration/gateway_configuration.md#authentication__defaultcreatorroleurl)
+for more details
+
+A GET request
+
+#### Response
+
+The response is expected to be in the format:
+
+```json
+{
+  "result": "Editor"
 }
 ```
 
@@ -77,10 +103,10 @@ The response is expected to be in the format:
 
 Detailed here are the possible roles a user can have in ScriptBee.
 
-- Administrator - user that can perform any action
-- Manager - user that can perform project management on project they belong to
+- Admin - user that can perform any action
+- Editor - user that can perform project management on project they belong to
 - Analyst - user that can perform different analysis tasks on allowed projects
-- Auditor - user that can view only allowed projects
+- Viewer - user that can view the results of the analysis
 
 > Note: The roles are only as examples, and can be defined in the OPA server. The roles can be assigned to users in the
 > OPA server. The permissions are the ones that are actually used in ScriptBee to determine what actions a user can
@@ -91,29 +117,56 @@ Detailed here are the possible roles a user can have in ScriptBee.
 
 ### Project
 
-| Permission              | Admin   | Manager | Analyst | Auditor |
-| ----------------------- | ------- | ------- | ------- | ------- |
-| project:view            | &check; | &check; | &check; | &check; |
-| project:edit            | &check; | &check; |         |         |
-| project:remove          | &check; | &check; |         |         |
-| project:load_model      | &check; | &check; | &check; |         |
-| project:link_model      | &check; | &check; | &check; |         |
-| project:generate_script | &check; | &check; | &check; |         |
-| project:create_script   | &check; | &check; | &check; |         |
-| project:edit_script     | &check; | &check; | &check; |         |
-| project:delete_script   | &check; | &check; | &check; |         |
+| Permission     | Admin   | Editor  | Analyst | Viewer  |
+| -------------- | ------- | ------- | ------- | ------- |
+| project:create | &check; | &check; | &check; | &check; |
+| project:view   | &check; | &check; | &check; | &check; |
+| project:edit   | &check; | &check; |         |         |
+| project:delete | &check; | &check; |         |         |
+
+### Scripts
+
+| Permission    | Admin   | Editor  | Analyst | Viewer  |
+| ------------- | ------- | ------- | ------- | ------- |
+| script:view   | &check; | &check; | &check; | &check; |
+| script:create | &check; | &check; |         |         |
+| script:edit   | &check; | &check; |         |         |
+| script:delete | &check; | &check; |         |         |
+
+### Model
+
+| Permission   | Admin   | Editor  | Analyst | Viewer |
+| ------------ | ------- | ------- | ------- | ------ |
+| model:view   | &check; | &check; | &check; |        |
+| model:upload | &check; | &check; | &check; |        |
+| model:load   | &check; | &check; | &check; |        |
+| model:link   | &check; | &check; | &check; |        |
+| model:clear  | &check; | &check; | &check; |        |
 
 ### Analysis
 
-| Permission      | Admin   | Manager | Analyst | Auditor |
+| Permission      | Admin   | Editor  | Analyst | Viewer  |
 | --------------- | ------- | ------- | ------- | ------- |
 | analysis:view   | &check; | &check; | &check; | &check; |
-| analysis:run    |         | &check; | &check; | &check; |
-| analysis:remove |         | &check; | &check; | &check; |
+| analysis:run    | &check; | &check; | &check; |         |
+| analysis:delete | &check; | &check; |         |         |
+
+### Plugins
+
+| Permission               | Admin   | Editor  | Analyst | Viewer |
+| ------------------------ | ------- | ------- | ------- | ------ |
+| plugin:view              | &check; | &check; | &check; |        |
+| plugin:install           | &check; | &check; |         |        |
+| plugin:uninstall         | &check; | &check; |         |        |
+| plugin:configure         | &check; | &check; |         |        |
+| gateway_plugin:view      | &check; |         |         |        |
+| gateway_plugin:install   | &check; |         |         |        |
+| gateway_plugin:uninstall | &check; |         |         |        |
+| gateway_plugin:configure | &check; |         |         |        |
 
 ### Token management
 
-| Permission            | Admin | Manager | Analyst | Auditor |
-| --------------------- | ----- | ------- | ------- | ------- |
-| analysis_token:create |       |         | &check; | &check; |
-| analysis_token:delete |       |         | &check; | &check; |
+| Permission   | Admin   | Editor  | Analyst | Viewer |
+| ------------ | ------- | ------- | ------- | ------ |
+| token:create | &check; | &check; |         |        |
+| token:delete | &check; | &check; |         |        |

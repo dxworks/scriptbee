@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using OneOf;
 using ScriptBee.Domain.Model.Project;
@@ -10,7 +9,7 @@ using ScriptBee.Web.Config;
 namespace ScriptBee.Web.Auth;
 
 public sealed class ExternalAuthorizationContextProvider(
-    IResourceMemberService resourceMemberService,
+    IGetResourceRole getResourceRole,
     IOptions<AuthenticationConfig> authConfigOptions
 ) : IExternalAuthorizationContextProvider
 {
@@ -21,7 +20,10 @@ public sealed class ExternalAuthorizationContextProvider(
     )
     {
         var routeData = httpContext.GetRouteData();
-        var (userId, groups) = ExtractFromClaims(httpContext);
+        var authConfig = authConfigOptions.Value;
+        var claimsPrincipal = httpContext.User;
+        var userId = CurrentUser.ExtractUserIdFromClaims(claimsPrincipal, authConfig);
+        var groups = CurrentUser.ExtractGroupsFromClaims(claimsPrincipal, authConfig);
 
         if (
             routeData.Values.TryGetValue("projectId", out var projectIdObj)
@@ -40,28 +42,6 @@ public sealed class ExternalAuthorizationContextProvider(
         return GetGlobalRequest(action, userId, groups);
     }
 
-    private (UserId userId, List<UserGroup> groups) ExtractFromClaims(HttpContext httpContext)
-    {
-        var authConfig = authConfigOptions.Value;
-        var claimsPrincipal = httpContext.User;
-
-        var userId =
-            authConfig.UserIdClaim != null
-                ? claimsPrincipal.FindFirst(authConfig.UserIdClaim)?.Value
-                : claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        userId ??= "";
-
-        var groups =
-            authConfig.GroupsClaim == null
-                ? []
-                : claimsPrincipal.FindAll(authConfig.GroupsClaim).Select(c => c.Value).ToList();
-
-        return new ValueTuple<UserId, List<UserGroup>>(
-            new UserId(userId),
-            [.. groups.Select(g => new UserGroup(g))]
-        );
-    }
-
     private async Task<ExternalAuthorizationRequest> GetProjectRequest(
         string action,
         UserId userId,
@@ -70,7 +50,7 @@ public sealed class ExternalAuthorizationContextProvider(
         CancellationToken cancellationToken
     )
     {
-        var resourceRole = await resourceMemberService.GetResourceRole(
+        var resourceRole = await getResourceRole.GetRole(
             userId,
             groups,
             OneOf<ProjectId>.FromT0(projectId),

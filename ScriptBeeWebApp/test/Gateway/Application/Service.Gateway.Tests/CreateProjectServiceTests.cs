@@ -4,6 +4,8 @@ using OneOf.Types;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Domain.Model.User;
+using ScriptBee.Ports.Permissions;
 using ScriptBee.Ports.Project;
 using ScriptBee.UseCases.Gateway;
 using static ScriptBee.Tests.Common.ProjectDetailsFixture;
@@ -14,11 +16,22 @@ public class CreateProjectServiceTests
 {
     private readonly ICreateProject _createProject = Substitute.For<ICreateProject>();
     private readonly IDateTimeProvider _dateTimeProvider = Substitute.For<IDateTimeProvider>();
+
+    private readonly IGetDefaultCreatorRole _getDefaultCreatorRole =
+        Substitute.For<IGetDefaultCreatorRole>();
+
+    private readonly ISetResourceRole _setResourceRole = Substitute.For<ISetResourceRole>();
+
     private readonly CreateProjectService _createProjectService;
 
     public CreateProjectServiceTests()
     {
-        _createProjectService = new CreateProjectService(_createProject, _dateTimeProvider);
+        _createProjectService = new CreateProjectService(
+            _createProject,
+            _dateTimeProvider,
+            _getDefaultCreatorRole,
+            _setResourceRole
+        );
     }
 
     [Fact]
@@ -37,7 +50,7 @@ public class CreateProjectServiceTests
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
-            new CreateProjectCommand("id", "project"),
+            new CreateProjectCommand("id", "project", new UserId("user-id")),
             TestContext.Current.CancellationToken
         );
 
@@ -48,6 +61,33 @@ public class CreateProjectServiceTests
                 Arg.Is<ProjectDetails>(details =>
                     MatchProjectDetails(details, expectedProjectDetails)
                 ),
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    [Fact]
+    public async Task CreateProjectSuccessfully_ShouldAssignUserToProjectCreatorRole()
+    {
+        var creationDate = DateTimeOffset.Parse("2024-02-08");
+        var userId = new UserId("user-id");
+        var userRole = new UserRole("creator-role");
+        _createProject
+            .Create(Arg.Any<ProjectDetails>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<OneOf<Success, ProjectIdAlreadyInUseError>>(new Success()));
+        _dateTimeProvider.UtcNow().Returns(creationDate);
+        _getDefaultCreatorRole.GetRole(Arg.Any<CancellationToken>()).Returns(userRole);
+
+        await _createProjectService.CreateProject(
+            new CreateProjectCommand("id", "project", userId),
+            TestContext.Current.CancellationToken
+        );
+
+        await _setResourceRole
+            .Received(1)
+            .SetRoleForUser(
+                userId,
+                ProjectId.FromValue("id"),
+                userRole,
                 Arg.Any<CancellationToken>()
             );
     }
@@ -70,7 +110,7 @@ public class CreateProjectServiceTests
         _dateTimeProvider.UtcNow().Returns(creationDate);
 
         var projectDetails = await _createProjectService.CreateProject(
-            new CreateProjectCommand("id", "project"),
+            new CreateProjectCommand("id", "project", new UserId("user-id")),
             TestContext.Current.CancellationToken
         );
 
@@ -81,6 +121,15 @@ public class CreateProjectServiceTests
                 Arg.Is<ProjectDetails>(details =>
                     MatchProjectDetails(details, expectedProjectDetails)
                 ),
+                Arg.Any<CancellationToken>()
+            );
+        await _getDefaultCreatorRole.DidNotReceive().GetRole(Arg.Any<CancellationToken>());
+        await _setResourceRole
+            .DidNotReceive()
+            .SetRoleForUser(
+                Arg.Any<UserId>(),
+                Arg.Any<ProjectId>(),
+                Arg.Any<UserRole>(),
                 Arg.Any<CancellationToken>()
             );
     }

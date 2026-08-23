@@ -4,9 +4,9 @@ using ScriptBee.Domain.Model.User;
 
 namespace ScriptBee.Ports.Permissions;
 
-public interface IResourceMemberService
+public interface IGetResourceRole
 {
-    Task<UserRole?> GetResourceRole(
+    Task<UserRole?> GetRole(
         UserId userId,
         List<UserGroup> groups,
         OneOf<ProjectId> resourceId,

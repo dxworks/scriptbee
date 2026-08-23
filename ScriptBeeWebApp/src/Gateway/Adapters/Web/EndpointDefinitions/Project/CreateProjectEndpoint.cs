@@ -4,6 +4,7 @@ using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Service.Gateway;
 using ScriptBee.UseCases.Gateway;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -28,13 +29,14 @@ public class CreateProjectEndpoint : IEndpointDefinition
     private static async Task<
         Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>
     > CreateProject(
+        CurrentUser currentUser,
         HttpContext context,
         [FromBody] WebCreateProjectCommand command,
         ICreateProjectUseCase useCase,
         CancellationToken cancellationToken = default
     )
     {
-        var result = await useCase.CreateProject(command.Map(), cancellationToken);
+        var result = await useCase.CreateProject(command.Map(currentUser.Id), cancellationToken);
 
         return result.Match<Results<Created<WebCreateProjectResponse>, Conflict<ProblemDetails>>>(
             projectDetails =>

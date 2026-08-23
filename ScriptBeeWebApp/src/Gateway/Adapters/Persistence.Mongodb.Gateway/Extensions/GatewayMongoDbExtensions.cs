@@ -36,7 +36,8 @@ public static class GatewayMongoDbExtensions
         {
             return services
                 .AddMongoCollection<MongodbResourceMember>(mongoDatabase, "ResourceMembers")
-                .AddSingleton<IResourceMemberService, ResourceMembersPersistenceAdapter>();
+                .AddSingleton<IGetResourceRole, ResourceMembersPersistenceAdapter>()
+                .AddSingleton<ISetResourceRole, ResourceMembersPersistenceAdapter>();
         }
     }
 }

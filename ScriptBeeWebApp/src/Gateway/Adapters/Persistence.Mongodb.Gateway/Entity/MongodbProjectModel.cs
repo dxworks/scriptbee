@@ -27,8 +27,8 @@ public class MongodbProjectModel : IDocument
             CreationDate,
             SavedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
             LoadedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
-            Linkers.ToList(),
-            InstalledPlugins.Select(x => x.ToPluginInstallationConfig()).ToList()
+            [.. Linkers],
+            [.. InstalledPlugins.Select(x => x.ToPluginInstallationConfig())]
         );
     }
 
@@ -48,9 +48,10 @@ public class MongodbProjectModel : IDocument
                 x => x.Value.Select(MongodbFileData.From).ToList()
             ),
             Linkers = projectDetails.Linkers,
-            InstalledPlugins = projectDetails
-                .InstalledPlugins.Select(MongodbPluginInstallationConfig.From)
-                .ToList(),
+            InstalledPlugins =
+            [
+                .. projectDetails.InstalledPlugins.Select(MongodbPluginInstallationConfig.From),
+            ],
         };
     }
 }

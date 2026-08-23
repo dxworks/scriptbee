@@ -10,13 +10,13 @@ namespace ScriptBee.Persistence.Mongodb;
 
 public sealed class ResourceMembersPersistenceAdapter(
     IMongoRepository<MongodbResourceMember> mongoRepository
-) : IResourceMemberService
+) : IGetResourceRole, ISetResourceRole
 {
     private const string ProjectResourceType = "project";
     private const string UserMemberType = "user";
     private const string GroupMemberType = "group";
 
-    public async Task<UserRole?> GetResourceRole(
+    public async Task<UserRole?> GetRole(
         UserId userId,
         List<UserGroup> groups,
         OneOf<ProjectId> resourceId,
@@ -49,5 +49,26 @@ public sealed class ResourceMembersPersistenceAdapter(
         }
 
         return new UserRole(resourceMember.Role);
+    }
+
+    public async Task SetRoleForUser(
+        UserId userId,
+        ProjectId projectId,
+        UserRole role,
+        CancellationToken cancellationToken
+    )
+    {
+        var model = new MongodbResourceMember
+        {
+            Id = null!,
+            ResourceType = ProjectResourceType,
+            ResourceId = projectId.Value,
+            MemberType = UserMemberType,
+            MemberId = userId.Value,
+            Role = role.Value,
+            AssignedAt = DateTimeOffset.UtcNow,
+        };
+
+        await mongoRepository.CreateDocument(model, cancellationToken);
     }
 }

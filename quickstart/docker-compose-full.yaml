@@ -13,7 +13,12 @@ services:
 
   opa:
     image: openpolicyagent/opa:1.19.1-static
-    command: ["run", "--server", "--set=decision_logs.console=true", "/policies"]
+    command:
+      - "run"
+      - "--server"
+      - "--addr=:8181"
+      - "--log-level=info"
+      - "/policies"
     ports:
       - "8181:8181"
     volumes:
@@ -27,7 +32,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HOSTNAME: http://localhost:8082
       KC_HOSTNAME_STRICT: "false"
-    command: ["start-dev", "--import-realm"]
+    command: [ "start-dev", "--import-realm" ]
     volumes:
       - ./full/realm-export.json:/opt/keycloak/data/import/realm.json:ro
     ports:
@@ -51,7 +56,8 @@ services:
       - AUTHENTICATION__CLIENTID=scriptbee-client
       - AUTHENTICATION__REQUIREHTTPSMETADATA=false
       - AUTHENTICATION__SCOPE=openid profile email
-      - AUTHENTICATION__OPAURL=http://opa:8181/v1/data/scriptbee/auth/allow
+      - AUTHENTICATION__EXTERNALAUTHORIZATIONURL=http://opa:8181/v1/data/scriptbee/auth/allow
+      - AUTHENTICATION__DEFAULTCREATORROLEURL=http://opa:8181/v1/data/scriptbee/auth/roles/default_creator_role
       - SCRIPTBEE__ANALYSIS__DRIVER=docker
       - SCRIPTBEE__ANALYSIS__DOCKER__NETWORK=scriptbee-quickstart-full_default
       - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock
