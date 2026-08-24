@@ -14,11 +14,11 @@ import { ContextModelPage } from './pages/projects/project-details/model/context
 import { GatewayPluginsComponent } from './pages/gateway-plugins/gateway-plugins.component';
 import { inject } from '@angular/core';
 import { LoginComponent } from './pages/login/login.component';
-import { authGuard } from './guards/auth.guard';
+import { authGuard, loginGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'projects', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
   { path: 'projects', component: ProjectsPage, canActivate: [authGuard] },
   { path: 'gateway-plugins', component: GatewayPluginsComponent, canActivate: [authGuard] },
   { path: 'create-project', component: CreateProjectPage, canActivate: [authGuard] },

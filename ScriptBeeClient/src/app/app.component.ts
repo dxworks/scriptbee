@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -32,7 +32,7 @@ import { AuthService } from './services/auth/AuthService';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
   private gatewayPluginsService = inject(GatewayPluginsService);
@@ -66,16 +66,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.authService.checkAuth().subscribe();
-  }
-
   onMenuButtonClick() {
     this.isMenuOpen.update((value) => !value);
   }
 
   logout() {
-    this.authService.logout();
-    void this.router.navigate(['/login']);
+    this.authService.logout().subscribe();
   }
 }

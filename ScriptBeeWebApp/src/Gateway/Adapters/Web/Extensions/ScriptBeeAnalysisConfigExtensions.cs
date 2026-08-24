@@ -36,7 +36,7 @@ public static class ScriptBeeAnalysisConfigExtensions
         );
 
         return services.AddDockerInstanceAdapter(
-            $"{analysisConfiguration}:${nameof(scriptBeeAnalysisConfig.Docker)}"
+            $"{analysisConfiguration}:{nameof(scriptBeeAnalysisConfig.Docker)}"
         );
     }
 }

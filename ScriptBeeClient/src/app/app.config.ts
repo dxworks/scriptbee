@@ -10,11 +10,15 @@ import { provideAuth, StsConfigLoader } from 'angular-auth-oidc-client';
 import { httpLoaderFactory } from './utils/authConfigHttpLoaderFactory';
 import { AuthService } from './services/auth/AuthService';
 import { AppAuthService } from './services/auth/app-auth.service';
+import { firstValueFrom, take } from 'rxjs';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideAppInitializer(() => inject(GatewayPluginsService).fetchUIPlugins()),
+    provideAppInitializer(async () => {
+      await firstValueFrom(inject(AuthService).checkAuth().pipe(take(1)));
+    }),
     provideRouter(routes, withComponentInputBinding(), withErrorNavigation),
     provideHttpClient(
       withInterceptors([authTokenInterceptor, clientIdInterceptor]),

@@ -23,7 +23,7 @@ export class OidcAuthService implements AuthService {
     return this.oidcSecurityService.checkAuth();
   }
 
-  logout(): void {
-    this.oidcSecurityService.logoff().subscribe();
+  logout() {
+    return this.oidcSecurityService.logoff();
   }
 }

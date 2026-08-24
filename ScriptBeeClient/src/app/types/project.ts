@@ -47,3 +47,8 @@ export interface GetProjectFilesResponse {
   offset: number;
   limit: number;
 }
+
+export interface ProjectPermissionsResponse {
+  role: string;
+  permissions: string[];
+}
