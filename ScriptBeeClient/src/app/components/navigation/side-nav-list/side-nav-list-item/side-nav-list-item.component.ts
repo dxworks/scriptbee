@@ -3,10 +3,11 @@ import { NavItem } from '../../navItem';
 import { MatIcon } from '@angular/material/icon';
 import { MatListItem, MatListItemMeta, MatListItemTitle } from '@angular/material/list';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { HasPermissionDirective } from '../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-side-nav-list-item',
-  imports: [MatIcon, MatListItem, MatListItemTitle, RouterLinkActive, RouterLink, MatListItemMeta],
+  imports: [MatIcon, MatListItem, MatListItemTitle, RouterLinkActive, RouterLink, MatListItemMeta, HasPermissionDirective],
   templateUrl: './side-nav-list-item.component.html',
   styleUrl: './side-nav-list-item.component.scss',
 })

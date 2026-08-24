@@ -4,6 +4,7 @@ import { ProjectSideNavListComponent } from './project-side-nav-list.component';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
+import { PermissionsService } from '../../../services/auth/permissions.service';
 
 @Component({
   selector: 'test-entry',
@@ -24,6 +25,12 @@ describe('ProjectSideNavListComponent', () => {
             component: TestEntry,
           }))
         ),
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
       ],
     }).compileComponents();
 

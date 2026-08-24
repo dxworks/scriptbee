@@ -23,6 +23,7 @@ export class ProjectSideNavListComponent {
       link: outlet.path,
       name: outlet.label,
       icon: outlet.icon,
+      permission: 'plugin:view',
     }))
   );
 }
@@ -37,32 +38,39 @@ const defaultNavItems: NavItem[] = [
         link: '/upload',
         name: 'Upload',
         icon: 'upload',
+        permission: 'model:upload',
       },
       {
         link: '/load',
         name: 'Load',
         icon: 'autorenew',
+        permission: 'model:load',
       },
       {
         link: '/context',
         name: 'Context',
         icon: 'account_tree',
+        permission: 'model:clear',
       },
     ],
+    permission: 'model:view',
   },
   {
     link: '/analysis',
     name: 'Analysis',
     icon: 'query_stats',
+    permission: 'analysis:view',
   },
   {
     link: '/settings',
     name: 'Settings',
     icon: 'settings',
+    permission: 'project:edit',
   },
   {
     link: '/plugins',
     name: 'Plugins',
     icon: 'extension',
+    permission: 'plugin:install',
   },
 ];

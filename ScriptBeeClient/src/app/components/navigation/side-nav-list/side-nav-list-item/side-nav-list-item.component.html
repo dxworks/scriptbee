@@ -1,4 +1,5 @@
 <a
+  *hasPermission="navItem().permission"
   mat-list-item
   [routerLink]="navItem().children ? null : getUrl()"
   (click)="toggleNestedMenu()"
@@ -27,6 +28,7 @@
   <div>
     @for (childNavItem of navItem().children; track childNavItem.name) {
       <a
+        *hasPermission="childNavItem.permission"
         mat-list-item
         [routerLink]="getChildUrl(childNavItem)"
         routerLinkActive
