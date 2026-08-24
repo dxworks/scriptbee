@@ -31,9 +31,9 @@
 
   <mat-divider></mat-divider>
 
-  <h4>Danger Zone</h4>
+  <h4 *hasPermission="'project:delete'">Danger Zone</h4>
 
-  <mat-card appearance="outlined">
+  <mat-card *hasPermission="'project:delete'" appearance="outlined">
     <mat-card-header>
       <mat-card-title>Delete Project</mat-card-title>
       <mat-card-subtitle> Id: {{ project().id }}</mat-card-subtitle>
