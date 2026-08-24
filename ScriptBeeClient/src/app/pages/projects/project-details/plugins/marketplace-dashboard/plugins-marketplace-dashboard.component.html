@@ -18,6 +18,7 @@
 
   <div class="actions-container">
     <button
+      *hasPermission="'plugin:install'"
       mat-icon-button
       color="primary"
       matTooltip="Install Plugin from URL"
@@ -29,7 +30,13 @@
         <mat-icon>link</mat-icon>
       }
     </button>
-    <button mat-icon-button color="primary" matTooltip="Install Plugin Manually" [disabled]="uploading() || installingFromUrl()" (click)="fileInput.click()">
+    <button
+      *hasPermission="'plugin:install'"
+      mat-icon-button
+      color="primary"
+      matTooltip="Install Plugin Manually"
+      [disabled]="uploading() || installingFromUrl()"
+      (click)="fileInput.click()">
       @if (uploading()) {
         <mat-icon>hourglass_empty</mat-icon>
       } @else {

@@ -12,7 +12,7 @@
 
     @if (authService.isAuthenticated$ | async) {
       <button mat-button routerLink="/projects">Projects</button>
-      <button mat-button routerLink="/gateway-plugins">Gateway Plugins</button>
+      <button *hasPermission="'gateway_plugin:management'" mat-button routerLink="/gateway-plugins">Gateway Plugins</button>
 
       @for (element of navBarsElements(); track element.path) {
         <button mat-button [routerLink]="element.path">{{ element.label }}</button>

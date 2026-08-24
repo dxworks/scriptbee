@@ -6,10 +6,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
 import { MarketplacePluginWithDetails } from '../../../../../../../types/marketplace-plugin';
+import { HasPermissionDirective } from '../../../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-plugin-details-header',
-  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatDividerModule, RouterModule],
+  imports: [MatButtonModule, MatIconModule, MatChipsModule, MatDividerModule, RouterModule, HasPermissionDirective],
   templateUrl: './plugin-details-header.component.html',
   styleUrls: ['./plugin-details-header.component.scss'],
 })

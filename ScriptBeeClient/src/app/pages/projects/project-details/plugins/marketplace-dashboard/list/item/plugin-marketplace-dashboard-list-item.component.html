@@ -45,13 +45,13 @@
       <mat-spinner [diameter]="32"></mat-spinner>
     } @else {
       @if (installedVersion()) {
-        <button mat-button color="warn" (click)="onUninstallButtonClick()">UNINSTALL</button>
+        <button *hasPermission="'plugin:uninstall'" mat-button color="warn" (click)="onUninstallButtonClick()">UNINSTALL</button>
       }
 
       @if (updateAvailable()) {
-        <button mat-flat-button color="primary" (click)="onInstallButtonClick()">UPDATE</button>
+        <button *hasPermission="'plugin:install'" mat-flat-button color="primary" (click)="onInstallButtonClick()">UPDATE</button>
       } @else if (!installedVersion()) {
-        <button mat-flat-button color="primary" (click)="onInstallButtonClick()">INSTALL</button>
+        <button *hasPermission="'plugin:install'" mat-flat-button color="primary" (click)="onInstallButtonClick()">INSTALL</button>
       }
     }
   </mat-card-actions>

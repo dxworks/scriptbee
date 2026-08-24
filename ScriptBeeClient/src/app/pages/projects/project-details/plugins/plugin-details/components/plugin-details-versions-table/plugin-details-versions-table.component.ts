@@ -5,10 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PluginVersion } from '../../../../../../../types/marketplace-plugin';
+import { HasPermissionDirective } from '../../../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-plugin-details-versions-table',
-  imports: [MatTableModule, MatChipsModule, MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatTableModule, MatChipsModule, MatButtonModule, MatIconModule, MatTooltipModule, HasPermissionDirective],
   templateUrl: './plugin-details-versions-table.component.html',
   styleUrls: ['./plugin-details-versions-table.component.scss'],
 })

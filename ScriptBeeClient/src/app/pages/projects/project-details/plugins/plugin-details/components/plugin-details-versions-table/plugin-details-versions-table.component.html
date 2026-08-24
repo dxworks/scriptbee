@@ -19,6 +19,7 @@
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let element">
         <button
+          *hasPermission="'plugin:install'"
           mat-icon-button
           color="primary"
           [disabled]="element.installed"

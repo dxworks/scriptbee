@@ -23,7 +23,4 @@ export type Permission =
   | 'plugin:configure'
   | 'token:create'
   | 'token:delete'
-  | 'gateway_plugin:view'
-  | 'gateway_plugin:install'
-  | 'gateway_plugin:uninstall'
-  | 'gateway_plugin:configure';
+  | 'gateway_plugin:management';

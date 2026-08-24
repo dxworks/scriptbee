@@ -1,6 +1,9 @@
 <div class="header-container">
   <div class="back-nav">
-    <button mat-button color="primary" routerLink=".."><mat-icon>arrow_back</mat-icon> Back to Marketplace</button>
+    <button mat-button color="primary" routerLink="..">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Marketplace
+    </button>
   </div>
 
   <div class="main-info">
@@ -25,13 +28,22 @@
 
       <div class="action-buttons">
         @if (installedVersion()) {
-          <button mat-stroked-button color="warn" (click)="uninstall.emit()"><mat-icon>delete</mat-icon> Uninstall</button>
+          <button *hasPermission="'plugin:uninstall'" mat-stroked-button color="warn" (click)="uninstall.emit()">
+            <mat-icon>delete</mat-icon>
+            Uninstall
+          </button>
         }
 
         @if (updateAvailable()) {
-          <button mat-flat-button color="primary" (click)="install.emit()"><mat-icon>system_update_alt</mat-icon> Update</button>
+          <button *hasPermission="'plugin:install'" mat-flat-button color="primary" (click)="install.emit()">
+            <mat-icon>system_update_alt</mat-icon>
+            Update
+          </button>
         } @else if (!installedVersion()) {
-          <button mat-flat-button color="primary" (click)="install.emit()"><mat-icon>download</mat-icon> Install</button>
+          <button *hasPermission="'plugin:install'" mat-flat-button color="primary" (click)="install.emit()">
+            <mat-icon>download</mat-icon>
+            Install
+          </button>
         }
       </div>
     </div>
