@@ -8,6 +8,7 @@ import { ProjectStateService } from '../../../services/projects/project-state.se
 import { of } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
 import { ProjectLiveUpdatesService } from '../../../services/projects/project-live-updates.service';
+import { PermissionsService } from '../../../services/auth/permissions.service';
 
 @Component({
   selector: 'app-project-details',
@@ -31,12 +32,14 @@ export class ProjectDetailsPage {
   private projectService = inject(ProjectService);
   private projectStateService = inject(ProjectStateService);
   private projectLiveUpdatesService = inject(ProjectLiveUpdatesService);
+  private permissionsService = inject(PermissionsService);
 
   constructor() {
     effect(() => {
       const project = this.projectResource.value();
       if (project) {
         this.projectStateService.currentProject.set(project);
+        this.permissionsService.setProjectId(project.id);
         void this.projectLiveUpdatesService.connect(project.id);
       } else {
         void this.projectLiveUpdatesService.disconnect();

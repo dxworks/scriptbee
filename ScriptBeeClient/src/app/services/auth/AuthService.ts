@@ -7,5 +7,5 @@ export abstract class AuthService {
   abstract accessToken$: Observable<string | null>;
   abstract checkAuth(): Observable<LoginResponse>;
   abstract login(): void;
-  abstract logout(): void;
+  abstract logout(): Observable<unknown>;
 }

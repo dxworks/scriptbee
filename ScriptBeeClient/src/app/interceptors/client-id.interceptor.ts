@@ -5,6 +5,10 @@ import { ClientIdService } from '../services/common/client-id.service';
 export const clientIdInterceptor: HttpInterceptorFn = (req, next) => {
   const clientIdService = inject(ClientIdService);
 
+  if (!req.url.startsWith('/api')) {
+    return next(req);
+  }
+
   const clonedRequest = req.clone({
     setHeaders: {
       'X-Client-Id': clientIdService.clientId,

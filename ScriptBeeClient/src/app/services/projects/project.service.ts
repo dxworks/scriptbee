@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CreateProjectRequest, CreateProjectResponse, Project } from '../../types/project';
+import { CreateProjectRequest, CreateProjectResponse, Project, ProjectPermissionsResponse } from '../../types/project';
 import { map, Observable } from 'rxjs';
 import { WebResponse } from '../../types/web-response';
 
@@ -30,5 +30,9 @@ export class ProjectService {
 
   deleteProject(projectId: string) {
     return this.http.delete(`${this.projectsAPIUrl}/${projectId}`);
+  }
+
+  getPermissions(projectId: string): Observable<string[]> {
+    return this.http.get<ProjectPermissionsResponse>(`${this.projectsAPIUrl}/${projectId}/permissions`).pipe(map((r) => r.permissions));
   }
 }

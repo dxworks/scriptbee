@@ -45,14 +45,16 @@ export class AppAuthService implements AuthService {
     });
   }
 
-  logout(): void {
-    this.configService.config$.subscribe((config) => {
-      if (this.isDevAuth(config)) {
-        this.devAuthService.logout();
-      } else {
-        this.oidcAuthService.logout();
-      }
-    });
+  logout() {
+    return this.configService.config$.pipe(
+      switchMap((config) => {
+        if (this.isDevAuth(config)) {
+          return this.devAuthService.logout();
+        } else {
+          return this.oidcAuthService.logout();
+        }
+      })
+    );
   }
 
   private isDevAuth(config: AuthConfig) {

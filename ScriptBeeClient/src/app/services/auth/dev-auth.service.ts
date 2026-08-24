@@ -27,5 +27,6 @@ export class DevAuthService implements AuthService {
 
   logout() {
     console.log('[Dev Mode] Logout clicked.');
+    return of();
   }
 }
