@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 import { AuthService } from '../services/auth/AuthService';
 
 export const authGuard: CanActivateFn = () => {
@@ -8,6 +8,7 @@ export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   return authService.isAuthenticated$.pipe(
+    take(1),
     map((isAuthenticated) => {
       if (isAuthenticated) {
         return true;
@@ -16,10 +17,4 @@ export const authGuard: CanActivateFn = () => {
       return router.createUrlTree(['/login']);
     })
   );
-};
-export const loginGuard: CanActivateFn = () => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  return authService.isAuthenticated$.pipe(map((isAuth) => (isAuth ? router.createUrlTree(['/projects']) : true)));
 };

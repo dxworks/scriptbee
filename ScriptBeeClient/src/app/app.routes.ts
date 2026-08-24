@@ -14,7 +14,10 @@ import { ContextModelPage } from './pages/projects/project-details/model/context
 import { GatewayPluginsComponent } from './pages/gateway-plugins/gateway-plugins.component';
 import { inject } from '@angular/core';
 import { LoginComponent } from './pages/login/login.component';
-import { authGuard, loginGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard';
+import { loginGuard } from './guards/login.guard';
+import { permissionGuard } from './guards/permissions.guard';
+import { projectPermissionsGuard } from './guards/projectPermission.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -22,7 +25,7 @@ export const routes: Routes = [
   { path: 'projects', component: ProjectsPage, canActivate: [authGuard] },
   {
     path: 'gateway-plugins',
-    canActivate: [authGuard],
+    canActivate: [authGuard, permissionGuard('gateway_plugin:management')],
     children: [
       { path: '', component: GatewayPluginsComponent },
       { path: ':pluginId', component: PluginDetailsComponent },
@@ -32,7 +35,7 @@ export const routes: Routes = [
   {
     path: 'projects/:id',
     component: ProjectDetailsPage,
-    canActivate: [authGuard],
+    canActivate: [authGuard, projectPermissionsGuard],
     children: [
       {
         path: 'model',
@@ -42,32 +45,38 @@ export const routes: Routes = [
           {
             path: 'upload',
             component: UploadModelPage,
+            canActivate: [permissionGuard('model:upload')],
           },
           {
             path: 'load',
             component: LoadModelPage,
+            canActivate: [permissionGuard('model:load')],
           },
           {
             path: 'context',
             component: ContextModelPage,
           },
         ],
+        canActivate: [permissionGuard('model:view')],
       },
       {
         path: 'analysis',
         component: AnalysisComponent,
+        canActivate: [permissionGuard('analysis:view')],
       },
       {
         path: 'analysis/:analysisId',
         component: AnalysisRunDetailsComponent,
+        canActivate: [permissionGuard('analysis:view')],
       },
-      { path: 'settings', component: ProjectSettingsPage },
+      { path: 'settings', component: ProjectSettingsPage, canActivate: [permissionGuard('project:edit')] },
       {
         path: 'plugins',
         children: [
           { path: '', component: PluginsMarketplaceDashboardComponent },
           { path: ':pluginId', component: PluginDetailsComponent },
         ],
+        canActivate: [permissionGuard('plugin:view')],
       },
       { path: '**', redirectTo: 'model' },
     ],
