@@ -1,4 +1,4 @@
-<div class="instance-manager-container">
+<div *hasPermission="'instance:view'" class="instance-manager-container">
   <button mat-button [matMenuTriggerFor]="instanceMenu" class="instance-button">
     @if (currentInstance()) {
       <div class="instance-button-text">
@@ -31,13 +31,18 @@
             </span>
           </div>
         </button>
-        <button mat-icon-button (click)="onDeallocateInstance($event, instance)" matTooltip="Deallocate Instance" class="deallocate-button">
+        <button
+          *hasPermission="'instance:deallocate'"
+          mat-icon-button
+          (click)="onDeallocateInstance($event, instance)"
+          matTooltip="Deallocate Instance"
+          class="deallocate-button">
           <mat-icon color="warn">delete</mat-icon>
         </button>
       </div>
     }
     <mat-divider></mat-divider>
-    <button mat-menu-item (click)="onAllocateInstance()">
+    <button *hasPermission="'instance:allocate'" mat-menu-item (click)="onAllocateInstance()">
       <mat-icon color="primary">add_circle</mat-icon>
       <span>Allocate New Instance</span>
     </button>

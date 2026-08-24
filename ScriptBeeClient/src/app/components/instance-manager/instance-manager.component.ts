@@ -10,10 +10,11 @@ import { ProjectStateService } from '../../services/projects/project-state.servi
 import { InstanceInfo, InstanceStatus } from '../../types/instance';
 import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/confirmation-dialog.component';
 import { InstanceAllocationService } from '../../services/instances/instance-allocation.service';
+import { HasPermissionDirective } from '../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-instance-manager',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, MatDividerModule, MatDialogModule, DatePipe],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, MatDividerModule, MatDialogModule, DatePipe, HasPermissionDirective],
   templateUrl: './instance-manager.component.html',
   styleUrls: ['./instance-manager.component.scss'],
 })

@@ -9,6 +9,7 @@ import { By } from '@angular/platform-browser';
 import { InstanceInfo } from '../../types/instance';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { PermissionsService } from '../../services/auth/permissions.service';
 
 describe('InstanceManagerComponent', () => {
   let component: InstanceManagerComponent;
@@ -60,6 +61,12 @@ describe('InstanceManagerComponent', () => {
       providers: [
         { provide: InstanceAllocationService, useValue: instanceAllocationServiceSpy },
         { provide: ProjectStateService, useValue: projectStateServiceMock },
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
       ],
     })
       .overrideComponent(InstanceManagerComponent, {
