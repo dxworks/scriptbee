@@ -9,12 +9,23 @@ import { AnalysisSelectorComponent } from '../../../../components/analysis-selec
 import { ProjectFileNode } from '../../../../types/project';
 import { ProjectStateService } from '../../../../services/projects/project-state.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SelectedScriptComponent } from './scripts-content/selected-script/selected-script.component';
+import { HasPermissionDirective } from '../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-analysis',
   templateUrl: './analysis.component.html',
   styleUrls: ['./analysis.component.scss'],
-  imports: [AngularSplitModule, ScriptsContentComponent, ScriptTreeComponent, AnalysisOutputComponent, AnalysisSelectorComponent, MatProgressBarModule],
+  imports: [
+    AngularSplitModule,
+    ScriptsContentComponent,
+    ScriptTreeComponent,
+    AnalysisOutputComponent,
+    AnalysisSelectorComponent,
+    MatProgressBarModule,
+    SelectedScriptComponent,
+    HasPermissionDirective,
+  ],
 })
 export class AnalysisComponent {
   selectedFileId = signal<string | null>(null);

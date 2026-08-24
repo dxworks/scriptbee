@@ -15,7 +15,7 @@
   @if (isDeleting()) {
     <mat-spinner diameter="32"></mat-spinner>
   } @else {
-    <button mat-flat-button color="warn" (click)="onDeleteClick()" [disabled]="runResource.isLoading() || isDeleting()">
+    <button *hasPermission="'analysis:delete'" mat-flat-button color="warn" (click)="onDeleteClick()" [disabled]="runResource.isLoading() || isDeleting()">
       <mat-icon>delete</mat-icon>
       Delete Analysis
     </button>
