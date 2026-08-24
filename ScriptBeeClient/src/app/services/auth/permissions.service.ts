@@ -18,6 +18,9 @@ export class PermissionsService {
     },
     stream: ({ params }) => this.projectService.getPermissions(params.projectId),
   });
+
+  readonly status = this.projectPermissionsResource.status;
+
   setProjectId(projectId: string) {
     this.projectId.set(projectId);
   }
