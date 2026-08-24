@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -13,6 +13,7 @@ import { ThemeService } from './services/common/theme.service';
 import { GatewayPluginsService } from './services/plugin/gateway-plugins.service';
 import { AsyncPipe } from '@angular/common';
 import { AuthService } from './services/auth/AuthService';
+import { HasPermissionDirective } from './directives/has-permission.directive';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ import { AuthService } from './services/auth/AuthService';
     RouterLink,
     ProjectSideNavListComponent,
     AsyncPipe,
+    HasPermissionDirective,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -36,7 +38,6 @@ export class AppComponent {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
   private gatewayPluginsService = inject(GatewayPluginsService);
-  private router = inject(Router);
 
   authService = inject(AuthService);
   themeService = inject(ThemeService);

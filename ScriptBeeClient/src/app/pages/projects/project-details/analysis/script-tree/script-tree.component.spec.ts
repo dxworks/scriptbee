@@ -11,6 +11,7 @@ import { ProjectContextService } from '../../../../../services/projects/project-
 import { ProjectStateService } from '../../../../../services/projects/project-state.service';
 import { ProjectLiveUpdatesService } from '../../../../../services/projects/project-live-updates.service';
 import { ScriptCreateEvent, ScriptDeletedEvent, ScriptUpdatedEvent } from '../../../../../types/live-updates';
+import { PermissionsService } from '../../../../../services/auth/permissions.service';
 
 const makeFileNode = (overrides: Partial<ProjectFileNode> = {}): ProjectFileNode => ({
   id: 'file-1',
@@ -83,6 +84,12 @@ describe('ScriptTreeComponent', () => {
         { provide: MatDialog, useValue: mocks.dialog },
         { provide: MatSnackBar, useValue: mocks.snackbar },
         { provide: ProjectLiveUpdatesService, useValue: mocks.liveUpdates },
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
       ],
     }).compileComponents();
 

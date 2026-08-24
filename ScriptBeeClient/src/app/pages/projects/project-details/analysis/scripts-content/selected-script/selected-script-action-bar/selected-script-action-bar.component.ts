@@ -13,12 +13,23 @@ import { AnalysisService } from '../../../../../../../services/analysis/analysis
 import { UserFolderPathService } from '../../../../../../../services/common/user-folder-path.service';
 
 import { RunScriptLoadingComponent } from '../run-script-loading/run-script-loading.component';
+import { HasPermissionDirective } from '../../../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-selected-script-action-bar',
   templateUrl: './selected-script-action-bar.component.html',
   styleUrls: ['./selected-script-action-bar.component.scss'],
-  imports: [MatButtonModule, MatIconModule, MatTooltip, CdkCopyToClipboard, SafeUrlPipe, FormsModule, SafeUrlPipe, RunScriptLoadingComponent],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatTooltip,
+    CdkCopyToClipboard,
+    SafeUrlPipe,
+    FormsModule,
+    SafeUrlPipe,
+    RunScriptLoadingComponent,
+    HasPermissionDirective,
+  ],
 })
 export class SelectedScriptActionBarComponent {
   projectId = input.required<string>();

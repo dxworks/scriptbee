@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { InstalledPlugin } from '../../../../../types/marketplace-plugin';
+import { PermissionsService } from '../../../../../services/auth/permissions.service';
 
 describe('PluginsMarketplaceDashboardComponent', () => {
   let component: PluginsMarketplaceDashboardComponent;
@@ -50,6 +51,14 @@ describe('PluginsMarketplaceDashboardComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [PluginsMarketplaceDashboardComponent],
+      providers: [
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
+      ],
     })
       .overrideComponent(PluginsMarketplaceDashboardComponent, {
         add: {

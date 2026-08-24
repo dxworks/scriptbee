@@ -13,6 +13,7 @@ import { ProjectContextGraphComponent } from '../../../../../../components/proje
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HasPermissionDirective } from '../../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-project-context',
@@ -27,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    HasPermissionDirective,
   ],
 })
 export class ProjectContextComponent {

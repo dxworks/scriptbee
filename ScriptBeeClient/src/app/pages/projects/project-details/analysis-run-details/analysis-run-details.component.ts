@@ -23,6 +23,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../../components/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProjectStateService } from '../../../../services/projects/project-state.service';
+import { HasPermissionDirective } from '../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-analysis-run-details',
@@ -44,6 +45,7 @@ import { ProjectStateService } from '../../../../services/projects/project-state
     RouterLink,
     MatDialogModule,
     MatSnackBarModule,
+    HasPermissionDirective,
   ],
   templateUrl: './analysis-run-details.component.html',
   styleUrls: ['./analysis-run-details.component.scss'],

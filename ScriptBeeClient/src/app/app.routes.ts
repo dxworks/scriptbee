@@ -20,7 +20,14 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent, canActivate: [loginGuard] },
   { path: 'projects', component: ProjectsPage, canActivate: [authGuard] },
-  { path: 'gateway-plugins', component: GatewayPluginsComponent, canActivate: [authGuard] },
+  {
+    path: 'gateway-plugins',
+    canActivate: [authGuard],
+    children: [
+      { path: '', component: GatewayPluginsComponent },
+      { path: ':pluginId', component: PluginDetailsComponent },
+    ],
+  },
   { path: 'create-project', component: CreateProjectPage, canActivate: [authGuard] },
   {
     path: 'projects/:id',

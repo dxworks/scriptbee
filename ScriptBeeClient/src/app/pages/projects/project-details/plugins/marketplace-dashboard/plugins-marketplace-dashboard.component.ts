@@ -19,6 +19,7 @@ import { of } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { InstallPluginFromUrlDialogComponent } from './install-plugin-from-url-dialog/install-plugin-from-url-dialog.component';
+import { HasPermissionDirective } from '../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-plugins-marketplace-dashboard',
@@ -39,6 +40,7 @@ import { InstallPluginFromUrlDialogComponent } from './install-plugin-from-url-d
     FormsModule,
     MatTooltipModule,
     MatDialogModule,
+    HasPermissionDirective,
   ],
 })
 export class PluginsMarketplaceDashboardComponent {

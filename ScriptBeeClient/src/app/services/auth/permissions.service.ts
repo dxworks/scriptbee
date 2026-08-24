@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ProjectService } from '../projects/project.service';
+import { Permission } from '../../types/permissions';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class PermissionsService {
     this.projectId.set(projectId);
   }
 
-  hasPermission(permission: string) {
+  hasPermission(permission: Permission) {
     return this.projectPermissionsResource.value()?.includes(permission) ?? false;
   }
 }

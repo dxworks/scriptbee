@@ -3,11 +3,16 @@
     <as-split-area size="65">
       <as-split direction="horizontal">
         <as-split-area size="25">
-          <app-script-tree [projectId]="projectId()!" [selectedFileId]="selectedFileId()" (fileSelected)="onFileSelected($event)" />
+          <app-script-tree
+            *hasPermission="'script:view'"
+            [projectId]="projectId()!"
+            [selectedFileId]="selectedFileId()"
+            (fileSelected)="onFileSelected($event)" />
         </as-split-area>
 
         <as-split-area size="75">
           <app-scripts-content
+            *hasPermission="'script:view'"
             [projectId]="projectId()!"
             [instanceId]="instanceId()!"
             [fileId]="selectedFileId()"
@@ -17,9 +22,9 @@
     </as-split-area>
 
     <as-split-area size="35">
-      <app-analysis-selector [projectId]="projectId()!" [(analysisId)]="analysisId" #selector />
+      <app-analysis-selector *hasPermission="'analysis:view'" [projectId]="projectId()!" [(analysisId)]="analysisId" #selector />
       @if (analysisId()) {
-        <app-analysis-output [projectId]="projectId()!" [analysisId]="analysisId()!" />
+        <app-analysis-output *hasPermission="'analysis:view'" [projectId]="projectId()!" [analysisId]="analysisId()!" />
       } @else {
         <div class="no-analysis-message">There are no results since no analysis was run yet</div>
       }

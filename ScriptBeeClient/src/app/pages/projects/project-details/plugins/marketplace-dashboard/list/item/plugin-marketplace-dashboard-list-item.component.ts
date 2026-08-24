@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { MarketplacePlugin } from '../../../../../../../types/marketplace-plugin';
 import { PluginService } from '../../../../../../../services/plugin/plugin.service';
 import { finalize } from 'rxjs';
+import { HasPermissionDirective } from '../../../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-plugin-marketplace-dashboard-list-item',
@@ -28,6 +29,7 @@ import { finalize } from 'rxjs';
     MatTooltipModule,
     MatBadgeModule,
     RouterModule,
+    HasPermissionDirective,
   ],
 })
 export class PluginMarketplaceDashboardListItemComponent {

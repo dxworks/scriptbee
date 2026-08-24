@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { By } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { PermissionsService } from '../../../../../../services/auth/permissions.service';
 
 describe('ProjectContextComponent', () => {
   let fixture: ComponentFixture<ProjectContextComponent>;
@@ -26,7 +27,17 @@ describe('ProjectContextComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ProjectContextComponent],
-      providers: [{ provide: ProjectContextService, useValue: projectContextService }, provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        { provide: ProjectContextService, useValue: projectContextService },
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProjectContextComponent);

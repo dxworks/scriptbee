@@ -2,7 +2,12 @@
   <button mat-icon-button aria-label="reload tree" matTooltip="Reload tree" (click)="onReloadTreeButtonClick()">
     <mat-icon>sync</mat-icon>
   </button>
-  <button mat-icon-button aria-label="create new script" matTooltip="Create new script" (click)="onCreateNewScriptButtonClick()">
+  <button
+    *hasPermission="'script:create'"
+    mat-icon-button
+    aria-label="create new script"
+    matTooltip="Create new script"
+    (click)="onCreateNewScriptButtonClick()">
     <mat-icon>note_add</mat-icon>
   </button>
 </div>
@@ -13,7 +18,7 @@
 
 <app-lazy-file-tree
   [fetchData]="fetchData"
-  [actions]="actions"
+  [actions]="actions()"
   [hasChildAccessor]="hasChildAccessor"
   [idAccessor]="idAccessor"
   [displayNameAccessor]="displayNameAccessor"

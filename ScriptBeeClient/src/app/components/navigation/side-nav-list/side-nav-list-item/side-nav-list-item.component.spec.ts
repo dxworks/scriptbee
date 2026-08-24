@@ -1,31 +1,46 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SideNavListItemComponent } from './side-nav-list-item.component';
 import { provideRouter } from '@angular/router';
+import { NavItem } from '../../navItem';
+import { PermissionsService } from '../../../../services/auth/permissions.service';
 
 describe('SideNavListItemComponent', () => {
   let fixture: ComponentFixture<SideNavListItemComponent>;
+  const mockHasPermission = vi.fn();
 
-  const NAV_ITEM = {
+  const NAV_ITEM: NavItem = {
     name: 'Parent',
     link: '/parent',
     icon: 'home',
+    permission: 'project:view',
   };
 
-  const NAV_ITEM_WITH_CHILDREN = {
+  const NAV_ITEM_WITH_CHILDREN: NavItem = {
     name: 'Parent',
     link: '/parent',
     icon: 'home',
     children: [
-      { name: 'Child 1', link: '/child-1', icon: 'star' },
-      { name: 'Child 2', link: '/child-2', icon: 'info' },
+      { name: 'Child 1', link: '/child-1', icon: 'star', permission: 'plugin:view' },
+      { name: 'Child 2', link: '/child-2', icon: 'info', permission: 'plugin:view' },
     ],
+    permission: 'project:view',
   };
 
   beforeEach(async () => {
+    mockHasPermission.mockReturnValue(true);
+
     await TestBed.configureTestingModule({
       imports: [SideNavListItemComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: mockHasPermission,
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SideNavListItemComponent);
@@ -100,6 +115,36 @@ describe('SideNavListItemComponent', () => {
     expect(children.length).toBe(2);
     expect(children[0].textContent).toContain('Child 1');
     expect(children[1].textContent).toContain('Child 2');
+  });
+
+  it('does not render the parent item when the parent permission is missing', () => {
+    mockHasPermission.mockImplementation((permission: string) => permission !== 'project:view');
+
+    fixture.componentRef.setInput('navItem', NAV_ITEM);
+    fixture.componentRef.setInput('isCollapsed', false);
+    fixture.detectChanges();
+
+    const allAnchors = getAllAnchors();
+
+    expect(allAnchors.length).toBe(0);
+    expect(fixture.nativeElement.textContent).not.toContain('Parent');
+  });
+
+  it('renders only the parent when the parent has permission but child does not', () => {
+    mockHasPermission.mockImplementation((permission: string) => permission === 'project:view');
+
+    fixture.componentRef.setInput('navItem', NAV_ITEM_WITH_CHILDREN);
+    fixture.componentRef.setInput('isCollapsed', false);
+    fixture.detectChanges();
+
+    clickMainItem();
+
+    const allAnchors = getAllAnchors();
+
+    expect(allAnchors.length).toBe(1);
+    expect(allAnchors[0].textContent).toContain('Parent');
+    expect(fixture.nativeElement.textContent).not.toContain('Child 1');
+    expect(fixture.nativeElement.textContent).not.toContain('Child 2');
   });
 
   it('closes nested menu when clicked twice', () => {

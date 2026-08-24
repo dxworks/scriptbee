@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, input, output, signal, viewChild } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
@@ -16,12 +16,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProjectLiveUpdatesService } from '../../../../../services/projects/project-live-updates.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PermissionsService } from '../../../../../services/auth/permissions.service';
+import { HasPermissionDirective } from '../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-script-tree',
   templateUrl: './script-tree.component.html',
   styleUrls: ['./script-tree.component.scss'],
-  imports: [MatIconButton, MatTooltip, MatIcon, LazyFileTreeComponent, LoadingProgressBarComponent],
+  imports: [MatIconButton, MatTooltip, MatIcon, LazyFileTreeComponent, LoadingProgressBarComponent, HasPermissionDirective],
 })
 export class ScriptTreeComponent {
   projectId = input.required<string>();
@@ -33,20 +35,29 @@ export class ScriptTreeComponent {
 
   lazyTree = viewChild.required(LazyFileTreeComponent<ProjectFileNode>);
 
-  actions: TreeAction<ProjectFileNode>[] = [
-    {
-      label: 'Delete',
-      icon: 'delete',
-      type: 'all',
-      callback: (node) => this.deleteNode(node.data),
-    },
-    {
-      label: 'Rename',
-      icon: 'edit',
-      type: 'file',
-      callback: (node) => this.renameFile(node.data),
-    },
-  ];
+  actions = computed<TreeAction<ProjectFileNode>[]>(() => {
+    const actions: TreeAction<ProjectFileNode>[] = [];
+
+    if (this.permissionsService.hasPermission('script:delete')) {
+      actions.push({
+        label: 'Delete',
+        icon: 'delete',
+        type: 'all',
+        callback: (node) => this.deleteNode(node.data),
+      });
+    }
+
+    if (this.permissionsService.hasPermission('script:edit')) {
+      actions.push({
+        label: 'Rename',
+        icon: 'edit',
+        type: 'file',
+        callback: (node) => this.renameFile(node.data),
+      });
+    }
+
+    return actions;
+  });
 
   hasChildAccessor = (node: TreeNode<ProjectFileNode>) => node.data.hasChildren;
   idAccessor = (node: TreeNode<ProjectFileNode>) => node.data.id;
@@ -57,6 +68,7 @@ export class ScriptTreeComponent {
   private projectLiveUpdatesService = inject(ProjectLiveUpdatesService);
   private dialog = inject(MatDialog);
   private snackbar = inject(MatSnackBar);
+  private readonly permissionsService = inject(PermissionsService);
 
   constructor() {
     this.projectLiveUpdatesService.scriptUpdated$.pipe(takeUntilDestroyed()).subscribe((event) => {

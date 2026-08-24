@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { UserFolderPathService } from '../../../../services/common/user-folder-path.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { convertError } from '../../../../utils/api';
+import { HasPermissionDirective } from '../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-project-settings',
@@ -38,6 +39,7 @@ import { convertError } from '../../../../utils/api';
     MatFormFieldModule,
     MatInputModule,
     MatDivider,
+    HasPermissionDirective,
   ],
   templateUrl: './project-settings.component.html',
   styleUrl: './project-settings.component.scss',

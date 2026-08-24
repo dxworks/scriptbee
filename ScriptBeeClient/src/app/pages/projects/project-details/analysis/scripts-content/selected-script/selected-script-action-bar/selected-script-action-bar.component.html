@@ -14,11 +14,11 @@
   <a mat-icon-button matTooltip="Open in VS Code" [href]="'vscode://file/' + absoluteSrcPath() | safeUrl">
     <mat-icon svgIcon="microsoft-visual-studio-code"></mat-icon>
   </a>
-  <button mat-icon-button matTooltip="Edit Parameters" (click)="onEditParametersButtonClick()">
+  <button *hasPermission="'script:edit'" mat-icon-button matTooltip="Edit Parameters" (click)="onEditParametersButtonClick()">
     <mat-icon>tune</mat-icon>
   </button>
 
-  <button mat-icon-button matTooltip="Run script" (click)="onRunScriptButtonClick()" [disabled]="isLoadingResults()">
+  <button *hasPermission="'analysis:run'" mat-icon-button matTooltip="Run script" (click)="onRunScriptButtonClick()" [disabled]="isLoadingResults()">
     @if (isLoadingResults()) {
       <mat-icon class="spinner">sync</mat-icon>
     } @else {

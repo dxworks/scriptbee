@@ -4,6 +4,8 @@ import { SideNavListComponent } from './side-nav-list.component';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { Component } from '@angular/core';
+import { NavItem } from '../navItem';
+import { PermissionsService } from '../../../services/auth/permissions.service';
 
 @Component({
   selector: 'test-entry-1',
@@ -34,6 +36,12 @@ describe('SideNavListComponent', () => {
             component: Entry2,
           },
         ]),
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
       ],
     }).compileComponents();
 
@@ -50,13 +58,15 @@ describe('SideNavListComponent', () => {
         link: '/entry-1',
         name: 'Entry 1',
         icon: 'model_training',
+        permission: 'model:view',
       },
       {
         link: '/entry-2',
         name: 'Entry 2',
         icon: 'query_stats',
+        permission: 'model:view',
       },
-    ]);
+    ] satisfies NavItem[]);
     fixture.componentRef.setInput('isCollapsed', false);
     fixture.detectChanges();
 
@@ -75,13 +85,15 @@ describe('SideNavListComponent', () => {
         link: '/entry-1',
         name: 'Entry 1',
         icon: 'model_training',
+        permission: 'model:view',
       },
       {
         link: '/entry-2',
         name: 'Entry 2',
         icon: 'query_stats',
+        permission: 'model:view',
       },
-    ]);
+    ] satisfies NavItem[]);
     fixture.componentRef.setInput('isCollapsed', true);
     fixture.detectChanges();
 
