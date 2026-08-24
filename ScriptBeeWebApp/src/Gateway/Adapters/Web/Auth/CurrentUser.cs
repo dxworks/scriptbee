@@ -6,9 +6,10 @@ using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Auth;
 
-public sealed class CurrentUser(UserId id)
+public sealed class CurrentUser(UserId id, List<UserGroup> groups)
 {
     public UserId Id => id;
+    public List<UserGroup> Groups => groups;
 
     public static async ValueTask<CurrentUser?> BindAsync(HttpContext context)
     {
@@ -22,7 +23,7 @@ public sealed class CurrentUser(UserId id)
 
         if (authConfig.IsDevelopment)
         {
-            return new CurrentUser(new UserId(""));
+            return new CurrentUser(new UserId(""), []);
         }
 
         if (user.Identity?.IsAuthenticated != true)
@@ -36,8 +37,9 @@ public sealed class CurrentUser(UserId id)
             useCase,
             context.RequestAborted
         );
+        var groups = ExtractGroupsFromClaims(user, authConfig);
 
-        return !userId.HasValue ? null : new CurrentUser(userId.Value);
+        return !userId.HasValue ? null : new CurrentUser(userId.Value, groups);
     }
 
     public static async Task<UserId?> ExtractUserIdFromClaims(

@@ -57,7 +57,9 @@ services:
       - AUTHENTICATION__REQUIREHTTPSMETADATA=false
       - AUTHENTICATION__SCOPE=openid profile email
       - AUTHENTICATION__EXTERNALAUTHORIZATIONURL=http://opa:8181/v1/data/scriptbee/auth/allow
-      - AUTHENTICATION__DEFAULTCREATORROLEURL=http://opa:8181/v1/data/scriptbee/auth/roles/default_creator_role
+      - AUTHENTICATION__PERMISSIONSURL=http://opa:8181/v1/data/scriptbee/auth/user_permissions
+      - AUTHENTICATION__ROLESURL=http://opa:8181/v1/data/scriptbee/auth/roles_and_permissions/roles
+      - AUTHENTICATION__DEFAULTCREATORROLEURL=http://opa:8181/v1/data/scriptbee/auth/roles_and_permissions/default_creator_role
       - SCRIPTBEE__ANALYSIS__DRIVER=docker
       - SCRIPTBEE__ANALYSIS__DOCKER__NETWORK=scriptbee-quickstart-full_default
       - SCRIPTBEE__ANALYSIS__DOCKER__DOCKERSOCKET=unix:///var/run/docker.sock

@@ -71,11 +71,23 @@
 - **Description:** The authorization URL for the external authorization service (e.g., OPA). This is used to validate
   user permissions.
 
+### `AUTHENTICATION__PERMISSIONSURL`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The authorization URL for permissions for a given user for a resource
+
 ### `AUTHENTICATION__DEFAULTCREATORROLEURL`
 
 - **Type:** `string`
 - **Default:** _None_
 - **Description:** The URL to obtain the role that is assigned to the user when creating a project
+
+### `AUTHENTICATION__ROLESURL`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The URL to obtain the role defintiions.
 
 ### `AUTHENTICATION__AUTHMODE`
 

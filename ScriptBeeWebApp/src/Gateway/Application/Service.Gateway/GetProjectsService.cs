@@ -6,7 +6,7 @@ using ScriptBee.UseCases.Gateway;
 
 namespace ScriptBee.Service.Gateway;
 
-public class GetProjectsService(IGetAllProjects getAllProjects, IGetProject getProject)
+public sealed class GetProjectsService(IGetAllProjects getAllProjects, IGetProject getProject)
     : IGetProjectsUseCase
 {
     public async Task<IEnumerable<ProjectDetails>> GetAllProjects(

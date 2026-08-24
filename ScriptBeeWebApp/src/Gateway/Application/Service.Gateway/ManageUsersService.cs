@@ -7,7 +7,7 @@ using ScriptBee.UseCases.Gateway;
 
 namespace ScriptBee.Service.Gateway;
 
-public class ManageUsersService(
+public sealed class ManageUsersService(
     IOptions<ScriptBeeUserManagementConfig> userManagementConfigOptions,
     IMemoryCache cache,
     IGetOrAddUser getOrAddUser

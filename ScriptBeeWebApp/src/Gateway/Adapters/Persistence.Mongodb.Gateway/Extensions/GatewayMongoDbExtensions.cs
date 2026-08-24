@@ -45,7 +45,7 @@ public static class GatewayMongoDbExtensions
         {
             return services
                 .AddMongoCollection<MongodbUser>(mongoDatabase, "Users")
-                .AddSingleton<UserManagementIndexes>()
+                .AddSingleton<IIndexCreator, UserManagementIndexes>()
                 .AddSingleton<IGetOrAddUser, UserManagementPersistenceAdapter>();
         }
     }

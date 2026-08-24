@@ -1,12 +1,81 @@
-package scriptbee.auth.roles
+package scriptbee.auth.roles_and_permissions
 
 import rego.v1
 
 roles := [
-    {"id": "Admin", "description": "User that can perform any action."},
     {"id": "Editor", "description": "User that can manage projects they belong to."},
     {"id": "Analyst", "description": "User that can perform analysis tasks on allowed projects."},
     {"id": "Viewer", "description": "User that can view only allowed projects and their analysis."}
 ]
 
 default_creator_role := "Editor"
+
+project_permissions := {
+    "Admin": {
+        "project:view",
+        "project:edit",
+        "project:delete",
+        "script:view",
+        "script:create",
+        "script:edit",
+        "script:delete",
+        "model:view",
+        "model:upload",
+        "model:load",
+        "model:link",
+        "model:clear",
+        "analysis:view",
+        "analysis:run",
+        "analysis:delete",
+        "plugin:view",
+        "plugin:install",
+        "plugin:uninstall",
+        "plugin:configure",
+        "token:create",
+        "token:delete",
+        "gateway_plugin:view",
+        "gateway_plugin:install",
+        "gateway_plugin:uninstall",
+        "gateway_plugin:configure"
+    },
+    "Editor": {
+        "project:view",
+        "project:edit",
+        "project:delete",
+        "script:view",
+        "script:create",
+        "script:edit",
+        "script:delete",
+        "model:view",
+        "model:upload",
+        "model:load",
+        "model:link",
+        "model:clear",
+        "analysis:view",
+        "analysis:run",
+        "analysis:delete",
+        "plugin:view",
+        "plugin:install",
+        "plugin:uninstall",
+        "plugin:configure",
+        "token:create",
+        "token:delete"
+    },
+    "Analyst": {
+        "project:view",
+        "script:view",
+        "model:view",
+        "model:upload",
+        "model:load",
+        "model:link",
+        "model:clear",
+        "analysis:view",
+        "analysis:run",
+        "plugin:view"
+    },
+    "Viewer": {
+        "project:view",
+        "script:view",
+        "analysis:view"
+    }
+}

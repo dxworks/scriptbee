@@ -12,6 +12,8 @@ public class AuthenticationConfig
     public string? UserIdClaim { get; init; }
     public string? GroupsClaim { get; init; }
     public string? ExternalAuthorizationUrl { get; init; }
+    public string? PermissionsUrl { get; init; }
+    public string? RolesUrl { get; init; }
     public string? DefaultCreatorRoleUrl { get; init; }
 
     public bool IsDevelopment =>

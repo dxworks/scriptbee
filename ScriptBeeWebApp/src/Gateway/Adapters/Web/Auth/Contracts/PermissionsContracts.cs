@@ -2,26 +2,23 @@ using System.Text.Json.Serialization;
 
 namespace ScriptBee.Web.Auth.Contracts;
 
-public class ExternalAuthorizationRequest
+public class PermissionsRequest
 {
     [JsonPropertyName("input")]
-    public required ExternalAuthorizationRequestInput Input { get; init; }
+    public required PermissionsRequestInput Input { get; init; }
 }
 
-public class ExternalAuthorizationRequestInput
+public class PermissionsRequestInput
 {
     [JsonPropertyName("subject")]
     public required ExternalAuthorizationRequestSubject Subject { get; init; }
-
-    [JsonPropertyName("action")]
-    public required string Action { get; init; }
 
     [JsonPropertyName("resource")]
     public required ExternalAuthorizationResource Resource { get; init; }
 }
 
-public class ExternalAuthorizationResponse
+public class PermissionsResponse
 {
     [JsonPropertyName("result")]
-    public required bool Result { get; init; }
+    public required List<string> Permissions { get; init; }
 }
