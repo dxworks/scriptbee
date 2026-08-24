@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ScriptBee.Persistence.Mongodb;
 
 namespace ScriptBee.Tests.Common;
 
@@ -27,6 +28,8 @@ public class TestWebApplicationFactory<TStartup>(
         {
             services.RemoveAll<IAntiforgery>();
             services.AddSingleton<IAntiforgery, NoOpAntiforgery>();
+
+            services.RemoveAll<IIndexCreator>();
         });
         return base.CreateHost(builder);
     }

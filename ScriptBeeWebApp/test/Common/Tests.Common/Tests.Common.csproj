@@ -11,5 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Common\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\src\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
   </ItemGroup>
 </Project>
