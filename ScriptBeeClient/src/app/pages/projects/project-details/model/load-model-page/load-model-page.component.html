@@ -1,7 +1,7 @@
 @if (instanceId()) {
-  <app-load-models [project]="project()" [instanceId]="instanceId()!"></app-load-models>
+  <app-load-models *hasPermission="'model:load'" [project]="project()" [instanceId]="instanceId()!"></app-load-models>
 
   <mat-divider />
 
-  <app-link-models [projectId]="project().id" [instanceId]="instanceId()!"></app-link-models>
+  <app-link-models *hasPermission="'model:link'" [projectId]="project().id" [instanceId]="instanceId()!"></app-link-models>
 }

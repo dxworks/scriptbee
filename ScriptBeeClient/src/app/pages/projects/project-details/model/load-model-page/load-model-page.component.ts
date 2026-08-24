@@ -3,10 +3,11 @@ import { MatDivider } from '@angular/material/list';
 import { ProjectStateService } from '../../../../../services/projects/project-state.service';
 import { LoadModelsComponent } from './load-models/load-models.component';
 import { LinkModelsComponent } from './link-models/link-models.component';
+import { HasPermissionDirective } from '../../../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-load-model-page',
-  imports: [MatDivider, LoadModelsComponent, LinkModelsComponent],
+  imports: [MatDivider, LoadModelsComponent, LinkModelsComponent, HasPermissionDirective],
   templateUrl: './load-model-page.component.html',
   styleUrl: './load-model-page.component.scss',
 })

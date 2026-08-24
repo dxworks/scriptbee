@@ -18,11 +18,22 @@
 
     <span class="flex-spacer"></span>
 
-    <button mat-button (click)="onReloadModelsClick()" [disabled]="isReloadContextLoading()" matTooltip="Reload all models for this instance">
+    <button
+      *hasPermission="'model:load'"
+      mat-button
+      (click)="onReloadModelsClick()"
+      [disabled]="isReloadContextLoading()"
+      matTooltip="Reload all models for this instance">
       <mat-icon>refresh</mat-icon>
       Reload Models
     </button>
-    <button mat-button color="warn" (click)="onClearContextButtonClick()" [disabled]="isClearContextLoading()" matTooltip="Clear all loaded models">
+    <button
+      *hasPermission="'model:clear'"
+      mat-button
+      color="warn"
+      (click)="onClearContextButtonClick()"
+      [disabled]="isClearContextLoading()"
+      matTooltip="Clear all loaded models">
       <mat-icon>delete</mat-icon>
       Clear Context
     </button>
