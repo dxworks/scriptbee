@@ -136,6 +136,35 @@
         }
       }
     },
+    "/api/projects/{projectId}/permissions": {
+      "get": {
+        "tags": ["Projects", "Permissions"],
+        "summary": "Get project permissions",
+        "description": "Get all the permissions for the user associated for the project.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPermissionsForProjectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/scripts": {
       "post": {
         "tags": ["Scripts"],
@@ -2797,6 +2826,21 @@
           }
         }
       },
+      "GetUserPermissionsForProjectResponse": {
+        "required": ["role", "permissions"],
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": ["null", "string"]
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "HttpValidationProblemDetails": {
         "type": "object",
         "properties": {
@@ -3435,6 +3479,9 @@
   "tags": [
     {
       "name": "Projects"
+    },
+    {
+      "name": "Permissions"
     },
     {
       "name": "Scripts"

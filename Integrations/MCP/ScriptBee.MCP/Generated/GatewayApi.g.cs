@@ -84,6 +84,16 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Get("/api/projects/{projectId}")]
         Task<ProjectDetails> ProjectsGet(string projectId, CancellationToken cancellationToken = default);
 
+        /// <summary>Get project permissions</summary>
+        /// <remarks>Get all the permissions for the user associated for the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/projects/{projectId}/permissions")]
+        Task<GetUserPermissionsForProjectResponse> Permissions(string projectId, CancellationToken cancellationToken = default);
+
         /// <summary>Create a new script</summary>
         /// <remarks>Creates a new script within the specified project.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -1793,6 +1803,28 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
         [JsonPropertyName("data")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<ScriptData> Data { get; set; } = new System.Collections.ObjectModel.Collection<ScriptData>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetUserPermissionsForProjectResponse
+    {
+
+        [JsonPropertyName("role")]
+        public string Role { get; set; }
+
+        [JsonPropertyName("permissions")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<string> Permissions { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
         private IDictionary<string, object> _additionalProperties;
 

@@ -82,6 +82,74 @@ The response is expected to be in the format:
 }
 ```
 
+### Permissions Url
+
+See [PermissionsUrl Config](./configuration/gateway_configuration.md#authentication__permissionsurl)
+for more details
+
+#### Request
+
+POST request with body example:
+
+```json
+{
+  "input": {
+    "subject": {
+      "user_id": "user-123",
+      "groups": []
+    },
+    "resource": {
+      "type": "project",
+      "id": "project-123",
+      "role": "Editor"
+    }
+  }
+}
+```
+
+#### Response
+
+The response is expected to be in the format:
+
+```json
+{
+  "result": ["project:view", "project:edit", "project:delete"]
+}
+```
+
+### Roles Url
+
+See [RolesUrl Config](./configuration/gateway_configuration.md#authentication__rolesurl) for more details
+
+#### Request
+
+A GET request
+
+#### Response
+
+The response is expected to be in the format:
+
+```json
+{
+  "result": [
+    {
+      "id": "Editor",
+      "description": "User that can manage projects they belong to."
+    },
+    {
+      "id": "Analyst",
+      "description": "User that can perform analysis tasks on allowed projects."
+    },
+    {
+      "id": "Viewer",
+      "description": "User that can view only allowed projects and their analysis."
+    }
+  ]
+}
+```
+
+### Default Creator Role Url
+
 #### Request
 
 See [DefaultCreatorRoleUrl Config](./configuration/gateway_configuration.md#authentication__defaultcreatorroleurl)

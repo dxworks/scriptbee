@@ -59,6 +59,7 @@ public sealed class ExternalAuthorizationContextProvider(
         CancellationToken cancellationToken
     )
     {
+        // TODO: should cache this mongo query
         var resourceRole = await getResourceRole.GetRole(
             userId,
             groups,

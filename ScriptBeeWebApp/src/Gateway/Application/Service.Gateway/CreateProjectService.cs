@@ -10,7 +10,7 @@ using ScriptBee.UseCases.Gateway;
 
 namespace ScriptBee.Service.Gateway;
 
-public class CreateProjectService(
+public sealed class CreateProjectService(
     ICreateProject createProject,
     IDateTimeProvider dateTimeProvider,
     IGetDefaultCreatorRole getDefaultCreatorRole,

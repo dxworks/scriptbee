@@ -78,14 +78,7 @@ public static class AuthenticationExtensions
             }
 
             services.AddHttpContextAccessor();
-            services.AddHttpClient(
-                AuthorizeExternally.ClientName,
-                client => client.BaseAddress = new Uri(GetExternalAuthorizationUrl(config))
-            );
-            services.AddHttpClient(
-                GetDefaultCreatorRole.ClientName,
-                client => client.BaseAddress = new Uri(GetDefaultCreatorRoleUrl(config))
-            );
+            services.AddHttpClientsFromConfigUrl(config);
 
             if (config.IsDevelopment)
             {
@@ -101,35 +94,72 @@ public static class AuthenticationExtensions
                     IExternalAuthorizationContextProvider,
                     ExternalAuthorizationContextProvider
                 >()
-                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>();
+                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>()
+                .AddSingleton<IGetProjectPermissions, GetProjectPermissions>();
+        }
+
+        private void AddHttpClientsFromConfigUrl(AuthenticationConfig config)
+        {
+            services.AddHttpClient(
+                AuthorizeExternally.ClientName,
+                client =>
+                    client.BaseAddress = new Uri(
+                        GetUrlFromConfig(
+                            config,
+                            c => c.ExternalAuthorizationUrl,
+                            nameof(config.ExternalAuthorizationUrl)
+                        )
+                    )
+            );
+            services.AddHttpClient(
+                GetDefaultCreatorRole.ClientName,
+                client =>
+                    client.BaseAddress = new Uri(
+                        GetUrlFromConfig(
+                            config,
+                            c => c.DefaultCreatorRoleUrl,
+                            nameof(config.DefaultCreatorRoleUrl)
+                        )
+                    )
+            );
+            services.AddHttpClient(
+                GetProjectPermissions.ClientName,
+                client =>
+                    client.BaseAddress = new Uri(
+                        GetUrlFromConfig(
+                            config,
+                            c => c.PermissionsUrl,
+                            nameof(config.PermissionsUrl)
+                        )
+                    )
+            );
+            services.AddHttpClient(
+                "GetRoles",
+                client =>
+                    client.BaseAddress = new Uri(
+                        GetUrlFromConfig(config, c => c.RolesUrl, nameof(config.RolesUrl))
+                    )
+            );
         }
     }
 
-    private static string GetExternalAuthorizationUrl(AuthenticationConfig config)
+    private static string GetUrlFromConfig(
+        AuthenticationConfig config,
+        Func<AuthenticationConfig, string?> func,
+        string nameOfProperty
+    )
     {
         if (config.IsDevelopment)
         {
             return "";
         }
 
-        return string.IsNullOrEmpty(config.ExternalAuthorizationUrl)
-            ? throw new InvalidOperationException(
-                $"{nameof(config.ExternalAuthorizationUrl)} is not configured and is mandatory. Please set {AuthenticationConfigSectionName}:{nameof(config.ExternalAuthorizationUrl)} in your configuration."
-            )
-            : config.ExternalAuthorizationUrl;
-    }
+        var url = func(config);
 
-    private static string GetDefaultCreatorRoleUrl(AuthenticationConfig config)
-    {
-        if (config.IsDevelopment)
-        {
-            return "";
-        }
-
-        return string.IsNullOrEmpty(config.DefaultCreatorRoleUrl)
+        return string.IsNullOrEmpty(url)
             ? throw new InvalidOperationException(
-                $"{nameof(config.DefaultCreatorRoleUrl)} is not configured and is mandatory. Please set {AuthenticationConfigSectionName}:{nameof(config.DefaultCreatorRoleUrl)} in your configuration."
+                $"{nameof(nameOfProperty)} is not configured and is mandatory. Please set {AuthenticationConfigSectionName}:{nameOfProperty} in your configuration."
             )
-            : config.DefaultCreatorRoleUrl;
+            : url;
     }
 }

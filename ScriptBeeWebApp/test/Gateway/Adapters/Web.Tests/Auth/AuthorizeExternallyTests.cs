@@ -68,6 +68,7 @@ public class AuthorizeExternallyTests : IDisposable
         );
 
         // Assert
+        Assert.True(result);
         var item = Assert.Single(_server.LogEntries);
         Assert.Equal("/api/authorize", item.RequestMessage?.Path);
         var body = _server.LogEntries[0].RequestMessage?.Body!;
@@ -90,6 +91,5 @@ public class AuthorizeExternallyTests : IDisposable
                 }
                 """
             );
-        Assert.True(result);
     }
 }
