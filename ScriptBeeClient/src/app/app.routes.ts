@@ -78,9 +78,10 @@ export const routes: Routes = [
         ],
         canActivate: [permissionGuard('plugin:view')],
       },
-      { path: '**', redirectTo: 'model' },
+      { path: '**', redirectTo: 'analysis' },
     ],
   },
+  { path: '**', redirectTo: '' },
 ];
 
 export const withErrorNavigation = withNavigationErrorHandler((error) => {

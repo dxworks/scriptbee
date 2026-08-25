@@ -1,4 +1,5 @@
 export type Permission =
+  | 'project:create'
   | 'project:view'
   | 'project:edit'
   | 'project:delete'

@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
+import { AuthService } from '../auth/AuthService';
 import { ClientIdService } from '../common/client-id.service';
 import { AnalysisStatusChangedEvent, ScriptCreateEvent, ScriptDeletedEvent, ScriptUpdatedEvent } from '../../types/live-updates';
 
@@ -11,6 +12,7 @@ export class ProjectLiveUpdatesService {
   private hubConnection: signalR.HubConnection | null = null;
   private currentProjectId: string | null = null;
   private clientIdService = inject(ClientIdService);
+  private authService = inject(AuthService);
 
   public readonly scriptCreated$ = new Subject<ScriptCreateEvent>();
   public readonly scriptUpdated$ = new Subject<ScriptUpdatedEvent>();
@@ -27,7 +29,15 @@ export class ProjectLiveUpdatesService {
     }
 
     this.currentProjectId = projectId;
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl('/api/projectLiveUpdates').withAutomaticReconnect().build();
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('/api/projectLiveUpdates', {
+        accessTokenFactory: async () => {
+          const token = await firstValueFrom(this.authService.accessToken$);
+          return token ?? '';
+        },
+      })
+      .withAutomaticReconnect()
+      .build();
 
     this.hubConnection.on('ScriptCreated', (event: ScriptCreateEvent) => {
       if (event.clientId !== this.clientIdService.clientId) {
