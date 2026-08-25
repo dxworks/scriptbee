@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -24,11 +25,14 @@ public class GetProjectInstancesEndpoint : IEndpointDefinition
             .WithSummary("Get all project instances")
             .WithDescription(
                 "Retrieves a list of all instances associated with the specified project."
-            );
+            )
+            .RequireAction("instance:view");
+
         app.MapGet("/api/projects/{projectId}/instances/{instanceId}", GetInstance)
             .WithTags("Instances")
             .WithSummary("Get project instance by ID")
-            .WithDescription("Retrieves detailed information about a specific project instance.");
+            .WithDescription("Retrieves detailed information about a specific project instance.")
+            .RequireAction("instance:view");
     }
 
     private static async Task<Ok<WebGetProjectInstancesListResponse>> GetAllInstances(

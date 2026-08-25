@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Project;
 using ScriptBee.Service.Gateway.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -28,13 +29,16 @@ public class GetInstalledPluginsEndpoint : IEndpointDefinition
             .WithSummary("Get installed plugins for a project")
             .WithDescription(
                 "Retrieves a list of all plugins currently installed in the specified project."
-            );
+            )
+            .RequireAction("plugin:view");
+
         app.MapGet("/api/projects/{projectId}/plugins/{pluginId}", GetPlugin)
             .WithTags("Plugins")
             .WithSummary("Get installed plugin details")
             .WithDescription(
                 "Retrieves detailed information about a specific plugin installed in a project."
-            );
+            )
+            .RequireAction("plugin:view");
     }
 
     private static async Task<

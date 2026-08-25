@@ -57,7 +57,7 @@ Or
       "user_id": "user-123",
       "groups": ["admins"]
     },
-    "action": "gateway_plugins:view",
+    "action": "gateway_plugin:management",
     "resource": {
       "type": "global"
     }
@@ -181,13 +181,12 @@ Detailed here are the possible roles a user can have in ScriptBee.
 > perform. The roles can be defined in the OPA server and assigned to users. The permissions are used to determine what
 > actions a user can perform in ScriptBee.
 
-## Permissions
+## Project Level Permissions
 
 ### Project
 
 | Permission     | Admin   | Editor  | Analyst | Viewer  |
 | -------------- | ------- | ------- | ------- | ------- |
-| project:create | &check; | &check; | &check; | &check; |
 | project:view   | &check; | &check; | &check; | &check; |
 | project:edit   | &check; | &check; |         |         |
 | project:delete | &check; | &check; |         |         |
@@ -211,6 +210,14 @@ Detailed here are the possible roles a user can have in ScriptBee.
 | model:link   | &check; | &check; | &check; |        |
 | model:clear  | &check; | &check; | &check; |        |
 
+### Instance
+
+| Permission          | Admin   | Editor  | Analyst | Viewer |
+| ------------------- | ------- | ------- | ------- | ------ |
+| instance:view       | &check; | &check; | &check; |        |
+| instance:allocate   | &check; | &check; | &check; |        |
+| instance:deallocate | &check; | &check; | &check; |        |
+
 ### Analysis
 
 | Permission      | Admin   | Editor  | Analyst | Viewer  |
@@ -221,16 +228,13 @@ Detailed here are the possible roles a user can have in ScriptBee.
 
 ### Plugins
 
-| Permission               | Admin   | Editor  | Analyst | Viewer |
-| ------------------------ | ------- | ------- | ------- | ------ |
-| plugin:view              | &check; | &check; | &check; |        |
-| plugin:install           | &check; | &check; |         |        |
-| plugin:uninstall         | &check; | &check; |         |        |
-| plugin:configure         | &check; | &check; |         |        |
-| gateway_plugin:view      | &check; |         |         |        |
-| gateway_plugin:install   | &check; |         |         |        |
-| gateway_plugin:uninstall | &check; |         |         |        |
-| gateway_plugin:configure | &check; |         |         |        |
+| Permission                | Admin   | Editor  | Analyst | Viewer |
+| ------------------------- | ------- | ------- | ------- | ------ |
+| plugin:view               | &check; | &check; | &check; |        |
+| plugin:install            | &check; | &check; |         |        |
+| plugin:uninstall          | &check; | &check; |         |        |
+| plugin:configure          | &check; | &check; |         |        |
+| gateway_plugin:management | &check; |         |         |        |
 
 ### Token management
 
@@ -238,3 +242,10 @@ Detailed here are the possible roles a user can have in ScriptBee.
 | ------------ | ------- | ------- | ------- | ------ |
 | token:create | &check; | &check; |         |        |
 | token:delete | &check; | &check; |         |        |
+
+## Global Level Permissions
+
+| Permission                | Admin   | Regular User |
+| ------------------------- | ------- | ------------ |
+| project:create            | &check; | &check;      |
+| gateway_plugin:management | &check; |              |

@@ -2,5 +2,5 @@
   "authMode": "Development",
   "authority": "http://localhost:8080/default",
   "clientId": "test-client-id",
-  "scope": "openid profile email"
+  "scope": "openid profile"
 }

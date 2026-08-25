@@ -4,6 +4,7 @@ using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Instances.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -25,7 +26,8 @@ public class AddProjectInstanceEndpoint : IEndpointDefinition
             .WithSummary("Add a new project instance")
             .WithDescription(
                 "Allocates and adds a new execution instance for the specified project."
-            );
+            )
+            .RequireAction("instance:allocate");
     }
 
     private static async Task<AllocateInstanceType> AllocateInstance(

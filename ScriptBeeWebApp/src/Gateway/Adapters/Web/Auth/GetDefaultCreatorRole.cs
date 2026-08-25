@@ -21,11 +21,3 @@ public sealed class GetDefaultCreatorRole(IHttpClientFactory httpClientFactory)
         return new UserRole(response!.Result);
     }
 }
-
-public sealed class GetDevAuthCreatorRole : IGetDefaultCreatorRole
-{
-    public Task<UserRole> GetRole(CancellationToken cancellationToken)
-    {
-        return Task.FromResult(new UserRole("DevAdmin"));
-    }
-}

@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Context;
 using ScriptBee.UseCases.Gateway.Context;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
@@ -23,7 +24,8 @@ public class GetLoadersEndpoint : IEndpointDefinition
             .WithSummary("Get available loaders for an instance")
             .WithDescription(
                 "Retrieves a list of all loaders available for the specified project instance."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<Ok<WebGetLoadersResponse>> GetInstanceLoaders(

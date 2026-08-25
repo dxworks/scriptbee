@@ -6,6 +6,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Context;
 using ScriptBee.UseCases.Gateway.Context;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -26,7 +27,8 @@ public class ProjectContextLinkEndpoint : IEndpointDefinition
             .WithDescription(
                 "Links the data context of the specified project instance using the provided linkers."
             )
-            .WithRequestValidation<WebLinkContextCommand>();
+            .WithRequestValidation<WebLinkContextCommand>()
+            .RequireAction("model:link");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> LinkContext(

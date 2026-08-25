@@ -41,7 +41,6 @@ builder
     })
     .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
-    .AddAuthenticationConfig(builder.Configuration)
     .AddMongoDb(mongoConnectionString)
     .AddCommonServices()
     .AddArtifactFileAdapters()
@@ -51,7 +50,8 @@ builder
     .AddUserManagementServices("ScriptBee:UserManagement")
     .AddInstanceManagementServices("ScriptBee:Instance")
     .AddPluginServices("ScriptBee:Plugins")
-    .AddProjectLiveUpdates();
+    .AddProjectLiveUpdates()
+    .AddAuthenticationConfig(builder.Configuration);
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),

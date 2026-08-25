@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
@@ -15,28 +16,36 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
         app.MapGet("/api/plugins/gateway", GetGatewayPlugins)
             .WithTags("Plugins")
             .WithSummary("Get gateway plugins")
-            .WithDescription("Retrieves a list of all plugins installed at the gateway level.");
+            .WithDescription("Retrieves a list of all plugins installed at the gateway level.")
+            .RequireAction("gateway_plugin:management");
+
         app.MapPost("/api/plugins/gateway", InstallGatewayPlugin)
             .WithTags("Plugins")
             .WithSummary("Install gateway plugin")
-            .WithDescription("Installs a new plugin at the gateway level.");
+            .WithDescription("Installs a new plugin at the gateway level.")
+            .RequireAction("gateway_plugin:management");
+
         app.MapDelete("/api/plugins/gateway/{pluginId}", UninstallGatewayPlugin)
             .WithTags("Plugins")
             .WithSummary("Uninstall gateway plugin")
-            .WithDescription("Uninstalls a plugin from the gateway level.");
+            .WithDescription("Uninstalls a plugin from the gateway level.")
+            .RequireAction("gateway_plugin:management");
+
         app.MapGet("/api/plugins/gateway/ui/manifest", GetUiPluginsManifest)
             .WithTags("Plugins")
             .WithSummary("Get the manifest for UI plugins")
             .WithDescription(
                 "Retrieves a map with the installed UI plugin remotes and the associated remoteEntry.js file."
             );
+
         app.MapGet(
                 "/api/plugins/gateway/ui/files/{pluginId}/{version}/{*filePath}",
                 ServeUiPluginFile
             )
             .WithTags("Plugins")
             .WithSummary("Serve UI plugin file")
-            .WithDescription("Serves static files associated with UI plugins.");
+            .WithDescription("Serves static files associated with UI plugins.")
+            .RequireAuthorization();
     }
 
     private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(

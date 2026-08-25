@@ -7,6 +7,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -26,11 +27,14 @@ public class GetAnalysisStatusEndpoint : IEndpointDefinition
             .WithSummary("Get all analyses for a project")
             .WithDescription(
                 "Retrieves a list of all analyses performed within the specified project."
-            );
+            )
+            .RequireAction("analysis:view");
+
         app.MapGet("/api/projects/{projectId}/analyses/{analysisId}", GetAnalysisById)
             .WithTags("Analysis")
             .WithSummary("Get analysis status by ID")
-            .WithDescription("Retrieves the current status and details of a specific analysis.");
+            .WithDescription("Retrieves the current status and details of a specific analysis.")
+            .RequireAction("analysis:view");
     }
 
     private static async Task<

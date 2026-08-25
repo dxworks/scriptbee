@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Context;
 using ScriptBee.UseCases.Gateway.Context;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Context;
@@ -26,7 +27,8 @@ public class ProjectContextReloadEndpoint : IEndpointDefinition
             .WithSummary("Reload instance context")
             .WithDescription(
                 "Reloads the data context for the specified project instance, refreshing all linked and loaded data."
-            );
+            )
+            .RequireAction("model:load");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ReloadContext(

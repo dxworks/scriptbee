@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using ScriptBee.Ports.Permissions;
 using ScriptBee.Web.Auth;
+using ScriptBee.Web.Auth.Dev;
 using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Extensions;
@@ -82,11 +83,16 @@ public static class AuthenticationExtensions
 
             if (config.IsDevelopment)
             {
-                services.AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>();
+                services
+                    .AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>()
+                    .AddSingleton<IGetProjectPermissions, GetDevProjectPermissions>()
+                    .AddSingleton<IGetResourceRole, GetDevResourceRole>();
             }
             else
             {
-                services.AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>();
+                services
+                    .AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>()
+                    .AddSingleton<IGetProjectPermissions, GetProjectPermissions>();
             }
 
             return services
@@ -94,8 +100,7 @@ public static class AuthenticationExtensions
                     IExternalAuthorizationContextProvider,
                     ExternalAuthorizationContextProvider
                 >()
-                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>()
-                .AddSingleton<IGetProjectPermissions, GetProjectPermissions>();
+                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>();
         }
 
         private void AddHttpClientsFromConfigUrl(AuthenticationConfig config)

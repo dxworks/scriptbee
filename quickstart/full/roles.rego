@@ -10,6 +10,10 @@ roles := [
 
 default_creator_role := "Editor"
 
+plugin_marketplace_permissions := {
+   "plugin:view"
+}
+
 project_permissions := {
     "Admin": {
         "project:view",
@@ -24,6 +28,9 @@ project_permissions := {
         "model:load",
         "model:link",
         "model:clear",
+        "instance:view",
+        "instance:allocate",
+        "instance:deallocate",
         "analysis:view",
         "analysis:run",
         "analysis:delete",
@@ -32,11 +39,7 @@ project_permissions := {
         "plugin:uninstall",
         "plugin:configure",
         "token:create",
-        "token:delete",
-        "gateway_plugin:view",
-        "gateway_plugin:install",
-        "gateway_plugin:uninstall",
-        "gateway_plugin:configure"
+        "token:delete"
     },
     "Editor": {
         "project:view",
@@ -51,6 +54,9 @@ project_permissions := {
         "model:load",
         "model:link",
         "model:clear",
+        "instance:view",
+        "instance:allocate",
+        "instance:deallocate",
         "analysis:view",
         "analysis:run",
         "analysis:delete",
@@ -69,6 +75,9 @@ project_permissions := {
         "model:load",
         "model:link",
         "model:clear",
+        "instance:view",
+        "instance:allocate",
+        "instance:deallocate",
         "analysis:view",
         "analysis:run",
         "plugin:view"

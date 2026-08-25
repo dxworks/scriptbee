@@ -23,7 +23,8 @@ public class CreateProjectEndpoint : IEndpointDefinition
             .WithTags("Projects")
             .WithSummary("Create a new project")
             .WithDescription("Creates a new project with the specified name and description.")
-            .WithRequestValidation<WebCreateProjectCommand>();
+            .WithRequestValidation<WebCreateProjectCommand>()
+            .RequireAction("project:create");
     }
 
     private static async Task<

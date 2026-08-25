@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Gateway.ProjectStructure;
 using ScriptBee.UseCases.Gateway.ProjectStructure;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -22,17 +23,22 @@ public class GetProjectScriptsEndpoint : IEndpointDefinition
         app.MapGet("/api/projects/{projectId}/scripts", GetProjectScripts)
             .WithTags("Scripts")
             .WithSummary("Get all project scripts")
-            .WithDescription("Retrieves a list of all scripts available in the specified project.");
+            .WithDescription("Retrieves a list of all scripts available in the specified project.")
+            .RequireAction("script:view");
+
         app.MapGet("/api/projects/{projectId}/scripts/{scriptId}", GetProjectScriptById)
             .WithTags("Scripts")
             .WithSummary("Get project script by ID")
-            .WithDescription("Retrieves metadata about a specific project script.");
+            .WithDescription("Retrieves metadata about a specific project script.")
+            .RequireAction("script:view");
+
         app.MapGet("/api/projects/{projectId}/scripts/{scriptId}/content", GetProjectScriptsContent)
             .WithTags("Scripts")
             .WithName("GetScriptContent")
             .WithSummary("Get project script content")
             .WithDescription("Retrieves the actual code content of a project script.")
-            .Produces<string>(200, "text/plain");
+            .Produces<string>(200, "text/plain")
+            .RequireAction("script:view");
     }
 
     private static async Task<Ok<WebGetScriptDataResponse>> GetProjectScripts(

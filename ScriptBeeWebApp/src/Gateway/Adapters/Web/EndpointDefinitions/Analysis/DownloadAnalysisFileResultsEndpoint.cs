@@ -6,6 +6,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Analysis;
@@ -30,7 +31,8 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
             )
             .WithTags("Analysis")
             .WithSummary("Download individual analysis result file")
-            .WithDescription("Downloads a specific file generated as a result of an analysis.");
+            .WithDescription("Downloads a specific file generated as a result of an analysis.")
+            .RequireAction("analysis:view");
 
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/results/files/download",
@@ -40,7 +42,8 @@ public class DownloadAnalysisFileResultsEndpoint : IEndpointDefinition
             .WithSummary("Download all analysis result files")
             .WithDescription(
                 "Downloads a ZIP archive containing all files generated as a result of an analysis."
-            );
+            )
+            .RequireAction("analysis:view");
     }
 
     private static async Task<DownloadResult> DownloadIndividualFile(

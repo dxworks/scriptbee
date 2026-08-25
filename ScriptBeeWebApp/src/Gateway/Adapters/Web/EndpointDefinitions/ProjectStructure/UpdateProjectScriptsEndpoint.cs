@@ -7,6 +7,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Gateway.ProjectStructure;
 using ScriptBee.UseCases.Gateway.ProjectStructure;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -27,7 +28,8 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
             .WithDescription(
                 "Updates the metadata (name, parameters) of a specific project script."
             )
-            .WithRequestValidation<WebUpdateScriptCommand>();
+            .WithRequestValidation<WebUpdateScriptCommand>()
+            .RequireAction("script:edit");
 
         app.MapPut(
                 "/api/projects/{projectId}/scripts/{scriptId}/content",
@@ -36,7 +38,8 @@ public class UpdateProjectScriptsEndpoint : IEndpointDefinition
             .Accepts<string>(MediaTypeNames.Text.Plain)
             .WithTags("Scripts")
             .WithSummary("Update project script content")
-            .WithDescription("Updates the actual code content of a specific project script.");
+            .WithDescription("Updates the actual code content of a specific project script.")
+            .RequireAction("script:edit");
     }
 
     private static async Task<

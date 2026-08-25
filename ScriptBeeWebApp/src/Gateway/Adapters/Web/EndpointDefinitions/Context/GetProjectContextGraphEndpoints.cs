@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Context;
 using ScriptBee.UseCases.Gateway.Context;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -22,7 +23,8 @@ public class GetProjectContextGraphEndpoints : IEndpointDefinition
         app.MapGet("/api/projects/{projectId}/instances/{instanceId}/context/graph", SearchNodes)
             .WithTags("Instances", "Context", "Graph")
             .WithSummary("Search context nodes")
-            .WithDescription("Searches for context nodes based on a query string.");
+            .WithDescription("Searches for context nodes based on a query string.")
+            .RequireAction("model:view");
 
         app.MapGet(
                 "/api/projects/{projectId}/instances/{instanceId}/context/graph/neighbors",
@@ -32,7 +34,8 @@ public class GetProjectContextGraphEndpoints : IEndpointDefinition
             .WithSummary("Get node neighbors")
             .WithDescription(
                 "Retrieves the immediate neighbors and edges for a specific context node."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<

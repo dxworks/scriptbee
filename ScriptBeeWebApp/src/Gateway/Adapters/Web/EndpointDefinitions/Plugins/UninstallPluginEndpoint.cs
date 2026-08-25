@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.Exceptions;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
@@ -21,7 +22,8 @@ public class UninstallPluginEndpoint : IEndpointDefinition
         app.MapDelete("/api/projects/{projectId}/plugins/{pluginId}", UninstallPlugin)
             .WithTags("Plugins")
             .WithSummary("Uninstall a plugin from a project")
-            .WithDescription("Uninstalls a specific plugin version from the specified project.");
+            .WithDescription("Uninstalls a specific plugin version from the specified project.")
+            .RequireAction("plugin:uninstall");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> UninstallPlugin(

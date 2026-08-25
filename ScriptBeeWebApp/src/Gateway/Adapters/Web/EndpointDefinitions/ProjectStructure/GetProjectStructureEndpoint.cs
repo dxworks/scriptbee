@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Gateway.ProjectStructure;
 using ScriptBee.UseCases.Gateway.ProjectStructure;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -25,7 +26,9 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
             .WithSummary("Get project files")
             .WithDescription(
                 "Retrieves a paginated list of files and directories within the specified project."
-            );
+            )
+            .RequireAction("script:view");
+
         app.MapGet(
                 "/api/projects/{projectId}/structure/available-script-types",
                 GetAvailableScriptTypes
@@ -34,7 +37,8 @@ public class GetProjectStructureEndpoint : IEndpointDefinition
             .WithSummary("Get available script types")
             .WithDescription(
                 "Retrieves a list of all script languages and types supported by the project."
-            );
+            )
+            .RequireAction("script:view");
     }
 
     private static async Task<

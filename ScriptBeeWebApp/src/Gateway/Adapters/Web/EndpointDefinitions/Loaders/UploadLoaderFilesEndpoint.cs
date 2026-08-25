@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Files;
 using ScriptBee.UseCases.Gateway.Files;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Loaders.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -26,7 +27,8 @@ public class UploadLoaderFilesEndpoint : IEndpointDefinition
             .WithSummary("Upload files for a loader")
             .WithDescription(
                 "Uploads one or more files to be used by a specific loader in the project."
-            );
+            )
+            .RequireAction("model:upload");
     }
 
     private static async Task<UploadResult> UploadLoaderFiles(

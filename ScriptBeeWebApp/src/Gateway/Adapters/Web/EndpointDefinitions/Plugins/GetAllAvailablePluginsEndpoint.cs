@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ScriptBee.Common.Web;
 using ScriptBee.Service.Gateway.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -20,13 +21,16 @@ public class GetAllAvailablePluginsEndpoint : IEndpointDefinition
         app.MapGet("/api/plugins", GetAllAvailablePlugins)
             .WithTags("Plugins")
             .WithSummary("Get all available plugins")
-            .WithDescription("Retrieves a list of all available plugins from the marketplace.");
+            .WithDescription("Retrieves a list of all available plugins from the marketplace.")
+            .RequireAction("plugin:view");
+
         app.MapGet("/api/plugins/{id}", GetPlugin)
             .WithTags("Plugins")
             .WithSummary("Get plugin by ID")
             .WithDescription(
                 "Retrieves detailed information about a specific plugin from the marketplace by its unique identifier."
-            );
+            )
+            .RequireAction("plugin:view");
     }
 
     private static async Task<Ok<WebAllAvailablePluginsResponse>> GetAllAvailablePlugins(

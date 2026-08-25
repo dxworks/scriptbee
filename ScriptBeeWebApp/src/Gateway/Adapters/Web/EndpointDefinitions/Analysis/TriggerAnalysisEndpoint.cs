@@ -7,6 +7,7 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -27,7 +28,8 @@ public class TriggerAnalysisEndpoint : IEndpointDefinition
             .WithDescription(
                 "Triggers a new analysis for a specific project instance using a given script."
             )
-            .WithRequestValidation<WebTriggerAnalysisCommand>();
+            .WithRequestValidation<WebTriggerAnalysisCommand>()
+            .RequireAction("analysis:run");
     }
 
     private static async Task<Results<Accepted, NotFound<ProblemDetails>>> TriggerAnalysis(

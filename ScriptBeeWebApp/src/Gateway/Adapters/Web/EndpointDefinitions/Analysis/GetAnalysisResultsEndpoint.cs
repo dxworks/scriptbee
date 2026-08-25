@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
 using ScriptBee.UseCases.Gateway.Analysis;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Analysis.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -25,7 +26,9 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
             )
             .WithTags("Analysis")
             .WithSummary("Get console analysis results")
-            .WithDescription("Retrieves the console output generated during the analysis.");
+            .WithDescription("Retrieves the console output generated during the analysis.")
+            .RequireAction("analysis:view");
+
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/results/errors",
                 GetErrorsAnalysisResult
@@ -34,14 +37,17 @@ public class GetAnalysisResultsEndpoint : IEndpointDefinition
             .WithSummary("Get analysis error results")
             .WithDescription(
                 "Retrieves a list of errors that occurred during the analysis execution."
-            );
+            )
+            .RequireAction("analysis:view");
+
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/results/files",
                 GetFilesAnalysisResult
             )
             .WithTags("Analysis")
             .WithSummary("Get analysis file results")
-            .WithDescription("Retrieves a list of files generated as a result of the analysis.");
+            .WithDescription("Retrieves a list of files generated as a result of the analysis.")
+            .RequireAction("analysis:view");
     }
 
     private static async Task<

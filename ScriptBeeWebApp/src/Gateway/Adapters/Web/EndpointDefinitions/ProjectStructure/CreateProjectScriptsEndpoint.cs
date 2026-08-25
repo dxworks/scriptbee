@@ -5,6 +5,7 @@ using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.ProjectStructure;
 using ScriptBee.UseCases.Gateway.ProjectStructure;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.ProjectStructure.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -31,7 +32,8 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
             .WithTags("Scripts")
             .WithSummary("Create a new script")
             .WithDescription("Creates a new script within the specified project.")
-            .WithRequestValidation<WebCreateScriptCommand>();
+            .WithRequestValidation<WebCreateScriptCommand>()
+            .RequireAction("script:create");
     }
 
     private static async Task<CreateResponse> CreateProjectScript(

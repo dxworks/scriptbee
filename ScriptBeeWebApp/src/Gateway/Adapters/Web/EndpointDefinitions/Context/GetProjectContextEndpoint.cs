@@ -5,6 +5,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Context;
 using ScriptBee.UseCases.Gateway.Context;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -24,7 +25,8 @@ public class GetProjectContextEndpoint : IEndpointDefinition
             .WithSummary("Get current instance context")
             .WithDescription(
                 "Retrieves the current data context for the specified project instance."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<

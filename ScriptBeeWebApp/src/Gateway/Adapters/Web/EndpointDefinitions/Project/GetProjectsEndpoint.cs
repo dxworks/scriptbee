@@ -22,7 +22,8 @@ public class GetProjectsEndpoint : IEndpointDefinition
         app.MapGet("/api/projects", GetAllProjects)
             .WithTags("Projects")
             .WithSummary("Get all projects")
-            .WithDescription("Retrieves a list of all existing projects with their basic details.");
+            .WithDescription("Retrieves a list of all existing projects with their basic details.")
+            .RequireAuthorization();
 
         app.MapGet("/api/projects/{projectId}", GetProjectById)
             .WithTags("Projects")

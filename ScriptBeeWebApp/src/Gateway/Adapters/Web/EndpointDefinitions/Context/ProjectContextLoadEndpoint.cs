@@ -6,6 +6,7 @@ using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Context;
 using ScriptBee.UseCases.Gateway.Context;
+using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Web.Exceptions;
 
@@ -26,7 +27,8 @@ public class ProjectContextLoadEndpoint : IEndpointDefinition
             .WithDescription(
                 "Loads data into the context of the specified project instance using the provided loaders."
             )
-            .WithRequestValidation<WebLoadContextCommand>();
+            .WithRequestValidation<WebLoadContextCommand>()
+            .RequireAction("model:load");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> LoadContext(
