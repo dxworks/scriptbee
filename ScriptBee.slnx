@@ -65,6 +65,7 @@
   <Folder Name="/src/Gateway/">
     <!-- Adapters -->
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Analysis.Instance.Docker/Analysis.Instance.Docker.csproj" />
+    <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Auth/Auth.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Rest/Rest.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Web/Web.csproj" />
     <Project Path="ScriptBeeWebApp/src/Gateway/Adapters/Persistence.Mongodb.Gateway/Persistence.Mongodb.Gateway.csproj" />
@@ -109,6 +110,7 @@
 
   <Folder Name="/test/Gatway/">
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Analysis.Instance.Docker.Tests/Analysis.Instance.Docker.Tests.csproj" />
+    <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Auth.Tests/Auth.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Rest.Tests/Rest.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Web.Tests/Web.Tests.csproj" />
     <Project Path="ScriptBeeWebApp/test/Gateway/Adapters/Persistence.Mongodb.Gateway.Tests/Persistence.Mongodb.Gateway.Tests.csproj" />

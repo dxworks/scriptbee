@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using ScriptBee.Adapters.Auth;
+using ScriptBee.Adapters.Auth.Config;
+using ScriptBee.Adapters.Auth.Dev;
 using ScriptBee.Ports.Permissions;
-using ScriptBee.Web.Auth;
-using ScriptBee.Web.Auth.Dev;
-using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Extensions;
 
@@ -39,6 +39,22 @@ public static class AuthenticationExtensions
                     options.Authority = authConfig.Authority;
                     options.Audience = authConfig.Audience;
                     options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var path = context.HttpContext.Request.Path;
+                            if (
+                                path.StartsWithSegments("/api/projectLiveUpdates")
+                                && context.Request.Query.TryGetValue("access_token", out var token)
+                            )
+                            {
+                                context.Token = token;
+                            }
+
+                            return Task.CompletedTask;
+                        },
+                    };
 
                     if (authConfig.IsDevelopment)
                     {

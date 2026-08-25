@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Service.Gateway.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
-using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Web.Exceptions;
 

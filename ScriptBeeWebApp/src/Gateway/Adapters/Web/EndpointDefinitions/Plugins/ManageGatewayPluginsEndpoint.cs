@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.UseCases.Gateway.Plugins;
-using ScriptBee.Web.Auth;
 using ScriptBee.Web.EndpointDefinitions.Plugins.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Plugins;
