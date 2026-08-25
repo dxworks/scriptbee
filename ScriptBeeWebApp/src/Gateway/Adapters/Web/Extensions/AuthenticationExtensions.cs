@@ -92,6 +92,10 @@ public static class AuthenticationExtensions
                     IAuthorizationHandler,
                     ExternalAuthorizationActionAuthorizationHandler
                 >();
+                services.AddSingleton<
+                    IAuthorizationPolicyProvider,
+                    PermissionActionAuthorizationPolicyProvider
+                >();
             }
 
             services.AddHttpContextAccessor();

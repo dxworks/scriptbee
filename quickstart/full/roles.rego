@@ -17,6 +17,7 @@ plugin_marketplace_permissions := {
 project_permissions := {
     "Admin": {
         "project:view",
+        "project:live_updates",
         "project:edit",
         "project:delete",
         "script:view",
@@ -43,6 +44,7 @@ project_permissions := {
     },
     "Editor": {
         "project:view",
+        "project:live_updates",
         "project:edit",
         "project:delete",
         "script:view",
@@ -69,6 +71,7 @@ project_permissions := {
     },
     "Analyst": {
         "project:view",
+        "project:live_updates",
         "script:view",
         "model:view",
         "model:upload",

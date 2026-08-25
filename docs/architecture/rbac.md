@@ -185,11 +185,12 @@ Detailed here are the possible roles a user can have in ScriptBee.
 
 ### Project
 
-| Permission     | Admin   | Editor  | Analyst | Viewer  |
-| -------------- | ------- | ------- | ------- | ------- |
-| project:view   | &check; | &check; | &check; | &check; |
-| project:edit   | &check; | &check; |         |         |
-| project:delete | &check; | &check; |         |         |
+| Permission           | Admin   | Editor  | Analyst | Viewer  |
+| -------------------- | ------- | ------- | ------- | ------- |
+| project:view         | &check; | &check; | &check; | &check; |
+| project:live_updates | &check; | &check; | &check; | &check; |
+| project:edit         | &check; | &check; |         |         |
+| project:delete       | &check; | &check; |         |         |
 
 ### Scripts
 

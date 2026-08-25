@@ -4,11 +4,11 @@ namespace ScriptBee.Adapters.Auth;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 public class AuthorizeActionAttribute(string action)
-    : AuthorizeAttribute,
+    : AuthorizeAttribute(action),
         IAuthorizationRequirementData
 {
-    public string Action => action;
+    public string Action => Policy!;
 
     public IEnumerable<IAuthorizationRequirement> GetRequirements() =>
-        [new PermissionActionRequirement(action)];
+        [new PermissionActionRequirement(Action)];
 }

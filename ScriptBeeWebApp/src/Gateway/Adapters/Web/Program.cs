@@ -92,7 +92,7 @@ app.UseExceptionEndpoint();
 
 app.UseEndpoints(_ => { });
 
-app.MapHub<ProjectLiveUpdatesHub>("/api/projectLiveUpdates");
+app.MapHub<ProjectLiveUpdatesHub>("/api/projectLiveUpdates").RequireAuthorization();
 
 app.UseEndpointDefinitions();
 
