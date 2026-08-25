@@ -36,6 +36,11 @@ public static class AuthenticationExtensions
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    if (authConfig.IsDevelopment)
+                    {
+                        return;
+                    }
+
                     options.Authority = authConfig.Authority;
                     options.Audience = authConfig.Audience;
                     options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
@@ -56,26 +61,14 @@ public static class AuthenticationExtensions
                         },
                     };
 
-                    if (authConfig.IsDevelopment)
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = false,
-                            ValidateLifetime = true,
-                        };
-                    }
-                    else
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidIssuer = authConfig.Authority,
-                            ValidAudience = authConfig.Audience,
-                        };
-                    }
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidIssuer = authConfig.Authority,
+                        ValidAudience = authConfig.Audience,
+                    };
                 });
             return services;
         }
@@ -85,6 +78,10 @@ public static class AuthenticationExtensions
             if (config.IsDevelopment)
             {
                 services.AddSingleton<IAuthorizationHandler, AllowAllAuthorizationHandler>();
+                services.AddSingleton<
+                    IAuthorizationPolicyProvider,
+                    DevAuthorizationPolicyProvider
+                >();
             }
             else
             {
