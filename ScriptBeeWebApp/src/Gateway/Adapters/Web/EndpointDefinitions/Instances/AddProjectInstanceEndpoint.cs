@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway.Analysis;
@@ -25,7 +26,8 @@ public class AddProjectInstanceEndpoint : IEndpointDefinition
             .WithSummary("Add a new project instance")
             .WithDescription(
                 "Allocates and adds a new execution instance for the specified project."
-            );
+            )
+            .RequireAction("instance:allocate");
     }
 
     private static async Task<AllocateInstanceType> AllocateInstance(

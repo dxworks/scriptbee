@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Options;
+using ScriptBee.Adapters.Auth.Config;
 using ScriptBee.Common.Web;
-using ScriptBee.Web.Config;
 using ScriptBee.Web.EndpointDefinitions.Config.Contracts;
 
 namespace ScriptBee.Web.EndpointDefinitions.Config;

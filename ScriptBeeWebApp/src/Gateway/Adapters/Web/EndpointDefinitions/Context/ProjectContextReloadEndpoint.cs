@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -26,7 +27,8 @@ public class ProjectContextReloadEndpoint : IEndpointDefinition
             .WithSummary("Reload instance context")
             .WithDescription(
                 "Reloads the data context for the specified project instance, refreshing all linked and loaded data."
-            );
+            )
+            .RequireAction("model:load");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ReloadContext(

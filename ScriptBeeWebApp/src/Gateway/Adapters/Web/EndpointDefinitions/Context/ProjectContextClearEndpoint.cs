@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -23,7 +24,8 @@ public class ProjectContextClearEndpoint : IEndpointDefinition
             .WithSummary("Clear instance context")
             .WithDescription(
                 "Clears all loaded data from the current context of the specified project instance."
-            );
+            )
+            .RequireAction("model:clear");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> ClearContext(

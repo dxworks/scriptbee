@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Instance;
@@ -27,7 +28,8 @@ public class TriggerAnalysisEndpoint : IEndpointDefinition
             .WithDescription(
                 "Triggers a new analysis for a specific project instance using a given script."
             )
-            .WithRequestValidation<WebTriggerAnalysisCommand>();
+            .WithRequestValidation<WebTriggerAnalysisCommand>()
+            .RequireAction("analysis:run");
     }
 
     private static async Task<Results<Accepted, NotFound<ProblemDetails>>> TriggerAnalysis(

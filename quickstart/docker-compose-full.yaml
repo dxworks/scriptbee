@@ -55,7 +55,7 @@ services:
       - AUTHENTICATION__AUDIENCE=scriptbee-api
       - AUTHENTICATION__CLIENTID=scriptbee-client
       - AUTHENTICATION__REQUIREHTTPSMETADATA=false
-      - AUTHENTICATION__SCOPE=openid profile email
+      - AUTHENTICATION__SCOPE=openid profile
       - AUTHENTICATION__EXTERNALAUTHORIZATIONURL=http://opa:8181/v1/data/scriptbee/auth/allow
       - AUTHENTICATION__PERMISSIONSURL=http://opa:8181/v1/data/scriptbee/auth/user_permissions
       - AUTHENTICATION__ROLESURL=http://opa:8181/v1/data/scriptbee/auth/roles_and_permissions/roles

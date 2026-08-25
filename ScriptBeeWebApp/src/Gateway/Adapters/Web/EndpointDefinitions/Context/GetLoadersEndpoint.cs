@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -23,7 +24,8 @@ public class GetLoadersEndpoint : IEndpointDefinition
             .WithSummary("Get available loaders for an instance")
             .WithDescription(
                 "Retrieves a list of all loaders available for the specified project instance."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<Ok<WebGetLoadersResponse>> GetInstanceLoaders(

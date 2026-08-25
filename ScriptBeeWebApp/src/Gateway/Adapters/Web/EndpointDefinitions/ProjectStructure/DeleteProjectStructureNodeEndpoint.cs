@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -21,7 +22,8 @@ public class DeleteProjectStructureNodeEndpoint : IEndpointDefinition
         app.MapDelete("/api/projects/{projectId}/files/{fileId}", DeleteProjectStructureNode)
             .WithTags("ProjectStructure")
             .WithSummary("Delete a project structure node")
-            .WithDescription("Deletes a file or directory (node) from the project structure.");
+            .WithDescription("Deletes a file or directory (node) from the project structure.")
+            .RequireAction("script:delete");
     }
 
     private static async Task<

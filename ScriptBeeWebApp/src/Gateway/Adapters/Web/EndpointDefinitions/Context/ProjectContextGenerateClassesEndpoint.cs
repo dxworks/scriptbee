@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -27,7 +28,8 @@ public class ProjectContextGenerateClassesEndpoint : IEndpointDefinition
             .WithSummary("Generate classes for instance context")
             .WithDescription(
                 "Generates script classes based on the current data context for the specified project instance and returns them as a stream."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<

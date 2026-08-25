@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
@@ -26,7 +27,8 @@ public class UploadLoaderFilesEndpoint : IEndpointDefinition
             .WithSummary("Upload files for a loader")
             .WithDescription(
                 "Uploads one or more files to be used by a specific loader in the project."
-            );
+            )
+            .RequireAction("model:upload");
     }
 
     private static async Task<UploadResult> UploadLoaderFiles(

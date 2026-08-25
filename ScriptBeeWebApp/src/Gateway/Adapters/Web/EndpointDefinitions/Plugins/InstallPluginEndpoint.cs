@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
@@ -24,17 +25,22 @@ public class InstallPluginEndpoint : IEndpointDefinition
             .WithSummary("Install a plugin from marketplace")
             .WithDescription(
                 "Installs a specific version of a plugin from the marketplace into the project."
-            );
+            )
+            .RequireAction("plugin:install");
+
         app.MapPost("/api/projects/{projectId}/plugins", UploadPlugin)
             .WithTags("Plugins")
             .WithSummary("Upload and install a plugin")
-            .WithDescription("Uploads a plugin ZIP file and installs it into the project.");
+            .WithDescription("Uploads a plugin ZIP file and installs it into the project.")
+            .RequireAction("plugin:install");
+
         app.MapPost("/api/projects/{projectId}/plugins/url", InstallPluginFromUrl)
             .WithTags("Plugins")
             .WithSummary("Install a plugin from a URL")
             .WithDescription(
                 "Downloads a plugin ZIP file from the provided URL and installs it into the project. The ZIP must contain a manifest.yaml in its root folder."
-            );
+            )
+            .RequireAction("plugin:install");
     }
 
     private static async Task<

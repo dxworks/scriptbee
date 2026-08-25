@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -23,7 +24,8 @@ public class GetLinkersEndpoint : IEndpointDefinition
             .WithSummary("Get available linkers for an instance")
             .WithDescription(
                 "Retrieves a list of all linkers available for the specified project instance."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<Ok<WebGetLinkersResponse>> GetInstanceLinkers(

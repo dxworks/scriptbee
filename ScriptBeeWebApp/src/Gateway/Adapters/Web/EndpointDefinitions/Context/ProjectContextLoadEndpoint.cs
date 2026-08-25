@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Instance;
@@ -26,7 +27,8 @@ public class ProjectContextLoadEndpoint : IEndpointDefinition
             .WithDescription(
                 "Loads data into the context of the specified project instance using the provided loaders."
             )
-            .WithRequestValidation<WebLoadContextCommand>();
+            .WithRequestValidation<WebLoadContextCommand>()
+            .RequireAction("model:load");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> LoadContext(

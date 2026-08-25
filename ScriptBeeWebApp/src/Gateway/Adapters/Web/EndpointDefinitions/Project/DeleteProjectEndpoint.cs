@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway;
@@ -21,7 +22,8 @@ public class DeleteProjectEndpoint : IEndpointDefinition
             .WithSummary("Delete a project")
             .WithDescription(
                 "Deletes a project and all its associated data, including scripts and artifacts."
-            );
+            )
+            .RequireAction("project:delete");
     }
 
     private static async Task<NoContent> DeleteProject(

@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using ScriptBee.Adapters.Auth;
+using ScriptBee.Adapters.Auth.Config;
+using ScriptBee.Adapters.Auth.Dev;
 using ScriptBee.Ports.Permissions;
-using ScriptBee.Web.Auth;
-using ScriptBee.Web.Config;
 
 namespace ScriptBee.Web.Extensions;
 
@@ -35,30 +36,39 @@ public static class AuthenticationExtensions
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
+                    if (authConfig.IsDevelopment)
+                    {
+                        return;
+                    }
+
                     options.Authority = authConfig.Authority;
                     options.Audience = authConfig.Audience;
                     options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var path = context.HttpContext.Request.Path;
+                            if (
+                                path.StartsWithSegments("/api/projectLiveUpdates")
+                                && context.Request.Query.TryGetValue("access_token", out var token)
+                            )
+                            {
+                                context.Token = token;
+                            }
 
-                    if (authConfig.IsDevelopment)
+                            return Task.CompletedTask;
+                        },
+                    };
+
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = false,
-                            ValidateLifetime = true,
-                        };
-                    }
-                    else
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidIssuer = authConfig.Authority,
-                            ValidAudience = authConfig.Audience,
-                        };
-                    }
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidIssuer = authConfig.Authority,
+                        ValidAudience = authConfig.Audience,
+                    };
                 });
             return services;
         }
@@ -68,12 +78,20 @@ public static class AuthenticationExtensions
             if (config.IsDevelopment)
             {
                 services.AddSingleton<IAuthorizationHandler, AllowAllAuthorizationHandler>();
+                services.AddSingleton<
+                    IAuthorizationPolicyProvider,
+                    DevAuthorizationPolicyProvider
+                >();
             }
             else
             {
                 services.AddSingleton<
                     IAuthorizationHandler,
                     ExternalAuthorizationActionAuthorizationHandler
+                >();
+                services.AddSingleton<
+                    IAuthorizationPolicyProvider,
+                    PermissionActionAuthorizationPolicyProvider
                 >();
             }
 
@@ -82,11 +100,16 @@ public static class AuthenticationExtensions
 
             if (config.IsDevelopment)
             {
-                services.AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>();
+                services
+                    .AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>()
+                    .AddSingleton<IGetProjectPermissions, GetDevProjectPermissions>()
+                    .AddSingleton<IGetResourceRole, GetDevResourceRole>();
             }
             else
             {
-                services.AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>();
+                services
+                    .AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>()
+                    .AddSingleton<IGetProjectPermissions, GetProjectPermissions>();
             }
 
             return services
@@ -94,8 +117,7 @@ public static class AuthenticationExtensions
                     IExternalAuthorizationContextProvider,
                     ExternalAuthorizationContextProvider
                 >()
-                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>()
-                .AddSingleton<IGetProjectPermissions, GetProjectPermissions>();
+                .AddSingleton<IAuthorizeExternally, AuthorizeExternally>();
         }
 
         private void AddHttpClientsFromConfigUrl(AuthenticationConfig config)

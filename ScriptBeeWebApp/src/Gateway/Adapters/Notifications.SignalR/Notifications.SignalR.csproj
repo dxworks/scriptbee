@@ -8,6 +8,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Auth\Auth.csproj" />
     <ProjectReference Include="..\..\Application\Ports.Notifications\Ports.Notifications.csproj" />
     <ProjectReference Include="..\..\..\Common\Application.Model\Application.Model.csproj" />
     <ProjectReference Include="..\..\..\Common\Model\Model.csproj" />

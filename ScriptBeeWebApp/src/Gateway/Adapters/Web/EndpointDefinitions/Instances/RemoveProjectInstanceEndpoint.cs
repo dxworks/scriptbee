@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -24,7 +25,8 @@ public class RemoveProjectInstanceEndpoint : IEndpointDefinition
         app.MapDelete("/api/projects/{projectId}/instances/{instanceId}", DeallocateInstance)
             .WithTags("Instances")
             .WithSummary("Remove a project instance")
-            .WithDescription("Deallocates and removes a specific project instance.");
+            .WithDescription("Deallocates and removes a specific project instance.")
+            .RequireAction("instance:deallocate");
     }
 
     private static async Task<Results<NoContent, NotFound<ProblemDetails>>> DeallocateInstance(

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.ProjectStructure;
@@ -29,7 +30,8 @@ public class GetAnalysisScriptEndpoint : IEndpointDefinition
             .WithDescription(
                 "Retrieves the actual code content of a script used in a specific analysis."
             )
-            .Produces<string>(200, "text/plain");
+            .Produces<string>(200, "text/plain")
+            .RequireAction("analysis:view");
 
         app.MapGet(
                 "/api/projects/{projectId}/analyses/{analysisId}/scripts/{scriptId}",
@@ -39,7 +41,8 @@ public class GetAnalysisScriptEndpoint : IEndpointDefinition
             .WithSummary("Get analysis script metadata")
             .WithDescription(
                 "Retrieves metadata about a script used in a specific analysis, such as its name and type."
-            );
+            )
+            .RequireAction("analysis:view");
     }
 
     private static async Task<

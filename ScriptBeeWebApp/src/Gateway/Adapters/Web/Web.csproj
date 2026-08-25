@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
     <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj" />
     <ProjectReference Include="..\Analysis.Instance.Docker\Analysis.Instance.Docker.csproj" />
+    <ProjectReference Include="..\Auth\Auth.csproj" />
     <ProjectReference Include="..\Rest\Rest.csproj" />
     <ProjectReference Include="..\Persistence.Mongodb.Gateway\Persistence.Mongodb.Gateway.csproj" />
     <ProjectReference Include="..\..\Application\Service.Gateway\Service.Gateway.csproj" />

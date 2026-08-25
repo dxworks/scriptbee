@@ -17,7 +17,6 @@ export class DevAuthService implements AuthService {
       userData: null,
       accessToken: 'dev-access-token',
       idToken: 'dev-id-token',
-      refreshToken: 'dev-refresh-token',
     });
   }
 

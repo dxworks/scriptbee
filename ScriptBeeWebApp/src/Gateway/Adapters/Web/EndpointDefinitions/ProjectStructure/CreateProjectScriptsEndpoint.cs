@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
@@ -31,7 +32,8 @@ public class CreateProjectScriptsEndpoint : IEndpointDefinition
             .WithTags("Scripts")
             .WithSummary("Create a new script")
             .WithDescription("Creates a new script within the specified project.")
-            .WithRequestValidation<WebCreateScriptCommand>();
+            .WithRequestValidation<WebCreateScriptCommand>()
+            .RequireAction("script:create");
     }
 
     private static async Task<CreateResponse> CreateProjectScript(

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using ScriptBee.Adapters.Auth.Extensions;
 using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -24,7 +25,8 @@ public class GetProjectContextEndpoint : IEndpointDefinition
             .WithSummary("Get current instance context")
             .WithDescription(
                 "Retrieves the current data context for the specified project instance."
-            );
+            )
+            .RequireAction("model:view");
     }
 
     private static async Task<
