@@ -71,3 +71,12 @@ export interface UserInfo {
 export interface UsersResponse {
   users: UserInfo[];
 }
+
+export interface RoleInfo {
+  id: string;
+  description: string;
+}
+
+export interface RolesResponse {
+  roles: RoleInfo[];
+}

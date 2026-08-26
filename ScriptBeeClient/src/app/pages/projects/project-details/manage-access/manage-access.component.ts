@@ -1,8 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ProjectStateService } from '../../../../services/projects/project-state.service';
 import { ProjectService } from '../../../../services/projects/project.service';
-import { ProjectMember, UserInfo } from '../../../../types/project';
-import { rxResource, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ProjectMember, RoleInfo, UserInfo } from '../../../../types/project';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,10 +15,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingProgressBarComponent } from '../../../../components/loading-progress-bar/loading-progress-bar.component';
 import { ErrorStateComponent } from '../../../../components/error-state/error-state.component';
-import { AsyncPipe } from '@angular/common';
-import { map, startWith } from 'rxjs';
 
 type MemberType = 'user' | 'group';
 
@@ -38,9 +37,9 @@ type MemberType = 'user' | 'group';
     MatCardModule,
     MatDividerModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     LoadingProgressBarComponent,
     ErrorStateComponent,
-    AsyncPipe,
   ],
 })
 export class ManageAccessComponent {
@@ -48,7 +47,8 @@ export class ManageAccessComponent {
 
   private projectStateService = inject(ProjectStateService);
   private projectService = inject(ProjectService);
-  private snackbar = inject(MatSnackBar);
+
+  snackbar = inject(MatSnackBar);
 
   project = computed(() => this.projectStateService.currentProject()!);
 
@@ -61,12 +61,16 @@ export class ManageAccessComponent {
     stream: () => this.projectService.getAllUsers(),
   });
 
+  rolesResource = rxResource({
+    stream: () => this.projectService.getRoles(),
+  });
+
   memberTypeControl = new FormControl<MemberType>('user', { nonNullable: true });
 
   addMemberForm = new FormGroup({
     memberType: this.memberTypeControl,
     memberId: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-    role: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    role: new FormControl<RoleInfo | null>(null, { validators: [Validators.required] }),
   });
 
   memberType = toSignal(this.addMemberForm.controls.memberType.valueChanges, {
@@ -75,16 +79,17 @@ export class ManageAccessComponent {
 
   isUserType = computed(() => this.memberType() === 'user');
 
-  filteredUsers = toObservable(this.usersResource.value).pipe(
-    startWith([] as UserInfo[]),
-    map((users) => users ?? [])
-  );
+  filteredUsers = computed<UserInfo[]>(() => this.usersResource.value() ?? []);
 
   isSaving = signal(false);
   removingMemberId = signal<string | null>(null);
 
   onUserSelected(user: UserInfo) {
     this.addMemberForm.patchValue({ memberId: user.id });
+  }
+
+  compareRoles(a: RoleInfo | null, b: RoleInfo | null): boolean {
+    return a?.id === b?.id;
   }
 
   onAddMember() {
@@ -95,10 +100,10 @@ export class ManageAccessComponent {
     const { memberId, memberType, role } = this.addMemberForm.getRawValue();
     this.isSaving.set(true);
 
-    this.projectService.updateProjectMember(this.project().id, memberId, role, memberType).subscribe({
+    this.projectService.updateProjectMember(this.project().id, memberId, role!.id, memberType).subscribe({
       next: () => {
         this.membersResource.reload();
-        this.addMemberForm.reset({ memberType: 'user', memberId: '', role: '' });
+        this.addMemberForm.reset({ memberType: 'user', memberId: '', role: null });
         this.snackbar.open('Member access updated.', 'Dismiss', { duration: 3000 });
       },
       error: () => {

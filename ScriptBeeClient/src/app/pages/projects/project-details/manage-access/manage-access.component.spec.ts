@@ -5,21 +5,21 @@ import { ProjectStateService } from '../../../../services/projects/project-state
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { Project, ProjectMember, UserInfo } from '../../../../types/project';
+import { Project, ProjectMember, RoleInfo, UserInfo } from '../../../../types/project';
 import { signal } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 describe('ManageAccessComponent', () => {
   let component: ManageAccessComponent;
   let fixture: ComponentFixture<ManageAccessComponent>;
-  let snackbarOpenSpy: ReturnType<typeof vi.fn>;
-  let snackbarMock: { open: ReturnType<typeof vi.fn> };
+  let snackbarOpenSpy: unknown;
 
   const projectServiceSpy = {
     getProjectMembers: vi.fn(),
     updateProjectMember: vi.fn(),
     removeProjectMember: vi.fn(),
     getAllUsers: vi.fn(),
+    getRoles: vi.fn(),
   };
 
   const mockProject: Project = {
@@ -41,13 +41,18 @@ describe('ManageAccessComponent', () => {
     { id: 'user-c', name: 'Charlie' },
   ];
 
+  const mockRoles: RoleInfo[] = [
+    { id: 'owner', description: 'Full control over the project' },
+    { id: 'editor', description: 'Can modify project resources' },
+    { id: 'viewer', description: 'Read-only access to the project' },
+  ];
+
   beforeEach(async () => {
     projectServiceSpy.getProjectMembers.mockReset().mockReturnValue(of(mockMembers));
     projectServiceSpy.updateProjectMember.mockReset().mockReturnValue(of(undefined));
     projectServiceSpy.removeProjectMember.mockReset().mockReturnValue(of(undefined));
     projectServiceSpy.getAllUsers.mockReset().mockReturnValue(of(mockUsers));
-
-    snackbarMock = { open: vi.fn().mockReturnValue({} as MatSnackBarRef<TextOnlySnackBar>) };
+    projectServiceSpy.getRoles.mockReset().mockReturnValue(of(mockRoles));
 
     const projectStateServiceMock = {
       currentProject: signal<Project | null>(mockProject),
@@ -57,7 +62,6 @@ describe('ManageAccessComponent', () => {
       imports: [ManageAccessComponent],
       providers: [
         { provide: ProjectService, useValue: projectServiceSpy },
-        { provide: MatSnackBar, useValue: snackbarMock },
         { provide: ProjectStateService, useValue: projectStateServiceMock },
       ],
     }).compileComponents();
@@ -66,7 +70,7 @@ describe('ManageAccessComponent', () => {
     component = fixture.componentInstance;
 
     fixture.detectChanges();
-    snackbarOpenSpy = snackbarMock.open;
+    snackbarOpenSpy = vi.spyOn(component.snackbar, 'open').mockReturnValue({} as MatSnackBarRef<TextOnlySnackBar>);
 
     await fixture.whenStable();
   });
@@ -80,7 +84,7 @@ describe('ManageAccessComponent', () => {
       expect(screenText).toContain('viewer');
     });
 
-    it('should add/update group member access when user inputs group details and clicks submit', async () => {
+    it('should add/update group member access when user selects group details and clicks submit', async () => {
       component.addMemberForm.controls.memberType.setValue('group');
       fixture.detectChanges();
       await fixture.whenStable();
@@ -89,9 +93,8 @@ describe('ManageAccessComponent', () => {
       groupInput.value = 'dev-team';
       groupInput.dispatchEvent(new Event('input'));
 
-      const roleInput = fixture.debugElement.query(By.css('#role-input')).nativeElement;
-      roleInput.value = 'editor';
-      roleInput.dispatchEvent(new Event('input'));
+      const editorRole = mockRoles.find((r) => r.id === 'editor')!;
+      component.addMemberForm.controls.role.setValue(editorRole);
 
       fixture.detectChanges();
       await fixture.whenStable();

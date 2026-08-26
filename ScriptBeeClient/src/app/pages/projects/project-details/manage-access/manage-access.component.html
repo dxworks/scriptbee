@@ -70,7 +70,7 @@
             <mat-label>User</mat-label>
             <input matInput id="member-id-autocomplete" [matAutocomplete]="auto" formControlName="memberId" placeholder="Search user..." />
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onUserSelected($event.option.value)">
-              @for (user of filteredUsers | async; track user.id) {
+              @for (user of filteredUsers(); track user.id) {
                 <mat-option [value]="user">{{ user.name }}</mat-option>
               }
             </mat-autocomplete>
@@ -84,7 +84,20 @@
 
         <mat-form-field>
           <mat-label>Role</mat-label>
-          <input matInput id="role-input" formControlName="role" placeholder="e.g. editor" />
+          @if (rolesResource.isLoading()) {
+            <mat-select id="role-select" formControlName="role" [compareWith]="compareRoles" [disabled]="true">
+              <mat-option>Loading roles...</mat-option>
+            </mat-select>
+          } @else {
+            <mat-select id="role-select" formControlName="role" [compareWith]="compareRoles">
+              @for (role of rolesResource.value() ?? []; track role.id) {
+                <mat-option [value]="role" [matTooltip]="role.description" matTooltipPosition="right">
+                  <span class="role-option-name">{{ role.id }}</span>
+                  <span class="role-option-description">{{ role.description }}</span>
+                </mat-option>
+              }
+            </mat-select>
+          }
         </mat-form-field>
 
         <button mat-flat-button type="submit" id="add-member-submit" [disabled]="addMemberForm.invalid || isSaving()">

@@ -7,6 +7,8 @@ import {
   ProjectMember,
   ProjectMembersResponse,
   ProjectPermissionsResponse,
+  RoleInfo,
+  RolesResponse,
   UserInfo,
   UsersResponse,
 } from '../../types/project';
@@ -59,5 +61,9 @@ export class ProjectService {
 
   getAllUsers(): Observable<UserInfo[]> {
     return this.http.get<UsersResponse>('/api/users').pipe(map((r) => r.users));
+  }
+
+  getRoles(): Observable<RoleInfo[]> {
+    return this.http.get<RolesResponse>('/api/roles').pipe(map((r) => r.roles));
   }
 }

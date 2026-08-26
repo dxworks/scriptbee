@@ -40,3 +40,15 @@
     align-self: flex-start;
   }
 }
+
+.role-option-name {
+  display: block;
+  font-weight: 500;
+}
+
+.role-option-description {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  white-space: normal;
+}
