@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { connectionService } from './connectionService';
 import { scriptSyncService } from './scriptSyncService';
 import { ClientIdService } from './clientIdService';
+import { authService } from './authService';
 import { logger } from '../utils/logger';
 import * as CommandIds from '../commands/commandIds';
 
@@ -50,7 +51,12 @@ export class LiveUpdatesService {
 
     const hubUrl = new URL('/api/projectLiveUpdates', connection.url).toString();
 
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(hubUrl).withAutomaticReconnect().build();
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(hubUrl, {
+        accessTokenFactory: async () => (await authService.getAccessToken(connection)) || '',
+      })
+      .withAutomaticReconnect()
+      .build();
 
     this.hubConnection.on('ScriptCreated', async (event: ScriptLiveUpdateEvent) => {
       if (this.shouldIgnore(event)) {

@@ -14,6 +14,9 @@ import { pushScript } from './project/pushScript';
 import { syncScripts } from './project/syncScripts';
 import { openProjectFolder } from './project/openProjectFolder';
 import { compareWithRemote } from './project/compareWithRemote';
+import { login } from './connection/loginCommand';
+import { logout } from './connection/logoutCommand';
+import { setAccessToken } from './connection/setAccessTokenCommand';
 import { refreshUI } from './ui/refreshUI';
 
 export function registerCommands(context: vscode.ExtensionContext) {
@@ -21,6 +24,9 @@ export function registerCommands(context: vscode.ExtensionContext) {
   const editConnectionCmd = vscode.commands.registerCommand(CommandIds.COMMAND_EDIT_CONNECTION, editConnection);
   const switchConnectionCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SWITCH_CONNECTION, switchConnection);
   const deleteConnectionCmd = vscode.commands.registerCommand(CommandIds.COMMAND_DELETE_CONNECTION, deleteConnection);
+  const loginCmd = vscode.commands.registerCommand(CommandIds.COMMAND_LOGIN, login);
+  const logoutCmd = vscode.commands.registerCommand(CommandIds.COMMAND_LOGOUT, logout);
+  const setAccessTokenCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SET_ACCESS_TOKEN, setAccessToken);
   const selectProjectCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SELECT_PROJECT, selectProject);
   const selectInstanceCmd = vscode.commands.registerCommand(CommandIds.COMMAND_SELECT_INSTANCE, selectInstance);
   const generateClassesCmd = vscode.commands.registerCommand(CommandIds.COMMAND_GENERATE_CLASSES, generateClasses);
@@ -38,6 +44,9 @@ export function registerCommands(context: vscode.ExtensionContext) {
     editConnectionCmd,
     switchConnectionCmd,
     deleteConnectionCmd,
+    loginCmd,
+    logoutCmd,
+    setAccessTokenCmd,
     selectProjectCmd,
     selectInstanceCmd,
     generateClassesCmd,

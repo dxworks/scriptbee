@@ -137,6 +137,21 @@
         "command": "scriptbee.generateClasses",
         "title": "ScriptBee: Generate Classes",
         "icon": "$(symbol-class)"
+      },
+      {
+        "command": "scriptbee.login",
+        "title": "ScriptBee: Login",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "scriptbee.logout",
+        "title": "ScriptBee: Logout",
+        "icon": "$(sign-out)"
+      },
+      {
+        "command": "scriptbee.setAccessToken",
+        "title": "ScriptBee: Set Access Token",
+        "icon": "$(key)"
       }
     ],
     "menus": {
@@ -153,6 +168,21 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "scriptbee.login",
+          "when": "view == scriptbee-connections && (viewItem == connection || viewItem == connectionActive)",
+          "group": "scriptbee_auth@1"
+        },
+        {
+          "command": "scriptbee.setAccessToken",
+          "when": "view == scriptbee-connections && (viewItem == connection || viewItem == connectionActive)",
+          "group": "scriptbee_auth@2"
+        },
+        {
+          "command": "scriptbee.logout",
+          "when": "view == scriptbee-connections && (viewItem == connection || viewItem == connectionActive)",
+          "group": "scriptbee_auth@3"
+        },
         {
           "command": "scriptbee.switchConnection",
           "when": "view == scriptbee-connections && viewItem == connection",
@@ -246,7 +276,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^10.0.11",
-    "axios": "^1.19.0"
+    "axios": "^1.20.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -257,11 +287,11 @@
     "@vscode/test-electron": "^3.1.0",
     "axios-mock-adapter": "^2.1.0",
     "esbuild": "^0.28.2",
-    "eslint": "^10.8.1",
+    "eslint": "^10.9.1",
     "mocha": "^11.8.0",
     "prettier": "^3.9.6",
     "sinon": "^22.1.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.68.0"
   }
 }

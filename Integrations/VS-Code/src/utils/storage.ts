@@ -13,14 +13,10 @@ export interface ScriptMeta {
   type: 'file' | 'folder';
 }
 
-export interface ScriptMeta {
-  id: string;
-  type: 'file' | 'folder';
-}
-
 export class Storage {
   private static instance: Storage;
   private context: vscode.ExtensionContext | undefined;
+  private inMemorySecrets: Map<string, string> = new Map();
 
   private constructor() {}
 
@@ -36,9 +32,10 @@ export class Storage {
   }
 
   public async reset(): Promise<void> {
+    this.inMemorySecrets.clear();
     if (this.context) {
-      this.context.globalState.update('scriptbee.connections', undefined);
-      this.context.globalState.update('scriptbee.activeConnectionId', undefined);
+      await this.context.globalState.update('scriptbee.connections', undefined);
+      await this.context.globalState.update('scriptbee.activeConnectionId', undefined);
     }
   }
 
@@ -56,6 +53,29 @@ export class Storage {
 
   public async setActiveConnectionId(connectionId: string | undefined): Promise<void> {
     await this.context?.globalState.update('scriptbee.activeConnectionId', connectionId);
+  }
+
+  public async getSecret(key: string): Promise<string | undefined> {
+    if (this.context?.secrets) {
+      return await this.context.secrets.get(key);
+    }
+    return this.inMemorySecrets.get(key);
+  }
+
+  public async storeSecret(key: string, value: string): Promise<void> {
+    if (this.context?.secrets) {
+      await this.context.secrets.store(key, value);
+    } else {
+      this.inMemorySecrets.set(key, value);
+    }
+  }
+
+  public async deleteSecret(key: string): Promise<void> {
+    if (this.context?.secrets) {
+      await this.context.secrets.delete(key);
+    } else {
+      this.inMemorySecrets.delete(key);
+    }
   }
 
   public async getScriptMeta(fileUri: vscode.Uri): Promise<ScriptMeta | undefined> {
