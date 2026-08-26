@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>ScriptBee.MCP.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ScriptBee.MCP\ScriptBee.MCP.csproj" />
+  </ItemGroup>
+</Project>

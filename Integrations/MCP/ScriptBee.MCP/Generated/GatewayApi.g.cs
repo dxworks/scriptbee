@@ -94,6 +94,69 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Get("/api/projects/{projectId}/permissions")]
         Task<GetUserPermissionsForProjectResponse> Permissions(string projectId, CancellationToken cancellationToken = default);
 
+        /// <summary>Get project members</summary>
+        /// <remarks>Returns all users and groups with their roles for the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/projects/{projectId}/members")]
+        Task<GetProjectMembersResponse> MembersGet(string projectId, CancellationToken cancellationToken = default);
+
+        /// <summary>Update project member role</summary>
+        /// <remarks>Assigns or updates the role for a user or group on the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="memberId">memberId parameter</param>
+        /// <param name="body">body parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>400</term>
+        /// <description>Bad Request</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/problem+json", "Content-Type: application/json")]
+        [Put("/api/projects/{projectId}/members/{memberId}")]
+        Task MembersPut(string projectId, string memberId, [Body] UpdateProjectMemberCommand body, CancellationToken cancellationToken = default);
+
+        /// <summary>Remove project member</summary>
+        /// <remarks>Removes a user or group's access from the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="memberId">memberId parameter</param>
+        /// <param name="memberType">memberType parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Delete("/api/projects/{projectId}/members/{memberId}")]
+        Task MembersDelete(string projectId, string memberId, [Query] string memberType, CancellationToken cancellationToken = default);
+
+        /// <summary>Get all users</summary>
+        /// <remarks>Returns all registered users for search-ahead.</remarks>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/users")]
+        Task<GetAllUsersResponse> Users(CancellationToken cancellationToken = default);
+
+        /// <summary>Get available roles</summary>
+        /// <remarks>Returns all roles available for assignment, as defined in the authorization system.</remarks>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/roles")]
+        Task<GetAvailableRolesResponse> Roles(CancellationToken cancellationToken = default);
+
         /// <summary>Create a new script</summary>
         /// <remarks>Creates a new script within the specified project.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -1562,6 +1625,25 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetAllUsersResponse
+    {
+
+        [JsonPropertyName("users")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<UserInfo> Users { get; set; } = new System.Collections.ObjectModel.Collection<UserInfo>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetAnalysisResultConsole
     {
 
@@ -1633,6 +1715,25 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
         [JsonPropertyName("data")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<AnalysisResultRunError> Data { get; set; } = new System.Collections.ObjectModel.Collection<AnalysisResultRunError>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetAvailableRolesResponse
+    {
+
+        [JsonPropertyName("roles")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<RoleInfo> Roles { get; set; } = new System.Collections.ObjectModel.Collection<RoleInfo>();
 
         private IDictionary<string, object> _additionalProperties;
 
@@ -1784,6 +1885,25 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
         [JsonPropertyName("data")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<Project> Data { get; set; } = new System.Collections.ObjectModel.Collection<Project>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetProjectMembersResponse
+    {
+
+        [JsonPropertyName("members")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<ProjectMember> Members { get; set; } = new System.Collections.ObjectModel.Collection<ProjectMember>();
 
         private IDictionary<string, object> _additionalProperties;
 
@@ -2565,6 +2685,56 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ProjectMember
+    {
+
+        [JsonPropertyName("memberId")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string MemberId { get; set; }
+
+        [JsonPropertyName("memberType")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string MemberType { get; set; }
+
+        [JsonPropertyName("role")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Role { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RoleInfo
+    {
+
+        [JsonPropertyName("id")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Id { get; set; }
+
+        [JsonPropertyName("description")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Description { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ScriptData
     {
 
@@ -2672,6 +2842,29 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UpdateProjectMemberCommand
+    {
+
+        [JsonPropertyName("role")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Role { get; set; }
+
+        [JsonPropertyName("memberType")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string MemberType { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UpdateScriptCommand
     {
 
@@ -2703,6 +2896,29 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
         [JsonPropertyName("fileNames")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<string> FileNames { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UserInfo
+    {
+
+        [JsonPropertyName("id")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Id { get; set; }
+
+        [JsonPropertyName("name")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Name { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 

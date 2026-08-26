@@ -1,7 +1,7 @@
 # Model Context Protocol (MCP) Integration
 
 ScriptBee provides an official MCP Server that exposes its capabilities—like project management, data context loading,
-and script analysis—to AI clients (e.g. Claude Code, Cursor, and VS Code).
+and script analysis—to AI clients (e.g. Claude Code, Cursor, GitHub Copilot, and VS Code).
 
 ## Requirements
 
@@ -33,15 +33,15 @@ _(Replace `5094` with the actual port the MCP server is running on)_
 ### Using Docker Transport (For IDEs and Claude Code)
 
 If you prefer not to manage a local .NET runtime or compile the executable manually, you can run the ScriptBee MCP
-server directly from its official Docker image (dxworks/scriptbee-mcp).
+server directly from its official Docker image (`dxworks/scriptbee-mcp`).
 
 Since local IDE clients and Claude Code spawn the MCP server as a subprocess via standard input/output, you must run the
-Docker container in interactive mode (-i) and pass the --stdio flag to the container.
+Docker container in interactive mode (`-i`) and pass the `--stdio` flag to the container.
 
-#### Configuration (mcp.json)
+#### Configuration (`mcp.json`)
 
-Add the following configuration to your mcp.json file. This tells your client to spin up the Docker container on demand,
-while passing the GatewayApiUrl environment variable to point the MCP server to your ScriptBee backend:
+Add the following configuration to your `mcp.json` file. This tells your client to spin up the Docker container on demand,
+while passing the `GatewayApiUrl` environment variable to point the MCP server to your ScriptBee backend:
 
 ```json
 {
@@ -64,7 +64,7 @@ while passing the GatewayApiUrl environment variable to point the MCP server to 
 
 > [!NOTE]
 > Networking Note: If your ScriptBee Gateway API is also running inside a Docker container on the same machine,
-> replacing localhost with host.docker.internal (e.g., -e GatewayApiUrl=http://host.docker.internal:5117) will allow the
+> replacing `localhost` with `host.docker.internal` (e.g., `-e GatewayApiUrl=http://host.docker.internal:5117`) will allow the
 > MCP container to communicate with it.
 
 ### Using Stdio Transport (For IDEs and Claude Code)
@@ -84,7 +84,7 @@ equivalent configuration file:
   "mcpServers": {
     "scriptbee": {
       "command": "/absolute/path/to/ScriptBee.MCP.exe",
-      "args": ["--stdio"]
+      "args": ["--stdio", "--gateway-url", "http://localhost:5117"]
     }
   }
 }
@@ -92,6 +92,50 @@ equivalent configuration file:
 
 _(On macOS/Linux, the command would be the path to the `ScriptBee.MCP` binary without the `.exe` extension, or `dotnet`
 with the path to `ScriptBee.MCP.dll` as the first argument)._
+
+## Authentication
+
+When the ScriptBee Gateway requires authentication, the MCP server can authenticate in several ways:
+
+### 1. Direct Bearer Token (VS Code / Copilot / Standalone)
+
+Provide a pre-existing JWT access token using the `--token` CLI argument or the `Authentication__AccessToken` / `ScriptBee__Authentication__AccessToken` environment variable:
+
+```json
+{
+  "mcpServers": {
+    "scriptbee": {
+      "command": "/absolute/path/to/ScriptBee.MCP.exe",
+      "args": ["--stdio", "--token", "ey...", "--gateway-url", "http://localhost:5117"]
+    }
+  }
+}
+```
+
+### 2. OIDC Client Credentials (Machine-to-Machine / CI)
+
+Configure the MCP server to automatically acquire and refresh access tokens from an OpenID Connect (OIDC) identity provider (e.g. Keycloak):
+
+```json
+{
+  "mcpServers": {
+    "scriptbee": {
+      "command": "/absolute/path/to/ScriptBee.MCP.exe",
+      "args": [
+        "--stdio",
+        "--authority",
+        "http://localhost:8080/realms/scriptbee",
+        "--client-id",
+        "scriptbee-mcp",
+        "--client-secret",
+        "your-client-secret",
+        "--gateway-url",
+        "http://localhost:5117"
+      ]
+    }
+  }
+}
+```
 
 ## Capabilities
 
@@ -109,6 +153,12 @@ The ScriptBee MCP server exposes the following primitives to the AI:
 The ScriptBee MCP server can be configured via command-line arguments or environment variables. Below are the available
 options:
 
-| Option        | Description                           | Default                 |
-| ------------- | ------------------------------------- | ----------------------- |
-| GatewayApiUrl | The URL of the ScriptBee Gateway API. | `http://localhost:5117` |
+| Option                         | CLI Argument       | Description                                              | Default                 |
+| ------------------------------ | ------------------ | -------------------------------------------------------- | ----------------------- |
+| `GatewayApiUrl`                | `--gateway-url`    | The URL of the ScriptBee Gateway API.                    | `http://localhost:5117` |
+| `Authentication:AccessToken`   | `--token`          | Static JWT access token for authenticating with Gateway. | `null`                  |
+| `Authentication:Authority`     | `--authority`      | OIDC Identity Provider authority URL.                    | `null`                  |
+| `Authentication:ClientId`      | `--client-id`      | OIDC client ID for client credentials flow.              | `null`                  |
+| `Authentication:ClientSecret`  | `--client-secret`  | OIDC client secret for client credentials flow.          | `null`                  |
+| `Authentication:Scope`         | `--scope`          | OIDC scope requested during token acquisition.           | `null`                  |
+| `Authentication:TokenEndpoint` | `--token-endpoint` | Explicit token endpoint URL (overrides OIDC discovery).  | `null`                  |

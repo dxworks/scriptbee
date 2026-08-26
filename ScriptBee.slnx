@@ -9,6 +9,7 @@
 
   <Folder Name="/Integrations/">
     <Project Path="Integrations/MCP/ScriptBee.MCP/ScriptBee.MCP.csproj" />
+    <Project Path="Integrations/MCP/ScriptBee.MCP.Tests/ScriptBee.MCP.Tests.csproj" />
   </Folder>
 
   <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj" />

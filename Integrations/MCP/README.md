@@ -114,11 +114,74 @@ After building or publishing the project, point directly to the output executabl
 - **load-and-link-context**: Guides the AI through the context ingestion workflow.
 - **run-analysis**: A workflow for the AI to run an analysis and monitor it until completion.
 
+## Authentication
+
+When the ScriptBee Gateway requires authentication, the MCP server can authenticate in several ways:
+
+### 1. Direct Bearer Token (VS Code / Copilot / Standalone)
+
+Provide a pre-existing JWT access token using the `--token` CLI argument or the `Authentication__AccessToken` / `ScriptBee__Authentication__AccessToken` environment variable.
+
+```json
+{
+  "mcpServers": {
+    "scriptbee": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "C:/Absolute/Path/To/ScriptBee.MCP.csproj",
+        "--",
+        "--stdio",
+        "--token",
+        "ey...",
+        "--gateway-url",
+        "http://localhost:5117"
+      ]
+    }
+  }
+}
+```
+
+### 2. OIDC Client Credentials (Machine-to-Machine / CI)
+
+Configure the MCP server to automatically acquire and refresh access tokens from an OpenID Connect (OIDC) identity provider (e.g. Keycloak):
+
+```json
+{
+  "mcpServers": {
+    "scriptbee": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "C:/Absolute/Path/To/ScriptBee.MCP.csproj",
+        "--",
+        "--stdio",
+        "--authority",
+        "http://localhost:8080/realms/scriptbee",
+        "--client-id",
+        "scriptbee-mcp",
+        "--client-secret",
+        "secret-key",
+        "--gateway-url",
+        "http://localhost:5117"
+      ]
+    }
+  }
+}
+```
+
 ## Configuration
 
-The ScriptBee MCP server can be configured via command-line arguments or environment variables. Below are the available
-options:
+The ScriptBee MCP server can be configured via command-line arguments or environment variables. Below are the available options:
 
-| Option        | Description                           | Default                 |
-|---------------|---------------------------------------|-------------------------|
-| GatewayApiUrl | The URL of the ScriptBee Gateway API. | `http://localhost:5117` |
+| Option                          | CLI Argument      | Description                                                | Default                 |
+|---------------------------------|-------------------|------------------------------------------------------------|-------------------------|
+| `GatewayApiUrl`                 | `--gateway-url`   | The URL of the ScriptBee Gateway API.                      | `http://localhost:5117` |
+| `Authentication:AccessToken`    | `--token`         | Static JWT access token for authenticating with Gateway.   | `null`                  |
+| `Authentication:Authority`      | `--authority`     | OIDC Identity Provider authority URL.                      | `null`                  |
+| `Authentication:ClientId`       | `--client-id`     | OIDC client ID for client credentials flow.                | `null`                  |
+| `Authentication:ClientSecret`   | `--client-secret` | OIDC client secret for client credentials flow.            | `null`                  |
+| `Authentication:Scope`          | `--scope`         | OIDC scope requested during token acquisition.             | `null`                  |
+| `Authentication:TokenEndpoint`  | `--token-endpoint`| Explicit token endpoint URL (overrides OIDC discovery).    | `null`                  |

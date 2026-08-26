@@ -28,6 +28,7 @@ export default defineConfig({
               { text: 'Docker Compose', link: '/installation/docker_installation' },
               { text: 'Kubernetes', link: '/installation/kubernetes_installation' },
               { text: 'VS Code', link: '/installation/vs_code_extension' },
+              { text: 'MCP Server', link: '/installation/mcp' },
             ],
           },
         ],
