@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { InstalledPlugin, MarketplacePlugin } from '../../types/marketplace-plugin';
+import { PermissionsService } from '../../services/auth/permissions.service';
 
 describe('GatewayPluginsComponent', () => {
   let component: GatewayPluginsComponent;
@@ -49,7 +50,16 @@ describe('GatewayPluginsComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [GatewayPluginsComponent],
-      providers: [{ provide: PluginService, useValue: pluginServiceSpy }, provideRouter([])],
+      providers: [
+        { provide: PluginService, useValue: pluginServiceSpy },
+        provideRouter([]),
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GatewayPluginsComponent);

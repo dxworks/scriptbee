@@ -1293,6 +1293,25 @@
         }
       }
     },
+    "/api/permissions": {
+      "get": {
+        "tags": ["Permissions"],
+        "summary": "Get global permissions",
+        "description": "Get all the global permissions for the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGlobalPermissionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/loaders/{loaderId}/files": {
       "put": {
         "tags": ["Loaders"],
@@ -2897,6 +2916,18 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ScriptLanguage"
+            }
+          }
+        }
+      },
+      "GetGlobalPermissionsResponse": {
+        "required": ["permissions"],
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }

@@ -15,6 +15,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideMonacoEditor } from 'ngx-monaco-editor-v2';
 import { ProjectLiveUpdatesService } from '../../../../../../services/projects/project-live-updates.service';
 import { ScriptUpdatedEvent } from '../../../../../../types/live-updates';
+import { PermissionsService } from '../../../../../../services/auth/permissions.service';
 
 interface MockServices {
   projectStructure: {
@@ -56,6 +57,12 @@ describe('SelectedScriptComponent', () => {
         { provide: MatSnackBar, useValue: { open: vi.fn() } },
         { provide: AnalysisService, useValue: { triggerAnalysis: vi.fn() } },
         { provide: ProjectLiveUpdatesService, useValue: mocks.liveUpdates },
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
       ],
     }).compileComponents();
 

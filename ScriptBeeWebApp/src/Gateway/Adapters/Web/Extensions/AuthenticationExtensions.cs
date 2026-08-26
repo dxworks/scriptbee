@@ -103,6 +103,7 @@ public static class AuthenticationExtensions
                 services
                     .AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>()
                     .AddSingleton<IGetProjectPermissions, GetDevProjectPermissions>()
+                    .AddSingleton<IGetGlobalPermissions, GetDevGlobalPermissions>()
                     .AddSingleton<IGetResourceRole, GetDevResourceRole>()
                     .AddSingleton<IGetAvailableRoles, GetDevAvailableRoles>();
             }
@@ -111,6 +112,7 @@ public static class AuthenticationExtensions
                 services
                     .AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>()
                     .AddSingleton<IGetProjectPermissions, GetProjectPermissions>()
+                    .AddSingleton<IGetGlobalPermissions, GetGlobalPermissions>()
                     .AddSingleton<IGetAvailableRoles, GetAvailableRoles>();
             }
 
@@ -148,6 +150,17 @@ public static class AuthenticationExtensions
             );
             services.AddHttpClient(
                 GetProjectPermissions.ClientName,
+                client =>
+                    client.BaseAddress = new Uri(
+                        GetUrlFromConfig(
+                            config,
+                            c => c.PermissionsUrl,
+                            nameof(config.PermissionsUrl)
+                        )
+                    )
+            );
+            services.AddHttpClient(
+                GetGlobalPermissions.ClientName,
                 client =>
                     client.BaseAddress = new Uri(
                         GetUrlFromConfig(

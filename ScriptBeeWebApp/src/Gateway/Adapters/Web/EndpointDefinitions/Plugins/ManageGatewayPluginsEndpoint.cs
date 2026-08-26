@@ -44,8 +44,7 @@ public class ManageGatewayPluginsEndpoint : IEndpointDefinition
             )
             .WithTags("Plugins")
             .WithSummary("Serve UI plugin file")
-            .WithDescription("Serves static files associated with UI plugins.")
-            .RequireAuthorization();
+            .WithDescription("Serves static files associated with UI plugins.");
     }
 
     private static Ok<WebGatewayPluginsResponse> GetGatewayPlugins(

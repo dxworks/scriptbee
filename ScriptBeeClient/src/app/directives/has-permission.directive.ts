@@ -11,13 +11,23 @@ export class HasPermissionDirective {
   private templateRef = inject(TemplateRef);
   private viewContainer = inject(ViewContainerRef);
   private permissionService = inject(PermissionsService);
+  private hasRenderedView = false;
 
   constructor() {
     effect(() => {
-      if (this.permissionService.hasPermission(this.hasPermission())) {
-        this.viewContainer.createEmbeddedView(this.templateRef);
-      } else {
+      const canRender = this.permissionService.hasPermission(this.hasPermission());
+
+      if (canRender) {
+        if (!this.hasRenderedView) {
+          this.viewContainer.createEmbeddedView(this.templateRef);
+          this.hasRenderedView = true;
+        }
+        return;
+      }
+
+      if (this.hasRenderedView) {
         this.viewContainer.clear();
+        this.hasRenderedView = false;
       }
     });
   }

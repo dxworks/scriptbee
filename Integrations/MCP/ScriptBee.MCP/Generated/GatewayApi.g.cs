@@ -599,6 +599,15 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Get("/api/plugins/gateway/ui/files/{pluginId}/{version}/{filePath}")]
         Task Files(string pluginId, string version, string filePath, CancellationToken cancellationToken = default);
 
+        /// <summary>Get global permissions</summary>
+        /// <remarks>Get all the global permissions for the authenticated user.</remarks>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/permissions")]
+        Task<GetGlobalPermissionsResponse> Permissions(CancellationToken cancellationToken = default);
+
         /// <summary>Upload files for a loader</summary>
         /// <remarks>Uploads one or more files to be used by a specific loader in the project.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -1753,6 +1762,25 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
         [JsonPropertyName("data")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<ScriptLanguage> Data { get; set; } = new System.Collections.ObjectModel.Collection<ScriptLanguage>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetGlobalPermissionsResponse
+    {
+
+        [JsonPropertyName("permissions")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<string> Permissions { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
         private IDictionary<string, object> _additionalProperties;
 
