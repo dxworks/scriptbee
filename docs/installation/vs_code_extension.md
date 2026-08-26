@@ -45,12 +45,24 @@ A dedicated **ScriptBee panel** is added to the VS Code Activity Bar. From here 
 
 You can define multiple connections to different ScriptBee backends (e.g., local development, staging, production).
 
-| Action                   | How                                                 |
-| ------------------------ | --------------------------------------------------- |
-| Add a connection         | Click the `+` icon in the ScriptBee panel title bar |
-| Edit a connection        | Click the pencil icon next to a connection          |
-| Switch active connection | Click the checkmark icon next to a connection       |
-| Delete a connection      | Click the trash icon next to a connection           |
+| Action                   | How                                                    |
+| ------------------------ | ------------------------------------------------------ |
+| Add a connection         | Click the `+` icon in the ScriptBee panel title bar    |
+| Edit a connection        | Click the pencil icon next to a connection             |
+| Switch active connection | Click the checkmark icon next to a connection          |
+| Delete a connection      | Click the trash icon next to a connection              |
+| Login (OIDC / PKCE)      | Right-click connection and select **Login**            |
+| Set Access Token         | Right-click connection and select **Set Access Token** |
+| Logout                   | Right-click connection and select **Logout**           |
+
+### Authentication
+
+The extension supports connecting to ScriptBee instances configured with OpenID Connect (OIDC) authentication:
+
+- **Interactive Login (PKCE Flow)**: Run `ScriptBee: Login` or select Login from the connection context menu. The extension starts a local loopback server and opens the browser to authenticate with the configured Identity Provider (e.g. Keycloak).
+- **Secure Token Storage**: Access and refresh tokens are stored securely in VS Code's `SecretStorage` and refreshed automatically.
+- **Manual Token Entry**: Use `ScriptBee: Set Access Token` to specify a pre-generated Bearer token.
+- **Development Mode**: If the ScriptBee backend runs in development mode (`AuthMode: Development`), authentication is automatically bypassed.
 
 ### Project Selection
 
