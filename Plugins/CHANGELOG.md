@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- update `Jint` to 4.16.0
+- update `Jint` to 4.16.1
 - update `Microsoft.CodeAnalysis` to 5.9.0
 - update `@angular/common` to 22.1.2
 - update `@angular/compiler` to 22.1.2

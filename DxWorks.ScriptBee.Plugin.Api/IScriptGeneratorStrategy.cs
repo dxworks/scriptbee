@@ -10,20 +10,37 @@ public interface IScriptGeneratorStrategy : IPlugin
 
     public string GenerateClassName(Type classType);
 
-    public string GenerateClassName(Type classType, Type baseClassType, out HashSet<Type> baseClassGenericTypes);
+    public string GenerateClassName(
+        Type classType,
+        Type baseClassType,
+        out HashSet<Type> baseClassGenericTypes
+    );
 
     public string GenerateClassStart();
 
     public string GenerateClassEnd();
 
-    public string GenerateField(string fieldModifier, Type fieldType, string fieldName,
-        out HashSet<Type> genericTypes);
+    public string GenerateField(
+        string fieldModifier,
+        Type fieldType,
+        string fieldName,
+        out HashSet<Type> genericTypes
+    );
 
-    public string GenerateProperty(string propertyModifier, Type propertyType, string propertyName,
-        out HashSet<Type> genericTypes);
+    public string GenerateProperty(
+        string propertyModifier,
+        Type propertyType,
+        string propertyName,
+        out HashSet<Type> genericTypes
+    );
 
-    public string GenerateMethod(string methodModifier, Type methodType, string methodName,
-        List<Tuple<Type, string>> methodParams, out HashSet<Type> genericTypes);
+    public string GenerateMethod(
+        string methodModifier,
+        Type methodType,
+        string methodName,
+        List<Tuple<Type, string>> methodParams,
+        out HashSet<Type> genericTypes
+    );
 
     public string GenerateModelDeclaration(string modelType);
 
