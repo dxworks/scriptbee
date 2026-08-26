@@ -1,5 +1,3 @@
 ﻿namespace DxWorks.ScriptBee.Plugin.Api;
 
-public interface IPlugin
-{
-}
+public interface IPlugin { }
