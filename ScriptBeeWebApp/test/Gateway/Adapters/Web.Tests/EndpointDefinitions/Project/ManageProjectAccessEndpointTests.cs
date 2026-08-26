@@ -159,4 +159,28 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
     }
+
+    [Theory]
+    [FilePath("TestData/GetAvailableRoles/response.json")]
+    public async Task GetAvailableRoles_ShouldReturnRoleList(string responsePath)
+    {
+        var api = new TestApiCaller<Program>("/api/roles");
+        var useCase = Substitute.For<IGetAvailableRolesUseCase>();
+        useCase
+            .GetAvailableRoles(Arg.Any<CancellationToken>())
+            .Returns(
+                Task.FromResult(
+                    new List<RoleInfo> { new("owner", "Full control over the project") }
+                )
+            );
+
+        var response = await api.GetApi(
+            new TestWebApplicationFactory<Program>(
+                outputHelper,
+                services => services.AddSingleton(useCase)
+            )
+        );
+
+        await response.AssertResponse(HttpStatusCode.OK, responsePath);
+    }
 }

@@ -103,13 +103,15 @@ public static class AuthenticationExtensions
                 services
                     .AddSingleton<IGetDefaultCreatorRole, GetDevAuthCreatorRole>()
                     .AddSingleton<IGetProjectPermissions, GetDevProjectPermissions>()
-                    .AddSingleton<IGetResourceRole, GetDevResourceRole>();
+                    .AddSingleton<IGetResourceRole, GetDevResourceRole>()
+                    .AddSingleton<IGetAvailableRoles, GetDevAvailableRoles>();
             }
             else
             {
                 services
                     .AddSingleton<IGetDefaultCreatorRole, GetDefaultCreatorRole>()
-                    .AddSingleton<IGetProjectPermissions, GetProjectPermissions>();
+                    .AddSingleton<IGetProjectPermissions, GetProjectPermissions>()
+                    .AddSingleton<IGetAvailableRoles, GetAvailableRoles>();
             }
 
             return services
@@ -156,7 +158,7 @@ public static class AuthenticationExtensions
                     )
             );
             services.AddHttpClient(
-                "GetRoles",
+                GetAvailableRoles.ClientName,
                 client =>
                     client.BaseAddress = new Uri(
                         GetUrlFromConfig(config, c => c.RolesUrl, nameof(config.RolesUrl))

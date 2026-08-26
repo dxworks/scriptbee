@@ -19,6 +19,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
         services.AddSingleton<IUpdateProjectMemberUseCase, UpdateProjectMemberService>();
         services.AddSingleton<IRemoveProjectMemberUseCase, RemoveProjectMemberService>();
         services.AddSingleton<IGetAllUsersUseCase, GetAllUsersService>();
+        services.AddSingleton<IGetAvailableRolesUseCase, GetAvailableRolesService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)
@@ -46,6 +47,14 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
             .WithTags("Users")
             .WithSummary("Get all users")
             .WithDescription("Returns all registered users for search-ahead.")
+            .RequireAuthorization();
+
+        app.MapGet("/api/roles", GetAvailableRoles)
+            .WithTags("Roles")
+            .WithSummary("Get available roles")
+            .WithDescription(
+                "Returns all roles available for assignment, as defined in the authorization system."
+            )
             .RequireAuthorization();
     }
 
@@ -113,6 +122,20 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
 
         return TypedResults.Ok(
             new WebGetAllUsersResponse(users.Select(u => new WebUserInfo(u.Id.Value, u.Name)))
+        );
+    }
+
+    private static async Task<Ok<WebGetAvailableRolesResponse>> GetAvailableRoles(
+        IGetAvailableRolesUseCase useCase,
+        CancellationToken cancellationToken
+    )
+    {
+        var roles = await useCase.GetAvailableRoles(cancellationToken);
+
+        return TypedResults.Ok(
+            new WebGetAvailableRolesResponse(
+                roles.Select(r => new WebRoleInfo(r.Id, r.Description))
+            )
         );
     }
 }
