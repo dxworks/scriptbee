@@ -14,6 +14,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ErrorStateComponent } from '../../../components/error-state/error-state.component';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { convertError } from '../../../utils/api';
+import { HasPermissionDirective } from '../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-projects-page',
@@ -31,6 +32,7 @@ import { convertError } from '../../../utils/api';
     DatePipe,
     RouterLink,
     ErrorStateComponent,
+    HasPermissionDirective,
   ],
 })
 export class ProjectsPage {

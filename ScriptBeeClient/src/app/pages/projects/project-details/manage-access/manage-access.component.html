@@ -1,0 +1,113 @@
+<div class="manage-access-container">
+  <h3>Manage Access</h3>
+
+  @if (membersResource.isLoading()) {
+    <app-loading-progress-bar title="Loading members..." />
+  } @else if (membersResource.error()) {
+    <app-error-state [error]="{ title: 'Failed to load members', detail: 'Please try again.', status: 500 }" (retry)="membersResource.reload()" />
+  } @else {
+    <table mat-table [dataSource]="membersResource.value() ?? []" class="members-table">
+      <ng-container matColumnDef="memberId">
+        <th mat-header-cell *matHeaderCellDef>Member ID</th>
+        <td mat-cell *matCellDef="let member">{{ member.memberId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="memberType">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let member">
+          <mat-icon class="type-icon">{{ member.memberType === 'user' ? 'person' : 'group' }}</mat-icon>
+          {{ member.memberType }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <td mat-cell *matCellDef="let member">{{ member.role }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let member">
+          <button
+            mat-icon-button
+            color="warn"
+            [disabled]="removingMemberId() === member.memberId"
+            (click)="onRemoveMember(member)"
+            id="remove-member-{{ member.memberId }}">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">No members found. Add members below.</td>
+      </tr>
+    </table>
+  }
+
+  <mat-divider />
+
+  <mat-card appearance="outlined" class="add-member-card">
+    <mat-card-header>
+      <mat-card-title>Add / Update Member</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="addMemberForm" class="add-member-form" (ngSubmit)="onAddMember()">
+        <mat-form-field>
+          <mat-label>Member Type</mat-label>
+          <mat-select formControlName="memberType" id="member-type-select">
+            <mat-option value="user">User</mat-option>
+            <mat-option value="group">Group</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        @if (isUserType()) {
+          <mat-form-field>
+            <mat-label>User</mat-label>
+            <input matInput id="member-id-autocomplete" [matAutocomplete]="auto" formControlName="memberId" placeholder="Search user..." />
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onUserSelected($event.option.value)">
+              @for (user of filteredUsers(); track user.id) {
+                <mat-option [value]="user">{{ user.name }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        } @else {
+          <mat-form-field>
+            <mat-label>Group ID</mat-label>
+            <input matInput id="member-id-input" formControlName="memberId" placeholder="e.g. dev-team" />
+          </mat-form-field>
+        }
+
+        <mat-form-field>
+          <mat-label>Role</mat-label>
+          @if (rolesResource.isLoading()) {
+            <mat-select id="role-select" formControlName="role" [compareWith]="compareRoles" [disabled]="true">
+              <mat-option>Loading roles...</mat-option>
+            </mat-select>
+          } @else {
+            <mat-select id="role-select" formControlName="role" [compareWith]="compareRoles">
+              @for (role of rolesResource.value() ?? []; track role.id) {
+                <mat-option [value]="role" [matTooltip]="role.description" matTooltipPosition="right">
+                  <span class="role-option-name">{{ role.id }}</span>
+                  <span class="role-option-description">{{ role.description }}</span>
+                </mat-option>
+              }
+            </mat-select>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" id="add-member-submit" [disabled]="addMemberForm.invalid || isSaving()">
+          @if (isSaving()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Add / Update
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

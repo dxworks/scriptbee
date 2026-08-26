@@ -224,4 +224,153 @@ public class ResourceMembersPersistenceAdapterIntegrationTests : IClassFixture<M
         savedProject.MemberId.ShouldBe(userId.Value);
         savedProject.AssignedAt.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(5));
     }
+
+    [Fact]
+    public async Task SetRoleForUser_WhenUserAlreadyExists_ShouldUpdateRole()
+    {
+        var projectId = ProjectId.FromValue("project-upsert-user");
+        var userId = new UserId("user-id-upsert");
+
+        await _adapter.SetRoleForUser(
+            userId,
+            projectId,
+            new UserRole("initial-role"),
+            TestContext.Current.CancellationToken
+        );
+
+        await _adapter.SetRoleForUser(
+            userId,
+            projectId,
+            new UserRole("updated-role"),
+            TestContext.Current.CancellationToken
+        );
+
+        var count = await _mongoCollection.CountDocumentsAsync(
+            m => m.ResourceId == projectId.Value && m.MemberId == userId.Value,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+        count.ShouldBe(1);
+
+        var saved = await _mongoCollection
+            .Find(m => m.ResourceId == projectId.Value && m.MemberId == userId.Value)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        saved.Role.ShouldBe("updated-role");
+    }
+
+    [Fact]
+    public async Task SetRoleForMember_ShouldUpsertGroupRole()
+    {
+        var projectId = ProjectId.FromValue("project-group-upsert");
+        const string groupId = "dev-team";
+
+        await _adapter.SetRoleForMember(
+            groupId,
+            "group",
+            projectId,
+            new UserRole("viewer"),
+            TestContext.Current.CancellationToken
+        );
+
+        await _adapter.SetRoleForMember(
+            groupId,
+            "group",
+            projectId,
+            new UserRole("editor"),
+            TestContext.Current.CancellationToken
+        );
+
+        var count = await _mongoCollection.CountDocumentsAsync(
+            m => m.ResourceId == projectId.Value && m.MemberId == groupId,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+        count.ShouldBe(1);
+
+        var saved = await _mongoCollection
+            .Find(m => m.ResourceId == projectId.Value && m.MemberId == groupId)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        saved.Role.ShouldBe("editor");
+        saved.MemberType.ShouldBe("group");
+    }
+
+    [Fact]
+    public async Task GetProjectMembers_ShouldReturnAllMembersForProject()
+    {
+        var projectId = ProjectId.FromValue("project-get-members");
+
+        await _mongoCollection.InsertManyAsync(
+            [
+                new MongodbResourceMember
+                {
+                    ResourceType = "project",
+                    ResourceId = projectId.Value,
+                    MemberType = "user",
+                    MemberId = "user-a",
+                    Role = "owner",
+                    AssignedAt = DateTimeOffset.UtcNow,
+                },
+                new MongodbResourceMember
+                {
+                    ResourceType = "project",
+                    ResourceId = projectId.Value,
+                    MemberType = "group",
+                    MemberId = "team-b",
+                    Role = "viewer",
+                    AssignedAt = DateTimeOffset.UtcNow,
+                },
+                new MongodbResourceMember
+                {
+                    ResourceType = "project",
+                    ResourceId = "other-project",
+                    MemberType = "user",
+                    MemberId = "user-c",
+                    Role = "editor",
+                    AssignedAt = DateTimeOffset.UtcNow,
+                },
+            ],
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        var members = await _adapter.GetProjectMembers(
+            projectId,
+            TestContext.Current.CancellationToken
+        );
+
+        members.Count.ShouldBe(2);
+        members.ShouldContain(m =>
+            m.MemberId == "user-a" && m.MemberType == "user" && m.Role == new UserRole("owner")
+        );
+        members.ShouldContain(m =>
+            m.MemberId == "team-b" && m.MemberType == "group" && m.Role == new UserRole("viewer")
+        );
+    }
+
+    [Fact]
+    public async Task RemoveProjectMember_ShouldDeleteMemberEntry()
+    {
+        var projectId = ProjectId.FromValue("project-remove-member");
+        await _mongoCollection.InsertOneAsync(
+            new MongodbResourceMember
+            {
+                ResourceType = "project",
+                ResourceId = projectId.Value,
+                MemberType = "user",
+                MemberId = "user-to-remove",
+                Role = "editor",
+                AssignedAt = DateTimeOffset.UtcNow,
+            },
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.RemoveProjectMember(
+            projectId,
+            "user-to-remove",
+            "user",
+            TestContext.Current.CancellationToken
+        );
+
+        var remaining = await _mongoCollection
+            .Find(m => m.ResourceId == projectId.Value && m.MemberId == "user-to-remove")
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        remaining.ShouldBeNull();
+    }
 }

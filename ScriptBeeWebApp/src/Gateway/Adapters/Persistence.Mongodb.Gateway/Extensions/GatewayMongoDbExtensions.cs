@@ -38,7 +38,9 @@ public static class GatewayMongoDbExtensions
             return services
                 .AddMongoCollection<MongodbResourceMember>(mongoDatabase, "ResourceMembers")
                 .AddSingleton<IGetResourceRole, ResourceMembersPersistenceAdapter>()
-                .AddSingleton<ISetResourceRole, ResourceMembersPersistenceAdapter>();
+                .AddSingleton<ISetResourceRole, ResourceMembersPersistenceAdapter>()
+                .AddSingleton<IGetProjectMembers, ResourceMembersPersistenceAdapter>()
+                .AddSingleton<IRemoveProjectMember, ResourceMembersPersistenceAdapter>();
         }
 
         public IServiceCollection AddUserManagementAdaptersAdapters(IMongoDatabase mongoDatabase)
@@ -46,7 +48,8 @@ public static class GatewayMongoDbExtensions
             return services
                 .AddMongoCollection<MongodbUser>(mongoDatabase, "Users")
                 .AddSingleton<IIndexCreator, UserManagementIndexes>()
-                .AddSingleton<IGetOrAddUser, UserManagementPersistenceAdapter>();
+                .AddSingleton<IGetOrAddUser, UserManagementPersistenceAdapter>()
+                .AddSingleton<IGetAllUsers, UserManagementPersistenceAdapter>();
         }
     }
 }

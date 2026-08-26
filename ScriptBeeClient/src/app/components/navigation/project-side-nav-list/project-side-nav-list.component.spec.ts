@@ -20,7 +20,7 @@ describe('ProjectSideNavListComponent', () => {
       imports: [ProjectSideNavListComponent],
       providers: [
         provideRouter(
-          ['model', 'analysis', 'settings', 'plugins'].map((path) => ({
+          ['model', 'analysis', 'settings', 'access', 'plugins'].map((path) => ({
             path,
             component: TestEntry,
           }))
@@ -44,13 +44,14 @@ describe('ProjectSideNavListComponent', () => {
 
   it('should render entries', () => {
     const icons = fixture.debugElement.queryAll(By.css('mat-icon'));
-    expect(icons).toHaveLength(5);
+    expect(icons).toHaveLength(6);
 
     const names = fixture.debugElement.queryAll(By.css('span[matListItemTitle]'));
-    expect(names).toHaveLength(4);
+    expect(names).toHaveLength(5);
     expect(names[0].nativeElement.textContent).toContain('Model');
     expect(names[1].nativeElement.textContent).toContain('Analysis');
     expect(names[2].nativeElement.textContent).toContain('Settings');
-    expect(names[3].nativeElement.textContent).toContain('Plugins');
+    expect(names[3].nativeElement.textContent).toContain('Manage Access');
+    expect(names[4].nativeElement.textContent).toContain('Plugins');
   });
 });

@@ -68,6 +68,12 @@ const defaultNavItems: NavItem[] = [
     permission: 'project:edit',
   },
   {
+    link: '/access',
+    name: 'Manage Access',
+    icon: 'manage_accounts',
+    permission: 'project:manage_access',
+  },
+  {
     link: '/plugins',
     name: 'Plugins',
     icon: 'extension',

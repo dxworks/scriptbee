@@ -1,6 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CreateProjectRequest, CreateProjectResponse, Project, ProjectPermissionsResponse } from '../../types/project';
+import {
+  CreateProjectRequest,
+  CreateProjectResponse,
+  Project,
+  ProjectMember,
+  ProjectMembersResponse,
+  ProjectPermissionsResponse,
+  RoleInfo,
+  RolesResponse,
+  UserInfo,
+  UsersResponse,
+} from '../../types/project';
 import { map, Observable } from 'rxjs';
 import { WebResponse } from '../../types/web-response';
 
@@ -34,5 +45,25 @@ export class ProjectService {
 
   getPermissions(projectId: string): Observable<string[]> {
     return this.http.get<ProjectPermissionsResponse>(`${this.projectsAPIUrl}/${projectId}/permissions`).pipe(map((r) => r.permissions));
+  }
+
+  getProjectMembers(projectId: string): Observable<ProjectMember[]> {
+    return this.http.get<ProjectMembersResponse>(`${this.projectsAPIUrl}/${projectId}/members`).pipe(map((r) => r.members));
+  }
+
+  updateProjectMember(projectId: string, memberId: string, role: string, memberType: string): Observable<void> {
+    return this.http.put<void>(`${this.projectsAPIUrl}/${projectId}/members/${memberId}`, { role, memberType });
+  }
+
+  removeProjectMember(projectId: string, memberId: string, memberType: string): Observable<void> {
+    return this.http.delete<void>(`${this.projectsAPIUrl}/${projectId}/members/${memberId}?memberType=${memberType}`);
+  }
+
+  getAllUsers(): Observable<UserInfo[]> {
+    return this.http.get<UsersResponse>('/api/users').pipe(map((r) => r.users));
+  }
+
+  getRoles(): Observable<RoleInfo[]> {
+    return this.http.get<RolesResponse>('/api/roles').pipe(map((r) => r.roles));
   }
 }

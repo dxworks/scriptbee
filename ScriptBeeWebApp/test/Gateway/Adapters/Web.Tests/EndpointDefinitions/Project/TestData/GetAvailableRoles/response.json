@@ -1,0 +1,8 @@
+{
+  "roles": [
+    {
+      "id": "owner",
+      "description": "Full control over the project"
+    }
+  ]
+}

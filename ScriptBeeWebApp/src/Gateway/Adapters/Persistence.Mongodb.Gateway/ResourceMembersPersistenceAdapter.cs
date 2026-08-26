@@ -10,7 +10,7 @@ namespace ScriptBee.Persistence.Mongodb;
 
 public sealed class ResourceMembersPersistenceAdapter(
     IMongoRepository<MongodbResourceMember> mongoRepository
-) : IGetResourceRole, ISetResourceRole
+) : IGetResourceRole, ISetResourceRole, IGetProjectMembers, IRemoveProjectMember
 {
     private const string ProjectResourceType = "project";
     private const string UserMemberType = "user";
@@ -60,17 +60,84 @@ public sealed class ResourceMembersPersistenceAdapter(
         CancellationToken cancellationToken
     )
     {
-        var model = new MongodbResourceMember
-        {
-            Id = null!,
-            ResourceType = ProjectResourceType,
-            ResourceId = projectId.Value,
-            MemberType = UserMemberType,
-            MemberId = userId.Value,
-            Role = role.Value,
-            AssignedAt = DateTimeOffset.UtcNow,
-        };
+        await UpsertMemberRole(userId.Value, UserMemberType, projectId, role, cancellationToken);
+    }
 
-        await mongoRepository.CreateDocument(model, cancellationToken);
+    public async Task SetRoleForMember(
+        string memberId,
+        string memberType,
+        ProjectId projectId,
+        UserRole role,
+        CancellationToken cancellationToken
+    )
+    {
+        await UpsertMemberRole(memberId, memberType, projectId, role, cancellationToken);
+    }
+
+    public async Task<List<ProjectMember>> GetProjectMembers(
+        ProjectId projectId,
+        CancellationToken cancellationToken
+    )
+    {
+        var filter = Builders<MongodbResourceMember>.Filter.And(
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceType, ProjectResourceType),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceId, projectId.Value)
+        );
+
+        var members = await mongoRepository
+            .MongoCollection.Find(filter)
+            .ToListAsync(cancellationToken);
+
+        return members
+            .Select(m => new ProjectMember(m.MemberId, m.MemberType, new UserRole(m.Role)))
+            .ToList();
+    }
+
+    public async Task RemoveProjectMember(
+        ProjectId projectId,
+        string memberId,
+        string memberType,
+        CancellationToken cancellationToken
+    )
+    {
+        var filter = Builders<MongodbResourceMember>.Filter.And(
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceType, ProjectResourceType),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceId, projectId.Value),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberId, memberId),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberType, memberType)
+        );
+
+        await mongoRepository.MongoCollection.DeleteOneAsync(filter, cancellationToken);
+    }
+
+    private async Task UpsertMemberRole(
+        string memberId,
+        string memberType,
+        ProjectId projectId,
+        UserRole role,
+        CancellationToken cancellationToken
+    )
+    {
+        var filter = Builders<MongodbResourceMember>.Filter.And(
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceType, ProjectResourceType),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceId, projectId.Value),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberType, memberType),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberId, memberId)
+        );
+
+        var update = Builders<MongodbResourceMember>
+            .Update.SetOnInsert(m => m.ResourceType, ProjectResourceType)
+            .SetOnInsert(m => m.ResourceId, projectId.Value)
+            .SetOnInsert(m => m.MemberType, memberType)
+            .SetOnInsert(m => m.MemberId, memberId)
+            .SetOnInsert(m => m.AssignedAt, DateTimeOffset.UtcNow)
+            .Set(m => m.Role, role.Value);
+
+        await mongoRepository.MongoCollection.UpdateOneAsync(
+            filter,
+            update,
+            new UpdateOptions { IsUpsert = true },
+            cancellationToken
+        );
     }
 }

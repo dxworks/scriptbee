@@ -1,0 +1,14 @@
+{
+  "members": [
+    {
+      "memberId": "user-a",
+      "memberType": "user",
+      "role": "owner"
+    },
+    {
+      "memberId": "team-b",
+      "memberType": "group",
+      "role": "viewer"
+    }
+  ]
+}
