@@ -1,0 +1,6 @@
+{
+  "permissions": [
+    "project:create",
+    "gateway_plugin:management"
+  ]
+}
