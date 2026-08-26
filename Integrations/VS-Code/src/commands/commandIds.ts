@@ -16,5 +16,9 @@ export const COMMAND_SELECT_INSTANCE = 'scriptbee.selectInstance';
 export const COMMAND_GENERATE_CLASSES = 'scriptbee.generateClasses';
 export const COMMAND_ON_PROJECT_SELECTED = 'scriptbee.onProjectSelected';
 
+export const COMMAND_LOGIN = 'scriptbee.login';
+export const COMMAND_LOGOUT = 'scriptbee.logout';
+export const COMMAND_SET_ACCESS_TOKEN = 'scriptbee.setAccessToken';
+
 export const VIEW_ID_CONNECTIONS = 'scriptbee-connections';
 export const VIEW_CONTAINER_ID = 'scriptbee-explorer';

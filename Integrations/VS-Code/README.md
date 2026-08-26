@@ -67,6 +67,15 @@ This extension can be configured via VS Code settings:
 4. Click **Select Project** inside your connection in the Activity Bar to choose an active project.
 5. Once a project is selected, you can use the Sync, Pull, and Push icons to manage your scripts.
 
+## Authentication
+
+The extension supports connecting to ScriptBee instances configured with OpenID Connect (OIDC) authentication:
+
+- **Interactive Login (PKCE Flow)**: Run `ScriptBee: Login` or click the Login action next to a connection. The extension starts a secure loopback callback server and opens your browser to authenticate with the configured Identity Provider (e.g. Keycloak).
+- **Secure Token Storage**: Access tokens and refresh tokens are safely stored in VS Code's `SecretStorage` and refreshed automatically before expiration.
+- **Manual Token Entry**: If using pre-generated or CI service tokens, run `ScriptBee: Set Access Token` to manually specify a bearer token.
+- **Development Mode**: If the ScriptBee backend runs in development mode (`AuthMode: Development`), authentication is automatically bypassed.
+
 ## Commands
 
 | Command                          | Description                                          |
@@ -75,6 +84,9 @@ This extension can be configured via VS Code settings:
 | `ScriptBee: Edit Connection`     | Edit an existing connection's name or URL.           |
 | `ScriptBee: Switch Connection`   | Make a connection the active one.                    |
 | `ScriptBee: Delete Connection`   | Remove a connection.                                 |
+| `ScriptBee: Login`               | Authenticate with the server via OIDC (PKCE).        |
+| `ScriptBee: Logout`              | Clear stored authentication tokens for a connection. |
+| `ScriptBee: Set Access Token`    | Manually set a Bearer token for a connection.        |
 | `ScriptBee: Select Project`      | Choose an active project for the current connection. |
 | `ScriptBee: Select Instance`     | Choose an active analysis instance.                  |
 | `ScriptBee: Refresh Tree View`   | Reload the connections panel.                        |
