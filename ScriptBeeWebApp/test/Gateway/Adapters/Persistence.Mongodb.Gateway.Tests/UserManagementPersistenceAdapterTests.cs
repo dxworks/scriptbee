@@ -71,4 +71,33 @@ public class UserManagementPersistenceAdapterTests : IClassFixture<MongoDbFixtur
             .FirstOrDefaultAsync(TestContext.Current.CancellationToken);
         savedUser.Name.ShouldBe("existing-user-name");
     }
+
+    [Fact]
+    public async Task GetAllUsers_ShouldReturnAllInsertedUsers()
+    {
+        await _mongoCollection.InsertManyAsync(
+            [
+                new MongodbUser
+                {
+                    ExternalId = "ext-id-1",
+                    Name = "Alice",
+                    CreatedAt = DateTimeOffset.UtcNow,
+                },
+                new MongodbUser
+                {
+                    ExternalId = "ext-id-2",
+                    Name = "Bob",
+                    CreatedAt = DateTimeOffset.UtcNow,
+                },
+            ],
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        var users = await _adapter.GetAllUsers(TestContext.Current.CancellationToken);
+
+        users.ShouldNotBeNull();
+        users.Count.ShouldBeGreaterThanOrEqualTo(2);
+        users.ShouldContain(u => u.Name == "Alice");
+        users.ShouldContain(u => u.Name == "Bob");
+    }
 }

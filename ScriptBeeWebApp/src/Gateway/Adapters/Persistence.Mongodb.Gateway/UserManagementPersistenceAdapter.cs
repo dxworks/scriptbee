@@ -7,7 +7,8 @@ using ScriptBee.Ports.Permissions;
 namespace ScriptBee.Persistence.Mongodb;
 
 public sealed class UserManagementPersistenceAdapter(IMongoRepository<MongodbUser> mongoRepository)
-    : IGetOrAddUser
+    : IGetOrAddUser,
+        IGetAllUsers
 {
     public async Task<UserId> GetOrAddUser(
         string externalUserId,
@@ -34,5 +35,14 @@ public sealed class UserManagementPersistenceAdapter(IMongoRepository<MongodbUse
             cancellationToken
         );
         return new UserId(user.Id);
+    }
+
+    public async Task<List<UserInfo>> GetAllUsers(CancellationToken cancellationToken)
+    {
+        var users = await mongoRepository
+            .MongoCollection.Find(Builders<MongodbUser>.Filter.Empty)
+            .ToListAsync(cancellationToken);
+
+        return users.Select(u => new UserInfo(new UserId(u.Id), u.Name)).ToList();
     }
 }

@@ -11,4 +11,12 @@ public interface ISetResourceRole
         UserRole role,
         CancellationToken cancellationToken
     );
+
+    Task SetRoleForMember(
+        string memberId,
+        string memberType,
+        ProjectId project,
+        UserRole role,
+        CancellationToken cancellationToken
+    );
 }
