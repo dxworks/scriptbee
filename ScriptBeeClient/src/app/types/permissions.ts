@@ -3,6 +3,7 @@ export type Permission =
   | 'project:view'
   | 'project:edit'
   | 'project:delete'
+  | 'project:manage_access'
   | 'script:view'
   | 'script:create'
   | 'script:edit'

@@ -52,3 +52,22 @@ export interface ProjectPermissionsResponse {
   role: string;
   permissions: string[];
 }
+
+export interface ProjectMember {
+  memberId: string;
+  memberType: string;
+  role: string;
+}
+
+export interface ProjectMembersResponse {
+  members: ProjectMember[];
+}
+
+export interface UserInfo {
+  id: string;
+  name: string;
+}
+
+export interface UsersResponse {
+  users: UserInfo[];
+}

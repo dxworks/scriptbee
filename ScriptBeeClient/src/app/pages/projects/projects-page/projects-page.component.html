@@ -6,7 +6,7 @@
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
-    <button mat-flat-button routerLink="/create-project">
+    <button *hasPermission="'project:create'" mat-flat-button routerLink="/create-project">
       Create Project
       <mat-icon>create</mat-icon>
     </button>

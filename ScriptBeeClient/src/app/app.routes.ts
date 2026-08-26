@@ -18,6 +18,7 @@ import { authGuard } from './guards/auth.guard';
 import { loginGuard } from './guards/login.guard';
 import { permissionGuard } from './guards/permissions.guard';
 import { projectPermissionsGuard } from './guards/projectPermission.guard';
+import { ManageAccessComponent } from './pages/projects/project-details/manage-access/manage-access.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -77,6 +78,11 @@ export const routes: Routes = [
           { path: ':pluginId', component: PluginDetailsComponent },
         ],
         canActivate: [permissionGuard('plugin:view')],
+      },
+      {
+        path: 'access',
+        component: ManageAccessComponent,
+        canActivate: [permissionGuard('project:manage_access')],
       },
       { path: '**', redirectTo: 'analysis' },
     ],
