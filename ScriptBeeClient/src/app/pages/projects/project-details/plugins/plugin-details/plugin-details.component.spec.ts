@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { By } from '@angular/platform-browser';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PermissionsService } from '../../../../../services/auth/permissions.service';
 
 describe('PluginDetailsComponent', () => {
   let fixture: ComponentFixture<PluginDetailsComponent>;
@@ -34,6 +35,12 @@ describe('PluginDetailsComponent', () => {
       providers: [
         { provide: PluginService, useValue: pluginServiceSpy },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
+        {
+          provide: PermissionsService,
+          useValue: {
+            hasPermission: () => true,
+          },
+        },
       ],
     }).compileComponents();
 

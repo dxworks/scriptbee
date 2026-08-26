@@ -26,3 +26,7 @@ export type Permission =
   | 'token:create'
   | 'token:delete'
   | 'gateway_plugin:management';
+
+export interface GlobalPermissionsResponse {
+  permissions: string[];
+}
