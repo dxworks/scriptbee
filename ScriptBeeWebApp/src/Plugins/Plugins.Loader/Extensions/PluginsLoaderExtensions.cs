@@ -30,7 +30,6 @@ public static class PluginsLoaderExtensions
         pluginRegistrationService.Add(PluginKind.ScriptRunner, [typeof(IScriptRunner)]);
         pluginRegistrationService.Add(PluginKind.HelperFunctions, [typeof(IHelperFunctions)]);
 
-        // todo: see how to start the plugin via node or http-server or something like that if not already started
         pluginRegistrationService.Add(PluginKind.Ui, []);
 
         return pluginRegistrationService;

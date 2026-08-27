@@ -12,4 +12,10 @@ public interface IGetResourceRole
         OneOf<ProjectId> resourceId,
         CancellationToken cancellationToken
     );
+
+    Task<List<ProjectId>> GetAccessibleProjectIds(
+        UserId userId,
+        List<UserGroup> groups,
+        CancellationToken cancellationToken
+    );
 }

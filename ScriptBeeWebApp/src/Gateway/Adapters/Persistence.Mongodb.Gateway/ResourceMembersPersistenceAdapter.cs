@@ -53,6 +53,36 @@ public sealed class ResourceMembersPersistenceAdapter(
         return new UserRole(resourceMember.Role);
     }
 
+    public async Task<List<ProjectId>> GetAccessibleProjectIds(
+        UserId userId,
+        List<UserGroup> groups,
+        CancellationToken cancellationToken
+    )
+    {
+        var filter = Builders<MongodbResourceMember>.Filter.And(
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceType, ProjectResourceType),
+            Builders<MongodbResourceMember>.Filter.Or(
+                Builders<MongodbResourceMember>.Filter.And(
+                    Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberType, UserMemberType),
+                    Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberId, userId.Value)
+                ),
+                Builders<MongodbResourceMember>.Filter.And(
+                    Builders<MongodbResourceMember>.Filter.Eq(m => m.MemberType, GroupMemberType),
+                    Builders<MongodbResourceMember>.Filter.In(
+                        m => m.MemberId,
+                        [.. groups.Select(g => g.Value)]
+                    )
+                )
+            )
+        );
+
+        var members = await mongoRepository
+            .MongoCollection.Find(filter)
+            .ToListAsync(cancellationToken);
+
+        return [.. members.Select(m => ProjectId.FromValue(m.ResourceId)).Distinct()];
+    }
+
     public async Task SetRoleForUser(
         UserId userId,
         ProjectId projectId,
@@ -88,9 +118,14 @@ public sealed class ResourceMembersPersistenceAdapter(
             .MongoCollection.Find(filter)
             .ToListAsync(cancellationToken);
 
-        return members
-            .Select(m => new ProjectMember(m.MemberId, m.MemberType, new UserRole(m.Role)))
-            .ToList();
+        return
+        [
+            .. members.Select(m => new ProjectMember(
+                m.MemberId,
+                m.MemberType,
+                new UserRole(m.Role)
+            )),
+        ];
     }
 
     public async Task RemoveProjectMember(

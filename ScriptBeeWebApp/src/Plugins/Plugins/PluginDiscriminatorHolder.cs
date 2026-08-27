@@ -2,7 +2,6 @@
 
 namespace ScriptBee.Plugins;
 
-// todo make it more extensible
 public class PluginDiscriminatorHolder : IPluginDiscriminatorHolder
 {
     public Dictionary<string, Type> GetDiscriminatedTypes()

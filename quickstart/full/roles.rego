@@ -17,6 +17,7 @@ plugin_marketplace_permissions := {
 project_permissions := {
     "Admin": {
         "project:view",
+        "project:view_all",
         "project:live_updates",
         "project:edit",
         "project:delete",

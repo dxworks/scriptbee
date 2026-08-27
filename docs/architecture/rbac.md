@@ -187,6 +187,7 @@ Detailed here are the possible roles a user can have in ScriptBee.
 
 | Permission            | Admin   | Editor  | Analyst | Viewer  |
 | --------------------- | ------- | ------- | ------- | ------- |
+| project:view_all      | &check; |         |         |         |
 | project:view          | &check; | &check; | &check; | &check; |
 | project:live_updates  | &check; | &check; | &check; | &check; |
 | project:edit          | &check; | &check; |         |         |

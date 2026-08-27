@@ -32,7 +32,7 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
             ),
         };
         getProjectsUseCase
-            .GetAllProjects(Arg.Any<CancellationToken>())
+            .GetAllProjects(Arg.Any<GetAllProjectsQuery>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(projectDetailsList));
 
         var response = await _api.GetApi(
