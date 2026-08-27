@@ -16,4 +16,13 @@ public sealed class GetDevResourceRole : IGetResourceRole
     {
         return Task.FromResult<UserRole?>(new UserRole("DevAdmin"));
     }
+
+    public Task<List<ProjectId>> GetAccessibleProjectIds(
+        UserId userId,
+        List<UserGroup> groups,
+        CancellationToken cancellationToken
+    )
+    {
+        return Task.FromResult<List<ProjectId>>([]);
+    }
 }

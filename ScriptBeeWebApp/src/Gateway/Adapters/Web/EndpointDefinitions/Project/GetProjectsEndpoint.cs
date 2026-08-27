@@ -41,7 +41,8 @@ public class GetProjectsEndpoint : IEndpointDefinition
         CancellationToken cancellationToken = default
     )
     {
-        var result = await useCase.GetAllProjects(cancellationToken);
+        var query = new GetAllProjectsQuery(currentUser.Id, currentUser.Groups);
+        var result = await useCase.GetAllProjects(query, cancellationToken);
 
         return TypedResults.Ok(WebGetProjectListResponse.Map(result));
     }

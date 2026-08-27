@@ -15,6 +15,10 @@ allow if {
 }
 
 allow if {
+    input.subject.groups[_] == "admin"
+}
+
+allow if {
     input.resource.type == "global"
     plugin_marketplace_permissions[input.action]
 }
@@ -32,6 +36,11 @@ user_permissions contains perm if {
 
 user_permissions contains "project:create" if {
     input.resource.type == "global"
+}
+
+user_permissions contains "project:view_all" if {
+    input.resource.type == "global"
+    input.subject.groups[_] == "admin"
 }
 
 user_permissions contains perm if {

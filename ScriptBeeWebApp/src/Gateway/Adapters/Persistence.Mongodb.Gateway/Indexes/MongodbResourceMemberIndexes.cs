@@ -9,17 +9,24 @@ public class MongodbResourceMemberIndexes(IMongoRepository<MongodbResourceMember
 {
     public async Task Create(CancellationToken cancellationToken)
     {
-        var index = new CreateIndexModel<MongodbResourceMember>(
-            Builders<MongodbResourceMember>
-                .IndexKeys.Ascending(x => x.ResourceType)
-                .Ascending(x => x.ResourceId)
-                .Ascending(x => x.MemberType)
-                .Ascending(x => x.MemberId)
-        );
+        var indexes = new[]
+        {
+            new CreateIndexModel<MongodbResourceMember>(
+                Builders<MongodbResourceMember>
+                    .IndexKeys.Ascending(x => x.ResourceType)
+                    .Ascending(x => x.ResourceId)
+                    .Ascending(x => x.MemberType)
+                    .Ascending(x => x.MemberId)
+            ),
+            new CreateIndexModel<MongodbResourceMember>(
+                Builders<MongodbResourceMember>
+                    .IndexKeys.Ascending(x => x.ResourceType)
+                    .Ascending(x => x.MemberType)
+                    .Ascending(x => x.MemberId)
+                    .Ascending(x => x.ResourceId)
+            ),
+        };
 
-        await mongoRepository.MongoCollection.Indexes.CreateOneAsync(
-            index,
-            cancellationToken: cancellationToken
-        );
+        await mongoRepository.MongoCollection.Indexes.CreateManyAsync(indexes, cancellationToken);
     }
 }
