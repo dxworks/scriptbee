@@ -88,9 +88,14 @@ public sealed class ResourceMembersPersistenceAdapter(
             .MongoCollection.Find(filter)
             .ToListAsync(cancellationToken);
 
-        return members
-            .Select(m => new ProjectMember(m.MemberId, m.MemberType, new UserRole(m.Role)))
-            .ToList();
+        return
+        [
+            .. members.Select(m => new ProjectMember(
+                m.MemberId,
+                m.MemberType,
+                new UserRole(m.Role)
+            )),
+        ];
     }
 
     public async Task RemoveProjectMember(

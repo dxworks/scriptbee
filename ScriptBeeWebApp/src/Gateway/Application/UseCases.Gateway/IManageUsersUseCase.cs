@@ -4,7 +4,7 @@ namespace ScriptBee.UseCases.Gateway;
 
 public interface IManageUsersUseCase
 {
-    public Task<UserId> GetUserId(
+    Task<UserId> GetUserId(
         string externalUserId,
         string externalUserName,
         CancellationToken cancellationToken

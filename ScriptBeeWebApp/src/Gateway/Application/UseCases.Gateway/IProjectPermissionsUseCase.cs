@@ -4,7 +4,7 @@ namespace ScriptBee.UseCases.Gateway;
 
 public interface IProjectPermissionsUseCase
 {
-    public Task<UserPermissions?> GetProjectPermissions(
+    Task<UserPermissions?> GetProjectPermissions(
         GetProjectPermissionsQuery getProjectPermissions,
         CancellationToken cancellationToken
     );
