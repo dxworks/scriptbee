@@ -373,4 +373,57 @@ public class ResourceMembersPersistenceAdapterIntegrationTests : IClassFixture<M
             .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
         remaining.ShouldBeNull();
     }
+
+    [Fact]
+    public async Task RemoveAllProjectMembers_ShouldDeleteAllMembersForProject()
+    {
+        var projectId = ProjectId.FromValue("project-remove-all-members");
+        var otherProjectId = ProjectId.FromValue("other-project-keep");
+
+        await _mongoCollection.InsertManyAsync(
+            [
+                new MongodbResourceMember
+                {
+                    ResourceType = "project",
+                    ResourceId = projectId.Value,
+                    MemberType = "user",
+                    MemberId = "user-1",
+                    Role = "owner",
+                    AssignedAt = DateTimeOffset.UtcNow,
+                },
+                new MongodbResourceMember
+                {
+                    ResourceType = "project",
+                    ResourceId = projectId.Value,
+                    MemberType = "group",
+                    MemberId = "team-1",
+                    Role = "viewer",
+                    AssignedAt = DateTimeOffset.UtcNow,
+                },
+                new MongodbResourceMember
+                {
+                    ResourceType = "project",
+                    ResourceId = otherProjectId.Value,
+                    MemberType = "user",
+                    MemberId = "user-other",
+                    Role = "editor",
+                    AssignedAt = DateTimeOffset.UtcNow,
+                },
+            ],
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        await _adapter.RemoveAllProjectMembers(projectId, TestContext.Current.CancellationToken);
+
+        var remainingCount = await _mongoCollection.CountDocumentsAsync(
+            m => m.ResourceId == projectId.Value,
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+        remainingCount.ShouldBe(0);
+
+        var otherRemaining = await _mongoCollection
+            .Find(m => m.ResourceId == otherProjectId.Value)
+            .FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+        otherRemaining.ShouldNotBeNull();
+    }
 }

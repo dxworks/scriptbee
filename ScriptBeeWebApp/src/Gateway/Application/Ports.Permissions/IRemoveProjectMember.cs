@@ -10,4 +10,6 @@ public interface IRemoveProjectMember
         string memberType,
         CancellationToken cancellationToken
     );
+
+    Task RemoveAllProjectMembers(ProjectId projectId, CancellationToken cancellationToken);
 }
