@@ -145,6 +145,19 @@ public sealed class ResourceMembersPersistenceAdapter(
         await mongoRepository.MongoCollection.DeleteOneAsync(filter, cancellationToken);
     }
 
+    public async Task RemoveAllProjectMembers(
+        ProjectId projectId,
+        CancellationToken cancellationToken
+    )
+    {
+        var filter = Builders<MongodbResourceMember>.Filter.And(
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceType, ProjectResourceType),
+            Builders<MongodbResourceMember>.Filter.Eq(m => m.ResourceId, projectId.Value)
+        );
+
+        await mongoRepository.MongoCollection.DeleteManyAsync(filter, cancellationToken);
+    }
+
     private async Task UpsertMemberRole(
         string memberId,
         string memberType,
