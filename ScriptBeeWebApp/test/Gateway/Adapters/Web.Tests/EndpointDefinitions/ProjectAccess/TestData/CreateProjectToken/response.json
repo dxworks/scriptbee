@@ -1,0 +1,8 @@
+{
+  "id": "token-1",
+  "token": "plain-token",
+  "description": "CI token",
+  "role": "viewer",
+  "createdAt": "2024-02-08T00:00:00+00:00",
+  "expiresAt": "2024-03-10T00:00:00+00:00"
+}

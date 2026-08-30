@@ -18,7 +18,8 @@ public static class MongoDbExtensions
             .AddProjectAdapters(mongoDatabase)
             .AddProjectInstancesAdapters(mongoDatabase)
             .AddResourceMembersAdapters(mongoDatabase)
-            .AddUserManagementAdaptersAdapters(mongoDatabase)
+            .AddUserManagementAdapters(mongoDatabase)
+            .AddProjectTokensAdapters(mongoDatabase)
             .AddAnalysisAdapters(mongoDatabase)
             .AddScriptAdapters(mongoDatabase);
     }

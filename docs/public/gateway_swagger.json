@@ -136,188 +136,6 @@
         }
       }
     },
-    "/api/projects/{projectId}/permissions": {
-      "get": {
-        "tags": ["Projects", "Permissions"],
-        "summary": "Get project permissions",
-        "description": "Get all the permissions for the user associated for the project.",
-        "parameters": [
-          {
-            "name": "projectId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserPermissionsForProjectResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/projects/{projectId}/members": {
-      "get": {
-        "tags": ["Projects", "Access"],
-        "summary": "Get project members",
-        "description": "Returns all users and groups with their roles for the project.",
-        "parameters": [
-          {
-            "name": "projectId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetProjectMembersResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/projects/{projectId}/members/{memberId}": {
-      "put": {
-        "tags": ["Projects", "Access"],
-        "summary": "Update project member role",
-        "description": "Assigns or updates the role for a user or group on the project.",
-        "parameters": [
-          {
-            "name": "projectId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "memberId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateProjectMemberCommand"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Projects", "Access"],
-        "summary": "Remove project member",
-        "description": "Removes a user or group's access from the project.",
-        "parameters": [
-          {
-            "name": "projectId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "memberId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "memberType",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/api/users": {
-      "get": {
-        "tags": ["Users"],
-        "summary": "Get all users",
-        "description": "Returns all registered users for search-ahead.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAllUsersResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/roles": {
-      "get": {
-        "tags": ["Roles"],
-        "summary": "Get available roles",
-        "description": "Returns all roles available for assignment, as defined in the authorization system.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableRolesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/projects/{projectId}/scripts": {
       "post": {
         "tags": ["Scripts"],
@@ -763,6 +581,294 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/permissions": {
+      "get": {
+        "tags": ["Projects", "Permissions"],
+        "summary": "Get project permissions",
+        "description": "Get all the permissions for the user associated for the project.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPermissionsForProjectResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/members": {
+      "get": {
+        "tags": ["Projects", "Access"],
+        "summary": "Get project members",
+        "description": "Returns all users and groups with their roles for the project.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProjectMembersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/members/{memberId}": {
+      "put": {
+        "tags": ["Projects", "Access"],
+        "summary": "Update project member role",
+        "description": "Assigns or updates the role for a user or group on the project.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectMemberCommand"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Projects", "Access"],
+        "summary": "Remove project member",
+        "description": "Removes a user or group's access from the project.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "memberType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get all users",
+        "description": "Returns all registered users for search-ahead.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllUsersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roles": {
+      "get": {
+        "tags": ["Roles"],
+        "summary": "Get available roles",
+        "description": "Returns all roles available for assignment, as defined in the authorization system.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableRolesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/tokens": {
+      "get": {
+        "tags": ["Projects", "Access"],
+        "summary": "Get project tokens",
+        "description": "Returns all the tokens associated with the project tokens.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProjectTokensResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Projects", "Access"],
+        "summary": "Create project token",
+        "description": "Creates a new project token",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProjectTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/tokens/{tokenId}": {
+      "delete": {
+        "tags": ["Projects", "Access"],
+        "summary": "Remove project token",
+        "description": "Removes a token from the project.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tokenId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -2779,6 +2885,49 @@
           }
         }
       },
+      "CreateProjectTokenRequest": {
+        "required": ["description", "role", "expiresAt"],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": ["null", "string"]
+          },
+          "role": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Command used to create a new project toke."
+      },
+      "CreateProjectTokenResponse": {
+        "required": ["id", "token", "description", "role", "createdAt", "expiresAt"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "role": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "CreateScriptCommand": {
         "required": ["path", "language", "parameters"],
         "type": "object",
@@ -3030,6 +3179,18 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ProjectMember"
+            }
+          }
+        }
+      },
+      "GetProjectTokensResponse": {
+        "required": ["tokens"],
+        "type": "object",
+        "properties": {
+          "tokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectToken"
             }
           }
         }
@@ -3616,6 +3777,29 @@
           }
         }
       },
+      "ProjectToken": {
+        "required": ["id", "description", "role", "createdAt", "expiresAt"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": ["null", "string"]
+          },
+          "role": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "RoleInfo": {
         "required": ["id", "description"],
         "type": "object",
@@ -3752,6 +3936,12 @@
       "name": "Projects"
     },
     {
+      "name": "Scripts"
+    },
+    {
+      "name": "ProjectStructure"
+    },
+    {
       "name": "Permissions"
     },
     {
@@ -3762,12 +3952,6 @@
     },
     {
       "name": "Roles"
-    },
-    {
-      "name": "Scripts"
-    },
-    {
-      "name": "ProjectStructure"
     },
     {
       "name": "Plugins"

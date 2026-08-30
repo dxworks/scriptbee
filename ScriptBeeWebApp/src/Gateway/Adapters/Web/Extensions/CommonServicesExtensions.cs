@@ -11,6 +11,7 @@ public static class CommonServicesExtensions
         return services
             .AddSingleton<IDateTimeProvider, DateTimeProvider>()
             .AddSingleton<IGuidProvider, GuidProvider>()
+            .AddSingleton<ISecureRandomProvider, SecureRandomProvider>()
             .AddScoped<IClientIdProvider, ClientIdProvider>()
             .AddSingleton<ScriptGeneratorStrategyFactory>();
     }

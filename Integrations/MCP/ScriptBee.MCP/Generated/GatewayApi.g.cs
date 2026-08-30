@@ -84,79 +84,6 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Get("/api/projects/{projectId}")]
         Task<ProjectDetails> ProjectsGet(string projectId, CancellationToken cancellationToken = default);
 
-        /// <summary>Get project permissions</summary>
-        /// <remarks>Get all the permissions for the user associated for the project.</remarks>
-        /// <param name="projectId">projectId parameter</param>
-        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
-        [Headers("Accept: application/json")]
-        [Get("/api/projects/{projectId}/permissions")]
-        Task<GetUserPermissionsForProjectResponse> Permissions(string projectId, CancellationToken cancellationToken = default);
-
-        /// <summary>Get project members</summary>
-        /// <remarks>Returns all users and groups with their roles for the project.</remarks>
-        /// <param name="projectId">projectId parameter</param>
-        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
-        [Headers("Accept: application/json")]
-        [Get("/api/projects/{projectId}/members")]
-        Task<GetProjectMembersResponse> MembersGet(string projectId, CancellationToken cancellationToken = default);
-
-        /// <summary>Update project member role</summary>
-        /// <remarks>Assigns or updates the role for a user or group on the project.</remarks>
-        /// <param name="projectId">projectId parameter</param>
-        /// <param name="memberId">memberId parameter</param>
-        /// <param name="body">body parameter</param>
-        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
-        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
-        /// <exception cref="ApiException">
-        /// Thrown when the request returns a non-success status code:
-        /// <list type="table">
-        /// <listheader>
-        /// <term>Status</term>
-        /// <description>Description</description>
-        /// </listheader>
-        /// <item>
-        /// <term>400</term>
-        /// <description>Bad Request</description>
-        /// </item>
-        /// </list>
-        /// </exception>
-        [Headers("Accept: application/problem+json", "Content-Type: application/json")]
-        [Put("/api/projects/{projectId}/members/{memberId}")]
-        Task MembersPut(string projectId, string memberId, [Body] UpdateProjectMemberCommand body, CancellationToken cancellationToken = default);
-
-        /// <summary>Remove project member</summary>
-        /// <remarks>Removes a user or group's access from the project.</remarks>
-        /// <param name="projectId">projectId parameter</param>
-        /// <param name="memberId">memberId parameter</param>
-        /// <param name="memberType">memberType parameter</param>
-        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
-        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
-        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
-        [Delete("/api/projects/{projectId}/members/{memberId}")]
-        Task MembersDelete(string projectId, string memberId, [Query] string memberType, CancellationToken cancellationToken = default);
-
-        /// <summary>Get all users</summary>
-        /// <remarks>Returns all registered users for search-ahead.</remarks>
-        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
-        [Headers("Accept: application/json")]
-        [Get("/api/users")]
-        Task<GetAllUsersResponse> Users(CancellationToken cancellationToken = default);
-
-        /// <summary>Get available roles</summary>
-        /// <remarks>Returns all roles available for assignment, as defined in the authorization system.</remarks>
-        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
-        [Headers("Accept: application/json")]
-        [Get("/api/roles")]
-        Task<GetAvailableRolesResponse> Roles(CancellationToken cancellationToken = default);
-
         /// <summary>Create a new script</summary>
         /// <remarks>Creates a new script within the specified project.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -357,6 +284,122 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Headers("Accept: application/json")]
         [Get("/api/projects/{projectId}/structure/available-script-types")]
         Task<GetAvailableScriptTypesResponse> AvailableScriptTypes(string projectId, CancellationToken cancellationToken = default);
+
+        /// <summary>Get project permissions</summary>
+        /// <remarks>Get all the permissions for the user associated for the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/projects/{projectId}/permissions")]
+        Task<GetUserPermissionsForProjectResponse> Permissions(string projectId, CancellationToken cancellationToken = default);
+
+        /// <summary>Get project members</summary>
+        /// <remarks>Returns all users and groups with their roles for the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/projects/{projectId}/members")]
+        Task<GetProjectMembersResponse> MembersGet(string projectId, CancellationToken cancellationToken = default);
+
+        /// <summary>Update project member role</summary>
+        /// <remarks>Assigns or updates the role for a user or group on the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="memberId">memberId parameter</param>
+        /// <param name="body">body parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>400</term>
+        /// <description>Bad Request</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/problem+json", "Content-Type: application/json")]
+        [Put("/api/projects/{projectId}/members/{memberId}")]
+        Task MembersPut(string projectId, string memberId, [Body] UpdateProjectMemberCommand body, CancellationToken cancellationToken = default);
+
+        /// <summary>Remove project member</summary>
+        /// <remarks>Removes a user or group's access from the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="memberId">memberId parameter</param>
+        /// <param name="memberType">memberType parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Delete("/api/projects/{projectId}/members/{memberId}")]
+        Task MembersDelete(string projectId, string memberId, [Query] string memberType, CancellationToken cancellationToken = default);
+
+        /// <summary>Get all users</summary>
+        /// <remarks>Returns all registered users for search-ahead.</remarks>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/users")]
+        Task<GetAllUsersResponse> Users(CancellationToken cancellationToken = default);
+
+        /// <summary>Get available roles</summary>
+        /// <remarks>Returns all roles available for assignment, as defined in the authorization system.</remarks>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/roles")]
+        Task<GetAvailableRolesResponse> Roles(CancellationToken cancellationToken = default);
+
+        /// <summary>Get project tokens</summary>
+        /// <remarks>Returns all the tokens associated with the project tokens.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Headers("Accept: application/json")]
+        [Get("/api/projects/{projectId}/tokens")]
+        Task<GetProjectTokensResponse> TokensGet(string projectId, CancellationToken cancellationToken = default);
+
+        /// <summary>Create project token</summary>
+        /// <remarks>Creates a new project token</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="body">body parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>Created</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>400</term>
+        /// <description>Bad Request</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/json, application/problem+json", "Content-Type: application/json")]
+        [Post("/api/projects/{projectId}/tokens")]
+        Task<CreateProjectTokenResponse> TokensPost(string projectId, [Body] CreateProjectTokenRequest body, CancellationToken cancellationToken = default);
+
+        /// <summary>Remove project token</summary>
+        /// <remarks>Removes a token from the project.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="tokenId">tokenId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
+        [Delete("/api/projects/{projectId}/tokens/{tokenId}")]
+        Task TokensDelete(string projectId, string tokenId, CancellationToken cancellationToken = default);
 
         /// <summary>Get all available plugins</summary>
         /// <remarks>Retrieves a list of all available plugins from the marketplace.</remarks>
@@ -1540,6 +1583,73 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
 
     }
 
+    /// <summary>
+    /// Command used to create a new project toke.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateProjectTokenRequest
+    {
+
+        [JsonPropertyName("description")]
+        public string Description { get; set; }
+
+        [JsonPropertyName("role")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Role { get; set; }
+
+        [JsonPropertyName("expiresAt")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset ExpiresAt { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class CreateProjectTokenResponse
+    {
+
+        [JsonPropertyName("id")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Id { get; set; }
+
+        [JsonPropertyName("token")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Token { get; set; }
+
+        [JsonPropertyName("description")]
+        public string Description { get; set; }
+
+        [JsonPropertyName("role")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Role { get; set; }
+
+        [JsonPropertyName("createdAt")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset CreatedAt { get; set; }
+
+        [JsonPropertyName("expiresAt")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset ExpiresAt { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class CreateScriptCommand
     {
@@ -1932,6 +2042,25 @@ namespace ScriptBee.MCP.Gateway.Generated.Contracts
         [JsonPropertyName("members")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<ProjectMember> Members { get; set; } = new System.Collections.ObjectModel.Collection<ProjectMember>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetProjectTokensResponse
+    {
+
+        [JsonPropertyName("tokens")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<ProjectToken> Tokens { get; set; } = new System.Collections.ObjectModel.Collection<ProjectToken>();
 
         private IDictionary<string, object> _additionalProperties;
 
@@ -2727,6 +2856,40 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
         [JsonPropertyName("role")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Role { get; set; }
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ProjectToken
+    {
+
+        [JsonPropertyName("id")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Id { get; set; }
+
+        [JsonPropertyName("description")]
+        public string Description { get; set; }
+
+        [JsonPropertyName("role")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Role { get; set; }
+
+        [JsonPropertyName("createdAt")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset CreatedAt { get; set; }
+
+        [JsonPropertyName("expiresAt")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public System.DateTimeOffset ExpiresAt { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 
