@@ -42,11 +42,11 @@ public class ManageProjectTokensServiceTests
             new(
                 new ProjectTokenId("id"),
                 projectId,
+                "hashed-token",
                 "description",
-                DateTimeOffset.UtcNow,
-                DateTimeOffset.UtcNow,
                 new UserRole("role"),
-                "hashed-token"
+                DateTimeOffset.UtcNow,
+                DateTimeOffset.UtcNow
             ),
         ];
         _getAllProjectTokens
@@ -72,11 +72,11 @@ public class ManageProjectTokensServiceTests
         var token = new ProjectToken(
             new ProjectTokenId("id"),
             projectId,
+            tokenHash,
             "description",
-            DateTimeOffset.UtcNow,
-            expiresAt,
             userRole,
-            tokenHash
+            DateTimeOffset.UtcNow,
+            expiresAt
         );
 
         _secureRandomProvider.GetBytes(32).Returns([.. "ab"u8]);

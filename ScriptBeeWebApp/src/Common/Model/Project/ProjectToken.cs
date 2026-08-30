@@ -5,9 +5,9 @@ namespace ScriptBee.Domain.Model.Project;
 public record ProjectToken(
     ProjectTokenId Id,
     ProjectId ProjectId,
+    string TokenHash,
     string? Description,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset ExpiresAt,
     UserRole Role,
-    string TokenHash
+    DateTimeOffset CreatedAt,
+    DateTimeOffset ExpiresAt
 );

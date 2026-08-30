@@ -31,20 +31,20 @@ public class ManageProjectTokensEndpointTests(ITestOutputHelper outputHelper)
                         new(
                             new ProjectTokenId("token-1"),
                             projectId,
+                            "hash-1",
                             "CI token",
-                            createdAt,
-                            expiresAt,
                             new UserRole("viewer"),
-                            "hash-1"
+                            createdAt,
+                            expiresAt
                         ),
                         new(
                             new ProjectTokenId("token-2"),
                             projectId,
+                            "hash-2",
                             "Deploy token",
-                            createdAt.AddDays(1),
-                            expiresAt.AddDays(1),
                             new UserRole("owner"),
-                            "hash-2"
+                            createdAt.AddDays(1),
+                            expiresAt.AddDays(1)
                         ),
                     }
                 )
@@ -98,11 +98,11 @@ public class ManageProjectTokensEndpointTests(ITestOutputHelper outputHelper)
                         new ProjectToken(
                             new ProjectTokenId("token-1"),
                             projectId,
+                            "hash-1",
                             "CI token",
-                            createdAt,
-                            expiresAt,
                             new UserRole("viewer"),
-                            "hash-1"
+                            createdAt,
+                            expiresAt
                         ),
                         "plain-token"
                     )

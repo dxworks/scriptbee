@@ -6,7 +6,7 @@ namespace ScriptBee.Ports.Permissions;
 public interface ICreateProjectToken
 {
     Task<ProjectToken> CreateToken(
-        ProjectId commandProjectId,
+        ProjectId projectId,
         string tokenHash,
         string? description,
         UserRole role,
