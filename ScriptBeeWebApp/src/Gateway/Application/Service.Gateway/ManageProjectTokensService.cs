@@ -1,32 +1,80 @@
+using System.Security.Cryptography;
+using System.Text;
+using ScriptBee.Common;
 using ScriptBee.Domain.Model.Project;
+using ScriptBee.Ports.Permissions;
 using ScriptBee.UseCases.Gateway;
 
 namespace ScriptBee.Service.Gateway;
 
-public sealed class ManageProjectTokensService() : IManageProjectTokensUseCase
+public sealed class ManageProjectTokensService(
+    ISecureRandomProvider secureRandomProvider,
+    IGetAllProjectTokens getAllProjectTokens,
+    ICreateProjectToken createProjectToken,
+    IDeleteProjectToken deleteProjectToken
+) : IManageProjectTokensUseCase
 {
-    public Task<List<ProjectToken>> GetProjectTokens(
+    private const string Prefix = "sb_at_";
+    private const int TokenRandomBytesSize = 32;
+
+    public async Task<List<ProjectToken>> GetProjectTokens(
         ProjectId projectId,
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        return await getAllProjectTokens.GetAllForProjectId(projectId, cancellationToken);
     }
 
-    public Task<NewProjectTokenResult> CreateProjectToken(
+    public async Task<NewProjectTokenResult> CreateProjectToken(
         CreateProjectTokenCommand command,
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var (rawToken, tokenHash) = GenerateToken();
+
+        var token = await createProjectToken.CreateToken(
+            command.ProjectId,
+            tokenHash,
+            command.Description,
+            command.Role,
+            command.ExpiresAt,
+            cancellationToken
+        );
+
+        return new NewProjectTokenResult(token, rawToken);
     }
 
-    public Task DeleteProjectToken(
+    public async Task DeleteProjectToken(
         ProjectId projectId,
         ProjectTokenId id,
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        await deleteProjectToken.DeleteToken(projectId, id, cancellationToken);
+    }
+
+    private (string rawToken, string tokenHash) GenerateToken()
+    {
+        var randomBytes = secureRandomProvider.GetBytes(TokenRandomBytesSize);
+
+        var secretPayload = Convert
+            .ToBase64String(randomBytes)
+            .Replace("+", "")
+            .Replace("/", "")
+            .Replace("=", "");
+
+        var rawToken = $"{Prefix}{secretPayload}";
+
+        var tokenHash = ComputeHash(rawToken);
+
+        return (rawToken, tokenHash);
+    }
+
+    private static string ComputeHash(string input)
+    {
+        var inputBytes = Encoding.UTF8.GetBytes(input);
+        var hashBytes = SHA256.HashData(inputBytes);
+
+        return Convert.ToHexString(hashBytes);
     }
 }
