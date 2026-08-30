@@ -4,9 +4,9 @@ using NSubstitute;
 using ScriptBee.Domain.Model.User;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Gateway;
-using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Web.EndpointDefinitions.ProjectAccess.Contracts;
 
-namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
+namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectAccess;
 
 public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
 {

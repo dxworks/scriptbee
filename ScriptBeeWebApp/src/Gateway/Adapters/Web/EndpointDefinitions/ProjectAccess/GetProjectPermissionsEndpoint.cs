@@ -5,9 +5,9 @@ using ScriptBee.Common.Web;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Service.Gateway;
 using ScriptBee.UseCases.Gateway;
-using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Web.EndpointDefinitions.ProjectAccess.Contracts;
 
-namespace ScriptBee.Web.EndpointDefinitions.Project;
+namespace ScriptBee.Web.EndpointDefinitions.ProjectAccess;
 
 public class GetProjectPermissionsEndpoint : IEndpointDefinition
 {

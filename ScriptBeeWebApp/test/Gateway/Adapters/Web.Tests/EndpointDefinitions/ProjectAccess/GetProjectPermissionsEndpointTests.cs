@@ -6,7 +6,7 @@ using ScriptBee.Domain.Model.User;
 using ScriptBee.Tests.Common;
 using ScriptBee.UseCases.Gateway;
 
-namespace ScriptBee.Web.Tests.EndpointDefinitions.Project;
+namespace ScriptBee.Web.Tests.EndpointDefinitions.ProjectAccess;
 
 public class GetProjectPermissionsEndpointTests(ITestOutputHelper outputHelper)
 {

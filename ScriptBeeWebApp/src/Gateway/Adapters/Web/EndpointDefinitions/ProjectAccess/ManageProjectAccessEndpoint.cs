@@ -5,13 +5,19 @@ using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
+using ScriptBee.Service.Gateway;
 using ScriptBee.UseCases.Gateway;
-using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
+using ScriptBee.Web.EndpointDefinitions.ProjectAccess.Contracts;
 
-namespace ScriptBee.Web.EndpointDefinitions.Project;
+namespace ScriptBee.Web.EndpointDefinitions.ProjectAccess;
 
 public class ManageProjectAccessEndpoint : IEndpointDefinition
 {
+    public void DefineServices(IServiceCollection services)
+    {
+        services.AddSingleton<IManageUsersUseCase, ManageUsersService>();
+    }
+
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/members", GetProjectMembers)
@@ -60,9 +66,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
         );
 
         return TypedResults.Ok(
-            new WebGetProjectMembersResponse(
-                members.Select(m => new WebProjectMember(m.MemberId, m.MemberType, m.Role.Value))
-            )
+            new WebGetProjectMembersResponse(members.Select(WebProjectMember.Map))
         );
     }
 
