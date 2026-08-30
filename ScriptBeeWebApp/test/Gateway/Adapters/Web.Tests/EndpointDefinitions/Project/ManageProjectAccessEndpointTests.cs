@@ -18,7 +18,7 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
     {
         var api = new TestApiCaller<Program>($"/api/projects/{ProjectId}/members");
         var projectId = Domain.Model.Project.ProjectId.FromValue(ProjectId);
-        var useCase = Substitute.For<IGetProjectMembersUseCase>();
+        var useCase = Substitute.For<IManageUsersUseCase>();
         useCase
             .GetProjectMembers(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -47,7 +47,7 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
     {
         var api = new TestApiCaller<Program>($"/api/projects/{ProjectId}/members");
         var projectId = Domain.Model.Project.ProjectId.FromValue(ProjectId);
-        var useCase = Substitute.For<IGetProjectMembersUseCase>();
+        var useCase = Substitute.For<IManageUsersUseCase>();
         useCase
             .GetProjectMembers(projectId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new List<ProjectMember>()));
@@ -66,7 +66,7 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
     public async Task UpdateProjectMember_ShouldReturnNoContent()
     {
         var api = new TestApiCaller<Program>($"/api/projects/{ProjectId}/members/user-a");
-        var useCase = Substitute.For<IUpdateProjectMemberUseCase>();
+        var useCase = Substitute.For<IManageUsersUseCase>();
         useCase
             .UpdateProjectMember(
                 Arg.Any<UpdateProjectMemberCommand>(),
@@ -114,7 +114,7 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
         var api = new TestApiCaller<Program>(
             $"/api/projects/{ProjectId}/members/user-a?memberType=user"
         );
-        var useCase = Substitute.For<IRemoveProjectMemberUseCase>();
+        var useCase = Substitute.For<IManageUsersUseCase>();
         useCase
             .RemoveProjectMember(
                 Arg.Any<RemoveProjectMemberCommand>(),
@@ -145,7 +145,7 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
     public async Task GetAllUsers_ShouldReturnUserList(string responsePath)
     {
         var api = new TestApiCaller<Program>("/api/users");
-        var useCase = Substitute.For<IGetAllUsersUseCase>();
+        var useCase = Substitute.For<IManageUsersUseCase>();
         useCase
             .GetAllUsers(Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new List<UserInfo> { new(new UserId("id-1"), "Alice") }));
@@ -165,7 +165,7 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
     public async Task GetAvailableRoles_ShouldReturnRoleList(string responsePath)
     {
         var api = new TestApiCaller<Program>("/api/roles");
-        var useCase = Substitute.For<IGetAvailableRolesUseCase>();
+        var useCase = Substitute.For<IManageUsersUseCase>();
         useCase
             .GetAvailableRoles(Arg.Any<CancellationToken>())
             .Returns(

@@ -5,7 +5,6 @@ using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.Validation;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
-using ScriptBee.Service.Gateway;
 using ScriptBee.UseCases.Gateway;
 using ScriptBee.Web.EndpointDefinitions.Project.Contracts;
 
@@ -13,15 +12,6 @@ namespace ScriptBee.Web.EndpointDefinitions.Project;
 
 public class ManageProjectAccessEndpoint : IEndpointDefinition
 {
-    public void DefineServices(IServiceCollection services)
-    {
-        services.AddSingleton<IGetProjectMembersUseCase, GetProjectMembersService>();
-        services.AddSingleton<IUpdateProjectMemberUseCase, UpdateProjectMemberService>();
-        services.AddSingleton<IRemoveProjectMemberUseCase, RemoveProjectMemberService>();
-        services.AddSingleton<IGetAllUsersUseCase, GetAllUsersService>();
-        services.AddSingleton<IGetAvailableRolesUseCase, GetAvailableRolesService>();
-    }
-
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapGet("/api/projects/{projectId}/members", GetProjectMembers)
@@ -60,7 +50,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
 
     private static async Task<Ok<WebGetProjectMembersResponse>> GetProjectMembers(
         [FromRoute] string projectId,
-        IGetProjectMembersUseCase useCase,
+        IManageUsersUseCase useCase,
         CancellationToken cancellationToken
     )
     {
@@ -80,7 +70,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
         [FromRoute] string projectId,
         [FromRoute] string memberId,
         [FromBody] WebUpdateProjectMemberCommand command,
-        IUpdateProjectMemberUseCase useCase,
+        IManageUsersUseCase useCase,
         CancellationToken cancellationToken
     )
     {
@@ -101,7 +91,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
         [FromRoute] string projectId,
         [FromRoute] string memberId,
         [FromQuery] string memberType,
-        IRemoveProjectMemberUseCase useCase,
+        IManageUsersUseCase useCase,
         CancellationToken cancellationToken
     )
     {
@@ -114,7 +104,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
     }
 
     private static async Task<Ok<WebGetAllUsersResponse>> GetAllUsers(
-        IGetAllUsersUseCase useCase,
+        IManageUsersUseCase useCase,
         CancellationToken cancellationToken
     )
     {
@@ -126,7 +116,7 @@ public class ManageProjectAccessEndpoint : IEndpointDefinition
     }
 
     private static async Task<Ok<WebGetAvailableRolesResponse>> GetAvailableRoles(
-        IGetAvailableRolesUseCase useCase,
+        IManageUsersUseCase useCase,
         CancellationToken cancellationToken
     )
     {
