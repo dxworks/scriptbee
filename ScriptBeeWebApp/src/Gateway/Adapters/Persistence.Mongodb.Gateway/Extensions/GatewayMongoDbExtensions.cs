@@ -57,9 +57,11 @@ public static class GatewayMongoDbExtensions
         {
             return services
                 .AddMongoCollection<MongodbProjectToken>(mongoDatabase, "ProjectTokens")
+                .AddSingleton<IIndexCreator, MongodbProjectTokenIndexes>()
                 .AddSingleton<ICreateProjectToken, ProjectTokensPersistenceAdapter>()
                 .AddSingleton<IGetAllProjectTokens, ProjectTokensPersistenceAdapter>()
-                .AddSingleton<IDeleteProjectToken, ProjectTokensPersistenceAdapter>();
+                .AddSingleton<IDeleteProjectToken, ProjectTokensPersistenceAdapter>()
+                .AddSingleton<IGetProjectTokenByHash, ProjectTokensPersistenceAdapter>();
         }
     }
 }

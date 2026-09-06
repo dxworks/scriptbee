@@ -9,7 +9,7 @@ namespace ScriptBee.Persistence.Mongodb;
 
 public sealed class ProjectTokensPersistenceAdapter(
     IMongoRepository<MongodbProjectToken> mongoRepository
-) : ICreateProjectToken, IGetAllProjectTokens, IDeleteProjectToken
+) : ICreateProjectToken, IGetAllProjectTokens, IDeleteProjectToken, IGetProjectTokenByHash
 {
     public async Task<ProjectToken> CreateToken(
         ProjectId projectId,
@@ -45,6 +45,19 @@ public sealed class ProjectTokensPersistenceAdapter(
             cancellationToken
         );
         return [.. tokens.Select(t => t.ToProjectToken())];
+    }
+
+    public async Task<ProjectToken?> GetTokenByHash(
+        string tokenHash,
+        CancellationToken cancellationToken
+    )
+    {
+        var mongoToken = await mongoRepository.GetDocument(
+            token => token.TokenHash == tokenHash,
+            cancellationToken
+        );
+
+        return mongoToken?.ToProjectToken();
     }
 
     public async Task DeleteToken(

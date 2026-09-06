@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using OneOf;
 using ScriptBee.Adapters.Auth.Config;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.User;
@@ -89,7 +90,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -155,7 +156,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Equal(new[] { "admins" }, result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -204,7 +205,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Equal(expectedGroups, result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("global", result.Input.Resource.Type);
@@ -272,7 +273,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -325,12 +326,205 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("global", result.Input.Resource.Type);
         Assert.Null(result.Input.Resource.Id);
         Assert.Null(result.Input.Resource.Role);
+    }
+
+    [Fact]
+    public async Task WhenPrincipalIsProjectToken_AndProjectIdMatchesRoute_ReturnsProjectRequestWithTokenRole()
+    {
+        const string tokenId = "token-1";
+        const string projectId = "project-123";
+        const string role = "editor";
+        const string action = "script:view";
+
+        var claimsPrincipal = new ClaimsPrincipal(
+            new ClaimsIdentity(
+                [
+                    new Claim("token_id", tokenId),
+                    new Claim("project_id", projectId),
+                    new Claim("role", role),
+                    new Claim("token_type", "project_token"),
+                ],
+                "ProjectToken"
+            )
+        );
+
+        var httpContext = new DefaultHttpContext { User = claimsPrincipal };
+        httpContext.Request.RouteValues.Add("projectId", projectId);
+
+        var result = await _provider.BuildRequestAsync(
+            httpContext,
+            action,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
+        Assert.Empty(result.Input.Subject.Groups);
+        Assert.Equal(action, result.Input.Action);
+        Assert.Equal("project", result.Input.Resource.Type);
+        Assert.Equal(projectId, result.Input.Resource.Id);
+        Assert.Equal(role, result.Input.Resource.Role);
+        await _manageUsersUseCase
+            .DidNotReceive()
+            .GetUserId(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _getResourceRole
+            .DidNotReceive()
+            .GetRole(
+                Arg.Any<UserId>(),
+                Arg.Any<List<UserGroup>>(),
+                Arg.Any<OneOf<ProjectId>>(),
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    [Fact]
+    public async Task WhenPrincipalIsProjectToken_AndProjectIdDoesNotMatchRoute_ReturnsProjectRequestWithNullRole()
+    {
+        const string tokenId = "token-1";
+        const string tokenProjectId = "project-123";
+        const string requestedProjectId = "project-456";
+        const string role = "editor";
+        const string action = "script:view";
+
+        var claimsPrincipal = new ClaimsPrincipal(
+            new ClaimsIdentity(
+                [
+                    new Claim("token_id", tokenId),
+                    new Claim("project_id", tokenProjectId),
+                    new Claim("role", role),
+                    new Claim("token_type", "project_token"),
+                ],
+                "ProjectToken"
+            )
+        );
+
+        var httpContext = new DefaultHttpContext { User = claimsPrincipal };
+        httpContext.Request.RouteValues.Add("projectId", requestedProjectId);
+
+        var result = await _provider.BuildRequestAsync(
+            httpContext,
+            action,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
+        Assert.Empty(result.Input.Subject.Groups);
+        Assert.Equal(action, result.Input.Action);
+        Assert.Equal("project", result.Input.Resource.Type);
+        Assert.Equal(requestedProjectId, result.Input.Resource.Id);
+        Assert.Null(result.Input.Resource.Role);
+    }
+
+    [Fact]
+    public async Task WhenPrincipalIsProjectToken_AndNoProjectIdInRoute_ReturnsGlobalRequestWithNullRole()
+    {
+        const string tokenId = "token-1";
+        const string tokenProjectId = "project-123";
+        const string role = "editor";
+        const string action = "gateway_plugin:management";
+
+        var claimsPrincipal = new ClaimsPrincipal(
+            new ClaimsIdentity(
+                [
+                    new Claim("token_id", tokenId),
+                    new Claim("project_id", tokenProjectId),
+                    new Claim("role", role),
+                    new Claim("token_type", "project_token"),
+                ],
+                "ProjectToken"
+            )
+        );
+
+        var httpContext = new DefaultHttpContext { User = claimsPrincipal };
+
+        var result = await _provider.BuildRequestAsync(
+            httpContext,
+            action,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
+        Assert.Empty(result.Input.Subject.Groups);
+        Assert.Equal(action, result.Input.Action);
+        Assert.Equal("global", result.Input.Resource.Type);
+        Assert.Null(result.Input.Resource.Id);
+        Assert.Null(result.Input.Resource.Role);
+    }
+
+    [Fact]
+    public async Task WhenPrincipalIsProjectToken_AndHubInvocationProjectIdMatches_ReturnsProjectRequestWithTokenRole()
+    {
+        const string tokenId = "token-1";
+        const string projectId = "project-123";
+        const string role = "admin";
+        const string action = "project:live_updates";
+
+        var claimsPrincipal = new ClaimsPrincipal(
+            new ClaimsIdentity(
+                [
+                    new Claim("token_id", tokenId),
+                    new Claim("project_id", projectId),
+                    new Claim("role", role),
+                    new Claim("token_type", "project_token"),
+                ],
+                "ProjectToken"
+            )
+        );
+
+        var hubCallerContext = Substitute.For<HubCallerContext>();
+        hubCallerContext.User.Returns(claimsPrincipal);
+
+        var hub = Substitute.For<Hub>();
+        var serviceProvider = Substitute.For<IServiceProvider>();
+        var hubMethod = typeof(TestHub).GetMethod(nameof(TestHub.JoinChannel))!;
+        var hubInvocationContext = new HubInvocationContext(
+            hubCallerContext,
+            serviceProvider,
+            hub,
+            hubMethod,
+            [projectId, "channel"]
+        );
+
+        var result = await _provider.BuildRequestAsync(
+            hubInvocationContext,
+            action,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
+        Assert.Empty(result.Input.Subject.Groups);
+        Assert.Equal(action, result.Input.Action);
+        Assert.Equal("project", result.Input.Resource.Type);
+        Assert.Equal(projectId, result.Input.Resource.Id);
+        Assert.Equal(role, result.Input.Resource.Role);
+    }
+
+    [Fact]
+    public async Task WhenUserIdClaimNotFound_ReturnsNull()
+    {
+        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity());
+        var httpContext = new DefaultHttpContext { User = claimsPrincipal };
+        _authConfigOptions.Value.Returns(
+            new AuthenticationConfig
+            {
+                RequireHttpsMetadata = false,
+                UserIdClaim = null,
+                GroupsClaim = null,
+            }
+        );
+
+        var result = await _provider.BuildRequestAsync(
+            httpContext,
+            "read",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Null(result);
     }
 
     private class TestHub : Hub

@@ -380,4 +380,35 @@ public class CurrentUserTests
 
         Assert.Equal([new UserGroup("admins"), new UserGroup("reviewers")], groups);
     }
+
+    [Fact]
+    public async Task BindAsync_WhenUserHasProjectTokenClaim_ReturnsNull()
+    {
+        var authConfig = new AuthenticationConfig
+        {
+            RequireHttpsMetadata = false,
+            UserIdClaim = null,
+            GroupsClaim = null,
+        };
+        var useCase = Substitute.For<IManageUsersUseCase>();
+        var serviceProvider = new ServiceCollection()
+            .AddSingleton(Options.Create(authConfig))
+            .AddSingleton(useCase)
+            .BuildServiceProvider();
+
+        var identity = new ClaimsIdentity("ProjectToken");
+        identity.AddClaim(new Claim("token_type", "project_token"));
+        var httpContext = new DefaultHttpContext
+        {
+            User = new ClaimsPrincipal(identity),
+            RequestServices = serviceProvider,
+        };
+
+        var result = await CurrentUser.BindAsync(httpContext);
+
+        Assert.Null(result);
+        await useCase
+            .DidNotReceive()
+            .GetUserId(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+    }
 }

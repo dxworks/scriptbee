@@ -28,7 +28,7 @@ public sealed class CurrentUser(UserId id, List<UserGroup> groups)
             return new CurrentUser(new UserId(""), []);
         }
 
-        if (user.Identity?.IsAuthenticated != true)
+        if (user.Identity?.IsAuthenticated != true || user.HasClaim("token_type", "project_token"))
         {
             return null;
         }

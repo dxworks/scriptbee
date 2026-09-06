@@ -173,4 +173,51 @@ public class ProjectTokensPersistenceAdapterTests : IClassFixture<MongoDbFixture
         differentProjectToken.ShouldNotBeNull();
         differentProjectToken.TokenHash.ShouldBe("hash-other-project");
     }
+
+    [Fact]
+    public async Task GetTokenByHash_WhenTokenExists_ShouldReturnToken()
+    {
+        var projectId = ProjectId.FromValue("project-get-by-hash");
+        var tokenId = new ProjectTokenId("507f1f77bcf86cd799439014");
+        const string tokenHash = "hash-target-token";
+        var expiresAt = DateTimeOffset.UtcNow.AddDays(5);
+
+        await _mongoCollection.InsertOneAsync(
+            new MongodbProjectToken
+            {
+                Id = tokenId.Value,
+                ProjectId = projectId.Value,
+                TokenHash = tokenHash,
+                Description = "token to find",
+                Role = "admin",
+                CreatedAt = DateTimeOffset.UtcNow,
+                ExpiresAt = expiresAt,
+            },
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+
+        var result = await _adapter.GetTokenByHash(
+            tokenHash,
+            TestContext.Current.CancellationToken
+        );
+
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(tokenId);
+        result.ProjectId.ShouldBe(projectId);
+        result.TokenHash.ShouldBe(tokenHash);
+        result.Description.ShouldBe("token to find");
+        result.Role.ShouldBe(new UserRole("admin"));
+        result.ExpiresAt.ShouldBe(expiresAt, TimeSpan.FromSeconds(5));
+    }
+
+    [Fact]
+    public async Task GetTokenByHash_WhenTokenDoesNotExist_ShouldReturnNull()
+    {
+        var result = await _adapter.GetTokenByHash(
+            "non-existent-hash",
+            TestContext.Current.CancellationToken
+        );
+
+        result.ShouldBeNull();
+    }
 }
