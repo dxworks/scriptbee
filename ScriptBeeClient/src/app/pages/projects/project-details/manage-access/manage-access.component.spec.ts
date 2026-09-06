@@ -5,19 +5,15 @@ import { ProjectStateService } from '../../../../services/projects/project-state
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { Project, ProjectMember, RoleInfo, UserInfo } from '../../../../types/project';
+import { Project } from '../../../../types/project';
 import { signal } from '@angular/core';
-import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 describe('ManageAccessComponent', () => {
-  let component: ManageAccessComponent;
   let fixture: ComponentFixture<ManageAccessComponent>;
-  let snackbarOpenSpy: unknown;
 
   const projectServiceSpy = {
     getProjectMembers: vi.fn(),
-    updateProjectMember: vi.fn(),
-    removeProjectMember: vi.fn(),
+    getProjectTokens: vi.fn(),
     getAllUsers: vi.fn(),
     getRoles: vi.fn(),
   };
@@ -31,28 +27,11 @@ describe('ManageAccessComponent', () => {
     linkers: [],
   };
 
-  const mockMembers: ProjectMember[] = [
-    { memberId: 'user-a', memberType: 'user', role: 'owner' },
-    { memberId: 'team-b', memberType: 'group', role: 'viewer' },
-  ];
-
-  const mockUsers: UserInfo[] = [
-    { id: 'user-a', name: 'Alice' },
-    { id: 'user-c', name: 'Charlie' },
-  ];
-
-  const mockRoles: RoleInfo[] = [
-    { id: 'owner', description: 'Full control over the project' },
-    { id: 'editor', description: 'Can modify project resources' },
-    { id: 'viewer', description: 'Read-only access to the project' },
-  ];
-
   beforeEach(async () => {
-    projectServiceSpy.getProjectMembers.mockReset().mockReturnValue(of(mockMembers));
-    projectServiceSpy.updateProjectMember.mockReset().mockReturnValue(of(undefined));
-    projectServiceSpy.removeProjectMember.mockReset().mockReturnValue(of(undefined));
-    projectServiceSpy.getAllUsers.mockReset().mockReturnValue(of(mockUsers));
-    projectServiceSpy.getRoles.mockReset().mockReturnValue(of(mockRoles));
+    projectServiceSpy.getProjectMembers.mockReset().mockReturnValue(of([]));
+    projectServiceSpy.getProjectTokens.mockReset().mockReturnValue(of([]));
+    projectServiceSpy.getAllUsers.mockReset().mockReturnValue(of([]));
+    projectServiceSpy.getRoles.mockReset().mockReturnValue(of([]));
 
     const projectStateServiceMock = {
       currentProject: signal<Project | null>(mockProject),
@@ -67,57 +46,15 @@ describe('ManageAccessComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ManageAccessComponent);
-    component = fixture.componentInstance;
-
     fixture.detectChanges();
-    snackbarOpenSpy = vi.spyOn(component.snackbar, 'open').mockReturnValue({} as MatSnackBarRef<TextOnlySnackBar>);
-
     await fixture.whenStable();
   });
 
-  describe('Business Perspective: Manage Project Access Page', () => {
-    it('should show current members and groups with their roles in the table', () => {
-      const screenText = fixture.nativeElement.textContent;
-      expect(screenText).toContain('user-a');
-      expect(screenText).toContain('team-b');
-      expect(screenText).toContain('owner');
-      expect(screenText).toContain('viewer');
-    });
+  it('should render both project members and tokens sections', () => {
+    const membersElement = fixture.debugElement.query(By.css('app-project-members'));
+    const tokensElement = fixture.debugElement.query(By.css('app-project-tokens'));
 
-    it('should add/update group member access when user selects group details and clicks submit', async () => {
-      component.addMemberForm.controls.memberType.setValue('group');
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const groupInput = fixture.debugElement.query(By.css('#member-id-input')).nativeElement;
-      groupInput.value = 'dev-team';
-      groupInput.dispatchEvent(new Event('input'));
-
-      const editorRole = mockRoles.find((r) => r.id === 'editor')!;
-      component.addMemberForm.controls.role.setValue(editorRole);
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      const submitBtn = fixture.debugElement.query(By.css('#add-member-submit'));
-      submitBtn.nativeElement.click();
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(projectServiceSpy.updateProjectMember).toHaveBeenCalledWith('project-1', 'dev-team', 'editor', 'group');
-      expect(snackbarOpenSpy).toHaveBeenCalledWith('Member access updated.', 'Dismiss', { duration: 3000 });
-    });
-
-    it('should revoke access when the user clicks the delete button for a member', async () => {
-      const deleteBtn = fixture.debugElement.query(By.css('#remove-member-user-a'));
-      deleteBtn.triggerEventHandler('click', null);
-
-      fixture.detectChanges();
-      await fixture.whenStable();
-
-      expect(projectServiceSpy.removeProjectMember).toHaveBeenCalledWith('project-1', 'user-a', 'user');
-      expect(snackbarOpenSpy).toHaveBeenCalledWith('Member removed.', 'Dismiss', { duration: 3000 });
-    });
+    expect(membersElement).toBeTruthy();
+    expect(tokensElement).toBeTruthy();
   });
 });
