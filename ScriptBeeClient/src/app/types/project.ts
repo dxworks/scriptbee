@@ -80,3 +80,30 @@ export interface RoleInfo {
 export interface RolesResponse {
   roles: RoleInfo[];
 }
+
+export interface ProjectToken {
+  id: string;
+  description: string | null;
+  role: string;
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface ProjectTokensResponse {
+  tokens: ProjectToken[];
+}
+
+export interface CreateTokenRequest {
+  description: string | null;
+  role: string;
+  expiresAt: string;
+}
+
+export interface CreateTokenResponse {
+  id: string;
+  token: string;
+  description: string | null;
+  role: string;
+  createdAt: string;
+  expiresAt: string;
+}

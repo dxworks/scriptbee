@@ -1,0 +1,148 @@
+<div class="section-container">
+  @if (newlyCreatedToken(); as created) {
+    <div class="new-token-banner">
+      <div class="new-token-banner-header">
+        <mat-icon class="banner-icon">check_circle</mat-icon>
+        <span class="banner-title">Token created — copy it now. It will not be shown again.</span>
+        <button mat-icon-button (click)="onDismissNewToken()" id="dismiss-new-token" aria-label="Dismiss">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="new-token-value">
+        <code id="new-token-value">{{ created.token }}</code>
+        <button mat-icon-button (click)="onCopyToken(created.token)" id="copy-new-token" matTooltip="Copy token">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </div>
+      @if (created.description) {
+        <p class="banner-meta">Description: {{ created.description }}</p>
+      }
+      <p class="banner-meta">
+        Role: <strong>{{ created.role }}</strong> &bull; Expires: {{ created.expiresAt | date: 'mediumDate' }}
+      </p>
+    </div>
+  }
+
+  @if (tokensResource.isLoading()) {
+    <app-loading-progress-bar title="Loading tokens..." />
+  } @else if (tokensResource.error()) {
+    <app-error-state [error]="{ title: 'Failed to load tokens', detail: 'Please try again.', status: 500 }" (retry)="tokensResource.reload()" />
+  } @else {
+    <table mat-table [dataSource]="tokensResource.value() ?? []" class="full-width-table">
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let token">{{ token.description || '—' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <td mat-cell *matCellDef="let token">
+          <mat-chip-set>
+            <mat-chip>{{ token.role }}</mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let token">{{ token.createdAt | date: 'mediumDate' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="expiresAt">
+        <th mat-header-cell *matHeaderCellDef>Expires</th>
+        <td mat-cell *matCellDef="let token">
+          <span [class.expired-label]="isExpired(token.expiresAt)">
+            {{ token.expiresAt | date: 'mediumDate' }}
+            @if (isExpired(token.expiresAt)) {
+              <mat-icon class="expired-icon" matTooltip="This token has expired">warning</mat-icon>
+            }
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let token">
+          <button
+            mat-icon-button
+            color="warn"
+            [disabled]="deletingTokenId() === token.id"
+            (click)="onDeleteToken(token)"
+            id="delete-token-{{ token.id }}"
+            matTooltip="Delete token">
+            @if (deletingTokenId() === token.id) {
+              <mat-spinner diameter="20" />
+            } @else {
+              <mat-icon>delete</mat-icon>
+            }
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">No tokens found. Create one below.</td>
+      </tr>
+    </table>
+  }
+
+  <mat-divider />
+
+  <mat-card appearance="outlined" class="form-card">
+    <mat-card-header>
+      <mat-card-title>Create Token</mat-card-title>
+      <mat-card-subtitle>Tokens grant programmatic access to this project.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="createTokenForm" class="form-layout" (ngSubmit)="onCreateToken()">
+        <mat-form-field>
+          <mat-label>Description (optional)</mat-label>
+          <input matInput id="token-description-input" formControlName="description" placeholder="e.g. CI/CD pipeline token" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Role</mat-label>
+          <mat-select id="token-role-select" formControlName="role" [compareWith]="compareRoles">
+            <mat-select-trigger>
+              {{ createTokenForm.controls.role.value?.id }}
+            </mat-select-trigger>
+            @if (rolesResource.isLoading()) {
+              <mat-option>Loading roles...</mat-option>
+            } @else {
+              @for (role of rolesResource.value() ?? []; track role.id) {
+                <mat-option [value]="role" [matTooltip]="role.description" matTooltipPosition="right">
+                  <span class="role-option-name">{{ role.id }}</span>
+                  <span class="role-option-description">{{ role.description }}</span>
+                </mat-option>
+              }
+            }
+          </mat-select>
+          @if (createTokenForm.controls.role.invalid && createTokenForm.controls.role.touched) {
+            <mat-error>Role is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Expiration Date</mat-label>
+          <input matInput id="token-expires-at-input" [matDatepicker]="picker" formControlName="expiresAt" [min]="minDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker" />
+          <mat-datepicker #picker />
+          @if (createTokenForm.controls.expiresAt.invalid && createTokenForm.controls.expiresAt.touched) {
+            <mat-error>Expiration date is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" id="create-token-submit" [disabled]="createTokenForm.invalid || isSaving()">
+          @if (isSaving()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Create Token
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

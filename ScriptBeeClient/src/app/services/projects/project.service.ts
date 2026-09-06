@@ -3,10 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import {
   CreateProjectRequest,
   CreateProjectResponse,
+  CreateTokenRequest,
+  CreateTokenResponse,
   Project,
   ProjectMember,
   ProjectMembersResponse,
   ProjectPermissionsResponse,
+  ProjectToken,
+  ProjectTokensResponse,
   RoleInfo,
   RolesResponse,
   UserInfo,
@@ -65,5 +69,17 @@ export class ProjectService {
 
   getRoles(): Observable<RoleInfo[]> {
     return this.http.get<RolesResponse>('/api/roles').pipe(map((r) => r.roles));
+  }
+
+  getProjectTokens(projectId: string): Observable<ProjectToken[]> {
+    return this.http.get<ProjectTokensResponse>(`${this.projectsAPIUrl}/${projectId}/tokens`).pipe(map((r) => r.tokens));
+  }
+
+  createProjectToken(projectId: string, request: CreateTokenRequest): Observable<CreateTokenResponse> {
+    return this.http.post<CreateTokenResponse>(`${this.projectsAPIUrl}/${projectId}/tokens`, request);
+  }
+
+  deleteProjectToken(projectId: string, tokenId: string): Observable<void> {
+    return this.http.delete<void>(`${this.projectsAPIUrl}/${projectId}/tokens/${tokenId}`);
   }
 }
