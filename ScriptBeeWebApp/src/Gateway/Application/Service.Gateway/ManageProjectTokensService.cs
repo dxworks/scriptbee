@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Permissions;
@@ -14,7 +12,6 @@ public sealed class ManageProjectTokensService(
     IDeleteProjectToken deleteProjectToken
 ) : IManageProjectTokensUseCase
 {
-    private const string Prefix = "sb_at_";
     private const int TokenRandomBytesSize = 32;
 
     public async Task<List<ProjectToken>> GetProjectTokens(
@@ -63,18 +60,10 @@ public sealed class ManageProjectTokensService(
             .Replace("/", "")
             .Replace("=", "");
 
-        var rawToken = $"{Prefix}{secretPayload}";
+        var rawToken = $"{ProjectToken.Prefix}{secretPayload}";
 
-        var tokenHash = ComputeHash(rawToken);
+        var tokenHash = ProjectToken.ComputeHash(rawToken);
 
         return (rawToken, tokenHash);
-    }
-
-    private static string ComputeHash(string input)
-    {
-        var inputBytes = Encoding.UTF8.GetBytes(input);
-        var hashBytes = SHA256.HashData(inputBytes);
-
-        return Convert.ToHexString(hashBytes);
     }
 }

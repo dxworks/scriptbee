@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
@@ -25,8 +26,23 @@ public sealed class ExternalAuthorizationContextProvider(
     )
     {
         var routeData = httpContext.GetRouteData();
-        var authConfig = authConfigOptions.Value;
         var claimsPrincipal = httpContext.User;
+
+        string? requestedProjectId = null;
+        if (
+            routeData.Values.TryGetValue("projectId", out var projectIdObj)
+            && projectIdObj is string projectId
+        )
+        {
+            requestedProjectId = projectId;
+        }
+
+        if (IsProjectToken(claimsPrincipal))
+        {
+            return BuildProjectTokenRequest(claimsPrincipal, action, requestedProjectId);
+        }
+
+        var authConfig = authConfigOptions.Value;
         var userId = (
             await CurrentUser.ExtractUserIdFromClaims(
                 claimsPrincipal,
@@ -37,16 +53,13 @@ public sealed class ExternalAuthorizationContextProvider(
         )!.Value;
         var groups = CurrentUser.ExtractGroupsFromClaims(claimsPrincipal, authConfig);
 
-        if (
-            routeData.Values.TryGetValue("projectId", out var projectIdObj)
-            && projectIdObj is string projectId
-        )
+        if (requestedProjectId is not null)
         {
             return await GetProjectRequest(
                 action,
                 userId,
                 groups,
-                ProjectId.FromValue(projectId),
+                ProjectId.FromValue(requestedProjectId),
                 cancellationToken
             );
         }
@@ -66,6 +79,13 @@ public sealed class ExternalAuthorizationContextProvider(
             return GetGlobalRequest(action, new UserId(""), []);
         }
 
+        var requestedProjectId = ExtractProjectIdFromHubInvocation(hubInvocationContext);
+
+        if (IsProjectToken(claimsPrincipal))
+        {
+            return BuildProjectTokenRequest(claimsPrincipal, action, requestedProjectId);
+        }
+
         var authConfig = authConfigOptions.Value;
         var userId = (
             await CurrentUser.ExtractUserIdFromClaims(
@@ -77,19 +97,54 @@ public sealed class ExternalAuthorizationContextProvider(
         )!.Value;
         var groups = CurrentUser.ExtractGroupsFromClaims(claimsPrincipal, authConfig);
 
-        var projectId = ExtractProjectIdFromHubInvocation(hubInvocationContext);
-        if (projectId is not null)
+        if (requestedProjectId is not null)
         {
             return await GetProjectRequest(
                 action,
                 userId,
                 groups,
-                ProjectId.FromValue(projectId),
+                ProjectId.FromValue(requestedProjectId),
                 cancellationToken
             );
         }
 
         return GetGlobalRequest(action, userId, groups);
+    }
+
+    private static bool IsProjectToken(ClaimsPrincipal claimsPrincipal) =>
+        claimsPrincipal.HasClaim("token_type", "project_token");
+
+    private static ExternalAuthorizationRequest BuildProjectTokenRequest(
+        ClaimsPrincipal claimsPrincipal,
+        string action,
+        string? requestedProjectId
+    )
+    {
+        var tokenId = claimsPrincipal.FindFirst("token_id")?.Value;
+        var tokenProjectId = claimsPrincipal.FindFirst("project_id")?.Value;
+        var tokenRole = claimsPrincipal.FindFirst("role")?.Value;
+
+        var isMatchingProject = requestedProjectId is not null
+            && string.Equals(tokenProjectId, requestedProjectId, StringComparison.Ordinal);
+
+        return new ExternalAuthorizationRequest
+        {
+            Input = new ExternalAuthorizationRequestInput
+            {
+                Subject = new ExternalAuthorizationRequestSubject
+                {
+                    UserId = $"project-token:{tokenId}",
+                    Groups = [],
+                },
+                Action = action,
+                Resource = new ExternalAuthorizationResource
+                {
+                    Type = requestedProjectId is not null ? "project" : "global",
+                    Id = requestedProjectId,
+                    Role = isMatchingProject ? tokenRole : null,
+                },
+            },
+        };
     }
 
     private static string? ExtractProjectIdFromHubInvocation(

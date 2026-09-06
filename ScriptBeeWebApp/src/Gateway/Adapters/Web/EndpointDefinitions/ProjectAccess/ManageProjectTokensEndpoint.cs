@@ -15,6 +15,7 @@ public class ManageProjectTokensEndpoint : IEndpointDefinition
     public void DefineServices(IServiceCollection services)
     {
         services.AddSingleton<IManageProjectTokensUseCase, ManageProjectTokensService>();
+        services.AddSingleton<IValidateProjectTokenUseCase, ValidateProjectTokenService>();
     }
 
     public void DefineEndpoints(IEndpointRouteBuilder app)

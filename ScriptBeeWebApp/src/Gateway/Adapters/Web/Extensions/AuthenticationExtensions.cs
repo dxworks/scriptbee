@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using ScriptBee.Adapters.Auth;
 using ScriptBee.Adapters.Auth.Config;
 using ScriptBee.Adapters.Auth.Dev;
+using ScriptBee.Domain.Model.Project;
 using ScriptBee.Ports.Permissions;
 
 namespace ScriptBee.Web.Extensions;
@@ -11,6 +12,7 @@ namespace ScriptBee.Web.Extensions;
 public static class AuthenticationExtensions
 {
     private const string AuthenticationConfigSectionName = "Authentication";
+    private const string JwtScheme = "JwtBearer";
 
     extension(IServiceCollection services)
     {
@@ -33,44 +35,89 @@ public static class AuthenticationExtensions
         private IServiceCollection AddAuthentication(AuthenticationConfig authConfig)
         {
             services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddAuthentication(options =>
                 {
-                    if (authConfig.IsDevelopment)
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddPolicyScheme(
+                    JwtBearerDefaults.AuthenticationScheme,
+                    "JWT or Project Token",
+                    options => options.ForwardDefaultSelector = SelectAuthenticationScheme
+                )
+                .AddJwtBearer(JwtScheme, options => ConfigureJwtBearer(options, authConfig))
+                .AddScheme<ProjectTokenAuthenticationOptions, ProjectTokenAuthenticationHandler>(
+                    ProjectTokenAuthenticationOptions.Scheme,
+                    _ => { }
+                );
+
+            return services;
+        }
+
+        private static string SelectAuthenticationScheme(HttpContext context)
+        {
+            return IServiceCollection.IsProjectTokenRequest(context)
+                ? ProjectTokenAuthenticationOptions.Scheme
+                : JwtScheme;
+        }
+
+        private static bool IsProjectTokenRequest(HttpContext context)
+        {
+            var authHeader = context.Request.Headers.Authorization.ToString();
+            if (
+                string.IsNullOrEmpty(authHeader)
+                || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+            )
+            {
+                return context.Request.Path.StartsWithSegments("/api/projectLiveUpdates")
+                    && context.Request.Query.TryGetValue("access_token", out var queryToken)
+                    && queryToken
+                        .ToString()
+                        .StartsWith(ProjectToken.Prefix, StringComparison.Ordinal);
+            }
+            var token = authHeader["Bearer ".Length..].Trim();
+            return token.StartsWith(ProjectToken.Prefix, StringComparison.Ordinal);
+        }
+
+        private static void ConfigureJwtBearer(
+            JwtBearerOptions options,
+            AuthenticationConfig authConfig
+        )
+        {
+            if (authConfig.IsDevelopment)
+            {
+                return;
+            }
+
+            options.Authority = authConfig.Authority;
+            options.Audience = authConfig.Audience;
+            options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var path = context.HttpContext.Request.Path;
+                    if (
+                        path.StartsWithSegments("/api/projectLiveUpdates")
+                        && context.Request.Query.TryGetValue("access_token", out var token)
+                    )
                     {
-                        return;
+                        context.Token = token;
                     }
 
-                    options.Authority = authConfig.Authority;
-                    options.Audience = authConfig.Audience;
-                    options.RequireHttpsMetadata = authConfig.RequireHttpsMetadata;
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            var path = context.HttpContext.Request.Path;
-                            if (
-                                path.StartsWithSegments("/api/projectLiveUpdates")
-                                && context.Request.Query.TryGetValue("access_token", out var token)
-                            )
-                            {
-                                context.Token = token;
-                            }
+                    return Task.CompletedTask;
+                },
+            };
 
-                            return Task.CompletedTask;
-                        },
-                    };
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = authConfig.Authority,
-                        ValidAudience = authConfig.Audience,
-                    };
-                });
-            return services;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidIssuer = authConfig.Authority,
+                ValidAudience = authConfig.Audience,
+            };
         }
 
         private IServiceCollection AddAuthorizationServices(AuthenticationConfig config)
