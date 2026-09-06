@@ -282,16 +282,16 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "26.x",
     "@types/sinon": "^22.0.0",
-    "@types/vscode": "^1.134.0",
+    "@types/vscode": "^1.136.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.1.0",
     "axios-mock-adapter": "^2.1.0",
     "esbuild": "^0.28.2",
-    "eslint": "^10.9.1",
-    "mocha": "^11.8.0",
+    "eslint": "^10.10.0",
+    "mocha": "^12.0.0",
     "prettier": "^3.9.6",
     "sinon": "^22.1.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.68.0"
+    "typescript-eslint": "^8.69.0"
   }
 }
