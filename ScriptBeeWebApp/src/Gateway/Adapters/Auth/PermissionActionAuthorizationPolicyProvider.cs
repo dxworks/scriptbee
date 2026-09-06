@@ -15,6 +15,7 @@ public class PermissionActionAuthorizationPolicyProvider(IOptions<AuthorizationO
         }
 
         return new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
             .AddRequirements(new PermissionActionRequirement(policyName))
             .Build();
     }

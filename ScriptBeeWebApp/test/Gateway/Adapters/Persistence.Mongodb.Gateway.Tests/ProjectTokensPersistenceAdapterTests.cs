@@ -196,7 +196,10 @@ public class ProjectTokensPersistenceAdapterTests : IClassFixture<MongoDbFixture
             cancellationToken: TestContext.Current.CancellationToken
         );
 
-        var result = await _adapter.GetTokenByHash(tokenHash, TestContext.Current.CancellationToken);
+        var result = await _adapter.GetTokenByHash(
+            tokenHash,
+            TestContext.Current.CancellationToken
+        );
 
         result.ShouldNotBeNull();
         result.Id.ShouldBe(tokenId);

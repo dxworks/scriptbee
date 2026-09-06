@@ -4,7 +4,8 @@ using ScriptBee.Persistence.Mongodb.Repository;
 
 namespace ScriptBee.Persistence.Mongodb.Indexes;
 
-public class MongodbProjectTokenIndexes(IMongoRepository<MongodbProjectToken> mongoRepository) : IIndexCreator
+public class MongodbProjectTokenIndexes(IMongoRepository<MongodbProjectToken> mongoRepository)
+    : IIndexCreator
 {
     public async Task Create(CancellationToken cancellationToken)
     {

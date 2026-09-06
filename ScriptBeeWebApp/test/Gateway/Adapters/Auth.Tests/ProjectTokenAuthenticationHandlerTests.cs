@@ -196,6 +196,9 @@ public class ProjectTokenAuthenticationHandlerTests
         await _handler.ChallengeAsync(new AuthenticationProperties());
 
         Assert.Equal(StatusCodes.Status401Unauthorized, httpContext.Response.StatusCode);
-        Assert.Equal("Bearer error=\"invalid_token\"", httpContext.Response.Headers.WWWAuthenticate.ToString());
+        Assert.Equal(
+            "Bearer error=\"invalid_token\"",
+            httpContext.Response.Headers.WWWAuthenticate.ToString()
+        );
     }
 }

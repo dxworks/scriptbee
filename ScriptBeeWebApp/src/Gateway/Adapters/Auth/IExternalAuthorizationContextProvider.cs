@@ -6,13 +6,13 @@ namespace ScriptBee.Adapters.Auth;
 
 public interface IExternalAuthorizationContextProvider
 {
-    Task<ExternalAuthorizationRequest> BuildRequestAsync(
+    Task<ExternalAuthorizationRequest?> BuildRequestAsync(
         HttpContext httpContext,
         string action,
         CancellationToken cancellationToken
     );
 
-    Task<ExternalAuthorizationRequest> BuildRequestAsync(
+    Task<ExternalAuthorizationRequest?> BuildRequestAsync(
         HubInvocationContext hubInvocationContext,
         string action,
         CancellationToken cancellationToken

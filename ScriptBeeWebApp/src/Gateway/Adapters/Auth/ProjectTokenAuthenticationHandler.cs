@@ -24,7 +24,10 @@ public class ProjectTokenAuthenticationHandler(
             return AuthenticateResult.NoResult();
         }
 
-        var token = await validateProjectTokenUseCase.ValidateToken(rawToken, Context.RequestAborted);
+        var token = await validateProjectTokenUseCase.ValidateToken(
+            rawToken,
+            Context.RequestAborted
+        );
         if (token is null)
         {
             return AuthenticateResult.Fail("Invalid or expired project token.");
@@ -57,13 +60,18 @@ public class ProjectTokenAuthenticationHandler(
     private string? ExtractToken()
     {
         var authorization = Request.Headers.Authorization.ToString();
-        if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+        if (
+            !string.IsNullOrEmpty(authorization)
+            && authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+        )
         {
             return authorization["Bearer ".Length..].Trim();
         }
 
-        if (Request.Path.StartsWithSegments("/api/projectLiveUpdates")
-            && Request.Query.TryGetValue("access_token", out var tokenValue))
+        if (
+            Request.Path.StartsWithSegments("/api/projectLiveUpdates")
+            && Request.Query.TryGetValue("access_token", out var tokenValue)
+        )
         {
             return tokenValue.ToString();
         }

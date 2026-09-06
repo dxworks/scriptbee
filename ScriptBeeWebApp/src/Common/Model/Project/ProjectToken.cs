@@ -24,4 +24,3 @@ public record ProjectToken(
         return Convert.ToHexString(hashBytes);
     }
 }
-

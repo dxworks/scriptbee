@@ -19,7 +19,7 @@ public sealed class ExternalAuthorizationContextProvider(
     IManageUsersUseCase manageUsersUseCase
 ) : IExternalAuthorizationContextProvider
 {
-    public async Task<ExternalAuthorizationRequest> BuildRequestAsync(
+    public async Task<ExternalAuthorizationRequest?> BuildRequestAsync(
         HttpContext httpContext,
         string action,
         CancellationToken cancellationToken
@@ -43,31 +43,35 @@ public sealed class ExternalAuthorizationContextProvider(
         }
 
         var authConfig = authConfigOptions.Value;
-        var userId = (
-            await CurrentUser.ExtractUserIdFromClaims(
-                claimsPrincipal,
-                authConfig,
-                manageUsersUseCase,
-                cancellationToken
-            )
-        )!.Value;
+        var userId = await CurrentUser.ExtractUserIdFromClaims(
+            claimsPrincipal,
+            authConfig,
+            manageUsersUseCase,
+            cancellationToken
+        );
+
+        if (!userId.HasValue)
+        {
+            return null;
+        }
+
         var groups = CurrentUser.ExtractGroupsFromClaims(claimsPrincipal, authConfig);
 
         if (requestedProjectId is not null)
         {
             return await GetProjectRequest(
                 action,
-                userId,
+                userId.Value,
                 groups,
                 ProjectId.FromValue(requestedProjectId),
                 cancellationToken
             );
         }
 
-        return GetGlobalRequest(action, userId, groups);
+        return GetGlobalRequest(action, userId.Value, groups);
     }
 
-    public async Task<ExternalAuthorizationRequest> BuildRequestAsync(
+    public async Task<ExternalAuthorizationRequest?> BuildRequestAsync(
         HubInvocationContext hubInvocationContext,
         string action,
         CancellationToken cancellationToken
@@ -87,28 +91,32 @@ public sealed class ExternalAuthorizationContextProvider(
         }
 
         var authConfig = authConfigOptions.Value;
-        var userId = (
-            await CurrentUser.ExtractUserIdFromClaims(
-                claimsPrincipal,
-                authConfig,
-                manageUsersUseCase,
-                cancellationToken
-            )
-        )!.Value;
+        var userId = await CurrentUser.ExtractUserIdFromClaims(
+            claimsPrincipal,
+            authConfig,
+            manageUsersUseCase,
+            cancellationToken
+        );
+
+        if (!userId.HasValue)
+        {
+            return null;
+        }
+
         var groups = CurrentUser.ExtractGroupsFromClaims(claimsPrincipal, authConfig);
 
         if (requestedProjectId is not null)
         {
             return await GetProjectRequest(
                 action,
-                userId,
+                userId.Value,
                 groups,
                 ProjectId.FromValue(requestedProjectId),
                 cancellationToken
             );
         }
 
-        return GetGlobalRequest(action, userId, groups);
+        return GetGlobalRequest(action, userId.Value, groups);
     }
 
     private static bool IsProjectToken(ClaimsPrincipal claimsPrincipal) =>
@@ -124,7 +132,8 @@ public sealed class ExternalAuthorizationContextProvider(
         var tokenProjectId = claimsPrincipal.FindFirst("project_id")?.Value;
         var tokenRole = claimsPrincipal.FindFirst("role")?.Value;
 
-        var isMatchingProject = requestedProjectId is not null
+        var isMatchingProject =
+            requestedProjectId is not null
             && string.Equals(tokenProjectId, requestedProjectId, StringComparison.Ordinal);
 
         return new ExternalAuthorizationRequest

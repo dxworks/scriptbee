@@ -90,7 +90,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -156,7 +156,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Equal(new[] { "admins" }, result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -205,7 +205,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Equal(expectedGroups, result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("global", result.Input.Resource.Type);
@@ -273,7 +273,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -326,7 +326,7 @@ public class ExternalAuthorizationContextProviderTests
         );
 
         // Assert
-        Assert.Equal(userIdValue, result.Input.Subject.UserId);
+        Assert.Equal(userIdValue, result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("global", result.Input.Resource.Type);
@@ -363,7 +363,7 @@ public class ExternalAuthorizationContextProviderTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal($"project-token:{tokenId}", result.Input.Subject.UserId);
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -412,7 +412,7 @@ public class ExternalAuthorizationContextProviderTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal($"project-token:{tokenId}", result.Input.Subject.UserId);
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
@@ -448,7 +448,7 @@ public class ExternalAuthorizationContextProviderTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal($"project-token:{tokenId}", result.Input.Subject.UserId);
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("global", result.Input.Resource.Type);
@@ -496,12 +496,35 @@ public class ExternalAuthorizationContextProviderTests
             TestContext.Current.CancellationToken
         );
 
-        Assert.Equal($"project-token:{tokenId}", result.Input.Subject.UserId);
+        Assert.Equal($"project-token:{tokenId}", result!.Input.Subject.UserId);
         Assert.Empty(result.Input.Subject.Groups);
         Assert.Equal(action, result.Input.Action);
         Assert.Equal("project", result.Input.Resource.Type);
         Assert.Equal(projectId, result.Input.Resource.Id);
         Assert.Equal(role, result.Input.Resource.Role);
+    }
+
+    [Fact]
+    public async Task WhenUserIdClaimNotFound_ReturnsNull()
+    {
+        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity());
+        var httpContext = new DefaultHttpContext { User = claimsPrincipal };
+        _authConfigOptions.Value.Returns(
+            new AuthenticationConfig
+            {
+                RequireHttpsMetadata = false,
+                UserIdClaim = null,
+                GroupsClaim = null,
+            }
+        );
+
+        var result = await _provider.BuildRequestAsync(
+            httpContext,
+            "read",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Null(result);
     }
 
     private class TestHub : Hub
