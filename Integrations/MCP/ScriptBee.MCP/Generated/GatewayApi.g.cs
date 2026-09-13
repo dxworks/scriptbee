@@ -754,6 +754,53 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Delete("/api/projects/{projectId}/instances/{instanceId}")]
         Task InstancesDelete(string projectId, string instanceId, CancellationToken cancellationToken = default);
 
+        /// <summary>Delete a saved file</summary>
+        /// <remarks>Deletes a saved file from the project and cleans up references.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="fileId">fileId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>404</term>
+        /// <description>Not Found</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/json")]
+        [Delete("/api/projects/{projectId}/saved-files/{fileId}")]
+        Task SavedFilesDelete(string projectId, string fileId, CancellationToken cancellationToken = default);
+
+        /// <summary>Upload saved files</summary>
+        /// <remarks>Uploads one or more files to the project without requiring a loader.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="files">files parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>404</term>
+        /// <description>Not Found</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Multipart]
+        [Headers("Accept: application/json")]
+        [Post("/api/projects/{projectId}/saved-files")]
+        Task<UploadSavedFilesResponse> SavedFilesPost(string projectId, IEnumerable<byte[]> files, CancellationToken cancellationToken = default);
+
         /// <summary>Get available linkers for an instance</summary>
         /// <remarks>Retrieves a list of all linkers available for the specified project instance.</remarks>
         /// <param name="projectId">projectId parameter</param>
@@ -774,7 +821,7 @@ namespace ScriptBee.MCP.Gateway.Generated
         /// <exception cref="ApiException">Thrown when the request returns a non-success status code.</exception>
         [Headers("Accept: application/json")]
         [Get("/api/projects/{projectId}/instances/{instanceId}/loaders")]
-        Task<GetLoadersResponse> Loaders(string projectId, string instanceId, CancellationToken cancellationToken = default);
+        Task<GetLoadersResponse> LoadersGet(string projectId, string instanceId, CancellationToken cancellationToken = default);
 
         /// <summary>Get current instance context</summary>
         /// <remarks>Retrieves the current data context for the specified project instance.</remarks>
@@ -974,6 +1021,55 @@ namespace ScriptBee.MCP.Gateway.Generated
         [Headers("Accept: application/json")]
         [Post("/api/projects/{projectId}/instances/{instanceId}/context/reload")]
         Task Reload(string projectId, string instanceId, CancellationToken cancellationToken = default);
+
+        /// <summary>Unload a model file from instance context</summary>
+        /// <remarks>Unloads a specific model file for a loader from the instance context and project state.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="instanceId">instanceId parameter</param>
+        /// <param name="loaderId">loaderId parameter</param>
+        /// <param name="fileId">fileId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>404</term>
+        /// <description>Not Found</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/json")]
+        [Delete("/api/projects/{projectId}/instances/{instanceId}/context/loaders/{loaderId}/files/{fileId}")]
+        Task Files(string projectId, string instanceId, string loaderId, string fileId, CancellationToken cancellationToken = default);
+
+        /// <summary>Unload all model files for a loader from instance context</summary>
+        /// <remarks>Unloads all model files for a specific loader from the instance context and project state.</remarks>
+        /// <param name="projectId">projectId parameter</param>
+        /// <param name="instanceId">instanceId parameter</param>
+        /// <param name="loaderId">loaderId parameter</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the request.</param>
+        /// <returns>A <see cref="Task"/> that completes when the request is finished.</returns>
+        /// <exception cref="ApiException">
+        /// Thrown when the request returns a non-success status code:
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Status</term>
+        /// <description>Description</description>
+        /// </listheader>
+        /// <item>
+        /// <term>404</term>
+        /// <description>Not Found</description>
+        /// </item>
+        /// </list>
+        /// </exception>
+        [Headers("Accept: application/json")]
+        [Delete("/api/projects/{projectId}/instances/{instanceId}/context/loaders/{loaderId}")]
+        Task LoadersDelete(string projectId, string instanceId, string loaderId, CancellationToken cancellationToken = default);
 
         /// <summary>Get authentication configuration</summary>
         /// <remarks>Retrieves the authentication configuration for the application.</remarks>
@@ -2463,9 +2559,11 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
     public partial class LoadContextCommand
     {
 
+        [JsonPropertyName("filesToLoad")]
+        public IDictionary<string, ICollection<string>> FilesToLoad { get; set; }
+
         [JsonPropertyName("loaderIds")]
-        [System.ComponentModel.DataAnnotations.Required]
-        public ICollection<string> LoaderIds { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+        public ICollection<string> LoaderIds { get; set; }
 
         private IDictionary<string, object> _additionalProperties;
 
@@ -2756,7 +2854,7 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
 
         [JsonPropertyName("savedFiles")]
         [System.ComponentModel.DataAnnotations.Required]
-        public IDictionary<string, ICollection<FileData>> SavedFiles { get; set; } = new Dictionary<string, ICollection<FileData>>();
+        public ICollection<FileData> SavedFiles { get; set; } = new System.Collections.ObjectModel.Collection<FileData>();
 
         [JsonPropertyName("loadedFiles")]
         [System.ComponentModel.DataAnnotations.Required]
@@ -3087,6 +3185,25 @@ public InstalledGatewayPluginExtensionPointOutletBaseInstalledGatewayPluginTopNa
         [JsonPropertyName("fileNames")]
         [System.ComponentModel.DataAnnotations.Required]
         public ICollection<string> FileNames { get; set; } = new System.Collections.ObjectModel.Collection<string>();
+
+        private IDictionary<string, object> _additionalProperties;
+
+        [JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class UploadSavedFilesResponse
+    {
+
+        [JsonPropertyName("files")]
+        [System.ComponentModel.DataAnnotations.Required]
+        public ICollection<FileData> Files { get; set; } = new System.Collections.ObjectModel.Collection<FileData>();
 
         private IDictionary<string, object> _additionalProperties;
 

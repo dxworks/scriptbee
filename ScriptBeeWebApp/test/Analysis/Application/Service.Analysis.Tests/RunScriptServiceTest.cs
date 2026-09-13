@@ -1,13 +1,16 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Results;
+using DxWorks.ScriptBee.Analysis.Sdk.Scripts;
+using DxWorks.ScriptBee.Analysis.Sdk.State;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OneOf;
-using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Context;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -19,9 +22,12 @@ namespace ScriptBee.Analysis.Service.Tests;
 
 public class RunScriptServiceTest
 {
-    private readonly ILoadFile _loadFile = Substitute.For<ILoadFile>();
-    private readonly IUpdateAnalysis _updateAnalysis = Substitute.For<IUpdateAnalysis>();
-    private readonly IFileModelService _fileModelService = Substitute.For<IFileModelService>();
+    private readonly IScriptLoader _scriptLoader = Substitute.For<IScriptLoader>();
+    private readonly IAnalysisState _analysisState = Substitute.For<IAnalysisState>();
+
+    private readonly IScriptResultsStore _scriptResultsStore =
+        Substitute.For<IScriptResultsStore>();
+
     private readonly IDateTimeProvider _dateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
@@ -34,9 +40,9 @@ public class RunScriptServiceTest
     public RunScriptServiceTest()
     {
         _runScriptService = new RunScriptService(
-            _loadFile,
-            _updateAnalysis,
-            _fileModelService,
+            _scriptLoader,
+            _analysisState,
+            _scriptResultsStore,
             _dateTimeProvider,
             _guidProvider,
             _pluginRepository,
@@ -50,24 +56,25 @@ public class RunScriptServiceTest
     {
         var request = new RunScriptRequest(_scriptRunner, CreateScript(), CreateAnalysisInfo());
         var finishedDate = DateTime.UtcNow;
-        _loadFile
+        _scriptLoader
             .GetScriptContent(Arg.Any<ProjectId>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(
-                Task.FromResult<OneOf<string, FileDoesNotExistsError>>(
-                    new FileDoesNotExistsError("path")
+                Task.FromResult<OneOf<string, ScriptDoesNotExistsError>>(
+                    new ScriptDoesNotExistsError("path")
                 )
             );
         _dateTimeProvider.UtcNow().Returns(finishedDate);
 
         await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
-        await _updateAnalysis
+        await _analysisState
             .Received(1)
-            .Update(
+            .UpdateAsync(
                 Arg.Is<AnalysisInfo>(a =>
                     a.Status == AnalysisStatus.Finished
                     && a.FinishedDate == finishedDate
-                    && a.Errors.Single().Equals(new AnalysisError("File does not exist: path"))
+                    && a.Errors.Single()
+                        .Equals(new AnalysisError("Script at path 'path' does not exist."))
                 ),
                 Arg.Any<CancellationToken>()
             );
@@ -85,16 +92,16 @@ public class RunScriptServiceTest
             request.Script.ScriptLanguage.Name,
             request.Script.ScriptLanguage.Extension
         );
-        _loadFile
+        _scriptLoader
             .GetScriptContent(Arg.Any<ProjectId>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<OneOf<string, FileDoesNotExistsError>>("content"));
+            .Returns(Task.FromResult<OneOf<string, ScriptDoesNotExistsError>>("content"));
         _guidProvider
             .NewGuid()
             .Returns(
                 new Guid("00000000-0000-0000-0000-000000000001"),
                 new Guid("00000000-0000-0000-0000-000000000002")
             );
-        _fileModelService
+        _scriptResultsStore
             .UploadFileAsync(
                 Arg.Any<FileId>(),
                 Arg.Any<Stream>(),
@@ -121,12 +128,12 @@ public class RunScriptServiceTest
         await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
-        await _updateAnalysis
+        await _analysisState
             .Received(2)
-            .Update(Arg.Any<AnalysisInfo>(), Arg.Any<CancellationToken>());
-        await _updateAnalysis
+            .UpdateAsync(Arg.Any<AnalysisInfo>(), Arg.Any<CancellationToken>());
+        await _analysisState
             .Received(1)
-            .Update(
+            .UpdateAsync(
                 Arg.Is<AnalysisInfo>(a =>
                     a.Status == AnalysisStatus.Finished
                     && a.FinishedDate == finishedDate
@@ -143,16 +150,16 @@ public class RunScriptServiceTest
         var script = CreateScript();
         var request = new RunScriptRequest(_scriptRunner, script, CreateAnalysisInfo());
         var finishedDate = DateTime.UtcNow;
-        _loadFile
+        _scriptLoader
             .GetScriptContent(Arg.Any<ProjectId>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<OneOf<string, FileDoesNotExistsError>>("content"));
+            .Returns(Task.FromResult<OneOf<string, ScriptDoesNotExistsError>>("content"));
         _guidProvider
             .NewGuid()
             .Returns(
                 new Guid("00000000-0000-0000-0000-000000000001"),
                 new Guid("00000000-0000-0000-0000-000000000002")
             );
-        _fileModelService
+        _scriptResultsStore
             .UploadFileAsync<object>(
                 Arg.Any<FileId>(),
                 Arg.Any<Stream>(),
@@ -179,12 +186,12 @@ public class RunScriptServiceTest
         await _runScriptService.RunAsync(request, TestContext.Current.CancellationToken);
 
         // Assert
-        await _updateAnalysis
+        await _analysisState
             .Received(2)
-            .Update(Arg.Any<AnalysisInfo>(), Arg.Any<CancellationToken>());
-        await _updateAnalysis
+            .UpdateAsync(Arg.Any<AnalysisInfo>(), Arg.Any<CancellationToken>());
+        await _analysisState
             .Received(1)
-            .Update(
+            .UpdateAsync(
                 Arg.Is<AnalysisInfo>(a =>
                     a.Status == AnalysisStatus.Finished
                     && a.FinishedDate == finishedDate

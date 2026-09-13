@@ -4,17 +4,6 @@
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentValidation" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Common\Common.Web\Common.Web.csproj" />
-    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
-    <ProjectReference Include="..\..\..\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
-    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis\Analysis.csproj" />
-    <ProjectReference Include="..\..\..\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj" />
     <ProjectReference Include="..\..\Application\Service.Analysis\Service.Analysis.csproj" />
-    <ProjectReference Include="..\..\Application\UseCases.Analysis\UseCases.Analysis.csproj" />
   </ItemGroup>
 </Project>

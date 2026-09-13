@@ -81,7 +81,7 @@ public class AnalysisPersistenceAdapter(IMongoRepository<MongodbAnalysisInfo> mo
 
     public async Task<AnalysisInfo> Update(
         AnalysisInfo analysisInfo,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         await mongoRepository.UpdateDocument(

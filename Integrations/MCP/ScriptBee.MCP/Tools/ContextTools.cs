@@ -14,7 +14,7 @@ public sealed class ContextTools(IGatewayApi gatewayApi)
         [Description("The unique identifier of the project.")] string projectId,
         [Description("The unique identifier of the instance.")] string instanceId,
         CancellationToken cancellationToken
-    ) => await gatewayApi.Loaders(projectId, instanceId, cancellationToken);
+    ) => await gatewayApi.LoadersGet(projectId, instanceId, cancellationToken);
 
     [McpServerTool]
     [Description(

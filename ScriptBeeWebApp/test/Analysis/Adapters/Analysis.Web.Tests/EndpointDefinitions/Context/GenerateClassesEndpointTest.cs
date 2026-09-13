@@ -1,10 +1,10 @@
 using System.Net;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
+using DxWorks.ScriptBee.Analysis.Sdk.Endpoints.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using ScriptBee.Analysis.Web.EndpointDefinitions.Context.Contracts;
 using ScriptBee.Common.CodeGeneration;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Context;
 
@@ -21,7 +21,7 @@ public class GenerateClassesEndpointTest(ITestOutputHelper outputHelper)
             .GenerateClasses(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
             .Returns(new List<SampleCodeFile>());
 
-        var response = await _api.PostApi<WebGenerateClassesRequest>(
+        var response = await _api.PostApi(
             new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>
@@ -48,7 +48,7 @@ public class GenerateClassesEndpointTest(ITestOutputHelper outputHelper)
             .GenerateClasses(Arg.Any<List<string>>(), Arg.Any<CancellationToken>())
             .Returns(new List<SampleCodeFile>());
 
-        var response = await _api.PostApi<WebGenerateClassesRequest>(
+        var response = await _api.PostApi(
             new AnalysisTestWebApplicationFactory(
                 outputHelper,
                 services =>

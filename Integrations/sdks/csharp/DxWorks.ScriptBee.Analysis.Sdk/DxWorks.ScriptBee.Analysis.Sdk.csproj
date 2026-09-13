@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>DxWorks.ScriptBee.Analysis.Sdk</RootNamespace>
+    <PackageId>DxWorks.ScriptBee.Analysis.Sdk</PackageId>
+    <Description>Public server SDK for developing ScriptBee Analysis Services.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/dxworks/scriptbee/tree/master/integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dxworks/scriptbee</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>1.0.0</Version>
+    <Company>dxworks</Company>
+    <Authors>dxworks</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None
+      Include="../../../../docs/sdks/csharp/analysis_service_sdk.md"
+      Pack="true"
+      PackagePath="README.md"
+    />
+    <None Include="../../../../LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\CodeGeneration\CodeGeneration.csproj" />
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Common.Web\Common.Web.csproj" />
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
+    <ProjectReference
+      Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj"
+      PrivateAssets="All"
+    />
+    <ProjectReference
+      Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj"
+      PrivateAssets="All"
+    />
+  </ItemGroup>
+</Project>

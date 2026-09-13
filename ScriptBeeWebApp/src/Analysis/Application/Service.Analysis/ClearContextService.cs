@@ -1,4 +1,4 @@
-﻿using ScriptBee.UseCases.Analysis;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 
 namespace ScriptBee.Service.Analysis;
 

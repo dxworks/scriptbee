@@ -1,6 +1,6 @@
 using System.Text;
+using DxWorks.ScriptBee.Analysis.Sdk.Results;
 using DxWorks.ScriptBee.Plugin.Api.Services;
-using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 
@@ -8,7 +8,7 @@ namespace ScriptBee.Service.Analysis;
 
 public class HelperFunctionsResultService(
     IResultCollector resultCollector,
-    IFileModelService fileModelService,
+    IScriptResultsStore scriptResultsStore,
     IGuidProvider guidProvider
 ) : IHelperFunctionsResultService
 {
@@ -36,7 +36,7 @@ public class HelperFunctionsResultService(
 
         resultCollector.Add(resultId, fileName, type);
 
-        await fileModelService.UploadFileAsync<object>(
+        await scriptResultsStore.UploadFileAsync<object>(
             resultId.ToFileId(),
             content,
             null,
@@ -58,6 +58,6 @@ public class HelperFunctionsResultService(
 
         resultCollector.Add(resultId, fileName, type);
 
-        fileModelService.UploadFile<object>(resultId.ToFileId(), content);
+        scriptResultsStore.UploadFileAsync<object>(resultId.ToFileId(), content);
     }
 }

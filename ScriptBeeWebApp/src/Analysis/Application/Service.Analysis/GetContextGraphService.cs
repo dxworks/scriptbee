@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Reflection;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Context;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 

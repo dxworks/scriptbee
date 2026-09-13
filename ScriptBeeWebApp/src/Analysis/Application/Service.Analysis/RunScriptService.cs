@@ -1,11 +1,13 @@
 using System.Text;
+using DxWorks.ScriptBee.Analysis.Sdk.Results;
+using DxWorks.ScriptBee.Analysis.Sdk.Scripts;
+using DxWorks.ScriptBee.Analysis.Sdk.State;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
 using Microsoft.Extensions.Logging;
-using ScriptBee.Analysis;
-using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Plugins.Loader;
@@ -13,9 +15,9 @@ using ScriptBee.Plugins.Loader;
 namespace ScriptBee.Service.Analysis;
 
 public sealed class RunScriptService(
-    ILoadFile loadFile,
-    IUpdateAnalysis updateAnalysis,
-    IFileModelService fileModelService,
+    IScriptLoader scriptLoader,
+    IAnalysisState analysisState,
+    IScriptResultsStore scriptResultsStore,
     IDateTimeProvider dateTimeProvider,
     IGuidProvider guidProvider,
     IPluginRepository pluginRepository,
@@ -28,7 +30,7 @@ public sealed class RunScriptService(
         CancellationToken cancellationToken = default
     )
     {
-        var scriptContent = await loadFile.GetScriptContent(
+        var scriptContent = await scriptLoader.GetScriptContent(
             request.Script.ProjectId,
             request.Script.File.Path,
             cancellationToken
@@ -72,7 +74,7 @@ public sealed class RunScriptService(
         var scriptFileId = await SaveStringContentToFile(content, metadata, cancellationToken);
 
         var analysisInfo = request.AnalysisInfo with { ScriptFileId = scriptFileId };
-        await updateAnalysis.Update(analysisInfo, cancellationToken);
+        await analysisState.UpdateAsync(analysisInfo, cancellationToken);
 
         logger.LogDebug(
             "Running script for analysis {AnalysisId} with runner {Runner}",
@@ -93,7 +95,7 @@ public sealed class RunScriptService(
             results.Count
         );
 
-        await updateAnalysis.Update(
+        await analysisState.UpdateAsync(
             analysisInfo.Success(dateTimeProvider.UtcNow(), results),
             cancellationToken
         );
@@ -101,11 +103,11 @@ public sealed class RunScriptService(
 
     private async Task UpdateAnalysisFileNotFound(
         AnalysisInfo analysisInfo,
-        FileDoesNotExistsError error,
+        ScriptDoesNotExistsError error,
         CancellationToken cancellationToken
     )
     {
-        await updateAnalysis.Update(
+        await analysisState.UpdateAsync(
             analysisInfo.Failed(dateTimeProvider.UtcNow(), error.ToString()),
             cancellationToken
         );
@@ -123,7 +125,7 @@ public sealed class RunScriptService(
 
         var fileId = new FileId(guidProvider.NewGuid());
 
-        await fileModelService.UploadFileAsync(fileId, stream, metadata, cancellationToken);
+        await scriptResultsStore.UploadFileAsync(fileId, stream, metadata, cancellationToken);
         return fileId;
     }
 
@@ -188,7 +190,7 @@ public sealed class RunScriptService(
     {
         var helperFunctionService = new HelperFunctionsResultService(
             resultCollector,
-            fileModelService,
+            scriptResultsStore,
             guidProvider
         );
 

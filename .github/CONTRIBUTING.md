@@ -38,8 +38,12 @@ To help you navigate the project, here is a breakdown of the key directories:
     - `src/Analysis`: Core logic for model loading and script execution.
     - `src/Workspace`: Model persistence and management.
     - `src/Plugins`: Logic for reading, installing and loading plugins.
-- **`Integrations/VS-Code`**: VS Code extension
-- **`Integrations/MCP`**: MCP Server
+- **`integrations/`**: Integration packages and SDKs.
+    - `sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk`: The C# **Server SDK** for building custom Analysis Services. It
+      provides the endpoint definitions, contracts, validators, use-case interfaces, and a registration extension so
+      implementors can focus solely on business logic.
+    - `MCP/`: The MCP Server integration.
+    - `VS-Code/`: The VS Code extension.
 - **`docs/`**: Documentation source files, built with **VitePress**.
 - **`scripts/`**: Utility scripts for building, packing, and maintaining the project.
 
@@ -88,14 +92,15 @@ ScriptBee uses a namespaced tagging strategy to manage independent component rel
 
 ### Tag Naming Convention
 
-| Tag Format             | Component                          | Artifact(s)                           | GitHub Release |
-|:-----------------------|:-----------------------------------|:--------------------------------------|:---------------|
-| `v<version>`           | Unified Application (Backend + UI) | Docker: `dxworks/scriptbee`           | **Yes (Main)** |
-| `analysis@<version>`   | Analysis Microservice              | Docker: `dxworks/scriptbee-analysis`  | No (Silent)    |
-| `plugin-api@<version>` | Plugin API                         | NuGet: `DxWorks.ScriptBee.Plugin.Api` | **Yes**        |
-| `bundle@<version>`     | Default Plugin Bundle              | Zip Archive                           | **Yes**        |
-| `vs-code@<version>`    | VS Code Extension                  | vsix file                             | **Yes**        |
-| `mcp@<version>`        | MCP Server                         | Docker: `dxworks/scriptbee-mcp`       | **Yes**        |
+| Tag Format               | Component                          | Artifact(s)                             | GitHub Release |
+|:-------------------------|:-----------------------------------|:----------------------------------------|:---------------|
+| `v<version>`             | Unified Application (Backend + UI) | Docker: `dxworks/scriptbee`             | **Yes (Main)** |
+| `analysis@<version>`     | Analysis Microservice              | Docker: `dxworks/scriptbee-analysis`    | No (Silent)    |
+| `analysis-sdk@<version>` | Analysis Server SDK (C#)           | NuGet: `DxWorks.ScriptBee.Analysis.Sdk` | **Yes**        |
+| `plugin-api@<version>`   | Plugin API                         | NuGet: `DxWorks.ScriptBee.Plugin.Api`   | **Yes**        |
+| `bundle@<version>`       | Default Plugin Bundle              | Zip Archive                             | **Yes**        |
+| `vs-code@<version>`      | VS Code Extension                  | vsix file                               | **Yes**        |
+| `mcp@<version>`          | MCP Server                         | Docker: `dxworks/scriptbee-mcp`         | **Yes**        |
 
 ### Release Process
 
@@ -103,7 +108,8 @@ ScriptBee uses a namespaced tagging strategy to manage independent component rel
 2. **Automation**: GitHub Actions will automatically:
     - Run the relevant test suites.
     - Build and publish the artifacts to Docker Hub or NuGet.
-    - Draft a GitHub Release with auto-generated release notes (for `v*`, `plugin-api@`, and `bundle@`).
+    - Draft a GitHub Release with auto-generated release notes (for `v*`, `analysis-sdk@`, `plugin-api@`, and
+      `bundle@`).
 3. **Manual Finalization**: The maintainer should review the drafted GitHub Release, refine the notes if necessary, and
    publish it.
 

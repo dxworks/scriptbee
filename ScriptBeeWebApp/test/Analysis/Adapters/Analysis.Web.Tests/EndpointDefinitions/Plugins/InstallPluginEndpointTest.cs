@@ -1,12 +1,12 @@
 using System.Net;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions.Errors;
+using DxWorks.ScriptBee.Analysis.Sdk.Endpoints.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using OneOf.Types;
-using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Analysis;
-using ScriptBee.UseCases.Analysis.Errors;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Plugins;
 

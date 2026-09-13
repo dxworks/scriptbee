@@ -1,5 +1,5 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Results;
 using NSubstitute;
-using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Service.Analysis;
@@ -9,7 +9,10 @@ namespace ScriptBee.Analysis.Service.Tests;
 public class HelperFunctionsResultServiceTest
 {
     private readonly IResultCollector _resultCollector = Substitute.For<IResultCollector>();
-    private readonly IFileModelService _fileModelService = Substitute.For<IFileModelService>();
+
+    private readonly IScriptResultsStore _scriptResultsStore =
+        Substitute.For<IScriptResultsStore>();
+
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly HelperFunctionsResultService _helperFunctionsResultService;
 
@@ -17,7 +20,7 @@ public class HelperFunctionsResultServiceTest
     {
         _helperFunctionsResultService = new HelperFunctionsResultService(
             _resultCollector,
-            _fileModelService,
+            _scriptResultsStore,
             _guidProvider
         );
     }
@@ -38,7 +41,7 @@ public class HelperFunctionsResultServiceTest
             TestContext.Current.CancellationToken
         );
 
-        await _fileModelService
+        await _scriptResultsStore
             .Received()
             .UploadFileAsync<object>(
                 resultId.ToFileId(),
@@ -65,7 +68,7 @@ public class HelperFunctionsResultServiceTest
             TestContext.Current.CancellationToken
         );
 
-        await _fileModelService
+        await _scriptResultsStore
             .Received()
             .UploadFileAsync<object>(
                 resultId.ToFileId(),
@@ -87,7 +90,13 @@ public class HelperFunctionsResultServiceTest
 
         _helperFunctionsResultService.UploadResult(fileName, type, content);
 
-        _fileModelService.Received().UploadFile<object>(resultId.ToFileId(), Arg.Any<Stream>());
+        _scriptResultsStore
+            .Received()
+            .UploadFileAsync<object>(
+                resultId.ToFileId(),
+                Arg.Any<Stream>(),
+                cancellationToken: Arg.Any<CancellationToken>()
+            );
         _resultCollector.Received().Add(resultId, fileName, type);
     }
 
@@ -96,13 +105,19 @@ public class HelperFunctionsResultServiceTest
     {
         const string fileName = "test.txt";
         const string type = "console";
-        var content = new MemoryStream("test content"u8.ToArray());
+        var content = new MemoryStream([.. "test content"u8]);
         var resultId = new ResultId(Guid.NewGuid());
         _guidProvider.NewGuid().Returns(resultId.Value);
 
         _helperFunctionsResultService.UploadResult(fileName, type, content);
 
-        _fileModelService.Received().UploadFile<object>(resultId.ToFileId(), content);
+        _scriptResultsStore
+            .Received()
+            .UploadFileAsync<object>(
+                resultId.ToFileId(),
+                content,
+                cancellationToken: Arg.Any<CancellationToken>()
+            );
         _resultCollector.Received().Add(resultId, fileName, type);
     }
 }
