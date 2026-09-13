@@ -1,3 +1,4 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions.Errors;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -9,7 +10,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
-using ScriptBee.UseCases.Analysis.Errors;
 
 namespace ScriptBee.Analysis.Service.Tests;
 

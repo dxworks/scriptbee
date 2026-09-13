@@ -1,9 +1,9 @@
 using System.Net;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.Context;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Context;
 

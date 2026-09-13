@@ -1,6 +1,6 @@
-﻿using ScriptBee.Domain.Model.Plugins;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
+using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Plugins.Loader;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 

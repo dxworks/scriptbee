@@ -1,4 +1,6 @@
-﻿using System.Threading.Channels;
+using System.Threading.Channels;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
+using DxWorks.ScriptBee.Analysis.Sdk.Context;
 using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Extensions.Logging;
 using OneOf;
@@ -9,7 +11,6 @@ using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Plugins.Loader;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 
@@ -20,7 +21,7 @@ public class RunAnalysisService(
     IGetScripts getScripts,
     IPluginRepository pluginRepository,
     Channel<RunScriptRequest> runScriptChannel,
-    InstanceInformation instanceInformation,
+    IAnalysisInstanceContext analysisInstanceContext,
     ILogger<RunAnalysisService> logger
 ) : IRunAnalysisUseCase
 {
@@ -49,7 +50,7 @@ public class RunAnalysisService(
                     AnalysisInfo.FailedToStart(
                         new AnalysisId(guidProvider.NewGuid()),
                         command.ProjectId,
-                        instanceInformation.Id,
+                        analysisInstanceContext.InstanceId,
                         command.ScriptId,
                         dateTimeProvider.UtcNow(),
                         error.ToString()
@@ -79,7 +80,7 @@ public class RunAnalysisService(
                     AnalysisInfo.FailedToStart(
                         new AnalysisId(guidProvider.NewGuid()),
                         script.ProjectId,
-                        instanceInformation.Id,
+                        analysisInstanceContext.InstanceId,
                         script.Id,
                         dateTimeProvider.UtcNow(),
                         error.ToString()
@@ -100,7 +101,7 @@ public class RunAnalysisService(
             AnalysisInfo.Started(
                 new AnalysisId(guidProvider.NewGuid()),
                 script.ProjectId,
-                instanceInformation.Id,
+                analysisInstanceContext.InstanceId,
                 script.Id,
                 dateTimeProvider.UtcNow()
             ),

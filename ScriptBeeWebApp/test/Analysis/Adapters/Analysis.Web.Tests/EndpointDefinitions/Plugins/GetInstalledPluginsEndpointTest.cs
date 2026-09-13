@@ -1,11 +1,11 @@
 using System.Net;
 using System.Text.Json;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Plugins.Manifest;
 using ScriptBee.Tests.Common;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Plugins;
 

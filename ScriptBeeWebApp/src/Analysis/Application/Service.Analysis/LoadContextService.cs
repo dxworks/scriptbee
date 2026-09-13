@@ -1,5 +1,5 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 using ScriptBee.Domain.Model.File;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Service.Analysis;
 

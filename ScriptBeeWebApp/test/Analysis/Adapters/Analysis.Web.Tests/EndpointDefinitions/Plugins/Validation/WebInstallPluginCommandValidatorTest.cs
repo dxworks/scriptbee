@@ -1,6 +1,6 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Endpoints.Contracts;
+using DxWorks.ScriptBee.Analysis.Sdk.Endpoints.Validation;
 using FluentValidation.TestHelper;
-using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Contracts;
-using ScriptBee.Analysis.Web.EndpointDefinitions.Plugins.Validation;
 
 namespace ScriptBee.Analysis.Web.Tests.EndpointDefinitions.Plugins.Validation;
 

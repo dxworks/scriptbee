@@ -1,3 +1,5 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions.Errors;
 using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
@@ -5,8 +7,6 @@ using ScriptBee.Domain.Model.Plugins;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Plugins;
 using ScriptBee.Plugins.Loader;
-using ScriptBee.UseCases.Analysis;
-using ScriptBee.UseCases.Analysis.Errors;
 
 namespace ScriptBee.Service.Analysis;
 
