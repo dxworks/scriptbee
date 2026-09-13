@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
@@ -16,7 +17,8 @@ public class LoadInstanceContextService(
     IGetProject getProject,
     IGetProjectInstance getProjectInstance,
     ILoadInstanceContext loadInstanceContext,
-    IUpdateProject updateProject
+    IUpdateProject updateProject,
+    ILogger<LoadInstanceContextService> logger
 ) : ILoadInstanceContextUseCase
 {
     public async Task<LoadContextResult> Load(
@@ -71,6 +73,15 @@ public class LoadInstanceContextService(
             filesToLoad != null
                 ? GetFilesToLoadFromFileIds(projectDetails.SavedFiles, filesToLoad)
                 : GetFilesToLoadFromLoaderIds(projectDetails.SavedFiles, loaderIds ?? []);
+
+        var loaderSummary = string.Join(", ", resolvedFilesToLoad.Keys);
+        logger.LogInformation(
+            "Loading context for project {ProjectId} on instance {InstanceId} with loaders [{Loaders}]",
+            projectDetails.Id,
+            instanceInfo.Id,
+            loaderSummary
+        );
+
         await loadInstanceContext.Load(
             instanceInfo,
             GetLoadedFileIds(resolvedFilesToLoad),
@@ -79,6 +90,12 @@ public class LoadInstanceContextService(
         await updateProject.Update(
             GetUpdateProjectDetailsWithLoadedFiles(projectDetails, resolvedFilesToLoad),
             cancellationToken
+        );
+
+        logger.LogInformation(
+            "Context loaded for project {ProjectId} on instance {InstanceId}",
+            projectDetails.Id,
+            instanceInfo.Id
         );
     }
 

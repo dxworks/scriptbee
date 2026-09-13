@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
 using OneOf.Types;
@@ -39,7 +40,8 @@ public class ReloadInstanceContextServiceTest
             _getProjectInstance,
             _clearInstanceContext,
             _loadInstanceContext,
-            _linkInstanceContext
+            _linkInstanceContext,
+            new Logger<ReloadInstanceContextService>(new LoggerFactory())
         );
     }
 

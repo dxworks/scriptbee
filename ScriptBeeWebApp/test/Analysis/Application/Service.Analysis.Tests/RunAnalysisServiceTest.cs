@@ -1,5 +1,6 @@
 ﻿using System.Threading.Channels;
 using DxWorks.ScriptBee.Plugin.Api;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
 using ScriptBee.Artifacts;
@@ -44,7 +45,8 @@ public class RunAnalysisServiceTest
             _getScripts,
             _pluginRepository,
             _runScriptChannel,
-            _instanceInformation
+            _instanceInformation,
+            new Logger<RunAnalysisService>(new LoggerFactory())
         );
     }
 

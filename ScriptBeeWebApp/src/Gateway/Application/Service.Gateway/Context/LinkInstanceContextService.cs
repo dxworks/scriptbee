@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using Microsoft.Extensions.Logging;
+using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
@@ -15,7 +16,8 @@ public class LinkInstanceContextService(
     IGetProject getProject,
     IGetProjectInstance getProjectInstance,
     ILinkInstanceContext linkInstanceContext,
-    IUpdateProject updateProject
+    IUpdateProject updateProject,
+    ILogger<LinkInstanceContextService> logger
 ) : ILinkInstanceContextUseCase
 {
     public async Task<LinkContextResult> Link(
@@ -63,8 +65,21 @@ public class LinkInstanceContextService(
         CancellationToken cancellationToken
     )
     {
+        logger.LogInformation(
+            "Linking context for project {ProjectId} on instance {InstanceId} with linkers [{Linkers}]",
+            projectDetails.Id,
+            instanceInfo.Id,
+            string.Join(", ", linkerIds)
+        );
+
         await linkInstanceContext.Link(instanceInfo, linkerIds, cancellationToken);
 
         await updateProject.Update(projectDetails with { Linkers = linkerIds }, cancellationToken);
+
+        logger.LogInformation(
+            "Context linked for project {ProjectId} on instance {InstanceId}",
+            projectDetails.Id,
+            instanceInfo.Id
+        );
     }
 }

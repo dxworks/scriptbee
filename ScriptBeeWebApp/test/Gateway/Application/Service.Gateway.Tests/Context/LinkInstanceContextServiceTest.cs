@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Logging;
+using NSubstitute;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
@@ -33,7 +34,8 @@ public class LinkInstanceContextServiceTest
             _getProject,
             _getProjectInstance,
             _linkInstanceContext,
-            _updateProject
+            _updateProject,
+            new Logger<LinkInstanceContextService>(new LoggerFactory())
         );
     }
 

@@ -42,15 +42,34 @@ public class PluginZipProcessor(
 
             var finalPluginPath = GetProjectPluginFolderPath(projectId, plugin.Id);
 
-            if (
-                Directory.Exists(finalPluginPath)
-                || Directory.Exists(GetGlobalPluginFolderPath(plugin.Id))
-            )
+            if (Directory.Exists(finalPluginPath))
             {
+                logger.LogDebug(
+                    "Plugin {PluginName} {PluginVersion} already exists at project path, skipping move",
+                    plugin.Id.Name,
+                    plugin.Id.Version
+                );
+                return plugin.Id;
+            }
+
+            if (Directory.Exists(GetGlobalPluginFolderPath(plugin.Id)))
+            {
+                logger.LogDebug(
+                    "Plugin {PluginName} {PluginVersion} already exists at global path, skipping move",
+                    plugin.Id.Name,
+                    plugin.Id.Version
+                );
                 return plugin.Id;
             }
 
             Directory.Move(tempFolderPath, finalPluginPath);
+
+            logger.LogInformation(
+                "Plugin {PluginName} {PluginVersion} extracted from zip for project {ProjectId}",
+                plugin.Id.Name,
+                plugin.Id.Version,
+                projectId
+            );
 
             return plugin.Id;
         }

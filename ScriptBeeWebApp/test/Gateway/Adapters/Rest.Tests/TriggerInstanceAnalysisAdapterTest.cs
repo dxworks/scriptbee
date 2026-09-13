@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
@@ -13,7 +14,8 @@ public sealed class TriggerInstanceAnalysisAdapterTest : IDisposable
     private readonly WireMockServer _server = WireMockServer.Start();
 
     private readonly TriggerInstanceAnalysisAdapter _triggerInstanceAnalysisAdapter = new(
-        new DefaultHttpClientFactory()
+        new DefaultHttpClientFactory(),
+        new Logger<TriggerInstanceAnalysisAdapter>(new LoggerFactory())
     );
 
     public void Dispose()

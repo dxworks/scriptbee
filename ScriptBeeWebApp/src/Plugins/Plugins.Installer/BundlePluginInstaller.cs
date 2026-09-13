@@ -173,11 +173,15 @@ public class BundlePluginInstaller(
 
         if (pluginIdsThatCouldNotBeInstalled.Count != 0)
         {
-            var errorMessage = pluginIdsThatCouldNotBeInstalled
-                .Select(id => $"Plugin {id.Name} version {id.Version} could not be installed.")
-                .Aggregate(string.Empty, (s, s1) => s + s1);
-
-            logger.LogError("{Message}", errorMessage);
+            foreach (var failedId in pluginIdsThatCouldNotBeInstalled)
+            {
+                logger.LogError(
+                    "Dependency plugin {PluginName} {PluginVersion} could not be installed for project {ProjectId}",
+                    failedId.Name,
+                    failedId.Version,
+                    projectId
+                );
+            }
 
             return new PluginInstallationError(pluginId, pluginIdsThatCouldNotBeInstalled);
         }
@@ -256,11 +260,14 @@ public class BundlePluginInstaller(
 
         if (pluginIdsThatCouldNotBeInstalled.Count != 0)
         {
-            var errorMessage = pluginIdsThatCouldNotBeInstalled
-                .Select(id => $"Plugin {id.Name} version {id.Version} could not be installed.")
-                .Aggregate(string.Empty, (s, s1) => s + s1);
-
-            logger.LogError("{Message}", errorMessage);
+            foreach (var failedId in pluginIdsThatCouldNotBeInstalled)
+            {
+                logger.LogError(
+                    "Dependency plugin {PluginName} {PluginVersion} could not be installed",
+                    failedId.Name,
+                    failedId.Version
+                );
+            }
 
             return new PluginInstallationError(pluginId, pluginIdsThatCouldNotBeInstalled);
         }

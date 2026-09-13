@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OneOf;
@@ -35,7 +36,8 @@ public class DeleteProjectServiceTests
             _deleteProject,
             _removeProjectMember,
             _getAllProjectInstances,
-            _deallocateProjectInstance
+            _deallocateProjectInstance,
+            new Logger<DeleteProjectService>(new LoggerFactory())
         );
     }
 

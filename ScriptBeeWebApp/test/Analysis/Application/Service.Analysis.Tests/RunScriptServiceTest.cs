@@ -1,5 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OneOf;
@@ -39,7 +40,8 @@ public class RunScriptServiceTest
             _dateTimeProvider,
             _guidProvider,
             _pluginRepository,
-            _projectManager
+            _projectManager,
+            new Logger<RunScriptService>(new LoggerFactory())
         );
     }
 

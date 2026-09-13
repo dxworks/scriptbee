@@ -1,5 +1,6 @@
 ﻿using System.Threading.Channels;
 using DxWorks.ScriptBee.Plugin.Api;
+using Microsoft.Extensions.Logging;
 using OneOf;
 using ScriptBee.Analysis;
 using ScriptBee.Artifacts;
@@ -19,7 +20,8 @@ public class RunAnalysisService(
     IGetScripts getScripts,
     IPluginRepository pluginRepository,
     Channel<RunScriptRequest> runScriptChannel,
-    InstanceInformation instanceInformation
+    InstanceInformation instanceInformation,
+    ILogger<RunAnalysisService> logger
 ) : IRunAnalysisUseCase
 {
     public async Task<AnalysisInfo> Run(
@@ -27,12 +29,23 @@ public class RunAnalysisService(
         CancellationToken cancellationToken = default
     )
     {
+        logger.LogInformation(
+            "Starting analysis for script {ScriptId} on project {ProjectId}",
+            command.ScriptId,
+            command.ProjectId
+        );
+
         var scriptResult = await getScripts.Get(command.ScriptId, cancellationToken);
 
         return await scriptResult.Match(
             async script => await Run(script, cancellationToken),
             async error =>
-                await createAnalysis.Create(
+            {
+                logger.LogWarning(
+                    "Script {ScriptId} not found — analysis will be recorded as failed to start",
+                    command.ScriptId
+                );
+                return await createAnalysis.Create(
                     AnalysisInfo.FailedToStart(
                         new AnalysisId(guidProvider.NewGuid()),
                         command.ProjectId,
@@ -42,7 +55,8 @@ public class RunAnalysisService(
                         error.ToString()
                     ),
                     cancellationToken
-                )
+                );
+            }
         );
     }
 
@@ -56,7 +70,12 @@ public class RunAnalysisService(
         return await scriptRunnerResult.Match(
             async runner => await Run(runner, script, cancellationToken),
             async error =>
-                await createAnalysis.Create(
+            {
+                logger.LogWarning(
+                    "No script runner found for language {Language} — analysis will be recorded as failed to start",
+                    script.ScriptLanguage.Name
+                );
+                return await createAnalysis.Create(
                     AnalysisInfo.FailedToStart(
                         new AnalysisId(guidProvider.NewGuid()),
                         script.ProjectId,
@@ -66,7 +85,8 @@ public class RunAnalysisService(
                         error.ToString()
                     ),
                     cancellationToken
-                )
+                );
+            }
         );
     }
 
@@ -85,6 +105,12 @@ public class RunAnalysisService(
                 dateTimeProvider.UtcNow()
             ),
             cancellationToken
+        );
+
+        logger.LogInformation(
+            "Analysis {AnalysisId} created — queuing script {ScriptPath} for execution",
+            analysisInfo.Id,
+            script.File.Path
         );
 
         await runScriptChannel.Writer.WriteAsync(

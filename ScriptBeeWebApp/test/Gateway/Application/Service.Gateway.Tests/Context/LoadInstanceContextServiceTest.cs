@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
 using OneOf.Types;
@@ -34,7 +35,8 @@ public class LoadInstanceContextServiceTest
             _getProject,
             _getProjectInstance,
             _loadInstanceContext,
-            _updateProject
+            _updateProject,
+            new Logger<LoadInstanceContextService>(new LoggerFactory())
         );
     }
 

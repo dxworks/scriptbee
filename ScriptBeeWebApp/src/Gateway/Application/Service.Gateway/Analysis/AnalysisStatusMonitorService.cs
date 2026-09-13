@@ -25,7 +25,14 @@ public class AnalysisStatusMonitorService(
 
     public void Track(AnalysisId analysisId, ProjectId projectId)
     {
-        _trackedAnalyses.TryAdd(analysisId, (projectId, AnalysisStatus.Started.Value));
+        if (_trackedAnalyses.TryAdd(analysisId, (projectId, AnalysisStatus.Started.Value)))
+        {
+            logger.LogInformation(
+                "Tracking analysis {AnalysisId} for project {ProjectId}",
+                analysisId,
+                projectId
+            );
+        }
     }
 
     public async Task SeedRunningAnalyses(CancellationToken cancellationToken)

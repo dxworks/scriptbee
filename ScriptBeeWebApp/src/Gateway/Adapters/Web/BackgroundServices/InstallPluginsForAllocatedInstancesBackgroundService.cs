@@ -12,12 +12,19 @@ public class InstallPluginsForAllocatedInstancesBackgroundService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        logger.LogInformation("Install Plugins Background Service is starting");
+
         while (await eventChannel.Reader.WaitToReadAsync(stoppingToken))
         {
             InstanceAllocatedEvent? request = null;
             try
             {
                 request = await eventChannel.Reader.ReadAsync(stoppingToken);
+                logger.LogDebug(
+                    "Received instance-allocated event for project {ProjectId}, instance {InstanceId}",
+                    request.projectDetails.Id,
+                    request.instanceInfo.Id
+                );
                 await service.InstallPlugins(
                     request.projectDetails,
                     request.instanceInfo,
@@ -33,5 +40,7 @@ public class InstallPluginsForAllocatedInstancesBackgroundService(
                 );
             }
         }
+
+        logger.LogInformation("Install Plugins Background Service has stopped");
     }
 }
