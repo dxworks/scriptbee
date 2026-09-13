@@ -13,9 +13,8 @@ export default defineConfig({
       { text: 'Projects', link: '/projects/creation' },
       { text: 'Plugins', link: '/plugins/installation' },
       { text: 'Scripts', link: '/scripts/setup' },
-      { text: 'Results', link: '/results/view' },
-      { text: 'Architecture', link: '/architecture/overview' },
       { text: 'SDKs', link: '/sdks/' },
+      { text: 'Architecture', link: '/architecture/overview' },
     ],
     sidebar: [
       {
@@ -86,9 +85,20 @@ export default defineConfig({
           },
         ],
       },
+      { text: 'View Results', link: '/results/view' },
       {
-        text: 'Results',
-        items: [{ text: 'View Results', link: '/results/view' }],
+        text: 'SDKs',
+        items: [
+          { text: 'Overview', link: '/sdks/' },
+          {
+            text: 'C#',
+            items: [{ text: 'Analysis Service SDK', link: '/sdks/csharp_analysis_service_sdk' }],
+          },
+          {
+            text: 'Python',
+            items: [{ text: 'Analysis Service SDK', link: '/sdks/python_analysis_service_sdk' }],
+          },
+        ],
       },
       {
         text: 'Architecture',
@@ -126,16 +136,6 @@ export default defineConfig({
                 link: '/architecture/internals/generate_classes_streaming_protocol',
               },
             ],
-          },
-        ],
-      },
-      {
-        text: 'SDKs',
-        items: [
-          { text: 'Overview', link: '/sdks/' },
-          {
-            text: 'C#',
-            items: [{ text: 'Analysis Service SDK', link: '/sdks/csharp_analysis_service_sdk' }],
           },
         ],
       },
