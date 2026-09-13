@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Loader } from '../../types/load-model';
-import { ReturnedContextSlice } from '../../types/returned-context-slice';
 import { WebResponse } from '../../types/web-response';
 import { map, retry } from 'rxjs';
 
@@ -18,9 +17,17 @@ export class LoaderService {
     );
   }
 
-  loadModels(projectId: string, instanceId: string, loaderIds: string[]) {
-    return this.http.post<ReturnedContextSlice[]>(`/api/projects/${projectId}/instances/${instanceId}/context/load`, {
-      loaderIds,
+  loadModels(projectId: string, instanceId: string, filesToLoad: Record<string, string[]>) {
+    return this.http.post<void>(`/api/projects/${projectId}/instances/${instanceId}/context/load`, {
+      filesToLoad,
     });
+  }
+
+  unloadModelFile(projectId: string, instanceId: string, loaderId: string, fileId: string) {
+    return this.http.delete<void>(`/api/projects/${projectId}/instances/${instanceId}/context/loaders/${loaderId}/files/${fileId}`);
+  }
+
+  unloadLoader(projectId: string, instanceId: string, loaderId: string) {
+    return this.http.delete<void>(`/api/projects/${projectId}/instances/${instanceId}/context/loaders/${loaderId}`);
   }
 }

@@ -53,7 +53,7 @@ public class ReloadInstanceContextServiceTest
             projectId,
             "name",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
+            [],
             new Dictionary<string, List<FileData>>
             {
                 {

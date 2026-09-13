@@ -1,3 +1,6 @@
 ﻿namespace ScriptBee.Web.EndpointDefinitions.Context.Contracts;
 
-public record WebLoadContextCommand(IEnumerable<string> LoaderIds);
+public record WebLoadContextCommand(
+    IEnumerable<string>? LoaderIds,
+    IDictionary<string, List<string>>? FilesToLoad
+);

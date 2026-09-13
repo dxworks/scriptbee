@@ -1632,6 +1632,101 @@
         }
       }
     },
+    "/api/projects/{projectId}/saved-files/{fileId}": {
+      "delete": {
+        "tags": ["Projects", "Files"],
+        "summary": "Delete a saved file",
+        "description": "Deletes a saved file from the project and cleans up references.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/saved-files": {
+      "post": {
+        "tags": ["Projects", "Files"],
+        "summary": "Upload saved files",
+        "description": "Uploads one or more files to the project without requiring a loader.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["files"],
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "$ref": "#/components/schemas/IFormFileCollection"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSavedFilesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/{projectId}/instances/{instanceId}/linkers": {
       "get": {
         "tags": ["Instances", "Context"],
@@ -2105,6 +2200,110 @@
           },
           {
             "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/instances/{instanceId}/context/loaders/{loaderId}/files/{fileId}": {
+      "delete": {
+        "tags": ["Instances", "Context"],
+        "summary": "Unload a model file from instance context",
+        "description": "Unloads a specific model file for a loader from the instance context and project state.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "loaderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{projectId}/instances/{instanceId}/context/loaders/{loaderId}": {
+      "delete": {
+        "tags": ["Instances", "Context"],
+        "summary": "Unload all model files for a loader from instance context",
+        "description": "Unloads all model files for a specific loader from the instance context and project state.",
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "loaderId",
             "in": "path",
             "required": true,
             "schema": {
@@ -3480,11 +3679,20 @@
         }
       },
       "LoadContextCommand": {
-        "required": ["loaderIds"],
+        "required": ["filesToLoad", "loaderIds"],
         "type": "object",
         "properties": {
+          "filesToLoad": {
+            "type": ["null", "object"],
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
           "loaderIds": {
-            "type": "array",
+            "type": ["null", "array"],
             "items": {
               "type": "string"
             }
@@ -3698,12 +3906,9 @@
             "format": "date-time"
           },
           "savedFiles": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/FileData"
-              }
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileData"
             }
           },
           "loadedFiles": {
@@ -3917,6 +4122,18 @@
           }
         }
       },
+      "UploadSavedFilesResponse": {
+        "required": ["files"],
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileData"
+            }
+          }
+        }
+      },
       "UserInfo": {
         "required": ["id", "name"],
         "type": "object",
@@ -3961,6 +4178,9 @@
     },
     {
       "name": "Instances"
+    },
+    {
+      "name": "Files"
     },
     {
       "name": "Context"

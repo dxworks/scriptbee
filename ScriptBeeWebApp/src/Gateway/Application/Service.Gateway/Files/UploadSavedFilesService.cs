@@ -11,15 +11,15 @@ namespace ScriptBee.Service.Gateway.Files;
 
 using UploadResult = OneOf<IEnumerable<FileData>, ProjectDoesNotExistsError>;
 
-public class UploadLoaderFilesService(
+public class UploadSavedFilesService(
     IGetProject getProject,
     IFileModelService fileModelService,
     IGuidProvider guidProvider,
     IUpdateProject updateProject
-) : IUploadLoaderFilesUseCase
+) : IUploadSavedFilesUseCase
 {
     public async Task<UploadResult> Upload(
-        UploadLoaderFilesCommand command,
+        UploadSavedFilesCommand command,
         CancellationToken cancellationToken = default
     )
     {
@@ -34,7 +34,7 @@ public class UploadLoaderFilesService(
     private async Task<UploadResult> Upload(
         ProjectDetails projectDetails,
         IEnumerable<UploadFileInformation> uploadFiles,
-        CancellationToken cancellationToken = default
+        CancellationToken cancellationToken
     )
     {
         var savedFilesData = await UploadFiles(uploadFiles, cancellationToken);

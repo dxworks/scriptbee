@@ -28,13 +28,10 @@ public class GetProjectByIdEndpointTests(ITestOutputHelper outputHelper)
         var creationDate = DateTimeOffset.Parse("2026-01-01T00:00:00Z");
         var projectDetails = BasicProjectDetails(ProjectId.Create("id"), "name", creationDate) with
         {
-            SavedFiles = new Dictionary<string, List<FileData>>
-            {
-                {
-                    "loader-id",
-                    [new FileData(new FileId("f2461a1d-b63a-4f7f-a486-d6b1aad57ad9"), "file-name")]
-                },
-            },
+            SavedFiles =
+            [
+                new FileData(new FileId("f2461a1d-b63a-4f7f-a486-d6b1aad57ad9"), "file-name"),
+            ],
             LoadedFiles = new Dictionary<string, List<FileData>>
             {
                 {

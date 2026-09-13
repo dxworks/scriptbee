@@ -1,4 +1,4 @@
-﻿using MongoDB.Driver;
+using MongoDB.Driver;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Project;
@@ -115,13 +115,7 @@ public class ProjectPersistenceAdapterTests : IClassFixture<MongoDbFixture>
                 Id = projectId,
                 Name = projectId,
                 CreationDate = creationDate,
-                SavedFiles =
-                {
-                    {
-                        "loader-id",
-                        [new MongodbFileData("957969a8-c66e-498d-b00f-7e58ded36b80", "file")]
-                    },
-                },
+                SavedFiles = [new MongodbFileData("957969a8-c66e-498d-b00f-7e58ded36b80", "file")],
                 LoadedFiles =
                 {
                     {
@@ -151,10 +145,9 @@ public class ProjectPersistenceAdapterTests : IClassFixture<MongoDbFixture>
         result.AsT0.Name.ShouldBe(projectId);
         result.AsT0.CreationDate.ShouldBe(DateTimeOffset.UtcNow, TimeSpan.FromSeconds(1));
         var savedFile = result.AsT0.SavedFiles.Single();
-        savedFile.Key.ShouldBe("loader-id");
-        savedFile
-            .Value.Single()
-            .ShouldBe(new FileData(new FileId("957969a8-c66e-498d-b00f-7e58ded36b80"), "file"));
+        savedFile.ShouldBe(
+            new FileData(new FileId("957969a8-c66e-498d-b00f-7e58ded36b80"), "file")
+        );
         var loadedFile = result.AsT0.LoadedFiles.Single();
         loadedFile.Key.ShouldBe("loader-id");
         loadedFile
@@ -226,13 +219,7 @@ public class ProjectPersistenceAdapterTests : IClassFixture<MongoDbFixture>
             projectId,
             "updated-name",
             DateTimeOffset.Parse("2024-02-08"),
-            new Dictionary<string, List<FileData>>
-            {
-                {
-                    "loader-id",
-                    [new FileData(new FileId("7609bb17-e623-454b-a441-0102fa64daf6"), "file")]
-                },
-            },
+            [new FileData(new FileId("7609bb17-e623-454b-a441-0102fa64daf6"), "file")],
             new Dictionary<string, List<FileData>>
             {
                 {
@@ -253,11 +240,8 @@ public class ProjectPersistenceAdapterTests : IClassFixture<MongoDbFixture>
         updatedMongoProject.Id.ShouldBe(projectId.Value);
         updatedMongoProject.Name.ShouldBe("updated-name");
         updatedMongoProject.CreationDate.ShouldBe(DateTimeOffset.Parse("2024-02-08"));
-        var loaderPair = updatedMongoProject.SavedFiles.Single();
-        loaderPair.Key.ShouldBe("loader-id");
-        loaderPair
-            .Value.Single()
-            .ShouldBe(new MongodbFileData("7609bb17-e623-454b-a441-0102fa64daf6", "file"));
+        var savedFile = updatedMongoProject.SavedFiles.Single();
+        savedFile.ShouldBe(new MongodbFileData("7609bb17-e623-454b-a441-0102fa64daf6", "file"));
         var linkerPair = updatedMongoProject.LoadedFiles.Single();
         linkerPair.Key.ShouldBe("loader-id");
         linkerPair

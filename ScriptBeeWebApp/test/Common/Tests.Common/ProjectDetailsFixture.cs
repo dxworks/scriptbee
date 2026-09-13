@@ -10,7 +10,7 @@ public static class ProjectDetailsFixture
             projectId,
             "project",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
+            [],
             new Dictionary<string, List<FileData>>(),
             [],
             new List<PluginInstallationConfig>()
@@ -29,6 +29,6 @@ public static class ProjectDetailsFixture
 
     public static ProjectDetails ProjectDetailsWithSavedFiles(
         ProjectId projectId,
-        Dictionary<string, List<FileData>> savedFiles
+        List<FileData> savedFiles
     ) => BasicProjectDetails(projectId) with { SavedFiles = savedFiles };
 }

@@ -26,7 +26,7 @@ public sealed class CreateProjectService(
             ProjectId.Create(command.Id),
             command.Name,
             dateTimeProvider.UtcNow(),
-            new Dictionary<string, List<FileData>>(),
+            [],
             new Dictionary<string, List<FileData>>(),
             [],
             []

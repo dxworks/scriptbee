@@ -1,4 +1,4 @@
-﻿using OneOf;
+using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
@@ -27,7 +27,14 @@ public class LoadInstanceContextService(
         var result = await getProject.GetById(command.ProjectId, cancellationToken);
 
         return await result.Match<Task<LoadContextResult>>(
-            details => Load(details, command.InstanceId, command.LoaderIds, cancellationToken),
+            details =>
+                Load(
+                    details,
+                    command.InstanceId,
+                    command.FilesToLoad,
+                    command.LoaderIds,
+                    cancellationToken
+                ),
             error => Task.FromResult<LoadContextResult>(error)
         );
     }
@@ -35,7 +42,8 @@ public class LoadInstanceContextService(
     private async Task<LoadContextResult> Load(
         ProjectDetails projectDetails,
         InstanceId instanceId,
-        IEnumerable<string> loaderIds,
+        IDictionary<string, List<string>>? filesToLoad,
+        IEnumerable<string>? loaderIds,
         CancellationToken cancellationToken
     )
     {
@@ -44,7 +52,7 @@ public class LoadInstanceContextService(
         return await result.Match<Task<LoadContextResult>>(
             async instanceInfo =>
             {
-                await Load(projectDetails, instanceInfo, loaderIds, cancellationToken);
+                await Load(projectDetails, instanceInfo, filesToLoad, loaderIds, cancellationToken);
                 return new Success();
             },
             error => Task.FromResult<LoadContextResult>(error)
@@ -54,38 +62,58 @@ public class LoadInstanceContextService(
     private async Task Load(
         ProjectDetails projectDetails,
         InstanceInfo instanceInfo,
-        IEnumerable<string> loaderIds,
+        IDictionary<string, List<string>>? filesToLoad,
+        IEnumerable<string>? loaderIds,
         CancellationToken cancellationToken
     )
     {
-        var filesToLoad = GetFilesToLoad(projectDetails.SavedFiles, loaderIds.ToHashSet());
+        var resolvedFilesToLoad =
+            filesToLoad != null
+                ? GetFilesToLoadFromFileIds(projectDetails.SavedFiles, filesToLoad)
+                : GetFilesToLoadFromLoaderIds(projectDetails.SavedFiles, loaderIds ?? []);
         await loadInstanceContext.Load(
             instanceInfo,
-            GetLoadedFileIds(filesToLoad),
+            GetLoadedFileIds(resolvedFilesToLoad),
             cancellationToken
         );
         await updateProject.Update(
-            GetUpdateProjectDetailsWithLoadedFiles(projectDetails, filesToLoad),
+            GetUpdateProjectDetailsWithLoadedFiles(projectDetails, resolvedFilesToLoad),
             cancellationToken
         );
     }
 
-    private static Dictionary<string, List<FileData>> GetFilesToLoad(
-        IDictionary<string, List<FileData>> savedFiles,
-        HashSet<string> loaderIds
+    private static Dictionary<string, List<FileData>> GetFilesToLoadFromFileIds(
+        IEnumerable<FileData> savedFiles,
+        IDictionary<string, List<string>> filesToLoad
     )
     {
-        var filesToLoad = new Dictionary<string, List<FileData>>();
+        var savedFilesMap = savedFiles.ToDictionary(f => f.Id.ToString(), f => f);
+        var result = new Dictionary<string, List<FileData>>();
 
-        foreach (var keyValuePair in savedFiles)
+        foreach (var (loaderId, fileIds) in filesToLoad)
         {
-            if (loaderIds.Contains(keyValuePair.Key))
+            var matchedFiles = new List<FileData>();
+            foreach (var fileId in fileIds)
             {
-                filesToLoad[keyValuePair.Key] = keyValuePair.Value;
+                if (savedFilesMap.TryGetValue(fileId, out var fileData))
+                {
+                    matchedFiles.Add(fileData);
+                }
             }
+
+            result[loaderId] = matchedFiles;
         }
 
-        return filesToLoad;
+        return result;
+    }
+
+    private static Dictionary<string, List<FileData>> GetFilesToLoadFromLoaderIds(
+        IEnumerable<FileData> savedFiles,
+        IEnumerable<string> loaderIds
+    )
+    {
+        var allFiles = savedFiles.ToList();
+        return loaderIds.ToDictionary(loaderId => loaderId, _ => allFiles);
     }
 
     private static Dictionary<string, IEnumerable<FileId>> GetLoadedFileIds(
@@ -104,7 +132,22 @@ public class LoadInstanceContextService(
 
         foreach (var (loaderId, loadedFiles) in filesToLoad)
         {
-            updatedLoadedFiles[loaderId] = loadedFiles;
+            if (updatedLoadedFiles.TryGetValue(loaderId, out var existingLoadedFiles))
+            {
+                var combined = new List<FileData>(existingLoadedFiles);
+                foreach (
+                    var file in loadedFiles.Where(file => !combined.Any(f => f.Id.Equals(file.Id)))
+                )
+                {
+                    combined.Add(file);
+                }
+
+                updatedLoadedFiles[loaderId] = combined;
+            }
+            else
+            {
+                updatedLoadedFiles[loaderId] = [.. loadedFiles];
+            }
         }
 
         return projectDetails with

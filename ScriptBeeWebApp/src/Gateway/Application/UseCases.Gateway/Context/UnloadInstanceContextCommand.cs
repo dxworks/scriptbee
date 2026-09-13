@@ -1,11 +1,12 @@
+using ScriptBee.Domain.Model.File;
 using ScriptBee.Domain.Model.Instance;
 using ScriptBee.Domain.Model.Project;
 
 namespace ScriptBee.UseCases.Gateway.Context;
 
-public record LoadContextCommand(
+public record UnloadInstanceContextCommand(
     ProjectId ProjectId,
     InstanceId InstanceId,
-    IEnumerable<string>? LoaderIds,
-    IDictionary<string, List<string>>? FilesToLoad
+    string LoaderId,
+    FileId? FileId = null
 );

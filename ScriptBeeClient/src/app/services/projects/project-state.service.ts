@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { Project } from '../../types/project';
+import { ProjectService } from './project.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ export class ProjectStateService {
   currentInstanceId = signal<string | null>(null);
 
   private router = inject(Router);
+  private projectService = inject(ProjectService);
 
   constructor() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
@@ -29,5 +31,16 @@ export class ProjectStateService {
         this.currentInstanceId.set(null);
       }
     });
+  }
+
+  reloadCurrentProject(): void {
+    const id = this.currentProjectId();
+    if (id) {
+      this.projectService.getProject(id).subscribe({
+        next: (project) => {
+          this.currentProject.set(project);
+        },
+      });
+    }
   }
 }

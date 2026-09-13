@@ -128,7 +128,7 @@ public class DeleteProjectLevelPluginsServiceTest : IClassFixture<TempDirFixture
             projectId,
             "ProjectName",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>(),
+            [],
             new Dictionary<string, List<FileData>>(),
             [],
             installedPlugins

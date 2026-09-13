@@ -160,4 +160,17 @@ public static class ApiErrorExtensions
             )
         );
     }
+
+    public static NotFound<ProblemDetails> ToProblem(
+        this ProjectFileDoesNotExistsError error,
+        HttpContext context
+    )
+    {
+        return TypedResults.NotFound(
+            context.ToProblemDetails(
+                "File Not Found",
+                $"A file with the ID '{error.FileId}' does not exist in the project."
+            )
+        );
+    }
 }
