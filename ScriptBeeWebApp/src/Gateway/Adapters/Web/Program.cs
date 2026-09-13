@@ -13,6 +13,7 @@ using ScriptBee.UseCases.Gateway.Plugins;
 using ScriptBee.Web.EndpointDefinitions;
 using ScriptBee.Web.Extensions;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,7 +87,27 @@ app.UseAuthorization();
 
 app.MapHealthChecksEndpoint();
 
-app.UseSerilogRequestLogging();
+app.UseSerilogRequestLogging(options =>
+{
+    options.GetLevel = (ctx, _, ex) =>
+        ex is not null ? LogEventLevel.Error
+        : ctx.Request.Path.StartsWithSegments("/health") ? LogEventLevel.Debug
+        : LogEventLevel.Information;
+
+    options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    {
+        diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+        diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+        if (httpContext.Request.Headers.TryGetValue("X-Client-Id", out var clientId))
+        {
+            diagnosticContext.Set("ClientId", clientId.ToString());
+        }
+        if (httpContext.User.Identity?.IsAuthenticated == true)
+        {
+            diagnosticContext.Set("UserName", httpContext.User.Identity.Name);
+        }
+    };
+});
 
 app.UseExceptionEndpoint();
 

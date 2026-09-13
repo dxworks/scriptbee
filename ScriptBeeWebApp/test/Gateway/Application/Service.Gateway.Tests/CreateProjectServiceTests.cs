@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Logging;
+using NSubstitute;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Common;
@@ -30,7 +31,8 @@ public class CreateProjectServiceTests
             _createProject,
             _dateTimeProvider,
             _getDefaultCreatorRole,
-            _setResourceRole
+            _setResourceRole,
+            new Logger<CreateProjectService>(new LoggerFactory())
         );
     }
 

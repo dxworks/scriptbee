@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Logging;
+using NSubstitute;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
@@ -25,7 +26,8 @@ public class ClearInstanceContextServiceTest
     {
         _clearInstanceContextService = new ClearInstanceContextService(
             _getProjectInstance,
-            _clearInstanceContext
+            _clearInstanceContext,
+            new Logger<ClearInstanceContextService>(new LoggerFactory())
         );
     }
 

@@ -1,6 +1,7 @@
 using System.Text;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
+using Microsoft.Extensions.Logging;
 using ScriptBee.Analysis;
 using ScriptBee.Artifacts;
 using ScriptBee.Common;
@@ -18,7 +19,8 @@ public sealed class RunScriptService(
     IDateTimeProvider dateTimeProvider,
     IGuidProvider guidProvider,
     IPluginRepository pluginRepository,
-    IProjectManager projectManager
+    IProjectManager projectManager,
+    ILogger<RunScriptService> logger
 ) : IRunScriptService
 {
     public async Task RunAsync(
@@ -38,7 +40,14 @@ public sealed class RunScriptService(
                 await RunScript(request, content, cancellationToken);
             },
             async error =>
-                await UpdateAnalysisFileNotFound(request.AnalysisInfo, error, cancellationToken)
+            {
+                logger.LogWarning(
+                    "Script file not found for analysis {AnalysisId}: {Error}",
+                    request.AnalysisInfo.Id,
+                    error
+                );
+                await UpdateAnalysisFileNotFound(request.AnalysisInfo, error, cancellationToken);
+            }
         );
     }
 
@@ -48,6 +57,12 @@ public sealed class RunScriptService(
         CancellationToken cancellationToken
     )
     {
+        logger.LogDebug(
+            "Saving script file snapshot for analysis {AnalysisId} (language: {Language})",
+            request.AnalysisInfo.Id,
+            request.Script.ScriptLanguage.Name
+        );
+
         var metadata = new HistoricalScriptMetadata(
             request.Script.File.Path,
             request.Script.ScriptLanguage.Name,
@@ -59,11 +74,23 @@ public sealed class RunScriptService(
         var analysisInfo = request.AnalysisInfo with { ScriptFileId = scriptFileId };
         await updateAnalysis.Update(analysisInfo, cancellationToken);
 
+        logger.LogDebug(
+            "Running script for analysis {AnalysisId} with runner {Runner}",
+            request.AnalysisInfo.Id,
+            request.ScriptRunner.GetType().Name
+        );
+
         var results = await RunScriptAsync(
             request.ScriptRunner,
             request.Script,
             content,
             cancellationToken
+        );
+
+        logger.LogDebug(
+            "Script execution finished for analysis {AnalysisId} — {ResultCount} result(s) produced",
+            request.AnalysisInfo.Id,
+            results.Count
         );
 
         await updateAnalysis.Update(
@@ -128,6 +155,13 @@ public sealed class RunScriptService(
         }
         catch (Exception e)
         {
+            logger.LogError(
+                e,
+                "Script runner threw an exception for script {ScriptPath} (language: {Language})",
+                script.File.Path,
+                script.ScriptLanguage.Name
+            );
+
             var runErrorId = await SaveStringContentToFile<object>(
                 e.Message,
                 null,

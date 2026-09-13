@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using Microsoft.Extensions.Logging;
+using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.Instance;
@@ -16,7 +17,8 @@ public class ReloadInstanceContextService(
     IGetProjectInstance getProjectInstance,
     IClearInstanceContext clearInstanceContext,
     ILoadInstanceContext loadInstanceContext,
-    ILinkInstanceContext linkInstanceContext
+    ILinkInstanceContext linkInstanceContext,
+    ILogger<ReloadInstanceContextService> logger
 ) : IReloadInstanceContextUseCase
 {
     public async Task<ReloadContextResult> Reload(
@@ -57,6 +59,12 @@ public class ReloadInstanceContextService(
         CancellationToken cancellationToken
     )
     {
+        logger.LogInformation(
+            "Reloading context for project {ProjectId} on instance {InstanceId}",
+            projectDetails.Id,
+            instanceInfo.Id
+        );
+
         await clearInstanceContext.Clear(instanceInfo, cancellationToken);
         await loadInstanceContext.Load(
             instanceInfo,
@@ -64,5 +72,11 @@ public class ReloadInstanceContextService(
             cancellationToken
         );
         await linkInstanceContext.Link(instanceInfo, projectDetails.Linkers, cancellationToken);
+
+        logger.LogInformation(
+            "Context reloaded for project {ProjectId} on instance {InstanceId}",
+            projectDetails.Id,
+            instanceInfo.Id
+        );
     }
 }

@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using Microsoft.Extensions.Logging;
+using OneOf;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Errors;
 using ScriptBee.Domain.Model.File;
@@ -14,7 +15,8 @@ public sealed class CreateProjectService(
     ICreateProject createProject,
     IDateTimeProvider dateTimeProvider,
     IGetDefaultCreatorRole getDefaultCreatorRole,
-    ISetResourceRole setResourceRole
+    ISetResourceRole setResourceRole,
+    ILogger<CreateProjectService> logger
 ) : ICreateProjectUseCase
 {
     public async Task<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>> CreateProject(
@@ -22,6 +24,12 @@ public sealed class CreateProjectService(
         CancellationToken cancellationToken
     )
     {
+        logger.LogInformation(
+            "Creating project '{ProjectName}' with id '{ProjectId}'",
+            command.Name,
+            command.Id
+        );
+
         var projectDetails = new ProjectDetails(
             ProjectId.Create(command.Id),
             command.Name,
@@ -37,6 +45,15 @@ public sealed class CreateProjectService(
         if (result.IsT0)
         {
             await AssignDefaultRole(projectDetails.Id, command.UserId, cancellationToken);
+            logger.LogInformation(
+                "Project '{ProjectName}' ({ProjectId}) created successfully",
+                command.Name,
+                projectDetails.Id
+            );
+        }
+        else
+        {
+            logger.LogWarning("Project id '{ProjectId}' is already in use", command.Id);
         }
 
         return result.Match<OneOf<ProjectDetails, ProjectIdAlreadyInUseError>>(

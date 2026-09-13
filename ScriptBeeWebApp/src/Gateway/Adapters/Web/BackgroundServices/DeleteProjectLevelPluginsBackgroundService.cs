@@ -12,12 +12,18 @@ public class DeleteProjectLevelPluginsBackgroundService(
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        logger.LogInformation("Delete Project Plugins Background Service is starting");
+
         while (await eventChannel.Reader.WaitToReadAsync(stoppingToken))
         {
             InstanceDeallocatedEvent? request = null;
             try
             {
                 request = await eventChannel.Reader.ReadAsync(stoppingToken);
+                logger.LogDebug(
+                    "Received instance-deallocated event for project {ProjectId}",
+                    request.projectDetails.Id
+                );
                 await service.DeleteProjectPlugins(request.projectDetails, stoppingToken);
             }
             catch (Exception e)
@@ -29,5 +35,7 @@ public class DeleteProjectLevelPluginsBackgroundService(
                 );
             }
         }
+
+        logger.LogInformation("Delete Project Plugins Background Service has stopped");
     }
 }

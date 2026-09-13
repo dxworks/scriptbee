@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Plugins;
@@ -13,13 +14,20 @@ public class InstallPluginService(
     IProjectManager projectManager,
     IPluginReader pluginReader,
     IPluginLoader pluginLoader,
-    IPluginPathProvider pluginPathProvider
+    IPluginPathProvider pluginPathProvider,
+    ILogger<InstallPluginService> logger
 ) : IInstallPluginUseCase
 {
     public OneOf<Success, InvalidPluginError, PluginInstallationError> InstallPlugin(
         PluginId pluginId
     )
     {
+        logger.LogInformation(
+            "Installing plugin {PluginName} {PluginVersion} on analysis instance",
+            pluginId.Name,
+            pluginId.Version
+        );
+
         try
         {
             var projectId = ProjectId.FromValue(projectManager.GetProject().Id);
@@ -30,14 +38,32 @@ public class InstallPluginService(
 
             if (plugin is null)
             {
+                logger.LogWarning(
+                    "Plugin {PluginName} {PluginVersion} not found in project or global plugin paths",
+                    pluginId.Name,
+                    pluginId.Version
+                );
                 return new InvalidPluginError(pluginId);
             }
 
             pluginLoader.Load(plugin);
+
+            logger.LogInformation(
+                "Plugin {PluginName} {PluginVersion} installed on analysis instance",
+                pluginId.Name,
+                pluginId.Version
+            );
+
             return new Success();
         }
-        catch
+        catch (Exception e)
         {
+            logger.LogError(
+                e,
+                "Failed to install plugin {PluginName} {PluginVersion} on analysis instance",
+                pluginId.Name,
+                pluginId.Version
+            );
             return new PluginInstallationError(pluginId);
         }
     }

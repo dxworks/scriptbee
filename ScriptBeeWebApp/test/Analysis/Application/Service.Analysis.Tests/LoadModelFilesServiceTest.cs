@@ -1,5 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.File;
@@ -23,7 +24,8 @@ public class LoadModelFilesServiceTest
         _loadModelFilesService = new LoadModelFilesService(
             _projectManager,
             _pluginRepository,
-            _fileModelService
+            _fileModelService,
+            new Logger<LoadModelFilesService>(new LoggerFactory())
         );
     }
 

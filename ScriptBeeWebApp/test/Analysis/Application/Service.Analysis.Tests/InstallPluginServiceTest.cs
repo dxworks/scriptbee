@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using OneOf.Types;
@@ -29,7 +30,8 @@ public class InstallPluginServiceTest
             _projectManager,
             _pluginReader,
             _pluginLoader,
-            _pluginPathProvider
+            _pluginPathProvider,
+            new Logger<InstallPluginService>(new LoggerFactory())
         );
     }
 

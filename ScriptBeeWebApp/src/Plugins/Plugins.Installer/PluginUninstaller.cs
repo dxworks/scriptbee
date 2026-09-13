@@ -7,8 +7,15 @@ public class PluginUninstaller(ILogger<PluginUninstaller> logger) : IPluginUnins
 {
     public void Uninstall(string pathToPlugin)
     {
-        logger.LogInformation("Uninstalling plugin: {PathToPlugin}", pathToPlugin);
+        var pluginName = Path.GetFileName(pathToPlugin);
+        logger.LogInformation(
+            "Uninstalling plugin {PluginName} from {PathToPlugin}",
+            pluginName,
+            pathToPlugin
+        );
 
         new DirectoryInfo(pathToPlugin).DeleteIfExists();
+
+        logger.LogInformation("Plugin {PluginName} uninstalled", pluginName);
     }
 }

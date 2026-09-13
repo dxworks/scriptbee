@@ -9,12 +9,14 @@ public static class SerilogExtensions
 {
     public static IServiceCollection AddSerilog(this IServiceCollection services)
     {
-        var serilogLogger = new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
             .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .CreateLogger();
-        Log.Logger = serilogLogger;
+            .WriteTo.Console(
+                outputTemplate: "[{Timestamp:o}][{Level:u3}][bootstrap] {Message:lj}{NewLine}{Exception}"
+            )
+            .CreateBootstrapLogger();
 
         return services;
     }
@@ -23,7 +25,9 @@ public static class SerilogExtensions
     {
         return hostBuilder.UseSerilog(
             (context, services, config) =>
-                config.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services)
+                config.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services),
+            preserveStaticLogger: false,
+            writeToProviders: false
         );
     }
 }

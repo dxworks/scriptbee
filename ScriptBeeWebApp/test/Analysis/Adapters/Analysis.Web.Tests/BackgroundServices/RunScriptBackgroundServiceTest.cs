@@ -1,5 +1,6 @@
 using System.Threading.Channels;
 using DxWorks.ScriptBee.Plugin.Api;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using ScriptBee.Analysis.Web.BackgroundServices;
 using ScriptBee.Domain.Model.Analysis;
@@ -19,7 +20,11 @@ public class RunScriptBackgroundServiceTest
     {
         var runScriptChannel = Channel.CreateUnbounded<RunScriptRequest>();
         var runScriptService = Substitute.For<IRunScriptService>();
-        var backgroundService = new RunScriptBackgroundService(runScriptChannel, runScriptService);
+        var backgroundService = new RunScriptBackgroundService(
+            runScriptChannel,
+            runScriptService,
+            new Logger<RunScriptBackgroundService>(new LoggerFactory())
+        );
         var request1 = new RunScriptRequest(
             _scriptRunner,
             CreateScript(),

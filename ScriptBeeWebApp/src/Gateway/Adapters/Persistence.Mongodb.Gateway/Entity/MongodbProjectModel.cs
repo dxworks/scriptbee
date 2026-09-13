@@ -25,7 +25,7 @@ public class MongodbProjectModel : IDocument
             ProjectId.FromValue(Id),
             Name,
             CreationDate,
-            SavedFiles.Select(v => v.ToFileData()).ToList(),
+            [.. SavedFiles.Select(v => v.ToFileData())],
             LoadedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
             [.. Linkers],
             [.. InstalledPlugins.Select(x => x.ToPluginInstallationConfig())]

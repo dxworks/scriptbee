@@ -1,5 +1,6 @@
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
+using Microsoft.Extensions.Logging;
 using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Plugins.Loader;
@@ -9,7 +10,8 @@ namespace ScriptBee.Service.Analysis;
 public class LoadModelFilesService(
     IProjectManager projectManager,
     IPluginRepository pluginRepository,
-    IFileModelService fileModelService
+    IFileModelService fileModelService,
+    ILogger<LoadModelFilesService> logger
 ) : ILoadModelFilesService
 {
     public async Task LoadModelFiles(
@@ -25,9 +27,14 @@ public class LoadModelFilesService(
 
             if (modelLoader is null)
             {
+                logger.LogWarning(
+                    "No model loader plugin found for loader '{LoaderId}' — files will be skipped",
+                    loader
+                );
                 continue;
             }
 
+            logger.LogDebug("Loading model files with loader '{LoaderId}'", loader);
             await LoadModelFiles(fileIds, modelLoader, loader, loadModels, cancellationToken);
         }
     }
@@ -51,6 +58,12 @@ public class LoadModelFilesService(
         var dictionary = await modelLoader.LoadModel(
             loadedFileStreams,
             cancellationToken: cancellationToken
+        );
+
+        logger.LogDebug(
+            "Loader '{LoaderId}' produced {TypeCount} model type(s)",
+            loader,
+            dictionary.Count
         );
 
         projectManager.AddToGivenProject(dictionary, modelLoader.GetName());
