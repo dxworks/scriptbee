@@ -1,5 +1,5 @@
 using ScriptBee.Domain.Model.Plugins;
 
-namespace ScriptBee.UseCases.Analysis.Errors;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Abstractions.Errors;
 
 public sealed record PluginInstallationError(PluginId Id);

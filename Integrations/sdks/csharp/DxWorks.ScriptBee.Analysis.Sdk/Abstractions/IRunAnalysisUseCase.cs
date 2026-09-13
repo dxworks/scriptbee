@@ -1,6 +1,6 @@
-﻿using ScriptBee.Domain.Model.Analysis;
+using ScriptBee.Domain.Model.Analysis;
 
-namespace ScriptBee.UseCases.Analysis;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 
 public interface IRunAnalysisUseCase
 {

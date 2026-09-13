@@ -1,4 +1,4 @@
-﻿namespace ScriptBee.UseCases.Analysis;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 
 public interface ILinkContextUseCase
 {

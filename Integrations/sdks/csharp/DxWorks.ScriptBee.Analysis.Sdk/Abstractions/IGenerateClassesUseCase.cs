@@ -1,6 +1,6 @@
 using ScriptBee.Common.CodeGeneration;
 
-namespace ScriptBee.UseCases.Analysis;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 
 public interface IGenerateClassesUseCase
 {

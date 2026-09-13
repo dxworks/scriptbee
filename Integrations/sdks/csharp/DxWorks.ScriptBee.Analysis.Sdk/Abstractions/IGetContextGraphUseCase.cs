@@ -1,6 +1,6 @@
 using ScriptBee.Domain.Model.Context;
 
-namespace ScriptBee.UseCases.Analysis;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 
 public interface IGetContextGraphUseCase
 {

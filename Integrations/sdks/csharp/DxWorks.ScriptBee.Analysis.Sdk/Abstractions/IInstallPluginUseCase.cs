@@ -1,9 +1,9 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions.Errors;
 using OneOf;
 using OneOf.Types;
 using ScriptBee.Domain.Model.Plugins;
-using ScriptBee.UseCases.Analysis.Errors;
 
-namespace ScriptBee.UseCases.Analysis;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
 
 public interface IInstallPluginUseCase
 {
