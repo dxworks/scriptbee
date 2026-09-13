@@ -12,18 +12,18 @@ using static ScriptBee.Tests.Common.ProjectDetailsFixture;
 
 namespace ScriptBee.Service.Gateway.Tests.Files;
 
-public class UploadLoaderFilesServiceTest
+public class UploadSavedFilesServiceTest
 {
     private readonly IGetProject _getProject = Substitute.For<IGetProject>();
     private readonly IFileModelService _fileModelService = Substitute.For<IFileModelService>();
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
     private readonly IUpdateProject _updateProject = Substitute.For<IUpdateProject>();
 
-    private readonly UploadLoaderFilesService _uploadLoaderFilesService;
+    private readonly UploadSavedFilesService _uploadSavedFilesService;
 
-    public UploadLoaderFilesServiceTest()
+    public UploadSavedFilesServiceTest()
     {
-        _uploadLoaderFilesService = new UploadLoaderFilesService(
+        _uploadSavedFilesService = new UploadSavedFilesService(
             _getProject,
             _fileModelService,
             _guidProvider,
@@ -32,11 +32,11 @@ public class UploadLoaderFilesServiceTest
     }
 
     [Fact]
-    public async Task GiveNoProjectForProjectId_ExpectProjectDoesNotExistsError()
+    public async Task GivenNoProjectForProjectId_ExpectProjectDoesNotExistsError()
     {
         // Arrange
         var projectId = ProjectId.FromValue("project-id");
-        var command = new UploadLoaderFilesCommand(projectId, "loader-id", []);
+        var command = new UploadSavedFilesCommand(projectId, []);
         var projectDoesNotExistsError = new ProjectDoesNotExistsError(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -47,7 +47,7 @@ public class UploadLoaderFilesServiceTest
             );
 
         // Act
-        var result = await _uploadLoaderFilesService.Upload(
+        var result = await _uploadSavedFilesService.Upload(
             command,
             TestContext.Current.CancellationToken
         );
@@ -61,9 +61,8 @@ public class UploadLoaderFilesServiceTest
     {
         // Arrange
         var projectId = ProjectId.FromValue("project-id");
-        var command = new UploadLoaderFilesCommand(
+        var command = new UploadSavedFilesCommand(
             projectId,
-            "loader-id",
             [new UploadFileInformation("file-name", 0, new MemoryStream())]
         );
         var projectDetails = BasicProjectDetails(projectId);
@@ -74,7 +73,7 @@ public class UploadLoaderFilesServiceTest
             );
 
         // Act
-        var result = await _uploadLoaderFilesService.Upload(
+        var result = await _uploadSavedFilesService.Upload(
             command,
             TestContext.Current.CancellationToken
         );
@@ -92,20 +91,23 @@ public class UploadLoaderFilesServiceTest
     }
 
     [Fact]
-    public async Task GivenFilesWithLength_ExpectFilesToBeUploaded()
+    public async Task GivenFilesWithLength_ExpectFilesToBeUploadedAndAppendedToSavedFiles()
     {
         // Arrange
         var projectId = ProjectId.FromValue("project-id");
-        var command = new UploadLoaderFilesCommand(
+        var command = new UploadSavedFilesCommand(
             projectId,
-            "loader-id",
             [
                 new UploadFileInformation("file-name-1", 2, new MemoryStream()),
                 new UploadFileInformation("file-name-2", 0, new MemoryStream()),
                 new UploadFileInformation("file-name-3", 5, new MemoryStream()),
             ]
         );
-        var projectDetails = BasicProjectDetails(projectId);
+        var existingFile = new FileData(
+            new FileId("a6037f8e-575a-488b-91a8-3e5b0ddff9e1"),
+            "existing-file"
+        );
+        var projectDetails = ProjectDetailsWithSavedFiles(projectId, [existingFile]);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
             .Returns(
@@ -119,7 +121,7 @@ public class UploadLoaderFilesServiceTest
             );
 
         // Act
-        var result = await _uploadLoaderFilesService.Upload(
+        var result = await _uploadSavedFilesService.Upload(
             command,
             TestContext.Current.CancellationToken
         );
@@ -147,75 +149,20 @@ public class UploadLoaderFilesServiceTest
                 null,
                 Arg.Any<CancellationToken>()
             );
-    }
-
-    [Fact]
-    public async Task GivenFilesWithLength_ExpectFilesToBeUpdatedInSavedFile()
-    {
-        // Arrange
-        var projectId = ProjectId.FromValue("project-id");
-        var command = new UploadLoaderFilesCommand(
-            projectId,
-            "loader-id",
-            [new UploadFileInformation("file", 2, new MemoryStream())]
-        );
-        var projectDetails = ProjectDetailsWithSavedFiles(
-            projectId,
-            [
-                new FileData(new FileId("5420adf9-9c2c-426c-8574-05270496053c"), "existing-file"),
-                new FileData(new FileId("8c88af6c-4d9b-4d56-9532-6478cd38ce0c"), "other-file"),
-            ]
-        );
-        var updatedProjectDetails = projectDetails with
-        {
-            SavedFiles =
-            [
-                new FileData(new FileId("5420adf9-9c2c-426c-8574-05270496053c"), "existing-file"),
-                new FileData(new FileId("8c88af6c-4d9b-4d56-9532-6478cd38ce0c"), "other-file"),
-                new FileData(new FileId("8b772016-480a-4dcf-868a-02804a7be0ff"), "file"),
-            ],
-        };
-        _getProject
-            .GetById(projectId, Arg.Any<CancellationToken>())
-            .Returns(
-                Task.FromResult<OneOf<ProjectDetails, ProjectDoesNotExistsError>>(projectDetails)
-            );
-        _guidProvider.NewGuid().Returns(Guid.Parse("8b772016-480a-4dcf-868a-02804a7be0ff"));
-
-        // Act
-        await _uploadLoaderFilesService.Upload(command, TestContext.Current.CancellationToken);
-
-        // Assert
         await _updateProject
             .Received(1)
             .Update(
                 Arg.Is<ProjectDetails>(details =>
-                    MatchProjectDetails(details, updatedProjectDetails)
+                    details.SavedFiles.Count == 3
+                    && details.SavedFiles[0].Equals(existingFile)
+                    && details
+                        .SavedFiles[1]
+                        .Id.Equals(new FileId("825cba0f-1de8-42ef-8225-47400644f9e2"))
+                    && details
+                        .SavedFiles[2]
+                        .Id.Equals(new FileId("9e0ac246-fb26-461f-b77f-2c4fa64348b0"))
                 ),
                 Arg.Any<CancellationToken>()
             );
-    }
-
-    private static bool MatchProjectDetails(
-        ProjectDetails details,
-        ProjectDetails expectedProjectDetails
-    )
-    {
-        var savedFiles = details.SavedFiles;
-        var expectedSavedFiles = expectedProjectDetails.SavedFiles;
-        return details.Id.Equals(expectedProjectDetails.Id)
-            && details.Name.Equals(expectedProjectDetails.Name)
-            && details.CreationDate.Equals(expectedProjectDetails.CreationDate)
-            && savedFiles.Count == expectedSavedFiles.Count
-            && MatchSavedFiles(savedFiles, expectedSavedFiles);
-    }
-
-    private static bool MatchSavedFiles(
-        List<FileData> savedFiles,
-        List<FileData> expectedSavedFiles
-    )
-    {
-        return savedFiles.Count == expectedSavedFiles.Count
-            && savedFiles.SequenceEqual(expectedSavedFiles);
     }
 }

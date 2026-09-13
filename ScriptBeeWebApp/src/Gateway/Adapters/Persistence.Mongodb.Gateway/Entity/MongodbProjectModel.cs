@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Attributes;
 using ScriptBee.Domain.Model.Project;
 using ScriptBee.Persistence.Mongodb.Repository;
 
@@ -12,7 +12,7 @@ public class MongodbProjectModel : IDocument
     public required string Name { get; init; }
     public DateTimeOffset CreationDate { get; init; }
 
-    public Dictionary<string, List<MongodbFileData>> SavedFiles { get; set; } = new();
+    public List<MongodbFileData> SavedFiles { get; set; } = [];
     public Dictionary<string, List<MongodbFileData>> LoadedFiles { get; set; } = new();
 
     public IEnumerable<string> Linkers { get; set; } = [];
@@ -25,7 +25,7 @@ public class MongodbProjectModel : IDocument
             ProjectId.FromValue(Id),
             Name,
             CreationDate,
-            SavedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
+            SavedFiles.Select(v => v.ToFileData()).ToList(),
             LoadedFiles.ToDictionary(x => x.Key, x => x.Value.Select(v => v.ToFileData()).ToList()),
             [.. Linkers],
             [.. InstalledPlugins.Select(x => x.ToPluginInstallationConfig())]
@@ -39,10 +39,7 @@ public class MongodbProjectModel : IDocument
             Id = projectDetails.Id.Value,
             Name = projectDetails.Name,
             CreationDate = projectDetails.CreationDate,
-            SavedFiles = projectDetails.SavedFiles.ToDictionary(
-                x => x.Key,
-                x => x.Value.Select(MongodbFileData.From).ToList()
-            ),
+            SavedFiles = projectDetails.SavedFiles.Select(MongodbFileData.From).ToList(),
             LoadedFiles = projectDetails.LoadedFiles.ToDictionary(
                 x => x.Key,
                 x => x.Value.Select(MongodbFileData.From).ToList()

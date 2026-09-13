@@ -23,37 +23,49 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
     [Fact]
     public async Task InvalidRequestBody_ShouldReturnBadRequest()
     {
+        // Act
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(outputHelper),
-            new WebLoadContextCommand(null!)
+            new WebLoadContextCommand(null, null)
         );
 
+        // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         await AssertValidationProblem(
             response.Content,
             TestUrl,
-            new { LoaderIds = new List<string> { "'Loader Ids' must not be empty." } }
+            new
+            {
+                LoaderIds = new List<string>
+                {
+                    "Either 'LoaderIds' or 'FilesToLoad' must be provided and non-empty.",
+                },
+            }
         );
     }
 
     [Fact]
     public async Task EmptyBody_ShouldReturnBadRequest()
     {
+        // Act
         var response = await _api.PostApi<WebLoadContextCommand>(
             new TestWebApplicationFactory<Program>(outputHelper)
         );
 
+        // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
         await AssertEmptyRequestBodyProblem(response.Content, TestUrl);
     }
 
     [Fact]
-    public async Task ContexLoadSuccessful_ShouldReturnNoContent()
+    public async Task ContextLoadSuccessful_ShouldReturnNoContent()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("60db5e7e-38ec-4fc3-b810-71eebbc206bd");
+        var filesToLoad = new Dictionary<string, List<string>> { { "loader-id", ["file-id"] } };
         var useCase = Substitute.For<ILoadInstanceContextUseCase>();
-        var expectedCommand = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
+        var expectedCommand = new LoadContextCommand(projectId, instanceId, null, filesToLoad);
         useCase
             .Load(
                 Arg.Is<LoadContextCommand>(actual =>
@@ -67,6 +79,7 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                 >(new Success())
             );
 
+        // Act
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
                 outputHelper,
@@ -75,15 +88,18 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                     services.AddSingleton(useCase);
                 }
             ),
-            new WebLoadContextCommand(["loader-id"])
+            new WebLoadContextCommand(null, filesToLoad)
         );
 
+        // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
     }
 
     [Fact]
     public async Task ProjectNotExists_ShouldReturnNotFound()
     {
+        // Arrange
+        var filesToLoad = new Dictionary<string, List<string>> { { "loader-id", ["file-id"] } };
         var useCase = Substitute.For<ILoadInstanceContextUseCase>();
         useCase
             .Load(Arg.Any<LoadContextCommand>(), Arg.Any<CancellationToken>())
@@ -93,6 +109,7 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                 >(new ProjectDoesNotExistsError(ProjectId.FromValue("project-id")))
             );
 
+        // Act
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
                 outputHelper,
@@ -101,15 +118,18 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                     services.AddSingleton(useCase);
                 }
             ),
-            new WebLoadContextCommand(["loader-id"])
+            new WebLoadContextCommand(null, filesToLoad)
         );
 
+        // Assert
         await AssertProjectNotFoundProblem(response, TestUrl);
     }
 
     [Fact]
     public async Task InstanceNotExists_ShouldReturnNotFound()
     {
+        // Arrange
+        var filesToLoad = new Dictionary<string, List<string>> { { "loader-id", ["file-id"] } };
         var instanceId = new InstanceId("60db5e7e-38ec-4fc3-b810-71eebbc206bd");
         var useCase = Substitute.For<ILoadInstanceContextUseCase>();
         useCase
@@ -120,6 +140,7 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                 >(new InstanceDoesNotExistsError(instanceId))
             );
 
+        // Act
         var response = await _api.PostApi(
             new TestWebApplicationFactory<Program>(
                 outputHelper,
@@ -128,9 +149,10 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
                     services.AddSingleton(useCase);
                 }
             ),
-            new WebLoadContextCommand(["loader-id"])
+            new WebLoadContextCommand(null, filesToLoad)
         );
 
+        // Assert
         await AssertInstanceNotFoundProblem(
             response,
             TestUrl,
@@ -145,6 +167,10 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
     {
         return actual.ProjectId.Equals(expected.ProjectId)
             && actual.InstanceId.Equals(expected.InstanceId)
-            && actual.LoaderIds.SequenceEqual(expected.LoaderIds);
+            && actual.FilesToLoad?.Count == expected.FilesToLoad?.Count
+            && (actual.FilesToLoad?.Keys ?? []).All(k =>
+                (expected.FilesToLoad?.ContainsKey(k) ?? false)
+                && (actual.FilesToLoad?[k].SequenceEqual(expected.FilesToLoad?[k] ?? []) ?? false)
+            );
     }
 }

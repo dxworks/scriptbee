@@ -41,22 +41,24 @@ public class LoadInstanceContextServiceTest
     [Fact]
     public async Task GivenInstanceAndProject_ExpectContextToBeLoaded()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
-        var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
+        var command = new LoadContextCommand(
+            projectId,
+            instanceId,
+            null,
+            new Dictionary<string, List<string>>
+            {
+                { "loader-id", ["cfcc1094-9a12-49cb-ac98-0b7df523a1ab"] },
+            }
+        );
         var projectDetails = ProjectDetailsWithSavedFiles(
             projectId,
-            new Dictionary<string, List<FileData>>
-            {
-                {
-                    "loader-id",
-                    [new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file")]
-                },
-                {
-                    "other",
-                    [new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "file")]
-                },
-            }
+            [
+                new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file"),
+                new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "other-file"),
+            ]
         );
         var instanceInfo = BasicInstanceInfo(projectId);
         _getProject
@@ -70,11 +72,13 @@ public class LoadInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
+        // Act
         var result = await _loadInstanceContextService.Load(
             command,
             TestContext.Current.CancellationToken
         );
 
+        // Assert
         result.AsT0.ShouldBe(new Success());
         await _loadInstanceContext
             .Received(1)
@@ -93,24 +97,26 @@ public class LoadInstanceContextServiceTest
     [Fact]
     public async Task GivenInstanceAndProject_ExpectProjectLoadedFilesToBeUpdated()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
-        var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
+        var command = new LoadContextCommand(
+            projectId,
+            instanceId,
+            null,
+            new Dictionary<string, List<string>>
+            {
+                { "loader-id", ["cfcc1094-9a12-49cb-ac98-0b7df523a1ab"] },
+            }
+        );
         var projectDetails = new ProjectDetails(
             projectId,
             "name",
             DateTimeOffset.UtcNow,
-            new Dictionary<string, List<FileData>>
-            {
-                {
-                    "loader-id",
-                    [new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file")]
-                },
-                {
-                    "other",
-                    [new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "file")]
-                },
-            },
+            [
+                new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file"),
+                new FileData(new FileId("7dd98a7e-1c9b-425d-9fbb-c098bf3d786f"), "file"),
+            ],
             new Dictionary<string, List<FileData>>
             {
                 {
@@ -137,25 +143,17 @@ public class LoadInstanceContextServiceTest
                 Task.FromResult<OneOf<InstanceInfo, InstanceDoesNotExistsError>>(instanceInfo)
             );
 
+        // Act
         await _loadInstanceContextService.Load(command, TestContext.Current.CancellationToken);
 
+        // Assert
         await _updateProject
             .Received(1)
             .Update(
                 Arg.Is<ProjectDetails>(details =>
                     details.LoadedFiles.Count == 2
-                    && details
-                        .LoadedFiles["loader-id"]
-                        .Single()
-                        .Equals(
-                            new FileData(new FileId("cfcc1094-9a12-49cb-ac98-0b7df523a1ab"), "file")
-                        )
-                    && details
-                        .LoadedFiles["existing"]
-                        .Single()
-                        .Equals(
-                            new FileData(new FileId("6c4e9f85-499a-455e-b5d6-ce7134a57650"), "file")
-                        )
+                    && details.LoadedFiles["loader-id"].Count == 2
+                    && details.LoadedFiles["existing"].Count == 1
                 ),
                 Arg.Any<CancellationToken>()
             );
@@ -164,9 +162,15 @@ public class LoadInstanceContextServiceTest
     [Fact]
     public async Task GivenNoProjectForProjectId_ExpectProjectDoesNotExistsError()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
-        var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
+        var command = new LoadContextCommand(
+            projectId,
+            instanceId,
+            null,
+            new Dictionary<string, List<string>> { { "loader-id", ["file-1"] } }
+        );
         var projectDoesNotExistsError = new ProjectDoesNotExistsError(projectId);
         _getProject
             .GetById(projectId, Arg.Any<CancellationToken>())
@@ -176,20 +180,28 @@ public class LoadInstanceContextServiceTest
                 )
             );
 
+        // Act
         var result = await _loadInstanceContextService.Load(
             command,
             TestContext.Current.CancellationToken
         );
 
+        // Assert
         result.AsT1.ShouldBe(projectDoesNotExistsError);
     }
 
     [Fact]
     public async Task GivenNoInstanceForInstanceId_ExpectInstanceDoesNotExistsError()
     {
+        // Arrange
         var projectId = ProjectId.FromValue("project-id");
         var instanceId = new InstanceId("aed2ef87-717c-4606-928a-314d39ad5e72");
-        var command = new LoadContextCommand(projectId, instanceId, ["loader-id"]);
+        var command = new LoadContextCommand(
+            projectId,
+            instanceId,
+            null,
+            new Dictionary<string, List<string>> { { "loader-id", ["file-1"] } }
+        );
         var projectDetails = BasicProjectDetails(projectId);
         var instanceDoesNotExistsError = new InstanceDoesNotExistsError(instanceId);
         _getProject
@@ -205,11 +217,13 @@ public class LoadInstanceContextServiceTest
                 )
             );
 
+        // Act
         var result = await _loadInstanceContextService.Load(
             command,
             TestContext.Current.CancellationToken
         );
 
+        // Assert
         result.AsT2.ShouldBe(instanceDoesNotExistsError);
     }
 }

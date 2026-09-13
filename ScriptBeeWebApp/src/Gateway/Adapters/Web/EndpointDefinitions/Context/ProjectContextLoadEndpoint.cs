@@ -43,7 +43,8 @@ public class ProjectContextLoadEndpoint : IEndpointDefinition
         var command = new LoadContextCommand(
             ProjectId.FromValue(projectId),
             new InstanceId(instanceId),
-            webCommand.LoaderIds
+            webCommand.LoaderIds,
+            webCommand.FilesToLoad
         );
         var result = await useCase.Load(command, cancellationToken);
 

@@ -40,7 +40,7 @@ public class GetInstalledPluginDetailsServiceTests
             projectId,
             "Project 1",
             DateTimeOffset.Now,
-            new Dictionary<string, List<FileData>>(),
+            [],
             new Dictionary<string, List<FileData>>(),
             [],
             [new PluginInstallationConfig(pluginId, version)]
@@ -83,7 +83,7 @@ public class GetInstalledPluginDetailsServiceTests
             projectId,
             "Project 1",
             DateTimeOffset.Now,
-            new Dictionary<string, List<FileData>>(),
+            [],
             new Dictionary<string, List<FileData>>(),
             [],
             []
