@@ -45,6 +45,77 @@ from the DI container at runtime.
 | `IInstallPluginUseCase`       | Install a plugin by id                      |
 | `IUninstallPluginUseCase`     | Uninstall a plugin by id                    |
 
+## Supporting SDK interfaces
+
+The SDK also exposes a small set of helper interfaces for context, scripts, model files, and results.
+These are injected into the service layer and provide the low-level persistence and retrieval operations
+that the higher-level use cases rely on.
+
+### `IModelFileLoader`
+
+```csharp
+public interface IModelFileLoader
+{
+    Task<Stream> LoadModelFileStreamAsync(FileId fileId, CancellationToken cancellationToken);
+}
+```
+
+Loads a model file stream identified by a `FileId` so the service can read or process the raw model file.
+
+### `IScriptLoader`
+
+```csharp
+public interface IScriptLoader
+{
+    Task<OneOf<Script, ScriptDoesNotExistsError>> Get(
+        ScriptId scriptId,
+        CancellationToken cancellationToken
+    );
+
+    Task<OneOf<string, ScriptDoesNotExistsError>> GetScriptContent(
+        ProjectId projectId,
+        string path,
+        CancellationToken cancellationToken
+    );
+}
+```
+
+Retrieves a script definition by `ScriptId`, and optionally resolves the script source text from a project
+path.
+
+### `IAnalysisState`
+
+```csharp
+public interface IAnalysisState
+{
+    Task<AnalysisInfo> CreateAsync(AnalysisInfo analysisInfo, CancellationToken cancellationToken);
+
+    Task UpdateAsync(AnalysisInfo analysisInfo, CancellationToken cancellationToken);
+}
+```
+
+Creates or updates persisted analysis metadata so the service can track the current analysis state.
+
+### `IScriptResultsStore`
+
+The current interface name is `IScriptResultsStore`. Older release notes and documentation may refer to
+this as `IScriptResults`.
+
+```csharp
+public interface IScriptResultsStore
+{
+    Task UploadFileAsync<TMetadata>(
+        FileId fileId,
+        Stream fileStream,
+        TMetadata? metadata = null,
+        CancellationToken cancellationToken = default
+    )
+        where TMetadata : class;
+}
+```
+
+Uploads a script result file and optional metadata for persistence under the provided `FileId`.
+
 ### Example
 
 ```csharp
