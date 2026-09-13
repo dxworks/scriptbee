@@ -1,9 +1,66 @@
 <div class="project-model-section-title project-model-content-after-divider">Load Models</div>
 
-<app-checkable-tree [data]="savedFiles()" [displayNameAccessor]="displayNameAccessor" (updateCheckedFiles)="onUpdateCheckedFiles($event)"></app-checkable-tree>
+<div class="load-models-form">
+  <mat-form-field appearance="outline" class="loader-select">
+    <mat-label>Select Loader</mat-label>
+    <mat-select [value]="selectedLoaderId()" (selectionChange)="onLoaderChange($event.value)">
+      @for (loader of loaders(); track loader.id) {
+        <mat-option [value]="loader.id">{{ loader.id }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
 
-@if (isLoadModelsLoading()) {
-  <app-loading-progress-bar title="Loading Models..."></app-loading-progress-bar>
+  @if (project().savedFiles.length === 0) {
+    <p class="empty-hint">No files uploaded yet. Upload files first.</p>
+  } @else {
+    <div class="files-list">
+      @for (file of project().savedFiles; track file.id) {
+        <div class="file-row">
+          <mat-checkbox [checked]="isFileSelected(file.id)" [disabled]="!selectedLoaderId()" (change)="toggleFile(file.id)">
+            {{ file.name }}
+          </mat-checkbox>
+        </div>
+      }
+    </div>
+  }
+
+  @if (isLoadModelsLoading()) {
+    <app-loading-progress-bar title="Loading Models..." />
+  }
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="load-button"
+    [disabled]="!selectedLoaderId() || selectedFileIds().size === 0 || isLoadModelsLoading()"
+    (click)="onLoadFilesClick()">
+    Load Files
+  </button>
+</div>
+
+@if (loadedFileEntries().length > 0) {
+  <div class="project-model-section-title">Loaded Models</div>
+
+  <div class="loaded-models-list">
+    @for (entry of loadedFileEntries(); track entry[0]) {
+      <div class="loader-group">
+        <div class="loader-group-header">
+          <span class="loader-id">{{ entry[0] }}</span>
+          <button mat-icon-button color="warn" [disabled]="unloadingLoaderId() === entry[0]" (click)="onUnloadLoader(entry[0])">
+            <mat-icon>delete_sweep</mat-icon>
+          </button>
+        </div>
+        <div class="loader-files">
+          @for (file of entry[1]; track file.id) {
+            <div class="loaded-file-row">
+              <span class="file-name">{{ file.name }}</span>
+              <button mat-icon-button color="warn" [disabled]="unloadingFileId() === file.id" (click)="onUnloadFile(entry[0], file.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
 }
-
-<button class="load-button" mat-raised-button [disabled]="checkedFiles().length === 0 || isLoadModelsLoading()" (click)="onLoadFilesClick()">Load Files</button>

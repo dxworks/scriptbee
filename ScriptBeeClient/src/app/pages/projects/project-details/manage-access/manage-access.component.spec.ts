@@ -22,7 +22,7 @@ describe('ManageAccessComponent', () => {
     id: 'project-1',
     name: 'Test Project',
     creationDate: '2024-02-08',
-    savedFiles: {},
+    savedFiles: [],
     loadedFiles: {},
     linkers: [],
   };

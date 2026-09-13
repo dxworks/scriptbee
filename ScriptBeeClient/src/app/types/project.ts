@@ -9,7 +9,7 @@ export interface Project {
   id: string;
   name: string;
   creationDate: string;
-  savedFiles: Record<string, ProjectFile[]>;
+  savedFiles: ProjectFile[];
   loadedFiles: Record<string, ProjectFile[]>;
   linkers: string[];
 }
