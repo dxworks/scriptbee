@@ -15,7 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../../../docs/sdks/csharp/analysis_service_sdk.md" Pack="true" PackagePath="README.md" />
+    <None
+      Include="../../../../docs/sdks/csharp/analysis_service_sdk.md"
+      Pack="true"
+      PackagePath="README.md"
+    />
     <None Include="../../../../LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 
