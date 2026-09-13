@@ -1,11 +1,11 @@
 # Analysis Service SDK
 
-ScriptBee is designed so that the **Analysis Service** is a replaceable component. Instead of being locked into
-a single in-memory implementation, any team can build and deploy their own Analysis Service — backed by a database,
-a graph engine like Neo4j, a remote computation cluster, or anything else — as long as it exposes the expected REST API.
+ScriptBee is designed so that the **Analysis Service** is a replaceable component. Instead of being locked into a single
+in-memory implementation, any team can build and deploy their own Analysis Service — backed by a database, a graph
+engine like Neo4j, a remote computation cluster, or anything else — as long as it exposes the expected REST API.
 
-The **Analysis Service SDK** packages everything needed to build such a service without writing HTTP boilerplate.
-You implement the business logic; the SDK handles routing, serialization, validation, and wiring.
+The **Analysis Service SDK** packages everything needed to build such a service without writing HTTP boilerplate. You
+implement the business logic; the SDK handles routing, serialization, validation, and wiring.
 
 ## Concept
 
@@ -45,7 +45,7 @@ Every Analysis Service must support the following capabilities:
 
 | Language                            | Package                                   | Status       |
 | :---------------------------------- | :---------------------------------------- | :----------- |
-| [C#](./csharp/analysis_service_sdk) | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
+| [C#](./csharp_analysis_service_sdk) | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
 | TypeScript                          | —                                         | 🗓 Planned    |
 | Python                              | —                                         | 🗓 Planned    |
 

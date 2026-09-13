@@ -73,7 +73,8 @@ public class RunScriptServiceTest
                 Arg.Is<AnalysisInfo>(a =>
                     a.Status == AnalysisStatus.Finished
                     && a.FinishedDate == finishedDate
-                    && a.Errors.Single().Equals(new AnalysisError("File does not exist: path"))
+                    && a.Errors.Single()
+                        .Equals(new AnalysisError("Script at path 'path' does not exist."))
                 ),
                 Arg.Any<CancellationToken>()
             );

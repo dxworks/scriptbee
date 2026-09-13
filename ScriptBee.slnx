@@ -13,8 +13,8 @@
   </Folder>
 
   <Folder Name="/Integrations/Sdks/CSharp/">
-    <Project Path="integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk/DxWorks.ScriptBee.Analysis.Sdk.csproj" />
-    <Project Path="integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk.Tests/DxWorks.ScriptBee.Analysis.Sdk.Tests.csproj" />
+    <Project Path="Integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk/DxWorks.ScriptBee.Analysis.Sdk.csproj" />
+    <Project Path="Integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk.Tests/DxWorks.ScriptBee.Analysis.Sdk.Tests.csproj" />
   </Folder>
 
   <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj" />

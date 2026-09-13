@@ -2,7 +2,7 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public sealed class ScriptDoesNotExistsError
+public sealed record ScriptDoesNotExistsError
 {
     public ScriptId? ScriptId { get; }
     private string? Path { get; }

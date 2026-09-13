@@ -95,7 +95,7 @@ public class HelperFunctionsResultServiceTest
             .UploadFileAsync<object>(
                 resultId.ToFileId(),
                 Arg.Any<Stream>(),
-                cancellationToken: TestContext.Current.CancellationToken
+                cancellationToken: Arg.Any<CancellationToken>()
             );
         _resultCollector.Received().Add(resultId, fileName, type);
     }
@@ -105,7 +105,7 @@ public class HelperFunctionsResultServiceTest
     {
         const string fileName = "test.txt";
         const string type = "console";
-        var content = new MemoryStream("test content"u8.ToArray());
+        var content = new MemoryStream([.. "test content"u8]);
         var resultId = new ResultId(Guid.NewGuid());
         _guidProvider.NewGuid().Returns(resultId.Value);
 
@@ -116,7 +116,7 @@ public class HelperFunctionsResultServiceTest
             .UploadFileAsync<object>(
                 resultId.ToFileId(),
                 content,
-                cancellationToken: TestContext.Current.CancellationToken
+                cancellationToken: Arg.Any<CancellationToken>()
             );
         _resultCollector.Received().Add(resultId, fileName, type);
     }
