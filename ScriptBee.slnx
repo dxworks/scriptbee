@@ -12,6 +12,11 @@
     <Project Path="Integrations/MCP/ScriptBee.MCP.Tests/ScriptBee.MCP.Tests.csproj" />
   </Folder>
 
+  <Folder Name="/Integrations/Sdks/CSharp/">
+    <Project Path="integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk/DxWorks.ScriptBee.Analysis.Sdk.csproj" />
+    <Project Path="integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk.Tests/DxWorks.ScriptBee.Analysis.Sdk.Tests.csproj" />
+  </Folder>
+
   <Project Path="DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj" />
   <Folder Name="/Plugins/" />
 
@@ -60,7 +65,6 @@
 
     <!-- Application Layer -->
     <Project Path="ScriptBeeWebApp/src/Analysis/Application/Service.Analysis/Service.Analysis.csproj" />
-    <Project Path="ScriptBeeWebApp/src/Analysis/Application/UseCases.Analysis/UseCases.Analysis.csproj" />
   </Folder>
 
   <Folder Name="/src/Gateway/">
