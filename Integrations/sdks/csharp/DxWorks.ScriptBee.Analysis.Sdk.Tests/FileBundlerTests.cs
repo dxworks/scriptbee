@@ -1,9 +1,8 @@
 using System.Buffers.Binary;
 using System.Text;
 using ScriptBee.Common.CodeGeneration;
-using ScriptBee.Service.Analysis;
 
-namespace ScriptBee.Analysis.Service.Tests;
+namespace DxWorks.ScriptBee.Analysis.Sdk.Tests;
 
 public class FileBundlerTests
 {

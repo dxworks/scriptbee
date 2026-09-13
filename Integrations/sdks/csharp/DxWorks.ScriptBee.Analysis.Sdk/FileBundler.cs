@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 using System.Text;
 using ScriptBee.Common.CodeGeneration;
 
-namespace ScriptBee.Service.Analysis;
+namespace DxWorks.ScriptBee.Analysis.Sdk;
 
 public class FileBundler
 {
