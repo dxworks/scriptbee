@@ -12,6 +12,7 @@ public class LoadContextValidator : AbstractValidator<WebLoadContextCommand>
                 (x.LoaderIds != null && x.LoaderIds.Any())
                 || (x.FilesToLoad != null && x.FilesToLoad.Count != 0)
             )
+            .WithName("LoaderIds")
             .WithMessage("Either 'LoaderIds' or 'FilesToLoad' must be provided and non-empty.");
     }
 }

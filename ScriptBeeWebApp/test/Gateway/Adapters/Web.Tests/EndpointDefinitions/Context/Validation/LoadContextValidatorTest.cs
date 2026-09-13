@@ -48,7 +48,7 @@ public class LoadContextValidatorTest
         );
 
         result
-            .ShouldHaveValidationErrorFor(x => x)
+            .ShouldHaveValidationErrorFor(x => x.LoaderIds)
             .WithErrorMessage(
                 "Either 'LoaderIds' or 'FilesToLoad' must be provided and non-empty."
             );
@@ -65,7 +65,7 @@ public class LoadContextValidatorTest
         );
 
         result
-            .ShouldHaveValidationErrorFor(x => x)
+            .ShouldHaveValidationErrorFor(x => x.LoaderIds)
             .WithErrorMessage(
                 "Either 'LoaderIds' or 'FilesToLoad' must be provided and non-empty."
             );
