@@ -2,7 +2,25 @@
 
 namespace ScriptBee.Domain.Model.Errors;
 
-public sealed record ScriptDoesNotExistsError(ScriptId ScriptId)
+public sealed class ScriptDoesNotExistsError
 {
-    public override string ToString() => $"Script '{ScriptId}' does not exist.";
+    public ScriptId? ScriptId { get; }
+    private string? Path { get; }
+
+    public ScriptDoesNotExistsError(ScriptId scriptId)
+    {
+        ScriptId = scriptId;
+    }
+
+    public ScriptDoesNotExistsError(string path)
+    {
+        Path = path;
+    }
+
+    public override string ToString()
+    {
+        return Path is not null
+            ? $"Script at path '{Path}' does not exist."
+            : $"Script '{ScriptId}' does not exist.";
+    }
 }

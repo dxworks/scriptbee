@@ -1,8 +1,8 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Model;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
@@ -13,18 +13,18 @@ public class LoadModelFilesServiceTest
 {
     private readonly IProjectManager _projectManager;
     private readonly IPluginRepository _pluginRepository;
-    private readonly IFileModelService _fileModelService;
+    private readonly IModelFileLoader _modelFileLoader;
     private readonly LoadModelFilesService _loadModelFilesService;
 
     public LoadModelFilesServiceTest()
     {
         _projectManager = Substitute.For<IProjectManager>();
         _pluginRepository = Substitute.For<IPluginRepository>();
-        _fileModelService = Substitute.For<IFileModelService>();
+        _modelFileLoader = Substitute.For<IModelFileLoader>();
         _loadModelFilesService = new LoadModelFilesService(
             _projectManager,
             _pluginRepository,
-            _fileModelService,
+            _modelFileLoader,
             new Logger<LoadModelFilesService>(new LoggerFactory())
         );
     }
@@ -47,11 +47,11 @@ public class LoadModelFilesServiceTest
 
         var fileStream1 = new MemoryStream();
         var fileStream2 = new MemoryStream();
-        _fileModelService
-            .GetFileAsync(fileIds[0], Arg.Any<CancellationToken>())
+        _modelFileLoader
+            .LoadModelFileStreamAsync(fileIds[0], Arg.Any<CancellationToken>())
             .Returns(fileStream1);
-        _fileModelService
-            .GetFileAsync(fileIds[1], Arg.Any<CancellationToken>())
+        _modelFileLoader
+            .LoadModelFileStreamAsync(fileIds[1], Arg.Any<CancellationToken>())
             .Returns(fileStream2);
 
         var loadedModels = new Dictionary<string, Dictionary<string, ScriptBeeModel>>
@@ -131,8 +131,8 @@ public class LoadModelFilesServiceTest
         _pluginRepository.GetPlugin(Arg.Any<Func<IModelLoader, bool>>()).Returns(modelLoader);
 
         var fileStream = new MemoryStream();
-        _fileModelService
-            .GetFileAsync(fileIds[0], Arg.Any<CancellationToken>())
+        _modelFileLoader
+            .LoadModelFileStreamAsync(fileIds[0], Arg.Any<CancellationToken>())
             .Returns(fileStream);
 
         var loadedModels = new Dictionary<string, Dictionary<string, ScriptBeeModel>>

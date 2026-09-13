@@ -5,18 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using ScriptBee.Common.Web;
 
 namespace DxWorks.ScriptBee.Analysis.Sdk.Endpoints;
 
 public class GenerateClassesEndpoint : IEndpointDefinition
 {
-    public void DefineServices(IServiceCollection services)
-    {
-        services.AddSingleton<FileBundler>();
-    }
-
     public void DefineEndpoints(IEndpointRouteBuilder app)
     {
         app.MapPost("/api/context/generate-classes", GenerateClasses)

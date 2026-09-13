@@ -1,9 +1,12 @@
 ﻿using System.Threading.Channels;
+using DxWorks.ScriptBee.Analysis.Sdk.Abstractions;
+using DxWorks.ScriptBee.Analysis.Sdk.Context;
+using DxWorks.ScriptBee.Analysis.Sdk.Scripts;
+using DxWorks.ScriptBee.Analysis.Sdk.State;
 using DxWorks.ScriptBee.Plugin.Api;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using OneOf;
-using ScriptBee.Artifacts;
 using ScriptBee.Common;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Domain.Model.Errors;
@@ -12,7 +15,6 @@ using ScriptBee.Domain.Model.Project;
 using ScriptBee.Domain.Model.ProjectStructure;
 using ScriptBee.Plugins.Loader;
 using ScriptBee.Service.Analysis;
-using ScriptBee.UseCases.Analysis;
 
 namespace ScriptBee.Analysis.Service.Tests;
 
@@ -20,17 +22,15 @@ public class RunAnalysisServiceTest
 {
     private readonly IDateTimeProvider _dateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly IGuidProvider _guidProvider = Substitute.For<IGuidProvider>();
-    private readonly ICreateAnalysis _createAnalysis = Substitute.For<ICreateAnalysis>();
-    private readonly IGetScripts _getScripts = Substitute.For<IGetScripts>();
+    private readonly IAnalysisState _analysisState = Substitute.For<IAnalysisState>();
+    private readonly IScriptLoader _scriptLoader = Substitute.For<IScriptLoader>();
     private readonly IPluginRepository _pluginRepository = Substitute.For<IPluginRepository>();
 
     private readonly Channel<RunScriptRequest> _runScriptChannel =
         Channel.CreateUnbounded<RunScriptRequest>();
 
-    private readonly InstanceInformation _instanceInformation = new()
-    {
-        Id = new InstanceId("cd7f332a-88a4-4567-86f3-2a04fca2b1b1"),
-    };
+    private readonly IAnalysisInstanceContext _analysisInstanceContext =
+        Substitute.For<IAnalysisInstanceContext>();
 
     private readonly IScriptRunner _scriptRunner = Substitute.For<IScriptRunner>();
 
@@ -41,12 +41,16 @@ public class RunAnalysisServiceTest
         _runAnalysisService = new RunAnalysisService(
             _dateTimeProvider,
             _guidProvider,
-            _createAnalysis,
-            _getScripts,
+            _analysisState,
+            _scriptLoader,
             _pluginRepository,
             _runScriptChannel,
-            _instanceInformation,
+            _analysisInstanceContext,
             new Logger<RunAnalysisService>(new LoggerFactory())
+        );
+
+        _analysisInstanceContext.InstanceId.Returns(
+            new InstanceId("cd7f332a-88a4-4567-86f3-2a04fca2b1b1")
         );
     }
 
@@ -79,11 +83,11 @@ public class RunAnalysisServiceTest
         );
         _dateTimeProvider.UtcNow().Returns(creationDate);
         _guidProvider.NewGuid().Returns(analysisId.Value);
-        _getScripts
+        _scriptLoader
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(script));
-        _createAnalysis
-            .Create(
+        _analysisState
+            .CreateAsync(
                 Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
                 Arg.Any<CancellationToken>()
             )
@@ -127,7 +131,7 @@ public class RunAnalysisServiceTest
         );
         _dateTimeProvider.UtcNow().Returns(date);
         _guidProvider.NewGuid().Returns(analysisId.Value);
-        _getScripts
+        _scriptLoader
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
@@ -140,8 +144,8 @@ public class RunAnalysisServiceTest
                     )
                 )
             );
-        _createAnalysis
-            .Create(
+        _analysisState
+            .CreateAsync(
                 Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
                 Arg.Any<CancellationToken>()
             )
@@ -180,15 +184,15 @@ public class RunAnalysisServiceTest
         );
         _dateTimeProvider.UtcNow().Returns(date);
         _guidProvider.NewGuid().Returns(analysisId.Value);
-        _getScripts
+        _scriptLoader
             .Get(scriptId, Arg.Any<CancellationToken>())
             .Returns(
                 Task.FromResult<OneOf<Script, ScriptDoesNotExistsError>>(
                     new ScriptDoesNotExistsError(scriptId)
                 )
             );
-        _createAnalysis
-            .Create(
+        _analysisState
+            .CreateAsync(
                 Arg.Is<AnalysisInfo>(info => info.MatchAnalysisResult(expectedAnalysisInfo)),
                 Arg.Any<CancellationToken>()
             )

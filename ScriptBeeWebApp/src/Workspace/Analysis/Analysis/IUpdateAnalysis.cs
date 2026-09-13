@@ -4,8 +4,5 @@ namespace ScriptBee.Analysis;
 
 public interface IUpdateAnalysis
 {
-    Task<AnalysisInfo> Update(
-        AnalysisInfo analysisInfo,
-        CancellationToken cancellationToken = default
-    );
+    Task<AnalysisInfo> Update(AnalysisInfo analysisInfo, CancellationToken cancellationToken);
 }

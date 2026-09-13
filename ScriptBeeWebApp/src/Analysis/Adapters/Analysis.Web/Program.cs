@@ -1,18 +1,12 @@
-using FluentValidation;
+using DxWorks.ScriptBee.Analysis.Sdk.Extensions;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using ScriptBee.Analysis.Web.EndpointDefinitions;
 using ScriptBee.Analysis.Web.Extensions;
-using ScriptBee.Artifacts.Extensions;
-using ScriptBee.Common.Web;
 using ScriptBee.Common.Web.EndpointDefinition;
 using ScriptBee.Common.Web.Extensions;
 using Serilog;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var mongoConnectionString = builder.Configuration.GetConnectionString("mongodb");
-var scriptBeeConfigurationSection = builder.Configuration.GetSection("ScriptBee");
 
 builder
     .Services.AddConfiguredHealthChecks()
@@ -33,19 +27,13 @@ builder
         options.StripWebPrefix();
         options.AddDescriptionSupport();
     })
-    .AddValidatorsFromAssemblyContaining<IEndpointDefinitionMarker>()
     .AddProblemDetailsDefaults()
+    .AddSdkServices()
     .AddCommonServices()
-    .AddInstanceConfig(scriptBeeConfigurationSection)
-    .AddMongoDb(mongoConnectionString)
-    .AddArtifactFileAdapters()
+    .AddInstanceConfig()
+    .AddAnalysisSdk(builder.Configuration)
     .AddPluginServices("ScriptBee:Plugins")
     .AddRunScriptServices();
-
-builder.Services.AddEndpointDefinitions(
-    typeof(IEndpointDefinition),
-    typeof(IEndpointDefinitionMarker)
-);
 
 builder.Services.Configure<KestrelServerOptions>(options =>
 {

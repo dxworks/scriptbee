@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DxWorks.ScriptBee.Analysis.Sdk\DxWorks.ScriptBee.Analysis.Sdk.csproj" />
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Analysis\Analysis\Analysis.csproj" />
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Artifacts\Artifacts\Artifacts.csproj" />
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\test\Common\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 

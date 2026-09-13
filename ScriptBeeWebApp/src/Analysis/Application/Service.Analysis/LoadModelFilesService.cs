@@ -1,7 +1,7 @@
+using DxWorks.ScriptBee.Analysis.Sdk.Model;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Model;
 using Microsoft.Extensions.Logging;
-using ScriptBee.Artifacts;
 using ScriptBee.Domain.Model.File;
 using ScriptBee.Plugins.Loader;
 
@@ -10,7 +10,7 @@ namespace ScriptBee.Service.Analysis;
 public class LoadModelFilesService(
     IProjectManager projectManager,
     IPluginRepository pluginRepository,
-    IFileModelService fileModelService,
+    IModelFileLoader modelFileLoader,
     ILogger<LoadModelFilesService> logger
 ) : ILoadModelFilesService
 {
@@ -51,7 +51,10 @@ public class LoadModelFilesService(
 
         foreach (var fileId in fileIds)
         {
-            var fileStream = await fileModelService.GetFileAsync(fileId, cancellationToken);
+            var fileStream = await modelFileLoader.LoadModelFileStreamAsync(
+                fileId,
+                cancellationToken
+            );
             loadedFileStreams.Add(new NamedFileStream(fileId.ToString(), fileStream));
         }
 

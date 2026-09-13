@@ -3,6 +3,8 @@
     <RootNamespace>ScriptBee.Service.Analysis</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\CodeGeneration\CodeGeneration.csproj" />
+    <ProjectReference Include="..\..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\Plugins\Plugins.Loader\Plugins.Loader.csproj" />
     <ProjectReference Include="..\..\..\..\..\integrations\sdks\csharp\DxWorks.ScriptBee.Analysis.Sdk\DxWorks.ScriptBee.Analysis.Sdk.csproj" />
   </ItemGroup>

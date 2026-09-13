@@ -37,7 +37,13 @@
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj" />
-    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj" />
+    <ProjectReference
+      Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Analysis\Analysis.Mongodb\Analysis.Mongodb.csproj"
+      PrivateAssets="All"
+    />
+    <ProjectReference
+      Include="..\..\..\..\ScriptBeeWebApp\src\Workspace\Artifacts\Artifacts.Mongodb\Artifacts.Mongodb.csproj"
+      PrivateAssets="All"
+    />
   </ItemGroup>
 </Project>
