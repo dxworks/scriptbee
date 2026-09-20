@@ -43,10 +43,10 @@ Every Analysis Service must support the following capabilities:
 
 ## Available SDK Implementations
 
-| Language                                | Package                                   | Status       |
-| :-------------------------------------- | :---------------------------------------- | :----------- |
-| [C#](./csharp_analysis_service_sdk)         | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
-| [Python](./python_analysis_service_sdk)     | `scriptbee-analysis-sdk` on PyPI          | ✅ Available |
+| Language                                        | Package                                   | Status       |
+| :---------------------------------------------- | :---------------------------------------- | :----------- |
+| [C#](./csharp_analysis_service_sdk)             | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
+| [Python](./python_analysis_service_sdk)         | `scriptbee-analysis-sdk` on PyPI          | ✅ Available |
 | [TypeScript](./typescript_analysis_service_sdk) | `@dxworks/scriptbee-analysis-sdk` on npm  | ✅ Available |
 
 ---
@@ -62,13 +62,12 @@ concerns such as file IDs, GUIDs, byte encoding, or store calls.
 > offers (by implementing `IScriptResultsStore` in C# or `ScriptResultsStore` in Python and TypeScript, backed by
 > e.g. S3, disk, blob storage, or a database).
 
-
-| Result type   | Produced by                                    | Consumed by       |
-| :------------ | :--------------------------------------------- | :---------------- |
-| `File`        | `AddFileAsync` / `add_file` / `addFile`        | UI file downloads |
-| `Console`     | `AddConsoleAsync` / `add_console` / `addConsole`| Console log view  |
-| `RunError`    | `AddErrorAsync` / `add_error` / `addError`     | Error display     |
-| Custom string | `AddResultAsync` / `add_result` / `addResult`  | Plugin-defined    |
+| Result type   | Produced by                                      | Consumed by       |
+| :------------ | :----------------------------------------------- | :---------------- |
+| `File`        | `AddFileAsync` / `add_file` / `addFile`          | UI file downloads |
+| `Console`     | `AddConsoleAsync` / `add_console` / `addConsole` | Console log view  |
+| `RunError`    | `AddErrorAsync` / `add_error` / `addError`       | Error display     |
+| Custom string | `AddResultAsync` / `add_result` / `addResult`    | Plugin-defined    |
 
 The interface is the same conceptually across all languages:
 

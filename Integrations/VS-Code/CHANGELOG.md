@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+- upgrade `vscode engine` to 1.138.0
+
 ## [1.2.0]
 
 ### Changes
@@ -14,7 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - enhance create script with parent id and path in #296
 - upgrade `@microsoft/signalr` to 10.0.11
 - upgrade `axios` to 1.20.0
-- upgrade  `vscode engine` to 1.136.0
+- upgrade `vscode engine` to 1.136.0
 
 ## [1.1.0]
 

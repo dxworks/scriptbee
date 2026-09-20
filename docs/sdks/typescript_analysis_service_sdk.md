@@ -60,17 +60,17 @@ import type {
   AnalysisInfo,
   RunAnalysisCommand,
   RunAnalysisUseCase,
-} from "@dxworks/scriptbee-analysis-sdk";
+} from '@dxworks/scriptbee-analysis-sdk';
 
 export class Neo4jRunAnalysisService implements RunAnalysisUseCase {
   constructor(private readonly session: unknown) {}
 
   async run(command: RunAnalysisCommand): Promise<AnalysisInfo> {
     return {
-      id: { value: "analysis-1" },
+      id: { value: 'analysis-1' },
       projectId: command.projectId,
       scriptId: command.scriptId,
-      status: { value: "Running" },
+      status: { value: 'Running' },
       creationDate: new Date(),
     };
   }
@@ -83,12 +83,12 @@ Create a container implementing `AnalysisSdkContainer`, then call `createAnalysi
 to get a pre-configured Hono app:
 
 ```typescript
-import { Hono } from "hono";
-import { serve } from "@hono/node-server";
+import { Hono } from 'hono';
+import { serve } from '@hono/node-server';
 import {
   createAnalysisSdkRouter,
   type AnalysisSdkContainer,
-} from "@dxworks/scriptbee-analysis-sdk";
+} from '@dxworks/scriptbee-analysis-sdk';
 
 class AppContainer implements AnalysisSdkContainer {
   readonly runAnalysis = new Neo4jRunAnalysisService(null);
@@ -104,7 +104,7 @@ class AppContainer implements AnalysisSdkContainer {
 }
 
 const app = new Hono();
-app.route("/", createAnalysisSdkRouter(new AppContainer()));
+app.route('/', createAnalysisSdkRouter(new AppContainer()));
 
 serve({
   fetch: app.fetch,
@@ -140,12 +140,10 @@ The `FileBundler` utility serialises a list of `SampleCodeFile` objects into the
 consumed by the Gateway for the generate-classes endpoint.
 
 ```typescript
-import { FileBundler } from "@dxworks/scriptbee-analysis-sdk";
+import { FileBundler } from '@dxworks/scriptbee-analysis-sdk';
 
 const bundler = new FileBundler();
-const buffer = bundler.writeToBuffer([
-  { name: "Model.ts", content: "export interface Model {}" },
-]);
+const buffer = bundler.writeToBuffer([{ name: 'Model.ts', content: 'export interface Model {}' }]);
 ```
 
 The wire format matches the Gateway expectation: for each file, a big-endian `uint32` path length,
@@ -156,13 +154,13 @@ terminated by a `uint32` of `0`.
 
 All domain models are exported from the root barrel:
 
-| Module              | Types                                                                         |
-| :------------------ | :---------------------------------------------------------------------------- |
-| `project`           | `ProjectId`, `ScriptId`, `FileId`, `InstanceId`                               |
-| `context`           | `ContextSlice`, `ContextGraphNode`, `ContextGraphEdge`, `ContextGraphResult`  |
-| `analysis`          | `AnalysisId`, `AnalysisStatus`, `AnalysisInfo`                                |
-| `code-generation`   | `SampleCodeFile`                                                              |
-| `plugins`           | `PluginId`, `PluginKind`, `PluginManifest`, `Plugin`, `PluginExtensionPoint`  |
+| Module            | Types                                                                        |
+| :---------------- | :--------------------------------------------------------------------------- |
+| `project`         | `ProjectId`, `ScriptId`, `FileId`, `InstanceId`                              |
+| `context`         | `ContextSlice`, `ContextGraphNode`, `ContextGraphEdge`, `ContextGraphResult` |
+| `analysis`        | `AnalysisId`, `AnalysisStatus`, `AnalysisInfo`                               |
+| `code-generation` | `SampleCodeFile`                                                             |
+| `plugins`         | `PluginId`, `PluginKind`, `PluginManifest`, `Plugin`, `PluginExtensionPoint` |
 
 ## Results SDK
 
@@ -172,7 +170,6 @@ output, errors, or custom types) without managing file IDs, byte encoding, or lo
 ### Storage Decoupling
 
 The SDK deliberately does not provide any in-memory or built-in storage implementation. The SDK only defines the basic abstractions — concrete storage is something that the concrete implementer offers by implementing `ScriptResultsStore` (backed by e.g. S3, disk, blob storage, or a database).
-
 
 ### Interfaces
 
@@ -196,10 +193,14 @@ import {
   DefaultAnalysisResultService,
   ResultType,
   type ScriptResultsStore,
-} from "@dxworks/scriptbee-analysis-sdk";
+} from '@dxworks/scriptbee-analysis-sdk';
 
 class FileSystemResultsStore implements ScriptResultsStore {
-  async uploadFile(fileId: string, content: Uint8Array, metadata?: Record<string, string>): Promise<void> {
+  async uploadFile(
+    fileId: string,
+    content: Uint8Array,
+    metadata?: Record<string, string>,
+  ): Promise<void> {
     // concrete storage implementation (e.g. S3, disk, blob storage)
   }
 }
@@ -208,16 +209,16 @@ const store = new FileSystemResultsStore();
 const results = new DefaultAnalysisResultService({ store });
 
 // emit a file result
-const resultId = await results.addFile("summary.json", '{"count": 42}');
+const resultId = await results.addFile('summary.json', '{"count": 42}');
 
 // emit console output
-await results.addConsole("Analysis started");
+await results.addConsole('Analysis started');
 
 // emit an error
-await results.addError("Script timed out");
+await results.addError('Script timed out');
 
 // emit a custom result type
-await results.addResult("chart.svg", "Chart", svgBytes);
+await results.addResult('chart.svg', 'Chart', svgBytes);
 ```
 
 ### Result types
@@ -238,7 +239,7 @@ Built-in type constants:
 const summaries: ResultSummary[] = [];
 const results = new DefaultAnalysisResultService({
   store,
-  onResultAdded: (summary) => summaries.push(summary),
+  onResultAdded: summary => summaries.push(summary),
 });
 ```
 
