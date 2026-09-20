@@ -45,6 +45,28 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "npm"
+    directory: "/Integrations/sdks/typescript"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "pip"
+    directory: "/Integrations/sdks/python"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "npm"
     directory: "/Plugins/UI/default-scriptbee-charts"
     schedule:
       interval: "weekly"
