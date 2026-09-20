@@ -66,7 +66,10 @@ def make_plugins_router(
             status_code=500,
             content={
                 "title": "Plugin Installation Failed",
-                "detail": f"An error occurred while installing plugin {result.id.name} version {result.id.version}",
+                "detail": (
+                    f"An error occurred while installing plugin {result.id.name} "
+                    f"version {result.id.version}"
+                ),
             },
         )
 

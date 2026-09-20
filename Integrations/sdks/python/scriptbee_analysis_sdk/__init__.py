@@ -32,11 +32,20 @@ from scriptbee_analysis_sdk.domain import (
     PluginKind,
     PluginManifest,
     ProjectId,
+    ResultId,
+    ResultSummary,
+    ResultType,
     SampleCodeFile,
     ScriptId,
 )
 from scriptbee_analysis_sdk.extensions import AnalysisSdkContainer, create_analysis_sdk_router
 from scriptbee_analysis_sdk.file_bundler import FileBundler
+from scriptbee_analysis_sdk.results import (
+    AnalysisResultService,
+    DefaultAnalysisResultService,
+    InMemoryScriptResultsStore,
+    ScriptResultsStore,
+)
 
 __all__ = [
     "__version__",
@@ -69,8 +78,15 @@ __all__ = [
     "PluginKind",
     "PluginManifest",
     "ProjectId",
+    "ResultId",
+    "ResultSummary",
+    "ResultType",
     "SampleCodeFile",
     "ScriptId",
+    "AnalysisResultService",
+    "DefaultAnalysisResultService",
+    "InMemoryScriptResultsStore",
+    "ScriptResultsStore",
     "AnalysisSdkContainer",
     "create_analysis_sdk_router",
     "FileBundler",

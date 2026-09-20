@@ -50,7 +50,9 @@ def make_context_router(
         status_code=204,
         name="Load",
         summary="Load data into analysis context",
-        description="Loads data from files into the current analysis context using the provided loaders.",
+        description=(
+            "Loads data from files into the current analysis context using the provided loaders."
+        ),
     )
     async def load_context_handler(
         command: WebLoadContextCommand,
@@ -124,7 +126,10 @@ def make_context_router(
         "/api/context/generate-classes",
         name="GenerateClasses",
         summary="Generate classes for analysis context",
-        description="Generates script classes based on the current data context and returns them as a stream.",
+        description=(
+            "Generates script classes based on the current data context "
+            "and returns them as a stream."
+        ),
     )
     async def generate_classes_handler(
         request: WebGenerateClassesRequest,

@@ -1,4 +1,11 @@
-from scriptbee_analysis_sdk.domain.analysis import AnalysisId, AnalysisInfo, AnalysisStatus
+from scriptbee_analysis_sdk.domain.analysis import (
+    AnalysisId,
+    AnalysisInfo,
+    AnalysisStatus,
+    ResultId,
+    ResultSummary,
+    ResultType,
+)
 from scriptbee_analysis_sdk.domain.code_generation import SampleCodeFile
 from scriptbee_analysis_sdk.domain.context import (
     ContextGraphEdge,
@@ -50,6 +57,9 @@ __all__ = [
     "PluginKind",
     "PluginManifest",
     "ProjectId",
+    "ResultId",
+    "ResultSummary",
+    "ResultType",
     "SampleCodeFile",
     "Script",
     "ScriptGeneratorPluginExtensionPoint",
