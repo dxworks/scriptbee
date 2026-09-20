@@ -17,8 +17,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "fastapi>=0.115.0",
-    "pydantic>=2.7.0",
+    "fastapi>=0.141.1",
+    "pydantic>=2.13.5",
 ]
 
 [project.urls]
@@ -28,11 +28,11 @@ Source = "https://github.com/dxworks/scriptbee/tree/master/integrations/sdks/pyt
 
 [dependency-groups]
 dev = [
-    "pytest>=8.2.0",
-    "pytest-asyncio>=0.23.0",
-    "httpx>=0.27.0",
-    "anyio>=4.4.0",
-    "ruff>=0.9.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "httpx>=0.28.1",
+    "anyio>=4.15.1",
+    "ruff>=0.16.8",
 ]
 
 [tool.pytest.ini_options]
