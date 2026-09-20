@@ -1,0 +1,75 @@
+name: SDK CI
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'Integrations/sdks/**'
+      - 'ScriptBee.slnx'
+      - 'Directory.Build.props'
+      - 'Directory.Packages.props'
+      - '.github/workflows/sdk-ci.yml'
+  pull_request:
+    paths:
+      - 'Integrations/sdks/**'
+      - 'ScriptBee.slnx'
+      - 'Directory.Build.props'
+      - 'Directory.Packages.props'
+      - '.github/workflows/sdk-ci.yml'
+
+jobs:
+  csharp-sdk:
+    name: C# SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ScriptBee.slnx
+
+      - name: Build
+        run: dotnet build ScriptBee.slnx --no-restore -c Release
+
+      - name: Test
+        run: dotnet test Integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk.Tests/DxWorks.ScriptBee.Analysis.Sdk.Tests.csproj --no-build -c Release --verbosity normal
+
+  python-sdk:
+    name: Python SDK (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6.1.0
+        with:
+          version: "latest"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install dependencies
+        working-directory: Integrations/sdks/python
+        run: uv sync --frozen
+
+      - name: Lint
+        working-directory: Integrations/sdks/python
+        run: uv run ruff check .
+
+      - name: Format check
+        working-directory: Integrations/sdks/python
+        run: uv run ruff format --check .
+
+      - name: Test
+        working-directory: Integrations/sdks/python
+        run: uv run pytest --tb=short -q

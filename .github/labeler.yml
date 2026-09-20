@@ -4,6 +4,10 @@
           - ScriptBeeWebApp/src/Analysis/**
           - ScriptBeeWebApp/test/Analysis/**
 
+"area/sdk":
+  - changed-files:
+      - any-glob-to-any-file: Integrations/sdks/**
+
 "area/mcp-server":
   - changed-files:
       - any-glob-to-any-file: Integrations/MCP/**

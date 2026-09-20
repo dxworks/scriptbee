@@ -43,11 +43,11 @@ Every Analysis Service must support the following capabilities:
 
 ## Available SDK Implementations
 
-| Language                            | Package                                   | Status       |
-| :---------------------------------- | :---------------------------------------- | :----------- |
-| [C#](./csharp_analysis_service_sdk) | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
-| TypeScript                          | —                                         | 🗓 Planned    |
-| Python                              | —                                         | 🗓 Planned    |
+| Language                                | Package                                   | Status       |
+| :-------------------------------------- | :---------------------------------------- | :----------- |
+| [C#](./csharp_analysis_service_sdk)     | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
+| [Python](./python_analysis_service_sdk) | `scriptbee-analysis-sdk` on PyPI          | ✅ Available |
+| TypeScript                              | —                                         | 🗓 Planned    |
 
 ---
 

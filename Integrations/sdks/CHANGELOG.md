@@ -25,7 +25,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
     - `POST /plugins/install` — install a plugin
     - `DELETE /plugins/{pluginId}` — uninstall a plugin
 - **Web contracts** (`Web*` records) matching the public REST API surface defined in `analysis_swagger.json`.
-- **FluentValidation validators** for all request models.
+
+#### C# SDK
+
 - **Use-case interfaces** that decouple the HTTP layer from business logic:
   `IRunAnalysisUseCase`, `IGetContextUseCase`, `IGetContextGraphUseCase`, `ILoadContextUseCase`,
   `ILinkContextUseCase`, `IClearContextUseCase`, `IGenerateClassesUseCase`,
@@ -34,7 +36,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 - **`AnalysisServiceCollectionExtensions.AddAnalysisEndpoints()`** — registers validators and maps all endpoints in a
   single call.
 - **SDK interfaces**:
-  - IModelFileLoader
-  - IScriptResultsStore
-  - IScriptLoader
-  - IAnalysisState
+    - IModelFileLoader
+    - IScriptResultsStore
+    - IScriptLoader
+    - IAnalysisState
+
+##### Python SDK
+
+#### Python SDK
+
+- **Use-case ABCs** mirroring the C# interfaces: `IClearContextUseCase`, `IGenerateClassesUseCase`, 
+  `IGetContextGraphUseCase`, `IGetContextUseCase`, `IGetInstalledPluginsUseCase`, `IInstallPluginUseCase`,
+  `ILinkContextUseCase`, `ILoadContextUseCase`, `IRunAnalysisUseCase`, `IUninstallPluginUseCase`.
+- **Domain models** (Pydantic): `AnalysisInfo`, `ContextSlice`, `ContextGraphNode/Edge/Result`, `Plugin`, 
+  `PluginManifest`, `PluginExtensionPoint` discriminated unions, `SampleCodeFile`.
+- **Web contracts** (Pydantic) matching the C# contracts with field validation.
+- **FastAPI routers** for all 11 endpoints organized as `analyses_router`, `context_router`, `plugins_router`.
+- **FileBundler** implementation byte-for-byte compatible with the C# version using Python's `struct` module.
+- **`create_analysis_sdk_router()`** — assembles all routers into a single FastAPI `APIRouter`.

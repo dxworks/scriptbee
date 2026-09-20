@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scriptbee-analysis-sdk"
+version = "1.0.0"
+description = "Server SDK for developing ScriptBee Analysis Services."
+requires-python = ">=3.12"
+license = { file = "../../../LICENSE" }
+authors = [{ name = "dxworks" }]
+keywords = ["scriptbee", "analysis", "sdk"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.115.0",
+    "pydantic>=2.7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/dxworks/scriptbee"
+Repository = "https://github.com/dxworks/scriptbee"
+Source = "https://github.com/dxworks/scriptbee/tree/master/integrations/sdks/python/scriptbee_analysis_sdk"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "anyio>=4.4.0",
+    "ruff>=0.9.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["scriptbee_analysis_sdk"]

@@ -135,6 +135,20 @@ For the full configuration reference, see the [MCP Server README](Integrations/M
 
 ---
 
+## Analysis Service SDKs
+
+ScriptBee supports pluggable Analysis Services. Official SDKs remove the HTTP boilerplate so you can
+focus on your business logic. Implement the use-case interfaces, register your container, and the SDK
+wires up all endpoints automatically.
+
+| Language   | Package                            | Docs                                                                            |
+| :--------- | :--------------------------------- | :------------------------------------------------------------------------------ |
+| C#         | `DxWorks.ScriptBee.Analysis.Sdk`   | [C# SDK Guide](https://dxworks.org/scriptbee/sdks/csharp_analysis_service_sdk)  |
+| Python     | `scriptbee-analysis-sdk`           | [Python SDK Guide](https://dxworks.org/scriptbee/sdks/python_analysis_service_sdk) |
+
+
+---
+
 ## Contributing
 
 For information on the repository structure, development setup, and how to contribute, please refer to our
