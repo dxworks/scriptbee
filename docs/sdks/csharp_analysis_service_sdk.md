@@ -115,6 +115,9 @@ public interface IScriptResultsStore
 ```
 
 Uploads a script result file and optional metadata for persistence under the provided `FileId`.
+The SDK deliberately does not provide an in-memory or built-in results store; storage is something
+that the concrete implementer offers by implementing `IScriptResultsStore` (backed by the host's file system,
+blob storage, database, etc.).
 
 ### Example
 

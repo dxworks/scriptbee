@@ -45,29 +45,36 @@ Every Analysis Service must support the following capabilities:
 
 | Language                                | Package                                   | Status       |
 | :-------------------------------------- | :---------------------------------------- | :----------- |
-| [C#](./csharp_analysis_service_sdk)     | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
-| [Python](./python_analysis_service_sdk) | `scriptbee-analysis-sdk` on PyPI          | ✅ Available |
-| TypeScript                              | —                                         | 🗓 Planned    |
+| [C#](./csharp_analysis_service_sdk)         | `DxWorks.ScriptBee.Analysis.Sdk` on NuGet | ✅ Available |
+| [Python](./python_analysis_service_sdk)     | `scriptbee-analysis-sdk` on PyPI          | ✅ Available |
+| [TypeScript](./typescript_analysis_service_sdk) | `@dxworks/scriptbee-analysis-sdk` on npm  | ✅ Available |
 
 ---
 
 ## Results SDK
 
-In addition to the request/response endpoints, both SDK implementations provide a **Results SDK** —
+In addition to the request/response endpoints, all SDK implementations provide a **Results SDK** —
 a high-level, write-only sink that lets analysis logic emit typed results without managing low-level
 concerns such as file IDs, GUIDs, byte encoding, or store calls.
 
-| Result type   | Produced by                       | Consumed by       |
-| :------------ | :-------------------------------- | :---------------- |
-| `File`        | `AddFileAsync` / `add_file`       | UI file downloads |
-| `Console`     | `AddConsoleAsync` / `add_console` | Console log view  |
-| `RunError`    | `AddErrorAsync` / `add_error`     | Error display     |
-| Custom string | `AddResultAsync` / `add_result`   | Plugin-defined    |
+> **Storage Decoupling**: The SDKs deliberately do not include any in-memory or built-in storage implementations.
+> The SDKs only offer the basic contracts and abstractions; storage is something that the concrete implementer
+> offers (by implementing `IScriptResultsStore` in C# or `ScriptResultsStore` in Python and TypeScript, backed by
+> e.g. S3, disk, blob storage, or a database).
 
-The interface is the same conceptually in both languages:
+
+| Result type   | Produced by                                    | Consumed by       |
+| :------------ | :--------------------------------------------- | :---------------- |
+| `File`        | `AddFileAsync` / `add_file` / `addFile`        | UI file downloads |
+| `Console`     | `AddConsoleAsync` / `add_console` / `addConsole`| Console log view  |
+| `RunError`    | `AddErrorAsync` / `add_error` / `addError`     | Error display     |
+| Custom string | `AddResultAsync` / `add_result` / `addResult`  | Plugin-defined    |
+
+The interface is the same conceptually across all languages:
 
 - **C#**: `IAnalysisResultService` with `AddFileAsync`, `AddConsoleAsync`, `AddErrorAsync`, `AddResultAsync`
 - **Python**: `AnalysisResultService` protocol with `add_file`, `add_console`, `add_error`, `add_result`
+- **TypeScript**: `AnalysisResultService` interface with `addFile`, `addConsole`, `addError`, `addResult`
 
 See the language-specific SDK page for usage examples and DI registration details.
 

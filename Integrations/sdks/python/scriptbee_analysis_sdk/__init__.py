@@ -43,7 +43,6 @@ from scriptbee_analysis_sdk.file_bundler import FileBundler
 from scriptbee_analysis_sdk.results import (
     AnalysisResultService,
     DefaultAnalysisResultService,
-    InMemoryScriptResultsStore,
     ScriptResultsStore,
 )
 
@@ -85,7 +84,6 @@ __all__ = [
     "ScriptId",
     "AnalysisResultService",
     "DefaultAnalysisResultService",
-    "InMemoryScriptResultsStore",
     "ScriptResultsStore",
     "AnalysisSdkContainer",
     "create_analysis_sdk_router",

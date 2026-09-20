@@ -4,12 +4,32 @@ import pytest
 
 from scriptbee_analysis_sdk.domain.analysis import ResultSummary, ResultType
 from scriptbee_analysis_sdk.results.service import DefaultAnalysisResultService
-from scriptbee_analysis_sdk.results.store import InMemoryScriptResultsStore
+
+
+class StubScriptResultsStore:
+    def __init__(self) -> None:
+        self.files: dict[str, bytes] = {}
+        self.metadata: dict[str, dict[str, str] | None] = {}
+
+    async def upload_file(
+        self,
+        file_id: str,
+        content: bytes,
+        metadata: dict[str, str] | None = None,
+    ) -> None:
+        self.files[file_id] = content
+        self.metadata[file_id] = metadata
+
+    def get_file(self, file_id: str) -> bytes | None:
+        return self.files.get(file_id)
+
+    def has_file(self, file_id: str) -> bool:
+        return file_id in self.files
 
 
 @pytest.mark.asyncio
 async def test_add_file_with_string_content() -> None:
-    store = InMemoryScriptResultsStore()
+    store = StubScriptResultsStore()
     fixed_date = datetime(2026, 1, 1, 12, 0, 0, tzinfo=UTC)
     recorded_summaries: list[ResultSummary] = []
 
@@ -33,7 +53,7 @@ async def test_add_file_with_string_content() -> None:
 
 @pytest.mark.asyncio
 async def test_add_file_with_bytes_content() -> None:
-    store = InMemoryScriptResultsStore()
+    store = StubScriptResultsStore()
     service = DefaultAnalysisResultService(
         store=store,
         id_generator=lambda: "custom-id-bytes",
@@ -47,7 +67,7 @@ async def test_add_file_with_bytes_content() -> None:
 
 @pytest.mark.asyncio
 async def test_add_console() -> None:
-    store = InMemoryScriptResultsStore()
+    store = StubScriptResultsStore()
     recorded_summaries: list[ResultSummary] = []
     service = DefaultAnalysisResultService(
         store=store,
@@ -66,7 +86,7 @@ async def test_add_console() -> None:
 
 @pytest.mark.asyncio
 async def test_add_error() -> None:
-    store = InMemoryScriptResultsStore()
+    store = StubScriptResultsStore()
     recorded_summaries: list[ResultSummary] = []
     service = DefaultAnalysisResultService(
         store=store,
@@ -85,7 +105,7 @@ async def test_add_error() -> None:
 
 @pytest.mark.asyncio
 async def test_add_custom_result() -> None:
-    store = InMemoryScriptResultsStore()
+    store = StubScriptResultsStore()
     recorded_summaries: list[ResultSummary] = []
     service = DefaultAnalysisResultService(
         store=store,
@@ -108,7 +128,7 @@ async def test_add_custom_result() -> None:
 
 @pytest.mark.asyncio
 async def test_default_providers() -> None:
-    store = InMemoryScriptResultsStore()
+    store = StubScriptResultsStore()
     service = DefaultAnalysisResultService(store=store)
 
     result_id = await service.add_file("default.txt", "test")
