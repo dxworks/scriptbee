@@ -32,7 +32,9 @@ export const TopNavigationBarOutletSchema = z.object({
   nested: z.boolean().nullable().optional(),
   componentName: z.string().nullable().optional(),
 });
-export type TopNavigationBarOutlet = z.infer<typeof TopNavigationBarOutletSchema>;
+export type TopNavigationBarOutlet = z.infer<
+  typeof TopNavigationBarOutletSchema
+>;
 
 export const SidePanelOutletSchema = z.object({
   type: z.literal(OutletType.SIDE_PANEL),
@@ -60,7 +62,9 @@ export const UiPluginExtensionPointOutletSchema = z.discriminatedUnion("type", [
   SidePanelOutletSchema,
   FilePreviewerOutletSchema,
 ]);
-export type UiPluginExtensionPointOutlet = z.infer<typeof UiPluginExtensionPointOutletSchema>;
+export type UiPluginExtensionPointOutlet = z.infer<
+  typeof UiPluginExtensionPointOutletSchema
+>;
 
 export const NestedPluginExtensionPointSchema = z.object({
   kind: z.literal(PluginKind.PLUGIN),

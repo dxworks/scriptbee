@@ -13,7 +13,9 @@ describe("FileBundler", () => {
 
   it("encodes a single file with correct big-endian framing", () => {
     const bundler = new FileBundler();
-    const buf = bundler.writeToBuffer([{ name: "Model.ts", content: "export {}" }]);
+    const buf = bundler.writeToBuffer([
+      { name: "Model.ts", content: "export {}" },
+    ]);
 
     const encoder = new TextEncoder();
     const pathBytes = encoder.encode("Model.ts");
@@ -26,7 +28,9 @@ describe("FileBundler", () => {
     expect(pathLen).toBe(pathBytes.byteLength);
     offset += 4;
 
-    const decodedPath = new TextDecoder().decode(buf.slice(offset, offset + pathLen));
+    const decodedPath = new TextDecoder().decode(
+      buf.slice(offset, offset + pathLen),
+    );
     expect(decodedPath).toBe("Model.ts");
     offset += pathLen;
 
@@ -34,7 +38,9 @@ describe("FileBundler", () => {
     expect(contentLen).toBe(contentBytes.byteLength);
     offset += 8;
 
-    const decodedContent = new TextDecoder().decode(buf.slice(offset, offset + contentLen));
+    const decodedContent = new TextDecoder().decode(
+      buf.slice(offset, offset + contentLen),
+    );
     expect(decodedContent).toBe("export {}");
     offset += contentLen;
 
@@ -61,7 +67,9 @@ describe("FileBundler", () => {
       expect(view.getUint32(offset, false)).toBe(pathBytes.byteLength);
       offset += 4 + pathBytes.byteLength;
 
-      expect(Number(view.getBigUint64(offset, false))).toBe(contentBytes.byteLength);
+      expect(Number(view.getBigUint64(offset, false))).toBe(
+        contentBytes.byteLength,
+      );
       offset += 8 + contentBytes.byteLength;
     }
 

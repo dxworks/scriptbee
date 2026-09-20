@@ -27,19 +27,30 @@ function createRouter(overrides?: {
   const clearContext: ClearContextUseCase = overrides?.clearContext ?? {
     clear: vi.fn(),
   };
-  const getContextGraph: GetContextGraphUseCase = overrides?.getContextGraph ?? {
-    searchNodes: vi.fn().mockReturnValue({
-      nodes: [{ id: "n1", label: "Node 1", type: "Class", properties: { key: "val" } }],
-      edges: [{ source: "n1", target: "n2", label: "USES" }],
-    }),
-    getNeighbors: vi.fn().mockReturnValue({
-      nodes: [{ id: "n2", label: "Node 2", type: "Class", properties: {} }],
-      edges: [{ source: "n1", target: "n2", label: "USES" }],
-    }),
-  };
-  const generateClasses: GenerateClassesUseCase = overrides?.generateClasses ?? {
-    generateClasses: vi.fn().mockResolvedValue([{ name: "Model.ts", content: "export {}" }]),
-  };
+  const getContextGraph: GetContextGraphUseCase =
+    overrides?.getContextGraph ?? {
+      searchNodes: vi.fn().mockReturnValue({
+        nodes: [
+          {
+            id: "n1",
+            label: "Node 1",
+            type: "Class",
+            properties: { key: "val" },
+          },
+        ],
+        edges: [{ source: "n1", target: "n2", label: "USES" }],
+      }),
+      getNeighbors: vi.fn().mockReturnValue({
+        nodes: [{ id: "n2", label: "Node 2", type: "Class", properties: {} }],
+        edges: [{ source: "n1", target: "n2", label: "USES" }],
+      }),
+    };
+  const generateClasses: GenerateClassesUseCase =
+    overrides?.generateClasses ?? {
+      generateClasses: vi
+        .fn()
+        .mockResolvedValue([{ name: "Model.ts", content: "export {}" }]),
+    };
 
   const router = makeContextRouter({
     getContext: () => getContext,
@@ -50,7 +61,15 @@ function createRouter(overrides?: {
     generateClasses: () => generateClasses,
   });
 
-  return { router, getContext, loadContext, linkContext, clearContext, getContextGraph, generateClasses };
+  return {
+    router,
+    getContext,
+    loadContext,
+    linkContext,
+    clearContext,
+    getContextGraph,
+    generateClasses,
+  };
 }
 
 describe("makeContextRouter", () => {
@@ -143,10 +162,15 @@ describe("makeContextRouter", () => {
   it("handles GET /api/context/graph-nodes with query params", async () => {
     const { router, getContextGraph } = createRouter();
 
-    const response = await router.request("/api/context/graph-nodes?query=Node&offset=2&limit=5");
+    const response = await router.request(
+      "/api/context/graph-nodes?query=Node&offset=2&limit=5",
+    );
     expect(response.status).toBe(200);
 
-    const json = (await response.json()) as { nodes: unknown[]; edges: unknown[] };
+    const json = (await response.json()) as {
+      nodes: unknown[];
+      edges: unknown[];
+    };
     expect(json.nodes).toHaveLength(1);
     expect(json.edges).toHaveLength(1);
     expect(getContextGraph.searchNodes).toHaveBeenCalledWith("Node", 2, 5);
@@ -155,10 +179,15 @@ describe("makeContextRouter", () => {
   it("handles GET /api/context/graph-nodes/:nodeId/neighbors", async () => {
     const { router, getContextGraph } = createRouter();
 
-    const response = await router.request("/api/context/graph-nodes/n1/neighbors");
+    const response = await router.request(
+      "/api/context/graph-nodes/n1/neighbors",
+    );
     expect(response.status).toBe(200);
 
-    const json = (await response.json()) as { nodes: unknown[]; edges: unknown[] };
+    const json = (await response.json()) as {
+      nodes: unknown[];
+      edges: unknown[];
+    };
     expect(json.nodes).toHaveLength(1);
     expect(getContextGraph.getNeighbors).toHaveBeenCalledWith("n1");
   });
@@ -175,12 +204,18 @@ describe("makeContextRouter", () => {
     });
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("Content-Type")).toBe("application/octet-stream");
-    expect(response.headers.get("Content-Disposition")).toBe('attachment; filename="classes.bin"');
+    expect(response.headers.get("Content-Type")).toBe(
+      "application/octet-stream",
+    );
+    expect(response.headers.get("Content-Disposition")).toBe(
+      'attachment; filename="classes.bin"',
+    );
 
     const buffer = await response.arrayBuffer();
     expect(buffer.byteLength).toBeGreaterThan(0);
-    expect(generateClasses.generateClasses).toHaveBeenCalledWith(["typescript"]);
+    expect(generateClasses.generateClasses).toHaveBeenCalledWith([
+      "typescript",
+    ]);
   });
 
   it("handles POST /api/context/generate-classes with invalid body returning 400", async () => {

@@ -9,7 +9,8 @@ export function success(): Success {
   return { _tag: "Success" };
 }
 
-export type InstallPluginResult = Success | InvalidPluginError | PluginInstallationError;
+export type InstallPluginResult =
+  Success | InvalidPluginError | PluginInstallationError;
 
 export interface InstallPluginUseCase {
   installPlugin(pluginId: PluginId): InstallPluginResult;

@@ -5,7 +5,9 @@ import {
   webRunAnalysisResponseFromInfo,
 } from "./contracts/web-models.js";
 
-export function makeAnalysesRouter(getRunAnalysis: () => RunAnalysisUseCase): Hono {
+export function makeAnalysesRouter(
+  getRunAnalysis: () => RunAnalysisUseCase,
+): Hono {
   const router = new Hono();
 
   router.post("/api/analyses", async (c) => {
@@ -13,7 +15,10 @@ export function makeAnalysesRouter(getRunAnalysis: () => RunAnalysisUseCase): Ho
     const parsed = WebRunAnalysisCommandSchema.safeParse(body);
 
     if (!parsed.success) {
-      return c.json({ title: "Validation Failed", detail: parsed.error.message }, 400);
+      return c.json(
+        { title: "Validation Failed", detail: parsed.error.message },
+        400,
+      );
     }
 
     const command = {

@@ -24,10 +24,16 @@ export function makePluginsRouter(options: {
       const parsed = WebInstallPluginCommandSchema.safeParse(body);
 
       if (!parsed.success) {
-        return c.json({ title: "Validation Failed", detail: parsed.error.message }, 400);
+        return c.json(
+          { title: "Validation Failed", detail: parsed.error.message },
+          400,
+        );
       }
 
-      const pluginId = { name: parsed.data.pluginId, version: parsed.data.version };
+      const pluginId = {
+        name: parsed.data.pluginId,
+        version: parsed.data.version,
+      };
       const result = options.installPlugin().installPlugin(pluginId);
 
       if (result._tag === "Success") {

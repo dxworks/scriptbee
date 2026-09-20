@@ -1,6 +1,10 @@
 import { z } from "zod";
 import type { AnalysisInfo } from "../../../domain/analysis.js";
-import type { ContextGraphEdge, ContextGraphNode, ContextSlice } from "../../../domain/context.js";
+import type {
+  ContextGraphEdge,
+  ContextGraphNode,
+  ContextSlice,
+} from "../../../domain/context.js";
 import type { Plugin } from "../../../domain/plugins.js";
 
 export const WebRunAnalysisCommandSchema = z.object({
@@ -17,7 +21,9 @@ export interface WebRunAnalysisResponse {
   creationDate: string;
 }
 
-export function webRunAnalysisResponseFromInfo(info: AnalysisInfo): WebRunAnalysisResponse {
+export function webRunAnalysisResponseFromInfo(
+  info: AnalysisInfo,
+): WebRunAnalysisResponse {
   return {
     id: info.id.value,
     projectId: info.projectId.value,
@@ -28,7 +34,7 @@ export function webRunAnalysisResponseFromInfo(info: AnalysisInfo): WebRunAnalys
 }
 
 export const WebLoadContextCommandSchema = z.object({
-  filesToLoad: z.record(z.array(z.string())),
+  filesToLoad: z.record(z.string(), z.array(z.string())),
 });
 export type WebLoadContextCommand = z.infer<typeof WebLoadContextCommandSchema>;
 
@@ -54,7 +60,9 @@ export const WebGenerateClassesRequestSchema = z.object({
   languages: z.array(z.string()).optional(),
   transferFormat: z.string().optional(),
 });
-export type WebGenerateClassesRequest = z.infer<typeof WebGenerateClassesRequestSchema>;
+export type WebGenerateClassesRequest = z.infer<
+  typeof WebGenerateClassesRequestSchema
+>;
 
 export interface WebContextGraphNode {
   id: string;
@@ -64,7 +72,9 @@ export interface WebContextGraphNode {
   properties: Record<string, unknown>;
 }
 
-export function webContextGraphNodeFromDomain(node: ContextGraphNode): WebContextGraphNode {
+export function webContextGraphNodeFromDomain(
+  node: ContextGraphNode,
+): WebContextGraphNode {
   return {
     id: node.id,
     label: node.label,
@@ -80,7 +90,9 @@ export interface WebContextGraphEdge {
   label: string;
 }
 
-export function webContextGraphEdgeFromDomain(edge: ContextGraphEdge): WebContextGraphEdge {
+export function webContextGraphEdgeFromDomain(
+  edge: ContextGraphEdge,
+): WebContextGraphEdge {
   return { source: edge.source, target: edge.target, label: edge.label };
 }
 
@@ -93,7 +105,9 @@ export const WebInstallPluginCommandSchema = z.object({
   pluginId: z.string().min(1),
   version: z.string().min(1),
 });
-export type WebInstallPluginCommand = z.infer<typeof WebInstallPluginCommandSchema>;
+export type WebInstallPluginCommand = z.infer<
+  typeof WebInstallPluginCommandSchema
+>;
 
 export interface WebInstalledPluginManifest {
   apiVersion: string;
@@ -110,7 +124,9 @@ export interface WebInstalledPlugin {
   manifest: WebInstalledPluginManifest;
 }
 
-export function webInstalledPluginFromDomain(plugin: Plugin): WebInstalledPlugin {
+export function webInstalledPluginFromDomain(
+  plugin: Plugin,
+): WebInstalledPlugin {
   return {
     folderPath: plugin.folderPath,
     id: plugin.id.name,

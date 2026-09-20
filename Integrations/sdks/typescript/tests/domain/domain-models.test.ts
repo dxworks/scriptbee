@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { ProjectIdSchema, ScriptIdSchema, FileIdSchema, InstanceIdSchema } from "../../src/domain/project.js";
+import {
+  ProjectIdSchema,
+  ScriptIdSchema,
+  FileIdSchema,
+  InstanceIdSchema,
+} from "../../src/domain/project.js";
 import { SampleCodeFileSchema } from "../../src/domain/code-generation.js";
 import { AnalysisInfoSchema, ResultType } from "../../src/domain/analysis.js";
 import { PluginIdSchema, PluginKind } from "../../src/domain/plugins.js";
-import { ContextSliceSchema, ContextGraphNodeSchema } from "../../src/domain/context.js";
+import {
+  ContextSliceSchema,
+  ContextGraphNodeSchema,
+} from "../../src/domain/context.js";
 
 describe("ProjectId", () => {
   it("accepts a non-empty value", () => {
@@ -48,11 +56,17 @@ describe("InstanceId", () => {
 
 describe("SampleCodeFile", () => {
   it("accepts a valid file", () => {
-    expect(SampleCodeFileSchema.safeParse({ name: "Model.ts", content: "export {}" }).success).toBe(true);
+    expect(
+      SampleCodeFileSchema.safeParse({ name: "Model.ts", content: "export {}" })
+        .success,
+    ).toBe(true);
   });
 
   it("rejects an empty name", () => {
-    expect(SampleCodeFileSchema.safeParse({ name: "", content: "export {}" }).success).toBe(false);
+    expect(
+      SampleCodeFileSchema.safeParse({ name: "", content: "export {}" })
+        .success,
+    ).toBe(false);
   });
 });
 
@@ -84,7 +98,10 @@ describe("ResultType", () => {
 
 describe("PluginId", () => {
   it("stores name and version", () => {
-    const result = PluginIdSchema.safeParse({ name: "my-plugin", version: "1.0.0" });
+    const result = PluginIdSchema.safeParse({
+      name: "my-plugin",
+      version: "1.0.0",
+    });
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.name).toBe("my-plugin");
@@ -103,14 +120,21 @@ describe("PluginKind", () => {
 
 describe("ContextSlice", () => {
   it("parses model and pluginIds", () => {
-    const result = ContextSliceSchema.safeParse({ model: "MyModel", pluginIds: ["p1"] });
+    const result = ContextSliceSchema.safeParse({
+      model: "MyModel",
+      pluginIds: ["p1"],
+    });
     expect(result.success).toBe(true);
   });
 });
 
 describe("ContextGraphNode", () => {
   it("defaults properties to empty object", () => {
-    const result = ContextGraphNodeSchema.safeParse({ id: "n1", label: "Node", type: "Class" });
+    const result = ContextGraphNodeSchema.safeParse({
+      id: "n1",
+      label: "Node",
+      type: "Class",
+    });
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.properties).toEqual({});

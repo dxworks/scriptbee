@@ -37,7 +37,10 @@ export function makeContextRouter(options: {
     const parsed = WebLoadContextCommandSchema.safeParse(body);
 
     if (!parsed.success) {
-      return c.json({ title: "Validation Failed", detail: parsed.error.message }, 400);
+      return c.json(
+        { title: "Validation Failed", detail: parsed.error.message },
+        400,
+      );
     }
 
     const filesToLoad: Record<string, FileId[]> = {};
@@ -54,7 +57,10 @@ export function makeContextRouter(options: {
     const parsed = WebLinkContextCommandSchema.safeParse(body);
 
     if (!parsed.success) {
-      return c.json({ title: "Validation Failed", detail: parsed.error.message }, 400);
+      return c.json(
+        { title: "Validation Failed", detail: parsed.error.message },
+        400,
+      );
     }
 
     await options.linkContext().link(parsed.data.linkerIds);
@@ -92,10 +98,15 @@ export function makeContextRouter(options: {
     const parsed = WebGenerateClassesRequestSchema.safeParse(body);
 
     if (!parsed.success) {
-      return c.json({ title: "Validation Failed", detail: parsed.error.message }, 400);
+      return c.json(
+        { title: "Validation Failed", detail: parsed.error.message },
+        400,
+      );
     }
 
-    const files = await options.generateClasses().generateClasses(parsed.data.languages ?? []);
+    const files = await options
+      .generateClasses()
+      .generateClasses(parsed.data.languages ?? []);
     const bundle = fileBundler.writeToBuffer(files);
 
     return new Response(bundle, {
