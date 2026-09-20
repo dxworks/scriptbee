@@ -191,13 +191,39 @@ class AnalysisResultService(Protocol):
     async def add_result(self, name: str, result_type: str, content: str | bytes) -> ResultId: ...
 ```
 
+### Storage Decoupling
+
+The SDK deliberately does not provide any in-memory or built-in storage implementation. The SDK only offers the basic abstractions — storage is something that the concrete implementer offers by implementing the `ScriptResultsStore` protocol.
+
+```python
+class ScriptResultsStore(Protocol):
+    async def upload_file(
+        self,
+        file_id: str,
+        content: bytes,
+        metadata: dict[str, str] | None = None,
+    ) -> None: ...
+```
+
 ### Usage
 
 ```python
-from scriptbee_analysis_sdk.results import DefaultAnalysisResultService, InMemoryScriptResultsStore
 from scriptbee_analysis_sdk.domain import ResultType
+from scriptbee_analysis_sdk.results import DefaultAnalysisResultService, ScriptResultsStore
 
-store = InMemoryScriptResultsStore()
+
+class FileSystemScriptResultsStore:
+    async def upload_file(
+        self,
+        file_id: str,
+        content: bytes,
+        metadata: dict[str, str] | None = None,
+    ) -> None:
+        # concrete storage implementation (e.g. S3, disk, blob storage)
+        ...
+
+
+store = FileSystemScriptResultsStore()
 results = DefaultAnalysisResultService(store=store)
 
 # emit a text file result
