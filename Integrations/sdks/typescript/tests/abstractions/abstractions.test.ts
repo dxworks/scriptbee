@@ -11,12 +11,21 @@ import {
 } from "../../src/abstractions/install-plugin-use-case.js";
 import type { LinkContextUseCase } from "../../src/abstractions/link-context-use-case.js";
 import type { LoadContextUseCase } from "../../src/abstractions/load-context-use-case.js";
-import type { RunAnalysisCommand, RunAnalysisUseCase } from "../../src/abstractions/run-analysis-use-case.js";
+import type {
+  RunAnalysisCommand,
+  RunAnalysisUseCase,
+} from "../../src/abstractions/run-analysis-use-case.js";
 import type { UninstallPluginUseCase } from "../../src/abstractions/uninstall-plugin-use-case.js";
-import { invalidPluginError, pluginInstallationError } from "../../src/abstractions/errors.js";
+import {
+  invalidPluginError,
+  pluginInstallationError,
+} from "../../src/abstractions/errors.js";
 import type { AnalysisInfo } from "../../src/domain/analysis.js";
 import type { SampleCodeFile } from "../../src/domain/code-generation.js";
-import type { ContextGraphResult, ContextSlice } from "../../src/domain/context.js";
+import type {
+  ContextGraphResult,
+  ContextSlice,
+} from "../../src/domain/context.js";
 import type { Plugin, PluginId } from "../../src/domain/plugins.js";
 import type { FileId } from "../../src/domain/project.js";
 
@@ -56,7 +65,11 @@ class StubClearContext implements ClearContextUseCase {
 }
 
 class StubGetContextGraph implements GetContextGraphUseCase {
-  searchNodes(_query: string, _offset: number, _limit: number): ContextGraphResult {
+  searchNodes(
+    _query: string,
+    _offset: number,
+    _limit: number,
+  ): ContextGraphResult {
     return { nodes: [], edges: [] };
   }
 
@@ -92,7 +105,10 @@ class StubUninstallPlugin implements UninstallPluginUseCase {
 describe("RunAnalysisUseCase", () => {
   it("returns analysis info from stub implementation", async () => {
     const useCase = new StubRunAnalysis();
-    const result = await useCase.run({ projectId: { value: "p" }, scriptId: { value: "s" } });
+    const result = await useCase.run({
+      projectId: { value: "p" },
+      scriptId: { value: "s" },
+    });
     expect(result.id.value).toBe("an-1");
     expect(result.status.value).toBe("Started");
   });
@@ -106,13 +122,17 @@ describe("GetContextUseCase", () => {
 
 describe("LoadContextUseCase", () => {
   it("resolves without error from stub", async () => {
-    await expect(new StubLoadContext().load({ "loader-1": [{ value: "f1" }] })).resolves.toBeUndefined();
+    await expect(
+      new StubLoadContext().load({ "loader-1": [{ value: "f1" }] }),
+    ).resolves.toBeUndefined();
   });
 });
 
 describe("LinkContextUseCase", () => {
   it("resolves without error from stub", async () => {
-    await expect(new StubLinkContext().link(["linker-1"])).resolves.toBeUndefined();
+    await expect(
+      new StubLinkContext().link(["linker-1"]),
+    ).resolves.toBeUndefined();
   });
 });
 
@@ -137,7 +157,9 @@ describe("GetContextGraphUseCase", () => {
 
 describe("GenerateClassesUseCase", () => {
   it("returns empty list from stub", async () => {
-    const result = await new StubGenerateClasses().generateClasses(["typescript"]);
+    const result = await new StubGenerateClasses().generateClasses([
+      "typescript",
+    ]);
     expect(result).toEqual([]);
   });
 });
@@ -150,13 +172,18 @@ describe("GetInstalledPluginsUseCase", () => {
 
 describe("InstallPluginUseCase", () => {
   it("returns Success result", () => {
-    const result = new StubInstallPlugin(success()).installPlugin({ name: "p", version: "1.0" });
+    const result = new StubInstallPlugin(success()).installPlugin({
+      name: "p",
+      version: "1.0",
+    });
     expect(result._tag).toBe("Success");
   });
 
   it("returns InvalidPluginError result", () => {
     const pluginId = { name: "p", version: "bad" };
-    const result = new StubInstallPlugin(invalidPluginError(pluginId)).installPlugin(pluginId);
+    const result = new StubInstallPlugin(
+      invalidPluginError(pluginId),
+    ).installPlugin(pluginId);
     expect(result._tag).toBe("InvalidPluginError");
     if (result._tag === "InvalidPluginError") {
       expect(result.id).toEqual(pluginId);
@@ -165,14 +192,18 @@ describe("InstallPluginUseCase", () => {
 
   it("returns PluginInstallationError result", () => {
     const pluginId = { name: "p", version: "1.0" };
-    const result = new StubInstallPlugin(pluginInstallationError(pluginId)).installPlugin(pluginId);
+    const result = new StubInstallPlugin(
+      pluginInstallationError(pluginId),
+    ).installPlugin(pluginId);
     expect(result._tag).toBe("PluginInstallationError");
   });
 });
 
 describe("UninstallPluginUseCase", () => {
   it("uninstalls without error from stub", () => {
-    expect(() => new StubUninstallPlugin().uninstallPlugin({ name: "p", version: "1.0" })).not.toThrow();
+    expect(() =>
+      new StubUninstallPlugin().uninstallPlugin({ name: "p", version: "1.0" }),
+    ).not.toThrow();
   });
 });
 

@@ -11,7 +11,7 @@ export const ContextGraphNodeSchema = z.object({
   label: z.string(),
   type: z.string(),
   loader: z.string().nullable().optional(),
-  properties: z.record(z.unknown()).default({}),
+  properties: z.record(z.string(), z.unknown()).default({}),
 });
 export type ContextGraphNode = z.infer<typeof ContextGraphNodeSchema>;
 

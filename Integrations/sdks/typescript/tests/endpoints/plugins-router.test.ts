@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import { invalidPluginError, pluginInstallationError } from "../../src/abstractions/errors.js";
+import {
+  invalidPluginError,
+  pluginInstallationError,
+} from "../../src/abstractions/errors.js";
 import type { GetInstalledPluginsUseCase } from "../../src/abstractions/get-installed-plugins-use-case.js";
-import { success, type InstallPluginUseCase } from "../../src/abstractions/install-plugin-use-case.js";
+import {
+  success,
+  type InstallPluginUseCase,
+} from "../../src/abstractions/install-plugin-use-case.js";
 import type { UninstallPluginUseCase } from "../../src/abstractions/uninstall-plugin-use-case.js";
 import { PluginKind } from "../../src/domain/plugins.js";
 import { makePluginsRouter } from "../../src/_internal/endpoints/plugins-router.js";
@@ -11,33 +17,35 @@ function createRouter(overrides?: {
   installPlugin?: InstallPluginUseCase;
   uninstallPlugin?: UninstallPluginUseCase;
 }) {
-  const getInstalledPlugins: GetInstalledPluginsUseCase = overrides?.getInstalledPlugins ?? {
-    get: vi.fn().mockReturnValue([
-      {
-        id: { name: "test-plugin", version: "1.0.0" },
-        folderPath: "/plugins/test-plugin",
-        manifest: {
-          apiVersion: "1.0.0",
-          name: "test-plugin",
-          description: "Test plugin",
-          author: "ScriptBee",
-          extensionPoints: [
-            {
-              kind: PluginKind.LOADER,
-              name: "CustomLoader",
-              description: "Loader",
-            },
-          ],
+  const getInstalledPlugins: GetInstalledPluginsUseCase =
+    overrides?.getInstalledPlugins ?? {
+      get: vi.fn().mockReturnValue([
+        {
+          id: { name: "test-plugin", version: "1.0.0" },
+          folderPath: "/plugins/test-plugin",
+          manifest: {
+            apiVersion: "1.0.0",
+            name: "test-plugin",
+            description: "Test plugin",
+            author: "ScriptBee",
+            extensionPoints: [
+              {
+                kind: PluginKind.LOADER,
+                name: "CustomLoader",
+                description: "Loader",
+              },
+            ],
+          },
         },
-      },
-    ]),
-  };
+      ]),
+    };
   const installPlugin: InstallPluginUseCase = overrides?.installPlugin ?? {
     installPlugin: vi.fn().mockReturnValue(success()),
   };
-  const uninstallPlugin: UninstallPluginUseCase = overrides?.uninstallPlugin ?? {
-    uninstallPlugin: vi.fn(),
-  };
+  const uninstallPlugin: UninstallPluginUseCase =
+    overrides?.uninstallPlugin ?? {
+      uninstallPlugin: vi.fn(),
+    };
 
   const router = makePluginsRouter({
     getInstalledPlugins: () => getInstalledPlugins,
@@ -55,7 +63,9 @@ describe("makePluginsRouter", () => {
     const response = await router.request("/api/plugins");
     expect(response.status).toBe(200);
 
-    const json = (await response.json()) as { data: Array<{ id: string; version: string }> };
+    const json = (await response.json()) as {
+      data: Array<{ id: string; version: string }>;
+    };
     expect(json.data).toHaveLength(1);
     expect(json.data[0]?.id).toBe("test-plugin");
     expect(json.data[0]?.version).toBe("1.0.0");
@@ -83,9 +93,11 @@ describe("makePluginsRouter", () => {
 
   it("handles POST /api/plugins with InvalidPluginError returning 400", async () => {
     const installPlugin: InstallPluginUseCase = {
-      installPlugin: vi.fn().mockReturnValue(
-        invalidPluginError({ name: "bad-plugin", version: "0.0.0" }),
-      ),
+      installPlugin: vi
+        .fn()
+        .mockReturnValue(
+          invalidPluginError({ name: "bad-plugin", version: "0.0.0" }),
+        ),
     };
     const { router } = createRouter({ installPlugin });
 
@@ -106,9 +118,11 @@ describe("makePluginsRouter", () => {
 
   it("handles POST /api/plugins with PluginInstallationError returning 500", async () => {
     const installPlugin: InstallPluginUseCase = {
-      installPlugin: vi.fn().mockReturnValue(
-        pluginInstallationError({ name: "err-plugin", version: "1.0.0" }),
-      ),
+      installPlugin: vi
+        .fn()
+        .mockReturnValue(
+          pluginInstallationError({ name: "err-plugin", version: "1.0.0" }),
+        ),
     };
     const { router } = createRouter({ installPlugin });
 

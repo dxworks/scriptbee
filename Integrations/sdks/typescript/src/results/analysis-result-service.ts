@@ -3,17 +3,26 @@ import { ResultId, ResultSummary, ResultType } from "../domain/analysis.js";
 import type { ScriptResultsStore } from "./script-results-store.js";
 
 export interface AnalysisResultService {
-  addFile(name: string, content: string | Uint8Array, resultType?: string): Promise<ResultId>;
+  addFile(
+    name: string,
+    content: string | Uint8Array,
+    resultType?: string,
+  ): Promise<ResultId>;
   addConsole(content: string, name?: string): Promise<ResultId>;
   addError(message: string, name?: string): Promise<ResultId>;
-  addResult(name: string, resultType: string, content: string | Uint8Array): Promise<ResultId>;
+  addResult(
+    name: string,
+    resultType: string,
+    content: string | Uint8Array,
+  ): Promise<ResultId>;
 }
 
 export class DefaultAnalysisResultService implements AnalysisResultService {
   private readonly store: ScriptResultsStore;
   private readonly idGenerator: () => string;
   private readonly dateProvider: () => Date;
-  private readonly onResultAdded: ((summary: ResultSummary) => void) | undefined;
+  private readonly onResultAdded:
+    ((summary: ResultSummary) => void) | undefined;
 
   constructor(options: {
     store: ScriptResultsStore;

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { success } from "../src/abstractions/install-plugin-use-case.js";
-import { createAnalysisSdkRouter, type AnalysisSdkContainer } from "../src/extensions.js";
+import {
+  createAnalysisSdkRouter,
+  type AnalysisSdkContainer,
+} from "../src/extensions.js";
 
 describe("createAnalysisSdkRouter", () => {
   it("assembles all routers and serves endpoints via the container", async () => {
@@ -59,10 +62,14 @@ describe("createAnalysisSdkRouter", () => {
     const getPlugins = await app.request("/api/plugins");
     expect(getPlugins.status).toBe(200);
 
-    const postClear = await app.request("/api/context/clear", { method: "POST" });
+    const postClear = await app.request("/api/context/clear", {
+      method: "POST",
+    });
     expect(postClear.status).toBe(204);
 
-    const deletePlugin = await app.request("/api/plugins/p1?version=1.0.0", { method: "DELETE" });
+    const deletePlugin = await app.request("/api/plugins/p1?version=1.0.0", {
+      method: "DELETE",
+    });
     expect(deletePlugin.status).toBe(204);
   });
 });

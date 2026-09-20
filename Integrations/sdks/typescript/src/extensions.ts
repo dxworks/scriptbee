@@ -29,7 +29,10 @@ export interface AnalysisSdkContainer {
 export function createAnalysisSdkRouter(container: AnalysisSdkContainer): Hono {
   const app = new Hono();
 
-  app.route("/", makeAnalysesRouter(() => container.runAnalysis));
+  app.route(
+    "/",
+    makeAnalysesRouter(() => container.runAnalysis),
+  );
   app.route(
     "/",
     makeContextRouter({

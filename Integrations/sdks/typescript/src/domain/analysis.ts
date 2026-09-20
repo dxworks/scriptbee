@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { InstanceIdSchema, ProjectIdSchema, ScriptIdSchema } from "./project.js";
+import {
+  InstanceIdSchema,
+  ProjectIdSchema,
+  ScriptIdSchema,
+} from "./project.js";
 
 export const AnalysisIdSchema = z.object({ value: z.string() });
 export type AnalysisId = z.infer<typeof AnalysisIdSchema>;
