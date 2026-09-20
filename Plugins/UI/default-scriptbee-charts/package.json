@@ -30,7 +30,7 @@
   "devDependencies": {
     "@angular-architects/native-federation": "^22.1.2",
     "@angular/build": "^22.1.6",
-    "@angular/cli": "^22.1.6",
+    "@angular/cli": "^22.1.8",
     "@angular/compiler-cli": "^22.1.6",
     "@eslint/js": "^10.0.1",
     "@softarc/native-federation-orchestrator": "^4.6.1",
