@@ -40,6 +40,7 @@ public static class SdkExtensions
                 .AddSingleton<IScriptLoader, ScriptLoader>()
                 .AddSingleton<IAnalysisState, AnalysisState>()
                 .AddSingleton<IScriptResultsStore, ScriptResultsStore>()
+                .AddSingleton<IAnalysisResultService, AnalysisResultService>()
                 .AddSingleton<IModelFileLoader, ModelFileLoader>()
                 .AddSingleton<FileBundler>();
         }

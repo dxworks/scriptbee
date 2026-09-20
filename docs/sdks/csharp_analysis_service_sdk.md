@@ -155,6 +155,70 @@ app.Run();
 `AddAnalysisEndpoints()` registers all FluentValidation validators and maps every endpoint to
 `IEndpointRouteBuilder` automatically.
 
+### `IAnalysisResultService`
+
+The high-level result service lets your analysis logic emit typed results (files, console output, errors,
+or custom types) without dealing with `FileId`s, GUIDs, or stream management directly.
+
+```csharp
+public interface IAnalysisResultService
+{
+    Task<ResultId> AddFileAsync(
+        string name, Stream content,
+        string resultType = RunResultTypes.File,
+        CancellationToken cancellationToken = default);
+
+    Task<ResultId> AddFileAsync(
+        string name, string content,
+        string resultType = RunResultTypes.File,
+        CancellationToken cancellationToken = default);
+
+    Task<ResultId> AddConsoleAsync(
+        string content, string name = "ConsoleOutput",
+        CancellationToken cancellationToken = default);
+
+    Task<ResultId> AddErrorAsync(
+        string message, string name = "RunError",
+        CancellationToken cancellationToken = default);
+
+    Task<ResultId> AddResultAsync(
+        string name, string resultType, Stream content,
+        CancellationToken cancellationToken = default);
+}
+```
+
+Inject `IAnalysisResultService` into your use-case implementations and use the ergonomic helpers:
+
+```csharp
+public sealed class MyRunAnalysisUseCase(IAnalysisResultService results) : IRunAnalysisUseCase
+{
+    public async Task RunAsync(CancellationToken cancellationToken)
+    {
+        await results.AddConsoleAsync("Analysis started", cancellationToken: cancellationToken);
+
+        await results.AddFileAsync(
+            "summary.json",
+            """{"count": 42}""",
+            cancellationToken: cancellationToken
+        );
+
+        await using var csvStream = BuildCsvReport();
+        await results.AddFileAsync("report.csv", csvStream, cancellationToken: cancellationToken);
+    }
+}
+```
+
+The well-known type constants are available on `RunResultTypes`:
+
+| Constant                  | Value        |
+| :------------------------ | :----------- |
+| `RunResultTypes.File`     | `"File"`     |
+| `RunResultTypes.Console`  | `"Console"`  |
+| `RunResultTypes.RunError` | `"RunError"` |
+
+You can also pass any custom string as `resultType` when calling `AddFileAsync` or `AddResultAsync`
+to define your own result categories.
+
 ## Versioning & Changelog
 
 The SDK follows [Semantic Versioning](https://semver.org/). Releases are tagged `analysis-sdk@<version>`

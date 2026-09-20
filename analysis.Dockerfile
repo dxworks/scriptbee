@@ -13,6 +13,8 @@ COPY ScriptBeeWebApp/src/Plugins ScriptBeeWebApp/src/Plugins
 COPY ScriptBeeWebApp/src/Analysis/Application ScriptBeeWebApp/src/Analysis/Application
 COPY ScriptBeeWebApp/src/Analysis/Adapters ScriptBeeWebApp/src/Analysis/Adapters
 
+COPY Integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk Integrations/sdks/csharp/DxWorks.ScriptBee.Analysis.Sdk
+
 RUN dotnet restore ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj
 
 RUN dotnet publish ScriptBeeWebApp/src/Analysis/Adapters/Analysis.Web/Analysis.Web.csproj -c Release -o publish --no-restore

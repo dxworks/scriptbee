@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Model\Model.csproj" />
+    <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\CodeGeneration\CodeGeneration.csproj" />
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\..\..\..\ScriptBeeWebApp\src\Common\Persistence.Mongodb.Abstractions\Persistence.Mongodb.Abstractions.csproj" />
