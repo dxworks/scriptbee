@@ -108,8 +108,10 @@ export function makeContextRouter(options: {
       .generateClasses()
       .generateClasses(parsed.data.languages ?? []);
     const bundle = fileBundler.writeToBuffer(files);
+    const responseBody = new ArrayBuffer(bundle.byteLength);
+    new Uint8Array(responseBody).set(bundle);
 
-    return new Response(bundle, {
+    return new Response(responseBody, {
       status: 200,
       headers: {
         "Content-Type": "application/octet-stream",
