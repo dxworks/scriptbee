@@ -51,6 +51,28 @@ Every Analysis Service must support the following capabilities:
 
 ---
 
+## Results SDK
+
+In addition to the request/response endpoints, both SDK implementations provide a **Results SDK** —
+a high-level, write-only sink that lets analysis logic emit typed results without managing low-level
+concerns such as file IDs, GUIDs, byte encoding, or store calls.
+
+| Result type   | Produced by                       | Consumed by       |
+| :------------ | :-------------------------------- | :---------------- |
+| `File`        | `AddFileAsync` / `add_file`       | UI file downloads |
+| `Console`     | `AddConsoleAsync` / `add_console` | Console log view  |
+| `RunError`    | `AddErrorAsync` / `add_error`     | Error display     |
+| Custom string | `AddResultAsync` / `add_result`   | Plugin-defined    |
+
+The interface is the same conceptually in both languages:
+
+- **C#**: `IAnalysisResultService` with `AddFileAsync`, `AddConsoleAsync`, `AddErrorAsync`, `AddResultAsync`
+- **Python**: `AnalysisResultService` protocol with `add_file`, `add_console`, `add_error`, `add_result`
+
+See the language-specific SDK page for usage examples and DI registration details.
+
+---
+
 > **Note**: All SDK implementations target the same REST API contract defined in
 > [`docs/public/analysis_swagger.json`](../public/analysis_swagger.json).
 > The Gateway does not know or care which language or backing store your service uses.

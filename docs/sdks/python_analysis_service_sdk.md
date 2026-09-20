@@ -25,7 +25,7 @@ uv add scriptbee-analysis-sdk
 | **Validators**   | Pydantic field validators for all request models                           |
 | **Abstractions** | Abstract base classes your service must implement                          |
 | **Utilities**    | `FileBundler` for packaging file streams for loader plugins                |
-| **Registration** | `create_analysis_sdk_router()` to mount everything in one call            |
+| **Registration** | `create_analysis_sdk_router()` to mount everything in one call             |
 
 ## Architecture
 
@@ -46,18 +46,18 @@ uv add scriptbee-analysis-sdk
 Implement each abstract base class from `scriptbee_analysis_sdk.abstractions` and expose them through
 an `AnalysisSdkContainer`-compatible object.
 
-| Abstract base class       | Responsibility                              |
-| :------------------------ | :------------------------------------------ |
-| `RunAnalysisUseCase`      | Execute a script against the loaded context |
-| `GetContextUseCase`       | Return current context slices               |
-| `GetContextGraphUseCase`  | Return context as a graph (nodes + edges)   |
-| `LoadContextUseCase`      | Load files into context via a loader plugin |
-| `LinkContextUseCase`      | Link loaded context via a linker plugin     |
-| `ClearContextUseCase`     | Clear all loaded context                    |
-| `GenerateClassesUseCase`  | Stream generated model class files          |
-| `GetInstalledPluginsUseCase` | List installed plugins                   |
-| `InstallPluginUseCase`    | Install a plugin by id                      |
-| `UninstallPluginUseCase`  | Uninstall a plugin by id                    |
+| Abstract base class          | Responsibility                              |
+| :--------------------------- | :------------------------------------------ |
+| `RunAnalysisUseCase`         | Execute a script against the loaded context |
+| `GetContextUseCase`          | Return current context slices               |
+| `GetContextGraphUseCase`     | Return context as a graph (nodes + edges)   |
+| `LoadContextUseCase`         | Load files into context via a loader plugin |
+| `LinkContextUseCase`         | Link loaded context via a linker plugin     |
+| `ClearContextUseCase`        | Clear all loaded context                    |
+| `GenerateClassesUseCase`     | Stream generated model class files          |
+| `GetInstalledPluginsUseCase` | List installed plugins                      |
+| `InstallPluginUseCase`       | Install a plugin by id                      |
+| `UninstallPluginUseCase`     | Uninstall a plugin by id                    |
 
 ### Example implementation
 
@@ -159,14 +159,86 @@ signals end-of-stream.
 
 All domain types live under `scriptbee_analysis_sdk.domain` and are Pydantic `BaseModel`s.
 
-| Module          | Types                                                        |
-| :-------------- | :----------------------------------------------------------- |
-| `project`       | `ProjectId`, `ScriptId`, `FileId`, `InstanceId`              |
-| `context`       | `ContextSlice`, `ContextGraphNode`, `ContextGraphEdge`, `ContextGraphResult` |
-| `analysis`      | `AnalysisId`, `AnalysisStatus`, `AnalysisInfo`               |
-| `code_generation` | `SampleCodeFile`                                           |
-| `plugins`       | `PluginId`, `PluginKind`, `PluginManifest`, `Plugin`, `*PluginExtensionPoint` |
-| `scripts`       | `Script`, `ScriptLanguage`                                   |
+| Module            | Types                                                                         |
+| :---------------- | :---------------------------------------------------------------------------- |
+| `project`         | `ProjectId`, `ScriptId`, `FileId`, `InstanceId`                               |
+| `context`         | `ContextSlice`, `ContextGraphNode`, `ContextGraphEdge`, `ContextGraphResult`  |
+| `analysis`        | `AnalysisId`, `AnalysisStatus`, `AnalysisInfo`                                |
+| `code_generation` | `SampleCodeFile`                                                              |
+| `plugins`         | `PluginId`, `PluginKind`, `PluginManifest`, `Plugin`, `*PluginExtensionPoint` |
+| `scripts`         | `Script`, `ScriptLanguage`                                                    |
+
+## Results SDK
+
+The `DefaultAnalysisResultService` lets your analysis logic emit typed results (files, console
+output, errors, or custom types) without managing file IDs, byte encoding, or store calls directly.
+
+### Interface
+
+```python
+class AnalysisResultService(Protocol):
+    async def add_file(
+        self,
+        name: str,
+        content: str | bytes,
+        result_type: str = ResultType.FILE,
+    ) -> ResultId: ...
+
+    async def add_console(self, content: str, name: str = "ConsoleOutput") -> ResultId: ...
+
+    async def add_error(self, message: str, name: str = "RunError") -> ResultId: ...
+
+    async def add_result(self, name: str, result_type: str, content: str | bytes) -> ResultId: ...
+```
+
+### Usage
+
+```python
+from scriptbee_analysis_sdk.results import DefaultAnalysisResultService, InMemoryScriptResultsStore
+from scriptbee_analysis_sdk.domain import ResultType
+
+store = InMemoryScriptResultsStore()
+results = DefaultAnalysisResultService(store=store)
+
+# emit a text file result
+result_id = await results.add_file("summary.json", '{"count": 42}')
+
+# emit console output
+await results.add_console("Analysis started")
+
+# emit an error
+await results.add_error("Script timed out")
+
+# emit a custom result type
+await results.add_result("chart.svg", "Chart", svg_bytes)
+```
+
+### Result types
+
+The built-in type constants are on `ResultType`:
+
+| Constant               | Value        |
+| :--------------------- | :----------- |
+| `ResultType.FILE`      | `"File"`     |
+| `ResultType.CONSOLE`   | `"Console"`  |
+| `ResultType.RUN_ERROR` | `"RunError"` |
+
+You can pass any custom string as `result_type` in `add_file` or `add_result` to define your own
+result categories.
+
+### Callback hook
+
+`DefaultAnalysisResultService` accepts an optional `on_result_added` callback that is invoked
+with a `ResultSummary` after each result is persisted. The host layer uses this to track results
+without leaking infrastructure concerns into the analysis logic:
+
+```python
+summaries = []
+results = DefaultAnalysisResultService(
+    store=store,
+    on_result_added=summaries.append,
+)
+```
 
 ## Versioning & Changelog
 
