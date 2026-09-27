@@ -28,7 +28,7 @@
     <PackageVersion Include="Polly" Version="8.7.0" />
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
     <PackageVersion Include="Refit" Version="16.0.0" />
-    <PackageVersion Include="Refit.HttpClientFactory" Version="15.2.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="16.0.0" />
     <PackageVersion Include="Refitter.SourceGenerator" Version="2.2.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageVersion Include="Serilog.Expressions" Version="5.0.0" />
