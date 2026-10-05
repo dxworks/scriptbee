@@ -29,7 +29,7 @@
     "prettier:fix": "prettier --write ."
   },
   "dependencies": {
-    "hono": "^4.6.0",
+    "hono": "^4.13.9",
     "zod": "^4.6.4"
   },
   "devDependencies": {
