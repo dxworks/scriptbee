@@ -7,6 +7,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Changed
+
+- Upgrade `hono` to 4.13.13
+
 ## [1.0.0] — Initial Release
 
 ### Added
