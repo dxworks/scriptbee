@@ -1,9 +1,9 @@
-﻿<template>
+<template>
   <div ref="container" class="redoc-container"></div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue';
+import {nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 
 const props = defineProps({
   specUrl: {
@@ -13,32 +13,26 @@ const props = defineProps({
 });
 
 const container = ref(null);
+let redocRoot;
+let redocModule;
+let themeObserver;
 
 function isDark() {
   return document.documentElement.classList.contains('dark');
 }
 
-function loadRedocScript() {
-  return new Promise((resolve, reject) => {
-    if (window.Redoc) return resolve(window.Redoc);
-
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/redoc@latest/bundles/redoc.standalone.js';
-    script.async = true;
-
-    script.onload = () => resolve(window.Redoc);
-    script.onerror = reject;
-
-    document.head.appendChild(script);
-  });
+function loadRedoc() {
+  redocModule ??= import('redoc/bundles/redoc.standalone.js');
+  return redocModule;
 }
 
 async function renderRedoc() {
   if (!container.value) return;
 
+  redocRoot?.unmount();
   container.value.innerHTML = '';
 
-  const Redoc = await loadRedocScript();
+  const Redoc = await loadRedoc();
 
   const theme = isDark()
     ? {
@@ -64,7 +58,7 @@ async function renderRedoc() {
       }
     : {};
 
-  Redoc.init(
+  redocRoot = Redoc.init(
     props.specUrl,
     {
       scrollYOffset: 60,
@@ -79,15 +73,24 @@ async function renderRedoc() {
 onMounted(async () => {
   await renderRedoc();
 
-  // react to dark mode changes
-  const observer = new MutationObserver(async () => {
+  let observedDarkMode = isDark();
+  themeObserver = new MutationObserver(async () => {
+    const darkMode = isDark();
+    if (darkMode === observedDarkMode) return;
+
+    observedDarkMode = darkMode;
     await renderRedoc();
   });
 
-  observer.observe(document.documentElement, {
+  themeObserver.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['class'],
   });
+});
+
+onBeforeUnmount(() => {
+  themeObserver?.disconnect();
+  redocRoot?.unmount();
 });
 
 watch(

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress';
+import {defineConfig} from 'vitepress';
 
 export default defineConfig({
   title: 'ScriptBee Docs',
@@ -97,6 +97,12 @@ export default defineConfig({
           {
             text: 'Python',
             items: [{ text: 'Analysis Service SDK', link: '/sdks/python_analysis_service_sdk' }],
+          },
+          {
+            text: 'Typescript',
+            items: [
+              { text: 'Analysis Service SDK', link: '/sdks/typescript_analysis_service_sdk' },
+            ],
           },
         ],
       },
