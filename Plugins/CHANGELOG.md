@@ -9,13 +9,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- update `Jint` to 4.16.3
-- update `@angular/common` to 22.1.7
-- update `@angular/compiler` to 22.1.7
-- update `@angular/core` to 22.1.7
-- update `@angular/forms` to 22.1.7
-- update `@angular/platform-browser` to 22.1.7
-- update `@angular/router` to 22.1.7
+- update `Jint` to 4.16.4
+- update `@angular/common` to 22.2.2
+- update `@angular/compiler` to 22.2.2
+- update `@angular/core` to 22.2.2
+- update `@angular/forms` to 22.2.2
+- update `@angular/platform-browser` to 22.2.2
+- update `@angular/router` to 22.2.2
 
 ## [2.3.0]
 
