@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "hono": "^4.13.13",
-    "zod": "^4.6.4"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "prettier": "^3.9.9",
