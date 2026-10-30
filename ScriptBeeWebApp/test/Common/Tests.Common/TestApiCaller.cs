@@ -12,20 +12,16 @@ public class TestApiCaller<TStartup>(string endpoint)
         T? data = default
     )
     {
-        using var client = factory.CreateClient();
-
-        var content = new StringContent(
+        using var content = new StringContent(
             JsonSerializer.Serialize(data),
             Encoding.UTF8,
             MediaTypeNames.Application.Json
         );
 
-        var response = await client.PostAsync(
-            endpoint,
-            content,
-            TestContext.Current.CancellationToken
+        return await SendApiRequest(
+            factory,
+            client => client.PostAsync(endpoint, content, TestContext.Current.CancellationToken)
         );
-        return response;
     }
 
     public async Task<HttpResponseMessage> PatchApi<T>(
@@ -33,36 +29,29 @@ public class TestApiCaller<TStartup>(string endpoint)
         T? data = default
     )
     {
-        using var client = factory.CreateClient();
-
-        var content = new StringContent(
+        using var content = new StringContent(
             JsonSerializer.Serialize(data),
             Encoding.UTF8,
             MediaTypeNames.Application.Json
         );
 
-        var response = await client.PatchAsync(
-            endpoint,
-            content,
-            TestContext.Current.CancellationToken
+        return await SendApiRequest(
+            factory,
+            client => client.PatchAsync(endpoint, content, TestContext.Current.CancellationToken)
         );
-        return response;
     }
 
     public async Task<HttpResponseMessage> DeleteApi(TestWebApplicationFactory<TStartup> factory)
     {
-        using var client = factory.CreateClient();
-
-        var response = await client.DeleteAsync(endpoint);
-        return response;
+        return await SendApiRequest(factory, client => client.DeleteAsync(endpoint));
     }
 
     public async Task<HttpResponseMessage> GetApi(TestWebApplicationFactory<TStartup> factory)
     {
-        using var client = factory.CreateClient();
-
-        var response = await client.GetAsync(endpoint, TestContext.Current.CancellationToken);
-        return response;
+        return await SendApiRequest(
+            factory,
+            client => client.GetAsync(endpoint, TestContext.Current.CancellationToken)
+        );
     }
 
     public async Task<HttpResponseMessage> GetApi(
@@ -70,10 +59,7 @@ public class TestApiCaller<TStartup>(string endpoint)
         TestWebApplicationFactory<TStartup> factory
     )
     {
-        using var client = factory.CreateClient();
-
-        var response = await client.GetAsync(endpoint + queryParams);
-        return response;
+        return await SendApiRequest(factory, client => client.GetAsync(endpoint + queryParams));
     }
 
     public async Task<HttpResponseMessage> PutApi<T>(
@@ -82,16 +68,16 @@ public class TestApiCaller<TStartup>(string endpoint)
         string mediaType = MediaTypeNames.Application.Json
     )
     {
-        using var client = factory.CreateClient();
-
-        var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, mediaType);
-
-        var response = await client.PutAsync(
-            endpoint,
-            content,
-            TestContext.Current.CancellationToken
+        using var content = new StringContent(
+            JsonSerializer.Serialize(data),
+            Encoding.UTF8,
+            mediaType
         );
-        return response;
+
+        return await SendApiRequest(
+            factory,
+            client => client.PutAsync(endpoint, content, TestContext.Current.CancellationToken)
+        );
     }
 
     public async Task<HttpResponseMessage> PutApiFormWithFile(
@@ -100,8 +86,6 @@ public class TestApiCaller<TStartup>(string endpoint)
         Dictionary<string, byte[]> files
     )
     {
-        using var client = factory.CreateClient();
-
         using var multipartContent = new MultipartFormDataContent();
 
         foreach (var kvp in formData)
@@ -114,12 +98,11 @@ public class TestApiCaller<TStartup>(string endpoint)
             multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
         }
 
-        var response = await client.PutAsync(
-            endpoint,
-            multipartContent,
-            TestContext.Current.CancellationToken
+        return await SendApiRequest(
+            factory,
+            client =>
+                client.PutAsync(endpoint, multipartContent, TestContext.Current.CancellationToken)
         );
-        return response;
     }
 
     public async Task<HttpResponseMessage> PostApiFormWithFile(
@@ -128,8 +111,6 @@ public class TestApiCaller<TStartup>(string endpoint)
         Dictionary<string, byte[]> files
     )
     {
-        using var client = factory.CreateClient();
-
         using var multipartContent = new MultipartFormDataContent();
 
         foreach (var kvp in formData)
@@ -142,11 +123,22 @@ public class TestApiCaller<TStartup>(string endpoint)
             multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
         }
 
-        var response = await client.PostAsync(
-            endpoint,
-            multipartContent,
-            TestContext.Current.CancellationToken
+        return await SendApiRequest(
+            factory,
+            client =>
+                client.PostAsync(endpoint, multipartContent, TestContext.Current.CancellationToken)
         );
-        return response;
+    }
+
+    private static async Task<HttpResponseMessage> SendApiRequest(
+        TestWebApplicationFactory<TStartup> factory,
+        Func<HttpClient, Task<HttpResponseMessage>> sendRequest
+    )
+    {
+        await using (factory)
+        using (var client = factory.CreateClient())
+        {
+            return await sendRequest(client);
+        }
     }
 }
