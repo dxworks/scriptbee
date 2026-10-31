@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- update `Jint` to 4.16.4
+- update `Jint` to 4.17.0
 - update `@angular/common` to 22.2.2
 - update `@angular/compiler` to 22.2.2
 - update `@angular/core` to 22.2.2
