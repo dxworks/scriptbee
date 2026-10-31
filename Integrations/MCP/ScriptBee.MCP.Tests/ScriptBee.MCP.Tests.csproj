@@ -3,7 +3,7 @@
     <RootNamespace>ScriptBee.MCP.Tests</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>    
+  <ItemGroup>
     <ProjectReference Include="..\ScriptBee.MCP\ScriptBee.MCP.csproj" />
   </ItemGroup>
 </Project>
