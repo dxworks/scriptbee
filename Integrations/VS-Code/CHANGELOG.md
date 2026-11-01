@@ -7,7 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-- upgrade `vscode engine` to 1.138.0
+- upgrade `axios` to 1.21.0npm audit
+- upgrade `vscode engine` to 1.144.0
 
 ## [1.2.0]
 
