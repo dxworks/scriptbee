@@ -39,7 +39,7 @@
     <PackageVersion Include="WireMock.Net" Version="2.21.0" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.9.0" />
-    <PackageVersion Include="CsvHelper" Version="33.1.0" />
+    <PackageVersion Include="CsvHelper" Version="34.0.0" />
     <PackageVersion Include="Jint" Version="4.17.0" />
     <PackageVersion Include="IronPython" Version="3.4.2" />
     <PackageVersion Include="KubernetesClient" Version="21.0.8" />
