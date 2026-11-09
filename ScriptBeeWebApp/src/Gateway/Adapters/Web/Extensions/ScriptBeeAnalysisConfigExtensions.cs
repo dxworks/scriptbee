@@ -1,4 +1,5 @@
 using ScriptBee.Analysis.Instance.Docker.Extensions;
+using ScriptBee.Analysis.Instance.Kubernetes.Extensions;
 using ScriptBee.Domain.Model.Analysis;
 using ScriptBee.Ports.Instance;
 using ScriptBee.Web.Config;
@@ -19,24 +20,36 @@ public static class ScriptBeeAnalysisConfigExtensions
             .GetSection(analysisConfiguration)
             .Get<ScriptBeeAnalysisConfig>()!;
 
-        if (
-            !scriptBeeAnalysisConfig.Driver.Equals(
-                nameof(scriptBeeAnalysisConfig.Docker),
-                StringComparison.InvariantCultureIgnoreCase
-            )
-        )
-        {
-            throw new AnalysisInstanceDriverTypeNotSupported(scriptBeeAnalysisConfig.Driver);
-        }
-
         services.AddSingleton<IInstanceTemplateProvider, InstanceTemplateProvider>(
             _ => new InstanceTemplateProvider(
                 new AnalysisInstanceImage(scriptBeeAnalysisConfig.Image)
             )
         );
 
-        return services.AddDockerInstanceAdapter(
-            $"{analysisConfiguration}:{nameof(scriptBeeAnalysisConfig.Docker)}"
-        );
+        if (
+            scriptBeeAnalysisConfig.Driver.Equals(
+                nameof(scriptBeeAnalysisConfig.Docker),
+                StringComparison.InvariantCultureIgnoreCase
+            )
+        )
+        {
+            return services.AddDockerInstanceAdapter(
+                $"{analysisConfiguration}:{nameof(scriptBeeAnalysisConfig.Docker)}"
+            );
+        }
+
+        if (
+            scriptBeeAnalysisConfig.Driver.Equals(
+                nameof(scriptBeeAnalysisConfig.Kubernetes),
+                StringComparison.InvariantCultureIgnoreCase
+            )
+        )
+        {
+            return services.AddKubernetesInstanceAdapter(
+                $"{analysisConfiguration}:{nameof(scriptBeeAnalysisConfig.Kubernetes)}"
+            );
+        }
+
+        throw new AnalysisInstanceDriverTypeNotSupported(scriptBeeAnalysisConfig.Driver);
     }
 }
