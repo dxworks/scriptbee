@@ -9,7 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- update `Westwind.Utilities` to 5.3.5
+- update `Westwind.Utilities` to 5.3.6.1
 
 ## [2.1.0]
 

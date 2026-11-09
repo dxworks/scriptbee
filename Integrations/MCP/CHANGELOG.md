@@ -7,10 +7,14 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.2.0]
+
+### Changed
+
 - update `Microsoft.AspNetCore.Authentication.JwtBearer` to 10.0.14
-- update `Refit` to 16.3.0
-- update `Refit.HttpClientFactory` to 16.3.0
-- update `Refitter.SourceGenerator` to 2.3.0
+- update `ModelContextProtocol.AspNetCore` to 2.3.0
+- update `Refit` to 16.4.0
+- update `Refit.HttpClientFactory` to 16.4.0
 
 ## [1.1.0]
 
