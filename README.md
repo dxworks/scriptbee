@@ -49,17 +49,39 @@ docker compose -f scriptbee/docker-compose.yaml down
 
 > **Already cloned the repo?** Run `bash quickstart/start.sh` (or `.\quickstart\start.ps1`) directly from the repo root
 
+### Kubernetes Quick Start
+
+You can also run ScriptBee directly on Kubernetes using the manifests in `quickstart/kubernetes`:
+
+```bash
+# Start in basic development mode
+kubectl apply -f quickstart/kubernetes/base
+
+# Or start in full mode (with Keycloak & OPA)
+kubectl apply -f quickstart/kubernetes/full
+
+# Forward port to access UI
+kubectl port-forward -n scriptbee svc/scriptbee 4201:80
+```
+
+To stop:
+```bash
+kubectl delete -f quickstart/kubernetes/base # or full
+```
+
+See [Kubernetes Quickstart README](quickstart/kubernetes/README.md) for full instructions.
+
 ---
 
 ## Configuration
 
 ScriptBee can be configured using environment variables. Below are the most important settings:
 
-| Variable                     | Description                                                      | Default                    |
-|------------------------------|------------------------------------------------------------------|----------------------------|
-| `ConnectionStrings__mongodb` | Connection string for the MongoDB instance used for persistence. | `mongodb://mongo:27017...` |
-| `UserFolder__UserFolderPath` | Host path for storing project data and shared files.             |                            |
-| `SCRIPTBEE_ANALYSIS__DRIVER` | How analysis instances are managed: `docker` or `kubernetes`.    | `docker`                   |
+| Variable                      | Description                                                      | Default                    |
+|-------------------------------|------------------------------------------------------------------|----------------------------|
+| `ConnectionStrings__mongodb`  | Connection string for the MongoDB instance used for persistence. | `mongodb://mongo:27017...` |
+| `UserFolder__UserFolderPath`  | Host path for storing project data and shared files.             |                            |
+| `SCRIPTBEE__ANALYSIS__DRIVER` | How analysis instances are managed: `docker` or `kubernetes`.    | `docker`                   |
 
 Check the [Configuration Reference](https://dxworks.org/scriptbee/architecture/configuration/gateway_configuration.html)
 for a complete list of configuration options.
