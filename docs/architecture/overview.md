@@ -52,6 +52,11 @@ See [Docker Compose](../installation/docker_installation.md) for more informatio
 
 ### Kubernetes
 
-In Kubernetes deployments, analysis is managed through specialized controllers that handle the lifecycle of each instance as a native resource.
+In Kubernetes environments, the **Kubernetes Analysis Driver** dynamically manages Analysis instances as native Kubernetes resources:
+
+- **Workload Lifecycle**: Each Analysis instance runs in an isolated `Pod` paired with a companion `ClusterIP Service`.
+- **In-Cluster Networking**: The Gateway routes HTTP commands to Analysis instances via predictable cluster DNS (`http://<pod-name>.<namespace>.svc.cluster.local:<port>`).
+- **Persistent Storage**: Shared plugins and project user files are mounted via Kubernetes `PersistentVolumeClaim` (PVC) resources.
+- **Readiness Detection**: An HTTP readiness probe (`/health`) ensures the Gateway routes traffic and installs plugins only after the instance is healthy.
 
 See [Kubernetes](../installation/kubernetes_installation.md) for more information about deployment to Kubernetes

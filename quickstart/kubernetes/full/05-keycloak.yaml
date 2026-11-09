@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  namespace: scriptbee
+data:
+  realm.json: |
+    {
+      "id": "scriptbee",
+      "realm": "scriptbee",
+      "enabled": true,
+      "clients": [
+        {
+          "clientId": "scriptbee-client",
+          "publicClient": true,
+          "directAccessGrantsEnabled": true,
+          "protocol": "openid-connect",
+          "redirectUris": [
+            "http://localhost:4201/*"
+          ],
+          "webOrigins": [
+            "http://localhost:4201"
+          ],
+          "protocolMappers": [
+            {
+              "name": "audience",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-audience-mapper",
+              "consentRequired": false,
+              "config": {
+                "included.client.audience": "scriptbee-api",
+                "id.token.claim": "false",
+                "access.token.claim": "true",
+                "claim.name": "aud"
+              }
+            }
+          ]
+        },
+        {
+          "clientId": "scriptbee-api",
+          "publicClient": false,
+          "protocol": "openid-connect",
+          "serviceAccountsEnabled": true,
+          "bearerOnly": false
+        }
+      ],
+      "users": [
+        {
+          "username": "test",
+          "enabled": true,
+          "email": "test@scriptbee.local",
+          "firstName": "Test",
+          "lastName": "User",
+          "emailVerified": true,
+          "credentials": [
+            {
+              "type": "password",
+              "value": "test"
+            }
+          ]
+        }
+      ]
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: scriptbee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.7.2
+          args: ["start-dev", "--import-realm"]
+          env:
+            - name: KEYCLOAK_ADMIN
+              value: "admin"
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: "admin"
+            - name: KC_HOSTNAME
+              value: "http://localhost:8082"
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import/realm.json
+              subPath: realm.json
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: scriptbee
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - port: 8080
+      targetPort: 8080
