@@ -90,6 +90,22 @@ Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`.
 
 ScriptBee uses a namespaced tagging strategy to manage independent component releases within the monorepo.
 
+### Preparing Changelogs
+
+Each releasable subproject has its own changelog. With Python 3.11 or newer, run the updater from any directory in the
+repository after dependency updates have been merged or committed:
+
+```bash
+python scripts/update_changelog.py
+python scripts/update_changelog.py --write
+```
+
+By default, the script previews edits without changing files. `--write` updates the relevant `[Unreleased]` sections.
+It compares checked-out runtime dependency manifests and lockfiles with each component's latest release tag, adds missing
+dependency entries, and updates existing entries to the current resolved versions. Development dependencies are
+excluded. The SDK changelog has no release tag, so its last released changelog heading is used to find the baseline
+commit. Review and commit changelog edits yourself; the script does not create commits or push branches.
+
 ### Tag Naming Convention
 
 | Tag Format               | Component                          | Artifact(s)                             | GitHub Release |

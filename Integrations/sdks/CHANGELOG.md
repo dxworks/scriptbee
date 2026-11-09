@@ -7,9 +7,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.1.0]
+
 ### Changed
 
-- Upgrade `hono` to 4.13.14
+- update `fastapi` to 0.162.0
+- update `FluentValidation` to 12.2.0
+- update `FluentValidation.DependencyInjectionExtensions` to 12.2.0
+- update `hono` to 4.13.16
+- update `Microsoft.AspNetCore.OpenApi` to 10.0.14
+- update `pydantic` to 2.14.2
+- update `Swashbuckle.AspNetCore.SwaggerUI` to 10.3.1
+- update `zod` to 4.6.7
 
 ## [1.0.0] — Initial Release
 

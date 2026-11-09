@@ -7,8 +7,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-- upgrade `axios` to 1.21.0npm audit
-- upgrade `vscode engine` to 1.144.0
+## [1.3.0]
+
+### Changed
+
+- update `axios` to 1.21.0
+- update `vscode engine` to 1.144.0
 
 ## [1.2.0]
 
@@ -23,7 +27,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- `scriptbee.enableLiveUpdates` to enable live updates for project script events of creation, update, and deletion.
+- `scriptbee.enableLiveUpdates` to enable live updates for project script eventsof creation, update, and deletion.
 - `scriptbee.enableAutoPush` to enable auto push to server when script is saved.
 
 ### Changes

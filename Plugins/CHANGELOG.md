@@ -7,15 +7,19 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.4.0]
+
 ### Changed
 
-- update `Jint` to 4.17.0
 - update `@angular/common` to 22.2.4
 - update `@angular/compiler` to 22.2.4
 - update `@angular/core` to 22.2.4
 - update `@angular/forms` to 22.2.4
 - update `@angular/platform-browser` to 22.2.4
 - update `@angular/router` to 22.2.4
+- update `CsvHelper` to 34.0.0
+- update `Jint` to 4.17.0
+- update `tslib` to 2.9.1
 
 ## [2.3.0]
 
