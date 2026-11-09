@@ -86,6 +86,38 @@ volumes:
   - ./scriptbee_data:/root/.scriptbee
 ```
 
+## Full Setup with Keycloak & Open Policy Agent (OPA)
+
+For production-like environments or testing authorization, ScriptBee provides `docker-compose-full.yaml` with Keycloak for authentication and Open Policy Agent (OPA) for role-based access control.
+
+To run the full setup:
+
+```shell
+docker compose -f quickstart/docker-compose-full.yaml up
+```
+
+Or using the quickstart script:
+
+```bash
+bash quickstart/start.sh full
+# On Windows PowerShell:
+.\quickstart\start.ps1 full
+```
+
+### Full Configuration Overview
+
+The full setup configures:
+
+- **Keycloak** on port `8082`, preloaded with the `scriptbee` realm from `quickstart/full/realm-export.json`.
+  - Default user: `test` / `test`
+- **OPA** on port `8181`, evaluating policies in `quickstart/full/policy.rego` and `quickstart/full/roles.rego`.
+- **ScriptBee Gateway** configured with:
+  - `AUTHENTICATION__AUTHORITY=http://localhost:8082/realms/scriptbee`
+  - `AUTHENTICATION__EXTERNALAUTHORIZATIONURL=http://opa:8181/v1/data/scriptbee/auth/allow`
+  - `AUTHENTICATION__PERMISSIONSURL=http://opa:8181/v1/data/scriptbee/auth/user_permissions`
+  - `AUTHENTICATION__ROLESURL=http://opa:8181/v1/data/scriptbee/auth/roles_and_permissions/roles`
+  - `AUTHENTICATION__DEFAULTCREATORROLEURL=http://opa:8181/v1/data/scriptbee/auth/roles_and_permissions/default_creator_role`
+
 ## Docker Hosting Tips
 
 When hosting ScriptBee with Docker, pay attention to the following settings:

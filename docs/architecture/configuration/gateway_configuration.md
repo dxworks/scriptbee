@@ -102,7 +102,7 @@
 
 - **Type:** `string`
 - **Default:** `Docker`
-- **Description:** The driver used to manage analysis instances. Currently only `Docker` is supported.
+- **Description:** The driver used to manage analysis instances. Supported drivers: `Docker` and `Kubernetes`.
 
 ### `SCRIPTBEE__ANALYSIS__IMAGE`
 
@@ -189,6 +189,81 @@ For example, you can se the memory limit like this
 ```
 SCRIPTBEE__ANALYSIS__DOCKER__HOSTCONFIG__MEMORY=536870912
 ```
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__NAMESPACE`
+
+- **Type:** `string`
+- **Default:** `default`
+- **Description:** The Kubernetes namespace where Analysis Pods and Services will be created.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__PORT`
+
+- **Type:** `int`
+- **Default:** `80`
+- **Description:** The internal port on which the analysis container listens and the ClusterIP Service exposes.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__KUBECONFIGPATH`
+
+- **Type:** `string`
+- **Default:** _Auto-detected_
+- **Description:** Path to an explicit kubeconfig file. If omitted, the driver checks the `KUBECONFIG` environment variable, `~/.kube/config`, or falls back to in-cluster ServiceAccount credentials.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__MONGODBCONNECTIONSTRING`
+
+- **Type:** `string`
+- **Default:** _Inherits Gateway's connection string_
+- **Description:** MongoDB connection string used by Analysis Pods inside the cluster.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__USERFOLDERVOLUMEPATH`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** Mount path for user project data inside the Analysis Pod container (e.g. `/root/.scriptbee`).
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__USERFOLDERPVCNAME`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The PersistentVolumeClaim (PVC) name containing project user data to mount at `UserFolderVolumePath`.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__PLUGINSPVCNAME`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The PersistentVolumeClaim (PVC) name where plugins are stored, mounted to `/app/plugins` as read-only.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__LABELS`
+
+- **Type:** `Dictionary<string, string>`
+- **Default:** _None_
+- **Description:** Custom labels attached to created Pods and Services.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__RESOURCES`
+
+- **Type:** `PodResourceRequirements`
+- **Default:** _None_
+- **Description:** CPU and memory `Requests` and `Limits` applied to the analysis container.
+
+For example:
+
+```dotenv
+SCRIPTBEE__ANALYSIS__KUBERNETES__RESOURCES__REQUESTS__CPU=100m
+SCRIPTBEE__ANALYSIS__KUBERNETES__RESOURCES__REQUESTS__MEMORY=256Mi
+SCRIPTBEE__ANALYSIS__KUBERNETES__RESOURCES__LIMITS__CPU=500m
+SCRIPTBEE__ANALYSIS__KUBERNETES__RESOURCES__LIMITS__MEMORY=1Gi
+```
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__NODESELECTOR`
+
+- **Type:** `Dictionary<string, string>`
+- **Default:** _None_
+- **Description:** Node selector labels for scheduling Analysis Pods on specific nodes.
+
+### `SCRIPTBEE__ANALYSIS__KUBERNETES__TOLERATIONS`
+
+- **Type:** `List<PodTolerationConfig>`
+- **Default:** _None_
+- **Description:** Tolerations for running Analysis Pods on tainted nodes.
 
 ## Instance Configuration
 
