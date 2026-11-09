@@ -1,0 +1,204 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opa-policies
+  namespace: scriptbee
+data:
+  policy.rego: |
+    package scriptbee.auth
+
+    import data.scriptbee.auth.roles_and_permissions.project_permissions
+    import data.scriptbee.auth.roles_and_permissions.plugin_marketplace_permissions
+
+    default allow = false
+
+    allow if {
+        role := input.resource.role
+        project_permissions[role][input.action]
+    }
+
+    allow if {
+        input.action == "project:create"
+    }
+
+    allow if {
+        input.subject.groups[_] == "admin"
+    }
+
+    allow if {
+        input.resource.type == "global"
+        plugin_marketplace_permissions[input.action]
+    }
+
+    allow if {
+        input.resource.type == "global"
+        input.action == "gateway_plugin:management"
+        input.subject.groups[_] == "admin"
+    }
+
+    user_permissions contains perm if {
+       role := input.resource.role   
+       perm := project_permissions[role][_] 
+    }
+
+    user_permissions contains "project:create" if {
+        input.resource.type == "global"
+    }
+
+    user_permissions contains "project:view_all" if {
+        input.resource.type == "global"
+        input.subject.groups[_] == "admin"
+    }
+
+    user_permissions contains perm if {
+        input.resource.type == "global"
+        perm := plugin_marketplace_permissions[_]
+    }
+
+    user_permissions contains "gateway_plugin:management" if {
+        input.resource.type == "global"
+        input.subject.groups[_] == "admin"
+    }
+  roles.rego: |
+    package scriptbee.auth.roles_and_permissions
+
+    import rego.v1
+
+    roles := [
+        {"id": "Editor", "description": "User that can manage projects they belong to."},
+        {"id": "Analyst", "description": "User that can perform analysis tasks on allowed projects."},
+        {"id": "Viewer", "description": "User that can view only allowed projects and their analysis."}
+    ]
+
+    default_creator_role := "Editor"
+
+    plugin_marketplace_permissions := {
+       "plugin:view"
+    }
+
+    project_permissions := {
+        "Admin": {
+            "project:view",
+            "project:view_all",
+            "project:live_updates",
+            "project:edit",
+            "project:delete",
+            "project:manage_access",
+            "script:view",
+            "script:create",
+            "script:edit",
+            "script:delete",
+            "model:view",
+            "model:upload",
+            "model:load",
+            "model:link",
+            "model:clear",
+            "instance:view",
+            "instance:allocate",
+            "instance:deallocate",
+            "analysis:view",
+            "analysis:run",
+            "analysis:delete",
+            "plugin:view",
+            "plugin:install",
+            "plugin:uninstall",
+            "plugin:configure",
+            "token:create",
+            "token:delete"
+        },
+        "Editor": {
+            "project:view",
+            "project:live_updates",
+            "project:edit",
+            "project:delete",
+            "project:manage_access",
+            "script:view",
+            "script:create",
+            "script:edit",
+            "script:delete",
+            "model:view",
+            "model:upload",
+            "model:load",
+            "model:link",
+            "model:clear",
+            "instance:view",
+            "instance:allocate",
+            "instance:deallocate",
+            "analysis:view",
+            "analysis:run",
+            "analysis:delete",
+            "plugin:view",
+            "plugin:install",
+            "plugin:uninstall",
+            "plugin:configure",
+            "token:create",
+            "token:delete"
+        },
+        "Analyst": {
+            "project:view",
+            "project:live_updates",
+            "script:view",
+            "model:view",
+            "model:upload",
+            "model:load",
+            "model:link",
+            "model:clear",
+            "instance:view",
+            "instance:allocate",
+            "instance:deallocate",
+            "analysis:view",
+            "analysis:run",
+            "plugin:view"
+        },
+        "Viewer": {
+            "project:view",
+            "script:view",
+            "analysis:view"
+        }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opa
+  namespace: scriptbee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opa
+  template:
+    metadata:
+      labels:
+        app: opa
+    spec:
+      containers:
+        - name: opa
+          image: openpolicyagent/opa:1.19.1-static
+          args:
+            - "run"
+            - "--server"
+            - "--addr=:8181"
+            - "--log-level=info"
+            - "/policies"
+          ports:
+            - containerPort: 8181
+          volumeMounts:
+            - name: policies
+              mountPath: /policies
+      volumes:
+        - name: policies
+          configMap:
+            name: opa-policies
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: opa
+  namespace: scriptbee
+spec:
+  selector:
+    app: opa
+  ports:
+    - port: 8181
+      targetPort: 8181

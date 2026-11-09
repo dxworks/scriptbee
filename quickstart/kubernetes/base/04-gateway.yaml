@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scriptbee
+  namespace: scriptbee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scriptbee
+  template:
+    metadata:
+      labels:
+        app: scriptbee
+    spec:
+      serviceAccountName: scriptbee-gateway
+      containers:
+        - name: gateway
+          image: dxworks/scriptbee:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: ConnectionStrings__mongodb
+              value: "mongodb://root:example@mongodb.scriptbee.svc.cluster.local:27017/ScriptBee?authSource=admin"
+            - name: UserFolder__UserFolderPath
+              value: "/root/.scriptbee"
+            - name: AUTHENTICATION__AUTHMODE
+              value: "Development"
+            - name: SCRIPTBEE__ANALYSIS__DRIVER
+              value: "kubernetes"
+            - name: SCRIPTBEE__ANALYSIS__KUBERNETES__NAMESPACE
+              value: "scriptbee"
+            - name: SCRIPTBEE__ANALYSIS__KUBERNETES__USERFOLDERVOLUMEPATH
+              value: "/root/.scriptbee"
+            - name: SCRIPTBEE__ANALYSIS__KUBERNETES__USERFOLDERPVCNAME
+              value: "scriptbee-userdata-pvc"
+            - name: SCRIPTBEE__ANALYSIS__KUBERNETES__PLUGINSPVCNAME
+              value: "scriptbee-plugins-pvc"
+            - name: SCRIPTBEE__PLUGINS__INSTALLATIONFOLDER
+              value: "/app/plugins"
+          volumeMounts:
+            - name: userdata
+              mountPath: /root/.scriptbee
+            - name: plugins
+              mountPath: /app/plugins
+      volumes:
+        - name: userdata
+          persistentVolumeClaim:
+            claimName: scriptbee-userdata-pvc
+        - name: plugins
+          persistentVolumeClaim:
+            claimName: scriptbee-plugins-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scriptbee
+  namespace: scriptbee
+spec:
+  type: ClusterIP
+  selector:
+    app: scriptbee
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
