@@ -28,6 +28,7 @@
   </Folder>
 
   <Folder Name="/Plugins/test/">
+    <Project Path="Plugins/HelperFunctions/DxWorks.ScriptBee.Plugin.HelperFunctions.Default.Tests/DxWorks.ScriptBee.Plugin.HelperFunctions.Default.Tests.csproj" />
     <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon/DxWorks.ScriptBee.Plugin.ScriptRunner.TestsCommon.csproj" />
     <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.CSharp.Tests.csproj" />
     <Project Path="Plugins/ScriptRunner/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests/DxWorks.ScriptBee.Plugin.ScriptRunner.Python.Tests.csproj" />

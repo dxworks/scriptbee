@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+using System.Dynamic;
+using System.Reflection;
 using CsvHelper;
 using DxWorks.ScriptBee.Plugin.Api;
 using DxWorks.ScriptBee.Plugin.Api.Services;
@@ -16,10 +17,16 @@ public class CsvHelperFunctions(IHelperFunctionsResultService helperFunctionsRes
     {
         await using var stream = new MemoryStream();
 
-        await using var writer = new StreamWriter(stream);
-        await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        await using (var csv = CsvWriter.Create(stream, leaveOpen: true))
+        {
+            await csv.WriteRecordsAsync(
+                records.Select(r => (object)ToExpando(r)),
+                cancellationToken
+            );
+            await csv.FlushAsync(cancellationToken);
+        }
 
-        await csv.WriteRecordsAsync(records, cancellationToken);
+        stream.Position = 0;
 
         await helperFunctionsResultService.UploadResultAsync(
             fileName,
@@ -33,11 +40,39 @@ public class CsvHelperFunctions(IHelperFunctionsResultService helperFunctionsRes
     {
         using var stream = new MemoryStream();
 
-        using var writer = new StreamWriter(stream);
-        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        using (var csv = CsvWriter.Create(stream, leaveOpen: true))
+        {
+            csv.WriteRecords(records.Select(ToExpando).Cast<object>());
+            csv.Flush();
+        }
 
-        csv.WriteRecords(records);
+        stream.Position = 0;
 
         helperFunctionsResultService.UploadResult(fileName, RunResultDefaultTypes.FileType, stream);
+    }
+
+    private static ExpandoObject ToExpando(object? obj)
+    {
+        var expando = new ExpandoObject();
+        IDictionary<string, object?> dict = expando;
+
+        if (obj is IDictionary<string, object?> existing)
+        {
+            foreach (var kvp in existing)
+                dict[kvp.Key] = kvp.Value;
+
+            return expando;
+        }
+
+        foreach (
+            var property in obj?.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                ?? []
+        )
+        {
+            dict[property.Name] = property.GetValue(obj);
+        }
+
+        return expando;
     }
 }

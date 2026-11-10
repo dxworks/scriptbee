@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\DxWorks.ScriptBee.Plugin.HelperFunctions.Default\DxWorks.ScriptBee.Plugin.HelperFunctions.Default.csproj" />
+  </ItemGroup>
+</Project>
