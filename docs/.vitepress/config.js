@@ -111,6 +111,7 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/architecture/overview' },
           { text: 'Diagram', link: '/architecture/diagram' },
+          { text: 'Telemetry', link: '/architecture/telemetry' },
           {
             text: 'Configuration',
             items: [

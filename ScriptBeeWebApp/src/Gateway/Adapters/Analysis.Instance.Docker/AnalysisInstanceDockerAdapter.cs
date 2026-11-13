@@ -229,6 +229,30 @@ public class AnalysisInstanceDockerAdapter(
             $"ASPNETCORE_HTTP_PORTS={config.Value.Port}",
         };
 
+        var telemetrySection = configuration.GetSection("ScriptBee:Telemetry");
+        if (bool.TryParse(telemetrySection["Enabled"], out var enabled))
+        {
+            environmentVariables.Add($"ScriptBee__Telemetry__Enabled={enabled}");
+        }
+
+        var otlpEndpoint = telemetrySection["OtlpEndpoint"];
+        if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+        {
+            environmentVariables.Add($"ScriptBee__Telemetry__OtlpEndpoint={otlpEndpoint}");
+        }
+
+        if (
+            bool.TryParse(
+                telemetrySection["ConsoleExporterEnabled"],
+                out var consoleExporterEnabled
+            )
+        )
+        {
+            environmentVariables.Add(
+                $"ScriptBee__Telemetry__ConsoleExporterEnabled={consoleExporterEnabled}"
+            );
+        }
+
         if (!string.IsNullOrEmpty(config.Value.UserFolderVolumePath))
         {
             environmentVariables.Add(

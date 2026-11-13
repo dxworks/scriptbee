@@ -34,3 +34,23 @@ Most of the variables here are configured automatically by the Gateway Service w
 - **Type:** `string`
 - **Default:** `/app/plugins`
 - **Description:** The folder inside the analysis instance where plugins are accessed. This folder is typically a read-only view of the central Plugin Cache managed by the Gateway.
+
+## Telemetry
+
+### `SCRIPTBEE__TELEMETRY__ENABLED`
+
+- **Type:** `bool`
+- **Default:** `true`
+- **Description:** Whether to enable OpenTelemetry tracing and metrics collection. When spawned by the Gateway, this value is automatically forwarded from the Gateway's configuration.
+
+### `SCRIPTBEE__TELEMETRY__OTLPENDPOINT`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The OTLP endpoint to export telemetry data to. When spawned by the Gateway, this value is automatically forwarded from the Gateway's configuration.
+
+### `SCRIPTBEE__TELEMETRY__CONSOLEEXPORTERENABLED`
+
+- **Type:** `bool`
+- **Default:** `false`
+- **Description:** Whether to print traces and metrics to the console output. When spawned by the Gateway, this value is automatically forwarded from the Gateway's configuration.
