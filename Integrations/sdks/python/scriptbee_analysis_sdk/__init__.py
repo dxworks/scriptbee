@@ -45,6 +45,7 @@ from scriptbee_analysis_sdk.results import (
     DefaultAnalysisResultService,
     ScriptResultsStore,
 )
+from scriptbee_analysis_sdk.telemetry import setup_telemetry
 
 __all__ = [
     "__version__",
@@ -88,4 +89,5 @@ __all__ = [
     "AnalysisSdkContainer",
     "create_analysis_sdk_router",
     "FileBundler",
+    "setup_telemetry",
 ]

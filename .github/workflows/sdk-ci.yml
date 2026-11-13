@@ -58,7 +58,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: Integrations/sdks/python
-        run: uv sync --frozen
+        run: uv sync --frozen --all-extras
 
       - name: Lint
         working-directory: Integrations/sdks/python

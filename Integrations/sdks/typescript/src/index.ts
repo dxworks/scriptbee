@@ -64,3 +64,6 @@ export { FileBundler } from "./file-bundler.js";
 
 export type { AnalysisSdkContainer } from "./extensions.js";
 export { createAnalysisSdkRouter } from "./extensions.js";
+
+export type { TelemetryOptions } from "./telemetry.js";
+export { createTelemetrySdk, applyOtelMiddleware } from "./telemetry.js";

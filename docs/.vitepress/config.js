@@ -104,6 +104,7 @@ export default defineConfig({
               { text: 'Analysis Service SDK', link: '/sdks/typescript_analysis_service_sdk' },
             ],
           },
+          { text: 'Telemetry', link: '/sdks/telemetry' },
         ],
       },
       {

@@ -21,6 +21,15 @@ dependencies = [
     "pydantic>=2.13.5",
 ]
 
+[project.optional-dependencies]
+telemetry = [
+    "opentelemetry-api>=1.30.0",
+    "opentelemetry-sdk>=1.30.0",
+    "opentelemetry-instrumentation-fastapi>=0.50b0",
+    "opentelemetry-instrumentation-httpx>=0.50b0",
+    "opentelemetry-exporter-otlp>=1.30.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/dxworks/scriptbee"
 Repository = "https://github.com/dxworks/scriptbee"
@@ -33,6 +42,11 @@ dev = [
     "httpx>=0.28.1",
     "anyio>=4.15.1",
     "ruff>=0.16.8",
+    "opentelemetry-api>=1.45.2",
+    "opentelemetry-sdk>=1.45.2",
+    "opentelemetry-instrumentation-fastapi>=0.66b2",
+    "opentelemetry-instrumentation-httpx>=0.66b2",
+    "opentelemetry-exporter-otlp>=1.45.2",
 ]
 
 [tool.pytest.ini_options]
