@@ -7,6 +7,30 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+## [1.2.0]
+
+### Changed
+
+- add traces and metrics using open telemetry
+- update `@hono/otel` to 1.3.0
+- update `@opentelemetry/auto-instrumentations-node` to 0.83.1
+- update `@opentelemetry/exporter-metrics-otlp-http` to 0.301.2
+- update `@opentelemetry/exporter-trace-otlp-http` to 0.301.2
+- update `@opentelemetry/resources` to 3.1.1
+- update `@opentelemetry/sdk-node` to 0.301.2
+- update `@opentelemetry/semantic-conventions` to 1.45.0
+- update `OpenTelemetry.Exporter.Console` to 1.20.1
+- update `OpenTelemetry.Exporter.OpenTelemetryProtocol` to 1.20.1
+- update `OpenTelemetry.Extensions.Hosting` to 1.20.1
+- update `OpenTelemetry.Instrumentation.AspNetCore` to 1.20.2
+- update `OpenTelemetry.Instrumentation.Http` to 1.20.2
+- update `OpenTelemetry.Instrumentation.Runtime` to 1.20.1
+- update `opentelemetry-api` to 1.30.0
+- update `opentelemetry-sdk` to 1.30.0
+- update `opentelemetry-instrumentation-fastapi` to 0.50b0
+- update `opentelemetry-instrumentation-httpx` to 0.50b0
+- update `opentelemetry-exporter-otlp` to 1.30.0
+
 ## [1.1.0]
 
 ### Changed

@@ -8,7 +8,6 @@ import tomllib
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parent.parent
 CHANGELOG_RELEASE_TAGS = {
     "Plugins/CHANGELOG.md": "bundle",
@@ -205,7 +204,11 @@ def python_manifest_versions(content):
         return {}
     project = tomllib.loads(content).get("project", {})
     versions = {}
-    for requirement in project.get("dependencies", []):
+    requirements = list(project.get("dependencies", []))
+    for optional_dependencies in project.get("optional-dependencies", {}).values():
+        requirements.extend(optional_dependencies)
+
+    for requirement in requirements:
         name = re.match(r"\s*([A-Za-z0-9_.-]+)", requirement)
         version = VERSION_PATTERN.search(requirement)
         if name:
@@ -225,6 +228,12 @@ def python_manifest_dependency_names(content):
         for requirement in project.get("dependencies", [])
         if (match := re.match(r"\s*([A-Za-z0-9_.-]+)", requirement))
     }
+    for requirements in project.get("optional-dependencies", {}).values():
+        names.update(
+            normalize_python_name(match.group(1))
+            for requirement in requirements
+            if (match := re.match(r"\s*([A-Za-z0-9_.-]+)", requirement))
+        )
     for requirements in project.get("dependency-groups", {}).values():
         names.update(
             normalize_python_name(match.group(1))
@@ -385,7 +394,7 @@ def updated_changelog_content(changelog_path, dependencies, managed_names):
         ),
         len(lines),
     )
-    section = lines[unreleased_start + 1 : unreleased_end]
+    section = lines[unreleased_start + 1: unreleased_end]
     existing_entry = re.compile(r"^- (?:update|upgrade) `([^`]+)`(?: to .*)?$", re.IGNORECASE)
     section = [
         line
@@ -414,14 +423,14 @@ def updated_changelog_content(changelog_path, dependencies, managed_names):
             ),
             len(section),
         )
-        changed_section = section[changed_heading + 1 : changed_end]
+        changed_section = section[changed_heading + 1: changed_end]
         while changed_section and not changed_section[0].strip():
             changed_section.pop(0)
         while changed_section and not changed_section[-1].strip():
             changed_section.pop()
         if changed_section:
             changed_section.append("")
-        section[changed_heading + 1 : changed_end] = ["", *changed_section, *entries]
+        section[changed_heading + 1: changed_end] = ["", *changed_section, *entries]
 
     while section and not section[-1].strip():
         section.pop()
@@ -445,8 +454,8 @@ def main():
 
     modified = []
     for relative_path in (
-        *CHANGELOG_RELEASE_TAGS.keys(),
-        "Integrations/sdks/CHANGELOG.md",
+            *CHANGELOG_RELEASE_TAGS.keys(),
+            "Integrations/sdks/CHANGELOG.md",
     ):
         dependencies, managed_names = changed_dependencies(relative_path)
         changelog_path = ROOT / relative_path
@@ -484,11 +493,11 @@ if __name__ == "__main__":
     try:
         main()
     except (
-        OSError,
-        ET.ParseError,
-        ValueError,
-        json.JSONDecodeError,
-        subprocess.CalledProcessError,
+            OSError,
+            ET.ParseError,
+            ValueError,
+            json.JSONDecodeError,
+            subprocess.CalledProcessError,
     ) as error:
         print(error, file=sys.stderr)
         sys.exit(1)
