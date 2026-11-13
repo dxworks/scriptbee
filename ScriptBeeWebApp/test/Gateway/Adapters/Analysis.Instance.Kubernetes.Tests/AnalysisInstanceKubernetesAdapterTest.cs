@@ -156,6 +156,93 @@ public class AnalysisInstanceKubernetesAdapterTest
     }
 
     [Fact]
+    public async Task Allocate_ShouldPassTelemetryEnvironmentVariables_WhenConfigured()
+    {
+        // Arrange
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(
+                new Dictionary<string, string?>
+                {
+                    ["ConnectionStrings:mongodb"] = TestMongoConnectionString,
+                    ["ScriptBee:Telemetry:Enabled"] = "true",
+                    ["ScriptBee:Telemetry:OtlpEndpoint"] = "http://otel-collector:4318",
+                    ["ScriptBee:Telemetry:ConsoleExporterEnabled"] = "true",
+                }
+            )
+            .Build();
+
+        var config = new AnalysisKubernetesConfig { Namespace = TestNamespace, Port = TestPort };
+        var options = Options.Create(config);
+        var adapter = new AnalysisInstanceKubernetesAdapter(
+            _clientFactory,
+            options,
+            configuration,
+            _logger
+        );
+
+        V1Pod? createdPod = null;
+        _coreV1
+            .CreateNamespacedPodWithHttpMessagesAsync(
+                Arg.Do<V1Pod>(p => createdPod = p),
+                TestNamespace,
+                cancellationToken: Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult(
+                    new HttpOperationResponse<V1Pod>
+                    {
+                        Response = new HttpResponseMessage(HttpStatusCode.Created),
+                        Body = new V1Pod(),
+                    }
+                )
+            );
+
+        _coreV1
+            .CreateNamespacedServiceWithHttpMessagesAsync(
+                Arg.Any<V1Service>(),
+                TestNamespace,
+                cancellationToken: Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                Task.FromResult(
+                    new HttpOperationResponse<V1Service>
+                    {
+                        Response = new HttpResponseMessage(HttpStatusCode.Created),
+                        Body = new V1Service(),
+                    }
+                )
+            );
+
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(
+            ProjectId.FromValue("proj-1")
+        );
+        var instanceId = new InstanceId(Guid.Parse("11111111-2222-3333-4444-555555555555"));
+        var image = new AnalysisInstanceImage("dxworks/scriptbee-analysis:latest");
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        createdPod.ShouldNotBeNull();
+        var container = createdPod.Spec.Containers.ShouldHaveSingleItem();
+        container.Env.ShouldContain(e =>
+            e.Name == "ScriptBee__Telemetry__Enabled" && e.Value == "True"
+        );
+        container.Env.ShouldContain(e =>
+            e.Name == "ScriptBee__Telemetry__OtlpEndpoint"
+            && e.Value == "http://otel-collector:4318"
+        );
+        container.Env.ShouldContain(e =>
+            e.Name == "ScriptBee__Telemetry__ConsoleExporterEnabled" && e.Value == "True"
+        );
+    }
+
+    [Fact]
     public async Task Allocate_ShouldAttachPvcVolumes_WhenPvcNamesAreConfigured()
     {
         // Arrange

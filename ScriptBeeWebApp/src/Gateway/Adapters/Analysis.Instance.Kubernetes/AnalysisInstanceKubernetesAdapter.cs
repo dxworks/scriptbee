@@ -252,6 +252,29 @@ public sealed class AnalysisInstanceKubernetesAdapter(
             );
         }
 
+        var telemetrySection = configuration.GetSection("ScriptBee:Telemetry");
+        if (bool.TryParse(telemetrySection["Enabled"], out var enabled))
+        {
+            envVars.Add(new V1EnvVar { Name = "ScriptBee__Telemetry__Enabled", Value = enabled.ToString() });
+        }
+
+        var otlpEndpoint = telemetrySection["OtlpEndpoint"];
+        if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+        {
+            envVars.Add(new V1EnvVar { Name = "ScriptBee__Telemetry__OtlpEndpoint", Value = otlpEndpoint });
+        }
+
+        if (bool.TryParse(telemetrySection["ConsoleExporterEnabled"], out var consoleExporterEnabled))
+        {
+            envVars.Add(
+                new V1EnvVar
+                {
+                    Name = "ScriptBee__Telemetry__ConsoleExporterEnabled",
+                    Value = consoleExporterEnabled.ToString(),
+                }
+            );
+        }
+
         return envVars;
     }
 

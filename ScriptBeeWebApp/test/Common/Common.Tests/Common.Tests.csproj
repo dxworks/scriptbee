@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Common\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\src\Common\Common.Web\Common.Web.csproj" />
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
   </ItemGroup>
 </Project>

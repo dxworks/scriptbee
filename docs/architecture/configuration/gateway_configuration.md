@@ -304,3 +304,23 @@ SCRIPTBEE__ANALYSIS__KUBERNETES__RESOURCES__LIMITS__MEMORY=1Gi
 - **Type:** `long`
 - **Default:** `3600`
 - **Description:** The amount of time to cache the user information before loading it from the database.
+
+## Telemetry
+
+### `SCRIPTBEE__TELEMETRY__ENABLED`
+
+- **Type:** `bool`
+- **Default:** `true`
+- **Description:** Whether to enable OpenTelemetry tracing and metrics collection. Set to `false` to disable telemetry entirely.
+
+### `SCRIPTBEE__TELEMETRY__OTLPENDPOINT`
+
+- **Type:** `string`
+- **Default:** _None_
+- **Description:** The OTLP endpoint (HTTP or gRPC) to export telemetry data to (e.g., `http://otel-collector:4318` or `http://localhost:4317`). When configured on the Gateway, this setting is automatically forwarded to spawned Analysis instances. If omitted or empty, no remote export occurs.
+
+### `SCRIPTBEE__TELEMETRY__CONSOLEEXPORTERENABLED`
+
+- **Type:** `bool`
+- **Default:** `false`
+- **Description:** Whether to print traces and metrics to the console output. Useful for local debugging.

@@ -52,7 +52,8 @@ builder
     .AddInstanceManagementServices("ScriptBee:Instance")
     .AddPluginServices("ScriptBee:Plugins")
     .AddProjectLiveUpdates()
-    .AddAuthenticationConfig(builder.Configuration);
+    .AddAuthenticationConfig(builder.Configuration)
+    .AddScriptBeeTelemetry(builder.Configuration, "scriptbee.gateway");
 
 builder.Services.AddEndpointDefinitions(
     typeof(IEndpointDefinition),

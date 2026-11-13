@@ -229,6 +229,55 @@ public class AnalysisInstanceDockerAdapterTest : IClassFixture<DockerFixture>
     }
 
     [Fact]
+    public async Task Allocate_ShouldPassTelemetryEnvironmentVariables_WhenConfigured()
+    {
+        // Arrange
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(
+                new Dictionary<string, string?>
+                {
+                    ["ConnectionStrings:mongodb"] = TestMongoConnectionString,
+                    ["ScriptBee:Telemetry:Enabled"] = "true",
+                    ["ScriptBee:Telemetry:OtlpEndpoint"] = "http://otel-collector:4318",
+                    ["ScriptBee:Telemetry:ConsoleExporterEnabled"] = "true",
+                }
+            )
+            .Build();
+
+        var adapter = new AnalysisInstanceDockerAdapter(
+            _configOptions,
+            configuration,
+            _logger,
+            _freePortProvider
+        );
+        var projectDetails = ProjectDetailsFixture.BasicProjectDetails(ProjectId.FromValue("id"));
+        var instanceId = new InstanceId(Guid.NewGuid());
+        var image = new AnalysisInstanceImage(DockerFixture.TestImageName);
+
+        // Act
+        await adapter.Allocate(
+            projectDetails,
+            instanceId,
+            image,
+            TestContext.Current.CancellationToken
+        );
+
+        // Assert
+        var containerInspect = await _dockerFixture.DockerClient.Containers.InspectContainerAsync(
+            $"scriptbee-analysis-{instanceId}",
+            TestContext.Current.CancellationToken
+        );
+
+        containerInspect.Config.Env.ShouldContain("ScriptBee__Telemetry__Enabled=True");
+        containerInspect.Config.Env.ShouldContain(
+            "ScriptBee__Telemetry__OtlpEndpoint=http://otel-collector:4318"
+        );
+        containerInspect.Config.Env.ShouldContain(
+            "ScriptBee__Telemetry__ConsoleExporterEnabled=True"
+        );
+    }
+
+    [Fact]
     public async Task Allocate_ShouldUseUserFolderHostPath_WhenConfigured()
     {
         // Arrange
