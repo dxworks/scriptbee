@@ -34,7 +34,7 @@ builder
     .AddAnalysisSdk(builder.Configuration)
     .AddPluginServices("ScriptBee:Plugins")
     .AddRunScriptServices()
-    .AddScriptBeeTelemetry(builder.Configuration, "scriptbee.analysis");
+    .AddAnalysisSdkTelemetry(builder.Configuration);
 
 builder.Services.Configure<KestrelServerOptions>(options =>
 {
