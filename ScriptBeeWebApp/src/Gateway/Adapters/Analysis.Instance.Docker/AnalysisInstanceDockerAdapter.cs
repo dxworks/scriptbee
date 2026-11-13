@@ -241,7 +241,12 @@ public class AnalysisInstanceDockerAdapter(
             environmentVariables.Add($"ScriptBee__Telemetry__OtlpEndpoint={otlpEndpoint}");
         }
 
-        if (bool.TryParse(telemetrySection["ConsoleExporterEnabled"], out var consoleExporterEnabled))
+        if (
+            bool.TryParse(
+                telemetrySection["ConsoleExporterEnabled"],
+                out var consoleExporterEnabled
+            )
+        )
         {
             environmentVariables.Add(
                 $"ScriptBee__Telemetry__ConsoleExporterEnabled={consoleExporterEnabled}"
