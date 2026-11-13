@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { Hono } from "hono";
 import { applyOtelMiddleware, createTelemetrySdk } from "../src/telemetry.js";
 
 describe("createTelemetrySdk", () => {
