@@ -15,12 +15,12 @@
   "private": true,
   "packageManager": "npm@12.2.1",
   "dependencies": {
-    "@angular/common": "^22.2.4",
-    "@angular/compiler": "^22.2.5",
-    "@angular/core": "^22.2.4",
-    "@angular/forms": "^22.2.4",
-    "@angular/platform-browser": "^22.2.4",
-    "@angular/router": "^22.2.4",
+    "@angular/common": "^22.2.6",
+    "@angular/compiler": "^22.2.6",
+    "@angular/core": "^22.2.6",
+    "@angular/forms": "^22.2.6",
+    "@angular/platform-browser": "^22.2.6",
+    "@angular/router": "^22.2.6",
     "echarts": "^6.1.0",
     "echarts-stat": "^1.2.0",
     "ngx-echarts": "^22.0.0",
@@ -30,8 +30,8 @@
   "devDependencies": {
     "@angular-architects/native-federation": "^22.2.4",
     "@angular/build": "^22.2.7",
-    "@angular/cli": "^22.2.4",
-    "@angular/compiler-cli": "^22.2.4",
+    "@angular/cli": "^22.2.7",
+    "@angular/compiler-cli": "^22.2.6",
     "@eslint/js": "^10.0.1",
     "@softarc/native-federation-orchestrator": "^4.9.0",
     "@vitest/browser-playwright": "^5.0.5",
@@ -45,7 +45,7 @@
     "prettier": "^3.9.10",
     "prettier-eslint": "^17.1.2",
     "typescript": "~6.0.3",
-    "typescript-eslint": "8.72.2",
+    "typescript-eslint": "8.72.1",
     "vitest": "^5.0.5"
   }
 }

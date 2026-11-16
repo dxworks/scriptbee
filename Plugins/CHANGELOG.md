@@ -7,6 +7,15 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- update `@angular/common` to 22.2.6
+- update `@angular/compiler` to 22.2.6
+- update `@angular/core` to 22.2.6
+- update `@angular/forms` to 22.2.6
+- update `@angular/platform-browser` to 22.2.6
+- update `@angular/router` to 22.2.6
+
 ## [2.4.0]
 
 ### Changed
