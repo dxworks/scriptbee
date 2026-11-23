@@ -15,8 +15,4 @@
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Generated\**" />
-  </ItemGroup>
 </Project>

@@ -103,7 +103,7 @@ internal static class ServicesExtensions
         services.AddTransient<GatewayAuthHandler>();
 
         services
-            .AddRefitGeneratedClient<IGatewayApi>()
+            .AddRefitClient<IGatewayApi>()
             .ConfigureHttpClient(c =>
                 c.BaseAddress = new Uri(configuration["GatewayApiUrl"] ?? "http://localhost:5117")
             )

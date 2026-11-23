@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
-using ScriptBee.MCP.Gateway.Generated;
 
 namespace ScriptBee.MCP.Prompts;
 
