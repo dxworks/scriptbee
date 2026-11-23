@@ -39,10 +39,8 @@ internal class PluginRepository : IPluginRepository, IPluginRegistry
 
     public void RegisterPlugin(Plugin plugin)
     {
-        _plugins.AddOrUpdate(
-            plugin.Id.Name,
-            plugin,
-            (_, manifest) => manifest.Id.Version < plugin.Id.Version ? plugin : manifest
+        _plugins.AddOrUpdate(plugin.Id.Name, plugin, (_, manifest) =>
+            manifest.Id.Version < plugin.Id.Version ? plugin : manifest
         );
     }
 

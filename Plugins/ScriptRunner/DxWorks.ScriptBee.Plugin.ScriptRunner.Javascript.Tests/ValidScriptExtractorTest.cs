@@ -75,19 +75,19 @@ public class ValidScriptExtractorTest : IAsyncLifetime
     [InlineData("class DummyModel {")]
     [InlineData(
         """
-            class DummyModel {
+        class DummyModel {
 
-            // start script
+        // start script
 
-            some text }
-            """
+        some text }
+        """
     )]
     [InlineData(
         """
-            class DummyModel {
+        class DummyModel {
 
-            // end script
-            """
+        // end script
+        """
     )]
     public void ExtractValidScript_InvalidCases(string? script)
     {

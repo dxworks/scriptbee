@@ -252,9 +252,8 @@ public class BundlePluginInstaller(
         {
             var installResult = await Install(id, cancellationToken);
 
-            installResult.Switch(
-                installedPluginIds.AddRange,
-                _ => pluginIdsThatCouldNotBeInstalled.Add(id)
+            installResult.Switch(installedPluginIds.AddRange, _ =>
+                pluginIdsThatCouldNotBeInstalled.Add(id)
             );
         }
 

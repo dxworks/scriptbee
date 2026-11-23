@@ -32,9 +32,10 @@ public class InstallPluginService(
         {
             var projectId = ProjectId.FromValue(projectManager.GetProject().Id);
 
-            var plugin =
-                pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(projectId), pluginId)
-                ?? pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(), pluginId);
+            var plugin = pluginReader.ReadPlugin(
+                pluginPathProvider.GetPathToPlugins(projectId),
+                pluginId
+            ) ?? pluginReader.ReadPlugin(pluginPathProvider.GetPathToPlugins(), pluginId);
 
             if (plugin is null)
             {

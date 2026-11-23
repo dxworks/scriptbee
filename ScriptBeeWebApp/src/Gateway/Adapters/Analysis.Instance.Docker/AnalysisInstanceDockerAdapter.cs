@@ -40,8 +40,7 @@ public class AnalysisInstanceDockerAdapter(
 
         var hostPort = freePortProvider.GetFreeTcpPort();
 
-        var mongoDbConnectionString =
-            analysisDockerConfig.MongoDbConnectionString
+        var mongoDbConnectionString = analysisDockerConfig.MongoDbConnectionString
             ?? configuration.GetConnectionString("mongodb");
 
         var response = await client.Containers.CreateContainerAsync(

@@ -32,9 +32,8 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
             );
 
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -53,9 +52,8 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult(new List<ProjectMember>()));
 
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -75,9 +73,8 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.CompletedTask);
 
         var response = await api.PutApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new WebUpdateProjectMemberCommand("editor", "user")
         );
@@ -123,9 +120,8 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.CompletedTask);
 
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -151,9 +147,8 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult(new List<UserInfo> { new(new UserId("id-1"), "Alice") }));
 
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -175,9 +170,8 @@ public class ManageProjectAccessEndpointTests(ITestOutputHelper outputHelper)
             );
 
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 

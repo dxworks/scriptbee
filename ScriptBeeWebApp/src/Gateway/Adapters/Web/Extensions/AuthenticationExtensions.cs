@@ -173,56 +173,38 @@ public static class AuthenticationExtensions
 
         private void AddHttpClientsFromConfigUrl(AuthenticationConfig config)
         {
-            services.AddHttpClient(
-                AuthorizeExternally.ClientName,
-                client =>
-                    client.BaseAddress = new Uri(
-                        GetUrlFromConfig(
-                            config,
-                            c => c.ExternalAuthorizationUrl,
-                            nameof(config.ExternalAuthorizationUrl)
-                        )
+            services.AddHttpClient(AuthorizeExternally.ClientName, client =>
+                client.BaseAddress = new Uri(
+                    GetUrlFromConfig(
+                        config,
+                        c => c.ExternalAuthorizationUrl,
+                        nameof(config.ExternalAuthorizationUrl)
                     )
+                )
             );
-            services.AddHttpClient(
-                GetDefaultCreatorRole.ClientName,
-                client =>
-                    client.BaseAddress = new Uri(
-                        GetUrlFromConfig(
-                            config,
-                            c => c.DefaultCreatorRoleUrl,
-                            nameof(config.DefaultCreatorRoleUrl)
-                        )
+            services.AddHttpClient(GetDefaultCreatorRole.ClientName, client =>
+                client.BaseAddress = new Uri(
+                    GetUrlFromConfig(
+                        config,
+                        c => c.DefaultCreatorRoleUrl,
+                        nameof(config.DefaultCreatorRoleUrl)
                     )
+                )
             );
-            services.AddHttpClient(
-                GetProjectPermissions.ClientName,
-                client =>
-                    client.BaseAddress = new Uri(
-                        GetUrlFromConfig(
-                            config,
-                            c => c.PermissionsUrl,
-                            nameof(config.PermissionsUrl)
-                        )
-                    )
+            services.AddHttpClient(GetProjectPermissions.ClientName, client =>
+                client.BaseAddress = new Uri(
+                    GetUrlFromConfig(config, c => c.PermissionsUrl, nameof(config.PermissionsUrl))
+                )
             );
-            services.AddHttpClient(
-                GetGlobalPermissions.ClientName,
-                client =>
-                    client.BaseAddress = new Uri(
-                        GetUrlFromConfig(
-                            config,
-                            c => c.PermissionsUrl,
-                            nameof(config.PermissionsUrl)
-                        )
-                    )
+            services.AddHttpClient(GetGlobalPermissions.ClientName, client =>
+                client.BaseAddress = new Uri(
+                    GetUrlFromConfig(config, c => c.PermissionsUrl, nameof(config.PermissionsUrl))
+                )
             );
-            services.AddHttpClient(
-                GetAvailableRoles.ClientName,
-                client =>
-                    client.BaseAddress = new Uri(
-                        GetUrlFromConfig(config, c => c.RolesUrl, nameof(config.RolesUrl))
-                    )
+            services.AddHttpClient(GetAvailableRoles.ClientName, client =>
+                client.BaseAddress = new Uri(
+                    GetUrlFromConfig(config, c => c.RolesUrl, nameof(config.RolesUrl))
+                )
             );
         }
     }

@@ -26,13 +26,10 @@ public class DeleteProjectEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult<OneOf<Success>>(new Success()));
 
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(deleteProjectUseCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(deleteProjectUseCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);

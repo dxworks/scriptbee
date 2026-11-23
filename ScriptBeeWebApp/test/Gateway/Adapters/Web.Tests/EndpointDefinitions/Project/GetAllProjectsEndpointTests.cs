@@ -36,13 +36,10 @@ public class GetAllProjectsEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult(projectDetailsList));
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(getProjectsUseCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(getProjectsUseCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);

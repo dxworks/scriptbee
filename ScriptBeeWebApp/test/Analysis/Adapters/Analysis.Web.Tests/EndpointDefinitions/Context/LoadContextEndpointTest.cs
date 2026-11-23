@@ -46,13 +46,10 @@ public class LoadContextEndpointTest(ITestOutputHelper outputHelper)
     {
         var useCase = Substitute.For<ILoadContextUseCase>();
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLoadContextCommand(
                 new Dictionary<string, List<string>>
                 {

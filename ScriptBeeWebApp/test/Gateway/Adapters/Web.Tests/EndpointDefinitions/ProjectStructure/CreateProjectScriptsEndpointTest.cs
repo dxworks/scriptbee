@@ -75,13 +75,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
@@ -132,13 +129,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebCreateScriptCommand(
                 "path",
                 "csharp",
@@ -179,13 +173,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
@@ -206,13 +197,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebCreateScriptCommand("path", "csharp", null)
         );
 
@@ -231,13 +219,10 @@ public class CreateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult<CreateResponse>(new ScriptPathAlreadyExistsError("path")));
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebCreateScriptCommand("path", "csharp", null)
         );
 

@@ -40,13 +40,10 @@ public class DeleteSavedFileEndpointTest(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -68,13 +65,10 @@ public class DeleteSavedFileEndpointTest(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -100,13 +94,10 @@ public class DeleteSavedFileEndpointTest(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert

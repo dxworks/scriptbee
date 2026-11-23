@@ -14,8 +14,7 @@ public static class TelemetryExtensions
         string serviceName
     )
     {
-        var options =
-            configuration.GetSection("ScriptBee:Telemetry").Get<TelemetryOptions>()
+        var options = configuration.GetSection("ScriptBee:Telemetry").Get<TelemetryOptions>()
             ?? new TelemetryOptions();
 
         if (!options.Enabled)

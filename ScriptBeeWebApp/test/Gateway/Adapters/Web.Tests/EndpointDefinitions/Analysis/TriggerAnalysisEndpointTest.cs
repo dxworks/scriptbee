@@ -63,13 +63,10 @@ public class TriggerAnalysisEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebTriggerAnalysisCommand(scriptId.ToString())
         );
 
@@ -98,13 +95,10 @@ public class TriggerAnalysisEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebTriggerAnalysisCommand(scriptId.ToString())
         );
 

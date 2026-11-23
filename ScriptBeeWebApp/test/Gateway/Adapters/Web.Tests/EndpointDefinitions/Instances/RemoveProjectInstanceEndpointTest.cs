@@ -29,13 +29,10 @@ public class RemoveProjectInstanceEndpointTest(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult<OneOf<Success, ProjectDoesNotExistsError>>(new Success()));
 
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -57,13 +54,10 @@ public class RemoveProjectInstanceEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl);

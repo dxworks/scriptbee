@@ -17,13 +17,10 @@ public class ClearContextEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IClearContextUseCase>();
 
         var response = await _api.PostApi<object>(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);

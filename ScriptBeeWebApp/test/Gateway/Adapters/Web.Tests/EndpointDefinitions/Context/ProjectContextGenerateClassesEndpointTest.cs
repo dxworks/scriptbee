@@ -36,13 +36,10 @@ public class ProjectContextGenerateClassesEndpointTest(ITestOutputHelper outputH
             .Returns(Task.FromResult<OneOf<Stream, InstanceDoesNotExistsError>>(stream));
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebProjectContextGenerateClassesRequest(null)
         );
 
@@ -70,13 +67,10 @@ public class ProjectContextGenerateClassesEndpointTest(ITestOutputHelper outputH
             .Returns(Task.FromResult<OneOf<Stream, InstanceDoesNotExistsError>>(stream));
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebProjectContextGenerateClassesRequest(languages)
         );
 
@@ -106,13 +100,10 @@ public class ProjectContextGenerateClassesEndpointTest(ITestOutputHelper outputH
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebProjectContextGenerateClassesRequest(null)
         );
 

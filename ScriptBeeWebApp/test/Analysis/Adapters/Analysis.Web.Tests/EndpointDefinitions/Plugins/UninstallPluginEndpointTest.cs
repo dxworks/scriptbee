@@ -22,13 +22,10 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
         const string url = $"{TestUrl}?version={version}";
         var api = new TestApiCaller<Program>(url);
         var response = await api.DeleteApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -42,13 +39,10 @@ public class UninstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         var api = new TestApiCaller<Program>(TestUrl);
         var response = await api.DeleteApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);

@@ -46,13 +46,10 @@ public class LinkContextEndpointTest(ITestOutputHelper outputHelper)
         List<string> linkerIds = ["linker-id"];
         var useCase = Substitute.For<ILinkContextUseCase>();
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLinkContextCommand(linkerIds)
         );
 

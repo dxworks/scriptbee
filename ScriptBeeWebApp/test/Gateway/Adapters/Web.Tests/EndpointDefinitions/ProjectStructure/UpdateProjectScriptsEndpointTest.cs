@@ -68,13 +68,10 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PatchApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebUpdateScriptCommand(null, [new WebScriptParameter("parameter", type, value)])
         );
 
@@ -116,13 +113,10 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PatchApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebUpdateScriptCommand("name", null)
         );
 
@@ -145,13 +139,10 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PatchApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebUpdateScriptCommand(null, null)
         );
 
@@ -170,13 +161,10 @@ public class UpdateProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult<UpdateResponse>(new ScriptDoesNotExistsError(_scriptId)));
 
         var response = await _api.PatchApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebUpdateScriptCommand(null, null)
         );
 

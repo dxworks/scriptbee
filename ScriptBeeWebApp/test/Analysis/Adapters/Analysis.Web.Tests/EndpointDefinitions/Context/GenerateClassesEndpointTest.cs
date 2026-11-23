@@ -22,13 +22,10 @@ public class GenerateClassesEndpointTest(ITestOutputHelper outputHelper)
             .Returns(new List<SampleCodeFile>());
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebGenerateClassesRequest(null)
         );
 
@@ -49,13 +46,10 @@ public class GenerateClassesEndpointTest(ITestOutputHelper outputHelper)
             .Returns(new List<SampleCodeFile>());
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebGenerateClassesRequest(languages)
         );
 

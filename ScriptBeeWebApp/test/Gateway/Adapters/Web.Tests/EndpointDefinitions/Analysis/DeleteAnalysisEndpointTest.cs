@@ -31,13 +31,10 @@ public class DeleteAnalysisEndpointTest(ITestOutputHelper outputHelper)
             .Returns(Task.CompletedTask);
 
         var response = await _api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);

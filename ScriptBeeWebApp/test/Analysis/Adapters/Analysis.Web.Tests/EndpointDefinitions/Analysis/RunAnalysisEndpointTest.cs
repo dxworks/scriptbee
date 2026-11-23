@@ -75,13 +75,10 @@ public class RunAnalysisEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(runAnalysisUseCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(runAnalysisUseCase);
+            }),
             new WebRunAnalysisCommand("project-id", "e22be395-a668-4a26-81e7-67682afb1320")
         );
 

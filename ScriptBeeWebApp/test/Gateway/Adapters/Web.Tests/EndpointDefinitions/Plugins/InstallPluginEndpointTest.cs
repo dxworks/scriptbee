@@ -22,13 +22,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PutApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -57,13 +54,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         // Act
         TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
         var response = await api.PutApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -91,13 +85,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
         var response = await api.PutApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl);
@@ -125,13 +116,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
         var response = await api.PutApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
@@ -173,13 +161,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new($"{TestUrl}?version=1.2.3");
         var response = await api.PutApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);

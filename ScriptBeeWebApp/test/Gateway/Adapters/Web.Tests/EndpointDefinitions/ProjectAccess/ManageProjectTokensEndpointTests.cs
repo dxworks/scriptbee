@@ -51,9 +51,8 @@ public class ManageProjectTokensEndpointTests(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -72,9 +71,8 @@ public class ManageProjectTokensEndpointTests(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult(new List<ProjectToken>()));
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -110,9 +108,8 @@ public class ManageProjectTokensEndpointTests(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new WebCreateProjectTokenRequest("CI token", "viewer", expiresAt)
         );
@@ -159,9 +156,8 @@ public class ManageProjectTokensEndpointTests(ITestOutputHelper outputHelper)
         var response = await new TestApiCaller<Program>(
             "/api/projects/project-id/tokens/token-1"
         ).DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 

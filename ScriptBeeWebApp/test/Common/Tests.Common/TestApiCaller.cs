@@ -18,9 +18,8 @@ public class TestApiCaller<TStartup>(string endpoint)
             MediaTypeNames.Application.Json
         );
 
-        return await SendApiRequest(
-            factory,
-            client => client.PostAsync(endpoint, content, TestContext.Current.CancellationToken)
+        return await SendApiRequest(factory, client =>
+            client.PostAsync(endpoint, content, TestContext.Current.CancellationToken)
         );
     }
 
@@ -35,9 +34,8 @@ public class TestApiCaller<TStartup>(string endpoint)
             MediaTypeNames.Application.Json
         );
 
-        return await SendApiRequest(
-            factory,
-            client => client.PatchAsync(endpoint, content, TestContext.Current.CancellationToken)
+        return await SendApiRequest(factory, client =>
+            client.PatchAsync(endpoint, content, TestContext.Current.CancellationToken)
         );
     }
 
@@ -48,9 +46,8 @@ public class TestApiCaller<TStartup>(string endpoint)
 
     public async Task<HttpResponseMessage> GetApi(TestWebApplicationFactory<TStartup> factory)
     {
-        return await SendApiRequest(
-            factory,
-            client => client.GetAsync(endpoint, TestContext.Current.CancellationToken)
+        return await SendApiRequest(factory, client =>
+            client.GetAsync(endpoint, TestContext.Current.CancellationToken)
         );
     }
 
@@ -74,9 +71,8 @@ public class TestApiCaller<TStartup>(string endpoint)
             mediaType
         );
 
-        return await SendApiRequest(
-            factory,
-            client => client.PutAsync(endpoint, content, TestContext.Current.CancellationToken)
+        return await SendApiRequest(factory, client =>
+            client.PutAsync(endpoint, content, TestContext.Current.CancellationToken)
         );
     }
 
@@ -98,10 +94,8 @@ public class TestApiCaller<TStartup>(string endpoint)
             multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
         }
 
-        return await SendApiRequest(
-            factory,
-            client =>
-                client.PutAsync(endpoint, multipartContent, TestContext.Current.CancellationToken)
+        return await SendApiRequest(factory, client =>
+            client.PutAsync(endpoint, multipartContent, TestContext.Current.CancellationToken)
         );
     }
 
@@ -123,10 +117,8 @@ public class TestApiCaller<TStartup>(string endpoint)
             multipartContent.Add(new ByteArrayContent(file.Value), file.Key, file.Key);
         }
 
-        return await SendApiRequest(
-            factory,
-            client =>
-                client.PostAsync(endpoint, multipartContent, TestContext.Current.CancellationToken)
+        return await SendApiRequest(factory, client =>
+            client.PostAsync(endpoint, multipartContent, TestContext.Current.CancellationToken)
         );
     }
 

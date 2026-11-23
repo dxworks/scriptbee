@@ -43,13 +43,10 @@ public class GetAvailablePluginByIdEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -68,13 +65,10 @@ public class GetAvailablePluginByIdEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);

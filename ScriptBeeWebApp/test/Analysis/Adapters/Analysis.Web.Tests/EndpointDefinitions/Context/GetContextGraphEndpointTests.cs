@@ -34,9 +34,8 @@ public class GetContextGraphEndpointTests(ITestOutputHelper outputHelper)
 
         var response = await _api.GetApi(
             "?query=test&offset=0&limit=10",
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -66,9 +65,8 @@ public class GetContextGraphEndpointTests(ITestOutputHelper outputHelper)
 
         var response = await _api.GetApi(
             "/node-1/neighbors",
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 

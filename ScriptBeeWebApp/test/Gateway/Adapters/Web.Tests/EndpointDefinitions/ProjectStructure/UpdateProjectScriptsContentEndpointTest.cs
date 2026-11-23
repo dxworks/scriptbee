@@ -35,13 +35,10 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
             .Returns(Task.FromResult<UpdateResponse>(new Success()));
 
         var response = await _api.PutApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             "content",
             MediaTypeNames.Text.Plain
         );
@@ -62,13 +59,10 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
             );
 
         var response = await _api.PutApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             "content",
             MediaTypeNames.Text.Plain
         );
@@ -85,13 +79,10 @@ public class UpdateProjectScriptsContentEndpointTest(ITestOutputHelper outputHel
             .Returns(Task.FromResult<UpdateResponse>(new ScriptDoesNotExistsError(_scriptId)));
 
         var response = await _api.PutApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             "content",
             MediaTypeNames.Text.Plain
         );
