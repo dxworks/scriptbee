@@ -9,11 +9,11 @@
     <PackageVersion Include="DxWorks.Hub.Sdk" Version="2.0.0" />
     <PackageVersion Include="FluentValidation" Version="12.2.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.15" />
     <PackageVersion Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="10.0.14" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.14" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
@@ -39,7 +39,7 @@
     <PackageVersion Include="Westwind.Utilities" Version="5.3.6.1" />
     <PackageVersion Include="WireMock.Net" Version="2.30.0" />
     <PackageVersion Include="YamlDotNet" Version="18.1.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.12.0" />
     <PackageVersion Include="CsvHelper" Version="34.0.0" />
     <PackageVersion Include="Jint" Version="4.17.0" />
     <PackageVersion Include="IronPython" Version="3.4.2" />
