@@ -62,12 +62,12 @@ jobs:
             -p:Version=${{ steps.meta.outputs.version }}
 
       - name: Pack
-        run: >
-          dotnet pack DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
-          --no-build
-          -c Release
-          -p:Version=${{ steps.meta.outputs.version }}
-          -o ./nuget-output
+        run: |
+          dotnet pack DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj \
+            --no-build \
+            -c Release \
+            -p:Version=${{ steps.meta.outputs.version }} \
+            -o ./nuget-output
 
       - name: Push to NuGet
         run: >
