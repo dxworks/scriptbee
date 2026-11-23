@@ -54,7 +54,7 @@ public class GetInstanceContextGraphAdapter(IHttpClientFactory httpClientFactory
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        return RestService.For<IAnalysisApi>(client);
+        return RestService.ForGenerated<IAnalysisApi>(client);
     }
 
     private static ContextGraphNode MapNode(GeneratedContracts.ContextGraphNode node)

@@ -18,7 +18,7 @@ public class InstallPluginAdapter(IHttpClientFactory httpClientFactory) : IInsta
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var analysisApi = RestService.For<IAnalysisApi>(client);
+        var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
 
         var request = new InstallPluginCommand(pluginId.Name, pluginId.Version.ToString());
         await analysisApi.PluginsPost(request, cancellationToken);

@@ -17,7 +17,7 @@ public class UninstallPluginAdapter(IHttpClientFactory httpClientFactory) : IUni
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var analysisApi = RestService.For<IAnalysisApi>(client);
+        var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
 
         await analysisApi.PluginsDelete(
             pluginId.Name,

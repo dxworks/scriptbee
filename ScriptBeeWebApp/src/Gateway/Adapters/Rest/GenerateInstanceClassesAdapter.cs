@@ -19,7 +19,7 @@ public class GenerateInstanceClassesAdapter(IHttpClientFactory httpClientFactory
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var analysisApi = RestService.For<IAnalysisApi>(client);
+        var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
 
         return await analysisApi.GenerateClasses(
             new GenerateClassesRequest(languages, transferFormat ?? string.Empty),

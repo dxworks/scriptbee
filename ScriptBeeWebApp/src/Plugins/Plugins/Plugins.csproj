@@ -4,7 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="YamlDotNet" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ public class LoadInstanceContextAdapter(IHttpClientFactory httpClientFactory) : 
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var analysisApi = RestService.For<IAnalysisApi>(client);
+        var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
 
         await analysisApi.Load(
             new LoadContextCommand(ConvertFilesToLoad(filesToLoad)),

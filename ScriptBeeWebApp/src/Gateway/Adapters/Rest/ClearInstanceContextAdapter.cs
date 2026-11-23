@@ -16,7 +16,7 @@ public class ClearInstanceContextAdapter(IHttpClientFactory httpClientFactory)
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var contextApi = RestService.For<IAnalysisApi>(client);
+        var contextApi = RestService.ForGenerated<IAnalysisApi>(client);
 
         await contextApi.Clear(cancellationToken);
     }
