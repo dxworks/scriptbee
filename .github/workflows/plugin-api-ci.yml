@@ -23,13 +23,16 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: '11.0.x'
 
       - name: Restore dependencies
         run: dotnet restore DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
 
-      - name: Build
-        run: dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj -c Release --no-restore
+      - name: Build .NET 10
+        run: dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj -c Release --no-restore -f net10.0
+    
+      - name: Build .NET 11
+        run: dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj -c Release --no-restore -f net11.0
 
       - name: Pack (validate)
         run: dotnet pack DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj --no-build -c Release

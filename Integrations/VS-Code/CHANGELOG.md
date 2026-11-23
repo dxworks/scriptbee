@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- update `@microsoft/signalr` to 11.0.0
+- update `axios` to 1.21.1
+
 ## [1.3.0]
 
 ### Changed
