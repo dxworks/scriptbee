@@ -28,9 +28,9 @@
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="11.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Resilience" Version="11.0.1" />
     <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="2.4.0" />
-    <PackageVersion Include="Refit" Version="17.0.0" />
-    <PackageVersion Include="Refit.HttpClientFactory" Version="17.0.0" />
-    <PackageVersion Include="Refitter.SourceGenerator" Version="2.4.2" />
+    <PackageVersion Include="Refit" Version="16.4.0" />
+    <PackageVersion Include="Refit.HttpClientFactory" Version="16.4.0" />
+    <PackageVersion Include="Refitter.SourceGenerator" Version="2.3.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="11.0.0" />
     <PackageVersion Include="Serilog.Expressions" Version="5.0.0" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="11.0.0" />
