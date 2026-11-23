@@ -42,13 +42,10 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
 
         var api = new TestApiCaller<Program>(TestUrl);
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -87,13 +84,10 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         const string testUrl = $"{TestUrl}/a60eafb2-7f85-432e-891e-863bdfab59fe";
         var api = new TestApiCaller<Program>(testUrl);
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -120,13 +114,10 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         const string testUrl = $"{TestUrl}/e9ca58a1-c3cf-4bc1-9252-970484c67215";
         var api = new TestApiCaller<Program>(testUrl);
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertScriptDoesNotExistProblem(
@@ -151,13 +142,10 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         const string testUrl = $"{TestUrl}/04389d95-b217-45da-b690-c3f283134d9e/content";
         var api = new TestApiCaller<Program>(testUrl);
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -188,13 +176,10 @@ public class GetProjectScriptsEndpointTest(ITestOutputHelper outputHelper)
         const string testUrl = $"{TestUrl}/58cdce76-e1ff-4011-9d41-31138da9e94a/content";
         var api = new TestApiCaller<Program>(testUrl);
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertScriptDoesNotExistProblem(

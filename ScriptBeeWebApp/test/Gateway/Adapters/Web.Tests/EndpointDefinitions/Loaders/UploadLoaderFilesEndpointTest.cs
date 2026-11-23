@@ -54,13 +54,10 @@ public class UploadLoaderFilesEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PutApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new Dictionary<string, string>(),
             new Dictionary<string, byte[]> { { "file-1", "test-content"u8.ToArray() } }
         );
@@ -92,13 +89,10 @@ public class UploadLoaderFilesEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PutApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new Dictionary<string, string>(),
             new Dictionary<string, byte[]> { { "file-1", "test-content"u8.ToArray() } }
         );

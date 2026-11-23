@@ -91,13 +91,10 @@ public class GetAllAnalysisStatusEndpointTest(ITestOutputHelper outputHelper)
 
         var response = await _api.GetApi(
             queryParams,
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
         return response;
     }

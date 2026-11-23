@@ -32,13 +32,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -52,13 +49,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             request
         );
 
@@ -77,13 +71,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new($"{TestUrl}/{pluginId}?version={version}");
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -115,13 +106,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new($"{TestUrl}?kind=UI");
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -145,13 +133,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new("/api/plugins/gateway/ui/manifest");
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -176,13 +161,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
         try
         {
             var response = await api.GetApi(
-                new TestWebApplicationFactory<Program>(
-                    outputHelper,
-                    services =>
-                    {
-                        services.AddSingleton(useCase);
-                    }
-                )
+                new TestWebApplicationFactory<Program>(outputHelper, services =>
+                {
+                    services.AddSingleton(useCase);
+                })
             );
 
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -210,13 +192,10 @@ public class ManageGatewayPluginsEndpointTests(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new("/api/plugins/gateway/ui/files/id/1.0.0/invalid.js");
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);

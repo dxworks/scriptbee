@@ -34,9 +34,8 @@ public class InstallPluginFromUploadEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new Dictionary<string, string>(),
             new Dictionary<string, byte[]> { { "file", [1, 2, 3] } }
@@ -62,9 +61,8 @@ public class InstallPluginFromUploadEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new Dictionary<string, string>(),
             new Dictionary<string, byte[]> { { "file", [1, 2, 3] } }
@@ -84,9 +82,8 @@ public class InstallPluginFromUploadEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new Dictionary<string, string>(),
             new Dictionary<string, byte[]> { { "file", [1, 2, 3] } }
@@ -115,9 +112,8 @@ public class InstallPluginFromUploadEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApiFormWithFile(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new Dictionary<string, string>(),
             new Dictionary<string, byte[]> { { "file", [1, 2, 3] } }

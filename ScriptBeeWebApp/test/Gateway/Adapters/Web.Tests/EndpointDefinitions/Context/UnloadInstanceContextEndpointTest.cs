@@ -48,13 +48,10 @@ public class UnloadInstanceContextEndpointTest(ITestOutputHelper outputHelper)
         // Act
         var api = new TestApiCaller<Program>(FileUrl);
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -87,13 +84,10 @@ public class UnloadInstanceContextEndpointTest(ITestOutputHelper outputHelper)
         // Act
         var api = new TestApiCaller<Program>(LoaderUrl);
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -116,13 +110,10 @@ public class UnloadInstanceContextEndpointTest(ITestOutputHelper outputHelper)
         // Act
         var api = new TestApiCaller<Program>(FileUrl);
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -146,13 +137,10 @@ public class UnloadInstanceContextEndpointTest(ITestOutputHelper outputHelper)
         // Act
         var api = new TestApiCaller<Program>(FileUrl);
         var response = await api.DeleteApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert

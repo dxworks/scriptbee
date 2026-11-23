@@ -29,13 +29,10 @@ public class AddProjectInstanceEndpointTest(ITestOutputHelper outputHelper)
             .Returns(Task.FromResult<OneOf<InstanceInfo, ProjectDoesNotExistsError>>(instanceInfo));
 
         var response = await _api.PostApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.Created);
@@ -61,13 +58,10 @@ public class AddProjectInstanceEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi<object>(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl);

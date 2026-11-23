@@ -229,8 +229,8 @@ public sealed class AnalysisInstanceKubernetesAdapter(
         AnalysisKubernetesConfig config
     )
     {
-        var mongoConnectionString =
-            config.MongoDbConnectionString ?? configuration.GetConnectionString("mongodb");
+        var mongoConnectionString = config.MongoDbConnectionString
+            ?? configuration.GetConnectionString("mongodb");
 
         var envVars = new List<V1EnvVar>
         {

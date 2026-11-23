@@ -23,13 +23,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         useCase.InstallPlugin(pluginId).Returns(new Success());
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebInstallPluginCommand("test-plugin", "1.0.0")
         );
 
@@ -43,13 +40,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IInstallPluginUseCase>();
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebInstallPluginCommand("", "1.0.0")
         );
 
@@ -62,13 +56,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         var useCase = Substitute.For<IInstallPluginUseCase>();
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebInstallPluginCommand("test-plugin", "")
         );
 
@@ -85,13 +76,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         useCase.InstallPlugin(pluginId).Returns(invalidPluginError);
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebInstallPluginCommand("test-plugin", "1.0.0")
         );
 
@@ -107,13 +95,10 @@ public class InstallPluginEndpointTest(ITestOutputHelper outputHelper)
         useCase.InstallPlugin(pluginId).Returns(installError);
 
         var response = await _api.PostApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebInstallPluginCommand("test-plugin", "1.0.0")
         );
 

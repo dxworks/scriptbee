@@ -34,13 +34,10 @@ public class GetAnalysisScriptContentEndpointTest(ITestOutputHelper outputHelper
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -66,13 +63,10 @@ public class GetAnalysisScriptContentEndpointTest(ITestOutputHelper outputHelper
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertAnalysisNotFoundProblem(response, TestUrl, analysisId.ToString());
@@ -94,13 +88,10 @@ public class GetAnalysisScriptContentEndpointTest(ITestOutputHelper outputHelper
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertScriptDoesNotExistProblem(response, TestUrl, scriptId.ToString());

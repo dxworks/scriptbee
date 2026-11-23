@@ -20,13 +20,10 @@ public class GetContextEndpointTest(ITestOutputHelper outputHelper)
         useCase.Get().Returns([new ContextSlice("model", ["plugin-id"])]);
 
         var response = await _api.GetApi(
-            new AnalysisTestWebApplicationFactory(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new AnalysisTestWebApplicationFactory(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);

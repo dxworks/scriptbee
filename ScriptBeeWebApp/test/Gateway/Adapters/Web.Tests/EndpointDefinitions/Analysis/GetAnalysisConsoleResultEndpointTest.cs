@@ -30,13 +30,10 @@ public class GetAnalysisConsoleResultEndpointTest(ITestOutputHelper outputHelper
             .Returns(Task.FromResult<OneOf<string, AnalysisDoesNotExistsError>>("console content"));
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -59,13 +56,10 @@ public class GetAnalysisConsoleResultEndpointTest(ITestOutputHelper outputHelper
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertAnalysisNotFoundProblem(

@@ -30,13 +30,10 @@ public class GetLoadersEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);

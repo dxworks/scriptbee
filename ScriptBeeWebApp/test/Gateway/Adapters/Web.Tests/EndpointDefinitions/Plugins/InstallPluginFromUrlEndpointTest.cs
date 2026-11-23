@@ -39,9 +39,8 @@ public class InstallPluginFromUrlEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new WebInstallPluginFromUrlRequest("https://example.com/plugin.zip")
         );
@@ -70,9 +69,8 @@ public class InstallPluginFromUrlEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new WebInstallPluginFromUrlRequest("https://example.com/plugin.zip")
         );
@@ -95,9 +93,8 @@ public class InstallPluginFromUrlEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new WebInstallPluginFromUrlRequest("https://example.com/plugin.zip")
         );
@@ -129,9 +126,8 @@ public class InstallPluginFromUrlEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new(TestUrl);
         var response = await api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             ),
             new WebInstallPluginFromUrlRequest("https://example.com/plugin.zip")
         );

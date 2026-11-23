@@ -81,13 +81,10 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLoadContextCommand(null, filesToLoad)
         );
 
@@ -111,13 +108,10 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLoadContextCommand(null, filesToLoad)
         );
 
@@ -142,13 +136,10 @@ public class ProjectContextLoadEndpointTest(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLoadContextCommand(null, filesToLoad)
         );
 

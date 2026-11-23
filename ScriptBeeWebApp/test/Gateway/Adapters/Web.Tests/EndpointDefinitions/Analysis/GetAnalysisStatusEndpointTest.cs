@@ -48,13 +48,10 @@ public class GetAnalysisStatusEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.Accepted, responsePath);
@@ -90,13 +87,10 @@ public class GetAnalysisStatusEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -117,13 +111,10 @@ public class GetAnalysisStatusEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertAnalysisNotFoundProblem(

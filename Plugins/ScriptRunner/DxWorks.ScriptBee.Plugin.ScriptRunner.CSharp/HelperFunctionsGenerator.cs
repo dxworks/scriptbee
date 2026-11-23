@@ -204,8 +204,8 @@ public static class HelperFunctionsGenerator
         var genericParameterConstraints = type.GetGenericParameterConstraints();
         foreach (var genericParameterConstraint in genericParameterConstraints)
         {
-            var constraintName =
-                genericParameterConstraint.FullName ?? genericParameterConstraint.Name;
+            var constraintName = genericParameterConstraint.FullName
+                ?? genericParameterConstraint.Name;
             if (constraintName == typeof(ValueType).FullName)
             {
                 yield return "struct";

@@ -55,8 +55,7 @@ public sealed class CurrentUser(UserId id, List<UserGroup> groups)
             authConfig.UserIdClaim != null
                 ? claimsPrincipal.FindFirst(authConfig.UserIdClaim)?.Value
                 : claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var userName =
-            claimsPrincipal.FindFirst(ClaimTypes.GivenName)?.Value
+        var userName = claimsPrincipal.FindFirst(ClaimTypes.GivenName)?.Value
             ?? claimsPrincipal.FindFirst(ClaimTypes.Surname)?.Value
             ?? claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value
             ?? claimsPrincipal.FindFirst(ClaimTypes.WindowsAccountName)?.Value

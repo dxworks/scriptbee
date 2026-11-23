@@ -51,9 +51,8 @@ public class GetProjectContextGraphEndpointTests(ITestOutputHelper outputHelper)
 
         var response = await _api.GetApi(
             "?query=test&offset=5&limit=20",
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -94,9 +93,8 @@ public class GetProjectContextGraphEndpointTests(ITestOutputHelper outputHelper)
 
         var response = await _api.GetApi(
             "/neighbors?nodeId=node-1",
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 
@@ -118,9 +116,8 @@ public class GetProjectContextGraphEndpointTests(ITestOutputHelper outputHelper)
 
         var response = await _api.GetApi(
             "?query=test",
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services => services.AddSingleton(useCase)
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+                services.AddSingleton(useCase)
             )
         );
 

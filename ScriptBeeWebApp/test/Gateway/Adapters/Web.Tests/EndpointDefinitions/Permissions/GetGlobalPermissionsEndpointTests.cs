@@ -28,13 +28,10 @@ public class GetGlobalPermissionsEndpointTests(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert
@@ -56,13 +53,10 @@ public class GetGlobalPermissionsEndpointTests(ITestOutputHelper outputHelper)
 
         // Act
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         // Assert

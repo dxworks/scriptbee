@@ -68,13 +68,10 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLinkContextCommand(["linker-id"])
         );
 
@@ -95,13 +92,10 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLinkContextCommand(["linker-id"])
         );
 
@@ -122,13 +116,10 @@ public class ProjectContextLinkEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.PostApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            ),
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            }),
             new WebLinkContextCommand(["linker-id"])
         );
 

@@ -39,13 +39,10 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -79,13 +76,10 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertAnalysisNotFoundProblem(
@@ -115,13 +109,10 @@ public class DownloadAnalysisFileResultsEndpointTest(ITestOutputHelper outputHel
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertAnalysisResultNotFoundProblem(

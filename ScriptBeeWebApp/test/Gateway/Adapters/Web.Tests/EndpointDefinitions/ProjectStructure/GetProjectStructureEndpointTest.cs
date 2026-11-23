@@ -86,13 +86,10 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertProjectNotFoundProblem(response, TestUrl, "id");
@@ -119,13 +116,10 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await AssertScriptDoesNotExistProblem(response, TestUrl, scriptId.ToString());
@@ -167,13 +161,10 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
             );
 
         var response = await _api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -222,13 +213,10 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
             $"{TestUrl}?parentId=0116d483-9f7a-4038-9da5-ebf98c81ce79&offset={2}&limit={3}"
         );
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
@@ -252,13 +240,10 @@ public class GetProjectStructureEndpointTest(ITestOutputHelper outputHelper)
 
         TestApiCaller<Program> api = new("/api/projects/id/structure/available-script-types");
         var response = await api.GetApi(
-            new TestWebApplicationFactory<Program>(
-                outputHelper,
-                services =>
-                {
-                    services.AddSingleton(useCase);
-                }
-            )
+            new TestWebApplicationFactory<Program>(outputHelper, services =>
+            {
+                services.AddSingleton(useCase);
+            })
         );
 
         await response.AssertResponse(HttpStatusCode.OK, responsePath);
