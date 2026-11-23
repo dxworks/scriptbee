@@ -45,12 +45,21 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
 
-      - name: Build
-        run: >
-          dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj
-          --no-restore
-          -c Release
-          -p:Version=${{ steps.meta.outputs.version }}
+      - name: Build .NET 10
+        run: |
+          dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj \
+            --no-restore \
+            -c Release \
+            -f net10.0 \
+            -p:Version=${{ steps.meta.outputs.version }}
+    
+      - name: Build .NET 11
+        run: |
+          dotnet build DxWorks.ScriptBee.Plugin.Api/DxWorks.ScriptBee.Plugin.Api.csproj \
+            --no-restore \
+            -c Release \
+            -f net11.0 \
+            -p:Version=${{ steps.meta.outputs.version }}
 
       - name: Pack
         run: >
