@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <RootNamespace>DxWorks.ScriptBee.Analysis.Sdk</RootNamespace>
     <PackageId>DxWorks.ScriptBee.Analysis.Sdk</PackageId>
     <Description>Public server SDK for developing ScriptBee Analysis Services.</Description>

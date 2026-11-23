@@ -7,6 +7,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ## [Unreleased]
 
+### Changed
+
+- update `fastapi` to 0.163.1
+- update `hono` to 4.13.18
+- update `Microsoft.AspNetCore.OpenApi` to 11.0.0
+- update `OpenTelemetry.Exporter.Console` to 1.21.0
+- update `OpenTelemetry.Exporter.OpenTelemetryProtocol` to 1.21.0
+- update `OpenTelemetry.Extensions.Hosting` to 1.21.0
+- update `OpenTelemetry.Instrumentation.AspNetCore` to 1.21.0
+- update `OpenTelemetry.Instrumentation.Http` to 1.21.0
+- update `OpenTelemetry.Instrumentation.Runtime` to 1.21.0
+- update `pydantic` to 2.14.3
+- update `Swashbuckle.AspNetCore.SwaggerUI` to 11.0.1
+
 ## [1.2.0]
 
 ### Changed

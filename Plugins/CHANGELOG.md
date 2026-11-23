@@ -15,6 +15,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update `@angular/forms` to 22.2.6
 - update `@angular/platform-browser` to 22.2.6
 - update `@angular/router` to 22.2.6
+- update `CsvHelper` to 34.1.0
+- update `Jint` to 4.18.1
+- update `Microsoft.CodeAnalysis` to 5.12.0
 
 ## [2.4.0]
 
