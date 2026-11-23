@@ -39,7 +39,7 @@ public class GetPluginsAdapter(IHttpClientFactory httpClientFactory) : IGetPlugi
         {
             ContentSerializer = new SystemTextJsonContentSerializer(options),
         };
-        var pluginsApi = RestService.ForGenerated<IAnalysisApi>(client, settings);
+        var pluginsApi = RestService.For<IAnalysisApi>(client, settings);
         return pluginsApi;
     }
 

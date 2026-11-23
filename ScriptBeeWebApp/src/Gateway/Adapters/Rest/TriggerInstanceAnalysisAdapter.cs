@@ -33,7 +33,7 @@ public class TriggerInstanceAnalysisAdapter(
             var client = httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(instanceInfo.Url);
 
-            var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
+            var analysisApi = RestService.For<IAnalysisApi>(client);
 
             var response = await analysisApi.Analyses(
                 new RunAnalysisCommand(instanceInfo.ProjectId.ToString(), scriptId.ToString()),

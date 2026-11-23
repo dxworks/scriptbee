@@ -17,7 +17,7 @@ public class GetInstanceContextAdapter(IHttpClientFactory httpClientFactory) : I
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
+        var analysisApi = RestService.For<IAnalysisApi>(client);
 
         var response = await analysisApi.Context(cancellationToken);
         return response.Data.Select(MapContextSlice);

@@ -17,7 +17,7 @@ public class LinkInstanceContextAdapter(IHttpClientFactory httpClientFactory) : 
         var client = httpClientFactory.CreateClient();
         client.BaseAddress = new Uri(instanceInfo.Url);
 
-        var analysisApi = RestService.ForGenerated<IAnalysisApi>(client);
+        var analysisApi = RestService.For<IAnalysisApi>(client);
 
         await analysisApi.Link(new LinkContextCommand(linkerIds.ToList()), cancellationToken);
     }
